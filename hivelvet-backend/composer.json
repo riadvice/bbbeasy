@@ -1,0 +1,67 @@
+{
+  "name": "riadvice/hivelvet-backend",
+  "description": "Hivelvet - Web-Application Backend",
+  "type": "project",
+  "autoload": {
+    "psr-4": {
+      "" : "app/src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "": [
+        "app/src",
+        "tests/src/"
+      ]
+    }
+  },
+  "require": {
+    "ext-json": "*",
+    "ext-curl": "*",
+    "ext-simplexml": "*",
+    "ext-dom": "*",
+    "ext-mbstring": "*",
+    "ext-bcmath": "*",
+    "bcosca/fatfree-core": "3.7.3",
+    "ikkez/f3-cortex": "^1.7",
+    "ikkez/f3-mailer": "^1.2",
+    "respect/validation": "^1.1",
+    "nette/utils": "^3.1",
+    "tracy/tracy": "^2.7",
+    "monolog/monolog": "^2.0",
+    "bigbluebutton/bigbluebutton-api-php": "^2.0",
+    "robmorgan/phinx": "^0.12",
+    "symfony/yaml": "^5.0",
+    "linfo/linfo": "^4.0",
+    "carbon-cli/carbon-cli": "^1.2"
+  },
+  "require-dev": {
+    "ext-xdebug": ">=2.3.3",
+    "kint-php/kint": "^3.3",
+    "fakerphp/faker": "^1.13",
+    "friendsofphp/php-cs-fixer": "^2.16",
+    "phpunit/php-code-coverage": "^7.0",
+    "kevinlebrun/colors.php": "^1.0",
+    "gabrielelana/byte-units": "^0.5",
+    "phpmetrics/phpmetrics": "^2.5"
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "sort-packages": false,
+    "process-timeout": 600,
+    "preferred-install": "dist",
+    "github-protocols": [
+      "https"
+    ]
+  },
+  "suggest": {
+    "xfra35/f3-cron": "Job scheduling for the PHP Fat-Free Framework"
+  },
+  "license": "PRIVATE",
+  "authors": [
+    {
+      "name": "RIADVICE",
+      "email": "devops@riadvice.tn"
+    }
+  ]
+}
