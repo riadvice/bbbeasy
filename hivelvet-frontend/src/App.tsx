@@ -17,15 +17,28 @@
  */
 
 import React from 'react';
-import './App.css';
+import { Route, Routes} from "react-router-dom";
+//import './App.css';
+
+//import AppSocket from "./components/AppSocket";
 import AppHeader from "./components/AppHeader";
-import AppSocket from "./components/AppSocket";
+import AppFooter from "./components/AppFooter";
+import LandingPage from "./components/LandingPage";
+import Register from "./components/Register";
+import Login from "./components/Login";
 
 function App() {
     return (
         <div className="App">
-            <AppSocket/>
             <AppHeader/>
+            <main>
+                <Routes>
+                    <Route path="/" element={<LandingPage/>} />
+                    <Route path="/register" element={<Register/>} />
+                    <Route path="/login" element={<Login/>} />
+                </Routes>
+            </main>
+            <AppFooter/>
         </div>
     );
 }

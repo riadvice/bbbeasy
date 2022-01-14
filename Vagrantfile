@@ -51,7 +51,7 @@ Vagrant.configure("2") do |config|
 
   # sync: folder "hivelvet" (host machine) -> folder "/app" (guest machine)
   config.vm.synced_folder "./", "/app", owner: "vagrant", group: "vagrant"
-  config.vm.synced_folder "../../riadvice/bigbluebutton-api-php", "/api", owner: "vagrant", group: "vagrant"
+  #config.vm.synced_folder "../../riadvice/bigbluebutton-api-php", "/api", owner: "vagrant", group: "vagrant"
 
   # disable folder "/vagrant" (guest machine)
   config.vm.synced_folder ".", "/vagrant", disabled: true
