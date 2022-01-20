@@ -18,12 +18,23 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Enum;
+namespace Actions\Core;
 
-class UserStatus extends Enum
+use Actions\Base as BaseAction;
+use Base;
+
+/**
+ * Index Action Class.
+ */
+class Main extends BaseAction
 {
-    public const ACTIVE   = 'active';
-    public const INACTIVE = 'inactive';
-    public const PENDING  = 'pending';
-    public const DELETED  = 'deleted';
+
+    /**
+     * @param Base  $f3
+     * @param array $params
+     */
+    public function execute($f3, $params): void
+    {
+
+    }
 }

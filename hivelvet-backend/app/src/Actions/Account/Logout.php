@@ -35,6 +35,6 @@ class Logout extends BaseAction
     public function execute($f3)
     {
         $this->session->revokeUser();
-        $this->f3->reroute('@login');
+        $this->renderJson(['redirect' => true]);
     }
 }

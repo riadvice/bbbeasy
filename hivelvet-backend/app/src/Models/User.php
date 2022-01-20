@@ -22,7 +22,6 @@ namespace Models;
 
 use Enum\CacheKey;
 use Enum\UserStatus;
-use Helpers\Pagination;
 use Models\Base as BaseModel;
 use DateTime;
 use DB\Cortex;

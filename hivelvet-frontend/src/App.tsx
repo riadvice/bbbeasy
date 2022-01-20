@@ -16,17 +16,57 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from 'react';
-import './App.css';
-import AppHeader from './components/AppHeader';
-import AppSocket from './components/AppSocket';
+import React, { useState} from 'react';
+import {Layout, ConfigProvider } from "antd";
+import { Route, Routes } from "react-router-dom";
+
+import AppHeader from "./components/AppHeader";
+import AppFooter from "./components/AppFooter";
+import LandingPage from "./components/LandingPage";
+import Register from "./components/Register";
+import Login from "./components/Login";
+
+import enUS from 'antd/lib/locale/en_US';
+import moment from 'moment';
+import 'moment/locale/fr';
+import 'moment/locale/ar';
+import 'moment/locale/en-au';
+
+moment.locale('en');
+
+const { Content } = Layout;
 
 function App() {
+    const locale = enUS;
+    const [currentLocale, setCurrentLocale] = useState(locale);
+    const direction = currentLocale.locale == 'ar' ? 'rtl' : 'ltr';
+
+    const handleChange = e => {
+        const localeValue = e.target.value;
+        if (!localeValue) {
+            moment.locale('en');
+        }
+        else {
+            moment.locale(localeValue.locale);
+        }
+        setCurrentLocale(localeValue);
+        localStorage.setItem("locale", localeValue);
+    };
+
     return (
-        <div className="App">
-            <AppSocket />
-            <AppHeader />
-        </div>
+        <Layout>
+            <AppHeader currentLocale={currentLocale} handleChange={handleChange} />
+            <Content>
+                <ConfigProvider locale={currentLocale} direction={direction}>
+                <Routes>
+                    <Route path="/" element={<LandingPage key={currentLocale ? currentLocale.locale : 'en' }/>} />
+                    <Route path="/register" element={<Register key={locale ? currentLocale.locale : 'en' }/>} />
+                    <Route path="/login" element={<Login key={currentLocale ? currentLocale.locale : 'en' }/>} />
+                </Routes>
+                </ConfigProvider>
+            </Content>
+            <AppFooter/>
+        </Layout>
     );
 }
 

@@ -1,9 +1,10 @@
 {
-  "name": "hivelvet-fronted",
+  "name": "hivelvet-frontend",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
     "@craco/craco": "^6.4.3",
+    "@hookform/resolvers": "^2.8.5",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^12.0.0",
     "@testing-library/user-event": "^13.2.1",
@@ -12,17 +13,24 @@
     "@types/react": "^17.0.20",
     "@types/react-dom": "^17.0.9",
     "antd": "^4.18.2",
+    "axios": "^0.24.0",
+    "chokidar": "^3.5.2",
+    "formik": "^2.2.9",
+    "moment": "^2.29.1",
     "pm2": "^5.1.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-hook-form": "^7.23.0",
+    "react-router-dom": "^6.2.1",
     "react-scripts": "5.0.0",
     "reload": "^3.2.0",
     "typescript": "^4.4.2",
     "web-vitals": "^2.1.0",
-    "websocket": "^1.0.34"
+    "websocket": "^1.0.34",
+    "yup": "^0.32.11"
   },
   "scripts": {
-    "start": "PORT=3300 craco start",
+    "start": "CHOKIDAR_USEPOLLING=true PORT=3300 craco start --watch",
     "build": "craco build",
     "test": "craco test",
     "eject": "craco eject",

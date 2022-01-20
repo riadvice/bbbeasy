@@ -16,17 +16,52 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Button, Layout } from 'antd';
-import React from 'react';
+import React, {Component} from 'react';
+import { Link } from 'react-router-dom';
+import {Layout, Typography, Radio} from 'antd';
+
+import enUS from 'antd/lib/locale/en_US';
+import frFR from 'antd/lib/locale/fr_FR';
+import arEG from 'antd/lib/locale/ar_EG';
 
 const { Header } = Layout;
+const { Paragraph } = Typography;
 
-const AppHeader = () => {
-    return (
-        <Header>
-            <Button type="ghost">Button</Button>
-        </Header>
-    );
+type Props = {
+    currentLocale : any;
+    handleChange : any;
 };
+
+type State = {
+    locale?: any;
+    direction?: any
+};
+
+const languages = [
+    { name: "English", key: 'en', value : enUS },
+    { name: "Français", key: 'fr', value: frFR },
+    { name: "العربية", code: 'ar', value: arEG },
+];
+
+class AppHeader extends Component<Props, State> {
+    render() {
+        return (
+            <Header className="site-header">
+                <Paragraph className="container site-header-inner">
+                    <Link to={"/"}>
+                        <img className="header-logo-image" src="dist/images/logo.svg" alt="Logo"/>
+                    </Link>
+                    <Radio.Group value={this.props.currentLocale} onChange={this.props.handleChange}>
+                        {languages.map(({ name, key, value }) => (
+                            <Radio.Button key={key} value={value}>
+                                {name}
+                            </Radio.Button>
+                        ))}
+                    </Radio.Group>
+                </Paragraph>
+            </Header>
+        )
+    }
+}
 
 export default AppHeader;

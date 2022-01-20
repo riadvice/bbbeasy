@@ -21,13 +21,10 @@
 namespace Actions\Account;
 
 use Actions\Base as BaseAction;
-use Base;
+use Enum\ResponseCode;
 use Enum\UserRole;
-use Enum\UserStatus;
-use Helpers\Flash;
 use Helpers\Time;
-use Models\User as UserModel;
-use Validation\Validator;
+use Models\User;
 
 /**
  * Class Login
@@ -38,63 +35,49 @@ class Login extends BaseAction
     public function __construct()
     {
         parent::__construct();
-
-        $this->view = 'authentication';
-    }
-
-    /**
-     * @param Base  $f3
-     * @param array $params
-     */
-    public function show($f3, $params): void
-    {
-        if (!$this->session->isLoggedIn()) {
-            $this->render();
-        } else {
-            if ($this->session->isRole(UserRole::ADMIN)) {
-                $this->f3->reroute('@dashboard');
-            } elseif ($this->session->isRole(UserRole::CUSTOMER)) {
-                $this->f3->reroute('@recordings_list');
-            }
-        }
     }
 
     public function authorise($f3): void
     {
-        $v    = new Validator();
-        $post = $this->f3->get('POST');
-        $v->email()->verify('email', $post['email']);
-        $v->length(4)->verify('password', $post['password']);
+        $user   = new User();
+        $form   = $this->getDecodedBody();
 
-        if ($v->allValid()) {
-            $email    = $this->f3->get('POST.email');
-            $password = $this->f3->get('POST.password');
+        $email    = $form['email'];
+        $password = $form['password'];
 
-            /**
-             * @var UserModel $user
-             */
-            $user = new UserModel();
+        if ($user->emailExists($email)) {
             $user = $user->getByEmail($email);
-
-            if ($user->valid() && $user->status === UserStatus::ACTIVE && $user->role !== UserRole::API && $user->verifyPassword($password)) {
+            //$user->status === UserStatus::ACTIVE &&
+            if ($user->role !== UserRole::API && $user->verifyPassword($password)) {
+                // valid credentials
                 $this->session->authorizeUser($user);
 
                 $user->last_login = Time::db();
                 $user->save();
 
                 $this->session->set('locale', $user->locale);
-
-                Flash::instance()->addMessage($this->f3->format($this->i18n->msg('user.login_success'), $user->first_name), Flash::INFORMATION);
-                $this->f3->reroute('@dashboard');
-            } else {
-                $this->f3->set('data', $post);
-                $this->f3->set('form_errors.email', $this->i18n->err('login.password'));
-                $this->show($f3, $post);
+                $message = 'Valid credentials';
+                $userInfos = array(
+                    "id" => $user->id,
+                    "username" => $user->username,
+                    "email" => $user->email,
+                    "role" => $user->role,
+                );
+                $this->logger->error('user successfully login', ['message' => $message]);
+                $this->renderJson(['message' => $message, 'user' => json_encode($userInfos)]);
             }
-        } else {
-            $this->f3->set('data', $post);
-            $this->f3->set('form_errors', $v->getErrors());
-            $this->show($f3, $post);
+            else {
+                //password invalid
+                $message = 'Password invalid';
+                $this->logger->error('Login error : user could not logged', ['error' => $message]);
+                $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+            }
+        }
+        else {
+            // email invalid or user no exist
+            $message = 'Email invalid';
+            $this->logger->error('Login error : user could not logged', ['error' => $message]);
+            $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }
