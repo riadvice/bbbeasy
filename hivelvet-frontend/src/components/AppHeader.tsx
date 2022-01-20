@@ -16,18 +16,17 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Button, Layout} from 'antd';
-import React from "react";
+import { Button, Layout } from 'antd';
+import React from 'react';
 
-const {Header} = Layout;
+const { Header } = Layout;
 
 const AppHeader = () => {
-
     return (
         <Header>
             <Button type="ghost">Button</Button>
         </Header>
-    )
-}
+    );
+};
 
 export default AppHeader;

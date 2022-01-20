@@ -18,14 +18,14 @@
 
 import React from 'react';
 import './App.css';
-import AppHeader from "./components/AppHeader";
-import AppSocket from "./components/AppSocket";
+import AppHeader from './components/AppHeader';
+import AppSocket from './components/AppSocket';
 
 function App() {
     return (
         <div className="App">
-            <AppSocket/>
-            <AppHeader/>
+            <AppSocket />
+            <AppHeader />
         </div>
     );
 }
