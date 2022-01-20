@@ -33,7 +33,10 @@
     "start": "CHOKIDAR_USEPOLLING=true PORT=3300 craco start --watch",
     "build": "craco build",
     "test": "craco test",
-    "eject": "craco eject"
+    "eject": "craco eject",
+    "lint": "eslint --ext .js,.jsx,.ts,.tsx src --color",
+    "format": "prettier --write 'src/**/*.{ts,tsx,scss,css,json}'",
+    "isready": "npm run format && npm run lint && npm run build"
   },
   "eslintConfig": {
     "extends": [
@@ -52,5 +55,16 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@typescript-eslint/parser": "^5.10.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react": "^7.28.0",
+    "eslint-webpack-plugin": "^3.1.1",
+    "husky": "4.2.5",
+    "lint-staged": "^12.2.1",
+    "prettier": "^2.5.1",
+    "ts-loader": "^9.2.6"
   }
 }

@@ -16,12 +16,12 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Component } from 'react';
+import { Component } from 'react';
 
 const client = new WebSocket('ws://hivelvet.test:8800');
 
-class  AppSocket extends Component<any, any> {
-    componentWillMount() {
+class AppSocket extends Component<unknown, unknown> {
+    UNSAFE_componentWillMount() {
         client.onopen = () => {
             console.log('WebSocket Client Connected');
         };
@@ -31,7 +31,7 @@ class  AppSocket extends Component<any, any> {
     }
 
     render() {
-        return ''
+        return '';
     }
 }
 export default AppSocket;
