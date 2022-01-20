@@ -16,12 +16,16 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component } from "react";
-import {Link} from "react-router-dom";
+import React, {Component} from 'react';
+import {Link} from 'react-router-dom';
+import AuthService from '../services/auth.service';
 
-import AuthService from "../services/auth.service";
-import { Formik, Field, Form, ErrorMessage } from "formik";
-import * as Yup from 'yup';
+import '../App.css';
+//import 'antd/dist/antd.css';
+import { Form, Input, Button, Checkbox, message, Alert, Col, Row, Typography, Space } from 'antd';
+import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
+
+const { Text, Title, Paragraph } = Typography;
 
 type Props = {};
 
@@ -49,28 +53,17 @@ class Register extends Component<Props, State> {
         };
     }
 
-    validationSchema() {
-        return Yup.object().shape({
-            username: Yup.string()
-                .required('Username is required'),
-            email: Yup.string()
-                .required('Email is required')
-                .email('Email is invalid'),
-            password: Yup.string()
-                .required('Password is required')
-                .min(4, 'Password must be at least 4 characters'),
-            confirmPassword: Yup.string()
-                .required('Confirm password is required')
-                .min(4, 'Password must be at least 4 characters')
-                .oneOf([Yup.ref('password'), null], 'Confirm password does not match')
-        });
-    }
-
-    handleRegistration(formValue: { username: string; email: string; password: string; confirmPassword: string }) {
+    handleRegistration(formValue: any) {
         const { username, email, password, confirmPassword } = formValue;
         AuthService.register(username, email, password, confirmPassword)
             .then(response => {
                 const responseMessage = response.data.message;
+                message.success({
+                    content: responseMessage,
+                    style: {
+                        marginTop: '20vh',
+                    },
+                });
                 this.setState({
                     successful: true,
                     message: responseMessage
@@ -95,66 +88,138 @@ class Register extends Component<Props, State> {
             successful: false,
             message: ''
         };
+
         return (
-            <section className="pricing section">
-                <div className="container-sm">
-                    <div className="pricing-inner section-inner section-top">
-                        <div className="pricing-header text-center">
-                            <h2 className="section-title mt-0">Join us</h2>
-                            <p className="section-paragraph mb-0">Register now and join our community</p>
-                        </div>
-                        <div className="pricing-tables-wrap">
-                            <div className="pricing-table">
-                                <div className="pricing-table-inner is-revealing">
-                                    <div className="pricing-table-main">
-                                        { message &&
-                                            <div className={ successful ? 'alert alert-success' : 'alert alert-danger'}>
-                                                { message }
-                                            </div>
-                                        }
-                                        <Formik
-                                            initialValues={initialValues}
-                                            validationSchema={this.validationSchema}
-                                            onSubmit={this.handleRegistration} >
-                                            {({ errors, touched }) => (
-                                            <Form>
-                                                <div className="form-group">
-                                                    <label className="form-label" htmlFor="user_name">Username</label>
-                                                    <Field type="text" name="username" id="user_name" className={`form-control ${errors.username && touched.username ? 'is-invalid' : ''}`}/>
-                                                    <ErrorMessage name="username" component="div" className="invalid-feedback"/>
-                                                </div>
-                                                <div className="form-group">
-                                                    <label className="form-label" htmlFor="user_email">Email</label>
-                                                    <Field type="email" name="email" id="user_email" className={`form-control ${errors.email && touched.email ? 'is-invalid' : ''}`}/>
-                                                    <ErrorMessage name="email" component="div" className="invalid-feedback"/>
-                                                </div>
-                                                <div className="form-group">
-                                                    <label className="form-label" htmlFor="user_password">Password</label>
-                                                    <Field type="password" name="password" id="user_password" className={`form-control ${errors.password && touched.password ? 'is-invalid' : ''}`}/>
-                                                    <ErrorMessage name="password" component="div" className="invalid-feedback"/>
-                                                </div>
-                                                <div className="form-group">
-                                                    <label className="form-label" htmlFor="user_password_confirm">Confirm password</label>
-                                                    <Field type="password" name="confirmPassword" id="user_password_confirm" className={`form-control ${errors.confirmPassword && touched.confirmPassword ? 'is-invalid' : ''}`}/>
-                                                    <ErrorMessage name="confirmPassword" component="div" className="invalid-feedback"/>
-                                                </div>
-                                                <div className="pricing-table-cta mb-8">
-                                                    <button className="button button-primary button-shadow button-block submit-btn">Register now</button>
-                                                </div>
-                                            </Form>
-                                            )}
-                                        </Formik>
-                                        <div className="text-center mt-24">
-                                            <span className="text-xs">Have already an account ? <Link to={'/login'} className="login-link">Login here</Link></span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        )
+            <Row>
+                <Col span={8} offset={8} className='section-top'>
+                    <Paragraph className='pricing-header text-center'>
+                        <Title style={{ fontWeight : 500 }}>Join us</Title>
+                        <Text>Register now and join our community</Text>
+                    </Paragraph>
+                    <Space direction='horizontal' style={{width: '100%', justifyContent: 'center'}}>
+                        <Paragraph className='pricing-table'>
+                            <Paragraph className='pricing-table-inner is-revealing'>
+                                { message && !successful &&
+                                    <Alert
+                                        style={{ marginBottom : 24 }}
+                                        message="Error"
+                                        description={ message }
+                                        type="error"
+                                        showIcon />
+                                }
+                                <Form
+                                    layout='vertical'
+                                    name="register"
+                                    className="register-form"
+                                    initialValues={initialValues}
+                                    onFinish={this.handleRegistration}>
+
+                                    <Form.Item
+                                        label="Username"
+                                        name="username"
+                                        hasFeedback
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message: 'Username is required'
+                                            }
+                                        ]}>
+                                        <Input />
+                                    </Form.Item>
+                                    <Form.Item
+                                        label="Email"
+                                        name="email"
+                                        hasFeedback
+                                        rules={[
+                                            {
+                                                type: 'email',
+                                                message: 'Email is invalid',
+                                            },
+                                            {
+                                                required: true,
+                                                message: 'Email is required',
+                                            }
+                                        ]}>
+                                        <Input />
+                                    </Form.Item>
+                                    <Form.Item
+                                        label="Password"
+                                        name="password"
+                                        hasFeedback
+                                        rules={[
+                                            {
+                                                min: 4,
+                                                message: 'Password must be at least 4 characters',
+                                            },
+                                            {
+                                                required: true,
+                                                message: 'Password is required',
+                                            },
+                                        ]}>
+                                        <Input.Password
+                                            iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+                                        />
+                                    </Form.Item>
+                                    <Form.Item
+                                        label="Confirm Password"
+                                        name="confirmPassword"
+                                        dependencies={['password']}
+                                        hasFeedback
+                                        rules={[
+                                            {
+                                                min: 4,
+                                                message: 'Confirm password must be at least 4 characters',
+                                            },
+                                            {
+                                                required: true,
+                                                message: 'Confirm password is required',
+                                            },
+                                            ({ getFieldValue }) => ({
+                                                validator(_, value) {
+                                                    if (!value || getFieldValue('password') === value) {
+                                                        return Promise.resolve();
+                                                    }
+                                                    return Promise.reject(new Error('The two passwords that you entered do not match'));
+                                                },
+                                            }),
+                                        ]}
+                                    >
+                                        <Input.Password />
+                                    </Form.Item>
+
+                                    <Form.Item
+                                        name="agreement"
+                                        valuePropName="checked"
+                                        rules={[
+                                            {
+                                                validator: (_, value) =>
+                                                    value ? Promise.resolve() : Promise.reject(new Error('Should accept agreement')),
+                                            },
+                                        ]}
+                                    >
+                                        <Checkbox>
+                                            I have read the <a href="#">agreement</a>
+                                        </Checkbox>
+                                    </Form.Item>
+
+                                    <Form.Item>
+                                        <Button type="primary" htmlType="submit" className="login-form-button" size='large'>
+                                            Register now
+                                        </Button>
+                                    </Form.Item>
+                                </Form>
+                                <Paragraph className="text-center mt-12">
+                                    <Text style={{color : "white" }}>
+                                        Have already an account ?
+                                    </Text>
+                                    <Link to={'/login'} className="login-link"> Login here </Link>
+                                </Paragraph>
+                            </Paragraph>
+                        </Paragraph>
+                    </Space>
+                </Col>
+            </Row>
+        );
     }
 }
 

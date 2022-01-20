@@ -15,45 +15,25 @@
  * You should have received a copy of the GNU Lesser General Public License along
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
-/*
+
 @import '~antd/dist/antd.css';
 
-.App {
-  text-align: center;
+.login-form {
+    max-width: 300px;
 }
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.login-form-forgot {
+    float: right;
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.ant-col-rtl .login-form-forgot {
+    float: left;
 }
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.login-form-button {
+    width: 100%;
 }
-
-.App-link {
-  color: #61dafb;
+.login-form .ant-form-item-label label,.login-form .ant-checkbox-wrapper,
+.register-form .ant-form-item-label label,.register-form .ant-checkbox-wrapper {
+    color: white !important;
 }
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.ant-layout, .ant-layout-header, .ant-layout-footer {
+    background: transparent !important;
 }
- */

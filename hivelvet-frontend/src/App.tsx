@@ -17,29 +17,30 @@
  */
 
 import React from 'react';
+import { Layout } from "antd";
 import { Route, Routes} from "react-router-dom";
-//import './App.css';
 
-//import AppSocket from "./components/AppSocket";
 import AppHeader from "./components/AppHeader";
 import AppFooter from "./components/AppFooter";
 import LandingPage from "./components/LandingPage";
 import Register from "./components/Register";
 import Login from "./components/Login";
 
+const { Content } = Layout;
+
 function App() {
     return (
-        <div className="App">
+        <Layout>
             <AppHeader/>
-            <main>
+            <Content>
                 <Routes>
                     <Route path="/" element={<LandingPage/>} />
                     <Route path="/register" element={<Register/>} />
                     <Route path="/login" element={<Login/>} />
                 </Routes>
-            </main>
+            </Content>
             <AppFooter/>
-        </div>
+        </Layout>
     );
 }
 

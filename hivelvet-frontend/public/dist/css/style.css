@@ -936,7 +936,7 @@ button,input,select,textarea,label{
 	}
 }
 .site-header{
-	padding:24px 0
+	padding:24px 0 !important;
 }
 .site-header-inner{
 	position:relative;
@@ -1247,7 +1247,7 @@ button,input,select,textarea,label{
 	}
 }
 .pricing-header{
-	margin-bottom:48px
+	margin-bottom:48px !important
 }
 .pricing-tables-wrap{
 	display:flex;
@@ -1342,7 +1342,7 @@ button,input,select,textarea,label{
 		padding-right:90px
 	}
 	.pricing-header{
-		margin-bottom:52px
+		margin-bottom:52px !important
 	}
 }
 .cta{
@@ -1425,7 +1425,8 @@ main{
 .site-footer{
 	font-size:14px;
 	line-height:22px;
-	letter-spacing:0px
+	letter-spacing:0px;
+	padding: 0px !important;
 }
 .site-footer a{
 	color:#8A94A7;
@@ -1461,6 +1462,16 @@ main{
 }
 .footer-links li+li{
 	margin-left:24px
+}
+.BtnUp {
+	height: 40px;
+	width: 40px;
+	line-height: 40px;
+	border-radius: 4px;
+	background-color: #1088e9;
+	color: #fff;
+	text-align: center;
+	font-size: 14px;
 }
 .form-label {
 	color: white;

@@ -17,45 +17,44 @@
  */
 
 import React,{Component} from 'react';
-import { Link} from "react-router-dom";
+import { Link} from 'react-router-dom';
+import { Space, Typography } from 'antd';
+
+const { Title, Text, Paragraph } = Typography;
 
 class LandingPage extends Component<any, any> {
-
     render() {
         return (
-            <section className="hero">
-                <div className="container">
-                    <div className="hero-inner">
-                        <div className="hero-copy">
-                            <h1 className="hero-title mt-0">Welcome to Hivelvet Application</h1>
-                            <p className="hero-paragraph">
-                                The new rooms experience for BigBlueButton.<br></br>
-                                New Open-source and simple portal for Web conference BBB.<br></br><br></br>
-                            </p>
-                            <div className="hero-cta">
-                                <Link className={"button button-primary"} to={"/login"}> Sign in </Link>
-                                <Link className={"button"} to={"/register"}> Sign up </Link>
-                            </div>
-                        </div>
-                        <div className="hero-figure anime-element">
-                            <svg className="placeholder" width="528" height="396" viewBox="0 0 528 396">
-                                <rect width="528" height="396" className="home-transparent"/>
-                            </svg>
-                            <div className="hero-figure-box hero-figure-box-01" data-rotation="45deg"></div>
-                            <div className="hero-figure-box hero-figure-box-02" data-rotation="-45deg"></div>
-                            <div className="hero-figure-box hero-figure-box-03" data-rotation="0deg"></div>
-                            <div className="hero-figure-box hero-figure-box-04" data-rotation="-135deg"></div>
-                            <div className="hero-figure-box hero-figure-box-05"></div>
-                            <div className="hero-figure-box hero-figure-box-06"></div>
-                            <div className="hero-figure-box hero-figure-box-07"></div>
-                            <div className="hero-figure-box hero-figure-box-08" data-rotation="-22deg"></div>
-                            <div className="hero-figure-box hero-figure-box-09" data-rotation="-52deg"></div>
-                            <div className="hero-figure-box hero-figure-box-10" data-rotation="-50deg"></div>
-                        </div>
-                    </div>
-                </div>
-            </section>
+            <Space direction='horizontal' style={{width: '100%', justifyContent: 'center' }} className="hero">
+                <Paragraph className='hero-copy'>
+                    <Title>Welcome to Hivelvet Application</Title>
+                    <Text style={{ color : '#3D6D9D', fontSize: 20, marginBottom : 24 }}>
+                        The new rooms experience for BigBlueButton.<br></br>
+                        New Open-source and simple portal for Web conference BBB.<br></br><br></br>
+                    </Text>
+                    <Paragraph className="hero-cta" style={{ marginTop : 24 }}>
+                        <Link className={"button button-primary"} to={"/login"}> Sign in </Link>
+                        <Link className={"button"} to={"/register"}> Sign up </Link>
+                    </Paragraph>
+                </Paragraph>
+                <Paragraph className="hero-figure anime-element">
+                    <svg className="placeholder" width="528" height="396" viewBox="0 0 528 396">
+                        <rect width="528" height="396" className="home-transparent"/>
+                    </svg>
+                    <Paragraph className="hero-figure-box hero-figure-box-01" data-rotation="45deg"></Paragraph>
+                    <Paragraph className="hero-figure-box hero-figure-box-02" data-rotation="-45deg"></Paragraph>
+                    <Paragraph className="hero-figure-box hero-figure-box-03" data-rotation="0deg"></Paragraph>
+                    <Paragraph className="hero-figure-box hero-figure-box-04" data-rotation="-135deg"></Paragraph>
+                    <Paragraph className="hero-figure-box hero-figure-box-05"></Paragraph>
+                    <Paragraph className="hero-figure-box hero-figure-box-06"></Paragraph>
+                    <Paragraph className="hero-figure-box hero-figure-box-07"></Paragraph>
+                    <Paragraph className="hero-figure-box hero-figure-box-08" data-rotation="-22deg"></Paragraph>
+                    <Paragraph className="hero-figure-box hero-figure-box-09" data-rotation="-52deg"></Paragraph>
+                    <Paragraph className="hero-figure-box hero-figure-box-10" data-rotation="-50deg"></Paragraph>
+                </Paragraph>
+            </Space>
         );
     }
 }
+
 export default LandingPage;

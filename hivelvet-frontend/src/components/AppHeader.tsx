@@ -16,24 +16,22 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from "react";
-import { Link} from "react-router-dom";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { Layout, Typography } from 'antd';
+
+const { Header } = Layout;
+const { Paragraph } = Typography;
 
 const AppHeader = () => {
     return (
-        <header className="site-header">
-            <div className="container">
-                <div className="site-header-inner">
-                    <div className="brand header-brand">
-                        <h1 className="m-0">
-                            <Link to={"/"}>
-                                <img className="header-logo-image" src="dist/images/logo.svg" alt="Logo"/>
-                            </Link>
-                        </h1>
-                    </div>
-                </div>
-            </div>
-        </header>
+        <Header className="site-header">
+            <Paragraph className="container site-header-inner">
+                <Link to={"/"}>
+                    <img className="header-logo-image" src="dist/images/logo.svg" alt="Logo"/>
+                </Link>
+            </Paragraph>
+        </Header>
     )
 }
 
