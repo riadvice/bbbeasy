@@ -20,12 +20,12 @@ import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
 import {Layout, Typography, Radio} from 'antd';
 
-const { Header } = Layout;
-const { Paragraph } = Typography;
-
 import enUS from 'antd/lib/locale/en_US';
 import frFR from 'antd/lib/locale/fr_FR';
 import arEG from 'antd/lib/locale/ar_EG';
+
+const { Header } = Layout;
+const { Paragraph } = Typography;
 
 type Props = {
     currentLocale : any;
