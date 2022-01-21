@@ -16,8 +16,8 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, {Component} from 'react';
-import {Link} from 'react-router-dom';
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import AuthService from '../services/auth.service';
 
 import '../App.css';
@@ -39,7 +39,6 @@ type State = {
 };
 
 class Register extends Component<Props, State> {
-
     constructor(props: Props) {
         super(props);
         this.handleRegistration = this.handleRegistration.bind(this);
@@ -49,14 +48,14 @@ class Register extends Component<Props, State> {
             password: '',
             confirmPassword: '',
             successful: false,
-            message: ''
+            message: '',
         };
     }
 
     handleRegistration(formValue: any) {
         const { username, email, password, confirmPassword } = formValue;
         AuthService.register(username, email, password, confirmPassword)
-            .then(response => {
+            .then((response) => {
                 const responseMessage = response.data.message;
                 message.success({
                     content: responseMessage,
@@ -66,14 +65,14 @@ class Register extends Component<Props, State> {
                 });
                 this.setState({
                     successful: true,
-                    message: responseMessage
+                    message: responseMessage,
                 });
             })
-            .catch(error => {
+            .catch((error) => {
                 const responseMessage = error.response.data.message;
                 this.setState({
                     successful: false,
-                    message: responseMessage
+                    message: responseMessage,
                 });
             });
     }
@@ -86,34 +85,35 @@ class Register extends Component<Props, State> {
             password: '',
             confirmPassword: '',
             successful: false,
-            message: ''
+            message: '',
         };
 
         return (
             <Row>
-                <Col span={8} offset={8} className='section-top'>
-                    <Paragraph className='pricing-header text-center'>
-                        <Title style={{ fontWeight : 500 }}>Join us</Title>
+                <Col span={8} offset={8} className="section-top">
+                    <Paragraph className="pricing-header text-center">
+                        <Title style={{ fontWeight: 500 }}>Join us</Title>
                         <Text>Register now and join our community</Text>
                     </Paragraph>
-                    <Space direction='horizontal' style={{width: '100%', justifyContent: 'center'}}>
-                        <Paragraph className='pricing-table'>
-                            <Paragraph className='pricing-table-inner is-revealing'>
-                                { message && !successful &&
+                    <Space direction="horizontal" style={{ width: '100%', justifyContent: 'center' }}>
+                        <Paragraph className="pricing-table">
+                            <Paragraph className="pricing-table-inner is-revealing">
+                                {message && !successful && (
                                     <Alert
-                                        style={{ marginBottom : 24 }}
+                                        style={{ marginBottom: 24 }}
                                         message="Error"
-                                        description={ message }
+                                        description={message}
                                         type="error"
-                                        showIcon />
-                                }
+                                        showIcon
+                                    />
+                                )}
                                 <Form
-                                    layout='vertical'
+                                    layout="vertical"
                                     name="register"
                                     className="register-form"
                                     initialValues={initialValues}
-                                    onFinish={this.handleRegistration}>
-
+                                    onFinish={this.handleRegistration}
+                                >
                                     <Form.Item
                                         label="Username"
                                         name="username"
@@ -121,9 +121,10 @@ class Register extends Component<Props, State> {
                                         rules={[
                                             {
                                                 required: true,
-                                                message: 'Username is required'
-                                            }
-                                        ]}>
+                                                message: 'Username is required',
+                                            },
+                                        ]}
+                                    >
                                         <Input />
                                     </Form.Item>
                                     <Form.Item
@@ -138,8 +139,9 @@ class Register extends Component<Props, State> {
                                             {
                                                 required: true,
                                                 message: 'Email is required',
-                                            }
-                                        ]}>
+                                            },
+                                        ]}
+                                    >
                                         <Input />
                                     </Form.Item>
                                     <Form.Item
@@ -155,9 +157,12 @@ class Register extends Component<Props, State> {
                                                 required: true,
                                                 message: 'Password is required',
                                             },
-                                        ]}>
+                                        ]}
+                                    >
                                         <Input.Password
-                                            iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+                                            iconRender={(visible) =>
+                                                visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                                            }
                                         />
                                     </Form.Item>
                                     <Form.Item
@@ -179,7 +184,9 @@ class Register extends Component<Props, State> {
                                                     if (!value || getFieldValue('password') === value) {
                                                         return Promise.resolve();
                                                     }
-                                                    return Promise.reject(new Error('The two passwords that you entered do not match'));
+                                                    return Promise.reject(
+                                                        new Error('The two passwords that you entered do not match')
+                                                    );
                                                 },
                                             }),
                                         ]}
@@ -193,7 +200,9 @@ class Register extends Component<Props, State> {
                                         rules={[
                                             {
                                                 validator: (_, value) =>
-                                                    value ? Promise.resolve() : Promise.reject(new Error('Should accept agreement')),
+                                                    value
+                                                        ? Promise.resolve()
+                                                        : Promise.reject(new Error('Should accept agreement')),
                                             },
                                         ]}
                                     >
@@ -203,16 +212,22 @@ class Register extends Component<Props, State> {
                                     </Form.Item>
 
                                     <Form.Item>
-                                        <Button type="primary" htmlType="submit" className="login-form-button" size='large'>
+                                        <Button
+                                            type="primary"
+                                            htmlType="submit"
+                                            className="login-form-button"
+                                            size="large"
+                                        >
                                             Register now
                                         </Button>
                                     </Form.Item>
                                 </Form>
                                 <Paragraph className="text-center mt-12">
-                                    <Text style={{color : "white" }}>
-                                        Have already an account ?
-                                    </Text>
-                                    <Link to={'/login'} className="login-link"> Login here </Link>
+                                    <Text style={{ color: 'white' }}>Have already an account ?</Text>
+                                    <Link to={'/login'} className="login-link">
+                                        {' '}
+                                        Login here{' '}
+                                    </Link>
                                 </Paragraph>
                             </Paragraph>
                         </Paragraph>

@@ -16,8 +16,8 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, {Component} from 'react';
-import {Link} from 'react-router-dom';
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import AuthService from '../services/auth.service';
 
 import '../App.css';
@@ -37,7 +37,6 @@ type State = {
 };
 
 class Login extends Component<Props, State> {
-
     constructor(props: Props) {
         super(props);
         this.handleLogin = this.handleLogin.bind(this);
@@ -45,14 +44,14 @@ class Login extends Component<Props, State> {
             email: '',
             password: '',
             successful: false,
-            message: ''
+            message: '',
         };
     }
 
     handleLogin(formValue: any) {
         const { email, password } = formValue;
         AuthService.login(email, password)
-            .then(response => {
+            .then((response) => {
                 const responseMessage = response.data.message;
                 message.success({
                     content: responseMessage,
@@ -62,16 +61,16 @@ class Login extends Component<Props, State> {
                 });
                 this.setState({
                     successful: true,
-                    message: responseMessage
+                    message: responseMessage,
                 });
                 const user = response.data.user;
-                localStorage.setItem("user", JSON.stringify(user));
+                localStorage.setItem('user', JSON.stringify(user));
             })
-            .catch(error => {
+            .catch((error) => {
                 const responseMessage = error.response.data.message;
                 this.setState({
                     successful: false,
-                    message: responseMessage
+                    message: responseMessage,
                 });
             });
     }
@@ -83,33 +82,35 @@ class Login extends Component<Props, State> {
             password: '',
             successful: false,
             message: '',
-            remember: true
+            remember: true,
         };
 
         return (
             <Row>
-                <Col span={8} offset={8} className='section-top'>
-                    <Paragraph className='pricing-header text-center'>
-                        <Title style={{ fontWeight : 500 }}>Get started</Title>
+                <Col span={8} offset={8} className="section-top">
+                    <Paragraph className="pricing-header text-center">
+                        <Title style={{ fontWeight: 500 }}>Get started</Title>
                         <Text>Sign in to continue to our application</Text>
                     </Paragraph>
-                    <Space direction='horizontal' style={{width: '100%', justifyContent: 'center'}}>
-                        <Paragraph className='pricing-table page-login'>
-                            <Paragraph className='pricing-table-inner is-revealing'>
-                                { message && !successful &&
+                    <Space direction="horizontal" style={{ width: '100%', justifyContent: 'center' }}>
+                        <Paragraph className="pricing-table page-login">
+                            <Paragraph className="pricing-table-inner is-revealing">
+                                {message && !successful && (
                                     <Alert
-                                        style={{ marginBottom : 24 }}
+                                        style={{ marginBottom: 24 }}
                                         message="Error"
-                                        description={ message }
+                                        description={message}
                                         type="error"
-                                        showIcon />
-                                }
+                                        showIcon
+                                    />
+                                )}
                                 <Form
-                                    layout='vertical'
+                                    layout="vertical"
                                     name="normal_login"
                                     className="login-form"
                                     initialValues={initialValues}
-                                    onFinish={this.handleLogin}>
+                                    onFinish={this.handleLogin}
+                                >
                                     <Form.Item
                                         label="Email"
                                         name="email"
@@ -123,7 +124,8 @@ class Login extends Component<Props, State> {
                                                 required: true,
                                                 message: 'Email is required',
                                             },
-                                        ]}>
+                                        ]}
+                                    >
                                         <Input />
                                     </Form.Item>
                                     <Form.Item
@@ -139,9 +141,12 @@ class Login extends Component<Props, State> {
                                                 required: true,
                                                 message: 'Password is required',
                                             },
-                                        ]}>
+                                        ]}
+                                    >
                                         <Input.Password
-                                            iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+                                            iconRender={(visible) =>
+                                                visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                                            }
                                         />
                                     </Form.Item>
                                     <Form.Item>
@@ -154,16 +159,22 @@ class Login extends Component<Props, State> {
                                         </a>
                                     </Form.Item>
                                     <Form.Item>
-                                        <Button type="primary" htmlType="submit" className="login-form-button" size='large'>
+                                        <Button
+                                            type="primary"
+                                            htmlType="submit"
+                                            className="login-form-button"
+                                            size="large"
+                                        >
                                             Log in now
                                         </Button>
                                     </Form.Item>
                                 </Form>
                                 <Paragraph className="text-center mt-12">
-                                    <Text style={{color : "white" }}>
-                                        Dont't have an account ?
-                                    </Text>
-                                    <Link to={'/register'} className="login-link"> Register here </Link>
+                                    <Text style={{ color: 'white' }}>{"Dont't have an account ?"}</Text>
+                                    <Link to={'/register'} className="login-link">
+                                        {' '}
+                                        Register here{' '}
+                                    </Link>
                                 </Paragraph>
                             </Paragraph>
                         </Paragraph>
