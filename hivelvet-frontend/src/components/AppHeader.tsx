@@ -16,9 +16,9 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import {Layout, Typography, Radio} from 'antd';
+import { Layout, Typography, Radio } from 'antd';
 
 import enUS from 'antd/lib/locale/en_US';
 import frFR from 'antd/lib/locale/fr_FR';
@@ -28,19 +28,19 @@ const { Header } = Layout;
 const { Paragraph } = Typography;
 
 type Props = {
-    currentLocale : any;
-    handleChange : any;
+    currentLocale: any;
+    handleChange: any;
 };
 
 type State = {
     locale?: any;
-    direction?: any
+    direction?: any;
 };
 
 const languages = [
-    { name: "English", key: 'en', value : enUS },
-    { name: "Français", key: 'fr', value: frFR },
-    { name: "العربية", code: 'ar', value: arEG },
+    { name: 'English', key: 'en', value: enUS },
+    { name: 'Français', key: 'fr', value: frFR },
+    { name: 'العربية', code: 'ar', value: arEG },
 ];
 
 class AppHeader extends Component<Props, State> {
@@ -48,8 +48,8 @@ class AppHeader extends Component<Props, State> {
         return (
             <Header className="site-header">
                 <Paragraph className="container site-header-inner">
-                    <Link to={"/"}>
-                        <img className="header-logo-image" src="dist/images/logo.svg" alt="Logo"/>
+                    <Link to={'/'}>
+                        <img className="header-logo-image" src="dist/images/logo.svg" alt="Logo" />
                     </Link>
                     <Radio.Group value={this.props.currentLocale} onChange={this.props.handleChange}>
                         {languages.map(({ name, key, value }) => (
@@ -60,7 +60,7 @@ class AppHeader extends Component<Props, State> {
                     </Radio.Group>
                 </Paragraph>
             </Header>
-        )
+        );
     }
 }
 
