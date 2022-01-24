@@ -32,7 +32,7 @@
     "yup": "^0.32.11"
   },
   "scripts": {
-    "start": "CHOKIDAR_USEPOLLING=true PORT=3300 craco start --watch",
+    "start": "CHOKIDAR_USEPOLLING=true PORT=3300 craco start --watch ",
     "build": "craco build",
     "test": "craco test",
     "eject": "craco eject",
@@ -58,6 +58,15 @@
       "last 1 safari version"
     ]
   },
+  "husky": {
+    "hooks": {
+         "pre-commit": "npm run lint && npm run format"
+    }
+},
+"lint-staged": {
+  "*.+(js|jsx)": ["eslint --fix", "git add"],
+  "*.+(json|css|md)": ["prettier --write", "git add"]
+},
   "devDependencies": {
     "@typescript-eslint/parser": "^5.10.0",
     "eslint-config-prettier": "^8.3.0",
