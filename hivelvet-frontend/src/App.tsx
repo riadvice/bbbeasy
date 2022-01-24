@@ -32,9 +32,18 @@ import 'moment/locale/fr';
 import 'moment/locale/ar';
 import 'moment/locale/en-au';
 
+import Logger from './lib/logger';
+
 moment.locale('en');
 
 const { Content } = Layout;
+
+/*
+Logger.info('init log info');
+Logger.warn('init log warning');
+Logger.error('init log error');
+Logger.fatal('init log fatal');
+*/
 
 function App() {
     const locale = enUS;
@@ -55,17 +64,17 @@ function App() {
 
     return (
         <Layout>
-            <AppHeader currentLocale={currentLocale} handleChange={handleChange} />
-            <Content>
-                <ConfigProvider locale={currentLocale} direction={direction}>
-                <Routes>
-                    <Route path="/" element={<LandingPage key={currentLocale ? currentLocale.locale : 'en' }/>} />
-                    <Route path="/register" element={<Register key={locale ? currentLocale.locale : 'en' }/>} />
-                    <Route path="/login" element={<Login key={currentLocale ? currentLocale.locale : 'en' }/>} />
-                </Routes>
-                </ConfigProvider>
-            </Content>
-            <AppFooter/>
+            <ConfigProvider locale={currentLocale} direction={direction}>
+                <AppHeader currentLocale={currentLocale} currentDirection={direction} handleChange={handleChange} />
+                <Content>
+                    <Routes>
+                        <Route path="/" element={<LandingPage key={currentLocale ? currentLocale.locale : 'en' }/>} />
+                        <Route path="/register" element={<Register key={locale ? currentLocale.locale : 'en' }/>} />
+                        <Route path="/login" element={<Login key={currentLocale ? currentLocale.locale : 'en' }/>} />
+                    </Routes>
+                </Content>
+                <AppFooter key={currentLocale ? currentLocale.locale : 'en' } />
+            </ConfigProvider>
         </Layout>
     );
 }

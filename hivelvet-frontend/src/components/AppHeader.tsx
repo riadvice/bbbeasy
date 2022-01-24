@@ -29,6 +29,7 @@ const { Paragraph } = Typography;
 
 type Props = {
     currentLocale : any;
+    currentDirection : any;
     handleChange : any;
 };
 
@@ -46,7 +47,7 @@ const languages = [
 class AppHeader extends Component<Props, State> {
     render() {
         return (
-            <Header className="site-header">
+            <Header className="site-header" dir={this.props.currentDirection}>
                 <Paragraph className="container site-header-inner">
                     <Link to={"/"}>
                         <img className="header-logo-image" src="dist/images/logo.svg" alt="Logo"/>

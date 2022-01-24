@@ -161,7 +161,7 @@ class Login extends Component<Props, State> {
                                 </Form>
                                 <Paragraph className="text-center mt-12">
                                     <Text style={{color : "white" }}>
-                                        Dont't have an account ?
+                                        Don&apos;t have an account ?
                                     </Text>
                                     <Link to={'/register'} className="login-link"> Register here </Link>
                                 </Paragraph>
