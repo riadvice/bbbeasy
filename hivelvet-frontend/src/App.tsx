@@ -16,41 +16,45 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useState} from 'react';
-import {Layout, ConfigProvider } from "antd";
-import { Route, Routes } from "react-router-dom";
+import React, { useState } from 'react';
+import { Layout, ConfigProvider, message } from 'antd';
+import { Route, Routes } from 'react-router-dom';
 
-import AppHeader from "./components/AppHeader";
-import AppFooter from "./components/AppFooter";
-import LandingPage from "./components/LandingPage";
-import Register from "./components/Register";
-import Login from "./components/Login";
+import AppHeader from './components/AppHeader';
+import AppFooter from './components/AppFooter';
+import LandingPage from './components/LandingPage';
+import Register from './components/Register';
+import Login from './components/Login';
 
 import enUS from 'antd/lib/locale/en_US';
 import moment from 'moment';
 import 'moment/locale/fr';
 import 'moment/locale/ar';
 import 'moment/locale/en-au';
-
+import { tx } from '@transifex/native';
+import { T, LanguagePicker, useLocale, useT, useLanguages } from '@transifex/react';
 moment.locale('en');
 
 const { Content } = Layout;
+tx.init({
+    token: '1/a6cfd7935802d07ec8332208a02c8ce02fbfc01c',
+});
 
+tx.setCurrentLocale('en');
 function App() {
     const locale = enUS;
     const [currentLocale, setCurrentLocale] = useState(locale);
     const direction = currentLocale.locale == 'ar' ? 'rtl' : 'ltr';
-
-    const handleChange = e => {
+    localStorage.setItem('locale', tx.getCurrentLocale());
+    const handleChange = (e) => {
         const localeValue = e.target.value;
         if (!localeValue) {
             moment.locale('en');
-        }
-        else {
+        } else {
             moment.locale(localeValue.locale);
         }
+        tx.setCurrentLocale(localeValue.locale);
         setCurrentLocale(localeValue);
-        localStorage.setItem("locale", localeValue);
     };
 
     return (
@@ -58,14 +62,14 @@ function App() {
             <AppHeader currentLocale={currentLocale} handleChange={handleChange} />
             <Content>
                 <ConfigProvider locale={currentLocale} direction={direction}>
-                <Routes>
-                    <Route path="/" element={<LandingPage key={currentLocale ? currentLocale.locale : 'en' }/>} />
-                    <Route path="/register" element={<Register key={locale ? currentLocale.locale : 'en' }/>} />
-                    <Route path="/login" element={<Login key={currentLocale ? currentLocale.locale : 'en' }/>} />
-                </Routes>
+                    <Routes>
+                        <Route path="/" element={<LandingPage key={currentLocale ? currentLocale.locale : 'en'} />} />
+                        <Route path="/register" element={<Register key={locale ? currentLocale.locale : 'en'} />} />
+                        <Route path="/login" element={<Login key={currentLocale ? currentLocale.locale : 'en'} />} />
+                    </Routes>
                 </ConfigProvider>
             </Content>
-            <AppFooter/>
+            <AppFooter />
         </Layout>
     );
 }

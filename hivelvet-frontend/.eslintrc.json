@@ -17,7 +17,18 @@
         "plugin:react/recommended",
         "prettier"
     ],
-    "rules": {},
+    "rules": {
+        "react/prop-types": "off",
+        "@typescript-eslint/ban-types": [
+            "error",
+            {
+              "extendDefaults": true,
+              "types": {
+                "{}": false
+              }
+            }
+          ]
+    },
     "settings": {
         "react": {
             "version": "detect"
@@ -34,7 +45,7 @@
                     "moduleResolution": "node",
                     "allowJs": true,
                     "noEmit": false,
-                    "strict": true,
+                    "strict": false,
                     "isolatedModules": true,
                     "esModuleInterop": true,
                     "noImplicitAny": false,
