@@ -32,13 +32,13 @@
     "yup": "^0.32.11"
   },
   "scripts": {
-    "start": "CHOKIDAR_USEPOLLING=true PORT=3300 craco start --watch ",
+    "start": "  yarn run lint && yarn run format && CHOKIDAR_USEPOLLING=true PORT=3300 craco start --watch ",
     "build": "craco build",
     "test": "craco test",
     "eject": "craco eject",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx src --color",
     "format": "prettier --write 'src/**/*.{ts,tsx,scss,css,json}'",
-    "isready": "npm run format && npm run lint && npm run build"
+    "isready": "yarn run format && yarn run lint && yarn run build"
   },
   "eslintConfig": {
     "extends": [
@@ -60,7 +60,8 @@
   },
   "husky": {
     "hooks": {
-         "pre-commit": "npm run lint && npm run format"
+         "pre-commit": "npm run lint && npm run format" 
+
     }
 },
 "lint-staged": {
