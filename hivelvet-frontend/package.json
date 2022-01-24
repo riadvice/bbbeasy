@@ -32,7 +32,7 @@
     "yup": "^0.32.11"
   },
   "scripts": {
-    "start": "  yarn run lint && yarn run format && CHOKIDAR_USEPOLLING=true PORT=3300 craco start --watch ",
+    "start": "CHOKIDAR_USEPOLLING=true PORT=3300 craco start --watch ",
     "build": "craco build",
     "test": "craco test",
     "eject": "craco eject",
