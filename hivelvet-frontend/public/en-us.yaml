@@ -1,0 +1,34 @@
+
+     en-US:
+        hello:  Hello  
+        get started :  Get started 
+        sign-in-to-continue: Sign in to continue to our application 
+        remember: Remember me 
+        forgot-password: Forgot password 
+        login-now: Log in now 
+        Dont-t-have-account: Dont't have an account 
+        register-here: Register here 
+        email:
+          label: Email 
+          required: Email is required
+          invalid: Email is invalid
+        password: 
+          label: Password 
+          required: Password is required
+          size: Password must be at least 4 characters
+        join-us: Join us 
+        register-now: Register now and join our community 
+        username: 
+           label: Username
+           required: Username is required
+        confirm-password: 
+          label: Confirm Password 
+          required: Confirm password is required
+          size: Confirm password must be at least 4 characters
+        read-agreement: I have read the agreement 
+        register: Register now 
+        have-already-account: Have already an account 
+        login-here: Login Here 
+        paaswords-not-match: The two passwords that you entered do not match
+       
+    
