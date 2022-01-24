@@ -17,7 +17,7 @@
  */
 
 import React, { useState } from 'react';
-import { Layout, ConfigProvider, message } from 'antd';
+import { Layout, ConfigProvider } from 'antd';
 import { Route, Routes } from 'react-router-dom';
 
 import AppHeader from './components/AppHeader';
@@ -32,7 +32,9 @@ import 'moment/locale/fr';
 import 'moment/locale/ar';
 import 'moment/locale/en-au';
 import { tx } from '@transifex/native';
-import { T, LanguagePicker, useLocale, useT, useLanguages } from '@transifex/react';
+
+import Logger from './lib/logger';
+
 moment.locale('en');
 
 const { Content } = Layout;
@@ -41,6 +43,14 @@ tx.init({
 });
 
 tx.setCurrentLocale('en');
+
+/*
+Logger.info('init log info');
+Logger.warn('init log warning');
+Logger.error('init log error');
+Logger.fatal('init log fatal');
+*/
+
 function App() {
     const locale = enUS;
     const [currentLocale, setCurrentLocale] = useState(locale);
@@ -59,17 +69,17 @@ function App() {
 
     return (
         <Layout>
-            <AppHeader currentLocale={currentLocale} handleChange={handleChange} />
-            <Content>
-                <ConfigProvider locale={currentLocale} direction={direction}>
+            <ConfigProvider locale={currentLocale} direction={direction}>
+                <AppHeader currentLocale={currentLocale} currentDirection={direction} handleChange={handleChange} />
+                <Content>
                     <Routes>
-                        <Route path="/" element={<LandingPage key={currentLocale ? currentLocale.locale : 'en'} />} />
-                        <Route path="/register" element={<Register key={locale ? currentLocale.locale : 'en'} />} />
-                        <Route path="/login" element={<Login key={currentLocale ? currentLocale.locale : 'en'} />} />
+                        <Route path="/" element={<LandingPage key={currentLocale ? currentLocale.locale : 'en' }/>} />
+                        <Route path="/register" element={<Register key={locale ? currentLocale.locale : 'en' }/>} />
+                        <Route path="/login" element={<Login key={currentLocale ? currentLocale.locale : 'en' }/>} />
                     </Routes>
-                </ConfigProvider>
-            </Content>
-            <AppFooter />
+                </Content>
+                <AppFooter key={currentLocale ? currentLocale.locale : 'en' } />
+            </ConfigProvider>
         </Layout>
     );
 }

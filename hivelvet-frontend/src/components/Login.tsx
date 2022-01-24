@@ -35,6 +35,7 @@ type State = {
     successful: boolean;
     message: string;
 };
+
 class Login extends Component<Props, State> {
     constructor(props: Props) {
         super(props);
