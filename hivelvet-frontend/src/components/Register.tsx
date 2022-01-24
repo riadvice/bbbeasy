@@ -24,8 +24,6 @@ import '../App.css';
 //import 'antd/dist/antd.css';
 import { Form, Input, Button, Checkbox, message, Alert, Col, Row, Typography, Space } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
-import { FormattedMessage } from 'react-intl';
-import { T } from '@transifex/react';
 
 const { Text, Title, Paragraph } = Typography;
 
@@ -94,12 +92,8 @@ class Register extends Component<Props, State> {
             <Row>
                 <Col span={8} offset={8} className="section-top">
                     <Paragraph className="pricing-header text-center">
-                        <Title style={{ fontWeight: 500 }}>
-                            <T _str="Join us" />
-                        </Title>
-                        <Text>
-                            <T _str="Register now and join our community" />
-                        </Text>
+                        <Title style={{ fontWeight: 500 }}>Join us</Title>
+                        <Text>Register now and join our community</Text>
                     </Paragraph>
                     <Space direction="horizontal" style={{ width: '100%', justifyContent: 'center' }}>
                         <Paragraph className="pricing-table">
@@ -108,7 +102,7 @@ class Register extends Component<Props, State> {
                                     <Alert
                                         style={{ marginBottom: 24 }}
                                         message="Error"
-                                        description={<T _str={message} />}
+                                        description={message}
                                         type="error"
                                         showIcon
                                     />
@@ -121,7 +115,7 @@ class Register extends Component<Props, State> {
                                     onFinish={this.handleRegistration}
                                 >
                                     <Form.Item
-                                        label={<T _str="Username" />}
+                                        label="Username"
                                         name="username"
                                         hasFeedback
                                         rules={[
@@ -134,7 +128,7 @@ class Register extends Component<Props, State> {
                                         <Input />
                                     </Form.Item>
                                     <Form.Item
-                                        label={<T _str="Email" />}
+                                        label="Email"
                                         name="email"
                                         hasFeedback
                                         rules={[
@@ -151,7 +145,7 @@ class Register extends Component<Props, State> {
                                         <Input />
                                     </Form.Item>
                                     <Form.Item
-                                        label={<T _str="Password" />}
+                                        label="Password"
                                         name="password"
                                         hasFeedback
                                         rules={[
@@ -172,7 +166,7 @@ class Register extends Component<Props, State> {
                                         />
                                     </Form.Item>
                                     <Form.Item
-                                        label={<T _str="Confirm Password" />}
+                                        label="Confirm Password"
                                         name="confirmPassword"
                                         dependencies={['password']}
                                         hasFeedback
@@ -213,10 +207,7 @@ class Register extends Component<Props, State> {
                                         ]}
                                     >
                                         <Checkbox>
-                                            {' '}
-                                            <a href="#">
-                                                <T _str="I have read the agreement" />
-                                            </a>
+                                            I have read the <a href="#">agreement</a>
                                         </Checkbox>
                                     </Form.Item>
 
@@ -227,17 +218,15 @@ class Register extends Component<Props, State> {
                                             className="login-form-button"
                                             size="large"
                                         >
-                                            <T _str="Register now" />
+                                            Register now
                                         </Button>
                                     </Form.Item>
                                 </Form>
                                 <Paragraph className="text-center mt-12">
-                                    <Text style={{ color: 'white' }}>
-                                        <T _str="Have already an account" />
-                                    </Text>
+                                    <Text style={{ color: 'white' }}>Have already an account ?</Text>
                                     <Link to={'/login'} className="login-link">
                                         {' '}
-                                        <T _str="Login Here" />{' '}
+                                        Login here{' '}
                                     </Link>
                                 </Paragraph>
                             </Paragraph>

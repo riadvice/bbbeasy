@@ -19,7 +19,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Space, Typography } from 'antd';
-import { T } from '@transifex/react';
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -28,23 +27,20 @@ class LandingPage extends Component<any, any> {
         return (
             <Space direction="horizontal" style={{ width: '100%', justifyContent: 'center' }} className="hero">
                 <Paragraph className="hero-copy">
-                    <Title>
-                        <T _str="Welcome to Hivelvet Application" />
-                    </Title>
+                    <Title>Welcome to Hivelvet Application</Title>
                     <Text style={{ color: '#3D6D9D', fontSize: 20, marginBottom: 24 }}>
-                        <T _str="The new rooms experience for BigBlueButton" />.<br></br>
-                        <T _str="New Open-source and simple portal for Web conference BBB" />
-                        <br></br>
+                        The new rooms experience for BigBlueButton.<br></br>
+                        New Open-source and simple portal for Web conference BBB.<br></br>
                         <br></br>
                     </Text>
                     <Paragraph className="hero-cta" style={{ marginTop: 24 }}>
                         <Link className={'button button-primary'} to={'/login'}>
                             {' '}
-                            <T _str="Sign in" />{' '}
+                            Sign in{' '}
                         </Link>
                         <Link className={'button'} to={'/register'}>
                             {' '}
-                            <T _str="Sign up" />{' '}
+                            Sign up{' '}
                         </Link>
                     </Paragraph>
                 </Paragraph>
