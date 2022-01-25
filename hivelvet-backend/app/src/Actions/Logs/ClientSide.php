@@ -29,9 +29,15 @@ use Base;
  */
 class ClientSide extends BaseAction
 {
-    public function execute(): void
+    /**
+     * @param Base  $f3
+     * @param array $params
+     */
+    public function execute($f3, $params): void
     {
-        $logs   = $this->getDecodedBody();
-        $this->logger->info('React logs :', ['logs' => $logs]);
+        if ($f3->get('FRONT.logs_enabled')) {
+            $logs   = $this->getDecodedBody();
+            $this->logger->info('React logs :', ['logs' => $logs]);
+        }
     }
 }

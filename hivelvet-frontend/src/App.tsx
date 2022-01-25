@@ -44,8 +44,8 @@ tx.init({
 
 tx.setCurrentLocale('en');
 
-/*
 Logger.info('init log info');
+/*
 Logger.warn('init log warning');
 Logger.error('init log error');
 Logger.fatal('init log fatal');
