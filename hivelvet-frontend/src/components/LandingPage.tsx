@@ -53,7 +53,7 @@ class LandingPage extends Component<any, any> {
                 <Col>
                     <Paragraph className="hero-figure anime-element">
                         <svg className="placeholder" width="528" height="396" viewBox="0 0 528 396">
-                            <rect width="528" height="396" className="home-transparent"/>
+                            <rect width="528" height="396" className="home-transparent" />
                         </svg>
                         <Paragraph className="hero-figure-box hero-figure-box-01" data-rotation="45deg"></Paragraph>
                         <Paragraph className="hero-figure-box hero-figure-box-02" data-rotation="-45deg"></Paragraph>

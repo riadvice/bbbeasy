@@ -39,9 +39,9 @@ type State = {
 };
 
 const languages = [
-    { name: 'English',  key: 'en', value: enUS },
+    { name: 'English', key: 'en', value: enUS },
     { name: 'Français', key: 'fr', value: frFR },
-    { name: 'العربية',  key: 'ar', value: arEG },
+    { name: 'العربية', key: 'ar', value: arEG },
 ];
 
 class AppHeader extends Component<Props, State> {
@@ -50,7 +50,7 @@ class AppHeader extends Component<Props, State> {
             <Header className="site-header" dir={this.props.currentDirection}>
                 <Paragraph className="container site-header-inner">
                     <Link to={'/'}>
-                        <img className="header-logo-image" src="dist/images/logo.svg" alt="Logo"/>
+                        <img className="header-logo-image" src="dist/images/logo.svg" alt="Logo" />
                     </Link>
                     <Radio.Group value={this.props.currentLocale} onChange={this.props.handleChange}>
                         {languages.map(({ name, key, value }) => (
