@@ -27,7 +27,7 @@ use Base;
  * Class Clean
  * @package Actions\Logs
  */
-class ClientSide extends BaseAction
+class Collect extends BaseAction
 {
     /**
      * @param Base  $f3
@@ -35,7 +35,7 @@ class ClientSide extends BaseAction
      */
     public function execute($f3, $params): void
     {
-        if ($f3->get('FRONT.logs_enabled')) {
+        if ($f3->get('client.logs_target') === 'server') {
             $logs   = $this->getDecodedBody();
             $this->logger->info('React logs :', ['logs' => $logs]);
         }
