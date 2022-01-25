@@ -44,8 +44,8 @@ tx.init({
 
 tx.setCurrentLocale('en');
 
-/*
 Logger.info('init log info');
+/*
 Logger.warn('init log warning');
 Logger.error('init log error');
 Logger.fatal('init log fatal');
@@ -73,12 +73,12 @@ function App() {
                 <AppHeader currentLocale={currentLocale} currentDirection={direction} handleChange={handleChange} />
                 <Content>
                     <Routes>
-                        <Route path="/" element={<LandingPage key={currentLocale ? currentLocale.locale : 'en' }/>} />
-                        <Route path="/register" element={<Register key={locale ? currentLocale.locale : 'en' }/>} />
-                        <Route path="/login" element={<Login key={currentLocale ? currentLocale.locale : 'en' }/>} />
+                        <Route path="/" element={<LandingPage key={currentLocale ? currentLocale.locale : 'en'} />} />
+                        <Route path="/register" element={<Register key={locale ? currentLocale.locale : 'en'} />} />
+                        <Route path="/login" element={<Login key={currentLocale ? currentLocale.locale : 'en'} />} />
                     </Routes>
                 </Content>
-                <AppFooter key={currentLocale ? currentLocale.locale : 'en' } />
+                <AppFooter key={currentLocale ? currentLocale.locale : 'en'} />
             </ConfigProvider>
         </Layout>
     );

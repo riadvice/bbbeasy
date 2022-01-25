@@ -2,4 +2,4 @@
 
 yarn run lint
 yarn run format
-yarn start
+pm2 start "yarn start" --attach --watch --time --name "hivelvet-frontend"

@@ -16,7 +16,7 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import pino from "pino";
+import pino from 'pino';
 
 const levels = {
     http: 10,
@@ -27,11 +27,11 @@ const levels = {
     fatal: 60,
 };
 
-const send = async (level : any, logEvent : any) => {
-    const url = "http://hivelvet.test/api/logs";
+const send = async (level: any, logEvent: any) => {
+    const url = 'http://hivelvet.test/api/logs';
     const response = await fetch(url, {
         method: 'POST',
-        body: JSON.stringify(logEvent)
+        body: JSON.stringify(logEvent),
     });
 };
 
@@ -47,9 +47,9 @@ const Logger = pino({
         serialize: true,
         asObject: true,
         transmit: {
-            send
-        }
-    }
+            send,
+        },
+    },
 });
 
-export default Logger
+export default Logger;

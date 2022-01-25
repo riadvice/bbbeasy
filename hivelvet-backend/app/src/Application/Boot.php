@@ -79,8 +79,7 @@ abstract class Boot
         $this->detectEnvironment();
 
         // start configuration F3 framework from this point
-        $this->loadStrategies();
-        $this->loadRecordingsConfig();
+        $this->loadClientConfig();
         $this->loadConfiguration();
         $this->setupLogging();
     }
@@ -114,14 +113,9 @@ abstract class Boot
 
     abstract protected function loadConfiguration();
 
-    protected function loadStrategies(): void
+    protected function loadClientConfig(): void
     {
-        $this->f3->config('config/strategies.ini');
-    }
-
-    protected function loadRecordingsConfig(): void
-    {
-        $this->f3->config('config/mp4-recordings.ini');
+        $this->f3->config('config/client.ini');
     }
 
     protected function setupMailer(): void
