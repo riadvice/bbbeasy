@@ -51,6 +51,7 @@ sudo apt update && sudo apt install yarn
 sudo yarn global add pm2 tar svgo uuid
 info "Install PHP 8.0 with its dependencies"
 sudo apt-get install -y php8.0-curl php8.0-cli php8.0-intl php8.0-redis php8.0-gd php8.0-fpm php8.0-pgsql php8.0-mbstring php8.0-xml php8.0-bcmath php-xdebug
+sudo update-alternatives --set php /usr/bin/php8.0
 
 info "Installing PostgreSQL"
 sudo percona-release setup ppg-14.1

@@ -1,10 +1,10 @@
 import axios from 'axios';
 
-const API_URL = 'http://hivelvet.test/';
+const API_URL = 'http://hivelvet.test';
 
 class AuthService {
     register(username: string, email: string, password: string, confirmPassword: string) {
-        return axios.post(API_URL + 'account/api/register', {
+        return axios.post(API_URL + '/api/account/register', {
             username,
             email,
             password,
@@ -12,7 +12,7 @@ class AuthService {
         });
     }
     login(email: string, password: string) {
-        return axios.post(API_URL + 'account/api/login', {
+        return axios.post(API_URL + '/api/account/login', {
             email,
             password,
         });
