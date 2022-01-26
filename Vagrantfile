@@ -3,16 +3,17 @@ require "fileutils"
 
 required_plugins = %w( vagrant-hostmanager vagrant-vbguest )
 required_plugins.each do |plugin|
-    exec "vagrant plugin install #{plugin}" unless Vagrant.has_plugin? plugin
+  exec "vagrant plugin install #{plugin}" unless Vagrant.has_plugin? plugin
 end
 
 domains = {
-  mainapp: "hivelvet.test",
+  frontend: "hivelvet.test",
+  backend: "api.hivelvet.test",
 }
 
 config = {
   local: "./vagrant/config/vagrant-local.yml",
-  example: "./vagrant/config/vagrant-local.example.yml"
+  example: "./vagrant/config/vagrant-local.example.yml",
 }
 
 # copy config from example if local config not exists
@@ -58,11 +59,11 @@ Vagrant.configure("2") do |config|
 
   # hosts settings (host machine)
   config.vm.provision :hostmanager
-  config.hostmanager.enabled            = true
-  config.hostmanager.manage_host        = true
-  config.hostmanager.ignore_private_ip  = false
-  config.hostmanager.include_offline    = true
-  config.hostmanager.aliases            = domains.values
+  config.hostmanager.enabled = true
+  config.hostmanager.manage_host = true
+  config.hostmanager.ignore_private_ip = false
+  config.hostmanager.include_offline = true
+  config.hostmanager.aliases = domains.values
 
   # provisioners
   config.vm.provision "shell", path: "./vagrant/provision/once-as-root.sh", args: [options["timezone"]]
@@ -70,5 +71,6 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", path: "./vagrant/provision/always-as-root.sh", run: "always"
 
   # post-install message (vagrant console)
-  config.vm.post_up_message = "Application URL: http://#{domains[:mainapp]}"
+  config.vm.post_up_message = "Hivelvet Frontend URL: http://#{domains[:frontend]}"
+  config.vm.post_up_message = "Hivelvet Backend API URL: http://#{domains[:backend]}"
 end

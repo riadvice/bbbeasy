@@ -28,7 +28,7 @@ const levels = {
 };
 
 const send = async (level: any, logEvent: any) => {
-    const url = 'http://hivelvet.test/api/logs';
+    const url = 'http://api.hivelvet.test/api/logs';
     const response = await fetch(url, {
         method: 'POST',
         body: JSON.stringify(logEvent),

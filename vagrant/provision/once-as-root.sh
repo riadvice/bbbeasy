@@ -70,7 +70,8 @@ sudo sed -i 's/user www-data/user vagrant/g' /etc/nginx/nginx.conf
 echo "Done!"
 
 info "Enabling site configuration"
-sudo ln -s /app/vagrant/dev/nginx/app.conf /etc/nginx/sites-enabled/app.conf
+sudo ln -s /app/vagrant/dev/nginx/hivelvelt-backend.conf /etc/nginx/sites-enabled/hivelvelt-backend.conf
+sudo ln -s /app/vagrant/dev/nginx/hivelvelt-frontend.conf /etc/nginx/sites-enabled/hivelvelt-frontend.conf
 echo "Done!"
 
 info "Install composer"

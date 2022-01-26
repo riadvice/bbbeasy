@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://hivelvet.test';
+const API_URL = 'http://api.hivelvet.test';
 
 class AuthService {
     register(username: string, email: string, password: string, confirmPassword: string) {

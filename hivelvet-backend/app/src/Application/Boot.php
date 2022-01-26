@@ -98,7 +98,7 @@ abstract class Boot
         $host = $this->f3->get('HOST');
 
         if ($this->f3->exists('GET.statera') !== true) {
-            if (Strings::contains($host, 'hivelvet.test')) {
+            if (Strings::contains($host, 'api.hivelvet.test')) {
                 $this->f3->set('application.environment', Environment::DEVELOPMENT);
             } else {
                 $this->f3->set('application.environment', Environment::PRODUCTION);
