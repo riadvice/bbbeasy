@@ -27,11 +27,17 @@ use Base;
  * Class Clean
  * @package Actions\Logs
  */
-class ClientSide extends BaseAction
+class Collect extends BaseAction
 {
-    public function execute(): void
+    /**
+     * @param Base  $f3
+     * @param array $params
+     */
+    public function execute($f3, $params): void
     {
-        $logs   = $this->getDecodedBody();
-        $this->logger->info('React logs :', ['logs' => $logs]);
+        if ($f3->get('client.logs_target') === 'server') {
+            $logs   = $this->getDecodedBody();
+            $this->logger->info('React logs :', ['logs' => $logs]);
+        }
     }
 }

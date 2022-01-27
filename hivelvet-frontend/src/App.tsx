@@ -49,17 +49,12 @@ tx.init({
 
 tx.setCurrentLocale('en');
 
-/*
-Logger.info('init log info');
-Logger.warn('init log warning');
-Logger.error('init log error');
-Logger.fatal('init log fatal');
-*/
+Logger.info('Initialisation Hivelvet Frontend Application');
 
 function App() {
     const locale = enUS;
     const [currentLocale, setCurrentLocale] = useState(locale);
-    const direction = currentLocale.locale == 'ar' ? 'rtl' : 'ltr';
+    const direction = currentLocale.locale !== 'ar' ? 'ltr' : 'rtl';
     localStorage.setItem('locale', tx.getCurrentLocale());
     const handleChange = (e) => {
         const localeValue = e.target.value;
@@ -85,7 +80,7 @@ function App() {
                         <Route path="/home" element={<Home key={currentLocale ? currentLocale.locale : 'en' }/>} />
                     </Routes>
                 </Content>
-                <AppFooter key={currentLocale ? currentLocale.locale : 'en' } />
+                <AppFooter key={currentLocale ? currentLocale.locale : 'en'} />
             </ConfigProvider>
             <BackTop>
                 <Button type="primary" shape="circle" icon={<CaretUpOutlined />} />

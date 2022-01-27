@@ -37,9 +37,9 @@ type Props = {
 type State = {};
 
 const languages = [
-    { name: 'English',  key: 'en', value: enUS },
+    { name: 'English', key: 'en', value: enUS },
     { name: 'Français', key: 'fr', value: frFR },
-    { name: 'العربية',  key: 'ar', value: arEG },
+    { name: 'العربية', key: 'ar', value: arEG },
 ];
 
 class AppHeader extends Component<Props, State> {
