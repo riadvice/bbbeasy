@@ -17,16 +17,53 @@
  */
 
 import React, { Component } from 'react';
-import { Row } from 'antd';
+import AuthService from '../services/auth.service';
 
-class LandingPage extends Component<any, any> {
+import { Row } from 'antd';
+import {Navigate} from "react-router-dom";
+
+type Props = {};
+
+type State = {
+    isLogged: boolean;
+    currentUser?: any;
+};
+
+class Home extends Component<Props, State> {
+
+    constructor(props: Props) {
+        super(props);
+        this.state = {
+            isLogged: false,
+            currentUser: undefined
+        };
+    }
+
+    componentDidMount() {
+        const user = AuthService.getCurrentUser();
+        if (user) {
+            this.setState({
+                isLogged: true,
+                currentUser: user
+            });
+        }
+    }
+
     render() {
+        const { isLogged } = this.state;
+
+        /*
+        if (!isLogged) {
+            return <Navigate to="/login" />;
+        }
+        */
+
         return (
             <Row justify="center">
-                <img className="landing-img" src="images/landing.png" />
+                <h1>Home page</h1>
             </Row>
         );
     }
 }
 
-export default LandingPage;
+export default Home;

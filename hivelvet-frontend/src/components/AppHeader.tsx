@@ -18,25 +18,23 @@
 
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Layout, Typography, Radio } from 'antd';
+import { Layout, Typography, Radio, Button, Menu, Dropdown, Space } from 'antd';
+import { GlobalOutlined, DownOutlined } from '@ant-design/icons';
 
 import enUS from 'antd/lib/locale/en_US';
 import frFR from 'antd/lib/locale/fr_FR';
 import arEG from 'antd/lib/locale/ar_EG';
+import {T} from "@transifex/react";
 
 const { Header } = Layout;
 const { Paragraph } = Typography;
 
 type Props = {
     currentLocale: any;
-    currentDirection: any;
     handleChange: any;
 };
 
-type State = {
-    locale?: any;
-    direction?: any;
-};
+type State = {};
 
 const languages = [
     { name: 'English',  key: 'en', value: enUS },
@@ -46,19 +44,46 @@ const languages = [
 
 class AppHeader extends Component<Props, State> {
     render() {
-        return (
-            <Header className="site-header" dir={this.props.currentDirection}>
-                <Paragraph className="container site-header-inner">
-                    <Link to={'/'}>
-                        <img className="header-logo-image" src="dist/images/logo.svg" alt="Logo"/>
-                    </Link>
-                    <Radio.Group value={this.props.currentLocale} onChange={this.props.handleChange}>
-                        {languages.map(({ name, key, value }) => (
-                            <Radio.Button key={key} value={value}>
+        const { currentLocale, handleChange } = this.props;
+
+        const result = languages.filter(item => item.value == currentLocale);
+        const language = result[0].name;
+
+        const menu = (
+            <Menu>
+                <Radio.Group value={currentLocale} onChange={handleChange}>
+                    {languages.map(({ name, key, value }) => (
+                        <Menu.Item key={key}>
+                            <Radio value={value}>
                                 {name}
-                            </Radio.Button>
-                        ))}
-                    </Radio.Group>
+                            </Radio>
+                        </Menu.Item>
+                    ))}
+                </Radio.Group>
+            </Menu>
+        );
+
+        return (
+            <Header className="site-header">
+                <Paragraph className="site-header-inner">
+                    <Link to={'/'}>
+                        <img className="header-logo-image" src="images/logo_01.png" alt="Logo"/>
+                    </Link>
+                    <Space size="large">
+                        <Dropdown overlay={menu}>
+                            <Button>
+                                <GlobalOutlined /> {language} <DownOutlined/>
+                            </Button>
+                        </Dropdown>
+                        <Link className={'ant-btn color-primary'} to={'/login'}>
+                            {' '}
+                            <T _str="Login" />{' '}
+                        </Link>
+                        <Link className={'ant-btn color-primary'} to={'/register'}>
+                            {' '}
+                            <T _str="Sign up" />{' '}
+                        </Link>
+                    </Space>
                 </Paragraph>
             </Header>
         );

@@ -17,14 +17,19 @@
  */
 
 import React, { useState } from 'react';
-import { Layout, ConfigProvider } from 'antd';
 import { Route, Routes } from 'react-router-dom';
+
+import './App.less';
+import { Layout, ConfigProvider, BackTop, Button } from 'antd';
+import { CaretUpOutlined } from '@ant-design/icons';
 
 import AppHeader from './components/AppHeader';
 import AppFooter from './components/AppFooter';
 import LandingPage from './components/LandingPage';
 import Register from './components/Register';
 import Login from './components/Login';
+import ResetPwd from './components/ResetPwd';
+import Home from './components/Home';
 
 import enUS from 'antd/lib/locale/en_US';
 import moment from 'moment';
@@ -70,16 +75,21 @@ function App() {
     return (
         <Layout>
             <ConfigProvider locale={currentLocale} direction={direction}>
-                <AppHeader currentLocale={currentLocale} currentDirection={direction} handleChange={handleChange} />
-                <Content>
+                <AppHeader currentLocale={currentLocale} handleChange={handleChange} />
+                <Content className="site-content">
                     <Routes>
                         <Route path="/" element={<LandingPage key={currentLocale ? currentLocale.locale : 'en' }/>} />
                         <Route path="/register" element={<Register key={locale ? currentLocale.locale : 'en' }/>} />
                         <Route path="/login" element={<Login key={currentLocale ? currentLocale.locale : 'en' }/>} />
+                        <Route path="/reset" element={<ResetPwd key={currentLocale ? currentLocale.locale : 'en' }/>} />
+                        <Route path="/home" element={<Home key={currentLocale ? currentLocale.locale : 'en' }/>} />
                     </Routes>
                 </Content>
                 <AppFooter key={currentLocale ? currentLocale.locale : 'en' } />
             </ConfigProvider>
+            <BackTop>
+                <Button type="primary" shape="circle" icon={<CaretUpOutlined />} />
+            </BackTop>
         </Layout>
     );
 }

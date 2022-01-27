@@ -17,6 +17,23 @@
  */
 
 /* craco.config.js */
+const CracoLessPlugin = require('craco-less');
+
 module.exports = {
-    // ...
+    plugins: [
+        {
+            plugin: CracoLessPlugin,
+            options: {
+                lessLoaderOptions: {
+                    lessOptions: {
+                        modifyVars: {
+                            '@primary-color': '#fbbc0b', // primary color for all components
+                            '@border-color-base': '#dddfe1', // major border color
+                        },
+                        javascriptEnabled: true,
+                    },
+                },
+            },
+        },
+    ],
 };

@@ -17,17 +17,14 @@
  */
 
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import AuthService from '../services/auth.service';
 
-import '../App.css';
-//import 'antd/dist/antd.css';
-import { Form, Input, Button, Checkbox, message, Alert, Col, Row, Typography, Space } from 'antd';
+import { Form, Input, Button, Checkbox, Alert, Col, Row, Typography, Card, Result } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
-import { FormattedMessage } from 'react-intl';
 import { T } from '@transifex/react';
 
-const { Text, Title, Paragraph } = Typography;
+const { Title, Paragraph } = Typography;
 
 type Props = {};
 
@@ -59,12 +56,6 @@ class Register extends Component<Props, State> {
         AuthService.register(username, email, password, confirmPassword)
             .then((response) => {
                 const responseMessage = response.data.message;
-                message.success({
-                    content: responseMessage,
-                    style: {
-                        marginTop: '20vh',
-                    },
-                });
                 this.setState({
                     successful: true,
                     message: responseMessage,
@@ -90,160 +81,161 @@ class Register extends Component<Props, State> {
             message: '',
         };
 
+
         return (
             <Row>
-                <Col span={8} offset={8} className="section-top">
-                    <Paragraph className="pricing-header text-center">
-                        <Title style={{ fontWeight: 500 }}>
-                            <T _str="Join us" />
-                        </Title>
-                        <Text>
-                            <T _str="Register now and join our community" />
-                        </Text>
-                    </Paragraph>
-                    <Space direction="horizontal" style={{ width: '100%', justifyContent: 'center' }}>
-                        <Paragraph className="pricing-table">
-                            <Paragraph className="pricing-table-inner is-revealing">
-                                {message && !successful && (
-                                    <Alert
-                                        style={{ marginBottom: 24 }}
-                                        message="Error"
-                                        description={<T _str={message} />}
-                                        type="error"
-                                        showIcon
-                                    />
-                                )}
-                                <Form
-                                    layout="vertical"
-                                    name="register"
-                                    className="register-form"
-                                    initialValues={initialValues}
-                                    onFinish={this.handleRegistration}
-                                >
-                                    <Form.Item
-                                        label={<T _str="Username" />}
-                                        name="username"
-                                        hasFeedback
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message: 'Username is required',
-                                            },
-                                        ]}
-                                    >
-                                        <Input />
-                                    </Form.Item>
-                                    <Form.Item
-                                        label={<T _str="Email" />}
-                                        name="email"
-                                        hasFeedback
-                                        rules={[
-                                            {
-                                                type: 'email',
-                                                message: 'Email is invalid',
-                                            },
-                                            {
-                                                required: true,
-                                                message: 'Email is required',
-                                            },
-                                        ]}
-                                    >
-                                        <Input />
-                                    </Form.Item>
-                                    <Form.Item
-                                        label={<T _str="Password" />}
-                                        name="password"
-                                        hasFeedback
-                                        rules={[
-                                            {
-                                                min: 4,
-                                                message: 'Password must be at least 4 characters',
-                                            },
-                                            {
-                                                required: true,
-                                                message: 'Password is required',
-                                            },
-                                        ]}
-                                    >
-                                        <Input.Password
-                                            iconRender={(visible) =>
-                                                visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-                                            }
-                                        />
-                                    </Form.Item>
-                                    <Form.Item
-                                        label={<T _str="Confirm Password" />}
-                                        name="confirmPassword"
-                                        dependencies={['password']}
-                                        hasFeedback
-                                        rules={[
-                                            {
-                                                min: 4,
-                                                message: 'Confirm password must be at least 4 characters',
-                                            },
-                                            {
-                                                required: true,
-                                                message: 'Confirm password is required',
-                                            },
-                                            ({ getFieldValue }) => ({
-                                                validator(_, value) {
-                                                    if (!value || getFieldValue('password') === value) {
-                                                        return Promise.resolve();
-                                                    }
-                                                    return Promise.reject(
-                                                        new Error('The two passwords that you entered do not match')
-                                                    );
-                                                },
-                                            }),
-                                        ]}
-                                    >
-                                        <Input.Password />
-                                    </Form.Item>
-
-                                    <Form.Item
-                                        name="agreement"
-                                        valuePropName="checked"
-                                        rules={[
-                                            {
-                                                validator: (_, value) =>
-                                                    value
-                                                        ? Promise.resolve()
-                                                        : Promise.reject(new Error('Should accept agreement')),
-                                            },
-                                        ]}
-                                    >
-                                        <Checkbox>
-                                            {' '}
-                                            <a href="#">
-                                                <T _str="I have read the agreement" />
-                                            </a>
-                                        </Checkbox>
-                                    </Form.Item>
-
-                                    <Form.Item>
-                                        <Button
-                                            type="primary"
-                                            htmlType="submit"
-                                            className="login-form-button"
-                                            size="large"
-                                        >
-                                            <T _str="Register now" />
-                                        </Button>
-                                    </Form.Item>
-                                </Form>
-                                <Paragraph className="text-center mt-12">
-                                    <Text style={{ color: 'white' }}>
-                                        <T _str="Have already an account" />
-                                    </Text>
-                                    <Link to={'/login'} className="login-link">
-                                        {' '}
-                                        <T _str="Login Here" />{' '}
-                                    </Link>
-                                </Paragraph>
+                { successful ?
+                    <Col span={10} offset={7} className="section-top">
+                        <Result
+                            status="success"
+                            title="Registration completed successfully"
+                            subTitle={message}
+                            extra={
+                                <Link to={"/login"} className="ant-btn ant-btn-lg">
+                                    Login now
+                                </Link>
+                            }
+                        />
+                    </Col>
+                    :
+                    <Col span={8} offset={8} className="section-top">
+                        <Card className="form-content">
+                            <Paragraph className="form-header text-center">
+                                <img className="form-img" src="images/logo_02.png" alt="Logo"/>
+                                <Title level={4}>
+                                    {' '}
+                                    <T _str="Sign Up" />
+                                </Title>
                             </Paragraph>
-                        </Paragraph>
-                    </Space>
-                </Col>
+
+                            {message && (
+                                <Alert
+                                    style={{ marginBottom: 24 }}
+                                    message={<T _str={message} />}
+                                    type="error"
+                                    showIcon
+                                />
+                            )}
+                            <Form
+                                layout="vertical"
+                                name="register"
+                                className="register-form"
+                                initialValues={initialValues}
+                                onFinish={this.handleRegistration}
+                            >
+                                <Form.Item
+                                    label={<T _str="Username" />}
+                                    name="username"
+                                    hasFeedback
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'Username is required',
+                                        },
+                                    ]}
+                                >
+                                    <Input placeholder="Username" />
+                                </Form.Item>
+                                <Form.Item
+                                    label={<T _str="Email" />}
+                                    name="email"
+                                    hasFeedback
+                                    rules={[
+                                        {
+                                            type: 'email',
+                                            message: 'Email is invalid',
+                                        },
+                                        {
+                                            required: true,
+                                            message: 'Email is required',
+                                        },
+                                    ]}
+                                >
+                                    <Input placeholder="Email" />
+                                </Form.Item>
+                                <Form.Item
+                                    label={<T _str="Password" />}
+                                    name="password"
+                                    hasFeedback
+                                    rules={[
+                                        {
+                                            min: 4,
+                                            message: 'Password must be at least 4 characters',
+                                        },
+                                        {
+                                            required: true,
+                                            message: 'Password is required',
+                                        },
+                                    ]}
+                                >
+                                    <Input.Password
+                                        placeholder="Password"
+                                        iconRender={(visible) =>
+                                            visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                                        }
+                                    />
+                                </Form.Item>
+                                <Form.Item
+                                    label={<T _str="Confirm Password" />}
+                                    name="confirmPassword"
+                                    dependencies={['password']}
+                                    hasFeedback
+                                    rules={[
+                                        {
+                                            min: 4,
+                                            message: 'Confirm password must be at least 4 characters',
+                                        },
+                                        {
+                                            required: true,
+                                            message: 'Confirm password is required',
+                                        },
+                                        ({ getFieldValue }) => ({
+                                            validator(_, value) {
+                                                if (!value || getFieldValue('password') === value) {
+                                                    return Promise.resolve();
+                                                }
+                                                return Promise.reject(
+                                                    new Error('The two passwords that you entered do not match')
+                                                );
+                                            },
+                                        }),
+                                    ]}
+                                >
+                                    <Input.Password placeholder="Confirm Password"/>
+                                </Form.Item>
+
+                                <Form.Item
+                                    className="form-agree"
+                                    name="agreement"
+                                    valuePropName="checked"
+                                    rules={[
+                                        {
+                                            validator: (_, value) =>
+                                                value
+                                                    ? Promise.resolve()
+                                                    : Promise.reject(new Error('Should accept agreement')),
+                                        },
+                                    ]}
+                                >
+                                    <Checkbox>
+                                        I agree to the <a href='#'>Terms of Service</a> and <a href='#'>Privacy Policy</a>
+                                    </Checkbox>
+                                </Form.Item>
+
+                                <Form.Item>
+                                    <Button
+                                        type="primary"
+                                        htmlType="submit"
+                                        size="large"
+                                        block
+                                    >
+                                        <T _str="Register" />
+                                    </Button>
+                                </Form.Item>
+                            </Form>
+                        </Card>
+                    </Col>
+                }
             </Row>
         );
     }

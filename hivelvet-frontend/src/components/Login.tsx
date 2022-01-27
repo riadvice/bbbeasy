@@ -16,15 +16,12 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Component, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { Component } from 'react';
+import { Link, Navigate } from 'react-router-dom';
+
 import AuthService from '../services/auth.service';
-import '../App.css';
-//import 'antd/dist/antd.css';
-import { Form, Input, Button, Checkbox, message, Alert, Col, Row, Typography, Space } from 'antd';
+import { Form, Input, Button, message, Alert, Col, Row, Typography, Card } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
-import { FormattedMessage } from 'react-intl';
-import { locale } from 'moment';
 import { T } from '@transifex/react';
 const { Text, Title, Paragraph } = Typography;
 
@@ -82,111 +79,102 @@ class Login extends Component<Props, State> {
             password: '',
             successful: false,
             message: '',
-            remember: true,
         };
+
+        if (successful) {
+            return <Navigate to="/home" />;
+        }
 
         return (
             <Row>
                 <Col span={8} offset={8} className="section-top">
-                    <Paragraph className="pricing-header text-center">
-                        <Title style={{ fontWeight: 500 }}>
-                            {' '}
-                            <T _str="Get started" />
-                        </Title>
-                        <Text>
-                            <T _str="Sign in to continue to our application" />
-                        </Text>
-                    </Paragraph>
-                    <Space direction="horizontal" style={{ width: '100%', justifyContent: 'center' }}>
-                        <Paragraph className="pricing-table page-login">
-                            <Paragraph className="pricing-table-inner is-revealing">
-                                {message && !successful && (
-                                    <Alert
-                                        style={{ marginBottom: 24 }}
-                                        message="Error"
-                                        description={<T _str={message} />}
-                                        type="error"
-                                        showIcon
-                                    />
-                                )}
-                                <Form
-                                    layout="vertical"
-                                    name="normal_login"
-                                    className="login-form"
-                                    initialValues={initialValues}
-                                    onFinish={this.handleLogin}
-                                >
-                                    <Form.Item
-                                        label={<T _str="Email" />}
-                                        name="email"
-                                        hasFeedback
-                                        rules={[
-                                            {
-                                                type: 'email',
-                                                message: 'Email is invalid',
-                                            },
-                                            {
-                                                required: true,
-                                                message: 'Email is required',
-                                            },
-                                        ]}
-                                    >
-                                        <Input />
-                                    </Form.Item>
-                                    <Form.Item
-                                        label={<T _str="Password" />}
-                                        name="password"
-                                        hasFeedback
-                                        rules={[
-                                            {
-                                                min: 4,
-                                                message: 'Password must be at least 4 characters',
-                                            },
-                                            {
-                                                required: true,
-                                                message: 'Password is required',
-                                            },
-                                        ]}
-                                    >
-                                        <Input.Password
-                                            iconRender={(visible) =>
-                                                visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-                                            }
-                                        />
-                                    </Form.Item>
-                                    <Form.Item>
-                                        <Form.Item name="remember" valuePropName="checked" noStyle>
-                                            <Checkbox>
-                                                <T _str="Remember me" />
-                                            </Checkbox>
-                                        </Form.Item>
-
-                                        <a className="login-form-forgot" href="#">
-                                            <T _str="Forgot password" />
-                                        </a>
-                                    </Form.Item>
-                                    <Form.Item>
-                                        <Button
-                                            type="primary"
-                                            htmlType="submit"
-                                            className="login-form-button"
-                                            size="large"
-                                        >
-                                            <T _str="Log in now" />
-                                        </Button>
-                                    </Form.Item>
-                                </Form>
-                                <Paragraph className="text-center mt-12">
-                                    <Text style={{ color: 'white' }}>
-                                        <T _str="Dont't have an account" />{' '}
-                                    </Text>
-                                    <Link to={'/register'} className="login-link">
-                                        <T _str="Register here" />{' '}
-                                    </Link>
-                                </Paragraph>
-                            </Paragraph>
+                    <Card className="form-content">
+                        <Paragraph className="form-header text-center">
+                            <img className="form-img" src="images/logo_02.png" alt="Logo"/>
+                            <Title level={4}>
+                                {' '}
+                                <T _str="Log into Your Account" />
+                            </Title>
                         </Paragraph>
-                    </Space>
+
+                        {message && !successful && (
+                            <Alert
+                                type="error"
+                                style={{ marginBottom: 24 }}
+                                message={<T _str={message} />}
+                                /* or other style of alert
+                                 description={<T _str={message} />}
+                                 */
+                                showIcon />
+                        )}
+
+                        <Form
+                            layout="vertical"
+                            name="login_form"
+                            className="login-form"
+                            initialValues={initialValues}
+                            onFinish={this.handleLogin}
+                        >
+                            <Form.Item
+                                label={<T _str="Email" />}
+                                name="email"
+                                hasFeedback
+                                rules={[
+                                    {
+                                        type: 'email',
+                                        message: 'Email is invalid',
+                                    },
+                                    {
+                                        required: true,
+                                        message: 'Email is required',
+                                    },
+                                ]}
+                            >
+                                <Input placeholder="Email" />
+                            </Form.Item>
+                            <Form.Item
+                                label={<T _str="Password" />}
+                                name="password"
+                                hasFeedback
+                                rules={[
+                                    {
+                                        min: 4,
+                                        message: 'Password must be at least 4 characters',
+                                    },
+                                    {
+                                        required: true,
+                                        message: 'Password is required',
+                                    },
+                                ]}
+                            >
+                                <Input.Password
+                                    placeholder="Password"
+                                    iconRender={(visible) =>
+                                        visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                                    }
+                                />
+                            </Form.Item>
+                            <Form.Item>
+                                <Button
+                                    type="primary"
+                                    htmlType="submit"
+                                    size="large"
+                                    block
+                                >
+                                    <T _str="Login" />
+                                </Button>
+                            </Form.Item>
+                        </Form>
+
+                        <Paragraph className="form-footer text-center">
+                            <Text>
+                                <T _str="Forgot your password ?" />{' '}
+                            </Text>
+                            <Link to={'/reset'}>
+                                <T _str="Reset here" />{' '}
+                            </Link>
+                        </Paragraph>
+                    </Card>
                 </Col>
             </Row>
         );
