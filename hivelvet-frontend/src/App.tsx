@@ -55,7 +55,6 @@ function App() {
     const locale = enUS;
     const [currentLocale, setCurrentLocale] = useState(locale);
     const direction = currentLocale.locale !== 'ar' ? 'ltr' : 'rtl';
-    localStorage.setItem('locale', tx.getCurrentLocale());
     const handleChange = (e) => {
         const localeValue = e.target.value;
         if (!localeValue) {
@@ -65,6 +64,8 @@ function App() {
         }
         tx.setCurrentLocale(localeValue.locale);
         setCurrentLocale(localeValue);
+        //localStorage.setItem('locale', tx.getCurrentLocale());
+        localStorage.setItem('locale', localeValue.locale);
     };
 
     return (
@@ -73,14 +74,14 @@ function App() {
                 <AppHeader currentLocale={currentLocale} handleChange={handleChange} />
                 <Content className="site-content">
                     <Routes>
-                        <Route path="/" element={<LandingPage key={currentLocale ? currentLocale.locale : 'en' }/>} />
-                        <Route path="/register" element={<Register key={locale ? currentLocale.locale : 'en' }/>} />
-                        <Route path="/login" element={<Login key={currentLocale ? currentLocale.locale : 'en' }/>} />
-                        <Route path="/reset" element={<ResetPwd key={currentLocale ? currentLocale.locale : 'en' }/>} />
-                        <Route path="/home" element={<Home key={currentLocale ? currentLocale.locale : 'en' }/>} />
+                        <Route path="/" element={<LandingPage/>} />
+                        <Route path="/register" element={<Register/>} />
+                        <Route path="/login" element={<Login/>} />
+                        <Route path="/reset" element={<ResetPwd/>} />
+                        <Route path="/home" element={<Home/>} />
                     </Routes>
                 </Content>
-                <AppFooter key={currentLocale ? currentLocale.locale : 'en'} />
+                <AppFooter/>
             </ConfigProvider>
             <BackTop>
                 <Button type="primary" shape="circle" icon={<CaretUpOutlined />} />

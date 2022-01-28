@@ -110,12 +110,13 @@ class Register extends Component<Props, State> {
 
                             {message && (
                                 <Alert
-                                    style={{ marginBottom: 24 }}
-                                    message={<T _str={message} />}
                                     type="error"
+                                    className="alert-msg"
+                                    message={<T _str={message} />}
                                     showIcon
                                 />
                             )}
+
                             <Form
                                 layout="vertical"
                                 name="register"

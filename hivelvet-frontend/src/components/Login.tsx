@@ -100,12 +100,10 @@ class Login extends Component<Props, State> {
                         {message && !successful && (
                             <Alert
                                 type="error"
-                                style={{ marginBottom: 24 }}
+                                className="alert-msg"
                                 message={<T _str={message} />}
-                                /* or other style of alert
-                                 description={<T _str={message} />}
-                                 */
-                                showIcon />
+                                showIcon
+                            />
                         )}
 
                         <Form

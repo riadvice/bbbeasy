@@ -28,7 +28,7 @@ const AppFooter = () => {
             <Space size="middle">
                 <Text type="secondary">Term & Conditions | Privacy Policy</Text>
                 <Text type="secondary">
-                    ©2022 <Button type="link" style={{ padding : 0 }}>RIADVICE</Button> All rights reserved
+                    ©2022 <Button type="link">RIADVICE</Button> All rights reserved
                 </Text>
             </Space>
         </Footer>
