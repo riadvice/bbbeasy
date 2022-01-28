@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a492c15108b8d9bfd417ab94e743bf28",
+    "content-hash": "e810d4a5a54670ee994320a2ccb02e58",
     "packages": [
         {
             "name": "bcosca/fatfree-core",
@@ -655,6 +655,432 @@
             "time": "2021-10-01T21:08:31+00:00"
         },
         {
+            "name": "mvccore/ext-auth",
+            "version": "v5.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mvccore/ext-auth.git",
+                "reference": "3dd93184de04fefcc4f0a1611e8f84bf5afaaafc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mvccore/ext-auth/zipball/3dd93184de04fefcc4f0a1611e8f84bf5afaaafc",
+                "reference": "3dd93184de04fefcc4f0a1611e8f84bf5afaaafc",
+                "shasum": ""
+            },
+            "require": {
+                "mvccore/ext-auth-basic": "^5.0",
+                "mvccore/mvccore": "^5.0",
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Tom Flidr",
+                    "homepage": "https://github.com/tomFlidr"
+                }
+            ],
+            "description": "MvcCore - Extension - Auth - authentication module with automatic authentication module type detection by loaded classes.",
+            "keywords": [
+                "Authentication",
+                "auth",
+                "authenticate",
+                "authorization",
+                "ext",
+                "extension",
+                "framework",
+                "log in",
+                "log out",
+                "login",
+                "logout",
+                "mvc",
+                "mvccore",
+                "plug-in",
+                "plugin",
+                "sign in",
+                "sign out",
+                "signin",
+                "signout",
+                "user"
+            ],
+            "support": {
+                "issues": "https://github.com/mvccore/ext-auth/issues",
+                "source": "https://github.com/mvccore/ext-auth/tree/v5.0.0"
+            },
+            "time": "2021-01-18T13:42:24+00:00"
+        },
+        {
+            "name": "mvccore/ext-auth-basic",
+            "version": "v5.0.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mvccore/ext-auth-basic.git",
+                "reference": "56d1a40e4045b54ba2ed1050bd92ce31bba211a6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mvccore/ext-auth-basic/zipball/56d1a40e4045b54ba2ed1050bd92ce31bba211a6",
+                "reference": "56d1a40e4045b54ba2ed1050bd92ce31bba211a6",
+                "shasum": ""
+            },
+            "require": {
+                "mvccore/ext-form": "^5.1.10",
+                "mvccore/ext-form-field-button": "^5.1",
+                "mvccore/ext-form-field-text": "^5.1",
+                "mvccore/mvccore": "^5.0.18",
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Tom Flidr",
+                    "homepage": "https://github.com/tomFlidr"
+                }
+            ],
+            "description": "MvcCore - Extension - Auth - Basic - simple authentication extension, only to signin/signout user. Extension can use credentials defined in system `config.ini` or in database. Possibility to extend user, signin/signout forms, submit controller and extension class itself.",
+            "keywords": [
+                "Authentication",
+                "auth",
+                "authenticate",
+                "authorization",
+                "ext",
+                "extension",
+                "framework",
+                "log in",
+                "log out",
+                "login",
+                "logout",
+                "mvc",
+                "mvccore",
+                "plug-in",
+                "plugin",
+                "sign in",
+                "sign out",
+                "signin",
+                "signout",
+                "user"
+            ],
+            "support": {
+                "issues": "https://github.com/mvccore/ext-auth-basic/issues",
+                "source": "https://github.com/mvccore/ext-auth-basic/tree/v5.0.6"
+            },
+            "time": "2021-07-21T15:25:57+00:00"
+        },
+        {
+            "name": "mvccore/ext-form",
+            "version": "v5.1.30",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mvccore/ext-form.git",
+                "reference": "aa4b60f1cd89bb81402aa39d9725deb248d7b5cb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mvccore/ext-form/zipball/aa4b60f1cd89bb81402aa39d9725deb248d7b5cb",
+                "reference": "aa4b60f1cd89bb81402aa39d9725deb248d7b5cb",
+                "shasum": ""
+            },
+            "require": {
+                "mvccore/mvccore": "^5.1.7",
+                "php": ">=5.4.0"
+            },
+            "suggest": {
+                "mvccore/ext-form-field-button": "MvcCore form extension with button fields and input submit fields.",
+                "mvccore/ext-form-field-date": "MvcCore form extension with input field types date, datetime, time, week and month.",
+                "mvccore/ext-form-field-numeric": "MvcCore form extension with input field types number and range.",
+                "mvccore/ext-form-field-selection": "MvcCore form extension with fields select, country select, checkbox(es) and radios.",
+                "mvccore/ext-form-field-special": "MvcCore form extension with input type file and color.",
+                "mvccore/ext-form-field-text": "MvcCore form extension with input field types text, email, password, search, tel, url and textarea field.",
+                "mvccore/ext-form-validator-special": "MvcCore form extension with special text and numeric validators."
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Tom Flidr",
+                    "homepage": "https://github.com/tomFlidr"
+                }
+            ],
+            "description": "MvcCore - Extension - Form - form extension with base classes to create and render web forms with HTML5 controls, to handle and validate submited user data, to manage forms sessions for default values, to manage user input errors and to extend and develop custom fields and field groups.",
+            "keywords": [
+                "Forms",
+                "HTML5",
+                "Month",
+                "button",
+                "checkbox",
+                "color",
+                "date",
+                "datetime",
+                "dynamic",
+                "email",
+                "ext",
+                "extension",
+                "field",
+                "fields",
+                "file",
+                "form",
+                "framework",
+                "groups",
+                "image",
+                "input",
+                "inputs",
+                "mvc",
+                "mvccore",
+                "number",
+                "plug-in",
+                "plugin",
+                "radio",
+                "range",
+                "reset",
+                "search",
+                "select",
+                "tel",
+                "text",
+                "textarea",
+                "time",
+                "url",
+                "webform",
+                "week"
+            ],
+            "support": {
+                "issues": "https://github.com/mvccore/ext-form/issues",
+                "source": "https://github.com/mvccore/ext-form/tree/v5.1.30"
+            },
+            "time": "2021-11-09T11:10:17+00:00"
+        },
+        {
+            "name": "mvccore/ext-form-field-button",
+            "version": "v5.1.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mvccore/ext-form-field-button.git",
+                "reference": "cf1557027db3a40534c3984244cad6bb6fba49bf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mvccore/ext-form-field-button/zipball/cf1557027db3a40534c3984244cad6bb6fba49bf",
+                "reference": "cf1557027db3a40534c3984244cad6bb6fba49bf",
+                "shasum": ""
+            },
+            "require": {
+                "mvccore/ext-form": "^5.1.25",
+                "mvccore/mvccore": "^5.1.7",
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Tom Flidr",
+                    "homepage": "https://github.com/tomFlidr"
+                }
+            ],
+            "description": "MvcCore - Extension - Form - Field - Button - form field types - button:submit, button:reset, input:submit, input:reset and image.",
+            "keywords": [
+                "Forms",
+                "HTML5",
+                "button",
+                "buttons",
+                "ext",
+                "extension",
+                "form",
+                "framework",
+                "image",
+                "mvc",
+                "mvccore",
+                "plug-in",
+                "plugin",
+                "reset",
+                "resets",
+                "submit",
+                "submits",
+                "submitting",
+                "webform"
+            ],
+            "support": {
+                "issues": "https://github.com/mvccore/ext-form-field-button/issues",
+                "source": "https://github.com/mvccore/ext-form-field-button/tree/v5.1.8"
+            },
+            "time": "2021-09-06T12:01:32+00:00"
+        },
+        {
+            "name": "mvccore/ext-form-field-text",
+            "version": "v5.1.9",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mvccore/ext-form-field-text.git",
+                "reference": "0daafd8dab4ed50b947149b9318e5d90117fb5fc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mvccore/ext-form-field-text/zipball/0daafd8dab4ed50b947149b9318e5d90117fb5fc",
+                "reference": "0daafd8dab4ed50b947149b9318e5d90117fb5fc",
+                "shasum": ""
+            },
+            "require": {
+                "mvccore/ext-form": "^5.1.25",
+                "mvccore/mvccore": "^5.1.7",
+                "php": ">=5.4.0"
+            },
+            "suggest": {
+                "mvccore/ext-form-validator-special": "MvcCore form extension with special text and numeric validators."
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Tom Flidr",
+                    "homepage": "https://github.com/tomFlidr"
+                }
+            ],
+            "description": "MvcCore - Extension - Form - Field - Text - form field types - input:text, input:email, input:password, input:search, input:tel, input:url and textarea.",
+            "keywords": [
+                "Forms",
+                "HTML5",
+                "email",
+                "emails",
+                "ext",
+                "extension",
+                "form",
+                "framework",
+                "gsm",
+                "input",
+                "inputs",
+                "mobile",
+                "mvc",
+                "mvccore",
+                "password",
+                "phone",
+                "plug-in",
+                "plugin",
+                "search",
+                "tel",
+                "telephone",
+                "text",
+                "textarea",
+                "texts",
+                "url",
+                "webform"
+            ],
+            "support": {
+                "issues": "https://github.com/mvccore/ext-form-field-text/issues",
+                "source": "https://github.com/mvccore/ext-form-field-text/tree/v5.1.9"
+            },
+            "time": "2021-09-06T12:02:23+00:00"
+        },
+        {
+            "name": "mvccore/mvccore",
+            "version": "v5.1.15",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mvccore/mvccore.git",
+                "reference": "f73e91df3d360a15def3b0a681ffab4aa2ff4a7b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mvccore/mvccore/zipball/f73e91df3d360a15def3b0a681ffab4aa2ff4a7b",
+                "reference": "f73e91df3d360a15def3b0a681ffab4aa2ff4a7b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "suggest": {
+                "mvccore/ext-debug-tracy": "MvcCore Extension - Debug - Tracy (tracy/tracy) - adapter for better development."
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ],
+                "files": [
+                    "src/startup.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Tom Flidr",
+                    "homepage": "https://github.com/tomFlidr"
+                }
+            ],
+            "description": "MvcCore is PHP MVC framework to develop and pack projects (partialy or completely) into super fast single file apps and tools.",
+            "keywords": [
+                "config",
+                "controller",
+                "core",
+                "debug",
+                "easy mvc",
+                "framework",
+                "model",
+                "mvc",
+                "mvccore",
+                "packed",
+                "packed app",
+                "packing",
+                "plugins",
+                "request",
+                "response",
+                "route",
+                "router",
+                "session",
+                "simple mvc",
+                "super fast app",
+                "tool",
+                "view"
+            ],
+            "support": {
+                "issues": "https://github.com/mvccore/mvccore/issues",
+                "source": "https://github.com/mvccore/mvccore/tree/v5.1.15"
+            },
+            "time": "2021-11-18T03:29:05+00:00"
+        },
+        {
             "name": "nesbot/carbon",
             "version": "2.55.2",
             "source": {
@@ -834,6 +1260,84 @@
                 "source": "https://github.com/nette/utils/tree/v3.2.6"
             },
             "time": "2021-11-24T15:47:23+00:00"
+        },
+        {
+            "name": "phpmailer/phpmailer",
+            "version": "v6.5.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PHPMailer/PHPMailer.git",
+                "reference": "baeb7cde6b60b1286912690ab0693c7789a31e71"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/baeb7cde6b60b1286912690ab0693c7789a31e71",
+                "reference": "baeb7cde6b60b1286912690ab0693c7789a31e71",
+                "shasum": ""
+            },
+            "require": {
+                "ext-ctype": "*",
+                "ext-filter": "*",
+                "ext-hash": "*",
+                "php": ">=5.5.0"
+            },
+            "require-dev": {
+                "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
+                "doctrine/annotations": "^1.2",
+                "php-parallel-lint/php-console-highlighter": "^0.5.0",
+                "php-parallel-lint/php-parallel-lint": "^1.3",
+                "phpcompatibility/php-compatibility": "^9.3.5",
+                "roave/security-advisories": "dev-latest",
+                "squizlabs/php_codesniffer": "^3.6.0",
+                "yoast/phpunit-polyfills": "^1.0.0"
+            },
+            "suggest": {
+                "ext-mbstring": "Needed to send email in multibyte encoding charset or decode encoded addresses",
+                "hayageek/oauth2-yahoo": "Needed for Yahoo XOAUTH2 authentication",
+                "league/oauth2-google": "Needed for Google XOAUTH2 authentication",
+                "psr/log": "For optional PSR-3 debug logging",
+                "stevenmaguire/oauth2-microsoft": "Needed for Microsoft XOAUTH2 authentication",
+                "symfony/polyfill-mbstring": "To support UTF-8 if the Mbstring PHP extension is not enabled (^1.2)"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PHPMailer\\PHPMailer\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-2.1-only"
+            ],
+            "authors": [
+                {
+                    "name": "Marcus Bointon",
+                    "email": "phpmailer@synchromedia.co.uk"
+                },
+                {
+                    "name": "Jim Jagielski",
+                    "email": "jimjag@gmail.com"
+                },
+                {
+                    "name": "Andy Prevost",
+                    "email": "codeworxtech@users.sourceforge.net"
+                },
+                {
+                    "name": "Brent R. Matzelle"
+                }
+            ],
+            "description": "PHPMailer is a full-featured email creation and transfer class for PHP",
+            "support": {
+                "issues": "https://github.com/PHPMailer/PHPMailer/issues",
+                "source": "https://github.com/PHPMailer/PHPMailer/tree/v6.5.3"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/Synchro",
+                    "type": "github"
+                }
+            ],
+            "time": "2021-11-25T16:34:11+00:00"
         },
         {
             "name": "psr/container",

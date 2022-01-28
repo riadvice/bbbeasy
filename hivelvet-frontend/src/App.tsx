@@ -34,6 +34,8 @@ import 'moment/locale/en-au';
 import { tx } from '@transifex/native';
 
 import Logger from './lib/logger';
+import Reset from './components/ResetPassword';
+import ChangePassword from './components/ChangePassword';
 
 moment.locale('en');
 
@@ -73,12 +75,20 @@ function App() {
                 <AppHeader currentLocale={currentLocale} currentDirection={direction} handleChange={handleChange} />
                 <Content>
                     <Routes>
-                        <Route path="/" element={<LandingPage key={currentLocale ? currentLocale.locale : 'en' }/>} />
-                        <Route path="/register" element={<Register key={locale ? currentLocale.locale : 'en' }/>} />
-                        <Route path="/login" element={<Login key={currentLocale ? currentLocale.locale : 'en' }/>} />
+                        <Route path="/" element={<LandingPage key={currentLocale ? currentLocale.locale : 'en'} />} />
+                        <Route path="/register" element={<Register key={locale ? currentLocale.locale : 'en'} />} />
+                        <Route path="/login" element={<Login key={currentLocale ? currentLocale.locale : 'en'} />} />
+                        <Route
+                            path="/reset-password"
+                            element={<Reset key={currentLocale ? currentLocale.locale : 'en'} />}
+                        />
+                        <Route
+                            path="/change-password"
+                            element={<ChangePassword key={currentLocale ? currentLocale.locale : 'en'} />}
+                        />
                     </Routes>
                 </Content>
-                <AppFooter key={currentLocale ? currentLocale.locale : 'en' } />
+                <AppFooter key={currentLocale ? currentLocale.locale : 'en'} />
             </ConfigProvider>
         </Layout>
     );

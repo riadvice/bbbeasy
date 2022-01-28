@@ -15,9 +15,8 @@
  * You should have received a copy of the GNU Lesser General Public License along
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
-
 import React, { Component, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import AuthService from '../services/auth.service';
 import '../App.css';
 //import 'antd/dist/antd.css';
@@ -27,32 +26,56 @@ import { FormattedMessage } from 'react-intl';
 import { locale } from 'moment';
 import { T } from '@transifex/react';
 const { Text, Title, Paragraph } = Typography;
+type Props = {
+    //location:string;
+};
 
-type Props = {};
 type State = {
-    email?: string;
     password?: string;
+    email: string;
     successful: boolean;
     message: string;
 };
 
-class Login extends Component<Props, State> {
-    constructor(props: Props) {
+class ChangePassword extends Component<Props, State> {
+    constructor(props) {
+        const params = new URLSearchParams(window.location.search);
+        console.log('params =', params);
+        console.log(params.get('token'));
+       
         super(props);
-        this.handleLogin = this.handleLogin.bind(this);
+
+        this.handleChange = this.handleChange.bind(this);
         this.state = {
-            email: '',
             password: '',
+            email: '',
             successful: false,
             message: '',
         };
+
+        /* this.handleLogin = this.handleLogin.bind(this);
+          this.state = {
+              email: '',
+              
+              successful: false,
+              message: '',
+          };*/
     }
 
-    handleLogin(formValue: any) {
-        const { email, password } = formValue;
-        AuthService.login(email, password)
+    handleChange(formValue: any) {
+        const { password, confirmPassword } = formValue;
+        console.log(formValue);
+        console.log(password, confirmPassword);
+        console.log('props', window.location.search);
+        const params = new URLSearchParams(window.location.search);
+        console.log('params =', params);
+        console.log(params.get('token'));
+
+        AuthService.change_password(params.get('token'), password)
             .then((response) => {
+                console.log(response);
                 const responseMessage = response.data.message;
+                console.log(responseMessage);
                 message.success({
                     content: responseMessage,
                     style: {
@@ -63,11 +86,11 @@ class Login extends Component<Props, State> {
                     successful: true,
                     message: responseMessage,
                 });
-                const user = response.data.user;
-                localStorage.setItem('user', JSON.stringify(user));
             })
             .catch((error) => {
+                console.log(error);
                 const responseMessage = error.response.data.message;
+                console.log(responseMessage);
                 this.setState({
                     successful: false,
                     message: responseMessage,
@@ -79,23 +102,20 @@ class Login extends Component<Props, State> {
         const { successful, message } = this.state;
         const initialValues = {
             email: '',
-            password: '',
+
             successful: false,
             message: '',
-            remember: true,
         };
-
+        
         return (
+
             <Row>
                 <Col span={8} offset={8} className="section-top">
                     <Paragraph className="pricing-header text-center">
                         <Title style={{ fontWeight: 500 }}>
                             {' '}
-                            <T _str="Get started" />
+                            <T _str="Change your password" />
                         </Title>
-                        <Text>
-                            <T _str="Sign in to continue to our application" />
-                        </Text>
                     </Paragraph>
                     <Space direction="horizontal" style={{ width: '100%', justifyContent: 'center' }}>
                         <Paragraph className="pricing-table page-login">
@@ -114,25 +134,8 @@ class Login extends Component<Props, State> {
                                     name="normal_login"
                                     className="login-form"
                                     initialValues={initialValues}
-                                    onFinish={this.handleLogin}
+                                    onFinish={this.handleChange}
                                 >
-                                    <Form.Item
-                                        label={<T _str="Email" />}
-                                        name="email"
-                                        hasFeedback
-                                        rules={[
-                                            {
-                                                type: 'email',
-                                                message: 'Email is invalid',
-                                            },
-                                            {
-                                                required: true,
-                                                message: 'Email is required',
-                                            },
-                                        ]}
-                                    >
-                                        <Input />
-                                    </Form.Item>
                                     <Form.Item
                                         label={<T _str="Password" />}
                                         name="password"
@@ -154,17 +157,35 @@ class Login extends Component<Props, State> {
                                             }
                                         />
                                     </Form.Item>
-                                    <Form.Item>
-                                        <Form.Item name="remember" valuePropName="checked" noStyle>
-                                            <Checkbox>
-                                                <T _str="Remember me" />
-                                            </Checkbox>
-                                        </Form.Item>
-
-                                        <Link to={'/reset-password'} className="login-link">
-                                            <T _str="Forgot password" />
-                                        </Link>
+                                    <Form.Item
+                                        label={<T _str="Confirm Password" />}
+                                        name="confirmPassword"
+                                        dependencies={['password']}
+                                        hasFeedback
+                                        rules={[
+                                            {
+                                                min: 4,
+                                                message: 'Confirm password must be at least 4 characters',
+                                            },
+                                            {
+                                                required: true,
+                                                message: 'Confirm password is required',
+                                            },
+                                            ({ getFieldValue }) => ({
+                                                validator(_, value) {
+                                                    if (!value || getFieldValue('password') === value) {
+                                                        return Promise.resolve();
+                                                    }
+                                                    return Promise.reject(
+                                                        new Error('The two passwords that you entered do not match')
+                                                    );
+                                                },
+                                            }),
+                                        ]}
+                                    >
+                                        <Input.Password />
                                     </Form.Item>
+
                                     <Form.Item>
                                         <Button
                                             type="primary"
@@ -172,18 +193,10 @@ class Login extends Component<Props, State> {
                                             className="login-form-button"
                                             size="large"
                                         >
-                                            <T _str="Log in now" />
+                                            <T _str="Submit" />
                                         </Button>
                                     </Form.Item>
                                 </Form>
-                                <Paragraph className="text-center mt-12">
-                                    <Text style={{ color: 'white' }}>
-                                        <T _str="Dont't have an account" />{' '}
-                                    </Text>
-                                    <Link to={'/register'} className="login-link">
-                                        <T _str="Register here" />{' '}
-                                    </Link>
-                                </Paragraph>
                             </Paragraph>
                         </Paragraph>
                     </Space>
@@ -193,4 +206,4 @@ class Login extends Component<Props, State> {
     }
 }
 
-export default Login;
+export default ChangePassword;

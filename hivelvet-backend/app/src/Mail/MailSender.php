@@ -24,7 +24,9 @@ use Base;
 use Exception;
 use Log\LogWriterTrait;
 use Mailer;
+use Models\User;
 use Nette\Utils\Strings;
+use OAuthProvider;
 use Prefab;
 use Template;
 use Utils\Environment;
@@ -84,14 +86,26 @@ class MailSender extends Prefab
      */
     public function send($template, $vars, $to, $title, $subject): bool
     {
-        $messageId         = $this->generateId();
+
+       $messageId         = $this->generateId();
         $vars['date']      = strftime('%A %d %B %A à %T');
         $vars['messageId'] = $shortId = Strings::before(mb_substr($messageId, 1, -1), '@');
         $vars['SCHEME']    = $this->f3->get('SCHEME');
         $vars['HOST']      = $this->f3->get('HOST');
         $vars['PORT']      = $this->f3->get('PORT');
         $vars['BASE']      = $this->f3->get('BASE');
-        $message           = Template::instance()->render('mail/' . $template . '.phtml', null, $vars);
+
+        $vars['to']  =  $to ;
+        $t  = bin2hex(random_bytes(16));
+        $user=new  User();
+        $user = $user->getByEmail($to);
+        $user->token=$t;
+        $user->save();
+        echo "token user". $user->token ;
+        $vars['token']=$t;
+
+        $message           = Template::instance()->render('mail/'  .$template.'.phtml', null, $vars);
+
         /*
         //replace the db template variables with provided $vars
         if (array_key_exists('first_name', $vars)) {
@@ -129,8 +143,10 @@ class MailSender extends Prefab
      * @param $messageId
      * @return bool
      */
-    private function smtpSend($from, $to, $title, $subject, $message, $messageId): bool
+    public function smtpSend( $from, $to, $title, $subject, $message ): bool
     {
+        $messageId         = $this->generateId();
+
         if (is_array($to)) {
             foreach ($to as $email) {
                 $this->mailer->addTo($email);
@@ -139,17 +155,21 @@ class MailSender extends Prefab
             $this->mailer->addTo($to, $title);
         }
 
-        if ($from !== null) {
-            $this->mailer->setFrom($from);
+        if ($from == null) {
+          //  $this->mailer->setFrom($from);
+            $this->mailer->setFrom($this->f3->get('debug.email'));
         }
         $this->mailer->setHTML($message);
         $this->mailer->set('Message-Id', $messageId);
         $sent = $this->mailer->send($subject, Environment::isNotProduction());
 
         if ($sent !== false && Environment::isNotProduction()) {
-            @file_put_contents($this->f3->get('MAIL_STORAGE') . mb_substr($messageId, 1, -1) . '.eml',
-                explode("354 Go ahead\n", explode("250 OK\nQUIT", $this->mailer->log())[0])[1]
-            );
+
+
+            @file_put_contents($this->f3->get('MAIL_STORAGE') . mb_substr($messageId, 1, -1) . '.eml' ,
+               explode("354 Go ahead\n", explode("250 OK\nQUIT", $this->mailer->log())[0])[1]
+);
+
         }
 
         $this->logger->info('Sending email | Status: ' . ($sent ? 'true' : 'false') . " | Log:\n" . $this->mailer->log());

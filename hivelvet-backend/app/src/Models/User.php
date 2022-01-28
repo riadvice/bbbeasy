@@ -36,6 +36,7 @@ use DB\Cortex;
  * @property string    $last_name
  * @property string    $password
  * @property string    $status
+ * @property string $resetToken
  * @property DateTime  $created_on
  * @property DateTime  $updated_on
  * @property DateTime  $last_login
@@ -158,5 +159,11 @@ class User extends BaseModel
     public function verifyPassword($password): bool
     {
         return password_verify(trim($password), $this->password);
+    }
+    public function getByResetToken($token)
+    {
+        $this->load(['token = ?',$token]);
+
+        return $this;
     }
 }

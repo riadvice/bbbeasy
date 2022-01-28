@@ -15,7 +15,6 @@
  * You should have received a copy of the GNU Lesser General Public License along
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
-
 import React, { Component, useState } from 'react';
 import { Link } from 'react-router-dom';
 import AuthService from '../services/auth.service';
@@ -31,28 +30,37 @@ const { Text, Title, Paragraph } = Typography;
 type Props = {};
 type State = {
     email?: string;
-    password?: string;
+
     successful: boolean;
     message: string;
 };
 
-class Login extends Component<Props, State> {
+class Reset extends Component<Props, State> {
     constructor(props: Props) {
         super(props);
-        this.handleLogin = this.handleLogin.bind(this);
+        this.handleReset = this.handleReset.bind(this);
         this.state = {
             email: '',
-            password: '',
             successful: false,
             message: '',
         };
+        /* this.handleLogin = this.handleLogin.bind(this);
+         this.state = {
+             email: '',
+             
+             successful: false,
+             message: '',
+         };*/
     }
 
-    handleLogin(formValue: any) {
-        const { email, password } = formValue;
-        AuthService.login(email, password)
+    handleReset(formValue: any) {
+        const { email } = formValue;
+        console.log(email);
+        AuthService.reset_password(email)
             .then((response) => {
+                console.log(response);
                 const responseMessage = response.data.message;
+                console.log(responseMessage);
                 message.success({
                     content: responseMessage,
                     style: {
@@ -63,11 +71,13 @@ class Login extends Component<Props, State> {
                     successful: true,
                     message: responseMessage,
                 });
-                const user = response.data.user;
-                localStorage.setItem('user', JSON.stringify(user));
+                // const user = response.data.user;
+                // localStorage.setItem('user', JSON.stringify(user));
             })
             .catch((error) => {
+                console.log(error);
                 const responseMessage = error.response.data.message;
+                console.log(responseMessage);
                 this.setState({
                     successful: false,
                     message: responseMessage,
@@ -79,10 +89,9 @@ class Login extends Component<Props, State> {
         const { successful, message } = this.state;
         const initialValues = {
             email: '',
-            password: '',
+
             successful: false,
             message: '',
-            remember: true,
         };
 
         return (
@@ -91,11 +100,8 @@ class Login extends Component<Props, State> {
                     <Paragraph className="pricing-header text-center">
                         <Title style={{ fontWeight: 500 }}>
                             {' '}
-                            <T _str="Get started" />
+                            <T _str="Reset Password" />
                         </Title>
-                        <Text>
-                            <T _str="Sign in to continue to our application" />
-                        </Text>
                     </Paragraph>
                     <Space direction="horizontal" style={{ width: '100%', justifyContent: 'center' }}>
                         <Paragraph className="pricing-table page-login">
@@ -114,7 +120,7 @@ class Login extends Component<Props, State> {
                                     name="normal_login"
                                     className="login-form"
                                     initialValues={initialValues}
-                                    onFinish={this.handleLogin}
+                                    onFinish={this.handleReset}
                                 >
                                     <Form.Item
                                         label={<T _str="Email" />}
@@ -133,38 +139,7 @@ class Login extends Component<Props, State> {
                                     >
                                         <Input />
                                     </Form.Item>
-                                    <Form.Item
-                                        label={<T _str="Password" />}
-                                        name="password"
-                                        hasFeedback
-                                        rules={[
-                                            {
-                                                min: 4,
-                                                message: 'Password must be at least 4 characters',
-                                            },
-                                            {
-                                                required: true,
-                                                message: 'Password is required',
-                                            },
-                                        ]}
-                                    >
-                                        <Input.Password
-                                            iconRender={(visible) =>
-                                                visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-                                            }
-                                        />
-                                    </Form.Item>
-                                    <Form.Item>
-                                        <Form.Item name="remember" valuePropName="checked" noStyle>
-                                            <Checkbox>
-                                                <T _str="Remember me" />
-                                            </Checkbox>
-                                        </Form.Item>
 
-                                        <Link to={'/reset-password'} className="login-link">
-                                            <T _str="Forgot password" />
-                                        </Link>
-                                    </Form.Item>
                                     <Form.Item>
                                         <Button
                                             type="primary"
@@ -172,16 +147,16 @@ class Login extends Component<Props, State> {
                                             className="login-form-button"
                                             size="large"
                                         >
-                                            <T _str="Log in now" />
+                                            <T _str="Submit" />
                                         </Button>
                                     </Form.Item>
                                 </Form>
                                 <Paragraph className="text-center mt-12">
                                     <Text style={{ color: 'white' }}>
-                                        <T _str="Dont't have an account" />{' '}
+                                        <T _str="I remember my password" />{' '}
                                     </Text>
-                                    <Link to={'/register'} className="login-link">
-                                        <T _str="Register here" />{' '}
+                                    <Link to={'/login'} className="login-link">
+                                        <T _str="Back to login" />{' '}
                                     </Link>
                                 </Paragraph>
                             </Paragraph>
@@ -193,4 +168,4 @@ class Login extends Component<Props, State> {
     }
 }
 
-export default Login;
+export default Reset;
