@@ -1,0 +1,42 @@
+en-US:
+  hello: Hello
+  get started: Get started
+  sign-in-to-continue: Sign in to continue to our application
+  remember: Remember me
+  forgot-password: Forgot password
+  login-now: Log in now
+  Dont-t-have-account: Dont't have an account
+  register-here: Register here
+  email :  
+    label: Email
+    required: Email is required
+    invalid: Email  invalid
+    already-exists: email already exists
+  password:
+    label: Password
+    required: Password is required
+    size: Password must be at least 4 characters
+    invalid: Password invalid
+  join-us: Join us
+  register-now: Register now and join our community
+  username:
+    label: Username
+    required: Username is required
+    already-exists: username and email already exist
+  confirm-password:
+    label: Confirm Password
+    required: Confirm password is required
+    size: Confirm password must be at least 4 characters
+  read-agreement: I have read the agreement
+  register: Register now
+  have-already-account: Have already an account
+  login-here: Login Here
+  paswords-not-match: The two passwords that you entered do not match
+  user-could-not-logged: user could not logged
+  success-login: user successfully login
+  success-registration: Congratulations ! Your account has been successfully created
+  username-email-already-exist: username and email already exist
+  welcome: Welcome back
+  accept-agreement: Should accept agreemen
+
+  
