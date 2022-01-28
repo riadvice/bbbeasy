@@ -20,7 +20,7 @@ import React, { Component } from 'react';
 import AuthService from '../services/auth.service';
 
 import { Row } from 'antd';
-import {Navigate} from "react-router-dom";
+import { Navigate } from 'react-router-dom';
 
 type Props = {};
 
@@ -30,12 +30,11 @@ type State = {
 };
 
 class Home extends Component<Props, State> {
-
     constructor(props: Props) {
         super(props);
         this.state = {
             isLogged: false,
-            currentUser: undefined
+            currentUser: undefined,
         };
     }
 
@@ -44,7 +43,7 @@ class Home extends Component<Props, State> {
         if (user) {
             this.setState({
                 isLogged: true,
-                currentUser: user
+                currentUser: user,
             });
         }
     }

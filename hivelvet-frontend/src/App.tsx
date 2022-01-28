@@ -44,7 +44,7 @@ moment.locale('en');
 
 const { Content } = Layout;
 tx.init({
-    token: '1/a6cfd7935802d07ec8332208a02c8ce02fbfc01c',
+    token: '1/7385d403dc3545240d6771327397811a619efe18',
 });
 
 tx.setCurrentLocale('en');
@@ -74,14 +74,14 @@ function App() {
                 <AppHeader currentLocale={currentLocale} handleChange={handleChange} />
                 <Content className="site-content">
                     <Routes>
-                        <Route path="/" element={<LandingPage/>} />
-                        <Route path="/register" element={<Register/>} />
-                        <Route path="/login" element={<Login/>} />
-                        <Route path="/reset" element={<ResetPwd/>} />
-                        <Route path="/home" element={<Home/>} />
+                        <Route path="/" element={<LandingPage />} />
+                        <Route path="/register" element={<Register />} />
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/reset" element={<ResetPwd />} />
+                        <Route path="/home" element={<Home />} />
                     </Routes>
                 </Content>
-                <AppFooter/>
+                <AppFooter />
             </ConfigProvider>
             <BackTop>
                 <Button type="primary" shape="circle" icon={<CaretUpOutlined />} />

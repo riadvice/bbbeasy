@@ -31,7 +31,7 @@ type State = {
 class ResetPwd extends Component<Props, State> {
     render() {
         const initialValues = {
-            email: ''
+            email: '',
         };
 
         return (
@@ -39,47 +39,42 @@ class ResetPwd extends Component<Props, State> {
                 <Col span={8} offset={8} className="section-top">
                     <Card className="form-content">
                         <Paragraph className="form-header text-center">
-                            <img className="form-img" src="images/logo_02.png" alt="Logo"/>
+                            <img className="form-img" src="images/logo_02.png" alt="Logo" />
                             <Title level={4}>
                                 {' '}
                                 <T _str="Reset my password" />
                             </Title>
                         </Paragraph>
-                            <Form
-                                layout="vertical"
-                                name="login_form"
-                                className="login-form"
-                                initialValues={initialValues}
+                        <Form layout="vertical" name="login_form" className="login-form" initialValues={initialValues}>
+                            <Form.Item
+                                label={<T _str="Email" />}
+                                name="email"
+                                hasFeedback
+                                rules={[
+                                    {
+                                        type: 'email',
+                                        message: 'Email invalid',
+                                    },
+                                    {
+                                        required: true,
+                                        message: 'Email is required',
+                                    },
+                                ]}
                             >
-                                <Form.Item
-                                    label={<T _str="Email" />}
-                                    name="email"
-                                    hasFeedback
-                                    rules={[
-                                        {
-                                            type: 'email',
-                                            message: 'Email invalid',
-                                        },
-                                        {
-                                            required: true,
-                                            message: 'Email is required',
-                                        },
-                                    ]}
+                                <Input placeholder="Email" />
+                            </Form.Item>
+                            <Form.Item>
+                                <Button
+                                    type="primary"
+                                    htmlType="submit"
+                                    className="login-form-button"
+                                    size="large"
+                                    block
                                 >
-                                    <Input placeholder="Email" />
-                                </Form.Item>
-                                <Form.Item>
-                                    <Button
-                                        type="primary"
-                                        htmlType="submit"
-                                        className="login-form-button"
-                                        size="large"
-                                        block
-                                    >
-                                        <T _str="Reset password" />
-                                    </Button>
-                                </Form.Item>
-                            </Form>
+                                    <T _str="Reset password" />
+                                </Button>
+                            </Form.Item>
+                        </Form>
 
                         <Paragraph className="form-footer text-center">
                             <Text>

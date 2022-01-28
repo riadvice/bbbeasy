@@ -37,6 +37,11 @@ en-US:
   success-registration: Congratulations ! Your account has been successfully created
   username-email-already-exist: username and email already exist
   welcome: Welcome back
-  accept-agreement: Should accept agreemen
+  accept-agreement: Should accept agreement
+  agree: I agree to the
+  terms: Terms of Service
+  and: and
+  privacy-policy: Privacy Policy
+
 
   

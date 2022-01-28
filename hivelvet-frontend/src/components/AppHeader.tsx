@@ -24,7 +24,7 @@ import { GlobalOutlined, DownOutlined } from '@ant-design/icons';
 import enUS from 'antd/lib/locale/en_US';
 import frFR from 'antd/lib/locale/fr_FR';
 import arEG from 'antd/lib/locale/ar_EG';
-import {T} from "@transifex/react";
+import { T } from '@transifex/react';
 
 const { Header } = Layout;
 const { Paragraph } = Typography;
@@ -46,7 +46,7 @@ class AppHeader extends Component<Props, State> {
     render() {
         const { currentLocale, handleChange } = this.props;
 
-        const result = languages.filter(item => item.value == currentLocale);
+        const result = languages.filter((item) => item.value == currentLocale);
         const language = result[0].name;
 
         const menu = (
@@ -54,9 +54,7 @@ class AppHeader extends Component<Props, State> {
                 <Radio.Group value={currentLocale} onChange={handleChange}>
                     {languages.map(({ name, key, value }) => (
                         <Menu.Item key={key}>
-                            <Radio value={value}>
-                                {name}
-                            </Radio>
+                            <Radio value={value}>{name}</Radio>
                         </Menu.Item>
                     ))}
                 </Radio.Group>
@@ -67,12 +65,12 @@ class AppHeader extends Component<Props, State> {
             <Header className="site-header">
                 <Paragraph className="site-header-inner">
                     <Link to={'/'}>
-                        <img className="header-logo-image" src="images/logo_01.png" alt="Logo"/>
+                        <img className="header-logo-image" src="images/logo_01.png" alt="Logo" />
                     </Link>
                     <Space size="large">
                         <Dropdown overlay={menu}>
                             <Button>
-                                <GlobalOutlined /> {language} <DownOutlined/>
+                                <GlobalOutlined /> {language} <DownOutlined />
                             </Button>
                         </Dropdown>
                         <Link className={'ant-btn color-primary'} to={'/login'}>

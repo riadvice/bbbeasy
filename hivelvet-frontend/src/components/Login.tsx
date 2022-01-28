@@ -90,7 +90,7 @@ class Login extends Component<Props, State> {
                 <Col span={8} offset={8} className="section-top">
                     <Card className="form-content">
                         <Paragraph className="form-header text-center">
-                            <img className="form-img" src="images/logo_02.png" alt="Logo"/>
+                            <img className="form-img" src="images/logo_02.png" alt="Logo" />
                             <Title level={4}>
                                 {' '}
                                 <T _str="Log into Your Account" />
@@ -98,12 +98,7 @@ class Login extends Component<Props, State> {
                         </Paragraph>
 
                         {message && !successful && (
-                            <Alert
-                                type="error"
-                                className="alert-msg"
-                                message={<T _str={message} />}
-                                showIcon
-                            />
+                            <Alert type="error" className="alert-msg" message={<T _str={message} />} showIcon />
                         )}
 
                         <Form
@@ -120,11 +115,11 @@ class Login extends Component<Props, State> {
                                 rules={[
                                     {
                                         type: 'email',
-                                        message: 'Email is invalid',
+                                        message: <T _str="Email is invalid" />,
                                     },
                                     {
                                         required: true,
-                                        message: 'Email is required',
+                                        message: <T _str="Email is required" />,
                                     },
                                 ]}
                             >
@@ -137,28 +132,21 @@ class Login extends Component<Props, State> {
                                 rules={[
                                     {
                                         min: 4,
-                                        message: 'Password must be at least 4 characters',
+                                        message: <T _str="Password must be at least 4 characters" />,
                                     },
                                     {
                                         required: true,
-                                        message: 'Password is required',
+                                        message: <T _str="Password is required" />,
                                     },
                                 ]}
                             >
                                 <Input.Password
                                     placeholder="Password"
-                                    iconRender={(visible) =>
-                                        visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-                                    }
+                                    iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
                                 />
                             </Form.Item>
                             <Form.Item>
-                                <Button
-                                    type="primary"
-                                    htmlType="submit"
-                                    size="large"
-                                    block
-                                >
+                                <Button type="primary" htmlType="submit" size="large" block>
                                     <T _str="Login" />
                                 </Button>
                             </Form.Item>

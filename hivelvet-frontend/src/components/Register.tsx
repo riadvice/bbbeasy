@@ -17,12 +17,13 @@
  */
 
 import React, { Component } from 'react';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import AuthService from '../services/auth.service';
 
 import { Form, Input, Button, Checkbox, Alert, Col, Row, Typography, Card, Result } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import { T } from '@transifex/react';
+import ReactDOMServer from 'react-dom/server';
 
 const { Title, Paragraph } = Typography;
 
@@ -81,27 +82,26 @@ class Register extends Component<Props, State> {
             message: '',
         };
 
-
         return (
             <Row>
-                { successful ?
+                {successful ? (
                     <Col span={10} offset={7} className="section-top">
                         <Result
                             status="success"
                             title="Registration completed successfully"
                             subTitle={message}
                             extra={
-                                <Link to={"/login"} className="ant-btn ant-btn-lg">
+                                <Link to={'/login'} className="ant-btn ant-btn-lg">
                                     Login now
                                 </Link>
                             }
                         />
                     </Col>
-                    :
+                ) : (
                     <Col span={8} offset={8} className="section-top">
                         <Card className="form-content">
                             <Paragraph className="form-header text-center">
-                                <img className="form-img" src="images/logo_02.png" alt="Logo"/>
+                                <img className="form-img" src="images/logo_02.png" alt="Logo" />
                                 <Title level={4}>
                                     {' '}
                                     <T _str="Sign Up" />
@@ -109,12 +109,7 @@ class Register extends Component<Props, State> {
                             </Paragraph>
 
                             {message && (
-                                <Alert
-                                    type="error"
-                                    className="alert-msg"
-                                    message={<T _str={message} />}
-                                    showIcon
-                                />
+                                <Alert type="error" className="alert-msg" message={<T _str={message} />} showIcon />
                             )}
 
                             <Form
@@ -131,7 +126,7 @@ class Register extends Component<Props, State> {
                                     rules={[
                                         {
                                             required: true,
-                                            message: 'Username is required',
+                                            message: <T _str="Username is required" />,
                                         },
                                     ]}
                                 >
@@ -144,11 +139,11 @@ class Register extends Component<Props, State> {
                                     rules={[
                                         {
                                             type: 'email',
-                                            message: 'Email invalid',
+                                            message: <T _str="Email invalid" />,
                                         },
                                         {
                                             required: true,
-                                            message: 'Email is required',
+                                            message: <T _str="Email is required" />,
                                         },
                                     ]}
                                 >
@@ -161,19 +156,17 @@ class Register extends Component<Props, State> {
                                     rules={[
                                         {
                                             min: 4,
-                                            message: 'Password must be at least 4 characters',
+                                            message: <T _str="Password must be at least 4 characters" />,
                                         },
                                         {
                                             required: true,
-                                            message: 'Password is required',
+                                            message: <T _str="Password is required" />,
                                         },
                                     ]}
                                 >
                                     <Input.Password
                                         placeholder="Password"
-                                        iconRender={(visible) =>
-                                            visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-                                        }
+                                        iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
                                     />
                                 </Form.Item>
                                 <Form.Item
@@ -184,11 +177,11 @@ class Register extends Component<Props, State> {
                                     rules={[
                                         {
                                             min: 4,
-                                            message: 'Confirm password must be at least 4 characters',
+                                            message: <T _str="Confirm password must be at least 4 characters" />,
                                         },
                                         {
                                             required: true,
-                                            message: 'Confirm password is required',
+                                            message: <T _str="Confirm password is required" />,
                                         },
                                         ({ getFieldValue }) => ({
                                             validator(_, value) {
@@ -196,13 +189,15 @@ class Register extends Component<Props, State> {
                                                     return Promise.resolve();
                                                 }
                                                 return Promise.reject(
-                                                    new Error('The two passwords that you entered do not match')
+                                                    ReactDOMServer.renderToString(
+                                                        <T _str="The two passwords that you entered do not match" />
+                                                    )
                                                 );
                                             },
                                         }),
                                     ]}
                                 >
-                                    <Input.Password placeholder="Confirm Password"/>
+                                    <Input.Password placeholder="Confirm Password" />
                                 </Form.Item>
 
                                 <Form.Item
@@ -214,29 +209,39 @@ class Register extends Component<Props, State> {
                                             validator: (_, value) =>
                                                 value
                                                     ? Promise.resolve()
-                                                    : Promise.reject(new Error('Should accept agreement')),
+                                                    : Promise.reject(
+                                                          new Error(
+                                                              ReactDOMServer.renderToString(
+                                                                  <T _str="Should accept the agreement" />
+                                                              )
+                                                          )
+                                                      ),
                                         },
                                     ]}
                                 >
                                     <Checkbox>
-                                        I agree to the <a href='#'>Terms of Service</a> and <a href='#'>Privacy Policy</a>
+                                        <T _str="I agree to the" />
+                                        <a href="#">
+                                            {' '}
+                                            <T _str="Terms of Service" />
+                                        </a>{' '}
+                                        <T _str="and" />{' '}
+                                        <a href="#">
+                                            {' '}
+                                            <T _str="Privacy Policy" />
+                                        </a>
                                     </Checkbox>
                                 </Form.Item>
 
                                 <Form.Item>
-                                    <Button
-                                        type="primary"
-                                        htmlType="submit"
-                                        size="large"
-                                        block
-                                    >
+                                    <Button type="primary" htmlType="submit" size="large" block>
                                         <T _str="Register" />
                                     </Button>
                                 </Form.Item>
                             </Form>
                         </Card>
                     </Col>
-                }
+                )}
             </Row>
         );
     }

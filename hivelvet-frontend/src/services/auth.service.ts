@@ -21,9 +21,8 @@ class AuthService {
         localStorage.removeItem('user');
     }
     getCurrentUser() {
-        const userStr = localStorage.getItem("user");
-        if (userStr)
-            return JSON.parse(userStr);
+        const userStr = localStorage.getItem('user');
+        if (userStr) return JSON.parse(userStr);
         return null;
     }
 }
