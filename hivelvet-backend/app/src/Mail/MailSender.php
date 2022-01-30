@@ -101,7 +101,7 @@ class MailSender extends Prefab
         $user = $user->getByEmail($to);
         $user->token=$t;
         $user->save();
-        echo "token user". $user->token ;
+
         $vars['token']=$t;
 
         $message           = Template::instance()->render('mail/'  .$template.'.phtml', null, $vars);

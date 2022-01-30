@@ -1,10 +1,10 @@
 import axios from 'axios';
 
-const API_URL = 'http://hivelvet.test/';
+const API_URL = 'http://api.hivelvet.test';
 
 class AuthService {
     register(username: string, email: string, password: string, confirmPassword: string) {
-        return axios.post(API_URL + 'account/api/register', {
+        return axios.post(API_URL + '/account/register', {
             username,
             email,
             password,
@@ -12,7 +12,7 @@ class AuthService {
         });
     }
     login(email: string, password: string) {
-        return axios.post(API_URL + 'account/api/login', {
+        return axios.post(API_URL + '/account/login', {
             email,
             password,
         });
@@ -20,22 +20,25 @@ class AuthService {
     logout() {
         localStorage.removeItem('user');
     }
+
     reset_password(email: string) {
-        return axios.post(API_URL + 'account/api/reset', {
+        return axios.post(API_URL + '/account/reset', {
             email,
         });
     }
     change_password(token: string, password: string) {
-        return axios.post(API_URL + 'account/api/change_password', {
+        return axios.post(API_URL + '/account/change_password', {
             token,
             password,
         });
     }
-    getUser(token: string ) {
-        return axios.post(API_URL + 'account/api/getuser_token', {
-            token,
-            
-        });
+    getUser(token: string) {
+        return axios.get(API_URL + '/account/get_user_token?token=' + token, {});
+    }
+    getCurrentUser() {
+        const userStr = localStorage.getItem('user');
+        if (userStr) return JSON.parse(userStr);
+        return null;
     }
 }
 

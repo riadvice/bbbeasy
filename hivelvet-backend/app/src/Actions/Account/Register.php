@@ -62,13 +62,13 @@ class Register extends BaseAction
                 $user->save();
             }
             catch (\Exception $e) {
-                $message = $e->getMessage();
+                $message = "user could not be added";
                 $this->logger->error('Registration error : user could not be added', ['error' => $message]);
                 $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
                 return;
             }
             $this->logger->error('user successfully registered', ['user' => $user->toArray()]);
-            $this->renderJson(['message' => 'Account created successfully']);
+            $this->renderJson(['message' => 'Congratulations ! Your account has been successfully created.']);
         }
     }
 }

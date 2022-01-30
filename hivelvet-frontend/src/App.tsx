@@ -17,14 +17,19 @@
  */
 
 import React, { useState } from 'react';
-import { Layout, ConfigProvider } from 'antd';
 import { Route, Routes } from 'react-router-dom';
+
+import './App.less';
+import { Layout, ConfigProvider, BackTop, Button } from 'antd';
+import { CaretUpOutlined } from '@ant-design/icons';
+import LandingPage from './components/LandingPage';
 
 import AppHeader from './components/AppHeader';
 import AppFooter from './components/AppFooter';
-import LandingPage from './components/LandingPage';
 import Register from './components/Register';
 import Login from './components/Login';
+import ResetPwd from './components/ResetPwd';
+import Home from './components/Home';
 
 import enUS from 'antd/lib/locale/en_US';
 import moment from 'moment';
@@ -41,23 +46,17 @@ moment.locale('en');
 
 const { Content } = Layout;
 tx.init({
-    token: '1/a6cfd7935802d07ec8332208a02c8ce02fbfc01c',
+    token: '1/7385d403dc3545240d6771327397811a619efe18',
 });
 
 tx.setCurrentLocale('en');
 
-Logger.info('init log info');
-/*
-Logger.warn('init log warning');
-Logger.error('init log error');
-Logger.fatal('init log fatal');
-*/
+Logger.info('Initialisation Hivelvet Frontend Application');
 
 function App() {
     const locale = enUS;
     const [currentLocale, setCurrentLocale] = useState(locale);
-    const direction = currentLocale.locale == 'ar' ? 'rtl' : 'ltr';
-    localStorage.setItem('locale', tx.getCurrentLocale());
+    const direction = currentLocale.locale !== 'ar' ? 'ltr' : 'rtl';
     const handleChange = (e) => {
         const localeValue = e.target.value;
         if (!localeValue) {
@@ -67,29 +66,30 @@ function App() {
         }
         tx.setCurrentLocale(localeValue.locale);
         setCurrentLocale(localeValue);
+        //localStorage.setItem('locale', tx.getCurrentLocale());
+        localStorage.setItem('locale', localeValue.locale);
     };
 
     return (
         <Layout>
             <ConfigProvider locale={currentLocale} direction={direction}>
-                <AppHeader currentLocale={currentLocale} currentDirection={direction} handleChange={handleChange} />
-                <Content>
+                <AppHeader currentLocale={currentLocale} handleChange={handleChange} />
+                <Content className="site-content">
                     <Routes>
-                        <Route path="/" element={<LandingPage key={currentLocale ? currentLocale.locale : 'en'} />} />
-                        <Route path="/register" element={<Register key={locale ? currentLocale.locale : 'en'} />} />
-                        <Route path="/login" element={<Login key={currentLocale ? currentLocale.locale : 'en'} />} />
-                        <Route
-                            path="/reset-password"
-                            element={<Reset key={currentLocale ? currentLocale.locale : 'en'} />}
-                        />
-                        <Route
-                            path="/change-password"
-                            element={<ChangePassword key={currentLocale ? currentLocale.locale : 'en'} />}
-                        />
+                        <Route path="/" element={<LandingPage />} />
+                        <Route path="/register" element={<Register />} />
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/reset-password" element={<Reset />} />
+                        <Route path="/change-password" element={<ChangePassword />} />
+
+                        <Route path="/home" element={<Home />} />
                     </Routes>
                 </Content>
-                <AppFooter key={currentLocale ? currentLocale.locale : 'en'} />
+                <AppFooter />
             </ConfigProvider>
+            <BackTop>
+                <Button type="primary" shape="circle" icon={<CaretUpOutlined />} />
+            </BackTop>
         </Layout>
     );
 }

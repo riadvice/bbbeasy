@@ -20,7 +20,7 @@ import { Link } from 'react-router-dom';
 import AuthService from '../services/auth.service';
 import '../App.css';
 //import 'antd/dist/antd.css';
-import { Form, Input, Button, Checkbox, message, Alert, Col, Row, Typography, Space } from 'antd';
+import { Form, Input, Button, Checkbox, message, Alert, Col, Row, Typography, Space, Card } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import { FormattedMessage } from 'react-intl';
 import { locale } from 'moment';
@@ -55,12 +55,11 @@ class Reset extends Component<Props, State> {
 
     handleReset(formValue: any) {
         const { email } = formValue;
-        console.log(email);
+
         AuthService.reset_password(email)
             .then((response) => {
-                console.log(response);
                 const responseMessage = response.data.message;
-                console.log(responseMessage);
+
                 message.success({
                     content: responseMessage,
                     style: {
@@ -71,13 +70,9 @@ class Reset extends Component<Props, State> {
                     successful: true,
                     message: responseMessage,
                 });
-                // const user = response.data.user;
-                // localStorage.setItem('user', JSON.stringify(user));
             })
             .catch((error) => {
-                console.log(error);
                 const responseMessage = error.response.data.message;
-                console.log(responseMessage);
                 this.setState({
                     successful: false,
                     message: responseMessage,
@@ -97,71 +92,63 @@ class Reset extends Component<Props, State> {
         return (
             <Row>
                 <Col span={8} offset={8} className="section-top">
-                    <Paragraph className="pricing-header text-center">
-                        <Title style={{ fontWeight: 500 }}>
-                            {' '}
-                            <T _str="Reset Password" />
-                        </Title>
-                    </Paragraph>
-                    <Space direction="horizontal" style={{ width: '100%', justifyContent: 'center' }}>
-                        <Paragraph className="pricing-table page-login">
-                            <Paragraph className="pricing-table-inner is-revealing">
-                                {message && !successful && (
-                                    <Alert
-                                        style={{ marginBottom: 24 }}
-                                        message="Error"
-                                        description={<T _str={message} />}
-                                        type="error"
-                                        showIcon
-                                    />
-                                )}
-                                <Form
-                                    layout="vertical"
-                                    name="normal_login"
-                                    className="login-form"
-                                    initialValues={initialValues}
-                                    onFinish={this.handleReset}
-                                >
-                                    <Form.Item
-                                        label={<T _str="Email" />}
-                                        name="email"
-                                        hasFeedback
-                                        rules={[
-                                            {
-                                                type: 'email',
-                                                message: 'Email is invalid',
-                                            },
-                                            {
-                                                required: true,
-                                                message: 'Email is required',
-                                            },
-                                        ]}
-                                    >
-                                        <Input />
-                                    </Form.Item>
-
-                                    <Form.Item>
-                                        <Button
-                                            type="primary"
-                                            htmlType="submit"
-                                            className="login-form-button"
-                                            size="large"
-                                        >
-                                            <T _str="Submit" />
-                                        </Button>
-                                    </Form.Item>
-                                </Form>
-                                <Paragraph className="text-center mt-12">
-                                    <Text style={{ color: 'white' }}>
-                                        <T _str="I remember my password" />{' '}
-                                    </Text>
-                                    <Link to={'/login'} className="login-link">
-                                        <T _str="Back to login" />{' '}
-                                    </Link>
-                                </Paragraph>
-                            </Paragraph>
+                    <Card className="form-content">
+                        <Paragraph className="form-header text-center">
+                            <img className="form-img" src="images/logo_02.png" alt="Logo" />
+                            <Title level={4}>
+                                {' '}
+                                <T _str="Reset my password" />
+                            </Title>
                         </Paragraph>
-                    </Space>
+                        {message && !successful && (
+                            <Alert type="error" className="alert-msg" message={<T _str={message} />} showIcon />
+                        )}
+                        <Form
+                            layout="vertical"
+                            name="login_form"
+                            className="login-form"
+                            initialValues={initialValues}
+                            onFinish={this.handleReset}
+                        >
+                            <Form.Item
+                                label="Email"
+                                name="email"
+                                hasFeedback
+                                rules={[
+                                    {
+                                        type: 'email',
+                                        message: <T _str="Email invalid" />,
+                                    },
+                                    {
+                                        required: true,
+                                        message: <T _str="Email is required" />,
+                                    },
+                                ]}
+                            >
+                                <Input placeholder="Email" />
+                            </Form.Item>
+                            <Form.Item>
+                                <Button
+                                    type="primary"
+                                    htmlType="submit"
+                                    className="login-form-button"
+                                    size="large"
+                                    block
+                                >
+                                    <T _str="Reset password" />
+                                </Button>
+                            </Form.Item>
+                        </Form>
+
+                        <Paragraph className="form-footer text-center">
+                            <Text>
+                                <T _str="I remember my password" />{' '}
+                            </Text>
+                            <Link to={'/login'}>
+                                <T _str="Back to login" />{' '}
+                            </Link>
+                        </Paragraph>
+                    </Card>
                 </Col>
             </Row>
         );

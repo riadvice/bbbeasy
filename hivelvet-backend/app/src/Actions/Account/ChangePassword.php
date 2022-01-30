@@ -34,19 +34,19 @@ class ChangePassword  extends BaseAction
 
         if ( $tokenExist ) {
             $user->password=$password;
-
+            $user->token=null;
 
             try{
                 $user->save();
             }
             catch (\Exception $e){
-                $message = $e->getMessage();
+                $message ="password could not be changed";
                 $this->logger->error('reset password error : password could not be changed', ['error' => $message]);
                 $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
                 return;
             }
-            $user->token=null;
-            echo $user->token;
+
+
             $this->renderJson(['message' => "password changed successfully","user"=>$user->toArray()]);
         }
         else {

@@ -56,9 +56,8 @@ class Login extends BaseAction
                 $user->save();
 
                 $this->session->set('locale', $user->locale);
-                $message = 'Valid credentials';
+                $message = 'Welcome back '. $user->username .' !';
                 $userInfos = array(
-                    "id" => $user->id,
                     "username" => $user->username,
                     "email" => $user->email,
                     "role" => $user->role,

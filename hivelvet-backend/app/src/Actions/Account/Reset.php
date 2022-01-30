@@ -36,9 +36,9 @@ class Reset extends  BaseAction
 
 
                 $this->session->set('locale', $user->locale);
-                $message = 'Valid credentials';
+
                 $mail = new  MailSender();
-                $template = "common/header";
+                $template = "common/content";
                 $mail->send($template, [], $email, "reset password", "reset password");
 
                 if ($mail) {
