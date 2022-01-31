@@ -35,8 +35,7 @@ class CreateUsersTables extends AbstractMigration
             ->addColumn('updated_on', 'datetime', ['default' => '0001-01-01 00:00:00', 'timezone' => true])
             ->addIndex('username', ['unique' => true, 'name' => 'idx_users_username'])
             ->addIndex('email', ['unique' => true, 'name' => 'idx_users_email'])
-             ->addColumn('token','string', ['limit' => 256, 'null' =>true] )
-            ->save();
+               ->save();
     }
 
     public function down(): void

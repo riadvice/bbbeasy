@@ -27,13 +27,13 @@ class AuthService {
         });
     }
     change_password(token: string, password: string) {
-        return axios.post(API_URL + '/account/change_password', {
+        return axios.post(API_URL + '/account/change-password', {
             token,
             password,
         });
     }
     getUser(token: string) {
-        return axios.get(API_URL + '/account/get_user_token?token=' + token, {});
+        return axios.get(API_URL + '/account/get-user?token=' + token, {});
     }
     getCurrentUser() {
         const userStr = localStorage.getItem('user');

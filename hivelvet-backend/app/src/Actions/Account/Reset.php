@@ -38,17 +38,17 @@ class Reset extends  BaseAction
                 $this->session->set('locale', $user->locale);
 
                 $mail = new  MailSender();
-                $template = "common/content";
+             $template = "common/reset_password";
                 $mail->send($template, [], $email, "reset password", "reset password");
 
                 if ($mail) {
 
-                    $this->renderJson(["message"=> "We have sent a link to reset you password to your mail address "],ResponseCode::HTTP_OK);
+                    $this->renderJson(["message"=> "Please check your email to reset your password "],ResponseCode::HTTP_OK);
                 }
             } else {
                 // email invalid or user no exist
-                $message = 'Email invalid';
-                // $this->logger->error('Login error : user could not logged', ['error' => $message]);
+                $message = 'User does not exist with this email';
+                  $this->logger->error('Login error : user could not logged', ['error' => $message]);
                 $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
             }
         }

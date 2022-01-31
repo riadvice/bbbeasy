@@ -10,13 +10,13 @@ en-US:
   email :  
     label: Email
     required: Email is required
-    invalid: Email  invalid
+    invalid: Invalid Email
     already-exists: email already exists
   password:
     label: Password
     required: Password is required
     size: Password must be at least 4 characters
-    invalid: Password invalid
+    invalid: Invalid Password
   join-us: Join us
   register-now: Register now and join our community
   username:
@@ -45,9 +45,12 @@ en-US:
   user_not_exists: user does not exist
   success_change_password: password changed successfull
   error_change_password: password could not be changed
-  request-timed-out: request timed out 
   error-registration: user could not be added
-  sent-link-successfully : We have sent a link to reset you password to your mail address
+  sent-link-successfully : Please check your email to reset your password 
+  token:
+    expired: Token was expired
+    consumed: Token was consumed
+
   
 
 

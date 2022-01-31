@@ -5,6 +5,7 @@ use Actions\Base as BaseAction;
 use Enum\ResponseCode;
 use Enum\UserRole;
 use Enum\UserStatus;
+use Models\ResetTokenPassword;
 use Models\User;
 
 
@@ -22,39 +23,43 @@ class ChangePassword  extends BaseAction
     public function execute($f3): void
     {
         $user   = new User();
-
+        $resettoken= new ResetTokenPassword();
         $form   = $this->getDecodedBody();
 
         $token  =  $form['token'] ;
         $password  =  $form['password'] ;
 
-        $user = $user->getByResetToken($token);
 
-        $tokenExist     = $user->load(['token = ?', $form['token']]);
 
-        if ( $tokenExist ) {
-            $user->password=$password;
-            $user->token=null;
 
-            try{
-                $user->save();
+
+
+          $resettoken=$resettoken->getByToken($token);
+
+
+
+               $user= $user->getByID($resettoken->userID);
+                $user->password=$password;
+                $resettoken->status="consumed";
+
+
+                try{
+                    $resettoken->save();
+                    $user->save();
+                }
+                catch (\Exception $e){
+
+                    $message ="password could not be changed";
+                    $this->logger->error('reset password error : password could not be changed', ['error' => $message]);
+                    $this->renderJson(['message' => $e->getMessage()], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+                    return;
+                }
+
+
+                $this->renderJson(['message' => "password changed successfully","user"=>$user->toArray()]);
             }
-            catch (\Exception $e){
-                $message ="password could not be changed";
-                $this->logger->error('reset password error : password could not be changed', ['error' => $message]);
-                $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-                return;
-            }
 
 
-            $this->renderJson(['message' => "password changed successfully","user"=>$user->toArray()]);
-        }
-        else {
-
-            $this->logger->error('user does not exist with this email', ['user' => $user->toArray()]);
-            $this->renderJson(['message' => 'user does not exist',ResponseCode::HTTP_INTERNAL_SERVER_ERROR]);
-        }
-    }
 
 
 }

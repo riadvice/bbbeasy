@@ -97,7 +97,7 @@ class Login extends Component<Props, State> {
                                 rules={[
                                     {
                                         type: 'email',
-                                        message: <T _str="Email is invalid" />,
+                                        message: <T _str="Invalid Email" />,
                                     },
                                     {
                                         required: true,

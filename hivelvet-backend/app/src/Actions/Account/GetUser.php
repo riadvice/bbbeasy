@@ -4,6 +4,7 @@ namespace Actions\Account;
 
 use Actions\Base as BaseAction;
 use Enum\ResponseCode;
+use Models\ResetTokenPassword;
 use Models\User;
 
 class GetUser extends BaseAction
@@ -18,18 +19,41 @@ class GetUser extends BaseAction
          $token=$f3->get('GET.token') ;
 
         $user=new User();
-        if ($user->tokenExists($token)) {
+        $resettoken=new ResetTokenPassword();
+        if ($resettoken->tokenExists($token)) {
+            $resettoken->getByToken($token);
+            if($resettoken->status =="new") {
 
-            $this->renderJson(['user' => $user->toArray(),ResponseCode::HTTP_OK]);
-        }else{
-            $this->renderJson(['message' => "request timed out "], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-         }
 
-    /*   if($user->id){
-           echo "no user";
-          // $this->logger->error('user does not exist with this email', ['user' => $user->toArray()]);
-          // $this->renderJson(['message' => 'You cannot access to this page request timed out',ResponseCode::HTTP_NOT_FOUND]);
-       }*/
+                if ($resettoken->expirationDate == date('Y-m-d')) {
+
+                    $resettoken->status = "expired";
+
+                    $this->logger->error('token was expired' );
+                    $this->renderJson(['message' => 'token was expired'],ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+
+                }
+                $user=$user->getByID($resettoken->userID);
+                $this->renderJson(['user' => $user->toArray(),ResponseCode::HTTP_OK]);
+
+
+            }
+          if($resettoken->status =="consumed") {
+
+              $this->logger->error('token was consumed' );
+              $this->renderJson(['message' => 'token was consumed'],ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+
+
+          }
+
+
+        }
+
+
+
+
+
+
 
     }
 }

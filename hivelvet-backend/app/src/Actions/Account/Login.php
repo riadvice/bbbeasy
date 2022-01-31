@@ -67,14 +67,14 @@ class Login extends BaseAction
             }
             else {
                 //password invalid
-                $message = 'Password invalid';
+                $message = 'Invalid Password';
                 $this->logger->error('Login error : user could not logged', ['error' => $message]);
                 $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
             }
         }
         else {
             // email invalid or user no exist
-            $message = 'Email invalid';
+            $message = 'Invalid Email';
             $this->logger->error('Login error : user could not logged', ['error' => $message]);
             $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
         }

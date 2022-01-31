@@ -119,7 +119,18 @@ class User extends BaseModel
 
         return $this;
     }
+    /**
+     * Get user record by id value
+     *
+     * @param  integer $id
+     * @return Cortex
+     */
+    public function getByID($id)
+    {
+        $this->load(['id = ?',$id]);
 
+        return $this;
+    }
     /**
      * Check if email already in use
      *
@@ -166,14 +177,6 @@ class User extends BaseModel
 
         return $this;
     }
-    /**
-     * Check if email already in use
-     *
-     * @param  string $token
-     * @return bool
-     */
-    public function tokenExists(string $token)
-    {
-        return count($this->db->exec('SELECT 1 FROM users WHERE token= ?', $token)) > 0;
-    }
+
+
 }

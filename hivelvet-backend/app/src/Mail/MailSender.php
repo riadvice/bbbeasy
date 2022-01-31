@@ -24,6 +24,7 @@ use Base;
 use Exception;
 use Log\LogWriterTrait;
 use Mailer;
+use Models\ResetTokenPassword;
 use Models\User;
 use Nette\Utils\Strings;
 use OAuthProvider;
@@ -98,13 +99,33 @@ class MailSender extends Prefab
         $vars['to']  =  $to ;
         $t  = bin2hex(random_bytes(16));
         $user=new  User();
+        $resettoken=new ResetTokenPassword();
         $user = $user->getByEmail($to);
-        $user->token=$t;
-        $user->save();
+         if($resettoken->userExists($user->id)){
+
+           $resettoken= $resettoken->getByUserID($user->id);
+             $resettoken->expirationDate=date('Y-m-d', strtotime('+1 day'));
+             $resettoken->status="new";
+             $resettoken->token=$t;
+
+             $resettoken->save();
+
+         }
+
+        $resettoken->expirationDate=date('Y-m-d', strtotime('+1 day'));
+
+        $resettoken->userID=$user->id;
+        $resettoken->status="new";
+        $resettoken->token=$t;
+
+        $resettoken->save();
 
         $vars['token']=$t;
+        $vars['from_name']=$this->f3->get('from_name');
 
-        $message           = Template::instance()->render('mail/'  .$template.'.phtml', null, $vars);
+
+
+        $message           = Template::instance()->render('mail/'  .$template.'.html', null, $vars);
 
         /*
         //replace the db template variables with provided $vars
@@ -143,7 +164,7 @@ class MailSender extends Prefab
      * @param $messageId
      * @return bool
      */
-    public function smtpSend( $from, $to, $title, $subject, $message ): bool
+    private  function smtpSend( $from, $to, $title, $subject, $message ): bool
     {
         $messageId         = $this->generateId();
 
@@ -156,9 +177,8 @@ class MailSender extends Prefab
         }
 
         if ($from == null) {
-          //  $this->mailer->setFrom($from);
-            $this->mailer->setFrom($this->f3->get('debug.email'));
-        }
+             $this->mailer->setFrom($this->f3->get('from_mail'));
+         }
         $this->mailer->setHTML($message);
         $this->mailer->set('Message-Id', $messageId);
         $sent = $this->mailer->send($subject, Environment::isNotProduction());

@@ -73,6 +73,7 @@ class Reset extends Component<Props, State> {
             })
             .catch((error) => {
                 const responseMessage = error.response.data.message;
+
                 this.setState({
                     successful: false,
                     message: responseMessage,
@@ -117,7 +118,7 @@ class Reset extends Component<Props, State> {
                                 rules={[
                                     {
                                         type: 'email',
-                                        message: <T _str="Email invalid" />,
+                                        message: <T _str="Invalid Email" />,
                                     },
                                     {
                                         required: true,

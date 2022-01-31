@@ -16,7 +16,7 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 import React, { Component, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, Navigate, useParams } from 'react-router-dom';
 import AuthService from '../services/auth.service';
 import '../App.css';
 //import 'antd/dist/antd.css';
@@ -47,15 +47,11 @@ class ChangePassword extends Component<Props, State> {
         authService
             .getUser(params.get('token'))
             .then((response) => {
-                console.log(response);
-                console.log(response.data);
                 this.setState({
                     pageexists: true,
                 });
             })
             .catch((error) => {
-                console.log(error);
-                console.log(error.response);
                 this.setState({
                     pageexists: false,
                 });
@@ -83,18 +79,13 @@ class ChangePassword extends Component<Props, State> {
 
     handleChange(formValue: any) {
         const { password, confirmPassword } = formValue;
-        console.log(formValue);
-        console.log(password, confirmPassword);
-        console.log('props', window.location.search);
+
         const params = new URLSearchParams(window.location.search);
-        console.log('params =', params);
-        console.log(params.get('token'));
 
         AuthService.change_password(params.get('token'), password)
             .then((response) => {
-                console.log(response);
                 const responseMessage = response.data.message;
-                console.log(responseMessage);
+
                 message.success({
                     content: responseMessage,
                     style: {
@@ -107,9 +98,7 @@ class ChangePassword extends Component<Props, State> {
                 });
             })
             .catch((error) => {
-                console.log(error);
                 const responseMessage = error.response.data.message;
-                console.log(responseMessage);
                 this.setState({
                     successful: false,
                     message: responseMessage,
@@ -126,7 +115,6 @@ class ChangePassword extends Component<Props, State> {
             message: '',
         };
 
-        console.log(pageexists);
         return (
             <Row>
                 {pageexists && (
@@ -224,6 +212,11 @@ class ChangePassword extends Component<Props, State> {
                                                 </Button>
                                             </Form.Item>
                                         </Form>
+                                        <Paragraph className="form-footer text-center">
+                                            <Link to={'/login'}>
+                                                <T _str="Back to login" />{' '}
+                                            </Link>
+                                        </Paragraph>
                                     </Paragraph>
                                 </Paragraph>
                             </Space>
