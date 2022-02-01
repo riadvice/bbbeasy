@@ -52,9 +52,7 @@ class Login extends Component<Props, State> {
                 const responseMessage = response.data.message;
                 message.success({
                     content: responseMessage,
-                    style: {
-                        marginTop: '20vh',
-                    },
+                    className: 'success-message'
                 });
                 this.setState({
                     successful: true,

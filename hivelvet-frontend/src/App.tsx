@@ -30,6 +30,7 @@ import Register from './components/Register';
 import Login from './components/Login';
 import ResetPwd from './components/ResetPwd';
 import Home from './components/Home';
+import Install from './components/Install';
 
 import enUS from 'antd/lib/locale/en_US';
 import moment from 'moment';
@@ -78,7 +79,9 @@ function App() {
                         <Route path="/register" element={<Register />} />
                         <Route path="/login" element={<Login />} />
                         <Route path="/reset" element={<ResetPwd />} />
-                        <Route path="/home" element={<Home />} />
+
+                        <Route path="/install" element={<Install />} />
+                        <Route path='/home' element={<Home />} />
                     </Routes>
                 </Content>
                 <AppFooter />
