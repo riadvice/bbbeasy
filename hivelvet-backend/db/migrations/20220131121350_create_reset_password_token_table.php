@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 use Phinx\Migration\AbstractMigration;
@@ -21,11 +22,10 @@ final class CreateResetPasswordTokenTable extends AbstractMigration
         $table = $this->table('reset_password_tokens');
         $table
             ->addColumn('userID', 'integer')
-            ->addColumn("token","string")
-            ->addColumn("status","string")
-            ->addColumn("expirationDate","date" ,[  'null' => true])
+            ->addColumn('token', 'string')
+            ->addColumn('status', 'string')
+            ->addColumn('expirationDate', 'date', [  'null' => true])
             ->addForeignKey(['userID'], 'users', ['id'], ['constraint' => 'users_id'])
-
 
             ->create();
     }

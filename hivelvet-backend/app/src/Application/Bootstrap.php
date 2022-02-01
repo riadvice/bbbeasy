@@ -151,8 +151,8 @@ class Bootstrap extends Boot
 
         // enable cors to allow cross-origin requests from frontend react client
         header('Access-Control-Allow-Origin: *');
-        header("Access-Control-Allow-Headers: Content-Type, Origin, Authorization, X-Authorization, Accept, Accept-Language, Access-Control-Request-Method");
-        header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
+        header('Access-Control-Allow-Headers: Content-Type, Origin, Authorization, X-Authorization, Accept, Accept-Language, Access-Control-Request-Method');
+        header('Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE');
         //header("Allow: GET, POST, OPTIONS, PUT, DELETE");
     }
 }

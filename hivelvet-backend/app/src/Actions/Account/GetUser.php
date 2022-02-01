@@ -1,5 +1,23 @@
 <?php
 
+/**
+ * Hivelvet open source platform - https://riadvice.tn/
+ *
+ * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
+ *
+ * This program is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free Software
+ * Foundation; either version 3.0 of the License, or (at your option) any later
+ * version.
+ *
+ * Hivelvet is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License along
+ * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
+ */
+
 namespace Actions\Account;
 
 use Actions\Base as BaseAction;
@@ -16,44 +34,26 @@ class GetUser extends BaseAction
 
     public function execute($f3, $params): void
     {
-         $token=$f3->get('GET.token') ;
+        $token = $f3->get('GET.token');
 
-        $user=new User();
-        $resettoken=new ResetTokenPassword();
-        if ($resettoken->tokenExists($token)) {
-            $resettoken->getByToken($token);
-            if($resettoken->status =="new") {
+        $user       = new User();
+        $resetToken = new ResetTokenPassword();
+        if ($resetToken->tokenExists($token)) {
+            $resetToken->getByToken($token);
+            if ($resetToken->status === 'new') {
+                if ($resetToken->expirationDate == date('Y-m-d')) {
+                    $resetToken->status = 'expired';
 
-
-                if ($resettoken->expirationDate == date('Y-m-d')) {
-
-                    $resettoken->status = "expired";
-
-                    $this->logger->error('token was expired' );
-                    $this->renderJson(['message' => 'token was expired'],ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-
+                    $this->logger->error('token was expired');
+                    $this->renderJson(['message' => 'token was expired'], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
                 }
-                $user=$user->getByID($resettoken->userID);
-                $this->renderJson(['user' => $user->toArray(),ResponseCode::HTTP_OK]);
-
-
+                $user = $user->getByID($resetToken->userID);
+                $this->renderJson(['user' => $user->toArray(), ResponseCode::HTTP_OK]);
             }
-          if($resettoken->status =="consumed") {
-
-              $this->logger->error('token was consumed' );
-              $this->renderJson(['message' => 'token was consumed'],ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-
-
-          }
-
-
+            if ($resetToken->status == 'consumed') {
+                $this->logger->error('token was consumed');
+                $this->renderJson(['message' => 'token was consumed'], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+            }
         }
-
-
-
-
-
-
-
     }
 }

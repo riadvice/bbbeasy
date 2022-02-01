@@ -1,10 +1,9 @@
 <?php
 
 namespace Models;
+
 use Enum\CacheKey;
-use Enum\UserStatus;
 use Models\Base as BaseModel;
-use DateTime;
 use DB\Cortex;
 
 /**
@@ -31,11 +30,9 @@ class ResetTokenPassword extends BaseModel
         $this->f3->clear(CacheKey::AJAX_USERS);
     }
 
-
     public function __construct($db = null, $table = null, $fluid = null, $ttl = 0)
     {
         parent::__construct($db, $table, $fluid, $ttl);
-
     }
 
     /**
@@ -48,7 +45,6 @@ class ResetTokenPassword extends BaseModel
     {
         return count($this->db->exec('SELECT 1 FROM reset_password_tokens WHERE "userID"= ?', $userID)) > 0;
     }
-
 
     /**
      * Check if token already exists
@@ -72,7 +68,6 @@ class ResetTokenPassword extends BaseModel
 
         return $this;
     }
-
 
     /**
      * Get user record by token value

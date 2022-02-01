@@ -27,7 +27,6 @@ use Mailer;
 use Models\ResetTokenPassword;
 use Models\User;
 use Nette\Utils\Strings;
-use OAuthProvider;
 use Prefab;
 use Template;
 use Utils\Environment;
@@ -87,8 +86,7 @@ class MailSender extends Prefab
      */
     public function send($template, $vars, $to, $title, $subject): bool
     {
-
-       $messageId         = $this->generateId();
+        $messageId         = $this->generateId();
         $vars['date']      = strftime('%A %d %B %A à %T');
         $vars['messageId'] = $shortId = Strings::before(mb_substr($messageId, 1, -1), '@');
         $vars['SCHEME']    = $this->f3->get('SCHEME');
@@ -97,33 +95,29 @@ class MailSender extends Prefab
         $vars['BASE']      = $this->f3->get('BASE');
 
         $vars['to']  =  $to ;
-        $t  = bin2hex(random_bytes(16));
-        $user=new  User();
-        $resettoken=new ResetTokenPassword();
-        $user = $user->getByEmail($to);
-         if($resettoken->userExists($user->id)){
+        $t           = bin2hex(random_bytes(16));
+        $user        =new  User();
+        $resettoken  =new ResetTokenPassword();
+        $user        = $user->getByEmail($to);
+        if ($resettoken->userExists($user->id)) {
+            $resettoken                = $resettoken->getByUserID($user->id);
+            $resettoken->expirationDate=date('Y-m-d', strtotime('+1 day'));
+            $resettoken->status        ='new';
+            $resettoken->token         =$t;
 
-           $resettoken= $resettoken->getByUserID($user->id);
-             $resettoken->expirationDate=date('Y-m-d', strtotime('+1 day'));
-             $resettoken->status="new";
-             $resettoken->token=$t;
-
-             $resettoken->save();
-
-         }
+            $resettoken->save();
+        }
 
         $resettoken->expirationDate=date('Y-m-d', strtotime('+1 day'));
 
         $resettoken->userID=$user->id;
-        $resettoken->status="new";
-        $resettoken->token=$t;
+        $resettoken->status='new';
+        $resettoken->token =$t;
 
         $resettoken->save();
 
-        $vars['token']=$t;
+        $vars['token']    =$t;
         $vars['from_name']=$this->f3->get('from_name');
-
-
 
         $message           = Template::instance()->render('mail/'  .$template.'.html', null, $vars);
 
@@ -164,7 +158,7 @@ class MailSender extends Prefab
      * @param $messageId
      * @return bool
      */
-    private  function smtpSend( $from, $to, $title, $subject, $message ): bool
+    private function smtpSend($from, $to, $title, $subject, $message): bool
     {
         $messageId         = $this->generateId();
 
@@ -177,19 +171,16 @@ class MailSender extends Prefab
         }
 
         if ($from == null) {
-             $this->mailer->setFrom($this->f3->get('from_mail'));
-         }
+            $this->mailer->setFrom($this->f3->get('from_mail'));
+        }
         $this->mailer->setHTML($message);
         $this->mailer->set('Message-Id', $messageId);
         $sent = $this->mailer->send($subject, Environment::isNotProduction());
 
         if ($sent !== false && Environment::isNotProduction()) {
-
-
-            @file_put_contents($this->f3->get('MAIL_STORAGE') . mb_substr($messageId, 1, -1) . '.eml' ,
+            @file_put_contents($this->f3->get('MAIL_STORAGE') . mb_substr($messageId, 1, -1) . '.eml',
                explode("354 Go ahead\n", explode("250 OK\nQUIT", $this->mailer->log())[0])[1]
 );
-
         }
 
         $this->logger->info('Sending email | Status: ' . ($sent ? 'true' : 'false') . " | Log:\n" . $this->mailer->log());
