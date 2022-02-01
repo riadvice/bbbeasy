@@ -9,10 +9,10 @@ use DB\Cortex;
 /**
  * Class User
  * @property int   $id
- * @property int $userID
+ * @property int $user_id
  * @property string $token
  * @property string    $status
- * @property date $expirationDate
+ * @property datetime $expires_at
 
 
  * @package Models
@@ -43,7 +43,7 @@ class ResetTokenPassword extends BaseModel
      */
     public function userExists($userID)
     {
-        return count($this->db->exec('SELECT 1 FROM reset_password_tokens WHERE "userID"= ?', $userID)) > 0;
+        return count($this->db->exec('SELECT 1 FROM reset_password_tokens WHERE  user_id = ?', $userID)) > 0;
     }
 
     /**
@@ -64,7 +64,7 @@ class ResetTokenPassword extends BaseModel
      */
     public function getByUserID(int $userID)
     {
-        $this->load(['userID = ?', $userID]);
+        $this->load(['user_id = ?', $userID]);
 
         return $this;
     }

@@ -54,6 +54,7 @@ class ChangePassword extends Component<Props, State> {
             .catch((error) => {
                 this.setState({
                     pageexists: false,
+                    message: error.response.data.message,
                 });
             });
 
@@ -67,14 +68,6 @@ class ChangePassword extends Component<Props, State> {
             message: '',
             pageexists: false,
         };
-
-        /* this.handleLogin = this.handleLogin.bind(this);
-          this.state = {
-              email: '',
-              
-              successful: false,
-              message: '',
-          };*/
     }
 
     handleChange(formValue: any) {
@@ -230,9 +223,13 @@ class ChangePassword extends Component<Props, State> {
                         </Paragraph>
                         <Space direction="horizontal" style={{ width: '100%', justifyContent: 'center' }}>
                             <Paragraph className="pricing-table page-login">
-                                <Form layout="vertical" name="normal_login" className="login-form">
-                                    <h1>Not found</h1>
-                                </Form>
+                                <Alert
+                                    style={{ marginBottom: 24 }}
+                                    message="Error"
+                                    description={<T _str={message} />}
+                                    type="error"
+                                    showIcon
+                                />
                             </Paragraph>
                         </Space>
                     </Col>

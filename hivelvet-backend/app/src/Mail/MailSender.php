@@ -100,24 +100,29 @@ class MailSender extends Prefab
         $resettoken  =new ResetTokenPassword();
         $user        = $user->getByEmail($to);
         if ($resettoken->userExists($user->id)) {
+
             $resettoken                = $resettoken->getByUserID($user->id);
-            $resettoken->expirationDate=date('Y-m-d', strtotime('+1 day'));
+            $resettoken->expires_at=date('Y-m-d  H:i:s', strtotime('+1 min'));
+
             $resettoken->status        ='new';
             $resettoken->token         =$t;
 
             $resettoken->save();
+        }else {
+
+
+            $resettoken->expires_at = date('Y-m-d H:i:s', strtotime('+15 min'));
+
+
+            $resettoken->user_id = $user->id;
+            $resettoken->status = 'new';
+            $resettoken->token = $t;
         }
-
-        $resettoken->expirationDate=date('Y-m-d', strtotime('+1 day'));
-
-        $resettoken->userID=$user->id;
-        $resettoken->status='new';
-        $resettoken->token =$t;
-
         $resettoken->save();
 
         $vars['token']    =$t;
         $vars['from_name']=$this->f3->get('from_name');
+        $vars['expires_at']=$resettoken->expires_at;
 
         $message           = Template::instance()->render('mail/'  .$template.'.html', null, $vars);
 

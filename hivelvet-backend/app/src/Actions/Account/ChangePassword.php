@@ -42,7 +42,7 @@ class ChangePassword extends BaseAction
 
         $resetToken = $resetToken->getByToken($token);
 
-        $user               = $user->getByID($resetToken->userID);
+        $user               = $user->getByID($resetToken->user_id);
         $user->password     = $password;
         $resetToken->status = 'consumed';
 

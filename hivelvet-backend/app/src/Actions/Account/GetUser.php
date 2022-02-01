@@ -41,18 +41,19 @@ class GetUser extends BaseAction
         if ($resetToken->tokenExists($token)) {
             $resetToken->getByToken($token);
             if ($resetToken->status === 'new') {
-                if ($resetToken->expirationDate == date('Y-m-d')) {
+                if ($resetToken->expires_at<= date('Y-m-d H:i:s')) {
                     $resetToken->status = 'expired';
 
                     $this->logger->error('token was expired');
                     $this->renderJson(['message' => 'token was expired'], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+                }else {
+                    $user = $user->getByID($resetToken->user_id);
+                    $this->renderJson(['user' => $user->toArray(), ResponseCode::HTTP_OK]);
                 }
-                $user = $user->getByID($resetToken->userID);
-                $this->renderJson(['user' => $user->toArray(), ResponseCode::HTTP_OK]);
             }
             if ($resetToken->status == 'consumed') {
                 $this->logger->error('token was consumed');
-                $this->renderJson(['message' => 'token was consumed'], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+                $this->renderJson(['message' => 'token was consumed , you should request to reset your password again '], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
             }
         }
     }
