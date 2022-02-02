@@ -20,6 +20,8 @@ import React from 'react';
 import { Steps, Button, Row, Col, Form, Input, Typography, Upload, Card, Avatar, Modal } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone, InboxOutlined } from '@ant-design/icons';
 import { T } from '@transifex/react';
+import ColorPicker from "rc-color-picker/lib/ColorPicker";
+import "rc-color-picker/assets/index.css";
 
 const { Title, Text, Paragraph } = Typography;
 const { Step } = Steps;
@@ -27,7 +29,12 @@ const { Meta } = Card;
 
 const Install = () => {
     const [stepForm] = Form.useForm();
+    const defaultColor = '#fbbc0b';
     const [activeStep, setActiveStep] = React.useState(0);
+    const [primaryColor, setPrimaryColor] = React.useState(defaultColor);
+    const [secondaryColor, setSecondaryColor] = React.useState(defaultColor);
+    const [accentColor, setAccentColor] = React.useState(defaultColor);
+    const [addColor, setAddColor] = React.useState(defaultColor);
     const initialValues = {
         username: '',
         email: '',
@@ -39,6 +46,10 @@ const Install = () => {
         term_url:'',
         policy_url:'',
 
+        primary_color: '',
+        secondary_color: '',
+        accent_color: '',
+        add_color: '',
     };
 
     const Step1Form = () => {
@@ -226,25 +237,70 @@ const Install = () => {
                             label={<T _str="Primary color" />}
                             name="primary_color"
                         >
-                            <Input />
+                            <ColorPicker
+                                animation="slide-up"
+                                defaultColor={primaryColor}
+                                onChange={ (color) => { setPrimaryColor(color.color) }}
+                                placement="bottomLeft"
+                            >
+                                <span className="rc-color-picker-trigger" />
+                            </ColorPicker>
+
+                            <span className="color-palette-picker-value">
+                                {primaryColor}
+                            </span>
                         </Form.Item>
                         <Form.Item
                             label={<T _str="Secondary color" />}
                             name="secondary_color"
                         >
-                            <Input />
+                            <ColorPicker
+                                animation="slide-up"
+                                defaultColor={secondaryColor}
+                                onChange={ (color) => { setSecondaryColor(color.color) }}
+                                placement="bottomLeft"
+                            >
+                                <span className="rc-color-picker-trigger" />
+                            </ColorPicker>
+
+                            <span className="color-palette-picker-value">
+                                {secondaryColor}
+                            </span>
+
                         </Form.Item>
                         <Form.Item
                             label={<T _str="Accent color" />}
                             name="accent_color"
                         >
-                            <Input />
+                            <ColorPicker
+                                animation="slide-up"
+                                defaultColor={accentColor}
+                                onChange={ (color) => { setAccentColor(color.color) }}
+                                placement="bottomLeft"
+                            >
+                                <span className="rc-color-picker-trigger" />
+                            </ColorPicker>
+
+                            <span className="color-palette-picker-value">
+                                {accentColor}
+                            </span>
                         </Form.Item>
                         <Form.Item
                             label={<T _str="Additional color" />}
                             name="add_color"
                         >
-                            <Input />
+                            <ColorPicker
+                                animation="slide-up"
+                                defaultColor={addColor}
+                                onChange={ (color) => { setAddColor(color.color) }}
+                                placement="bottomLeft"
+                            >
+                                <span className="rc-color-picker-trigger" />
+                            </ColorPicker>
+
+                            <span className="color-palette-picker-value">
+                                {addColor}
+                            </span>
                         </Form.Item>
                     </div>
                 </div>
@@ -390,14 +446,17 @@ const Install = () => {
         },
     ];
 
-    const onFinish = (fieldsValue) => {
+    const onFinish = () => {
         if(activeStep < steps.length - 1) {
             next();
         }
         else {
             const formData = stepForm.getFieldsValue(true);
+            formData.primary_color = primaryColor;
+            formData.secondary_color = secondaryColor;
+            formData.accent_color = accentColor;
+            formData.add_color = addColor;
             console.log(formData);
-            //console.log(fieldsValue); only values of final form
         }
     };
 
