@@ -25,12 +25,13 @@ import { CaretUpOutlined } from '@ant-design/icons';
 
 import AppHeader from './components/AppHeader';
 import AppFooter from './components/AppFooter';
+import Install from './components/Install';
+import PageNotFound from './components/PageNotFound';
 import LandingPage from './components/LandingPage';
 import Register from './components/Register';
 import Login from './components/Login';
 import ResetPwd from './components/ResetPwd';
 import Home from './components/Home';
-import Install from './components/Install';
 
 import enUS from 'antd/lib/locale/en_US';
 import moment from 'moment';
@@ -83,11 +84,13 @@ function App() {
                             <Route path="/register" element={<Register />} />
                             <Route path="/login" element={<Login />} />
                             <Route path="/reset" element={<ResetPwd />} />
-                            <Route path='/home' element={<Home />} />
+                            <Route path="/home" element={<Home />} />
+                            <Route path="*" element={<PageNotFound />} />
                         </Routes>
                     :
                         <Routes>
                             <Route path="/" element={<Install />} />
+                            <Route path="*" element={<PageNotFound />} />
                         </Routes>
                     }
                 </Content>

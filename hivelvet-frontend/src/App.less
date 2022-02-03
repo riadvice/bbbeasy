@@ -58,6 +58,24 @@ body,button,input,select,textarea{
   border-color: @primary-color;
 }
 
+.color-primary:hover{
+  color: @primary-color !important;
+}
+
+.color-blue {
+  color:#fff;
+  border-color:#1890ff;
+  background:#1890ff;
+  text-shadow:0 -1px 0 rgba(0,0,0,.12);
+  box-shadow:0 2px #0000000b
+}
+
+.color-blue:hover, .color-blue:focus {
+  color:#fff;
+  border-color:#40A9ff;
+  background:#40A9ff;
+}
+
 .landing-img {
   width: 85%;
   margin-top: 20px;
@@ -254,4 +272,8 @@ body,button,input,select,textarea{
 }
 .ant-layout, .ant-layout-header, .ant-layout-footer, .ant-layout-sider {
   background: transparent !important;
+}
+
+.page-not-found {
+    padding: 60px 32px !important;
 }
