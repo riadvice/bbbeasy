@@ -17,11 +17,13 @@
  */
 
 import React from 'react';
-import { Steps, Button, Row, Col, Form, Input, Typography, Upload, Card, Avatar, Modal } from 'antd';
+import AuthService from "../services/auth.service";
+
+import {Steps, Button, Row, Col, Form, Input, Typography, Upload, Card, Avatar, Modal, message} from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone, InboxOutlined } from '@ant-design/icons';
-import { T } from '@transifex/react';
 import ColorPicker from "rc-color-picker/lib/ColorPicker";
 import "rc-color-picker/assets/index.css";
+import { T } from '@transifex/react';
 
 const { Title, Text, Paragraph } = Typography;
 const { Step } = Steps;
@@ -181,7 +183,7 @@ const Install = () => {
                     </Form.Item>
 
                     <Form.Item
-                        label={<T _str="Term of use URL" />}
+                        label={<T _str="Terms of use URL" />}
                         name="term_url"
                         hasFeedback
                         rules={[
@@ -457,6 +459,16 @@ const Install = () => {
             formData.accent_color = accentColor;
             formData.add_color = addColor;
             console.log(formData);
+
+            AuthService.install(formData)
+                .then((response) => {
+                    console.log(response);
+                    //console.log(response.data.message);
+                })
+                .catch((error) => {
+                    console.log(error);
+                    //const responseMessage = error.response.data.message;
+                });
         }
     };
 

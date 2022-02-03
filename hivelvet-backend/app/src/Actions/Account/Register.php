@@ -67,7 +67,7 @@ class Register extends BaseAction
                 $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
                 return;
             }
-            $this->logger->error('user successfully registered', ['user' => $user->toArray()]);
+            $this->logger->info('user successfully registered', ['user' => $user->toArray()]);
             $this->renderJson(['message' => 'Congratulations ! Your account has been successfully created.']);
         }
     }

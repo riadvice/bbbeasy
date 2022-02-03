@@ -49,18 +49,19 @@ sudo apt remove cmdtest
 sudo apt update && sudo apt install yarn
 # sudo npm install -g pm2@5 npm@8.3.0 yarn tar@6 svgo@2 uuid@8.3.2
 sudo yarn global add pm2 tar svgo uuid
-info "Install PHP 8.1 with its dependencies"
-sudo apt-get install -y php8.1-curl php8.1-cli php8.1-intl php8.1-redis php8.1-gd php8.1-fpm php8.1-pgsql php8.1-mbstring php8.1-xml php8.1-bcmath php-xdebug
+info "Install PHP 8.0 with its dependencies"
+sudo apt-get install -y php8.0-curl php8.0-cli php8.0-intl php8.0-redis php8.0-gd php8.0-fpm php8.0-pgsql php8.0-mbstring php8.0-xml php8.0-bcmath php-xdebug
+sudo update-alternatives --set php /usr/bin/php8.0
 
 info "Installing PostgreSQL"
 sudo percona-release setup ppg-14.1
 sudo apt-get install -y percona-postgresql-14 percona-postgresql-14-pgaudit percona-pg-stat-monitor14
 
 info "Configure PHP-FPM"
-sudo rm /etc/php/8.1/fpm/pool.d/www.conf
-sudo ln -s /app/vagrant/dev/php-fpm/www.conf /etc/php/8.1/fpm/pool.d/www.conf
-sudo rm /etc/php/8.1/mods-available/xdebug.ini
-sudo ln -s /app/vagrant/dev/php-fpm/xdebug.ini /etc/php/8.1/mods-available/xdebug.ini
+sudo rm /etc/php/8.0/fpm/pool.d/www.conf
+sudo ln -s /app/vagrant/dev/php-fpm/www.conf /etc/php/8.0/fpm/pool.d/www.conf
+sudo rm /etc/php/8.0/mods-available/xdebug.ini
+sudo ln -s /app/vagrant/dev/php-fpm/xdebug.ini /etc/php/8.0/mods-available/xdebug.ini
 echo "Done!"
 
 

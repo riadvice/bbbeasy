@@ -62,7 +62,7 @@ class Login extends BaseAction
                     "email" => $user->email,
                     "role" => $user->role,
                 );
-                $this->logger->error('user successfully login', ['message' => $message]);
+                $this->logger->info('user successfully login', ['message' => $message]);
                 $this->renderJson(['message' => $message, 'user' => json_encode($userInfos)]);
             }
             else {

@@ -32,6 +32,7 @@ const { Paragraph } = Typography;
 type Props = {
     currentLocale: any;
     handleChange: any;
+    installed: any;
 };
 
 type State = {};
@@ -44,13 +45,9 @@ const languages = [
 
 class AppHeader extends Component<Props, State> {
     render() {
-        const location = window.location.pathname;
-        const isInstallRoute = location.includes("install");
-
-        const { currentLocale, handleChange } = this.props;
+        const { currentLocale, handleChange, installed } = this.props;
         const result = languages.filter((item) => item.value == currentLocale);
         const language = result[0].name;
-
         const menu = (
             <Menu>
                 <Radio.Group value={currentLocale} onChange={handleChange}>
@@ -69,7 +66,7 @@ class AppHeader extends Component<Props, State> {
                     <Link to={'/'}>
                         <img className="header-logo-image" src="images/logo_01.png" alt="Logo" />
                     </Link>
-                    { !isInstallRoute &&
+                    { installed &&
                         <Space size="large">
                             <Dropdown overlay={menu}>
                                 <Button>

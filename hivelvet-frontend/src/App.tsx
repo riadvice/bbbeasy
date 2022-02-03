@@ -69,20 +69,27 @@ function App() {
         localStorage.setItem('locale', localeValue.locale);
     };
 
+    // to be changed by backend after installation
+    const isInstalled: boolean = JSON.parse(process.env.REACT_APP_INSTALLED);
+
     return (
         <Layout>
             <ConfigProvider locale={currentLocale} direction={direction}>
-                <AppHeader currentLocale={currentLocale} handleChange={handleChange} />
+                <AppHeader currentLocale={currentLocale} handleChange={handleChange} installed={isInstalled} />
                 <Content className="site-content">
-                    <Routes>
-                        <Route path="/" element={<LandingPage />} />
-                        <Route path="/register" element={<Register />} />
-                        <Route path="/login" element={<Login />} />
-                        <Route path="/reset" element={<ResetPwd />} />
-
-                        <Route path="/install" element={<Install />} />
-                        <Route path='/home' element={<Home />} />
-                    </Routes>
+                    { isInstalled ?
+                        <Routes>
+                            <Route path="/" element={<LandingPage />} />
+                            <Route path="/register" element={<Register />} />
+                            <Route path="/login" element={<Login />} />
+                            <Route path="/reset" element={<ResetPwd />} />
+                            <Route path='/home' element={<Home />} />
+                        </Routes>
+                    :
+                        <Routes>
+                            <Route path="/" element={<Install />} />
+                        </Routes>
+                    }
                 </Content>
                 <AppFooter />
             </ConfigProvider>
