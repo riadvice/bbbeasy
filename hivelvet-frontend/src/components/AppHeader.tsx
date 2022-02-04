@@ -16,8 +16,8 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import React, { Component, useEffect, useState } from 'react';
+import { Link, Navigate } from 'react-router-dom';
 import { Layout, Typography, Radio, Button, Menu, Dropdown, Space } from 'antd';
 import { GlobalOutlined, DownOutlined } from '@ant-design/icons';
 
@@ -25,16 +25,27 @@ import enUS from 'antd/lib/locale/en_US';
 import frFR from 'antd/lib/locale/fr_FR';
 import arEG from 'antd/lib/locale/ar_EG';
 import { T } from '@transifex/react';
+import authService from '../services/auth.service';
+import { umask } from 'process';
+import { tx } from '@transifex/native';
+import moment from 'moment';
 
 const { Header } = Layout;
 const { Paragraph } = Typography;
 
 type Props = {
     currentLocale: any;
-    handleChange: any;
+    user: any;
+    isLogged: boolean;
+    setUser: any;
+    setLang: any;
 };
 
-type State = {};
+type State = {
+    isLogin: boolean;
+    isLogout: boolean;
+    user: any;
+};
 
 const languages = [
     { name: 'English', key: 'en', value: enUS },
@@ -43,15 +54,34 @@ const languages = [
 ];
 
 class AppHeader extends Component<Props, State> {
-    render() {
-        const { currentLocale, handleChange } = this.props;
+    constructor(props: Props) {
+        super(props);
+        this.state = {
+            isLogin: false,
+            isLogout: false,
+            user: {},
+        };
+    }
 
+    logout() {
+        localStorage.clear();
+        this.props.setUser(null, false);
+    }
+
+    handleChange = (e) => {
+        const res = languages.filter((item) => item.key == e.target.value.locale);
+
+        this.props.setLang(res[0].value);
+    };
+    render() {
+        const { currentLocale, user, isLogged } = this.props;
         const result = languages.filter((item) => item.value == currentLocale);
+
         const language = result[0].name;
 
         const menu = (
             <Menu>
-                <Radio.Group value={currentLocale} onChange={handleChange}>
+                <Radio.Group value={this.props.currentLocale} onChange={this.handleChange}>
                     {languages.map(({ name, key, value }) => (
                         <Menu.Item key={key}>
                             <Radio value={value}>{name}</Radio>
@@ -60,31 +90,56 @@ class AppHeader extends Component<Props, State> {
                 </Radio.Group>
             </Menu>
         );
+        if (!isLogged) {
+            return (
+                <Header className="site-header">
+                    <Paragraph className="site-header-inner">
+                        <Link to={'/'}>
+                            <img className="header-logo-image" src="images/logo_01.png" alt="Logo" />
+                        </Link>
 
-        return (
-            <Header className="site-header">
-                <Paragraph className="site-header-inner">
-                    <Link to={'/'}>
-                        <img className="header-logo-image" src="images/logo_01.png" alt="Logo" />
-                    </Link>
-                    <Space size="large">
-                        <Dropdown overlay={menu}>
-                            <Button>
-                                <GlobalOutlined /> {language} <DownOutlined />
-                            </Button>
-                        </Dropdown>
-                        <Link className={'ant-btn color-primary'} to={'/login'}>
-                            {' '}
-                            <T _str="Login" />{' '}
+                        <Space size="large">
+                            <Dropdown overlay={menu}>
+                                <Button>
+                                    <GlobalOutlined /> {language} <DownOutlined />
+                                </Button>
+                            </Dropdown>
+                            <Link className={'ant-btn color-primary'} to={'/login'}>
+                                {' '}
+                                <T _str="Login" />{' '}
+                            </Link>
+                            <Link className={'ant-btn color-primary'} to={'/register'}>
+                                {' '}
+                                <T _str="Sign up" />{' '}
+                            </Link>
+                        </Space>
+                    </Paragraph>
+                </Header>
+            );
+        } else {
+            return (
+                <Header className="site-header">
+                    <Paragraph className="site-header-inner">
+                        <Link to={'/'}>
+                            <img className="header-logo-image" src="images/logo_01.png" alt="Logo" />
                         </Link>
-                        <Link className={'ant-btn color-primary'} to={'/register'}>
-                            {' '}
-                            <T _str="Sign up" />{' '}
-                        </Link>
-                    </Space>
-                </Paragraph>
-            </Header>
-        );
+
+                        <Space size="large">
+                            <Dropdown overlay={menu}>
+                                <Button>
+                                    <GlobalOutlined /> {language} <DownOutlined />
+                                </Button>
+                            </Dropdown>
+
+                            <Link className={'ant-btn color-primary'} to={'/login'} onClick={() => this.logout()}>
+                                {' '}
+                                <T _str="Logout" />{' '}
+                            </Link>
+                        </Space>
+                    </Paragraph>
+                </Header>
+            );
+        }
     }
 }
 

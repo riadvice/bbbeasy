@@ -28,21 +28,23 @@ type Props = {
     isLogged: boolean;
 };
 
-class Home extends Component<Props> {
-    username = '';
+type State = {
+    isLogged: boolean;
+    currentUser?: any;
+};
+
+class Install extends Component<Props, State> {
     constructor(props: Props) {
         super(props);
     }
 
     render() {
-        this.username = this.props.user != null ? this.props.user.username : '';
-
         return (
             <Row justify="center">
-                <h1>logged as {this.username} </h1>
+                <h1>Install</h1>
             </Row>
         );
     }
 }
 
-export default Home;
+export default Install;

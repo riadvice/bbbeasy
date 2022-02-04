@@ -20,17 +20,22 @@ import React, { Component } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 
 import AuthService from '../services/auth.service';
-import { Form, Input, Button, message, Alert, Col, Row, Typography, Card } from 'antd';
+import { Form, Input, Button, message, Alert, Col, Row, Typography, Card, Layout, DatePicker } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import { T } from '@transifex/react';
+import { Header } from 'antd/lib/layout/layout';
 const { Text, Title, Paragraph } = Typography;
 
-type Props = {};
+type Props = {
+    setUser: any;
+};
 type State = {
     email?: string;
     password?: string;
     successful: boolean;
     message: string;
+    user: any;
+    isLogged: boolean;
 };
 
 class Login extends Component<Props, State> {
@@ -42,6 +47,8 @@ class Login extends Component<Props, State> {
             password: '',
             successful: false,
             message: '',
+            user: null,
+            isLogged: false,
         };
     }
 
@@ -50,19 +57,25 @@ class Login extends Component<Props, State> {
         AuthService.login(email, password)
             .then((response) => {
                 const responseMessage = response.data.message;
+
                 message.success({
-                    content: responseMessage,
                     style: {
                         marginTop: '20vh',
                     },
                 });
+
                 this.setState({
                     successful: true,
-                    message: responseMessage,
+                    user: response.data.user,
+                    isLogged: true,
                 });
+
                 const user = response.data.user;
-                localStorage.setItem('user', JSON.stringify(user));
+                this.props.setUser(response.data.user, true);
+
+                localStorage.setItem('user', user);
             })
+
             .catch((error) => {
                 const responseMessage = error.response.data.message;
                 this.setState({
@@ -82,7 +95,7 @@ class Login extends Component<Props, State> {
         };
 
         if (successful) {
-            return <Navigate to="/home" />;
+            return <Navigate to="/home" state={{ user: this.state.user, isLogged: this.state.isLogged }} />;
         }
 
         return (
