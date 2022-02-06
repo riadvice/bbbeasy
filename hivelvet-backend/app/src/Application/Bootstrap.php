@@ -46,7 +46,8 @@ class Bootstrap extends Boot
 
         parent::__construct();
 
-        $this->setupMailer();
+        // @fixme: must update for PHP 8.1
+        // $this->setupMailer();
         $this->handleException();
         $this->createDatabaseConnection();
         $this->prepareSession();

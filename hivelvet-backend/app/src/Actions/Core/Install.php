@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Hivelvet open source platform - https://riadvice.tn/
  *
@@ -21,6 +22,7 @@ namespace Actions\Core;
 
 use Actions\Base as BaseAction;
 use Base;
+use Enum\ResponseCode;
 use Enum\UserRole;
 use Enum\UserStatus;
 use Models\Setting;
@@ -41,56 +43,55 @@ class Install extends BaseAction
     {
         // test with the same env var in frontend
         //if ($f3->get('system.installed') === false) {
-            $body   = $this->getDecodedBody();
-            $form   = $body['data'];
+        $body   = $this->getDecodedBody();
+        $form   = $body['data'];
 
-            $this->logger->info('App configuration', ['form' => $form]);
+        $this->logger->info('App configuration', ['form' => $form]);
 
-            $user   = new User();
-            $user->email        = $form['email'];
-            $user->username     = $form['username'];
-            $user->password     = $form['password'];
-            $user->role         = UserRole::ADMIN;
-            $user->status       = UserStatus::ACTIVE;
-            $user->created_on   = date('Y-m-d H:i:s');
+        $user               = new User();
+        $user->email        = $form['email'];
+        $user->username     = $form['username'];
+        $user->password     = $form['password'];
+        $user->role         = UserRole::ADMIN;
+        $user->status       = UserStatus::ACTIVE;
+        $user->created_on   = date('Y-m-d H:i:s');
+
+        try {
+            $this->logger->info('App configuration', ['user' => $user->toArray()]);
+            $setting                  = new Setting();
+            $setting->company_name    = $form['company_name'];
+            $setting->company_website = $form['company_url'];
+            $setting->platform_name   = $form['platform_name'];
+            $setting->terms_use       = $form['term_url'];
+            $setting->privacy_policy  = $form['policy_url'];
+            //$setting->logo = $form['logo'];
+            $setting->primary_color    = $form['primary_color'];
+            $setting->secondary_color  = $form['secondary_color'];
+            $setting->accent_color     = $form['accent_color'];
+            $setting->additional_color = $form['add_color'];
 
             try {
-                $this->logger->info('App configuration', ['user' => $user->toArray()]);
-                $setting   = new Setting();
-                $setting->company_name = $form['company_name'];
-                $setting->company_website = $form['company_url'];
-                $setting->platform_name = $form['platform_name'];
-                $setting->terms_use = $form['term_url'];
-                $setting->privacy_policy = $form['policy_url'];
-                //$setting->logo = $form['logo'];
-                $setting->primary_color = $form['primary_color'];
-                $setting->secondary_color = $form['secondary_color'];
-                $setting->accent_color = $form['accent_color'];
-                $setting->additional_color = $form['add_color'];
-                $setting->created_on = date('Y-m-d H:i:s');
-
-                try {
-                    $this->logger->info('App configuration', ['setting' => $setting->toArray()]);
-                    /*
-                    $user->save();
-                    $setting->save();
-                    $this->logger->info('administrator and settings successfully added', ['user' => $user->toArray()]);
-                    $this->renderJson(['message' => 'Application is ready now !']);
-                    */
-                }
-                catch (\Exception $e) {
-                    $message = $e->getMessage();
-                    $this->logger->error('settings could not be added', ['error' => $message]);
-                    $this->renderJson(['errorStep2' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-                    return;
-                }
-            }
-            catch (\Exception $e) {
+                $this->logger->info('App configuration', ['setting' => $setting->toArray()]);
+                /*
+                $user->save();
+                $setting->save();
+                $this->logger->info('administrator and settings successfully added', ['user' => $user->toArray()]);
+                $this->renderJson(['message' => 'Application is ready now !']);
+                */
+            } catch (\Exception $e) {
                 $message = $e->getMessage();
-                $this->logger->error('administrator could not be added', ['error' => $message]);
-                $this->renderJson(['errorStep1' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+                $this->logger->error('settings could not be added', ['error' => $message]);
+                $this->renderJson(['errorStep2' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+
                 return;
             }
+        } catch (\Exception $e) {
+            $message = $e->getMessage();
+            $this->logger->error('administrator could not be added', ['error' => $message]);
+            $this->renderJson(['errorStep1' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+
+            return;
+        }
         //}
     }
 }

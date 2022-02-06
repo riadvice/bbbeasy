@@ -56,12 +56,12 @@ class Login extends BaseAction
                 $user->save();
 
                 $this->session->set('locale', $user->locale);
-                $message = 'Welcome back '. $user->username .' !';
-                $userInfos = array(
-                    "username" => $user->username,
-                    "email" => $user->email,
-                    "role" => $user->role,
-                );
+                $message   = 'Welcome back '. $user->username .' !';
+                $userInfos = [
+                    'username' => $user->username,
+                    'email'    => $user->email,
+                    'role'     => $user->role,
+                ];
                 $this->logger->info('user successfully login', ['message' => $message]);
                 $this->renderJson(['message' => $message, 'user' => json_encode($userInfos)]);
             } else {

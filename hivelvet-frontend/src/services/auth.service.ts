@@ -23,7 +23,7 @@ const API_URL = process.env.REACT_APP_API_URL;
 class AuthService {
     install(data: object) {
         return axios.post(API_URL + '/install', {
-            data
+            data,
         });
     }
 

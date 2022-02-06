@@ -22,7 +22,6 @@ import { Route, Routes } from 'react-router-dom';
 import './App.less';
 import { Layout, ConfigProvider, BackTop, Button } from 'antd';
 import { CaretUpOutlined } from '@ant-design/icons';
-import LandingPage from './components/LandingPage';
 
 import AppHeader from './components/AppHeader';
 import AppFooter from './components/AppFooter';
@@ -74,14 +73,14 @@ function App() {
     };
 
     // to be changed by backend after installation
-    const isInstalled: boolean = JSON.parse(process.env.REACT_APP_INSTALLED);
+    const isInstalled: boolean = JSON.parse(process.env.REACT_APP_INSTALLED) || false;
 
     return (
         <Layout>
             <ConfigProvider locale={currentLocale} direction={direction}>
                 <AppHeader currentLocale={currentLocale} handleChange={handleChange} installed={isInstalled} />
                 <Content className="site-content">
-                    { isInstalled ?
+                    {isInstalled ? (
                         <Routes>
                             <Route path="/" element={<LandingPage />} />
                             <Route path="/register" element={<Register />} />
@@ -92,12 +91,12 @@ function App() {
                             <Route path="/change-password" element={<ChangePassword />} />
                             <Route path="*" element={<PageNotFound />} />
                         </Routes>
-                    :
+                    ) : (
                         <Routes>
                             <Route path="/" element={<Install />} />
                             <Route path="*" element={<PageNotFound />} />
                         </Routes>
-                    }
+                    )}
                 </Content>
                 <AppFooter />
             </ConfigProvider>

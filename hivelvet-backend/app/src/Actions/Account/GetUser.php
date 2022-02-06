@@ -41,12 +41,12 @@ class GetUser extends BaseAction
         if ($resetToken->tokenExists($token)) {
             $resetToken->getByToken($token);
             if ($resetToken->status === 'new') {
-                if ($resetToken->expires_at<= date('Y-m-d H:i:s')) {
+                if ($resetToken->expires_at <= date('Y-m-d H:i:s')) {
                     $resetToken->status = 'expired';
 
                     $this->logger->error('token was expired');
                     $this->renderJson(['message' => 'token was expired'], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-                }else {
+                } else {
                     $user = $user->getByID($resetToken->user_id);
                     $this->renderJson(['user' => $user->toArray(), ResponseCode::HTTP_OK]);
                 }

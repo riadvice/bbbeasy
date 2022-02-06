@@ -34,7 +34,7 @@ class Login extends Component<Props, State> {
                 const responseMessage = response.data.message;
                 message.success({
                     content: responseMessage,
-                    className: 'success-message'
+                    className: 'success-message',
                 });
                 this.setState({
                     successful: true,

@@ -48,4 +48,3 @@ class CreateSettingsTables extends AbstractMigration
         $this->table('settings')->drop()->save();
     }
 }
-
