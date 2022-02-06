@@ -26,11 +26,16 @@ body,button,input,select,textarea{
 }
 
 .site-header{
-  /*padding: 5px 35px !important;
-  height: auto !important;*/
+  z-index: 1;
   -moz-box-shadow:0 5px 5px rgba(216, 216, 216, 0.8);
   -webkit-box-shadow: 0 5px 5px rgba(216, 216, 216, 0.8);
   box-shadow: 0 5px 5px rgba(216, 216, 216, 0.8);
+}
+
+.site-sider {
+  //width: 250px !important;
+  //margin-top: 10px;
+  box-shadow: 5px 0px 5px rgba(216, 216, 216, 0.8);
 }
 
 .site-header-inner{
@@ -51,6 +56,24 @@ body,button,input,select,textarea{
 
 .color-primary {
   border-color: @primary-color;
+}
+
+.color-primary:hover{
+  color: @primary-color !important;
+}
+
+.color-blue {
+  color:#fff;
+  border-color:#1890ff;
+  background:#1890ff;
+  text-shadow:0 -1px 0 rgba(0,0,0,.12);
+  box-shadow:0 2px #0000000b
+}
+
+.color-blue:hover, .color-blue:focus {
+  color:#fff;
+  border-color:#40A9ff;
+  background:#40A9ff;
 }
 
 .landing-img {
@@ -110,6 +133,116 @@ body,button,input,select,textarea{
   display: block;
 }
 
+.install-form {
+  padding: 50px 54px;
+}
+
+.install-steps {
+  margin-top: 20px;
+}
+
+.install-form .ant-upload.ant-upload-drag p.ant-upload-text {
+  font-weight: 600;
+}
+
+.install-form .ant-upload.ant-upload-drag p.ant-upload-hint {
+  font-size: 13px !important;
+}
+
+.install-form .company-container, .install-form .colors-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.install-form .button-container {
+  margin-top: 24px;
+}
+
+.install-form .button-container .prev {
+  margin: 0px 20px;
+}
+
+.install-form .button-container .ant-form-item-control-input-content {
+  display: flex;
+}
+
+.install-form .box,
+.install-form .colors-container .ant-form-item {
+  flex: 0 0 50%;
+  padding-right: 20px;
+}
+
+.install-form .box.last {
+  padding-left: 20px;
+  border-left: 1px solid #0000000f;
+}
+
+.install-form .rc-color-picker-wrap {
+  vertical-align: middle;
+}
+
+.install-form .rc-color-picker-trigger {
+  width: 85px;
+  height: 24px;
+  border: 1px solid #d0d0d0;
+}
+
+.install-form .color-palette-picker-value {
+  margin-left: 10px;
+  color: gray;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.presets-grid {
+  width: 25%;
+  box-shadow: none;
+}
+
+.presets-grid .ant-card-meta {
+  align-items: center;
+  display: inline-flex;
+}
+
+.presets-grid .ant-card-meta .ant-avatar {
+  width: 38px !important;
+  height: 38px !important;
+}
+
+.presets-grid .ant-card-meta .ant-card-meta-title {
+  white-space: unset;
+  text-overflow: unset;
+  font-weight: unset;
+  font-size: 14.5px;
+}
+
+.presets-grid.ant-card-grid-hoverable:hover{
+  background: #fef2ce;
+  cursor:pointer;
+}
+
+.presets-modal .anticon {
+  background: white;
+  padding: 5px;
+  -moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+  font-size: 14px;
+}
+
+.presets-modal .ant-modal-close {
+  top: -40px;
+  right: -40px;
+}
+
+.final-step-btn {
+  width: 81%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 60px !important;
+}
+
 .text-left{
   text-align:left
 }
@@ -120,22 +253,24 @@ body,button,input,select,textarea{
   text-align:right
 }
 
+.success-message {
+  margin-top: 20vh;
+}
+
 .site-footer{
   text-align: center;
   padding: 0px !important;
-  bottom: 0;
+  /*bottom: 0;
   width: 100%;
   position: fixed;
-  //height: 40px;
+  //height: 40px;*/
   z-index: 1;
 }
 
 .site-footer button {
   padding: 0px;
 }
-.ant-layout,
-.ant-layout-header,
-.ant-layout-footer {
+.ant-layout, .ant-layout-header, .ant-layout-footer, .ant-layout-sider {
   background: transparent !important;
 }
 
@@ -143,4 +278,8 @@ body,button,input,select,textarea{
   .site-header{
     position:relative
   }
+}
+
+.page-not-found {
+    padding: 60px 32px !important;
 }

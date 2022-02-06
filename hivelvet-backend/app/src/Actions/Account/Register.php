@@ -66,7 +66,7 @@ class Register extends BaseAction
 
                 return;
             }
-            $this->logger->error('user successfully registered', ['user' => $user->toArray()]);
+            $this->logger->info('user successfully registered', ['user' => $user->toArray()]);
             $this->renderJson(['message' => 'Congratulations ! Your account has been successfully created.']);
         }
     }

@@ -21,6 +21,12 @@ import axios from 'axios';
 const API_URL = process.env.REACT_APP_API_URL;
 
 class AuthService {
+    install(data: object) {
+        return axios.post(API_URL + '/install', {
+            data
+        });
+    }
+
     register(username: string, email: string, password: string, confirmPassword: string) {
         return axios.post(API_URL + '/account/register', {
             username,

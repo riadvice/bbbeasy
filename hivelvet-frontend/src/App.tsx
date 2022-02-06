@@ -26,6 +26,9 @@ import LandingPage from './components/LandingPage';
 
 import AppHeader from './components/AppHeader';
 import AppFooter from './components/AppFooter';
+import Install from './components/Install';
+import PageNotFound from './components/PageNotFound';
+import LandingPage from './components/LandingPage';
 import Register from './components/Register';
 import Login from './components/Login';
 import ResetPwd from './components/ResetPwd';
@@ -70,20 +73,31 @@ function App() {
         localStorage.setItem('locale', localeValue.locale);
     };
 
+    // to be changed by backend after installation
+    const isInstalled: boolean = JSON.parse(process.env.REACT_APP_INSTALLED);
+
     return (
         <Layout>
             <ConfigProvider locale={currentLocale} direction={direction}>
-                <AppHeader currentLocale={currentLocale} handleChange={handleChange} />
+                <AppHeader currentLocale={currentLocale} handleChange={handleChange} installed={isInstalled} />
                 <Content className="site-content">
-                    <Routes>
-                        <Route path="/" element={<LandingPage />} />
-                        <Route path="/register" element={<Register />} />
-                        <Route path="/login" element={<Login />} />
-                        <Route path="/reset-password" element={<Reset />} />
-                        <Route path="/change-password" element={<ChangePassword />} />
-
-                        <Route path="/home" element={<Home />} />
-                    </Routes>
+                    { isInstalled ?
+                        <Routes>
+                            <Route path="/" element={<LandingPage />} />
+                            <Route path="/register" element={<Register />} />
+                            <Route path="/login" element={<Login />} />
+                            <Route path="/reset" element={<ResetPwd />} />
+                            <Route path="/home" element={<Home />} />
+                            <Route path="/reset-password" element={<Reset />} />
+                            <Route path="/change-password" element={<ChangePassword />} />
+                            <Route path="*" element={<PageNotFound />} />
+                        </Routes>
+                    :
+                        <Routes>
+                            <Route path="/" element={<Install />} />
+                            <Route path="*" element={<PageNotFound />} />
+                        </Routes>
+                    }
                 </Content>
                 <AppFooter />
             </ConfigProvider>
