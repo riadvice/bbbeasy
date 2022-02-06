@@ -4,7 +4,7 @@
   "type": "project",
   "autoload": {
     "psr-4": {
-      "" : "app/src"
+      "": "app/src"
     }
   },
   "autoload-dev": {
@@ -22,8 +22,8 @@
     "ext-dom": "*",
     "ext-mbstring": "*",
     "ext-bcmath": "*",
-    "bcosca/fatfree-core": "3.7.3",
-    "ikkez/f3-cortex": "^1.7",
+    "bcosca/fatfree-core": "dev-master#d03a6f7 as 3.7.3",
+    "ikkez/f3-cortex": "dev-master#2ef6d81 as 1.7.1",
     "ikkez/f3-mailer": "^1.2",
     "respect/validation": "^1.1",
     "nette/utils": "^3.1",
@@ -36,6 +36,7 @@
     "carbon-cli/carbon-cli": "^1.2"
   },
   "require-dev": {
+    "roave/security-advisories": "dev-latest",
     "ext-xdebug": ">=2.3.3",
     "kint-php/kint": "^3.3",
     "fakerphp/faker": "^1.13",
