@@ -53,7 +53,7 @@ class ResetPwd extends Component<Props, State> {
                                 rules={[
                                     {
                                         type: 'email',
-                                        message: 'Email invalid',
+                                        message: 'Invalid Email',
                                     },
                                     {
                                         required: true,

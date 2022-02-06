@@ -56,25 +56,23 @@ class Login extends BaseAction
                 $user->save();
 
                 $this->session->set('locale', $user->locale);
-                $message = 'Welcome back '. $user->username .' !';
-                $userInfos = array(
-                    "username" => $user->username,
-                    "email" => $user->email,
-                    "role" => $user->role,
-                );
+                $message   = 'Welcome back '. $user->username .' !';
+                $userInfos = [
+                    'username' => $user->username,
+                    'email'    => $user->email,
+                    'role'     => $user->role,
+                ];
                 $this->logger->error('user successfully login', ['message' => $message]);
                 $this->renderJson(['message' => $message, 'user' => json_encode($userInfos)]);
-            }
-            else {
+            } else {
                 //password invalid
-                $message = 'Password invalid';
+                $message = 'Invalid Password';
                 $this->logger->error('Login error : user could not logged', ['error' => $message]);
                 $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
             }
-        }
-        else {
+        } else {
             // email invalid or user no exist
-            $message = 'Email invalid';
+            $message = 'Invalid Email';
             $this->logger->error('Login error : user could not logged', ['error' => $message]);
             $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
         }

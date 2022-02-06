@@ -22,7 +22,7 @@ namespace Utils;
 
 class DataUtils
 {
-    public static function keepIntegerInArray(&$array): void
+    public static function keepIntegerInArray(& $array): void
     {
         if (!is_null($array)) {
             array_filter($array, 'ctype_digit');
@@ -35,7 +35,7 @@ class DataUtils
      * @param $array
      * @param $value
      */
-    public static function unsetByValue(&$array, $value): void
+    public static function unsetByValue(& $array, $value): void
     {
         if (($key = array_search($value, $array)) !== false) {
             unset($array[$key]);

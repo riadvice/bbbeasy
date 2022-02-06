@@ -22,10 +22,10 @@ import { Route, Routes } from 'react-router-dom';
 import './App.less';
 import { Layout, ConfigProvider, BackTop, Button } from 'antd';
 import { CaretUpOutlined } from '@ant-design/icons';
+import LandingPage from './components/LandingPage';
 
 import AppHeader from './components/AppHeader';
 import AppFooter from './components/AppFooter';
-import LandingPage from './components/LandingPage';
 import Register from './components/Register';
 import Login from './components/Login';
 import ResetPwd from './components/ResetPwd';
@@ -39,6 +39,8 @@ import 'moment/locale/en-au';
 import { tx } from '@transifex/native';
 
 import Logger from './lib/logger';
+import Reset from './components/ResetPassword';
+import ChangePassword from './components/ChangePassword';
 
 moment.locale('en');
 
@@ -77,7 +79,9 @@ function App() {
                         <Route path="/" element={<LandingPage />} />
                         <Route path="/register" element={<Register />} />
                         <Route path="/login" element={<Login />} />
-                        <Route path="/reset" element={<ResetPwd />} />
+                        <Route path="/reset-password" element={<Reset />} />
+                        <Route path="/change-password" element={<ChangePassword />} />
+
                         <Route path="/home" element={<Home />} />
                     </Routes>
                 </Content>

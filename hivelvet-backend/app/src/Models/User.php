@@ -36,6 +36,7 @@ use DB\Cortex;
  * @property string    $last_name
  * @property string    $password
  * @property string    $status
+ * @property string $resetToken
  * @property DateTime  $created_on
  * @property DateTime  $updated_on
  * @property DateTime  $last_login
@@ -55,11 +56,10 @@ class User extends BaseModel
         $this->f3->clear(CacheKey::AJAX_USERS);
     }
 
-
     public function __construct($db = null, $table = null, $fluid = null, $ttl = 0)
     {
         parent::__construct($db, $table, $fluid, $ttl);
-        $this->onset('password', fn($self, $value) => password_hash($value, PASSWORD_BCRYPT));
+        $this->onset('password', fn ($self, $value) => password_hash($value, PASSWORD_BCRYPT));
     }
 
     /**
@@ -118,7 +118,18 @@ class User extends BaseModel
 
         return $this;
     }
+    /**
+     * Get user record by id value
+     *
+     * @param  integer $id
+     * @return Cortex
+     */
+    public function getByID($id)
+    {
+        $this->load(['id = ?',$id]);
 
+        return $this;
+    }
     /**
      * Check if email already in use
      *
@@ -158,5 +169,11 @@ class User extends BaseModel
     public function verifyPassword($password): bool
     {
         return password_verify(trim($password), $this->password);
+    }
+    public function getByResetToken($token)
+    {
+        $this->load(['token = ?',$token]);
+
+        return $this;
     }
 }
