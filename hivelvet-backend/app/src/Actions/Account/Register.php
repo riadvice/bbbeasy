@@ -53,10 +53,8 @@ class Register extends BaseAction
         else {
             $user->email        = $form['email'];
             $user->username     = $form['username'];
-            $user->password     = $form['password'];
             $user->role         = UserRole::VISITOR;
             $user->status       = UserStatus::PENDING;
-            $user->created_on   = date('Y-m-d H:i:s');
 
             try {
                 $user->save();

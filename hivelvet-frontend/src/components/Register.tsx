@@ -84,7 +84,7 @@ class Register extends Component<Props, State> {
 
         return (
             <Row>
-                {successful ? (
+                { successful ?
                     <Col span={10} offset={7} className="section-top">
                         <Result
                             status="success"
@@ -97,7 +97,7 @@ class Register extends Component<Props, State> {
                             }
                         />
                     </Col>
-                ) : (
+                    :
                     <Col span={8} offset={8} className="section-top">
                         <Card className="form-content">
                             <Paragraph className="form-header text-center">
@@ -234,14 +234,14 @@ class Register extends Component<Props, State> {
                                 </Form.Item>
 
                                 <Form.Item>
-                                    <Button type="primary" htmlType="submit" size="large" block>
+                                    <Button type="primary" htmlType="submit" block>
                                         <T _str="Register" />
                                     </Button>
                                 </Form.Item>
                             </Form>
                         </Card>
                     </Col>
-                )}
+                }
             </Row>
         );
     }

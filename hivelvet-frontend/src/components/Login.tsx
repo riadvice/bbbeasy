@@ -144,7 +144,7 @@ class Login extends Component<Props, State> {
                                 />
                             </Form.Item>
                             <Form.Item>
-                                <Button type="primary" htmlType="submit" size="large" block>
+                                <Button type="primary" htmlType="submit" block>
                                     <T _str="Login" />
                                 </Button>
                             </Form.Item>

@@ -68,7 +68,6 @@ class ResetPwd extends Component<Props, State> {
                                     type="primary"
                                     htmlType="submit"
                                     className="login-form-button"
-                                    size="large"
                                     block
                                 >
                                     <T _str="Reset password" />

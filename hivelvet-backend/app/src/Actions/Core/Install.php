@@ -21,8 +21,12 @@ namespace Actions\Core;
 
 use Actions\Base as BaseAction;
 use Base;
+use Enum\ResponseCode;
 use Enum\UserRole;
 use Enum\UserStatus;
+use Models\PresetCategory;
+use Models\PresetSetting;
+use Models\PresetSubCategory;
 use Models\Setting;
 use Models\User;
 
@@ -39,44 +43,61 @@ class Install extends BaseAction
      */
     public function execute($f3, $params): void
     {
-        // test with the same env var in frontend
+        // @todo for future tasks
         //if ($f3->get('system.installed') === false) {
             $body   = $this->getDecodedBody();
             $form   = $body['data'];
 
-            $this->logger->info('App configuration', ['form' => $form]);
-
             $user   = new User();
             $user->email        = $form['email'];
             $user->username     = $form['username'];
-            $user->password     = $form['password'];
             $user->role         = UserRole::ADMIN;
             $user->status       = UserStatus::ACTIVE;
-            $user->created_on   = date('Y-m-d H:i:s');
 
             try {
+                //$user->save();
+
                 $this->logger->info('App configuration', ['user' => $user->toArray()]);
                 $setting   = new Setting();
                 $setting->company_name = $form['company_name'];
                 $setting->company_website = $form['company_url'];
                 $setting->platform_name = $form['platform_name'];
-                $setting->terms_use = $form['term_url'];
-                $setting->privacy_policy = $form['policy_url'];
+                if ($form['term_url'] != '')
+                    $setting->terms_use = $form['term_url'];
+                if ($form['policy_url'] != '')
+                    $setting->privacy_policy = $form['policy_url'];
                 //$setting->logo = $form['logo'];
-                $setting->primary_color = $form['primary_color'];
-                $setting->secondary_color = $form['secondary_color'];
-                $setting->accent_color = $form['accent_color'];
-                $setting->additional_color = $form['add_color'];
-                $setting->created_on = date('Y-m-d H:i:s');
+                $colors = $form['branding_colors'];
+                $setting->primary_color = $colors['primary_color'];
+                $setting->secondary_color = $colors['secondary_color'];
+                $setting->accent_color = $colors['accent_color'];
+                $setting->additional_color = $colors['add_color'];
 
                 try {
+                    //$setting->save();
                     $this->logger->info('App configuration', ['setting' => $setting->toArray()]);
-                    /*
-                    $user->save();
-                    $setting->save();
-                    $this->logger->info('administrator and settings successfully added', ['user' => $user->toArray()]);
+
+                    $presets = $form['presetsConfig'];
+                    foreach ($presets as $preset) {
+                        $subcategories = $preset['subcategories'];
+                        foreach ($subcategories as $subcategory) {
+                            $presetSettings = new PresetSetting();
+                            $presetSettings->subcategory_id = $subcategory['id'];
+                            $presetSettings->is_enabled     = $subcategory['status'];
+                            try {
+                                $this->logger->info('App configuration', ['preset settings' => $presetSettings->toArray()]);
+                                //$presetSettings->save();
+                            }
+                            catch (\Exception $e) {
+                                $message = $e->getMessage();
+                                $this->logger->error('preset settings could not be added', ['error' => $message]);
+                                $this->renderJson(['errorStep3' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+                                return;
+                            }
+                        }
+                    }
+                    //$this->logger->info('administrator and settings and presets successfully added', ['user' => $user->toArray()]);
                     $this->renderJson(['message' => 'Application is ready now !']);
-                    */
                 }
                 catch (\Exception $e) {
                     $message = $e->getMessage();
@@ -92,5 +113,38 @@ class Install extends BaseAction
                 return;
             }
         //}
+    }
+
+    public function collect($f3, $params): void
+    {
+        $data = array();
+        $preset_category    = new PresetCategory();
+        $categories         = $preset_category->find([], ['order' => 'id']);
+
+        if ($categories) {
+            foreach ($categories as $category) {
+                $categoryData = [
+                    'name' => $category->name,
+                    'icon' => $category->icon,
+                    'subcategories' => array()
+                ];
+                $preset_subcategory = new PresetSubCategory();
+                $subcategories      = $preset_subcategory->find(['category_id = ?', $category->id], ['order' => 'id']);
+                if ($subcategories) {
+                    foreach ($subcategories as $subcategory) {
+                        $subCategoryData = [
+                            'id' => $subcategory->id,
+                            'name' => $subcategory->name,
+                            'status' => false
+                        ];
+                        array_push($categoryData['subcategories'],$subCategoryData);
+                    }
+                }
+                array_push($data,$categoryData);
+            }
+        }
+
+        $this->logger->info('collecting presets', ['data' => json_encode($data)]);
+        $this->renderJson(json_encode($data));
     }
 }

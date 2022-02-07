@@ -25,6 +25,7 @@ import { CaretUpOutlined } from '@ant-design/icons';
 
 import AppHeader from './components/AppHeader';
 import AppFooter from './components/AppFooter';
+
 import Install from './components/Install';
 import PageNotFound from './components/PageNotFound';
 import LandingPage from './components/LandingPage';
@@ -72,13 +73,18 @@ function App() {
 
     // to be changed by backend after installation
     const isInstalled: boolean = JSON.parse(process.env.REACT_APP_INSTALLED);
+    const [installed, setInstalled] = useState(isInstalled);
+    const handleInstall = () => {
+        // change env var REACT_APP_INSTALLED to true
+        setInstalled(true);
+    };
 
     return (
         <Layout>
-            <ConfigProvider locale={currentLocale} direction={direction}>
-                <AppHeader currentLocale={currentLocale} handleChange={handleChange} installed={isInstalled} />
+            <ConfigProvider locale={currentLocale} direction={direction} componentSize='large'>
+                <AppHeader currentLocale={currentLocale} handleChange={handleChange} installed={installed} />
                 <Content className="site-content">
-                    { isInstalled ?
+                    { installed ?
                         <Routes>
                             <Route path="/" element={<LandingPage />} />
                             <Route path="/register" element={<Register />} />
@@ -89,7 +95,7 @@ function App() {
                         </Routes>
                     :
                         <Routes>
-                            <Route path="/" element={<Install />} />
+                            <Route path="/" element={<Install installed={installed} handleInstall={handleInstall} />} />
                             <Route path="*" element={<PageNotFound />} />
                         </Routes>
                     }

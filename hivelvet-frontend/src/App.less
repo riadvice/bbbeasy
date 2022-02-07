@@ -18,6 +18,7 @@
 
 /*@import '~antd/dist/antd.css';*/
 @import '~antd/dist/antd.less';
+@import '~rc-color-picker/assets/index.css';
 
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
@@ -74,6 +75,20 @@ body,button,input,select,textarea{
   color:#fff;
   border-color:#40A9ff;
   background:#40A9ff;
+}
+
+.color-green {
+  color:#fff;
+  border-color: #5db332;
+  background:#5db332;
+  text-shadow:0 -1px 0 rgba(0,0,0,.12);
+  box-shadow:0 2px #0000000b
+}
+
+.color-green:hover, .color-green:focus {
+  color:#fff;
+  border-color: #62c03c;
+  background: #62c03c;
 }
 
 .landing-img {
@@ -154,12 +169,46 @@ body,button,input,select,textarea{
   flex-wrap: wrap;
 }
 
+.PresetIcon {
+  font-size: 18px;
+  padding: 10px;
+  color: #fff;
+  background: @primary-color;
+  clip-path: polygon(50% 0, 50% 0, 95% 25%, 95% 75%, 50% 100%, 50% 100%, 5% 75%, 5% 25%);
+  //clip-path: polygon(92.32051% 40%, 93.79385% 43.1596%, 94.69616% 46.52704%, 95% 50%, 94.69616% 53.47296%, 93.79385% 56.8404%, 92.32051% 60%, 79.82051% 81.65064%, 77.82089% 84.50639%, 75.35575% 86.97152%, 72.5% 88.97114%, 69.3404% 90.44449%, 65.97296% 91.34679%, 62.5% 91.65064%, 37.5% 91.65064%, 34.02704% 91.34679%, 30.6596% 90.44449%, 27.5% 88.97114%, 24.64425% 86.97152%, 22.17911% 84.50639%, 20.17949% 81.65064%, 7.67949% 60%, 6.20615% 56.8404%, 5.30384% 53.47296%, 5% 50%, 5.30384% 46.52704%, 6.20615% 43.1596%, 7.67949% 40%, 20.17949% 18.34936%, 22.17911% 15.49361%, 24.64425% 13.02848%, 27.5% 11.02886%, 30.6596% 9.55551%, 34.02704% 8.65321%, 37.5% 8.34936%, 62.5% 8.34936%, 65.97296% 8.65321%, 69.3404% 9.55551%, 72.5% 11.02886%, 75.35575% 13.02848%, 77.82089% 15.49361%, 79.82051% 18.34936%);
+  /*-moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;*/
+}
+
+.content-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: @primary-color !important;
+}
+
+.content-center .ant-avatar-string {
+  line-height: unset !important;
+}
+
+.install-form .colors-container label::before {
+  display: inline-block;
+  margin-right: 4px;
+  color: #ff4d4f;
+  font-size: 14px;
+  font-family: SimSun, sans-serif;
+  line-height: 1;
+  content: '*';
+}
+
 .install-form .button-container {
   margin-top: 24px;
 }
 
 .install-form .button-container .prev {
-  margin: 0px 20px;
+  /*margin: 0px 20px;*/
+  margin-right: 20px;
 }
 
 .install-form .button-container .ant-form-item-control-input-content {
@@ -221,7 +270,12 @@ body,button,input,select,textarea{
   cursor:pointer;
 }
 
-.presets-modal .anticon {
+.presets-modal .ant-modal-content {
+  margin: 0 30px;
+}
+
+/*
+.presets-modal .ant-modal-close-icon {
   background: white;
   padding: 5px;
   -moz-border-radius: 50%;
@@ -233,6 +287,35 @@ body,button,input,select,textarea{
 .presets-modal .ant-modal-close {
   top: -40px;
   right: -40px;
+}
+*/
+
+.presets-modal .presets-body {
+  //padding: 0 70px;
+  padding: 0 20px;
+}
+
+.presets-modal label {
+  color: black !important;
+  font-weight: 500;
+}
+
+.presets-modal label::after {
+  content: '';
+}
+
+.presets-modal .presets-body .ant-form-item-control {
+  text-align: right;
+}
+
+.presets-modal .ant-modal-footer {
+  text-align: center;
+  border-top: unset;
+}
+
+.presets-modal .ant-modal-footer button {
+  width: 70%;
+  margin-bottom: 24px;
 }
 
 .final-step-btn {

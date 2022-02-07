@@ -3,6 +3,9 @@ import axios from 'axios';
 const API_URL = 'http://api.hivelvet.test';
 
 class AuthService {
+    collectPresets() {
+        return axios.get(API_URL + '/collect-presets');
+    }
     install(data: object) {
         return axios.post(API_URL + '/install', {
             data

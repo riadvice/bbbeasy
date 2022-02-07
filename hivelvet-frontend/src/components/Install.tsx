@@ -17,26 +17,29 @@
  */
 
 import React from 'react';
-import AuthService from "../services/auth.service";
+import { Link } from 'react-router-dom';
+import AuthService from '../services/auth.service';
 
-import {Steps, Button, Row, Col, Form, Input, Typography, Upload, Card, Avatar, Modal, message} from 'antd';
-import { EyeInvisibleOutlined, EyeTwoTone, InboxOutlined } from '@ant-design/icons';
-import ColorPicker from "rc-color-picker/lib/ColorPicker";
-import "rc-color-picker/assets/index.css";
+import { Steps, Button, Row, Col, Form, Input, Typography, Upload, Card, Modal, Switch, Result } from 'antd';
+import { EyeInvisibleOutlined, EyeTwoTone, InboxOutlined, CloseOutlined, CheckOutlined } from '@ant-design/icons';
+import ColorPicker from 'rc-color-picker/lib/ColorPicker';
+import DynamicIcon from './DynamicIcon';
 import { T } from '@transifex/react';
 
 const { Title, Text, Paragraph } = Typography;
 const { Step } = Steps;
 const { Meta } = Card;
+const { Dragger } = Upload;
 
-const Install = () => {
+type Props = {
+    installed: boolean;
+    handleInstall: any;
+};
+
+const Install = (props : Props) => {
+    const { installed, handleInstall } = props;
     const [stepForm] = Form.useForm();
     const defaultColor = '#fbbc0b';
-    const [activeStep, setActiveStep] = React.useState(0);
-    const [primaryColor, setPrimaryColor] = React.useState(defaultColor);
-    const [secondaryColor, setSecondaryColor] = React.useState(defaultColor);
-    const [accentColor, setAccentColor] = React.useState(defaultColor);
-    const [addColor, setAddColor] = React.useState(defaultColor);
     const initialValues = {
         username: '',
         email: '',
@@ -47,12 +50,34 @@ const Install = () => {
         platform_name:'',
         term_url:'',
         policy_url:'',
+        branding_colors : {},
 
-        primary_color: '',
-        secondary_color: '',
-        accent_color: '',
-        add_color: '',
+        presetsConfig: []
     };
+    const [activeStep, setActiveStep] = React.useState(0);
+    const [successful, setSuccessful] = React.useState(false);
+    const [message, setMessage] = React.useState('');
+
+    const [primaryColor, setPrimaryColor] = React.useState(defaultColor);
+    const [secondaryColor, setSecondaryColor] = React.useState(defaultColor);
+    const [accentColor, setAccentColor] = React.useState(defaultColor);
+    const [addColor, setAddColor] = React.useState(defaultColor);
+
+    const [presets, setPresets] = React.useState([]);
+    const [isModalVisible, setIsModalVisible] = React.useState(false);
+    const [modalTitle, setModalTitle] = React.useState('');
+    const [modalContent, setModalContent] = React.useState([]);
+    const [selectedCategory, setSelectedCategory] = React.useState('');
+
+    if (presets.length == 0) {
+        AuthService.collectPresets()
+            .then((response) => {
+                setPresets(response.data);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
 
     const Step1Form = () => {
         return (
@@ -110,22 +135,19 @@ const Install = () => {
                 >
                     <Input.Password
                         placeholder="Password"
-                        iconRender={(visible) =>
-                            visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-                        }
+                        iconRender={(visible) => visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />}
                     />
                 </Form.Item>
             </div>
         );
     };
     const Step2Form = () => {
-        const normFile = (e: any) => {
-            console.log('Upload event:', e);
-            if (Array.isArray(e)) {
-                return e;
-            }
-            return e && e.fileList;
-        };
+        const changeCompany = (e) => {
+            const company_value = e.target.value;
+            stepForm.setFieldsValue({
+                platform_name : company_value + " Hivelvet"
+            });
+        }
         return (
             <div className="company-container">
                 <div className="box">
@@ -146,7 +168,7 @@ const Install = () => {
                             },
                         ]}
                     >
-                        <Input placeholder="Company name" />
+                        <Input placeholder="Company name" onChange={changeCompany} />
                     </Form.Item>
 
                     <Form.Item
@@ -160,7 +182,6 @@ const Install = () => {
                             },
                             {
                                 type: 'url',
-                                //warningOnly: true
                                 message: 'Company website is not a valid url'
                             }
                         ]}
@@ -188,10 +209,6 @@ const Install = () => {
                         hasFeedback
                         rules={[
                             {
-                                required: true,
-                                message: 'Term of use URL is required',
-                            },
-                            {
                                 type: 'url',
                                 message: 'Term of use url is not a valid url'
                             }
@@ -205,10 +222,6 @@ const Install = () => {
                         name="policy_url"
                         hasFeedback
                         rules={[
-                            {
-                                required: true,
-                                message: 'Privacy Policy is required',
-                            },
                             {
                                 type: 'url',
                                 message: 'Privacy Policy url is not a valid url'
@@ -226,23 +239,22 @@ const Install = () => {
                         </Title>
                     </Paragraph>
                     <Form.Item>
-                        <Form.Item valuePropName="fileList" getValueFromEvent={normFile} noStyle>
-                            <Upload.Dragger name="files" action="/upload.do">
+                        <Form.Item valuePropName="fileList">
+                            <Dragger name="files" action="/upload.do">
                                 <p className="ant-upload-drag-icon"><InboxOutlined /></p>
                                 <Text strong className="ant-upload-text">Drop your logo here</Text>
                                 <p className="ant-upload-hint">.rar .zip .doc .docx .pdf .jpg ...</p>
-                            </Upload.Dragger>
+                            </Dragger>
                         </Form.Item>
                     </Form.Item>
                     <div className="colors-container">
                         <Form.Item
                             label={<T _str="Primary color" />}
-                            name="primary_color"
                         >
                             <ColorPicker
                                 animation="slide-up"
                                 defaultColor={primaryColor}
-                                onChange={ (color) => { setPrimaryColor(color.color) }}
+                                onClose={ (color) => { setPrimaryColor(color.color) }}
                                 placement="bottomLeft"
                             >
                                 <span className="rc-color-picker-trigger" />
@@ -254,12 +266,11 @@ const Install = () => {
                         </Form.Item>
                         <Form.Item
                             label={<T _str="Secondary color" />}
-                            name="secondary_color"
                         >
                             <ColorPicker
                                 animation="slide-up"
                                 defaultColor={secondaryColor}
-                                onChange={ (color) => { setSecondaryColor(color.color) }}
+                                onClose={ (color) => { setSecondaryColor(color.color) }}
                                 placement="bottomLeft"
                             >
                                 <span className="rc-color-picker-trigger" />
@@ -272,12 +283,11 @@ const Install = () => {
                         </Form.Item>
                         <Form.Item
                             label={<T _str="Accent color" />}
-                            name="accent_color"
                         >
                             <ColorPicker
                                 animation="slide-up"
                                 defaultColor={accentColor}
-                                onChange={ (color) => { setAccentColor(color.color) }}
+                                onClose={ (color) => { setAccentColor(color.color) }}
                                 placement="bottomLeft"
                             >
                                 <span className="rc-color-picker-trigger" />
@@ -289,12 +299,11 @@ const Install = () => {
                         </Form.Item>
                         <Form.Item
                             label={<T _str="Additional color" />}
-                            name="add_color"
                         >
                             <ColorPicker
                                 animation="slide-up"
                                 defaultColor={addColor}
-                                onChange={ (color) => { setAddColor(color.color) }}
+                                onClose={ (color) => { setAddColor(color.color) }}
                                 placement="bottomLeft"
                             >
                                 <span className="rc-color-picker-trigger" />
@@ -310,77 +319,20 @@ const Install = () => {
         );
     };
     const Step3Form = () => {
-        const presets = [
-            {
-                title : 'Global'
-            },
-            {
-                title : 'Security'
-            },
-            {
-                title : 'Recording'
-            },
-            {
-                title : 'Breakout Rooms'
-            },
-
-            {
-                title : 'Webcams'
-            },
-            {
-                title : 'Screenshare'
-            },
-            {
-                title : 'Branding'
-            },
-            {
-                title : 'Audio'
-            },
-
-            {
-                title : 'Localisation'
-            },
-            {
-                title : 'Whiteboard'
-            },
-            {
-                title : 'Lock Settings'
-            },
-            {
-                title : 'Layout'
-            },
-
-            {
-                title : 'Guest policy'
-            },
-            {
-                title : 'Learning anaytics dashboard'
-            },
-            {
-                title : 'User Experience'
-            },
-            {
-                title : 'ZcaleRight Load Balancer'
-            }
-        ];
-        const [isModalVisible, setIsModalVisible] = React.useState(false);
-        const [modalTitle, setModalTitle] = React.useState('');
-
-        const showModal = (title) => {
+        const showModal = (title, content, indexCateg) => {
             setIsModalVisible(true);
             setModalTitle(title);
+            setModalContent(content);
+            setSelectedCategory(indexCateg);
         };
         const handleOk = () => {
+            presets[selectedCategory].subcategories = modalContent;
+            setPresets(presets);
             setIsModalVisible(false);
         };
         const handleCancel = () => {
             setIsModalVisible(false);
         };
-        const getIcon = (title) => {
-            const icon = title.replace(/\s/g, '-');
-            return "uploads/"+icon+".png";
-        };
-
         return (
             <div>
                 <Paragraph className="form-header">
@@ -390,11 +342,11 @@ const Install = () => {
                     </Title>
                 </Paragraph>
                 <Card bordered={false}>
-                    {presets.map(item => (
-                        <Card.Grid key={item.title} className="presets-grid" onClick={() => showModal(item.title)}>
+                    {presets.map((item,index) => (
+                        <Card.Grid key={item.name} className="presets-grid" onClick={() => showModal(item.name,item.subcategories,index)}>
                             <Meta
-                                avatar={<Avatar src={getIcon(item.title)}/>}
-                                title={item.title}
+                                avatar={<DynamicIcon type={item.icon} />}
+                                title={item.name}
                             />
                         </Card.Grid>
                     ))}
@@ -407,8 +359,29 @@ const Install = () => {
                         onOk={handleOk}
                         onCancel={handleCancel}
                         cancelButtonProps={{ style: { display: 'none' } }}
+                        footer={[
+                            <Button key="submit" className="ant-btn-primary" onClick={handleOk}>
+                                Saved
+                            </Button>
+                        ]}
                     >
-                        <p>Modal content</p>
+                        <div className="presets-body">
+                            {modalContent.map(item => (
+                                <div key={item.id}>
+                                    <Form.Item
+                                        label={item.name}
+                                        //name={item.id}
+                                    >
+                                        <Switch
+                                            checkedChildren={<CheckOutlined />}
+                                            unCheckedChildren={<CloseOutlined />}
+                                            defaultChecked={item.status == true ? true : false}
+                                            onChange={ (checked) => { item.status = checked }}
+                                        />
+                                    </Form.Item>
+                                </div>
+                            ))}
+                        </div>
                     </Modal>
                 </Card>
             </div>
@@ -454,68 +427,76 @@ const Install = () => {
         }
         else {
             const formData = stepForm.getFieldsValue(true);
-            formData.primary_color = primaryColor;
-            formData.secondary_color = secondaryColor;
-            formData.accent_color = accentColor;
-            formData.add_color = addColor;
-            console.log(formData);
-
+            formData.branding_colors = {
+                'primary_color' : primaryColor,
+                'secondary_color' : secondaryColor,
+                'accent_color' : accentColor,
+                'add_color' : addColor,
+            };
+            formData.presetsConfig = presets;
             AuthService.install(formData)
                 .then((response) => {
-                    console.log(response);
-                    //console.log(response.data.message);
+                    setSuccessful(true);
+                    setMessage(response.data.message);
                 })
                 .catch((error) => {
-                    console.log(error);
                     //const responseMessage = error.response.data.message;
+                    console.log(error);
+                    setSuccessful(false);
                 });
         }
     };
 
     return (
         <Row>
-            <Col span={4}>
-                <Steps className="install-steps" size="small" direction="vertical" current={activeStep}>
-                    {steps.map(item => (
-                        <Step key={item.title} title={item.title} />
-                    ))}
-                </Steps>
-            </Col>
-            <Col span={steps[activeStep].span} offset={steps[activeStep].offset}>
-                <Form
-                layout="vertical"
-                name="install_form"
-                className="install-form steps-content"
-                form={stepForm}
-                initialValues={initialValues}
-                onFinish={onFinish}
-                >
-                    {steps[activeStep].content}
-                    <Form.Item className={ activeStep === steps.length - 1 ? "button-container final-step-btn" : "button-container"} >
-                        {activeStep <= steps.length - 1 && (
-                            <Button
-                                type="primary"
-                                htmlType="submit"
-                                size="large"
-                                block
-                            >
-                                {steps[activeStep].button}
-                            </Button>
-                        )}
-
-                        {activeStep > 0 && (
-                                <Button
-                                    className='prev'
-                                    onClick={() => prev()}
-                                    size="large"
-                                    block
-                                >
-                                    Previous
-                                </Button>
-                        )}
-                    </Form.Item>
-                </Form>
-            </Col>
+            { successful ?
+                <Col span={10} offset={7} className="section-top">
+                    <Result
+                        status="success"
+                        title={message}
+                        subTitle="Your application setup is complete"
+                        extra={
+                            <Link to={'/login'} onClick={handleInstall} className="ant-btn ant-btn-lg color-green">
+                                Start using Hivelvet
+                            </Link>
+                        }
+                    />
+                </Col>
+                :
+                <>
+                    <Col span={4}>
+                        <Steps className="install-steps" size="small" direction="vertical" current={activeStep}>
+                            {steps.map(item => (
+                                <Step key={item.title} title={item.title} />
+                            ))}
+                        </Steps>
+                    </Col>
+                    <Col span={steps[activeStep].span} offset={steps[activeStep].offset}>
+                        <Form
+                        layout="vertical"
+                        name="install_form"
+                        className="install-form steps-content"
+                        form={stepForm}
+                        initialValues={initialValues}
+                        onFinish={onFinish}
+                        >
+                            {steps[activeStep].content}
+                            <Form.Item className={ activeStep === steps.length - 1 ? "button-container final-step-btn" : "button-container"} >
+                                {activeStep > 0 && (
+                                    <Button className='prev' onClick={() => prev()} block>
+                                        Previous
+                                    </Button>
+                                )}
+                                {activeStep <= steps.length - 1 && (
+                                    <Button type="primary" htmlType="submit" block>
+                                        {steps[activeStep].button}
+                                    </Button>
+                                )}
+                            </Form.Item>
+                        </Form>
+                    </Col>
+                </>
+            }
         </Row>
     )
 }
