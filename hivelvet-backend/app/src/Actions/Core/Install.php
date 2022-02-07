@@ -45,73 +45,73 @@ class Install extends BaseAction
     {
         // @todo for future tasks
         //if ($f3->get('system.installed') === false) {
-            $body   = $this->getDecodedBody();
-            $form   = $body['data'];
+        $body   = $this->getDecodedBody();
+        $form   = $body['data'];
 
-            $user   = new User();
-            $user->email        = $form['email'];
-            $user->username     = $form['username'];
-            $user->role         = UserRole::ADMIN;
-            $user->status       = UserStatus::ACTIVE;
+        $user   = new User();
+        $user->email        = $form['email'];
+        $user->username     = $form['username'];
+        $user->role         = UserRole::ADMIN;
+        $user->status       = UserStatus::ACTIVE;
+
+        try {
+            //$user->save();
+
+            $this->logger->info('App configuration', ['user' => $user->toArray()]);
+            $setting   = new Setting();
+            $setting->company_name = $form['company_name'];
+            $setting->company_website = $form['company_url'];
+            $setting->platform_name = $form['platform_name'];
+            if ($form['term_url'] != '')
+                $setting->terms_use = $form['term_url'];
+            if ($form['policy_url'] != '')
+                $setting->privacy_policy = $form['policy_url'];
+            //$setting->logo = $form['logo'];
+            $colors = $form['branding_colors'];
+            $setting->primary_color = $colors['primary_color'];
+            $setting->secondary_color = $colors['secondary_color'];
+            $setting->accent_color = $colors['accent_color'];
+            $setting->additional_color = $colors['add_color'];
 
             try {
-                //$user->save();
+                //$setting->save();
+                $this->logger->info('App configuration', ['setting' => $setting->toArray()]);
 
-                $this->logger->info('App configuration', ['user' => $user->toArray()]);
-                $setting   = new Setting();
-                $setting->company_name = $form['company_name'];
-                $setting->company_website = $form['company_url'];
-                $setting->platform_name = $form['platform_name'];
-                if ($form['term_url'] != '')
-                    $setting->terms_use = $form['term_url'];
-                if ($form['policy_url'] != '')
-                    $setting->privacy_policy = $form['policy_url'];
-                //$setting->logo = $form['logo'];
-                $colors = $form['branding_colors'];
-                $setting->primary_color = $colors['primary_color'];
-                $setting->secondary_color = $colors['secondary_color'];
-                $setting->accent_color = $colors['accent_color'];
-                $setting->additional_color = $colors['add_color'];
-
-                try {
-                    //$setting->save();
-                    $this->logger->info('App configuration', ['setting' => $setting->toArray()]);
-
-                    $presets = $form['presetsConfig'];
-                    foreach ($presets as $preset) {
-                        $subcategories = $preset['subcategories'];
-                        foreach ($subcategories as $subcategory) {
-                            $presetSettings = new PresetSetting();
-                            $presetSettings->subcategory_id = $subcategory['id'];
-                            $presetSettings->is_enabled     = $subcategory['status'];
-                            try {
-                                $this->logger->info('App configuration', ['preset settings' => $presetSettings->toArray()]);
-                                //$presetSettings->save();
-                            }
-                            catch (\Exception $e) {
-                                $message = $e->getMessage();
-                                $this->logger->error('preset settings could not be added', ['error' => $message]);
-                                $this->renderJson(['errorStep3' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-                                return;
-                            }
+                $presets = $form['presetsConfig'];
+                foreach ($presets as $preset) {
+                    $subcategories = $preset['subcategories'];
+                    foreach ($subcategories as $subcategory) {
+                        $presetSettings = new PresetSetting();
+                        $presetSettings->subcategory_id = $subcategory['id'];
+                        $presetSettings->is_enabled     = $subcategory['status'];
+                        try {
+                            $this->logger->info('App configuration', ['preset settings' => $presetSettings->toArray()]);
+                            //$presetSettings->save();
+                        }
+                        catch (\Exception $e) {
+                            $message = $e->getMessage();
+                            $this->logger->error('preset settings could not be added', ['error' => $message]);
+                            $this->renderJson(['errorStep3' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+                            return;
                         }
                     }
-                    //$this->logger->info('administrator and settings and presets successfully added', ['user' => $user->toArray()]);
-                    $this->renderJson(['message' => 'Application is ready now !']);
                 }
-                catch (\Exception $e) {
-                    $message = $e->getMessage();
-                    $this->logger->error('settings could not be added', ['error' => $message]);
-                    $this->renderJson(['errorStep2' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-                    return;
-                }
+                //$this->logger->info('administrator and settings and presets successfully added', ['user' => $user->toArray()]);
+                $this->renderJson(['message' => 'Application is ready now !']);
             }
             catch (\Exception $e) {
                 $message = $e->getMessage();
-                $this->logger->error('administrator could not be added', ['error' => $message]);
-                $this->renderJson(['errorStep1' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+                $this->logger->error('settings could not be added', ['error' => $message]);
+                $this->renderJson(['errorStep2' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
                 return;
             }
+        }
+        catch (\Exception $e) {
+            $message = $e->getMessage();
+            $this->logger->error('administrator could not be added', ['error' => $message]);
+            $this->renderJson(['errorStep1' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+            return;
+        }
         //}
     }
 

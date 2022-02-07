@@ -24,6 +24,7 @@ use Base;
 use Enum\CacheKey;
 use Helpers\Time;
 use Mail\MailSender;
+use Models\Setting;
 use Registry;
 use Tracy\Debugger;
 
@@ -46,7 +47,8 @@ class Bootstrap extends Boot
 
         parent::__construct();
 
-        $this->setupMailer();
+        // @fixme: must update for PHP 8.1
+        // $this->setupMailer();
         $this->handleException();
         $this->createDatabaseConnection();
         $this->prepareSession();
@@ -131,7 +133,7 @@ class Bootstrap extends Boot
         // setup routes
         // @see http://fatfreeframework.com/routing-engine
         // firstly load routes from ini file then load custom environment routes
-        $this->f3->config('config/routes.ini');
+        $this->f3->config('config/routes'. $this->f3->get('config.extension') .'.ini');
 
         if (file_exists('config/routes-' . $this->environment . '.ini')) {
             $this->f3->config('config/routes-' . $this->environment . '.ini');
@@ -139,7 +141,7 @@ class Bootstrap extends Boot
 
         if (!$this->isCli) {
             // load routes access policy
-            $this->f3->config('config/access.ini');
+            $this->f3->config('config/access'. $this->f3->get('config.extension') .'.ini');
         } else {
             // load routes access policy for CLI
             $this->f3->config('config/access-cli.ini');
@@ -151,8 +153,8 @@ class Bootstrap extends Boot
 
         // enable cors to allow cross-origin requests from frontend react client
         header('Access-Control-Allow-Origin: *');
-        header("Access-Control-Allow-Headers: Content-Type, Origin, Authorization, X-Authorization, Accept, Accept-Language, Access-Control-Request-Method");
-        header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
+        header('Access-Control-Allow-Headers: Content-Type, Origin, Authorization, X-Authorization, Accept, Accept-Language, Access-Control-Request-Method');
+        header('Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE');
         //header("Allow: GET, POST, OPTIONS, PUT, DELETE");
     }
 }

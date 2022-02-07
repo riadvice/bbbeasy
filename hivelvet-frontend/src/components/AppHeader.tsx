@@ -66,10 +66,10 @@ class AppHeader extends Component<Props, State> {
                     <Link to={'/'}>
                         <img className="header-logo-image" src="images/logo_01.png" alt="Logo" />
                     </Link>
-                    { installed &&
+                    {installed && (
                         <Space size="large">
                             <Dropdown overlay={menu}>
-                                <Button>
+                                <Button size="middle">
                                     <GlobalOutlined /> {language} <DownOutlined />
                                 </Button>
                             </Dropdown>
@@ -82,7 +82,7 @@ class AppHeader extends Component<Props, State> {
                                 <T _str="Sign up" />{' '}
                             </Link>
                         </Space>
-                    }
+                    )}
                 </Paragraph>
             </Header>
         );

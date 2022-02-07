@@ -42,6 +42,8 @@ import 'moment/locale/en-au';
 import { tx } from '@transifex/native';
 
 import Logger from './lib/logger';
+import Reset from './components/ResetPassword';
+import ChangePassword from './components/ChangePassword';
 
 moment.locale('en');
 
@@ -72,7 +74,7 @@ function App() {
     };
 
     // to be changed by backend after installation
-    const isInstalled: boolean = JSON.parse(process.env.REACT_APP_INSTALLED);
+    const isInstalled: boolean = JSON.parse(process.env.REACT_APP_INSTALLED) || false;
     const [installed, setInstalled] = useState(isInstalled);
     const handleInstall = () => {
         // change env var REACT_APP_INSTALLED to true
@@ -84,21 +86,23 @@ function App() {
             <ConfigProvider locale={currentLocale} direction={direction} componentSize='large'>
                 <AppHeader currentLocale={currentLocale} handleChange={handleChange} installed={installed} />
                 <Content className="site-content">
-                    { installed ?
+                    { installed ? (
                         <Routes>
                             <Route path="/" element={<LandingPage />} />
                             <Route path="/register" element={<Register />} />
                             <Route path="/login" element={<Login />} />
                             <Route path="/reset" element={<ResetPwd />} />
                             <Route path="/home" element={<Home />} />
+                            <Route path="/reset-password" element={<Reset />} />
+                            <Route path="/change-password" element={<ChangePassword />} />
                             <Route path="*" element={<PageNotFound />} />
                         </Routes>
-                    :
+                    ) : (
                         <Routes>
                             <Route path="/" element={<Install installed={installed} handleInstall={handleInstall} />} />
                             <Route path="*" element={<PageNotFound />} />
                         </Routes>
-                    }
+                    )}
                 </Content>
                 <AppFooter />
             </ConfigProvider>

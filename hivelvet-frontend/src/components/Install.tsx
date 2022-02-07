@@ -135,7 +135,7 @@ const Install = (props : Props) => {
                 >
                     <Input.Password
                         placeholder="Password"
-                        iconRender={(visible) => visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />}
+                        iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
                     />
                 </Form.Item>
             </div>
@@ -182,8 +182,8 @@ const Install = (props : Props) => {
                             },
                             {
                                 type: 'url',
-                                message: 'Company website is not a valid url'
-                            }
+                                message: 'Company website is not a valid url',
+                            },
                         ]}
                     >
                         <Input placeholder="Company website" />
@@ -210,8 +210,8 @@ const Install = (props : Props) => {
                         rules={[
                             {
                                 type: 'url',
-                                message: 'Term of use url is not a valid url'
-                            }
+                                message: 'Term of use url is not a valid url',
+                            },
                         ]}
                     >
                         <Input placeholder="Term of use URL" />
@@ -224,8 +224,8 @@ const Install = (props : Props) => {
                         rules={[
                             {
                                 type: 'url',
-                                message: 'Privacy Policy url is not a valid url'
-                            }
+                                message: 'Privacy Policy url is not a valid url',
+                            },
                         ]}
                     >
                         <Input placeholder="Privacy Policy URL" />
@@ -241,77 +241,72 @@ const Install = (props : Props) => {
                     <Form.Item>
                         <Form.Item valuePropName="fileList">
                             <Dragger name="files" action="/upload.do">
-                                <p className="ant-upload-drag-icon"><InboxOutlined /></p>
-                                <Text strong className="ant-upload-text">Drop your logo here</Text>
+                                <p className="ant-upload-drag-icon">
+                                    <InboxOutlined />
+                                </p>
+                                <Text strong className="ant-upload-text">
+                                    Drop your logo here
+                                </Text>
                                 <p className="ant-upload-hint">.rar .zip .doc .docx .pdf .jpg ...</p>
                             </Dragger>
                         </Form.Item>
                     </Form.Item>
                     <div className="colors-container">
-                        <Form.Item
-                            label={<T _str="Primary color" />}
-                        >
+                        <Form.Item label={<T _str="Primary color" />}>
                             <ColorPicker
                                 animation="slide-up"
                                 defaultColor={primaryColor}
-                                onClose={ (color) => { setPrimaryColor(color.color) }}
+                                onClose={ (color) => {
+                                    setPrimaryColor(color.color);
+                                }}
                                 placement="bottomLeft"
                             >
                                 <span className="rc-color-picker-trigger" />
                             </ColorPicker>
 
-                            <span className="color-palette-picker-value">
-                                {primaryColor}
-                            </span>
+                            <span className="color-palette-picker-value">{primaryColor}</span>
                         </Form.Item>
-                        <Form.Item
-                            label={<T _str="Secondary color" />}
-                        >
+                        <Form.Item label={<T _str="Secondary color" />}>
                             <ColorPicker
                                 animation="slide-up"
                                 defaultColor={secondaryColor}
-                                onClose={ (color) => { setSecondaryColor(color.color) }}
+                                onClose={ (color) => {
+                                    setSecondaryColor(color.color);
+                                }}
                                 placement="bottomLeft"
                             >
                                 <span className="rc-color-picker-trigger" />
                             </ColorPicker>
 
-                            <span className="color-palette-picker-value">
-                                {secondaryColor}
-                            </span>
-
+                            <span className="color-palette-picker-value">{secondaryColor}</span>
                         </Form.Item>
-                        <Form.Item
-                            label={<T _str="Accent color" />}
-                        >
+                        <Form.Item label={<T _str="Accent color" />}>
                             <ColorPicker
                                 animation="slide-up"
                                 defaultColor={accentColor}
-                                onClose={ (color) => { setAccentColor(color.color) }}
+                                onClose={ (color) => {
+                                    setAccentColor(color.color);
+                                }}
                                 placement="bottomLeft"
                             >
                                 <span className="rc-color-picker-trigger" />
                             </ColorPicker>
 
-                            <span className="color-palette-picker-value">
-                                {accentColor}
-                            </span>
+                            <span className="color-palette-picker-value">{accentColor}</span>
                         </Form.Item>
-                        <Form.Item
-                            label={<T _str="Additional color" />}
-                        >
+                        <Form.Item label={<T _str="Additional color" />}>
                             <ColorPicker
                                 animation="slide-up"
                                 defaultColor={addColor}
-                                onClose={ (color) => { setAddColor(color.color) }}
+                                onClose={ (color) => {
+                                    setAddColor(color.color);
+                                }}
                                 placement="bottomLeft"
                             >
                                 <span className="rc-color-picker-trigger" />
                             </ColorPicker>
 
-                            <span className="color-palette-picker-value">
-                                {addColor}
-                            </span>
+                            <span className="color-palette-picker-value">{addColor}</span>
                         </Form.Item>
                     </div>
                 </div>
@@ -333,21 +328,19 @@ const Install = (props : Props) => {
         const handleCancel = () => {
             setIsModalVisible(false);
         };
+
         return (
             <div>
                 <Paragraph className="form-header">
                     <Title level={4}>
                         {' '}
-                        <T _str="Global rooms settings"/>
+                        <T _str="Global rooms settings" />
                     </Title>
                 </Paragraph>
                 <Card bordered={false}>
                     {presets.map((item,index) => (
                         <Card.Grid key={item.name} className="presets-grid" onClick={() => showModal(item.name,item.subcategories,index)}>
-                            <Meta
-                                avatar={<DynamicIcon type={item.icon} />}
-                                title={item.name}
-                            />
+                            <Meta avatar={<DynamicIcon type={item.icon} />} title={item.name} />
                         </Card.Grid>
                     ))}
 
@@ -403,29 +396,28 @@ const Install = (props : Props) => {
             content: <Step1Form />,
             button: 'Create',
             span: 8,
-            offset: 4
+            offset: 4,
         },
         {
             title: 'Company & Branding',
             content: <Step2Form />,
             button: 'Next',
             span: 15,
-            offset: 2
+            offset: 2,
         },
         {
             title: 'BigBlueButton Settings',
             content: <Step3Form />,
             button: 'Finish',
             span: 18,
-            offset: 1
+            offset: 1,
         },
     ];
 
     const onFinish = () => {
-        if(activeStep < steps.length - 1) {
+        if (activeStep < steps.length - 1) {
             next();
-        }
-        else {
+        } else {
             const formData = stepForm.getFieldsValue(true);
             formData.branding_colors = {
                 'primary_color' : primaryColor,
@@ -449,7 +441,7 @@ const Install = (props : Props) => {
 
     return (
         <Row>
-            { successful ?
+            { successful ? (
                 <Col span={10} offset={7} className="section-top">
                     <Result
                         status="success"
@@ -462,26 +454,30 @@ const Install = (props : Props) => {
                         }
                     />
                 </Col>
-                :
+                ) : (
                 <>
                     <Col span={4}>
                         <Steps className="install-steps" size="small" direction="vertical" current={activeStep}>
-                            {steps.map(item => (
+                            {steps.map((item) => (
                                 <Step key={item.title} title={item.title} />
                             ))}
                         </Steps>
                     </Col>
                     <Col span={steps[activeStep].span} offset={steps[activeStep].offset}>
                         <Form
-                        layout="vertical"
-                        name="install_form"
-                        className="install-form steps-content"
-                        form={stepForm}
-                        initialValues={initialValues}
-                        onFinish={onFinish}
+                            layout="vertical"
+                            name="install_form"
+                            className="install-form steps-content"
+                            form={stepForm}
+                            initialValues={initialValues}
+                            onFinish={onFinish}
                         >
                             {steps[activeStep].content}
-                            <Form.Item className={ activeStep === steps.length - 1 ? "button-container final-step-btn" : "button-container"} >
+                            <Form.Item
+                                className={
+                                    activeStep === steps.length - 1 ? "button-container final-step-btn" : "button-container"
+                                }
+                            >
                                 {activeStep > 0 && (
                                     <Button className='prev' onClick={() => prev()} block>
                                         Previous
@@ -496,9 +492,9 @@ const Install = (props : Props) => {
                         </Form>
                     </Col>
                 </>
-            }
+            )}
         </Row>
-    )
-}
+    );
+};
 
 export default Install;

@@ -1,21 +1,3 @@
-/**
- * Hivelvet open source platform - https://riadvice.tn/
- *
- * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
- *
- * This program is free software; you can redistribute it and/or modify it under the
- * terms of the GNU Lesser General Public License as published by the Free Software
- * Foundation; either version 3.0 of the License, or (at your option) any later
- * version.
- *
- * Hivelvet is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
- * PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public License along
- * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
- */
-
 import React, { Component } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 
@@ -52,7 +34,7 @@ class Login extends Component<Props, State> {
                 const responseMessage = response.data.message;
                 message.success({
                     content: responseMessage,
-                    className: 'success-message'
+                    className: 'success-message',
                 });
                 this.setState({
                     successful: true,
@@ -113,7 +95,7 @@ class Login extends Component<Props, State> {
                                 rules={[
                                     {
                                         type: 'email',
-                                        message: <T _str="Email is invalid" />,
+                                        message: <T _str="Invalid Email" />,
                                     },
                                     {
                                         required: true,
@@ -154,7 +136,7 @@ class Login extends Component<Props, State> {
                             <Text>
                                 <T _str="Forgot your password ?" />{' '}
                             </Text>
-                            <Link to={'/reset'}>
+                            <Link to={'/reset-password'}>
                                 <T _str="Reset here" />{' '}
                             </Link>
                         </Paragraph>

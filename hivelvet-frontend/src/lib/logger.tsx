@@ -18,6 +18,8 @@
 
 import pino from 'pino';
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 const levels = {
     http: 10,
     debug: 20,
@@ -28,7 +30,7 @@ const levels = {
 };
 
 const send = async (level: any, logEvent: any) => {
-    const url = 'http://api.hivelvet.test/logs';
+    const url = API_URL + '/logs';
     const response = await fetch(url, {
         method: 'POST',
         body: JSON.stringify(logEvent),

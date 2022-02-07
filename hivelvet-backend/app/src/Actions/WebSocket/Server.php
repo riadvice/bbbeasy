@@ -44,7 +44,7 @@ class Server
      *
      * @param WS $ws
      */
-    private function register(WS $ws)
+    private function register(WS $ws): void
     {
         $ws
             ->on('start', [$this, 'onStart'])
@@ -60,10 +60,10 @@ class Server
     /**
      * Sends the provided message to all connected clients of the given server.
      *
-     * @param WS $ws
+     * @param WS     $ws
      * @param string $message
      */
-    private function sendMessageToAllClients(WS $ws, string $message)
+    private function sendMessageToAllClients(WS $ws, string $message): void
     {
         /** @var Agent $agent */
         foreach ($ws->agents() as $agent) {
@@ -76,20 +76,20 @@ class Server
      *
      * @param string $message
      */
-    private function debug(string $message)
+    private function debug(string $message): void
     {
-        $date = date('Y-m-d H:i:s');
+        $date   = date('Y-m-d H:i:s');
         $memory = round(memory_get_usage(true) / 1000 / 1000, 3) . ' MB';
 
         fwrite(STDOUT, $date . ' | ' . $memory . ' | ' . $message . "\n");
     }
 
-    public function onStart(WS $ws)
+    public function onStart(WS $ws): void
     {
         $this->logger->info('WebSocket server started');
     }
 
-    public function onError(WS $ws)
+    public function onError(WS $ws): void
     {
         $this->logger->error(__METHOD__);
 
@@ -103,19 +103,19 @@ class Server
         }
     }
 
-    public function onStop(WS $ws)
+    public function onStop(WS $ws): void
     {
         $this->logger->debug('Shutting down');
     }
 
-    public function onConnect(Agent $agent)
+    public function onConnect(Agent $agent): void
     {
         $this->logger->debug('Agent ' . $agent->id() . ' connected');
 
-        $this->sendMessageToAllClients($agent->server(), sprintf("Client with ID %s joined", $agent->id()));
+        $this->sendMessageToAllClients($agent->server(), sprintf('Client with ID %s joined', $agent->id()));
     }
 
-    public function onDisconnect(Agent $agent)
+    public function onDisconnect(Agent $agent): void
     {
         $this->logger->debug('Agent ' . $agent->id() . ' disconnected');
 
@@ -124,19 +124,20 @@ class Server
             socket_clear_error();
         }
 
-        $this->sendMessageToAllClients($agent->server(), sprintf("Client with ID %s left", $agent->id()));
+        $this->sendMessageToAllClients($agent->server(), sprintf('Client with ID %s left', $agent->id()));
     }
 
-    public function onIdle(Agent $agent)
+    public function onIdle(Agent $agent): void
     {
         $this->logger->debug('Agent ' . $agent->id() . ' idles');
     }
 
-    public function onReceive(Agent $agent, int $op, string $data)
+    public function onReceive(Agent $agent, int $op, string $data): void
     {
         // This example is only utilizing text frames for application-specific payload.
         if ($op != WS::Text) {
             $this->logger->debug(sprintf('Agent %s sent a message with ignored opcode %s.', $agent->id(), $op));
+
             return;
         }
 
@@ -146,7 +147,7 @@ class Server
          * Forward received message to all clients.
          */
         $message = json_encode([
-            'author' => $agent->id(),
+            'author'  => $agent->id(),
             'message' => trim($data),
         ]);
 
@@ -154,7 +155,7 @@ class Server
         $this->sendMessageToAllClients($agent->server(), $message);
     }
 
-    public function onSend(Agent $agent, int $op, string $data)
+    public function onSend(Agent $agent, int $op, string $data): void
     {
         $this->logger->debug(sprintf('Agent %s will receive a message: %s', $agent->id(), $data));
     }

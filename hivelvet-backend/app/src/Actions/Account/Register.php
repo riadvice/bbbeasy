@@ -49,8 +49,7 @@ class Register extends BaseAction
             $message = ($usernameExist and $emailExist) ? 'username and email already exist' : ($usernameExist ? 'username already exist' : 'email already exist');
             $this->logger->error('Registration error : user could not be added', ['error' => $message]);
             $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-        }
-        else {
+        } else {
             $user->email        = $form['email'];
             $user->username     = $form['username'];
             $user->role         = UserRole::VISITOR;
@@ -58,11 +57,11 @@ class Register extends BaseAction
 
             try {
                 $user->save();
-            }
-            catch (\Exception $e) {
-                $message = $e->getMessage();
+            } catch (\Exception $e) {
+                $message = 'user could not be added';
                 $this->logger->error('Registration error : user could not be added', ['error' => $message]);
                 $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+
                 return;
             }
             $this->logger->info('user successfully registered', ['user' => $user->toArray()]);
