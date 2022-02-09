@@ -25,6 +25,7 @@ use Base;
 use Enum\ResponseCode;
 use Enum\UserRole;
 use Enum\UserStatus;
+use Helpers\Upload;
 use Models\Setting;
 use Models\User;
 
@@ -43,7 +44,7 @@ class Install extends BaseAction
     {
         // test with the same env var in frontend
         //if ($f3->get('system.installed') === false) {
-     $body   = $this->getDecodedBody();
+        $body   = $this->getDecodedBody();
         $form   = $body['data'];
 
         $this->logger->info('App configuration', ['form' => $form]);
@@ -57,25 +58,39 @@ class Install extends BaseAction
         $user->created_on   = date('Y-m-d H:i:s');
 
         try {
-        $this->logger->info('App configuration', ['user' => $user->toArray()]);
-            $files = \Web::instance()->receive();
+            $this->logger->info('App configuration', ['user' => $user->toArray()]);
+            $fileUploaded = true;
 
-            $this->logger->info('files', ["files"=>$f3->get("FILES")]);
+            \Web::instance()->receive(function ($file, $formFieldName) use (&$fileUploaded) {
+                $result = Upload::instance()->uploadImage($file, 'settings/', $formFieldName);
 
+                if (!empty($result['error'])) {
+                    // @todo: return json error in the response
 
+                    $fileUploaded = false;
+                }
+
+                return false;
+            }, true);
+
+            // @todo : use $fileUploaded
+
+            $this->logger->info('files', ['files'=>$f3->get('FILES')]);
 
             $setting                  = new Setting();
-           $setting->company_name    = $form['company_name'];
+            $setting->company_name    = $form['company_name'];
             $setting->company_website = $form['company_url'];
             $setting->platform_name   = $form['platform_name'];
             $setting->terms_use       = $form['term_url'];
             $setting->privacy_policy  = $form['policy_url'];
-            $this->logger->info("file",["file"=>$form['logo']["name"],"type"=> gettype($form["logo"] )]);
-             $setting->logo = $form['logo']["name"]  ;
+
+            $this->logger->info('file', ['file'=>$form['logo']['name'],'type'=> gettype($form['logo'] )]);
+            $setting->logo             = $form['logo']['name']  ;
             $setting->primary_color    = $form['primary_color'];
             $setting->secondary_color  = $form['secondary_color'];
             $setting->accent_color     = $form['accent_color'];
             $setting->additional_color = $form['add_color'];
+
             try {
                 $this->logger->info('App configuration', ['setting' => $setting->toArray()]);
                 /*
