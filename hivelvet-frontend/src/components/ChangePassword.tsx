@@ -16,14 +16,11 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 import React, { Component, useState } from 'react';
-import { Link, Navigate, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import AuthService from '../services/auth.service';
 import '../App.css';
-//import 'antd/dist/antd.css';
 import { Form, Input, Button, Checkbox, message, Alert, Col, Row, Typography, Space, Card } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
-import { FormattedMessage } from 'react-intl';
-import { locale } from 'moment';
 import { T } from '@transifex/react';
 import authService from '../services/auth.service';
 const { Text, Title, Paragraph } = Typography;

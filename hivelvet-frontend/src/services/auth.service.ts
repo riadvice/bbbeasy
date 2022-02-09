@@ -21,23 +21,6 @@ import axios from 'axios';
 const API_URL = process.env.REACT_APP_API_URL;
 
 class AuthService {
-    install(data ) {
-          
-      
-          
-       const config ={
-           headers: {
-              "Content-Type": "multipart/form-data",
-            //  "Accept": "application/json",
-             // "type": "formData"
-           }
-        } 
-          return axios.post(API_URL + '/install', {
-              data ,config
-          });
-      }
-    
-
     register(username: string, email: string, password: string, confirmPassword: string) {
         return axios.post(API_URL + '/account/register', {
             username,

@@ -43,39 +43,43 @@ class Install extends BaseAction
     {
         // test with the same env var in frontend
         //if ($f3->get('system.installed') === false) {
-     $body   = $this->getDecodedBody();
-        $form   = $body['data'];
 
-        $this->logger->info('App configuration', ['form' => $form]);
+        $post=$f3->get("POST");
+        $this->logger->info('POST', ["POST"=>$f3->get("POST")]);
 
-        $user               = new User();
-        $user->email        = $form['email'];
-        $user->username     = $form['username'];
-        $user->password     = $form['password'];
+        $this->logger->info('files', ["files"=>$f3->get("FILES")]);
+        $files = \Web::instance()->receive();
+
+
+        $this->logger->info('files', ["files"=>$files]);
+
+
+     $user               = new User();
+        $user->email        = $post['email'];
+        $user->username     = $post['username'];
+        $user->password     = $post['password'];
         $user->role         = UserRole::ADMIN;
         $user->status       = UserStatus::ACTIVE;
         $user->created_on   = date('Y-m-d H:i:s');
 
         try {
-        $this->logger->info('App configuration', ['user' => $user->toArray()]);
-            $files = \Web::instance()->receive();
+       $this->logger->info('App configuration', ['user' => $user->toArray()]);
 
-            $this->logger->info('files', ["files"=>$f3->get("FILES")]);
 
 
 
             $setting                  = new Setting();
-           $setting->company_name    = $form['company_name'];
-            $setting->company_website = $form['company_url'];
-            $setting->platform_name   = $form['platform_name'];
-            $setting->terms_use       = $form['term_url'];
-            $setting->privacy_policy  = $form['policy_url'];
-            $this->logger->info("file",["file"=>$form['logo']["name"],"type"=> gettype($form["logo"] )]);
-             $setting->logo = $form['logo']["name"]  ;
-            $setting->primary_color    = $form['primary_color'];
-            $setting->secondary_color  = $form['secondary_color'];
-            $setting->accent_color     = $form['accent_color'];
-            $setting->additional_color = $form['add_color'];
+           $setting->company_name    = $post['company_name'];
+            $setting->company_website = $post['company_url'];
+            $setting->platform_name   = $post['platform_name'];
+            $setting->terms_use       = $post['term_url'];
+            $setting->privacy_policy  = $post['policy_url'];
+            $setting->logo = $post['logo_name']   ;
+            $setting->primary_color    = $post['primary_color'];
+            $setting->secondary_color  = $post['secondary_color'];
+            $setting->accent_color     = $post['accent_color'];
+            $setting->additional_color = $post['add_color'];
+
             try {
                 $this->logger->info('App configuration', ['setting' => $setting->toArray()]);
                 /*
@@ -98,6 +102,6 @@ class Install extends BaseAction
 
             return;
         }
-        //}
+
     }
 }
