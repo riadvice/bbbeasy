@@ -25,6 +25,7 @@ use Enum\ResponseCode;
 use Enum\UserRole;
 use Enum\UserStatus;
 use Models\User;
+use Validation\Validator;
 
 /**
  * Class Register
@@ -40,32 +41,59 @@ class Register extends BaseAction
     public function signup($f3): void
     {
         $user   = new User();
-        $form   = $this->getDecodedBody();
+        $body   = $this->getDecodedBody();
+        $form   = $body['data'];
+        $v      = new Validator();
 
-        $usernameExist  = $user->load(['username = ?', $form['username']]);
-        $emailExist     = $user->load(['email = ?', $form['email']]);
+        $v->notEmpty()->verify('username', $form['username'], ['notEmpty' => 'Username is required']);
+        $v->notEmpty()->verify('email', $form['email'], ['notEmpty' => 'Email is required']);
+        $v->notEmpty()->verify('password', $form['password'], ['notEmpty' => 'Password is required']);
+        $v->notEmpty()->verify('confirmPassword', $form['confirmPassword'], ['notEmpty' => 'Confirm password is required']);
+        $v->trueVal()->verify('agreement', $form['agreement'], ['trueVal' => 'Should accept the agreement']);
 
-        if ($usernameExist or $emailExist ) {
-            $message = ($usernameExist and $emailExist) ? 'username and email already exist' : ($usernameExist ? 'username already exist' : 'email already exist');
-            $this->logger->error('Registration error : user could not be added', ['error' => $message]);
-            $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-        } else {
-            $user->email        = $form['email'];
-            $user->username     = $form['username'];
-            $user->role         = UserRole::VISITOR;
-            $user->status       = UserStatus::PENDING;
+        if ($v->allValid()) {
+            $v->email()->verify('email', $form['email'], ['email' => 'Email is invalid']);
+            $v->length(4)->verify('password', $form['password'], ['length' => 'Password must be at least 4 characters']);
+            $v->length(4)->verify('confirmPassword', $form['confirmPassword'], ['length' => 'Confirm password must be at least 4 characters']);
+            $v->equals($form['password'])->verify('confirmPassword', $form['confirmPassword'], ['equals' => 'The two passwords that you entered do not match']);
 
-            try {
-                $user->save();
-            } catch (\Exception $e) {
-                $message = 'user could not be added';
-                $this->logger->error('Registration error : user could not be added', ['error' => $message]);
-                $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+            if ($v->allValid()) {
+                $usernameExist  = $user->load(['username = ?', $form['username']]);
+                $emailExist     = $user->load(['email = ?', $form['email']]);
 
-                return;
+                if ($usernameExist or $emailExist ) {
+                    $message = ($usernameExist and $emailExist) ? 'username and email already exist' : ($usernameExist ? 'username already exist' : 'email already exist');
+                    $this->logger->error('Registration error : user could not be added', ['error' => $message]);
+                    $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+                }
+                else {
+                    $user->email        = $form['email'];
+                    $user->username     = $form['username'];
+                    $user->password     = $form['password'];
+                    $user->role         = UserRole::VISITOR;
+                    $user->status       = UserStatus::PENDING;
+
+                    try {
+                        $user->save();
+                    } catch (\Exception $e) {
+                        $message = 'user could not be added';
+                        $this->logger->error('Registration error : user could not be added', ['user'=> $user->toArray(),'error' => $e->getMessage()]);
+                        $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+
+                        return;
+                    }
+                    $this->logger->info('user successfully registered', ['user' => $user->toArray()]);
+                    $this->renderJson(['message' => 'Congratulations ! Your account has been successfully created.']);
+                }
             }
-            $this->logger->info('user successfully registered', ['user' => $user->toArray()]);
-            $this->renderJson(['message' => 'Congratulations ! Your account has been successfully created.']);
+            else {
+                $this->logger->error('Registration error', ['errors' => $v->getErrors()]);
+                $this->renderJson(['errors' => $v->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
+            }
+        }
+        else {
+            $this->logger->error('Registration error', ['errors' => $v->getErrors()]);
+            $this->renderJson(['errors' => $v->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
         }
     }
 }

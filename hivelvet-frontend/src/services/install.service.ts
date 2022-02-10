@@ -1,4 +1,3 @@
-<?php
 /**
  * Hivelvet open source platform - https://riadvice.tn/
  *
@@ -17,24 +16,22 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-use Phinx\Migration\AbstractMigration;
+import axios from 'axios';
 
-class AddNullIndexSettingsTable extends AbstractMigration
-{
-    public function up(): void
-    {
-        $table = $this->table('settings');
+const API_URL = process.env.REACT_APP_API_URL;
 
-        $table->changeColumn('terms_use', 'string', ['limit' => 256, 'null' => true])
-            ->changeColumn('privacy_policy', 'string', ['limit' => 256, 'null' => true])
-            ->save();
+class InstallService {
+    collect_presets() {
+        return axios.get(API_URL + '/collect-presets');
     }
-
-    public function down(): void
-    {
-        $this->table('settings')
-            ->changeColumn('terms_use', 'string', ['limit' => 256, 'null' => false])
-            ->changeColumn('privacy_policy', 'string', ['limit' => 256, 'null' => false])
-            ->save();
+    collect_settings() {
+        return axios.get(API_URL + '/collect-settings');
+    }
+    install(data: object) {
+        return axios.post(API_URL + '/install', {
+            data
+        });
     }
 }
+
+export default new InstallService();

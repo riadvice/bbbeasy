@@ -32,6 +32,8 @@ import LandingPage from './components/LandingPage';
 import Register from './components/Register';
 import Login from './components/Login';
 import ResetPwd from './components/ResetPwd';
+import Reset from './components/ResetPassword';
+import ChangePassword from './components/ChangePassword';
 import Home from './components/Home';
 
 import enUS from 'antd/lib/locale/en_US';
@@ -42,8 +44,6 @@ import 'moment/locale/en-au';
 import { tx } from '@transifex/native';
 
 import Logger from './lib/logger';
-import Reset from './components/ResetPassword';
-import ChangePassword from './components/ChangePassword';
 
 moment.locale('en');
 
@@ -77,7 +77,7 @@ function App() {
     const isInstalled: boolean = JSON.parse(process.env.REACT_APP_INSTALLED) || false;
     const [installed, setInstalled] = useState(isInstalled);
     const handleInstall = () => {
-        // change env var REACT_APP_INSTALLED to true
+        // @todo for future tasks change env var REACT_APP_INSTALLED to true
         setInstalled(true);
     };
 

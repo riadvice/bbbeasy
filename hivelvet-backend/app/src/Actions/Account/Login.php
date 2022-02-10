@@ -25,6 +25,7 @@ use Enum\ResponseCode;
 use Enum\UserRole;
 use Helpers\Time;
 use Models\User;
+use Validation\Validator;
 
 /**
  * Class Login
@@ -41,40 +42,59 @@ class Login extends BaseAction
     {
         $user   = new User();
         $form   = $this->getDecodedBody();
-
+        $v      = new Validator();
+        
         $email    = $form['email'];
         $password = $form['password'];
 
-        if ($user->emailExists($email)) {
-            $user = $user->getByEmail($email);
-            //$user->status === UserStatus::ACTIVE &&
-            if ($user->role !== UserRole::API && $user->verifyPassword($password)) {
-                // valid credentials
-                $this->session->authorizeUser($user);
+        $v->notEmpty()->verify('email', $email, ['notEmpty' => 'Email is required']);
+        $v->notEmpty()->verify('password', $password, ['notEmpty' => 'Password is required']);
 
-                $user->last_login = Time::db();
-                $user->save();
+        if ($v->allValid()) {
+            $v->email()->verify('email', $email, ['email' => 'Email is invalid']);
+            $v->length(4)->verify('password', $password, ['length' => 'Password must be at least 4 characters']);
 
-                $this->session->set('locale', $user->locale);
-                $message   = 'Welcome back '. $user->username .' !';
-                $userInfos = [
-                    'username' => $user->username,
-                    'email'    => $user->email,
-                    'role'     => $user->role,
-                ];
-                $this->logger->info('user successfully login', ['message' => $message]);
-                $this->renderJson(['message' => $message, 'user' => json_encode($userInfos)]);
-            } else {
-                //password invalid
-                $message = 'Invalid Password';
-                $this->logger->error('Login error : user could not logged', ['error' => $message]);
-                $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+            if ($v->allValid()) {
+                if ($user->emailExists($email)) {
+                    $user = $user->getByEmail($email);
+                    //$user->status === UserStatus::ACTIVE &&
+                    if ($user->role !== UserRole::API && $user->verifyPassword($password)) {
+                        // valid credentials
+                        $this->session->authorizeUser($user);
+
+                        $user->last_login = Time::db();
+                        $user->save();
+
+                        $this->session->set('locale', $user->locale);
+                        $message   = 'Welcome back '. $user->username .' !';
+                        $userInfos = [
+                            'username' => $user->username,
+                            'email'    => $user->email,
+                            'role'     => $user->role,
+                        ];
+                        $this->logger->info('user successfully login', ['message' => $message]);
+                        $this->renderJson(['message' => $message, 'user' => json_encode($userInfos)]);
+                    } else {
+                        //password invalid
+                        $message = 'Invalid Password';
+                        $this->logger->error('Login error : user could not logged', ['error' => $message]);
+                        $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+                    }
+                } else {
+                    // email invalid or user no exist
+                    $message = 'Invalid Email';
+                    $this->logger->error('Login error : user could not logged', ['error' => $message]);
+                    $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+                }
             }
-        } else {
-            // email invalid or user no exist
-            $message = 'Invalid Email';
-            $this->logger->error('Login error : user could not logged', ['error' => $message]);
-            $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+            else {
+                $this->logger->error('Login error', ['errors' => $v->getErrors()]);
+                $this->renderJson(['errors' => $v->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
+            }
+        }
+        else {
+            $this->logger->error('Login error', ['errors' => $v->getErrors()]);
+            $this->renderJson(['errors' => $v->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
         }
     }
 }

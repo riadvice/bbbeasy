@@ -29,10 +29,10 @@ class CreateSettingsTables extends AbstractMigration
             ->addColumn('company_name', 'string', ['limit' => 256, 'null' => false])
             ->addColumn('company_website', 'string', ['limit' => 256, 'null' => false])
             ->addColumn('platform_name', 'string', ['limit' => 256, 'null' => false])
-            ->addColumn('terms_use', 'string', ['limit' => 256, 'null' => false])
-            ->addColumn('privacy_policy', 'string', ['limit' => 256, 'null' => false])
+            ->addColumn('terms_use', 'string', ['limit' => 256, 'null' => true])
+            ->addColumn('privacy_policy', 'string', ['limit' => 256, 'null' => true])
 
-            ->addColumn('logo', 'string', ['limit' => 256, 'null' => false])
+            ->addColumn('logo', 'string', ['limit' => 256, 'null' => true])
             ->addColumn('primary_color', 'string', ['limit' => 256, 'null' => false])
             ->addColumn('secondary_color', 'string', ['limit' => 256, 'null' => false])
             ->addColumn('accent_color', 'string', ['limit' => 256, 'null' => false])

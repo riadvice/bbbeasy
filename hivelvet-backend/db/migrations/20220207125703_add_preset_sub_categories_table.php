@@ -37,28 +37,28 @@ class AddPresetSubCategoriesTable extends AbstractMigration
                 'Allow only logged in users'
             ],
             ['Password protected'],
-            ['Enabled', 'Auto-start', 'Allow Start/Stop'],
-            ['Enabled','Private chat enabled', 'Recording enabled'],
+            ['Customizable', 'Auto-start', 'Allow Start/Stop'],
+            ['Customizable','Private chat', 'Recording'],
 
             [
-                'Enabled' ,
+                'Customizable' ,
                 'Visible for moderators only',
                 'Moderators allowed to eject cameras',
                 'Auto-share',
                 'Skip preview (always, first join only)'
             ],
-            ['Enabled'],
+            ['Customizable'],
             ['Title','Logo','Banner','Use avatars','Custom CSS'],
             [
                 'Users join muted',
                 'Moderators allowed to unmute users',
                 'Auto-join',
-                'Listen-only enabled',
+                'Listen-only',
                 'Listen-only enforced',
                 'Skip echo test (always, first join)'
             ],
 
-            ['Default locale'],
+            ['Default language'],
             ['Multi-user pen only','Presenter tools','Multiuser tools'],
             [
                 'Disable webcams',
@@ -71,17 +71,17 @@ class AddPresetSubCategoriesTable extends AbstractMigration
             ],
             ['Presentation','Participants','Chat','Navigation bar','Actions bar'],
 
-            ['Enabled','Policy'],
-            ['Enabled','Clean-up delay'],
-            ['Keyboard shortcuts enabled','Ask for feedback'],
+            ['Customizable','Policy'],
+            ['Customizable','Clean-up delay'],
+            ['Keyboard shortcuts','Ask for feedback'],
             ['Pool name']
         ];
         $subCategoriesData = array();
         foreach ($subcategories as $value){
             foreach ($value as $subcategory) {
                 $subCategoryData = [
-                    'name' => $subcategory,
-                    'category_id' => $first_key,
+                    'name'          => $subcategory,
+                    'category_id'   => $first_key,
                     'created_on'    => date('Y-m-d H:i:s')
                 ];
                 array_push($subCategoriesData,$subCategoryData);

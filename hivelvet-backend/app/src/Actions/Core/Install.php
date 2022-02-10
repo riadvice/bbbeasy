@@ -29,6 +29,7 @@ use Models\PresetSetting;
 use Models\PresetSubCategory;
 use Models\Setting;
 use Models\User;
+use Validation\Validator;
 
 /**
  * Class Install
@@ -47,75 +48,125 @@ class Install extends BaseAction
         //if ($f3->get('system.installed') === false) {
         $body   = $this->getDecodedBody();
         $form   = $body['data'];
+        $v1      = new Validator();
+        $v2      = new Validator();
 
-        $user   = new User();
-        $user->email        = $form['email'];
-        $user->username     = $form['username'];
-        $user->role         = UserRole::ADMIN;
-        $user->status       = UserStatus::ACTIVE;
+        $step1Validated = false;
+        $step2Validated = false;
 
-        try {
-            //$user->save();
+        // step1 validation notEmpty
+        $v1->notEmpty()->verify('username', $form['username'], ['notEmpty' => 'Username is required']);
+        $v1->notEmpty()->verify('email', $form['email'], ['notEmpty' => 'Email is required']);
+        $v1->notEmpty()->verify('password', $form['password'], ['notEmpty' => 'Password is required']);
 
-            $this->logger->info('App configuration', ['user' => $user->toArray()]);
-            $setting   = new Setting();
-            $setting->company_name = $form['company_name'];
-            $setting->company_website = $form['company_url'];
-            $setting->platform_name = $form['platform_name'];
-            if ($form['term_url'] != '')
-                $setting->terms_use = $form['term_url'];
-            if ($form['policy_url'] != '')
-                $setting->privacy_policy = $form['policy_url'];
-            //$setting->logo = $form['logo'];
-            $colors = $form['branding_colors'];
-            $setting->primary_color = $colors['primary_color'];
-            $setting->secondary_color = $colors['secondary_color'];
-            $setting->accent_color = $colors['accent_color'];
-            $setting->additional_color = $colors['add_color'];
+        if ($v1->allValid()) {
+            // step1 validation email/length
+            $v1->email()->verify('email', $form['email'], ['email' => 'Email is invalid']);
+            $v1->length(4)->verify('password', $form['password'], ['length' => 'Password must be at least 4 characters']);
+
+            if ($v1->allValid()) {
+                $step1Validated = true;
+            }
+        }
+
+        // step2 validation notEmpty
+        $v2->notEmpty()->verify('company_name', $form['company_name'], ['notEmpty' => 'Company name is required']);
+        $v2->notEmpty()->verify('company_url', $form['company_url'], ['notEmpty' => 'Company website is required']);
+        $v2->notEmpty()->verify('platform_name', $form['platform_name'], ['notEmpty' => 'Platform name is required']);
+
+        if ($v2->allValid()) {
+            //step2 validation url
+            $v2->url()->verify('company_url', $form['company_url'], ['url' => 'Company website is not a valid url']);
+            if ($v2->allValid()) {
+                $step2Validated = true;
+            }
+        }
+
+        if (!$step1Validated && !$step2Validated) {
+            $this->logger->error('App configuration', ['user_errors' => $v1->getErrors()]);
+            $this->logger->error('App configuration', ['settings_errors' => $v2->getErrors()]);
+            $this->renderJson(['userErrors' => $v1->getErrors(),'settingsErrors' => $v2->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
+        }
+        else if (!$step1Validated) {
+            $this->logger->error('App configuration', ['user_errors' => $v1->getErrors()]);
+            $this->renderJson(['userErrors' => $v1->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
+        }
+        else if (!$step2Validated) {
+            $this->logger->error('App configuration', ['settings_errors' => $v2->getErrors()]);
+            $this->renderJson(['settingsErrors' => $v2->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
+        }
+        else {
+            $user   = new User();
+            $user->email        = $form['email'];
+            $user->username     = $form['username'];
+            $user->role         = UserRole::ADMIN;
+            $user->status       = UserStatus::ACTIVE;
 
             try {
-                //$setting->save();
-                $this->logger->info('App configuration', ['setting' => $setting->toArray()]);
+                //$user->save();
+                $this->logger->info('App configuration', ['user' => $user->toArray()]);
 
-                $presets = $form['presetsConfig'];
-                foreach ($presets as $preset) {
-                    $subcategories = $preset['subcategories'];
-                    foreach ($subcategories as $subcategory) {
-                        $presetSettings = new PresetSetting();
-                        $presetSettings->subcategory_id = $subcategory['id'];
-                        $presetSettings->is_enabled     = $subcategory['status'];
-                        try {
-                            $this->logger->info('App configuration', ['preset settings' => $presetSettings->toArray()]);
-                            //$presetSettings->save();
-                        }
-                        catch (\Exception $e) {
-                            $message = $e->getMessage();
-                            $this->logger->error('preset settings could not be added', ['error' => $message]);
-                            $this->renderJson(['errorStep3' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-                            return;
+                $setting   = new Setting();
+                $defaultSettings    = $setting->find([], ['limit' => 1])->current();
+
+                $defaultSettings->company_name = $form['company_name'];
+                $defaultSettings->company_website = $form['company_url'];
+                $defaultSettings->platform_name = $form['platform_name'];
+                if ($form['term_url'] != '')
+                    $defaultSettings->terms_use = $form['term_url'];
+                if ($form['policy_url'] != '')
+                    $defaultSettings->privacy_policy = $form['policy_url'];
+                //$defaultSettings->logo = $form['logo'];
+                $colors = $form['branding_colors'];
+                $defaultSettings->primary_color = $colors['primary_color'];
+                $defaultSettings->secondary_color = $colors['secondary_color'];
+                $defaultSettings->accent_color = $colors['accent_color'];
+                $defaultSettings->additional_color = $colors['add_color'];
+
+                try {
+                    //$defaultSettings->save();
+                    $this->logger->info('App configuration', ['setting' => $defaultSettings->toArray()]);
+
+                    $presets = $form['presetsConfig'];
+                    foreach ($presets as $preset) {
+                        $subcategories = $preset['subcategories'];
+                        foreach ($subcategories as $subcategory) {
+                            $presetSettings = new PresetSetting();
+                            $presetSettings->subcategory_id = $subcategory['id'];
+                            $presetSettings->is_enabled     = $subcategory['status'];
+                            try {
+                                //$presetSettings->save();
+                                $this->logger->info('App configuration', ['preset settings' => $presetSettings->toArray()]);
+                            }
+                            catch (\Exception $e) {
+                                $message = $e->getMessage();
+                                $this->logger->error('preset settings could not be added', ['error' => $message]);
+                                $this->renderJson(['presetsErrors' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+                                return;
+                            }
                         }
                     }
+                    //$this->logger->info('administrator and settings and presets successfully added', ['user' => $user->toArray()]);
+                    $this->renderJson(['message' => 'Application is ready now !']);
                 }
-                //$this->logger->info('administrator and settings and presets successfully added', ['user' => $user->toArray()]);
-                $this->renderJson(['message' => 'Application is ready now !']);
+                catch (\Exception $e) {
+                    $message = $e->getMessage();
+                    $this->logger->error('settings could not be added', ['error' => $message]);
+                    $this->renderJson(['settingsErrors' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+                    return;
+                }
             }
             catch (\Exception $e) {
                 $message = $e->getMessage();
-                $this->logger->error('settings could not be added', ['error' => $message]);
-                $this->renderJson(['errorStep2' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+                $this->logger->error('administrator could not be added', ['error' => $message]);
+                $this->renderJson(['userErrors' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
                 return;
             }
-        }
-        catch (\Exception $e) {
-            $message = $e->getMessage();
-            $this->logger->error('administrator could not be added', ['error' => $message]);
-            $this->renderJson(['errorStep1' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-            return;
         }
         //}
     }
 
-    public function collect($f3, $params): void
+    public function collect_presets($f3, $params): void
     {
         $data = array();
         $preset_category    = new PresetCategory();
@@ -124,8 +175,8 @@ class Install extends BaseAction
         if ($categories) {
             foreach ($categories as $category) {
                 $categoryData = [
-                    'name' => $category->name,
-                    'icon' => $category->icon,
+                    'name'          => $category->name,
+                    'icon'          => $category->icon,
                     'subcategories' => array()
                 ];
                 $preset_subcategory = new PresetSubCategory();
@@ -133,9 +184,9 @@ class Install extends BaseAction
                 if ($subcategories) {
                     foreach ($subcategories as $subcategory) {
                         $subCategoryData = [
-                            'id' => $subcategory->id,
-                            'name' => $subcategory->name,
-                            'status' => false
+                            'id'        => $subcategory->id,
+                            'name'      => $subcategory->name,
+                            'status'    => false
                         ];
                         array_push($categoryData['subcategories'],$subCategoryData);
                     }
@@ -145,6 +196,29 @@ class Install extends BaseAction
         }
 
         $this->logger->info('collecting presets', ['data' => json_encode($data)]);
+        $this->renderJson(json_encode($data));
+    }
+
+    public function collect_settings($f3, $params): void
+    {
+        $data = array();
+        $setting            = new Setting();
+        $defaultSettings    = $setting->find([], ['limit' => 1])->current();
+
+        if ($defaultSettings) {
+            $data = [
+                'company_name'      => $defaultSettings->company_name,
+                'company_website'   => $defaultSettings->company_website,
+                'platform_name'     => $defaultSettings->platform_name,
+
+                'primary_color'     => $defaultSettings->primary_color,
+                'secondary_color'   => $defaultSettings->secondary_color,
+                'accent_color'      => $defaultSettings->accent_color,
+                'additional_color'  => $defaultSettings->additional_color,
+            ];
+        }
+
+        $this->logger->info('collecting settings', ['data' => json_encode($data)]);
         $this->renderJson(json_encode($data));
     }
 }

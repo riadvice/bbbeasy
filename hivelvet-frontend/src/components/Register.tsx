@@ -18,24 +18,21 @@
 
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import ReactDOMServer from 'react-dom/server';
 import AuthService from '../services/auth.service';
 
 import { Form, Input, Button, Checkbox, Alert, Col, Row, Typography, Card, Result } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import { T } from '@transifex/react';
-import ReactDOMServer from 'react-dom/server';
 
 const { Title, Paragraph } = Typography;
 
 type Props = {};
 
 type State = {
-    username?: string;
-    email?: string;
-    password?: string;
-    confirmPassword?: string;
-    successful: boolean;
-    message: string;
+    successful?: boolean;
+    message?: string;
+    errors?: any;
 };
 
 class Register extends Component<Props, State> {
@@ -43,18 +40,14 @@ class Register extends Component<Props, State> {
         super(props);
         this.handleRegistration = this.handleRegistration.bind(this);
         this.state = {
-            username: '',
-            email: '',
-            password: '',
-            confirmPassword: '',
             successful: false,
             message: '',
+            errors:[]
         };
     }
 
     handleRegistration(formValue: any) {
-        const { username, email, password, confirmPassword } = formValue;
-        AuthService.register(username, email, password, confirmPassword)
+        AuthService.register(formValue)
             .then((response) => {
                 const responseMessage = response.data.message;
                 this.setState({
@@ -63,7 +56,25 @@ class Register extends Component<Props, State> {
                 });
             })
             .catch((error) => {
-                const responseMessage = error.response.data.message;
+                this.setState({
+                    errors: []
+                });
+                const response = error.response.data;
+                if (response.errors) {
+                    const errors = Object.values(response.errors);
+                    const err = [];
+                    errors.forEach(function (value : any) {
+                        const keys = Object.keys(value);
+                        keys.forEach(function (key) {
+                            err.push(value[key]);
+                        });
+                    });
+                    this.setState({
+                        errors: err
+                    });
+                }
+
+                const responseMessage = response.message;
                 this.setState({
                     successful: false,
                     message: responseMessage,
@@ -72,14 +83,13 @@ class Register extends Component<Props, State> {
     }
 
     render() {
-        const { successful, message } = this.state;
+        const { successful, message, errors } = this.state;
         const initialValues = {
             username: '',
             email: '',
             password: '',
             confirmPassword: '',
-            successful: false,
-            message: '',
+            agreement: false
         };
 
         return (
@@ -108,6 +118,23 @@ class Register extends Component<Props, State> {
                                 </Title>
                             </Paragraph>
 
+                            {errors.length > 0 && (
+                                <Alert
+                                    type="error"
+                                   className="alert-msg"
+                                   message={errors.length > 1 ? (
+                                       <ul className="errors-list">
+                                           {errors.map((item,index) => (
+                                               <li key={index}>{item}</li>
+                                           ))}
+                                       </ul>
+                                   ) : (
+                                       <T _str={errors.toString()} />
+                                   )}
+                                   showIcon
+                                />
+                            )}
+
                             {message && (
                                 <Alert type="error" className="alert-msg" message={<T _str={message} />} showIcon />
                             )}
@@ -116,27 +143,30 @@ class Register extends Component<Props, State> {
                                 layout="vertical"
                                 name="register"
                                 className="register-form"
+                                
                                 initialValues={initialValues}
+                                requiredMark={false}
+                                scrollToFirstError={true}
+                                validateTrigger="onBlur"
+                                
                                 onFinish={this.handleRegistration}
                             >
                                 <Form.Item
                                     label={<T _str="Username" />}
                                     name="username"
-                                    hasFeedback
-                                    rules={[
+                                    /*rules={[
                                         {
                                             required: true,
                                             message: <T _str="Username is required" />,
                                         },
-                                    ]}
+                                    ]}*/
                                 >
                                     <Input placeholder="Username" />
                                 </Form.Item>
                                 <Form.Item
                                     label={<T _str="Email" />}
                                     name="email"
-                                    hasFeedback
-                                    rules={[
+                                    /*rules={[
                                         {
                                             type: 'email',
                                             message: <T _str="Invalid Email" />,
@@ -145,15 +175,14 @@ class Register extends Component<Props, State> {
                                             required: true,
                                             message: <T _str="Email is required" />,
                                         },
-                                    ]}
+                                    ]}*/
                                 >
                                     <Input placeholder="Email" />
                                 </Form.Item>
                                 <Form.Item
                                     label={<T _str="Password" />}
                                     name="password"
-                                    hasFeedback
-                                    rules={[
+                                    /*rules={[
                                         {
                                             min: 4,
                                             message: <T _str="Password must be at least 4 characters" />,
@@ -162,7 +191,7 @@ class Register extends Component<Props, State> {
                                             required: true,
                                             message: <T _str="Password is required" />,
                                         },
-                                    ]}
+                                    ]}*/
                                 >
                                     <Input.Password
                                         placeholder="Password"
@@ -173,8 +202,7 @@ class Register extends Component<Props, State> {
                                     label={<T _str="Confirm Password" />}
                                     name="confirmPassword"
                                     dependencies={['password']}
-                                    hasFeedback
-                                    rules={[
+                                    /*rules={[
                                         {
                                             min: 4,
                                             message: <T _str="Confirm password must be at least 4 characters" />,
@@ -195,7 +223,7 @@ class Register extends Component<Props, State> {
                                                 );
                                             },
                                         }),
-                                    ]}
+                                    ]}*/
                                 >
                                     <Input.Password placeholder="Confirm Password" />
                                 </Form.Item>
@@ -204,7 +232,7 @@ class Register extends Component<Props, State> {
                                     className="form-agree"
                                     name="agreement"
                                     valuePropName="checked"
-                                    rules={[
+                                    /*rules={[
                                         {
                                             validator: (_, value) =>
                                                 value
@@ -217,7 +245,7 @@ class Register extends Component<Props, State> {
                                                           )
                                                       ),
                                         },
-                                    ]}
+                                    ]}*/
                                 >
                                     <Checkbox>
                                         <T _str="I agree to the" />

@@ -15,29 +15,25 @@
  * You should have received a copy of the GNU Lesser General Public License along
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
-import React, { Component, useState } from 'react';
-import { Link, Navigate, useParams } from 'react-router-dom';
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import AuthService from '../services/auth.service';
 
-import { Form, Input, Button, Checkbox, message, Alert, Col, Row, Typography, Space, Card } from 'antd';
+import { Form, Input, Button, message, Alert, Col, Row, Typography, Space, Card } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
-import { FormattedMessage } from 'react-intl';
-import { locale } from 'moment';
 import { T } from '@transifex/react';
 import authService from '../services/auth.service';
-const { Text, Title, Paragraph } = Typography;
+const { Title, Paragraph } = Typography;
 import ReactDOMServer from 'react-dom/server';
 
-type Props = {
-    //location:string;
-};
+type Props = {};
 
 type State = {
     password?: string;
-    email: string;
-    successful: boolean;
-    message: string;
-    pageexists: boolean;
+    email?: string;
+    successful?: boolean;
+    message?: string;
+    pageexists?: boolean;
 };
 
 class ChangePassword extends Component<Props, State> {
@@ -70,7 +66,7 @@ class ChangePassword extends Component<Props, State> {
     }
 
     handleChange(formValue: any) {
-        const { password, confirmPassword } = formValue;
+        const { password } = formValue;
 
         const params = new URLSearchParams(window.location.search);
 
@@ -109,7 +105,7 @@ class ChangePassword extends Component<Props, State> {
 
         return (
             <Row>
-                {pageexists && (
+                { pageexists ? (
                     <Col span={8} offset={8} className="section-top">
                         <Card className="form-content">
                             <Paragraph className="pricing-header text-center">
@@ -152,11 +148,7 @@ class ChangePassword extends Component<Props, State> {
                                                     },
                                                 ]}
                                             >
-                                                <Input.Password
-                                                    iconRender={(visible) =>
-                                                        visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-                                                    }
-                                                />
+                                                <Input.Password iconRender={(visible) => visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />}/>
                                             </Form.Item>
                                             <Form.Item
                                                 label={<T _str="Confirm Password" />}
@@ -214,8 +206,7 @@ class ChangePassword extends Component<Props, State> {
                             </Space>
                         </Card>
                     </Col>
-                )}
-                {!pageexists && (
+                ) : (
                     <Col span={8} offset={8} className="section-top">
                         <Paragraph className="pricing-header text-center">
                             <Title style={{ fontWeight: 500 }}> </Title>

@@ -15,21 +15,18 @@
  * You should have received a copy of the GNU Lesser General Public License along
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
-import React, { Component, useState } from 'react';
+import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import AuthService from '../services/auth.service';
 
-import { Form, Input, Button, Checkbox, message, Alert, Col, Row, Typography, Space, Card } from 'antd';
-import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
-import { FormattedMessage } from 'react-intl';
-import { locale } from 'moment';
+import { Form, Input, Button, message, Alert, Col, Row, Typography, Card } from 'antd';
 import { T } from '@transifex/react';
+
 const { Text, Title, Paragraph } = Typography;
 
 type Props = {};
 type State = {
     email?: string;
-
     successful: boolean;
     message: string;
 };
@@ -43,13 +40,6 @@ class Reset extends Component<Props, State> {
             successful: false,
             message: '',
         };
-        /* this.handleLogin = this.handleLogin.bind(this);
-         this.state = {
-             email: '',
-             
-             successful: false,
-             message: '',
-         };*/
     }
 
     handleReset(formValue: any) {
