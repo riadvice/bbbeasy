@@ -166,7 +166,7 @@ class Install extends BaseAction
         //}
     }
 
-    public function collect_presets($f3, $params): void
+    public function collectPresets($f3, $params): void
     {
         $data = array();
         $preset_category    = new PresetCategory();
@@ -199,7 +199,7 @@ class Install extends BaseAction
         $this->renderJson(json_encode($data));
     }
 
-    public function collect_settings($f3, $params): void
+    public function collectSettings($f3, $params): void
     {
         $data = array();
         $setting            = new Setting();
@@ -220,5 +220,40 @@ class Install extends BaseAction
 
         $this->logger->info('collecting settings', ['data' => json_encode($data)]);
         $this->renderJson(json_encode($data));
+    }
+
+    public function saveLogo($f3, $params): void
+    {
+        // @todo for future tasks
+        //if ($f3->get('system.installed') === false) {
+        $files  = $f3->get("FILES");
+        $form   = $f3->get("POST");
+        $v      = new Validator();
+
+        $v->notEmpty()->verify('logo_name', $form['logo_name']);
+        //if files not empty
+
+        if ($v->allValid()) {
+            $this->logger->info('App configuration saving logo', ['FILES' => $files]);
+            // verif format file
+
+            //correct
+            \Web::instance()->receive();
+            $setting        = new Setting();
+            $settings       = $setting->find([], ['limit' => 1])->current();
+            $settings->logo = $form['logo_name'];
+            try {
+                //$settings->save();
+                $this->logger->info('App configuration saving logo', ['setting' => $settings->toArray()]);
+            }
+            catch (\Exception $e) {
+                $message = $e->getMessage();
+                $this->logger->error('logo could not be updated', ['error' => $message]);
+                $this->renderJson(['errors' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+                return;
+            }
+        }
+        //}
+
     }
 }

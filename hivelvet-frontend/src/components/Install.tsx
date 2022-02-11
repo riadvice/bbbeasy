@@ -20,12 +20,15 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import InstallService from '../services/install.service';
 
-import { Steps, Button, Row, Col, Form, Input, Typography, Upload, Card, Modal, Switch, Result, Alert } from 'antd';
+import { Steps, Button, message, Row, Col, Form, Input, Typography, Upload, Card, Modal, Switch, Result, Alert } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone, InboxOutlined, CloseOutlined, CheckOutlined } from '@ant-design/icons';
 import ColorPicker from 'rc-color-picker/lib/ColorPicker';
 import DynamicIcon from './DynamicIcon';
+import { RcFile } from 'antd/lib/upload';
 import { T } from '@transifex/react';
+import axios from 'axios';
 
+const API_URL = process.env.REACT_APP_API_URL;
 const { Title, Text, Paragraph } = Typography;
 const { Step } = Steps;
 const { Meta } = Card;
@@ -58,13 +61,15 @@ const Install = (props : Props) => {
     const [successful, setSuccessful] = React.useState(false);
     const [errorsStep1, setErrorsStep1] = React.useState([]);
     const [errorsStep2, setErrorsStep2] = React.useState([]);
-    const [message, setMessage] = React.useState('');
+    const [successMessage, setSuccessMessage] = React.useState('');
 
     const [settings, setSettings] = React.useState([]);
     const [primaryColor, setPrimaryColor] = React.useState('');
     const [secondaryColor, setSecondaryColor] = React.useState('');
     const [accentColor, setAccentColor] = React.useState('');
     const [addColor, setAddColor] = React.useState('');
+    const [fileList, setFileList] = React.useState();
+    const [file, setFile] = React.useState<any>();
 
     const [presets, setPresets] = React.useState([]);
     const [modalTitle, setModalTitle] = React.useState('');
@@ -182,6 +187,22 @@ const Install = (props : Props) => {
                 platform_name : company_value + " Hivelvet"
             });*/
         }
+        const normFile = (e: any) => {
+            if (Array.isArray(e)) {
+                return e;
+            }
+            return e && e.fileList;
+        };
+        const handleChangeFile = (info: any) => {
+            let fileList: any = [...info.fileList];
+            fileList = fileList.slice(-1);
+            const img = fileList[0].type === 'image/jpg' || fileList[0].type === 'image/jpeg' || fileList[0].type === 'image/png';
+            if (img) {
+                setFileList(fileList);
+                setFile(fileList[0]);
+            }
+        };
+
         return (
             <div className="company-container">
                 <div className="box">
@@ -281,16 +302,32 @@ const Install = (props : Props) => {
                             <T _str="Branding" />
                         </Title>
                     </Paragraph>
-                    <Form.Item valuePropName="fileList">
-                        <Dragger name="files" action="/upload.do">
-                            <p className="ant-upload-drag-icon">
-                                <InboxOutlined />
-                            </p>
-                            <Text strong className="ant-upload-text">
-                                Drop your logo here
-                            </Text>
-                            <p className="ant-upload-hint">.png .jpg .jpeg ...</p>
-                        </Dragger>
+                    <Form.Item>
+                        <Form.Item valuePropName="fileList" getValueFromEvent={normFile} noStyle>
+                            <Dragger
+                                name="logo"
+                                showUploadList={{ showRemoveIcon: false }}
+                                fileList={fileList}
+                                accept=".png,.jpg,.jpeg"
+                                onChange={(info) => { handleChangeFile(info) }}
+                                beforeUpload={(file: RcFile) => {
+                                    if (file.type === 'image/jpg' || file.type === 'image/png' || file.type === 'image/jpeg') {
+                                        message.success('file uploaded successfully');
+                                        return false;
+                                    }
+                                    message.error('wrong file');
+                                    return null;
+                                }}
+                            >
+                                <p className="ant-upload-drag-icon">
+                                    <InboxOutlined />
+                                </p>
+                                <Text strong className="ant-upload-text">
+                                    Drop your logo here
+                                </Text>
+                                <p className="ant-upload-hint">.png .jpg .jpeg ...</p>
+                            </Dragger>
+                        </Form.Item>
                     </Form.Item>
                     <div className="colors-container">
                         <Form.Item label={<T _str="Primary color" />}>
@@ -480,7 +517,7 @@ const Install = (props : Props) => {
             InstallService.install(formData)
                 .then((response) => {
                     setSuccessful(true);
-                    setMessage(response.data.message);
+                    setSuccessMessage(response.data.message);
                 })
                 .catch((error) => {
                     console.log(error);
@@ -516,6 +553,21 @@ const Install = (props : Props) => {
                     }
                     setSuccessful(false);
                 });
+
+            if (file != undefined) {
+                const fdata = new FormData();
+                fdata.append('logo', file.originFileObj, file.originFileObj.name);
+                fdata.append('logo_name', file.originFileObj.name);
+                axios
+                    .post(API_URL + '/save-logo', fdata)
+                    .then((response) => {
+                        console.log(response);
+                    })
+                    .catch((error) => {
+                        const responseErrors = error.response.data.errors;
+                        message.error(responseErrors);
+                    });
+            }
         }
     };
 
@@ -525,7 +577,7 @@ const Install = (props : Props) => {
                 <Col span={10} offset={7} className="section-top">
                     <Result
                         status="success"
-                        title={message}
+                        title={successMessage}
                         subTitle="Your application setup is complete"
                         extra={
                             <Link to={'/login'} onClick={handleInstall} className="ant-btn ant-btn-lg color-green">
