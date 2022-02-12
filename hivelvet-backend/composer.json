@@ -23,8 +23,8 @@
     "ext-mbstring": "*",
     "ext-bcmath": "*",
     "ext-fileinfo": "*",
-    "bcosca/fatfree-core": "dev-master#d03a6f7 as 3.7.3",
-    "ikkez/f3-cortex": "dev-master#2ef6d81 as 1.7.1",
+    "bcosca/fatfree-core": "dev-master#a361ad42 as 3.7.3",
+    "ikkez/f3-cortex": "dev-master#1527438 as 1.7.2",
     "ikkez/f3-mailer": "^1.2",
     "respect/validation": "^1.1",
     "nette/utils": "^3.1",
@@ -32,20 +32,20 @@
     "monolog/monolog": "^2.0",
     "bigbluebutton/bigbluebutton-api-php": "^2.0",
     "robmorgan/phinx": "^0.12",
-    "symfony/yaml": "^5.0",
+    "symfony/yaml": "^6.0",
     "linfo/linfo": "^4.0",
     "carbon-cli/carbon-cli": "^1.2"
   },
   "require-dev": {
     "roave/security-advisories": "dev-latest",
     "ext-xdebug": ">=2.3.3",
-    "kint-php/kint": "^3.3",
+    "kint-php/kint": "^4.0",
     "fakerphp/faker": "^1.13",
-    "friendsofphp/php-cs-fixer": "^2.16",
-    "phpunit/php-code-coverage": "^7.0",
+    "friendsofphp/php-cs-fixer": "^v3.6.0",
+    "phpunit/php-code-coverage": "^9.2.0",
     "kevinlebrun/colors.php": "^1.0",
     "gabrielelana/byte-units": "^0.5",
-    "phpmetrics/phpmetrics": "^2.5"
+    "phpmetrics/phpmetrics": "^2.7"
   },
   "config": {
     "optimize-autoloader": true,
@@ -54,6 +54,11 @@
     "preferred-install": "dist",
     "github-protocols": [
       "https"
+    ]
+  },
+  "scripts": {
+    "format": [
+      "vendor/bin/php-cs-fixer fix"
     ]
   },
   "suggest": {

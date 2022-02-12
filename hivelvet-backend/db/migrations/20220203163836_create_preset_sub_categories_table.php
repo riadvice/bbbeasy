@@ -1,6 +1,8 @@
 <?php
 
-/**
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -31,7 +33,8 @@ class CreatePresetSubCategoriesTable extends AbstractMigration
             ->addColumn('created_on', 'datetime', ['default' => '0001-01-01 00:00:00', 'timezone' => true])
             ->addColumn('updated_on', 'datetime', ['default' => '0001-01-01 00:00:00', 'timezone' => true])
             ->addForeignKey(['category_id'], 'preset_categories', ['id'], ['constraint' => 'subcategory_category_id'])
-            ->save();
+            ->save()
+        ;
     }
 
     public function down(): void

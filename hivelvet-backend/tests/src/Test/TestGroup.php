@@ -1,6 +1,8 @@
 <?php
 
-/**
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -28,6 +30,7 @@ class TestGroup
 
     /**
      * @param $f3 \Base
+     *
      * @return array
      */
     public function run($f3)

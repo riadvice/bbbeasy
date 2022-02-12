@@ -1,6 +1,8 @@
 <?php
 
-/**
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -22,10 +24,14 @@ namespace Test;
 
 use Utils\CliUtils;
 
-class UnitTest extends \Test
+/**
+ * @internal
+ * @coversNothing
+ */
+final class UnitTest extends \Test
 {
     /**
-     * Text represented group of tests
+     * Text represented group of tests.
      *
      * @var string
      */
@@ -37,7 +43,7 @@ class UnitTest extends \Test
     public function expect($cond, $text = null)
     {
         $result = parent::expect($cond, $text);
-        if (PHP_SAPI === 'cli') {
+        if (\PHP_SAPI === 'cli') {
             usleep(1000);
         }
 

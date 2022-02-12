@@ -1,6 +1,8 @@
 <?php
 
-/**
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -20,12 +22,16 @@
 
 namespace Suite;
 
-use Actions\Website\GetLocaleTest;
+use Actions\Core\GetLocaleTest;
 use Test\TestGroup;
 
-class CoreActionsTest extends TestGroup
+/**
+ * @internal
+ * @coversNothing
+ */
+final class CoreActionsTest extends TestGroup
 {
-    protected $classes = [GetLocaleTest::class];
+    // protected $classes = [GetLocaleTest::class];
 
     protected $quiet = true;
 }

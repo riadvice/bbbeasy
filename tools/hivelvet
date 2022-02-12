@@ -203,7 +203,7 @@ fix_styles() {
   cd "$BASEDIR/../hivelvet-backend/"
 
   sudo phpdismod -s cli xdebug
-  PHP_CS_FIXER_IGNORE_ENV=1 ./vendor/bin/php-cs-fixer fix --allow-risky=yes
+  composer format
   sudo phpenmod -s cli xdebug
   echo "✔ PHP Code Style Fixed"
 }
@@ -217,13 +217,13 @@ enable_tests() {
   rm -rfv "$BASEDIR/../hivelvet-backend/public/statera/"
   mkdir -pv "$BASEDIR/../hivelvet-backend/public/statera/coverage/"
   mkdir -pv "$BASEDIR/../hivelvet-backend/public/statera/result/"
-  cp -Rv "$BASEDIR/../hivelvet-backend/tools/statera.php" "$BASEDIR/../public/statera/index.php"
-  cp -Rv "$BASEDIR/../hivelvet-backend/tests/ui/css" "$BASEDIR/../public/statera/"
-  cp -Rv "$BASEDIR/../hivelvet-backend/tests/ui/images" "$BASEDIR/../public/statera/"
-  cp -Rv "$BASEDIR/../hivelvet-backend/tests/ui/css" "$BASEDIR/../public/statera/result"
-  cp -Rv "$BASEDIR/../hivelvet-backend/tests/ui/images" "$BASEDIR/../public/statera/result"
-  cp "$BASEDIR/../hivelvet-backend/vendor/bcosca/fatfree-core/code.css" "$BASEDIR/../public/statera/css/code.css"
-  cp "$BASEDIR/../hivelvet-backend/vendor/bcosca/fatfree-core/code.css" "$BASEDIR/../public/statera/result/css/code.css"
+  cp -Rv "$BASEDIR/../hivelvet-backend/tools/statera.php" "$BASEDIR/../hivelvet-backend/public/statera/index.php"
+  cp -Rv "$BASEDIR/../hivelvet-backend/tests/ui/css" "$BASEDIR/../hivelvet-backend/public/statera/"
+  cp -Rv "$BASEDIR/../hivelvet-backend/tests/ui/images" "$BASEDIR/../hivelvet-backend/public/statera/"
+  cp -Rv "$BASEDIR/../hivelvet-backend/tests/ui/css" "$BASEDIR/../hivelvet-backend/public/statera/result"
+  cp -Rv "$BASEDIR/../hivelvet-backend/tests/ui/images" "$BASEDIR/../hivelvet-backend/public/statera/result"
+  cp "$BASEDIR/../hivelvet-backend/vendor/bcosca/fatfree-core/code.css" "$BASEDIR/../hivelvet-backend/public/statera/css/code.css"
+  cp "$BASEDIR/../hivelvet-backend/vendor/bcosca/fatfree-core/code.css" "$BASEDIR/../hivelvet-backend/public/statera/result/css/code.css"
 
   echo "✔ Unit tests enabled"
 }
@@ -233,6 +233,7 @@ enable_tests() {
 #
 run_tests() {
   echo "► Running unit tests"
+  sudo phpenmod -s cli xdebug
   COVERAGE=$1
   USE_COVERAGE=""
   TEST_NAME="all"
@@ -357,7 +358,7 @@ run() {
 
   # Environment
   HOST_TESTER=$(hostname)
-  if [[ "$HOST_TESTER" == "hivelvet" ]]; then
+  if [[ "$HOST_TESTER" == "hivelvet.test" ]]; then
     ENVIRONMENT="development"
   else
     ENVIRONMENT="production"

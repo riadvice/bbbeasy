@@ -1,6 +1,8 @@
 <?php
 
-/**
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -23,13 +25,13 @@ namespace Actions\Account;
 use Actions\Base as BaseAction;
 
 /**
- * Class Logout
- * @package Actions\Account
+ * Class Logout.
  */
 class Logout extends BaseAction
 {
     /**
-     * @param  \Base $f3
+     * @param \Base $f3
+     *
      * @return array
      */
     public function execute($f3)

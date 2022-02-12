@@ -1,6 +1,8 @@
 <?php
 
-/**
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -60,12 +62,11 @@ class MailSender extends Prefab
 
     /**
      * @param Exception $exception
-     *
      */
     public function sendExceptionEmail($exception): void
     {
         $hash         = mb_substr(md5(preg_replace('~(Resource id #)\d+~', '$1', $exception)), 0, 10);
-        $mailSentPath = $this->f3->get('ROOT') .'/'. $this->f3->get('LOGS') . 'email-sent-' . $hash;
+        $mailSentPath = $this->f3->get('ROOT') . '/' . $this->f3->get('LOGS') . 'email-sent-' . $hash;
         $snooze       = strtotime('1 day') - time();
         $messageId    = $this->generateId();
         if (@filemtime($mailSentPath) + $snooze < time() && @file_put_contents($mailSentPath, 'sent')) {
@@ -82,7 +83,6 @@ class MailSender extends Prefab
      * @param $to
      * @param $title
      * @param $subject
-     * @return bool
      */
     public function send($template, $vars, $to, $title, $subject): bool
     {
@@ -94,17 +94,17 @@ class MailSender extends Prefab
         $vars['PORT']      = $this->f3->get('PORT');
         $vars['BASE']      = $this->f3->get('BASE');
 
-        $vars['to']  =  $to ;
-        $t           = bin2hex(random_bytes(16));
-        $user        =new  User();
-        $resettoken  =new ResetTokenPassword();
-        $user        = $user->getByEmail($to);
+        $vars['to'] = $to;
+        $t          = bin2hex(random_bytes(16));
+        $user       = new User();
+        $resettoken = new ResetTokenPassword();
+        $user       = $user->getByEmail($to);
         if ($resettoken->userExists($user->id)) {
-            $resettoken                = $resettoken->getByUserID($user->id);
-            $resettoken->expires_at    =date('Y-m-d  H:i:s', strtotime('+1 min'));
+            $resettoken             = $resettoken->getByUserID($user->id);
+            $resettoken->expires_at = date('Y-m-d  H:i:s', strtotime('+1 min'));
 
-            $resettoken->status        ='new';
-            $resettoken->token         =$t;
+            $resettoken->status = 'new';
+            $resettoken->token  = $t;
 
             $resettoken->save();
         } else {
@@ -116,11 +116,11 @@ class MailSender extends Prefab
         }
         $resettoken->save();
 
-        $vars['token']     =$t;
-        $vars['from_name'] =$this->f3->get('from_name');
-        $vars['expires_at']=$resettoken->expires_at;
+        $vars['token']      = $t;
+        $vars['from_name']  = $this->f3->get('from_name');
+        $vars['expires_at'] = $resettoken->expires_at;
 
-        $message           = Template::instance()->render('mail/'  .$template.'.html', null, $vars);
+        $message = Template::instance()->render('mail/' . $template . '.html', null, $vars);
 
         /*
         //replace the db template variables with provided $vars
@@ -157,13 +157,12 @@ class MailSender extends Prefab
      * @param $subject
      * @param $message
      * @param $messageId
-     * @return bool
      */
     private function smtpSend($from, $to, $title, $subject, $message): bool
     {
-        $messageId         = $this->generateId();
+        $messageId = $this->generateId();
 
-        if (is_array($to)) {
+        if (\is_array($to)) {
             foreach ($to as $email) {
                 $this->mailer->addTo($email);
             }
@@ -171,27 +170,27 @@ class MailSender extends Prefab
             $this->mailer->addTo($to, $title);
         }
 
-        if ($from == null) {
+        if (null === $from) {
             $this->mailer->setFrom($this->f3->get('from_mail'));
         }
         $this->mailer->setHTML($message);
         $this->mailer->set('Message-Id', $messageId);
         $sent = $this->mailer->send($subject, Environment::isNotProduction());
 
-        if ($sent !== false && Environment::isNotProduction()) {
-            @file_put_contents($this->f3->get('MAIL_STORAGE') . mb_substr($messageId, 1, -1) . '.eml',
-               explode("354 Go ahead\n", explode("250 OK\nQUIT", $this->mailer->log())[0])[1]
-);
+        if (false !== $sent && Environment::isNotProduction()) {
+            @file_put_contents(
+                $this->f3->get('MAIL_STORAGE') . mb_substr($messageId, 1, -1) . '.eml',
+                explode("354 Go ahead\n", explode("250 OK\nQUIT", $this->mailer->log())[0])[1]
+            );
         }
 
         $this->logger->info('Sending email | Status: ' . ($sent ? 'true' : 'false') . " | Log:\n" . $this->mailer->log());
 
-        return ($sent === true) ? $messageId : $sent;
+        return (true === $sent) ? $messageId : $sent;
     }
 
     /**
-     * Generate a unique message id
-     * @return string
+     * Generate a unique message id.
      */
     private function generateId(): string
     {

@@ -1,6 +1,8 @@
 <?php
 
-/**
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -26,19 +28,17 @@ use Nette\Utils\Strings;
 
 class URLUtils
 {
-
     /**
      * @param $apiCall
      * @param $data
      * @param $checksumLength
      * @param $sharedSecret
-     * @return string
      */
     public static function calculateChecksum($apiCall, $data, $checksumLength, $sharedSecret): string
     {
         $queryString = self::convertIncomingQuery($data);
 
-        return hash($checksumLength !== 64 ? 'sha1' : 'sha256', $apiCall . $queryString . $sharedSecret);
+        return hash(64 !== $checksumLength ? 'sha1' : 'sha256', $apiCall . $queryString . $sharedSecret);
     }
 
     /**
@@ -46,15 +46,14 @@ class URLUtils
      * @param $queryString
      * @param $checksumLength
      * @param $sharedSecret
-     * @return string
      */
     public static function calculateOutgoingChecksum($apiCall, $queryString, $checksumLength, $sharedSecret): string
     {
-        return hash($checksumLength !== 64 ? 'sha1' : 'sha256', $apiCall . $queryString . $sharedSecret);
+        return hash(64 !== $checksumLength ? 'sha1' : 'sha256', $apiCall . $queryString . $sharedSecret);
     }
 
     /**
-     * @return string
+     * @param mixed $requestData
      */
     public static function convertIncomingQuery($requestData): string
     {
@@ -70,16 +69,14 @@ class URLUtils
 
     /**
      * @param $data
-     * @return string
      */
     public static function convertOutgoingQuery($data): string
     {
         $query = http_build_query($data, '', '&');
         $query = str_replace('!', '%21', $query);
         $query = str_replace('*', '%2A', $query);
-        $query = str_replace('%20', '+', $query);
-        // $query = str_replace('%2B', '+', $query);
 
-        return $query;
+        return str_replace('%20', '+', $query);
+        // $query = str_replace('%2B', '+', $query);
     }
 }

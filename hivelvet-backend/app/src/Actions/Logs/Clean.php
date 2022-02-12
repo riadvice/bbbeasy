@@ -1,6 +1,8 @@
 <?php
 
-/**
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -24,12 +26,10 @@ use Actions\Base as BaseAction;
 use Base;
 
 /**
- * Class Clean
- * @package Actions\Logs
+ * Class Clean.
  */
 class Clean extends BaseAction
 {
-
     /**
      * @param Base  $f3
      * @param array $params

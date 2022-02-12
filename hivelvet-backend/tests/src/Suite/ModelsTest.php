@@ -1,6 +1,8 @@
 <?php
 
-/**
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -23,7 +25,11 @@ namespace Suite;
 use Models\UserTest;
 use Test\TestGroup;
 
-class ModelsTest extends TestGroup
+/**
+ * @internal
+ * @coversNothing
+ */
+final class ModelsTest extends TestGroup
 {
     protected $classes = [UserTest::class];
 }

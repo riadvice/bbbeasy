@@ -1,6 +1,8 @@
 <?php
 
-/**
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -21,12 +23,11 @@
 namespace Actions\Users;
 
 use Actions\Base as BaseAction;
-use Models\User;
 use Base;
+use Models\User;
 
 /**
- * Class Index
- * @package Actions\Users
+ * Class Index.
  */
 class Index extends BaseAction
 {
@@ -51,6 +52,6 @@ class Index extends BaseAction
      */
     public function execute($f3, $params): void
     {
-        $user    = new User();
+        $user = new User();
     }
 }

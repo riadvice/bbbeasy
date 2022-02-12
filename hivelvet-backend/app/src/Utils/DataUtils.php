@@ -1,6 +1,8 @@
 <?php
 
-/**
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -22,50 +24,51 @@ namespace Utils;
 
 class DataUtils
 {
-    public static function keepIntegerInArray(& $array): void
+    public static function keepIntegerInArray(&$array): void
     {
-        if (!is_null($array)) {
+        if (null !== $array) {
             array_filter($array, 'ctype_digit');
         }
     }
 
     /**
-     * Unsets an array item by its value
+     * Unsets an array item by its value.
      *
      * @param $array
      * @param $value
      */
-    public static function unsetByValue(& $array, $value): void
+    public static function unsetByValue(&$array, $value): void
     {
-        if (($key = array_search($value, $array)) !== false) {
+        if (($key = array_search($value, $array, true)) !== false) {
             unset($array[$key]);
         }
     }
 
     /**
-     * Returns a the key of the array as an array
+     * Returns a the key of the array as an array.
+     *
      * @param $array
      * @param $key
+     *
      * @return array
      */
     public static function getArrayFromField($array, $key)
     {
-        return array_map(function ($item) use ($key) {
-            return $item[$key];
-        }, $array);
+        return array_map(fn($item) => $item[$key], $array);
     }
 
     /**
      * @param $array
-     * @param  false  $stringData
+     * @param false $stringData
+     *
      * @return string
      */
     public static function toJsonArray($array, $stringData = false)
     {
         if (!$stringData) {
             return implode(',', $array);
-        } else {
-            return "'" . implode("','", $array) . "'";
         }
+
+        return "'" . implode("','", $array) . "'";
     }
 }

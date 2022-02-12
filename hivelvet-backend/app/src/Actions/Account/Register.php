@@ -1,6 +1,8 @@
 <?php
 
-/**
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -28,8 +30,7 @@ use Models\User;
 use Validation\Validator;
 
 /**
- * Class Register
- * @package Actions\Account
+ * Class Register.
  */
 class Register extends BaseAction
 {
@@ -40,10 +41,10 @@ class Register extends BaseAction
 
     public function signup($f3): void
     {
-        $user   = new User();
-        $body   = $this->getDecodedBody();
-        $form   = $body['data'];
-        $v      = new Validator();
+        $user = new User();
+        $body = $this->getDecodedBody();
+        $form = $body['data'];
+        $v    = new Validator();
 
         $v->notEmpty()->verify('username', $form['username'], ['notEmpty' => 'Username is required']);
         $v->notEmpty()->verify('email', $form['email'], ['notEmpty' => 'Email is required']);
@@ -58,26 +59,25 @@ class Register extends BaseAction
             $v->equals($form['password'])->verify('confirmPassword', $form['confirmPassword'], ['equals' => 'The two passwords that you entered do not match']);
 
             if ($v->allValid()) {
-                $usernameExist  = $user->load(['username = ?', $form['username']]);
-                $emailExist     = $user->load(['email = ?', $form['email']]);
+                $usernameExist = $user->load(['username = ?', $form['username']]);
+                $emailExist    = $user->load(['email = ?', $form['email']]);
 
-                if ($usernameExist or $emailExist ) {
-                    $message = ($usernameExist and $emailExist) ? 'username and email already exist' : ($usernameExist ? 'username already exist' : 'email already exist');
+                if ($usernameExist || $emailExist) {
+                    $message = ($usernameExist && $emailExist) ? 'username and email already exist' : ($usernameExist ? 'username already exist' : 'email already exist');
                     $this->logger->error('Registration error : user could not be added', ['error' => $message]);
                     $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-                }
-                else {
-                    $user->email        = $form['email'];
-                    $user->username     = $form['username'];
-                    $user->password     = $form['password'];
-                    $user->role         = UserRole::VISITOR;
-                    $user->status       = UserStatus::PENDING;
+                } else {
+                    $user->email    = $form['email'];
+                    $user->username = $form['username'];
+                    $user->password = $form['password'];
+                    $user->role     = UserRole::VISITOR;
+                    $user->status   = UserStatus::PENDING;
 
                     try {
                         $user->save();
                     } catch (\Exception $e) {
                         $message = 'user could not be added';
-                        $this->logger->error('Registration error : user could not be added', ['user'=> $user->toArray(),'error' => $e->getMessage()]);
+                        $this->logger->error('Registration error : user could not be added', ['user' => $user->toArray(), 'error' => $e->getMessage()]);
                         $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
 
                         return;
@@ -85,13 +85,11 @@ class Register extends BaseAction
                     $this->logger->info('user successfully registered', ['user' => $user->toArray()]);
                     $this->renderJson(['message' => 'Congratulations ! Your account has been successfully created.']);
                 }
-            }
-            else {
+            } else {
                 $this->logger->error('Registration error', ['errors' => $v->getErrors()]);
                 $this->renderJson(['errors' => $v->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
             }
-        }
-        else {
+        } else {
             $this->logger->error('Registration error', ['errors' => $v->getErrors()]);
             $this->renderJson(['errors' => $v->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
         }

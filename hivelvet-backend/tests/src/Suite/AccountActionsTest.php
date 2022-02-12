@@ -1,6 +1,8 @@
 <?php
 
-/**
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -20,12 +22,16 @@
 
 namespace Suite;
 
-use Actions\Users\LoginTest;
+use Actions\Account\LoginTest;
 use Test\TestGroup;
 
-class AccountActionsTest extends TestGroup
+/**
+ * @internal
+ * @coversNothing
+ */
+final class AccountActionsTest extends TestGroup
 {
-    protected $classes = [LoginTest::class];
+    // protected $classes = [LoginTest::class];
 
     protected $quiet = true;
 }

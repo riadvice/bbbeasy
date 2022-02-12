@@ -1,6 +1,8 @@
 <?php
 
-/**
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -37,51 +39,6 @@ class Server
         $ws = new WS('tcp://127.0.0.1:8800');
         $this->register($ws);
         $ws->run();
-    }
-
-    /**
-     * Registers the event listeners.
-     *
-     * @param WS $ws
-     */
-    private function register(WS $ws): void
-    {
-        $ws
-            ->on('start', [$this, 'onStart'])
-            ->on('error', [$this, 'onError'])
-            ->on('stop', [$this, 'onStop'])
-            ->on('connect', [$this, 'onConnect'])
-            ->on('disconnect', [$this, 'onDisconnect'])
-            ->on('idle', [$this, 'onIdle'])
-            ->on('receive', [$this, 'onReceive'])
-            ->on('send', [$this, 'onSend']);
-    }
-
-    /**
-     * Sends the provided message to all connected clients of the given server.
-     *
-     * @param WS     $ws
-     * @param string $message
-     */
-    private function sendMessageToAllClients(WS $ws, string $message): void
-    {
-        /** @var Agent $agent */
-        foreach ($ws->agents() as $agent) {
-            $agent->send(WS::Text, $message);
-        }
-    }
-
-    /**
-     * Writes a debug message to `STDOUT`.
-     *
-     * @param string $message
-     */
-    private function debug(string $message): void
-    {
-        $date   = date('Y-m-d H:i:s');
-        $memory = round(memory_get_usage(true) / 1000 / 1000, 3) . ' MB';
-
-        fwrite(STDOUT, $date . ' | ' . $memory . ' | ' . $message . "\n");
     }
 
     public function onStart(WS $ws): void
@@ -135,7 +92,7 @@ class Server
     public function onReceive(Agent $agent, int $op, string $data): void
     {
         // This example is only utilizing text frames for application-specific payload.
-        if ($op != WS::Text) {
+        if (WS::Text !== $op) {
             $this->logger->debug(sprintf('Agent %s sent a message with ignored opcode %s.', $agent->id(), $op));
 
             return;
@@ -158,5 +115,44 @@ class Server
     public function onSend(Agent $agent, int $op, string $data): void
     {
         $this->logger->debug(sprintf('Agent %s will receive a message: %s', $agent->id(), $data));
+    }
+
+    /**
+     * Registers the event listeners.
+     */
+    private function register(WS $ws): void
+    {
+        $ws
+            ->on('start', [$this, 'onStart'])
+            ->on('error', [$this, 'onError'])
+            ->on('stop', [$this, 'onStop'])
+            ->on('connect', [$this, 'onConnect'])
+            ->on('disconnect', [$this, 'onDisconnect'])
+            ->on('idle', [$this, 'onIdle'])
+            ->on('receive', [$this, 'onReceive'])
+            ->on('send', [$this, 'onSend'])
+        ;
+    }
+
+    /**
+     * Sends the provided message to all connected clients of the given server.
+     */
+    private function sendMessageToAllClients(WS $ws, string $message): void
+    {
+        /** @var Agent $agent */
+        foreach ($ws->agents() as $agent) {
+            $agent->send(WS::Text, $message);
+        }
+    }
+
+    /**
+     * Writes a debug message to `STDOUT`.
+     */
+    private function debug(string $message): void
+    {
+        $date   = date('Y-m-d H:i:s');
+        $memory = round(memory_get_usage(true) / 1000 / 1000, 3) . ' MB';
+
+        fwrite(STDOUT, $date . ' | ' . $memory . ' | ' . $message . "\n");
     }
 }

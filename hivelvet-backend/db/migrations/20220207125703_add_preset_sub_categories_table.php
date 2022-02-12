@@ -1,6 +1,8 @@
 <?php
 
-/**
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -28,38 +30,38 @@ class AddPresetSubCategoriesTable extends AbstractMigration
         $first_key = $first_key[0];
 
         $subCategoriesTable = $this->table('preset_sub_categories');
-        $subcategories = [
+        $subcategories      = [
             [
                 'Duration',
                 'Maximum participants',
                 'Anyone can start the meeting',
                 'Join all as moderators',
-                'Allow only logged in users'
+                'Allow only logged in users',
             ],
             ['Password protected'],
             ['Customizable', 'Auto-start', 'Allow Start/Stop'],
-            ['Customizable','Private chat', 'Recording'],
+            ['Customizable', 'Private chat', 'Recording'],
 
             [
-                'Customizable' ,
+                'Customizable',
                 'Visible for moderators only',
                 'Moderators allowed to eject cameras',
                 'Auto-share',
-                'Skip preview (always, first join only)'
+                'Skip preview (always, first join only)',
             ],
             ['Customizable'],
-            ['Title','Logo','Banner','Use avatars','Custom CSS'],
+            ['Title', 'Logo', 'Banner', 'Use avatars', 'Custom CSS'],
             [
                 'Users join muted',
                 'Moderators allowed to unmute users',
                 'Auto-join',
                 'Listen-only',
                 'Listen-only enforced',
-                'Skip echo test (always, first join)'
+                'Skip echo test (always, first join)',
             ],
 
             ['Default language'],
-            ['Multi-user pen only','Presenter tools','Multiuser tools'],
+            ['Multi-user pen only', 'Presenter tools', 'Multiuser tools'],
             [
                 'Disable webcams',
                 'Disable microphones',
@@ -67,26 +69,26 @@ class AddPresetSubCategoriesTable extends AbstractMigration
                 'Disable public chat',
                 'Disable shared notes',
                 'Disable locked layout',
-                'Disable lock on join'
+                'Disable lock on join',
             ],
-            ['Presentation','Participants','Chat','Navigation bar','Actions bar'],
+            ['Presentation', 'Participants', 'Chat', 'Navigation bar', 'Actions bar'],
 
-            ['Customizable','Policy'],
-            ['Customizable','Clean-up delay'],
-            ['Keyboard shortcuts','Ask for feedback'],
-            ['Pool name']
+            ['Customizable', 'Policy'],
+            ['Customizable', 'Clean-up delay'],
+            ['Keyboard shortcuts', 'Ask for feedback'],
+            ['Pool name'],
         ];
-        $subCategoriesData = array();
-        foreach ($subcategories as $value){
+        $subCategoriesData = [];
+        foreach ($subcategories as $value) {
             foreach ($value as $subcategory) {
                 $subCategoryData = [
-                    'name'          => $subcategory,
-                    'category_id'   => $first_key,
-                    'created_on'    => date('Y-m-d H:i:s')
+                    'name'        => $subcategory,
+                    'category_id' => $first_key,
+                    'created_on'  => date('Y-m-d H:i:s'),
                 ];
-                array_push($subCategoriesData,$subCategoryData);
+                $subCategoriesData[] = $subCategoryData;
             }
-            $first_key++;
+            ++$first_key;
         }
         $subCategoriesTable->insert($subCategoriesData)->save();
     }
@@ -94,7 +96,6 @@ class AddPresetSubCategoriesTable extends AbstractMigration
     public function down(): void
     {
         $subCategoriesTable = $this->table('preset_sub_categories');
-        $subCategoriesTable->getAdapter()->execute("DELETE from preset_sub_categories");
+        $subCategoriesTable->getAdapter()->execute('DELETE from preset_sub_categories');
     }
 }
-

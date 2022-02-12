@@ -1,6 +1,8 @@
 <?php
 
-/**
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -22,7 +24,7 @@ namespace Enum;
 
 class UserRole extends Enum
 {
-    public const VISITOR  = 'visitor';
-    public const ADMIN    = 'admin';
-    public const API      = 'api';
+    public const VISITOR = 'visitor';
+    public const ADMIN   = 'admin';
+    public const API     = 'api';
 }

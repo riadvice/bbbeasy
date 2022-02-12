@@ -1,6 +1,8 @@
 <?php
 
-/**
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -56,7 +58,7 @@ abstract class Boot
     protected $session;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $logSession = false;
 
@@ -72,7 +74,7 @@ abstract class Boot
 
     public function __construct()
     {
-        $this->isCli = PHP_SAPI === 'cli';
+        $this->isCli = \PHP_SAPI === 'cli';
         $this->f3    = Base::instance();
 
         $this->setPhpVariables();
@@ -84,6 +86,20 @@ abstract class Boot
         $this->setupLogging();
     }
 
+    public function prepareSession(): void
+    {
+        // store the session into sqlite database file
+        $this->session = new Session(Registry::get('db'), $this->f3->get('session.table'), false);
+        Registry::set('session', $this->session);
+    }
+
+    public function start(): void
+    {
+        // start the framework
+        $this->f3->run();
+        $this->logExecution();
+    }
+
     protected function setPhpVariables(): void
     {
         // add php variables configuration here
@@ -92,12 +108,15 @@ abstract class Boot
 
     protected function detectEnvironment(): void
     {
-        // read config and overrides
-        // @see http://fatfreeframework.com/framework-variables#configuration-files
-        // set the environment dynamically depending on the server IP address
+        /**
+         * read config and overrides.
+         *
+         * @see http://fatfreeframework.com/framework-variables#configuration-files
+         * set the environment dynamically depending on the server IP address
+         */
         $host = $this->f3->get('HOST');
 
-        if ($this->f3->exists('GET.statera') !== true) {
+        if (true !== $this->f3->exists('GET.statera')) {
             if (Strings::contains($host, 'api.hivelvet.test')) {
                 $this->f3->set('application.environment', Environment::DEVELOPMENT);
             } else {
@@ -140,26 +159,21 @@ abstract class Boot
 
     protected function createDatabaseConnection(): void
     {
-        // setup database connection params
-        // @see http://fatfreeframework.com/databases
-
+        /**
+         * setup database connection params.
+         *
+         * @see http://fatfreeframework.com/databases
+         */
         $db = new SQL(
             $this->f3->get('db.dsn'),
             $this->f3->get('db.username'),
             $this->f3->get('db.password')
         );
 
-        if ($this->logSession === true) {
-            $db->log($this->f3->get('log.session') === true);
+        if (true === $this->logSession) {
+            $db->log(true === $this->f3->get('log.session'));
         }
         Registry::set('db', $db);
-    }
-
-    public function prepareSession(): void
-    {
-        // store the session into sqlite database file
-        $this->session = new Session(Registry::get('db'), $this->f3->get('session.table'), false);
-        Registry::set('session', $this->session);
     }
 
     protected function detectCli(): void
@@ -176,18 +190,11 @@ abstract class Boot
     protected function logExecution(): void
     {
         // log session SQL queries only in dev environment for debugging purpose
-        if ($this->f3->get('log.session') === true) {
+        if (true === $this->f3->get('log.session')) {
             $this->logger->debug(Registry::get('db')->log());
         }
 
         $execution_time = round(microtime(true) - $this->f3->get('TIME'), 3);
         $this->logger->notice('[' . $this->f3->get('PATH') . '] Script executed in ' . $execution_time . ' seconds using ' . round(memory_get_usage() / 1024 / 1024, 3) . '/' . round(memory_get_peak_usage() / 1024 / 1024, 3) . ' MB memory/peak');
-    }
-
-    public function start(): void
-    {
-        // start the framework
-        $this->f3->run();
-        $this->logExecution();
     }
 }

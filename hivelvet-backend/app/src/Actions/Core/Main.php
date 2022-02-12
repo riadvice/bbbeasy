@@ -1,6 +1,8 @@
 <?php
 
-/**
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -28,7 +30,6 @@ use Base;
  */
 class Main extends BaseAction
 {
-
     /**
      * @param Base  $f3
      * @param array $params

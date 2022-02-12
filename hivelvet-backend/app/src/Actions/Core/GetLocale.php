@@ -1,6 +1,8 @@
 <?php
 
-/**
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -43,14 +45,14 @@ class GetLocale extends BaseAction
         // checking if the file is already cached, the cache locale file is generated from the file last modification time
         $cached = $cache->exists($hash = $localePrefix . '.' . $f3->hash(filemtime($f3['LOCALES'] . $params['locale'] . '.php') . $params['locale']));
 
-        if ($cached === false) {
+        if (false === $cached) {
             // we create a new json file from locales data
             $cache->reset($localePrefix);
             $cache->set($hash, json_encode($f3['i18n']));
         }
 
         // @fixme: move to CDN and make the call lighter
-        $this->logger->info('Loading locale: ' . $params['locale'], ['cached' => $cached !== false]);
+        $this->logger->info('Loading locale: ' . $params['locale'], ['cached' => false !== $cached]);
 
         $this->renderJson($cache->get($hash));
     }

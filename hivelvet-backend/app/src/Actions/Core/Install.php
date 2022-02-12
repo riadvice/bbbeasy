@@ -1,5 +1,8 @@
 <?php
-/**
+
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -32,24 +35,24 @@ use Models\User;
 use Validation\Validator;
 
 /**
- * Class Install
- * @package Actions\Account
+ * Class Install.
  */
 class Install extends BaseAction
 {
-
     /**
      * @param Base  $f3
      * @param array $params
      */
     public function execute($f3, $params): void
     {
-        // @todo for future tasks
-        //if ($f3->get('system.installed') === false) {
-        $body   = $this->getDecodedBody();
-        $form   = $body['data'];
-        $v1      = new Validator();
-        $v2      = new Validator();
+        /**
+         * @todo for future tasks
+         * if ($f3->get('system.installed') === false) {
+         */
+        $body = $this->getDecodedBody();
+        $form = $body['data'];
+        $v1   = new Validator();
+        $v2   = new Validator();
 
         $step1Validated = false;
         $step2Validated = false;
@@ -85,42 +88,41 @@ class Install extends BaseAction
         if (!$step1Validated && !$step2Validated) {
             $this->logger->error('App configuration', ['user_errors' => $v1->getErrors()]);
             $this->logger->error('App configuration', ['settings_errors' => $v2->getErrors()]);
-            $this->renderJson(['userErrors' => $v1->getErrors(),'settingsErrors' => $v2->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
-        }
-        else if (!$step1Validated) {
+            $this->renderJson(['userErrors' => $v1->getErrors(), 'settingsErrors' => $v2->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
+        } elseif (!$step1Validated) {
             $this->logger->error('App configuration', ['user_errors' => $v1->getErrors()]);
             $this->renderJson(['userErrors' => $v1->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
-        }
-        else if (!$step2Validated) {
+        } elseif (!$step2Validated) {
             $this->logger->error('App configuration', ['settings_errors' => $v2->getErrors()]);
             $this->renderJson(['settingsErrors' => $v2->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
-        }
-        else {
-            $user   = new User();
-            $user->email        = $form['email'];
-            $user->username     = $form['username'];
-            $user->role         = UserRole::ADMIN;
-            $user->status       = UserStatus::ACTIVE;
+        } else {
+            $user           = new User();
+            $user->email    = $form['email'];
+            $user->username = $form['username'];
+            $user->role     = UserRole::ADMIN;
+            $user->status   = UserStatus::ACTIVE;
 
             try {
                 //$user->save();
                 $this->logger->info('App configuration', ['user' => $user->toArray()]);
 
-                $setting   = new Setting();
-                $defaultSettings    = $setting->find([], ['limit' => 1])->current();
+                $setting         = new Setting();
+                $defaultSettings = $setting->find([], ['limit' => 1])->current();
 
-                $defaultSettings->company_name = $form['company_name'];
+                $defaultSettings->company_name    = $form['company_name'];
                 $defaultSettings->company_website = $form['company_url'];
-                $defaultSettings->platform_name = $form['platform_name'];
-                if ($form['term_url'] != '')
+                $defaultSettings->platform_name   = $form['platform_name'];
+                if ('' !== $form['term_url']) {
                     $defaultSettings->terms_use = $form['term_url'];
-                if ($form['policy_url'] != '')
+                }
+                if ('' !== $form['policy_url']) {
                     $defaultSettings->privacy_policy = $form['policy_url'];
+                }
                 //$defaultSettings->logo = $form['logo'];
-                $colors = $form['branding_colors'];
-                $defaultSettings->primary_color = $colors['primary_color'];
-                $defaultSettings->secondary_color = $colors['secondary_color'];
-                $defaultSettings->accent_color = $colors['accent_color'];
+                $colors                            = $form['branding_colors'];
+                $defaultSettings->primary_color    = $colors['primary_color'];
+                $defaultSettings->secondary_color  = $colors['secondary_color'];
+                $defaultSettings->accent_color     = $colors['accent_color'];
                 $defaultSettings->additional_color = $colors['add_color'];
 
                 try {
@@ -131,35 +133,36 @@ class Install extends BaseAction
                     foreach ($presets as $preset) {
                         $subcategories = $preset['subcategories'];
                         foreach ($subcategories as $subcategory) {
-                            $presetSettings = new PresetSetting();
+                            $presetSettings                 = new PresetSetting();
                             $presetSettings->subcategory_id = $subcategory['id'];
                             $presetSettings->is_enabled     = $subcategory['status'];
+
                             try {
                                 //$presetSettings->save();
                                 $this->logger->info('App configuration', ['preset settings' => $presetSettings->toArray()]);
-                            }
-                            catch (\Exception $e) {
+                            } catch (\Exception $e) {
                                 $message = $e->getMessage();
                                 $this->logger->error('preset settings could not be added', ['error' => $message]);
                                 $this->renderJson(['presetsErrors' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+
                                 return;
                             }
                         }
                     }
                     //$this->logger->info('administrator and settings and presets successfully added', ['user' => $user->toArray()]);
                     $this->renderJson(['message' => 'Application is ready now !']);
-                }
-                catch (\Exception $e) {
+                } catch (\Exception $e) {
                     $message = $e->getMessage();
                     $this->logger->error('settings could not be added', ['error' => $message]);
                     $this->renderJson(['settingsErrors' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+
                     return;
                 }
-            }
-            catch (\Exception $e) {
+            } catch (\Exception $e) {
                 $message = $e->getMessage();
                 $this->logger->error('administrator could not be added', ['error' => $message]);
                 $this->renderJson(['userErrors' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+
                 return;
             }
         }
@@ -168,30 +171,30 @@ class Install extends BaseAction
 
     public function collectPresets($f3, $params): void
     {
-        $data = array();
-        $preset_category    = new PresetCategory();
-        $categories         = $preset_category->find([], ['order' => 'id']);
+        $data            = [];
+        $preset_category = new PresetCategory();
+        $categories      = $preset_category->find([], ['order' => 'id']);
 
         if ($categories) {
             foreach ($categories as $category) {
                 $categoryData = [
                     'name'          => $category->name,
                     'icon'          => $category->icon,
-                    'subcategories' => array()
+                    'subcategories' => [],
                 ];
                 $preset_subcategory = new PresetSubCategory();
                 $subcategories      = $preset_subcategory->find(['category_id = ?', $category->id], ['order' => 'id']);
                 if ($subcategories) {
                     foreach ($subcategories as $subcategory) {
                         $subCategoryData = [
-                            'id'        => $subcategory->id,
-                            'name'      => $subcategory->name,
-                            'status'    => false
+                            'id'     => $subcategory->id,
+                            'name'   => $subcategory->name,
+                            'status' => false,
                         ];
-                        array_push($categoryData['subcategories'],$subCategoryData);
+                        $categoryData['subcategories'][] = $subCategoryData;
                     }
                 }
-                array_push($data,$categoryData);
+                $data[] = $categoryData;
             }
         }
 
@@ -201,20 +204,20 @@ class Install extends BaseAction
 
     public function collectSettings($f3, $params): void
     {
-        $data = array();
-        $setting            = new Setting();
-        $defaultSettings    = $setting->find([], ['limit' => 1])->current();
+        $data            = [];
+        $setting         = new Setting();
+        $defaultSettings = $setting->find([], ['limit' => 1])->current();
 
         if ($defaultSettings) {
             $data = [
-                'company_name'      => $defaultSettings->company_name,
-                'company_website'   => $defaultSettings->company_website,
-                'platform_name'     => $defaultSettings->platform_name,
+                'company_name'    => $defaultSettings->company_name,
+                'company_website' => $defaultSettings->company_website,
+                'platform_name'   => $defaultSettings->platform_name,
 
-                'primary_color'     => $defaultSettings->primary_color,
-                'secondary_color'   => $defaultSettings->secondary_color,
-                'accent_color'      => $defaultSettings->accent_color,
-                'additional_color'  => $defaultSettings->additional_color,
+                'primary_color'    => $defaultSettings->primary_color,
+                'secondary_color'  => $defaultSettings->secondary_color,
+                'accent_color'     => $defaultSettings->accent_color,
+                'additional_color' => $defaultSettings->additional_color,
             ];
         }
 
@@ -224,11 +227,13 @@ class Install extends BaseAction
 
     public function saveLogo($f3, $params): void
     {
-        // @todo for future tasks
-        //if ($f3->get('system.installed') === false) {
-        $files  = $f3->get("FILES");
-        $form   = $f3->get("POST");
-        $v      = new Validator();
+        /**
+         * @todo for future tasks
+         * if ($f3->get('system.installed') === false) {
+         */
+        $files = $f3->get('FILES');
+        $form  = $f3->get('POST');
+        $v     = new Validator();
 
         $v->notEmpty()->verify('logo_name', $form['logo_name']);
         //if files not empty
@@ -242,18 +247,18 @@ class Install extends BaseAction
             $setting        = new Setting();
             $settings       = $setting->find([], ['limit' => 1])->current();
             $settings->logo = $form['logo_name'];
+
             try {
                 //$settings->save();
                 $this->logger->info('App configuration saving logo', ['setting' => $settings->toArray()]);
-            }
-            catch (\Exception $e) {
+            } catch (\Exception $e) {
                 $message = $e->getMessage();
                 $this->logger->error('logo could not be updated', ['error' => $message]);
                 $this->renderJson(['errors' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+
                 return;
             }
         }
         //}
-
     }
 }

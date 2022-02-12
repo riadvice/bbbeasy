@@ -1,6 +1,8 @@
 <?php
 
-/**
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -32,32 +34,34 @@ class UserFaker
     private static array $storage = [];
 
     /**
-     * @param  null                $role
-     * @param  string              $status
-     * @param  null                $storageName
-     * @return User
+     * @param null   $role
+     * @param string $status
+     * @param null   $storageName
+     *
      * @throws ReflectionException
+     *
+     * @return User
      */
     public static function create($role = null, $status = UserStatus::ACTIVE, $storageName = null)
     {
         // To make testing easier, the user is password is the same as its role
-        $faker            = Faker::create();
-        $user             = new User();
-        $user->email      = $faker->email;
-        $user->username   = $faker->userName;
+        $faker          = Faker::create();
+        $user           = new User();
+        $user->email    = $faker->email;
+        $user->username = $faker->userName;
         // pick a random role if not provided
-        if (is_null($role)) {
+        if (null === $role) {
             $role = array_rand(UserRole::values());
         }
         $user->role     = $role;
         $user->password = $role;
-        if ($role === UserRole::ADMIN) {
+        if (UserRole::ADMIN === $role) {
             $user->password = $role . $role;
         }
         $user->status = $status;
 
         $user->save();
-        if (!is_null($storageName)) {
+        if (null !== $storageName) {
             self::$storage[$storageName] = $user;
         }
 
@@ -65,13 +69,15 @@ class UserFaker
     }
 
     /**
-     * Creates a user and authenticates it
+     * Creates a user and authenticates it.
      *
      * @param $role
-     * @param  string              $status
-     * @param  null                $storageName
-     * @return User
+     * @param string $status
+     * @param null   $storageName
+     *
      * @throws ReflectionException
+     *
+     * @return User
      */
     public static function createAndLogin($role, $status = UserStatus::ACTIVE, $storageName = null)
     {
@@ -88,12 +94,12 @@ class UserFaker
     public static function loginUser($user): void
     {
         $password = $role = $user->role;
-        if ($role === UserRole::ADMIN) {
+        if (UserRole::ADMIN === $role) {
             $password = $role . $role;
         }
         Base::instance()->mock('POST /login', [
             'email'    => $user->email,
-            'password' => $password
+            'password' => $password,
         ]);
     }
 
@@ -104,6 +110,7 @@ class UserFaker
 
     /**
      * @param $storageName
+     *
      * @return User
      */
     public static function get($storageName)

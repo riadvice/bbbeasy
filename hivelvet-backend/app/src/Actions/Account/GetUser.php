@@ -1,6 +1,8 @@
 <?php
 
-/**
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -40,7 +42,7 @@ class GetUser extends BaseAction
         $resetToken = new ResetTokenPassword();
         if ($resetToken->tokenExists($token)) {
             $resetToken->getByToken($token);
-            if ($resetToken->status === 'new') {
+            if ('new' === $resetToken->status) {
                 if ($resetToken->expires_at <= date('Y-m-d H:i:s')) {
                     $resetToken->status = 'expired';
 
@@ -51,7 +53,7 @@ class GetUser extends BaseAction
                     $this->renderJson(['user' => $user->toArray(), ResponseCode::HTTP_OK]);
                 }
             }
-            if ($resetToken->status == 'consumed') {
+            if ('consumed' === $resetToken->status) {
                 $this->logger->error('token was consumed');
                 $this->renderJson(['message' => 'token was consumed , you should request to reset your password again '], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
             }

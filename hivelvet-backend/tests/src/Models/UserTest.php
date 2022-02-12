@@ -1,6 +1,8 @@
 <?php
 
-/**
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -26,15 +28,18 @@ use Registry;
 use Test\Scenario;
 
 /**
- * Class UserTest
- * @package Models
+ * Class UserTest.
+ *
+ * @internal
+ * @coversNothing
  */
-class UserTest extends Scenario
+final class UserTest extends Scenario
 {
     protected $group = 'User Model';
 
     /**
-     * @param  Base  $f3
+     * @param Base $f3
+     *
      * @return array
      */
     public function testPasswordHash($f3)
@@ -52,7 +57,8 @@ class UserTest extends Scenario
     }
 
     /**
-     * @param  \Base $f3
+     * @param \Base $f3
+     *
      * @return array
      */
     public function testUserCreation($f3)
@@ -65,7 +71,7 @@ class UserTest extends Scenario
         $user->password = $faker->password(8);
         $user->save();
 
-        $test->expect($user->id !== 0, 'User mocked & saved to the database');
+        $test->expect(0 !== $user->id, 'User mocked & saved to the database');
 
         return $test->results();
     }

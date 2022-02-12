@@ -1,6 +1,8 @@
 <?php
 
-/**
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -22,12 +24,12 @@ namespace Enum;
 
 class ResponseCode extends Enum
 {
-    const HTTP_OK                    = 200;
-    const HTTP_NO_CONTENT            = 204;
-    const HTTP_BAD_REQUEST           = 400;
-    const HTTP_UNAUTHORIZED          = 401;
-    const HTTP_FORBIDDEN             = 403;
-    const HTTP_NOT_FOUND             = 404;
-    const HTTP_UNPROCESSABLE_ENTITY  = 422;                                        // RFC4918
-    const HTTP_INTERNAL_SERVER_ERROR = 500;
+    public const HTTP_OK                    = 200;
+    public const HTTP_NO_CONTENT            = 204;
+    public const HTTP_BAD_REQUEST           = 400;
+    public const HTTP_UNAUTHORIZED          = 401;
+    public const HTTP_FORBIDDEN             = 403;
+    public const HTTP_NOT_FOUND             = 404;
+    public const HTTP_UNPROCESSABLE_ENTITY  = 422;                                        // RFC4918
+    public const HTTP_INTERNAL_SERVER_ERROR = 500;
 }

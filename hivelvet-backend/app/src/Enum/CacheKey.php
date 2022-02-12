@@ -1,6 +1,8 @@
 <?php
 
-/**
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -29,12 +31,12 @@ class CacheKey extends Enum
 
     public const API_VERSION = 'api.version_';
 
-    public const AJAX_USERS      = 'ajax.users';
+    public const AJAX_USERS = 'ajax.users';
 
     /**
-     * Returns cache key for site logo plus size
+     * Returns cache key for site logo plus size.
+     *
      * @param $size
-     * @return string
      */
     public static function logoSize($size): string
     {

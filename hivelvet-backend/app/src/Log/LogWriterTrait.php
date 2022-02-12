@@ -1,6 +1,8 @@
 <?php
 
-/**
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -37,7 +39,7 @@ trait LogWriterTrait
 
     public function initLogger(): void
     {
-        $this->logger = new Logger(get_called_class());
+        $this->logger = new Logger(static::class);
         $level        = mb_strtoupper(Base::instance()->get('log.level'));
         $class        = new ReflectionClass('Monolog\Logger');
         $stream       = new StreamHandler(Base::instance()->get('application.logfile'), $class->getConstants()[$level]);

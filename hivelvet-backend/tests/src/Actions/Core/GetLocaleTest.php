@@ -1,6 +1,8 @@
 <?php
 
-/**
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -18,16 +20,21 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Actions\Website;
+namespace Actions\Core;
 
 use Test\Scenario;
 
-class GetLocaleTest extends Scenario
+/**
+ * @internal
+ * @coversNothing
+ */
+final class GetLocaleTest extends Scenario
 {
     protected $group = 'Action Core GetLocale';
 
     /**
      * @param $f3 \Base
+     *
      * @return array
      */
     public function testGetLocale($f3)
@@ -37,7 +44,7 @@ class GetLocaleTest extends Scenario
 
         json_decode($f3->get('RESPONSE'));
 
-        $test->expect(json_last_error() === JSON_ERROR_NONE, 'Create JSON localisation on the fly is valid caching ON');
+        $test->expect(JSON_ERROR_NONE === json_last_error(), 'Create JSON localisation on the fly is valid caching ON');
 
         return $test->results();
     }

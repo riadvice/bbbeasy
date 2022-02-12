@@ -1,6 +1,8 @@
 <?php
 
-/**
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -21,23 +23,22 @@
 namespace Actions\Account;
 
 use Actions\Base as BaseAction;
+use Base;
 use Enum\Locale;
 use Enum\ResponseCode;
 use Models\User;
-use Base;
 
 /**
- * Class SetLocal
- * @package Actions\Account
+ * Class SetLocal.
  */
 class SetLocale extends BaseAction
 {
-
     /**
      * Save the user locale.
      *
      * @param Base  $f3
      * @param array $params
+     *
      * @throws
      */
     public function execute($f3, $params): void

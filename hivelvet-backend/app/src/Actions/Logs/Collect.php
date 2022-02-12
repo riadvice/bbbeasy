@@ -1,6 +1,8 @@
 <?php
 
-/**
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -24,8 +26,7 @@ use Actions\Base as BaseAction;
 use Base;
 
 /**
- * Class Clean
- * @package Actions\Logs
+ * Class Clean.
  */
 class Collect extends BaseAction
 {
@@ -35,8 +36,8 @@ class Collect extends BaseAction
      */
     public function execute($f3, $params): void
     {
-        if ($f3->get('client.logs_target') === 'server') {
-            $logs   = $this->getDecodedBody();
+        if ('server' === $f3->get('client.logs_target')) {
+            $logs = $this->getDecodedBody();
             $this->logger->info('React logs :', ['logs' => $logs]);
         }
     }

@@ -1,6 +1,8 @@
 <?php
 
-/**
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -22,11 +24,11 @@ namespace Core;
 
 use Base;
 use DB\SQL;
+use DB\SQL\Session as SQLSession;
 use Log\LogWriterTrait;
 use Models\User;
 use Prefab;
 use Session as F3Session;
-use DB\SQL\Session as SQLSession;
 
 class Session extends Prefab
 {
@@ -46,6 +48,7 @@ class Session extends Prefab
 
     /**
      * Session constructor.
+     *
      * @param SQL    $db
      * @param string $table
      * @param bool   $force
@@ -56,8 +59,8 @@ class Session extends Prefab
     {
         $this->f3 = Base::instance();
         $this->initLogger();
-        if ($table === 'CACHE') {
-            $this->internalSession = new F3Session(function (F3Session $session, $id) {
+        if ('CACHE' === $table) {
+            $this->internalSession = new F3Session(function(F3Session $session, $id) {
                 // Suspect session
                 if (($ip = $session->ip()) !== $this->f3->get('IP')) {
                     $this->logger->warning('user changed IP:' . $ip);
@@ -69,7 +72,7 @@ class Session extends Prefab
                 return true;
             }, $key);
         } else {
-            $this->internalSession = new SQLSession($db, $table, $force, function ($session) {
+            $this->internalSession = new SQLSession($db, $table, $force, function($session) {
                 // Suspect session
                 if (($ip = $session->ip()) !== $this->f3->get('IP')) {
                     $this->logger->warning('user changed IP:' . $ip);
@@ -91,7 +94,6 @@ class Session extends Prefab
 
     /**
      * @param $key
-     * @return bool
      */
     public function exists($key): bool
     {
@@ -106,6 +108,7 @@ class Session extends Prefab
 
     /**
      * @param $key
+     *
      * @return mixed
      */
     public function get($key)
@@ -114,21 +117,20 @@ class Session extends Prefab
     }
 
     /**
-     *    Garbage collector
+     *    Garbage collector.
+     *
      * @param $max int
-     * @return TRUE
+     *
+     * @return true
      */
     public function cleanup($max): bool
     {
         return $this->internalSession->cleanup($max);
     }
 
-    /**
-     * @return bool
-     */
     public function isLoggedIn(): bool
     {
-        return $this->get('user.loggedIn') === true;
+        return true === $this->get('user.loggedIn');
     }
 
     /**
@@ -141,7 +143,7 @@ class Session extends Prefab
         $this->set('user.username', $user->username);
         $this->set('user.email', $user->email);
         $this->set('user.loggedIn', true);
-        $this->logger->debug("User with id $user->id is now logged in");
+        $this->logger->debug("User with id {$user->id} is now logged in");
     }
 
     /**
@@ -163,27 +165,25 @@ class Session extends Prefab
         $this->set('organisation', $organisation);
     }
 
-    /**
-     * @return string
-     */
     public function getRole(): string
     {
         return $this->get('user.role') ?: '';
     }
 
     /**
-     * @param  mixed $role
+     * @param mixed $role
+     *
      * @return bool
      */
     public function isRole($role)
     {
-        if (is_string($role)) {
+        if (\is_string($role)) {
             return $role === $this->getRole();
         }
-        if (is_array($role)) {
-            return in_array($this->getRole(), $role, true);
+        if (\is_array($role)) {
+            return \in_array($this->getRole(), $role, true);
         }
-        $this->logger->emergency($message = 'Cannot test user role on object typed with ' . gettype($role));
+        $this->logger->emergency($message = 'Cannot test user role on object typed with ' . \gettype($role));
     }
 
     /**
@@ -195,9 +195,9 @@ class Session extends Prefab
     }
 
     /**
-     *  Generates a CSRF Token and stores it in the Session
+     *  Generates a CSRF Token and stores it in the Session.
      *
-     * @return String
+     * @return string
      */
     public function generateToken()
     {
@@ -209,7 +209,7 @@ class Session extends Prefab
     }
 
     /**
-     * @return NULL|string
+     * @return null|string
      */
     public function sid()
     {
@@ -217,9 +217,9 @@ class Session extends Prefab
     }
 
     /**
-     *  Compares the given token with the value in the Session
+     *  Compares the given token with the value in the Session.
      *
-     * @return Boolean
+     * @return bool
      */
     public function validateToken()
     {
@@ -230,7 +230,8 @@ class Session extends Prefab
             $this->set('csrf_used', true);
             $tokenIsValid = $this->f3->get($this->f3->get('VERB') . '.csrf_token') === $this->get('csrf_token');
             if (!$tokenIsValid) {
-                $this->logger->critical('Invalid request token provided ' .
+                $this->logger->critical(
+                    'Invalid request token provided ' .
                                         $this->f3->get($this->f3->get('VERB') . '.csrf_token') .
                                         ' where it should be ' . $this->get('csrf_token')
                 );

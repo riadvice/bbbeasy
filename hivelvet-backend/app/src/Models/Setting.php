@@ -1,6 +1,8 @@
 <?php
 
-/**
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -24,21 +26,21 @@ use DateTime;
 use Models\Base as BaseModel;
 
 /**
- * Class Setting
- * @property int        $id
- * @property string     $company_name
- * @property string     $company_website
- * @property string     $platform_name
- * @property string     $terms_use
- * @property string     $privacy_policy
- * @property string     $logo
- * @property string     $primary_color
- * @property string     $secondary_color
- * @property string     $accent_color
- * @property string     $additional_color
- * @property DateTime   $created_on
- * @property DateTime   $updated_on
- * @package  Models
+ * Class Setting.
+ *
+ * @property int      $id
+ * @property string   $company_name
+ * @property string   $company_website
+ * @property string   $platform_name
+ * @property string   $terms_use
+ * @property string   $privacy_policy
+ * @property string   $logo
+ * @property string   $primary_color
+ * @property string   $secondary_color
+ * @property string   $accent_color
+ * @property string   $additional_color
+ * @property DateTime $created_on
+ * @property DateTime $updated_on
  */
 class Setting extends BaseModel
 {

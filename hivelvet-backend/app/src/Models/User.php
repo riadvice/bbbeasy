@@ -1,6 +1,8 @@
 <?php
 
-/**
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -20,31 +22,37 @@
 
 namespace Models;
 
+use DateTime;
+use DB\Cortex;
 use Enum\CacheKey;
 use Enum\UserStatus;
 use Models\Base as BaseModel;
-use DateTime;
-use DB\Cortex;
 
 /**
- * Class User
- * @property int       $id
- * @property string    $email
- * @property string    $role
- * @property string    $username
- * @property string    $first_name
- * @property string    $last_name
- * @property string    $password
- * @property string    $status
- * @property string $resetToken
- * @property DateTime  $created_on
- * @property DateTime  $updated_on
- * @property DateTime  $last_login
- * @package Models
+ * Class User.
+ *
+ * @property int      $id
+ * @property string   $email
+ * @property string   $role
+ * @property string   $username
+ * @property string   $first_name
+ * @property string   $last_name
+ * @property string   $password
+ * @property string   $status
+ * @property string   $resetToken
+ * @property DateTime $created_on
+ * @property DateTime $updated_on
+ * @property DateTime $last_login
  */
 class User extends BaseModel
 {
     protected $table = 'users';
+
+    public function __construct($db = null, $table = null, $fluid = null, $ttl = 0)
+    {
+        parent::__construct($db, $table, $fluid, $ttl);
+        $this->onset('password', fn($self, $value) => password_hash($value, PASSWORD_BCRYPT));
+    }
 
     public function onCreateCleanUp(): void
     {
@@ -56,15 +64,10 @@ class User extends BaseModel
         $this->f3->clear(CacheKey::AJAX_USERS);
     }
 
-    public function __construct($db = null, $table = null, $fluid = null, $ttl = 0)
-    {
-        parent::__construct($db, $table, $fluid, $ttl);
-        $this->onset('password', fn ($self, $value) => password_hash($value, PASSWORD_BCRYPT));
-    }
-
     /**
      * @param $filter
      * @param $external
+     *
      * @return array
      */
     public function all($filter, $external)
@@ -83,7 +86,7 @@ class User extends BaseModel
              ORDER BY id ASC
              LIMIT ? OFFSET ?',
             [$filter['role'], $filter['email'], $filter['username'],
-                $this->pageSize, $this->pageSize * ($page - 1)]
+                $this->pageSize, $this->pageSize * ($page - 1), ]
         );
 
         $total = $this->db->exec(
@@ -92,7 +95,8 @@ class User extends BaseModel
              WHERE role LIKE ?
              AND email LIKE ?
              AND username LIKE ?',
-            [$filter['role'], $filter['email'], $filter['username']])[0]['total'];
+            [$filter['role'], $filter['email'], $filter['username']]
+        )[0]['total'];
 
         $count = ceil($total / $this->pageSize);
         $pos   = max(0, min($page - 1, $count - 1));
@@ -102,14 +106,15 @@ class User extends BaseModel
             'total'  => $total,
             'limit'  => $this->pageSize,
             'count'  => $count,
-            'pos'    => $pos < $count ? $pos : 0
+            'pos'    => $pos < $count ? $pos : 0,
         ];
     }
 
     /**
-     * Get user record by email value
+     * Get user record by email value.
      *
-     * @param  string $email
+     * @param string $email
+     *
      * @return Cortex
      */
     public function getByEmail($email)
@@ -118,32 +123,37 @@ class User extends BaseModel
 
         return $this;
     }
+
     /**
-     * Get user record by id value
+     * Get user record by id value.
      *
-     * @param  integer $id
+     * @param int $id
+     *
      * @return Cortex
      */
     public function getByID($id)
     {
-        $this->load(['id = ?',$id]);
+        $this->load(['id = ?', $id]);
 
         return $this;
     }
+
     /**
-     * Check if email already in use
+     * Check if email already in use.
      *
-     * @param  string $email
+     * @param string $email
+     *
      * @return bool
      */
     public function emailExists($email)
     {
-        return count($this->db->exec('SELECT 1 FROM users WHERE email= ?', $email)) > 0;
+        return \count($this->db->exec('SELECT 1 FROM users WHERE email= ?', $email)) > 0;
     }
 
     //@todo: will be used to detect if the course is full or not yet
     /**
      * @param $ids
+     *
      * @return int
      */
     public function countActiveUsers($ids)
@@ -170,9 +180,10 @@ class User extends BaseModel
     {
         return password_verify(trim($password), $this->password);
     }
+
     public function getByResetToken($token)
     {
-        $this->load(['token = ?',$token]);
+        $this->load(['token = ?', $token]);
 
         return $this;
     }

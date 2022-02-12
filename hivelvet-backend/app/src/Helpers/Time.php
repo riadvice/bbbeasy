@@ -1,6 +1,8 @@
 <?php
 
-/**
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -32,18 +34,19 @@ class Time
     /**
      * format a database-specific date/time string.
      *
-     * @param string|int|DateTime $unixTime (optional) the unix time (null = now)
+     * @param DateTime|int|string $unixTime (optional) the unix time (null = now)
      * @param string              $dbms     (optional) the database software the timestamp is for
      *
-     * @return bool|string date in format of database driver
      * @throws Exception
+     *
+     * @return bool|string date in format of database driver
      *
      * @todo add a switch for the f3 database driver and set the timestamp
      */
     public static function db($unixTime = null, $dbms = null)
     {
         // use current time if bad time value or unset
-        if (is_string($unixTime)) {
+        if (\is_string($unixTime)) {
             $date     = new DateTime($unixTime);
             $unixTime = $date->getTimestamp();
         } elseif ($unixTime instanceof DateTime) {
@@ -56,6 +59,7 @@ class Time
 
         // format date/time according to database driver
         $dbms = empty($dbms) ? Base::instance()->get('db.driver') : $dbms;
+
         switch ($dbms) {
             default:
             case 'mysql':
@@ -73,7 +77,6 @@ class Time
      */
     public static function http($unixtime = null, $zone = 'GMT')
     {
-
         // use current time if bad time value or unset
         $unixtime = (int) $unixtime;
         if ($unixtime <= 0) {
@@ -81,7 +84,7 @@ class Time
         }
 
         // if its not a 3 letter timezone set it to GMT
-        if (mb_strlen($zone) != 3) {
+        if (3 !== mb_strlen($zone)) {
             $zone = 'GMT';
         } else {
             $zone = mb_strtoupper($zone);

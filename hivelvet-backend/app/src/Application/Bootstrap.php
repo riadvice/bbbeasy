@@ -1,6 +1,8 @@
 <?php
 
-/**
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -38,7 +40,7 @@ class Bootstrap extends Boot
 {
     public function __construct()
     {
-        if (PHP_SAPI !== 'cli') {
+        if (\PHP_SAPI !== 'cli') {
             $this->logFileName = 'app';
         } else {
             $this->logFileName = 'cli';
@@ -74,11 +76,11 @@ class Bootstrap extends Boot
     protected function handleException(): void
     {
         // Tracy consumes about 300 Ko of memory
-        Debugger::enable($this->debug !== 3 ? Debugger::PRODUCTION : Debugger::DEVELOPMENT, __DIR__ . '/../../' . $this->f3->get('LOGS'));
+        Debugger::enable(3 !== $this->debug ? Debugger::PRODUCTION : Debugger::DEVELOPMENT, __DIR__ . '/../../' . $this->f3->get('LOGS'));
         if (Debugger::$productionMode) {
-            Debugger::$onFatalError = [function ($exception): void {
+            Debugger::$onFatalError = [function($exception): void {
                 /**
-                 * @var $mailer MailSender
+                 * @var MailSender $mailer
                  */
                 $mailer = Registry::get('mailer');
                 $mailer->sendExceptionEmail($exception);
@@ -89,9 +91,9 @@ class Bootstrap extends Boot
         if (!$this->isCli && empty($this->debug)) {
             $this->f3->set(
                 'ONERROR',
-                function (): void {
+                function(): void {
                     header('Expires:  ' . Time::http(time() + Base::instance()->get('error.ttl')));
-                    if (Base::instance()->get('ERROR.code') === '404') {
+                    if ('404' === Base::instance()->get('ERROR.code')) {
                         include_once 'templates/error/404.phtml';
                     } else {
                         include_once 'templates/error/error.phtml';
@@ -108,7 +110,7 @@ class Bootstrap extends Boot
             // Load global settings
             foreach ([]
                      as $entry => $cacheKey) {
-                if ($entry === 'locale') {
+                if ('locale' === $entry) {
                     $exists = $this->session->get($entry);
                 } else {
                     $exists = $this->f3->exists($entry);
@@ -116,8 +118,8 @@ class Bootstrap extends Boot
                 if (!$exists) {
                     $setting = new Setting();
                     $setting->load();
-                    $value = $setting->$entry;
-                    if ($entry === 'locale') {
+                    $value = $setting->{$entry};
+                    if ('locale' === $entry) {
                         $this->session->set($entry, $value);
                     } else {
                         $this->f3->set($cacheKey, $value, 3600);
@@ -133,7 +135,7 @@ class Bootstrap extends Boot
         // setup routes
         // @see http://fatfreeframework.com/routing-engine
         // firstly load routes from ini file then load custom environment routes
-        $this->f3->config('config/routes'. $this->f3->get('config.extension') .'.ini');
+        $this->f3->config('config/routes' . $this->f3->get('config.extension') . '.ini');
 
         if (file_exists('config/routes-' . $this->environment . '.ini')) {
             $this->f3->config('config/routes-' . $this->environment . '.ini');
@@ -141,7 +143,7 @@ class Bootstrap extends Boot
 
         if (!$this->isCli) {
             // load routes access policy
-            $this->f3->config('config/access'. $this->f3->get('config.extension') .'.ini');
+            $this->f3->config('config/access' . $this->f3->get('config.extension') . '.ini');
         } else {
             // load routes access policy for CLI
             $this->f3->config('config/access-cli.ini');

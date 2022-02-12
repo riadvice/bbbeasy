@@ -1,6 +1,8 @@
 <?php
 
-/**
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -25,8 +27,7 @@ use Utils\Environment;
 use Validation\Validator;
 
 /**
- * Class Upload
- * @package security
+ * Class Upload.
  */
 class Upload extends \Prefab
 {
@@ -40,7 +41,7 @@ class Upload extends \Prefab
     protected $f3;
 
     /**
-     * Validator
+     * Validator.
      *
      * @var Validator
      */
@@ -70,7 +71,7 @@ class Upload extends \Prefab
     public function uploadImageBase64($fileData, $uploadSubDir, $formFieldName)
     {
         $f        = finfo_open();
-        $data     = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $fileData));
+        $data     = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $fileData), true);
         $mimeType = finfo_buffer($f, $data, FILEINFO_MIME_TYPE);
 
         // check mime-type
@@ -92,7 +93,7 @@ class Upload extends \Prefab
         $this->uploads[$formFieldName] = $uploadSubDir . $name;
 
         return [
-            'error' => null
+            'error' => null,
         ];
     }
 
@@ -102,19 +103,28 @@ class Upload extends \Prefab
     }
 
     /**
-     * @param  array   $file
-     * @param  string  $uploadDirectory
-     * @param  integer $maxSize
-     * @param  array   $allowedFiles
-     * @param  string  $formFieldName
-     * @param  bool    $useGeneratedName
+     * @return array
+     */
+    public function uploadedFiles()
+    {
+        return $this->uploads;
+    }
+
+    /**
+     * @param array  $file
+     * @param string $uploadDirectory
+     * @param int    $maxSize
+     * @param array  $allowedFiles
+     * @param string $formFieldName
+     * @param bool   $useGeneratedName
+     *
      * @return array
      */
     protected function upload($file, $uploadDirectory, $maxSize, $allowedFiles, $formFieldName, $useGeneratedName = false)
     {
         // Undefined | Multiple Files | $_FILES Corruption Attack
         // If this request falls under any of them, treat it invalid.
-        if (!isset($file['error']) || is_array($file['error'])) {
+        if (!isset($file['error']) || \is_array($file['error'])) {
             return ['error' => 'upload.invalid_parameters'];
         }
 
@@ -122,23 +132,26 @@ class Upload extends \Prefab
         switch ($file['error']) {
             case UPLOAD_ERR_OK:
                 break;
+
             case UPLOAD_ERR_NO_FILE:
                 return ['error' => 'upload.no_file'];
+
             case UPLOAD_ERR_INI_SIZE:
             case UPLOAD_ERR_FORM_SIZE:
                 return ['error' => 'upload.exceeded_file_size'];
+
             default:
                 return ['error' => 'upload.unknown'];
         }
 
         // You should also check filesize here.
-        if ($maxSize !== null && !$this->v->size(null, $maxSize)->validate($file['tmp_name'])) {
+        if (null !== $maxSize && !$this->v->size(null, $maxSize)->validate($file['tmp_name'])) {
             return ['error' => 'upload.exceeded_file_size'];
         }
 
         // Check MIME Type by yourself because $file['mime'] must not be trusted.
         $fileInfo = new \finfo(FILEINFO_MIME_TYPE);
-        if ($allowedFiles !== null && false === $ext = array_search($fileInfo->file($file['tmp_name']), $allowedFiles, true)) {
+        if (null !== $allowedFiles && false === $ext = array_search($fileInfo->file($file['tmp_name']), $allowedFiles, true)) {
             return ['error' => 'upload.invalid_format'];
         }
 
@@ -150,7 +163,7 @@ class Upload extends \Prefab
             $fileName = $formFieldName . $this->f3->hash($file['tmp_name']) . '.' . pathinfo($file['name'], PATHINFO_EXTENSION);
         }
 
-        $destination = "{$uploadDirectory}/$fileName";
+        $destination = "{$uploadDirectory}/{$fileName}";
         if (!$this->saveUploadedFile($file, $destination)) {
             return ['error' => 'upload.failed_to_move'];
         }
@@ -158,16 +171,8 @@ class Upload extends \Prefab
         $this->uploads[$formFieldName] = str_replace($this->f3->get('UPLOADS'), '', $uploadDirectory . $fileName);
 
         return [
-            'error' => null
+            'error' => null,
         ];
-    }
-
-    /**
-     * @return array
-     */
-    public function uploadedFiles()
-    {
-        return $this->uploads;
     }
 
     protected function getMaxSize()

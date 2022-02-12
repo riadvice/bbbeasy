@@ -1,6 +1,8 @@
 <?php
 
-/**
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -24,19 +26,19 @@ final class AddDefaultSettingsRecord extends AbstractMigration
 {
     public function up(): void
     {
-        $table = $this->table('settings');
+        $table        = $this->table('settings');
         $defaultColor = '#fbbc0b';
-        $data = [
+        $data         = [
             [
-                'company_name'      => 'RIADVICE',
-                'company_website'   => 'https://riadvice.tn',
-                'platform_name'     => 'Hivelvet',
-                'primary_color'     => $defaultColor,
-                'secondary_color'   => $defaultColor,
-                'accent_color'      => $defaultColor,
-                'additional_color'  => $defaultColor,
-                'created_on'        => date('Y-m-d H:i:s')
-            ]
+                'company_name'     => 'RIADVICE',
+                'company_website'  => 'https://riadvice.tn',
+                'platform_name'    => 'Hivelvet',
+                'primary_color'    => $defaultColor,
+                'secondary_color'  => $defaultColor,
+                'accent_color'     => $defaultColor,
+                'additional_color' => $defaultColor,
+                'created_on'       => date('Y-m-d H:i:s'),
+            ],
         ];
 
         $table->insert($data)->save();

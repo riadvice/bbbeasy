@@ -1,6 +1,8 @@
 <?php
 
-/**
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -28,27 +30,18 @@ class Environment
     public const DEVELOPMENT = 'development';
     public const PRODUCTION  = 'production';
 
-    /**
-     * @return bool
-     */
     public static function isProduction(): bool
     {
-        return Base::instance()->get('application.environment') === self::PRODUCTION;
+        return self::PRODUCTION === Base::instance()->get('application.environment');
     }
 
-    /**
-     * @return bool
-     */
     public static function isNotProduction(): bool
     {
         return !self::isProduction();
     }
 
-    /**
-     * @return bool
-     */
     public static function isTest(): bool
     {
-        return Base::instance()->get('application.environment') === self::TEST;
+        return self::TEST === Base::instance()->get('application.environment');
     }
 }

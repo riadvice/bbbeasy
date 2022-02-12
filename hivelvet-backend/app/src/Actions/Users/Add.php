@@ -1,6 +1,8 @@
 <?php
 
-/**
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -27,8 +29,7 @@ use Models\User;
 use Validation\Validator;
 
 /**
- * Class Add
- * @package Actions\Users
+ * Class Add.
  */
 class Add extends BaseAction
 {
@@ -47,9 +48,9 @@ class Add extends BaseAction
      */
     public function save($f3, $params): void
     {
-        $v       = new Validator();
-        $form    = $this->getDecodedBody();
-        $user    = new User();
+        $v    = new Validator();
+        $form = $this->getDecodedBody();
+        $user = new User();
 
         $v->notEmpty()->verify('email', $form['email'], ['notEmpty' => $this->i18n->err('users.email')]);
         $v->notEmpty()->verify('username', $form['username'], ['notEmpty' => $this->i18n->err('users.username')]);

@@ -1,6 +1,8 @@
 <?php
 
-/**
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -38,6 +40,12 @@ use Utils\Environment;
 abstract class Base extends \Prefab
 {
     use LogWriterTrait;
+
+    public const JSON            = 'Content-Type: application/json; charset=utf-8';
+    public const APPLICATION_XML = 'Content-Type: application/xml; charset=UTF-8';
+    public const CSV             = 'Content-Type: text/csv; charset=UTF-8';
+    public const TEXT            = 'Content-Type: text/plain; charset=utf-8';
+    public const XML             = 'Content-Type: text/xml; charset=UTF-8';
 
     /**
      * f3 instance.
@@ -82,12 +90,6 @@ abstract class Base extends \Prefab
      */
     private $templatesDir;
 
-    const JSON            = 'Content-Type: application/json; charset=utf-8';
-    const APPLICATION_XML = 'Content-Type: application/xml; charset=UTF-8';
-    const CSV             = 'Content-Type: text/csv; charset=UTF-8';
-    const TEXT            = 'Content-Type: text/plain; charset=utf-8';
-    const XML             = 'Content-Type: text/xml; charset=UTF-8';
-
     /**
      * initialize controller.
      */
@@ -109,12 +111,12 @@ abstract class Base extends \Prefab
 
     public function beforeroute(): void
     {
-        $this->access->authorize($this->getRole(), function ($route, $subject): void {
+        $this->access->authorize($this->getRole(), function($route, $subject): void {
             $this->onAccessAuthorizeDeny($route, $subject);
         });
         if ($this->session->isLoggedIn() && $this->f3->get('ALIAS') === $this->f3->get('ALIASES.login')) {
-            $this->f3->reroute($this->f3->get('ALIASES.dashboard'));
-        } elseif ($this->f3->VERB === 'POST' && !$this->session->validateToken()) {
+            $this->f3->reroute($this->f3->get('ALIASES.home'));
+        } elseif ('POST' === $this->f3->VERB && !$this->session->validateToken()) {
             $this->f3->reroute($this->f3->get('PATH'));
         }
         // Rerouted paged uri having the page value less than one
@@ -133,11 +135,6 @@ abstract class Base extends \Prefab
         $this->f3->error(404);
     }
 
-    protected function setPartial($name)
-    {
-        return "$name.phtml";
-    }
-
     /**
      * @param null   $view
      * @param null   $partial
@@ -146,11 +143,11 @@ abstract class Base extends \Prefab
     public function render($view = null, $partial = null, $mime = 'text/html'): void
     {
         // automatically load the partial from the class namespace
-        if ($partial === null) {
-            $partial = str_replace(['\\_'], '/', str_replace('actions\\_', '', $this->f3->snakecase(get_class($this))));
+        if (null === $partial) {
+            $partial = str_replace(['\\_'], '/', str_replace('actions\\_', '', $this->f3->snakecase(static::class)));
         }
         $this->f3->set('partial', $this->setPartial($partial));
-        if ($view === null) {
+        if (null === $view) {
             $view = $this->view ?: $this->f3->get('view.default');
         }
         // This required to register the template extensions before rendering it
@@ -161,25 +158,25 @@ abstract class Base extends \Prefab
     }
 
     /**
-     * @param string | array $json
-     * @param integer        $statusCode
+     * @param array|string $json
+     * @param int          $statusCode
      */
     public function renderJson($json, $statusCode = 200): void
     {
         header('HTTP/1.1 ' . $statusCode);
         header(self::JSON);
-        echo is_string($json) ? $json : json_encode($json);
+        echo \is_string($json) ? $json : json_encode($json);
     }
 
     /**
-     * @param string | array $text
-     * @param integer        $statusCode
+     * @param array|string $text
+     * @param int          $statusCode
      */
     public function renderText($text, $statusCode = 200): void
     {
         header('HTTP/1.1 ' . $statusCode);
         header(self::TEXT);
-        echo is_string($text) ? $text : implode("\n", $text);
+        echo \is_string($text) ? $text : implode("\n", $text);
     }
 
     public function renderCsv($object): void
@@ -218,19 +215,6 @@ abstract class Base extends \Prefab
         echo $xml->asXML();
     }
 
-    private function parseXMLView(string $view = null): string
-    {
-        $xmlResponse = new SimpleXMLElement(Template::instance()->render($this->view . '.xml'));
-
-        $xmlDocument                     = new DOMDocument('1.0');
-        $xmlDocument->preserveWhiteSpace = false;
-        $xmlDocument->formatOutput       = true;
-
-        $xmlDocument->loadXML($xmlResponse->asXML());
-
-        return $xmlDocument->saveXML();
-    }
-
     public function renderXmlString($xml = null): void
     {
         header('Content-Type: text/xml; charset=UTF-8');
@@ -246,6 +230,11 @@ abstract class Base extends \Prefab
         return json_decode($this->f3->get('BODY'), true);
     }
 
+    protected function setPartial($name)
+    {
+        return "{$name}.phtml";
+    }
+
     protected function parseHeaderAuthorization(): void
     {
         if ($header = $this->f3->get('HEADERS.Authorization')) {
@@ -253,9 +242,6 @@ abstract class Base extends \Prefab
         }
     }
 
-    /**
-     * @return bool
-     */
     protected function isApiUserVerified(): bool
     {
         if ($credentials = $this->getCredentials()) {
@@ -263,45 +249,53 @@ abstract class Base extends \Prefab
             $user = $user->getByEmail($credentials[0]);
 
             return
-                $user->valid() &&
-                $user->status === UserStatus::ACTIVE &&
-                $user->role === UserRole::API &&
-                $user->verifyPassword($credentials[1]);
+                $user->valid()
+                && UserStatus::ACTIVE === $user->status
+                && UserRole::API === $user->role
+                && $user->verifyPassword($credentials[1]);
         }
 
         return false;
     }
 
-    /**
-     * @return string
-     */
     protected function getRole(): string
     {
         if ($this->session->getRole()) {
             return $this->session->getRole();
-        } elseif ($this->isApiUserVerified()) {
+        }
+        if ($this->isApiUserVerified()) {
             return UserRole::API;
         }
 
         return '';
     }
 
-    /**
-     * @return array
-     */
     protected function getCredentials(): array
     {
         if (!$this->headerAuthorization) {
             return [];
         }
 
-        $credentials = base64_decode($this->headerAuthorization);
+        $credentials = base64_decode($this->headerAuthorization, true);
         $credentials = explode(':', $credentials);
 
-        if (count($credentials) !== 2) {
+        if (2 !== \count($credentials)) {
             return [];
         }
 
         return $credentials;
+    }
+
+    private function parseXMLView(string $view = null): string
+    {
+        $xmlResponse = new SimpleXMLElement(Template::instance()->render($this->view . '.xml'));
+
+        $xmlDocument                     = new DOMDocument('1.0');
+        $xmlDocument->preserveWhiteSpace = false;
+        $xmlDocument->formatOutput       = true;
+
+        $xmlDocument->loadXML($xmlResponse->asXML());
+
+        return $xmlDocument->saveXML();
     }
 }

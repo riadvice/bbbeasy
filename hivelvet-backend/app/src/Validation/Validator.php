@@ -1,6 +1,8 @@
 <?php
 
-/**
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -23,8 +25,7 @@ namespace Validation;
 use Respect\Validation\Validator as RespectValidator;
 
 /**
- * Class Validator
- * @package Validation
+ * Class Validator.
  */
 class Validator extends RespectValidator
 {
@@ -37,13 +38,14 @@ class Validator extends RespectValidator
      * @param $name
      * @param $input
      * @param $messages
-     * @return bool|$this
+     *
+     * @return $this|bool
      */
     public function verify($name, $input = null, $messages = null)
     {
         $exceptions    = $this->validateRules($input);
-        $numRules      = count($this->rules);
-        $numExceptions = count($exceptions);
+        $numRules      = \count($this->rules);
+        $numExceptions = \count($exceptions);
         $summary       = [
             'total'  => $numRules,
             'failed' => $numExceptions,
@@ -67,15 +69,16 @@ class Validator extends RespectValidator
     }
 
     /**
-     * @param  $popErrors     bool If true errors will be put into f3 hive
-     * @param  $errorsHiveKey string
+     * @param $popErrors     bool If true errors will be put into f3 hive
+     * @param $errorsHiveKey string
+     *
      * @return bool
      */
     public function allValid($popErrors = true, $errorsHiveKey = 'form_errors')
     {
         if (!empty($this->errors) && $popErrors) {
             foreach ($this->getErrors() as $key => $errors) {
-                if (is_array($errors)) {
+                if (\is_array($errors)) {
                     \Base::instance()->set($errorsHiveKey . '.' . $key, array_values($errors)[0]);
                 }
             }

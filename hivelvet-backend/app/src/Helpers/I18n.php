@@ -1,6 +1,8 @@
 <?php
 
-/**
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -28,8 +30,10 @@ use Helpers\Base as BaseHelper;
 class I18n extends BaseHelper
 {
     /**
-     * Get a i18n label
+     * Get a i18n label.
+     *
      * @param $key
+     *
      * @return string
      */
     public function lbl($key)
@@ -38,8 +42,10 @@ class I18n extends BaseHelper
     }
 
     /**
-     * Get a i18n message
+     * Get a i18n message.
+     *
      * @param $key
+     *
      * @return string
      */
     public function msg($key)
@@ -48,8 +54,10 @@ class I18n extends BaseHelper
     }
 
     /**
-     * Get a i18n error
+     * Get a i18n error.
+     *
      * @param $key
+     *
      * @return string
      */
     public function err($key)
@@ -58,8 +66,10 @@ class I18n extends BaseHelper
     }
 
     /**
-     * Get a i18n list
+     * Get a i18n list.
+     *
      * @param $key
+     *
      * @return array
      */
     public function lst($key)

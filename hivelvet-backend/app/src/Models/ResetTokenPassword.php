@@ -1,25 +1,49 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * Hivelvet open source platform - https://riadvice.tn/
+ *
+ * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
+ *
+ * This program is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free Software
+ * Foundation; either version 3.0 of the License, or (at your option) any later
+ * version.
+ *
+ * Hivelvet is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License along
+ * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
+ */
+
 namespace Models;
 
+use DB\Cortex;
 use Enum\CacheKey;
 use Models\Base as BaseModel;
-use DB\Cortex;
 
 /**
- * Class User
- * @property int   $id
- * @property int $user_id
- * @property string $token
- * @property string    $status
+ * Class User.
+ *
+ * @property int      $id
+ * @property int      $user_id
+ * @property string   $token
+ * @property string   $status
  * @property datetime $expires_at
-
-
- * @package Models
  */
 class ResetTokenPassword extends BaseModel
 {
     protected $table = 'reset_password_tokens';
+
+    public function __construct($db = null, $table = null, $fluid = null, $ttl = 0)
+    {
+        parent::__construct($db, $table, $fluid, $ttl);
+    }
+
     public function onCreateCleanUp(): void
     {
         $this->f3->clear(CacheKey::AJAX_USERS);
@@ -30,36 +54,31 @@ class ResetTokenPassword extends BaseModel
         $this->f3->clear(CacheKey::AJAX_USERS);
     }
 
-    public function __construct($db = null, $table = null, $fluid = null, $ttl = 0)
-    {
-        parent::__construct($db, $table, $fluid, $ttl);
-    }
-
     /**
-     * Check if USER id already in use
+     * Check if USER id already in use.
      *
-     * @param  integer $userID
+     * @param int $userID
+     *
      * @return bool
      */
     public function userExists($userID)
     {
-        return count($this->db->exec('SELECT 1 FROM reset_password_tokens WHERE  user_id = ?', $userID)) > 0;
+        return \count($this->db->exec('SELECT 1 FROM reset_password_tokens WHERE  user_id = ?', $userID)) > 0;
     }
 
     /**
-     * Check if token already exists
+     * Check if token already exists.
      *
-     * @param  string $token
      * @return bool
      */
     public function tokenExists(string $token)
     {
-        return count($this->db->exec('SELECT 1 FROM reset_password_tokens WHERE "token"= ?', $token)) > 0;
+        return \count($this->db->exec('SELECT 1 FROM reset_password_tokens WHERE "token"= ?', $token)) > 0;
     }
+
     /**
-     * Get user record by userID value
+     * Get user record by userID value.
      *
-     * @param  integer $userID
      * @return Cortex
      */
     public function getByUserID(int $userID)
@@ -70,9 +89,8 @@ class ResetTokenPassword extends BaseModel
     }
 
     /**
-     * Get user record by token value
+     * Get user record by token value.
      *
-     * @param  string $token
      * @return Cortex
      */
     public function getByToken(string $token)

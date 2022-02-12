@@ -1,6 +1,8 @@
 <?php
 
-/**
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -21,14 +23,13 @@
 namespace Actions\Users;
 
 use Actions\Base as BaseAction;
+use Base;
 use Enum\ResponseCode;
 use Models\User;
 use Validation\Validator;
-use Base;
 
 /**
- * Class Edit
- * @package Actions\Users
+ * Class Edit.
  */
 class Edit extends BaseAction
 {
@@ -53,9 +54,9 @@ class Edit extends BaseAction
      */
     public function save($f3, $params): void
     {
-        $v      = new Validator();
-        $form   = $this->getDecodedBody();
-        $user   = $this->loadData($params['id']);
+        $v    = new Validator();
+        $form = $this->getDecodedBody();
+        $user = $this->loadData($params['id']);
 
         $v->notEmpty()->verify('email', $form['email'], ['notEmpty' => $this->i18n->err('users.email')]);
         $v->notEmpty()->verify('username', $form['username'], ['notEmpty' => $this->i18n->err('users.username')]);
@@ -90,10 +91,9 @@ class Edit extends BaseAction
     }
 
     /**
-     * @param  int  $id
-     * @return User
+     * @param int $id
      */
-    public function loadData($id) : User
+    public function loadData($id): User
     {
         $user = new User();
         $user->load(['id = ?', [$id]]);

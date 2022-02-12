@@ -1,6 +1,8 @@
 <?php
 
-/**
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -69,8 +71,8 @@ class CliUtils extends \Prefab
             $testsNumber      = 0;
             $successfullTests = 0;
             foreach ($suite as $key => $value) {
-                $testsNumber += count($suite[$key]);
-                $successfullTests += count(array_filter(array_column($suite[$key], 'status')));
+                $testsNumber += \count($suite[$key]);
+                $successfullTests += \count(array_filter(array_column($suite[$key], 'status')));
             }
 
             $console = $this->console;
@@ -100,6 +102,6 @@ class CliUtils extends \Prefab
 
     private function isCli()
     {
-        return PHP_SAPI === 'cli';
+        return \PHP_SAPI === 'cli';
     }
 }

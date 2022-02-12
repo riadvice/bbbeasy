@@ -1,6 +1,8 @@
 <?php
 
-/**
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -28,8 +30,7 @@ use Models\User;
 use Validation\Validator;
 
 /**
- * Class Login
- * @package Actions\Account
+ * Class Login.
  */
 class Login extends BaseAction
 {
@@ -40,10 +41,10 @@ class Login extends BaseAction
 
     public function authorise($f3): void
     {
-        $user   = new User();
-        $form   = $this->getDecodedBody();
-        $v      = new Validator();
-        
+        $user = new User();
+        $form = $this->getDecodedBody();
+        $v    = new Validator();
+
         $email    = $form['email'];
         $password = $form['password'];
 
@@ -58,7 +59,7 @@ class Login extends BaseAction
                 if ($user->emailExists($email)) {
                     $user = $user->getByEmail($email);
                     //$user->status === UserStatus::ACTIVE &&
-                    if ($user->role !== UserRole::API && $user->verifyPassword($password)) {
+                    if (UserRole::API !== $user->role && $user->verifyPassword($password)) {
                         // valid credentials
                         $this->session->authorizeUser($user);
 
@@ -66,7 +67,7 @@ class Login extends BaseAction
                         $user->save();
 
                         $this->session->set('locale', $user->locale);
-                        $message   = 'Welcome back '. $user->username .' !';
+                        $message   = 'Welcome back ' . $user->username . ' !';
                         $userInfos = [
                             'username' => $user->username,
                             'email'    => $user->email,
@@ -86,13 +87,11 @@ class Login extends BaseAction
                     $this->logger->error('Login error : user could not logged', ['error' => $message]);
                     $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
                 }
-            }
-            else {
+            } else {
                 $this->logger->error('Login error', ['errors' => $v->getErrors()]);
                 $this->renderJson(['errors' => $v->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
             }
-        }
-        else {
+        } else {
             $this->logger->error('Login error', ['errors' => $v->getErrors()]);
             $this->renderJson(['errors' => $v->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
         }

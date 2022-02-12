@@ -1,6 +1,8 @@
 <?php
 
-/**
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -24,13 +26,13 @@ use DateTime;
 use Models\Base as BaseModel;
 
 /**
- * Class Setting
- * @property int        $id
- * @property int        $subcategory_id
- * @property boolean    $is_enabled
- * @property DateTime   $created_on
- * @property DateTime   $updated_on
- * @package  Models
+ * Class Setting.
+ *
+ * @property int      $id
+ * @property int      $subcategory_id
+ * @property bool     $is_enabled
+ * @property DateTime $created_on
+ * @property DateTime $updated_on
  */
 class PresetSetting extends BaseModel
 {

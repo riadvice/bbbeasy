@@ -1,6 +1,8 @@
 <?php
 
-/**
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -27,8 +29,7 @@ use Models\Base as Model;
 use Nette\Utils\Strings;
 
 /**
- * Class Delete
- * @package Actions
+ * Class Delete.
  */
 abstract class Delete extends BaseAction
 {
@@ -60,16 +61,16 @@ abstract class Delete extends BaseAction
     protected $messageArg;
 
     /**
-     * @param  \Base $f3
-     * @param  array $params
-     * @return void
+     * @param \Base $f3
+     * @param array $params
+     *
      * @throws
      */
     public function execute($f3, $params): void
     {
         $this->recordId = $params['id'];
 
-        if ($this->model === null) {
+        if (null === $this->model) {
             $this->model = $f3->camelcase(Strings::capitalize(str_replace('-', '_', Strings::before($f3->get('ALIAS'), '_delete'))));
         }
 
@@ -79,14 +80,14 @@ abstract class Delete extends BaseAction
         $this->modelInstance->load($this->getFilter());
         $this->logger->info('Built delete action for entity', ['model' => $this->model, 'id' => $this->recordId]);
         if ($this->modelInstance->valid()) {
-            $deleteResult = call_user_func_array([$this->modelInstance, $this->deleteMethodName], []);
-            if ($deleteResult === false) {
+            $deleteResult = \call_user_func_array([$this->modelInstance, $this->deleteMethodName], []);
+            if (false === $deleteResult) {
                 $resultCode = ResponseCode::HTTP_INTERNAL_SERVER_ERROR;
                 $this->logger->critical('Error occurred while deleting entity', ['model' => $this->model, 'id' => $this->recordId]);
             } else {
                 $resultCode = ResponseCode::HTTP_OK;
 
-                if ($this->messageArg !== null) {
+                if (null !== $this->messageArg) {
                     $message  = $this->i18n->msg(mb_strtolower($this->model) . '.delete_success');
                     $argument = Strings::startsWith($message, '{0}') ? Strings::capitalize($this->modelInstance[$this->messageArg]) : $this->modelInstance[$this->messageArg];
                     Flash::instance()->addMessage($this->f3->format($message, $argument), Flash::SUCCESS);

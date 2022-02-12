@@ -1,6 +1,8 @@
 <?php
 
-/**
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -26,38 +28,32 @@ use ReflectionException;
 class Enum
 {
     /**
-     * @return array
      * @throws ReflectionException
      */
     public static function values(): array
     {
-        $class = new ReflectionClass(get_called_class());
+        $class = new ReflectionClass(static::class);
 
         return array_values($class->getConstants());
     }
 
     /**
-     * @return array
-     */
-
-    /**
-     * @return array
      * @throws ReflectionException
      */
     public static function constants(): array
     {
-        $class = new ReflectionClass(get_called_class());
+        $class = new ReflectionClass(static::class);
 
         return $class->getConstants();
     }
 
     /**
      * @param $value string The class constant name
-     * @return bool
+     *
      * @throws ReflectionException
      */
     public static function contains($value): bool
     {
-        return in_array($value, self::values(), true);
+        return \in_array($value, self::values(), true);
     }
 }

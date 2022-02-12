@@ -1,6 +1,8 @@
 <?php
 
-/**
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -29,9 +31,9 @@ use Log\LogWriterTrait;
 
 /**
  * Base Model Class.
+ *
  * @property DateTime $created_on
  * @property DateTime $updated_on
- * @package Models
  */
 abstract class Base extends Cortex
 {
@@ -59,12 +61,13 @@ abstract class Base extends Cortex
     /**
      * Page size for list.
      *
-     * @var int $db
+     * @var int
      */
     protected $pageSize;
 
     /**
      * Base constructor. Initialises the model.
+     *
      * @param null $db
      * @param null $table
      * @param null $fluid
@@ -82,56 +85,27 @@ abstract class Base extends Cortex
         $this->pageSize = $this->f3->get('pagination.limit');
         $this->initLogger();
 
-        $this->beforeinsert(function (self $self): void {
+        $this->beforeinsert(function(self $self): void {
             $self->setCreatedOnDate();
         });
 
-        $this->beforeupdate(function (self $self): void {
+        $this->beforeupdate(function(self $self): void {
             $self->setUpdatedOnDate();
         });
     }
 
     /**
      * @param $filter
+     *
      * @return array
      */
     public function prepareFilter($filter)
     {
-        $result = array_map(function ($value) {
-            return $value === '' ? '%' : '%' . $value . '%';
-        }, $filter);
-
-        return $result;
-    }
-
-    protected function setCreatedOnDate(): void
-    {
-        if (array_search('created_on', $this->fields()) !== false) {
-            $this->created_on = Time::db();
-        }
-        if (method_exists($this, 'onCreateCleanUp')
-            && is_callable([$this, 'onCreateCleanUp'])) {
-            call_user_func(
-                [$this, 'onCreateCleanUp']
-            );
-        }
-    }
-
-    protected function setUpdatedOnDate(): void
-    {
-        if (array_search('updated_on', $this->fields()) !== false) {
-            $this->updated_on = Time::db();
-        }
-        if (method_exists($this, 'onUpdateCleanUp')
-            && is_callable([$this, 'onCreateCleanUp'])) {
-            call_user_func(
-                [$this, 'onCreateCleanUp']
-            );
-        }
+        return array_map(fn($value) => '' === $value ? '%' : '%' . $value . '%', $filter);
     }
 
     /**
-     * Set page size value for pagination
+     * Set page size value for pagination.
      *
      * @param int $pageSize
      */
@@ -141,31 +115,53 @@ abstract class Base extends Cortex
     }
 
     /**
-     * Returns the last inserted id
-     *
-     * @return int
+     * Returns the last inserted id.
      */
     public function lastInsertId(): int
     {
-        $id = $this->db->exec("SELECT MAX(id) as seq FROM `$this->table`");
+        $id = $this->db->exec("SELECT MAX(id) as seq FROM `{$this->table}`");
 
         return $id[0]['seq'];
     }
 
     /**
-     * Returns object converted to an array
+     * Returns object converted to an array.
      *
-     * @param  int   $depth
-     * @return array
+     * @param int $depth
      */
     public function toArray($depth = 0): array
     {
         return $this->cast(null, $depth);
     }
 
+    protected function setCreatedOnDate(): void
+    {
+        if (false !== array_search('created_on', $this->fields(), true)) {
+            $this->created_on = Time::db();
+        }
+        if (method_exists($this, 'onCreateCleanUp')
+            && \is_callable([$this, 'onCreateCleanUp'])) {
+            \call_user_func(
+                [$this, 'onCreateCleanUp']
+            );
+        }
+    }
+
+    protected function setUpdatedOnDate(): void
+    {
+        if (false !== array_search('updated_on', $this->fields(), true)) {
+            $this->updated_on = Time::db();
+        }
+        if (method_exists($this, 'onUpdateCleanUp')
+            && \is_callable([$this, 'onCreateCleanUp'])) {
+            \call_user_func(
+                [$this, 'onCreateCleanUp']
+            );
+        }
+    }
+
     /**
      * @param $set
-     * @return string
      */
     protected function toPostgreSqlArray($set): string
     {
@@ -173,7 +169,7 @@ abstract class Base extends Cortex
         $result = [];
 
         foreach ($set as $t) {
-            if (is_array($t)) {
+            if (\is_array($t)) {
                 $result[] = $this->toPostgreSqlArray($t);
             } else {
                 $t = str_replace('"', '\\"', $t); // escape double quote

@@ -1,6 +1,8 @@
 <?php
 
-/**
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -20,35 +22,34 @@
 
 return [
     'i18n' => [
-        'label'   => [
+        'label' => [
             'core' => [
-                'email'                 => 'Email',
-                'password'              => 'Password',
-                'password_hint'         => 'Password (8 characters at minimum)',
-                'first_name'            => 'First Name',
-                'last_name'             => 'Last Name',
-                'back'                  => 'Back',
-                'submit'                => 'Submit',
-                'confirm'               => 'Approve',
-                'cancel'                => 'Cancel',
+                'email'         => 'Email',
+                'password'      => 'Password',
+                'password_hint' => 'Password (8 characters at minimum)',
+                'first_name'    => 'First Name',
+                'last_name'     => 'Last Name',
+                'back'          => 'Back',
+                'submit'        => 'Submit',
+                'confirm'       => 'Approve',
+                'cancel'        => 'Cancel',
             ],
 
             'menu' => [
-                'users'           => 'Users'
+                'users' => 'Users',
             ],
 
             'dashboard' => [
-                'sessions'              => 'Sessions'
+                'sessions' => 'Sessions',
             ],
 
             'user' => [
-                'users'              => 'Users',
-                'user'               => 'User',
-                'email'              => 'Email',
-                'role'               => 'Role',
-                'status'             => 'Status'
+                'users'  => 'Users',
+                'user'   => 'User',
+                'email'  => 'Email',
+                'role'   => 'Role',
+                'status' => 'Status',
             ],
-
         ],
     ],
 ];

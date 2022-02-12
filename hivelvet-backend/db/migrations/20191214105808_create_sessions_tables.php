@@ -1,6 +1,8 @@
 <?php
 
-/**
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -30,7 +32,8 @@ class CreateSessionsTables extends AbstractMigration
             ->addColumn('ip', 'string', ['limit' => 56, 'null' => true])
             ->addColumn('agent', 'string', ['limit' => 512, 'null' => true])
             ->addColumn('stamp', 'integer', ['null' => true])
-            ->save();
+            ->save()
+        ;
     }
 
     public function down(): void
