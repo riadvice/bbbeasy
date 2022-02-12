@@ -304,7 +304,7 @@ run_migrations() {
 # Generate code quality metrics
 #
 generate_metrics() {
-  vendor/bin/phpmetrics --report-html="$BASEDIR/../hivelvet-backend/public/metrics" "$BASEDIR/../app/src/"
+  vendor/bin/phpmetrics --report-html="$BASEDIR/../hivelvet-backend/public/metrics" "$BASEDIR/../hivelvet-backend/app/src/"
 }
 
 #
