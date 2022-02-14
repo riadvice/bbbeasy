@@ -125,7 +125,7 @@ class App extends Component<Props, State> {
                         installed={installed}
                     />
                     <Layout>
-                        { isLogged && (
+                        { installed && isLogged && (
                             <AppSider/>
                         )}
                         <Content className="site-content">
