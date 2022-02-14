@@ -1,3 +1,21 @@
+/**
+ * Hivelvet open source platform - https://riadvice.tn/
+ *
+ * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
+ *
+ * This program is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free Software
+ * Foundation; either version 3.0 of the License, or (at your option) any later
+ * version.
+ *
+ * Hivelvet is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License along
+ * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
+ */
+
 import React, { Component } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 
@@ -5,13 +23,19 @@ import AuthService from '../services/auth.service';
 import { Form, Input, Button, message, Alert, Col, Row, Typography, Card } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import { T } from '@transifex/react';
+
 const { Text, Title, Paragraph } = Typography;
 
-type Props = {};
+type Props = {
+    setUser: any;
+};
+
 type State = {
     successful?: boolean;
     message?: string;
     errors?: any;
+    user?: any;
+    isLogged?: boolean;
 };
 
 class Login extends Component<Props, State> {
@@ -21,7 +45,9 @@ class Login extends Component<Props, State> {
         this.state = {
             successful: false,
             message: '',
-            errors:[]
+            errors:[],
+            user: null,
+            isLogged: false,
         };
     }
 
@@ -30,16 +56,21 @@ class Login extends Component<Props, State> {
         AuthService.login(email, password)
             .then((response) => {
                 const responseMessage = response.data.message;
+                const user = response.data.user;
+
                 message.success({
                     content: responseMessage,
                     className: 'success-message',
                 });
+                localStorage.setItem('user', JSON.stringify(user));
+                this.props.setUser(user, true);
                 this.setState({
                     successful: true,
                     message: responseMessage,
+
+                    user: user,
+                    isLogged: true,
                 });
-                const user = response.data.user;
-                localStorage.setItem('user', JSON.stringify(user));
             })
             .catch((error) => {
                 this.setState({
@@ -69,14 +100,14 @@ class Login extends Component<Props, State> {
     }
 
     render() {
-        const { successful, message, errors } = this.state;
+        const { successful, message, errors, user, isLogged } = this.state;
         const initialValues = {
             email: '',
             password: ''
         };
 
         if (successful) {
-            return <Navigate to="/home" />;
+            return <Navigate to="/home" state={{ user: user, isLogged: isLogged }} />;
         }
 
         return (
@@ -94,17 +125,17 @@ class Login extends Component<Props, State> {
                         {errors.length > 0 && !successful && (
                             <Alert
                                 type="error"
-                               className="alert-msg"
-                               message={errors.length > 1 ? (
-                                   <ul className="errors-list">
-                                       {errors.map((item,index) => (
-                                           <li key={index}>{item}</li>
-                                       ))}
-                                   </ul>
-                               ) : (
-                                   <T _str={errors.toString()} />
-                               )}
-                               showIcon
+                                className="alert-msg"
+                                message={errors.length > 1 ? (
+                                    <ul className="errors-list">
+                                        {errors.map((item,index) => (
+                                            <li key={index}>{item}</li>
+                                        ))}
+                                    </ul>
+                                ) : (
+                                    <T _str={errors.toString()} />
+                                )}
+                                showIcon
                             />
                         )}
                         {message && !successful && (

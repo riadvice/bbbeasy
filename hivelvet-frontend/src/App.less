@@ -33,10 +33,68 @@ body,button,input,select,textarea{
   box-shadow: 0 5px 5px rgba(216, 216, 216, 0.8);
 }
 
+.site-header .logout-btn,.site-header .profil-btn {
+  color: black;
+  clip-path: polygon(50% 0, 50% 0, 95% 25%, 95% 75%, 50% 100%, 50% 100%, 5% 75%, 5% 25%);
+}
+
+.home-guide {
+  margin-top: 80px;
+}
+
+.home-guide h4 {
+  font-size: 16px !important;
+}
+.home-guide .ant-row {
+  margin: 60px 0;
+}
+.home-guide .ant-row .ant-col {
+  padding: 15px 0;
+  flex: 0 0 14.5% !important;
+  max-width: 14.5% !important;
+}
+
+.home-guide .ant-row:not(.ant-row-rtl) .ant-col:not(:first-child) {
+  border-left: 1px solid #00000021;
+}
+
+.home-guide .ant-row.ant-row-rtl .ant-col:not(:first-child) {
+  border-right: 1px solid #00000021;
+}
+
+.home-guide .hivelvet-btn {
+  font-size: 45px !important;
+  font-weight: 600;
+  clip-path: polygon(50% 0, 50% 0, 95% 25%, 95% 75%, 50% 100%, 50% 100%, 5% 75%, 5% 25%);
+  margin-bottom: 20px;
+}
+
+.home-guide button {
+  width: 25%;
+  margin-top: 40px;
+}
+
 .site-sider {
   //width: 250px !important;
   //margin-top: 10px;
-  box-shadow: 5px 0px 5px rgba(216, 216, 216, 0.8);
+  /*box-shadow: 5px 0px 5px rgba(216, 216, 216, 0.8);*/
+}
+
+.sider-new-btn {
+  margin: 25px;
+}
+
+.ant-layout-sider-trigger {
+  background: @primary-color;
+}
+
+.ant-menu-item .ant-menu-item-icon, .ant-menu-submenu-title .ant-menu-item-icon, .ant-menu-item .anticon, .ant-menu-submenu-title .anticon {
+  min-width: 14px;
+  font-size: 18px !important;
+}
+
+.ant-menu-sub.ant-menu-inline {
+  background: transparent;
 }
 
 .site-header-inner{
@@ -365,5 +423,5 @@ body,button,input,select,textarea{
 }
 
 .page-not-found {
-    padding: 60px 32px !important;
+  padding: 60px 32px !important;
 }

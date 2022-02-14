@@ -17,9 +17,9 @@
  */
 
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { Layout, Typography, Radio, Button, Menu, Dropdown, Space } from 'antd';
-import { GlobalOutlined, DownOutlined } from '@ant-design/icons';
+import { GlobalOutlined, DownOutlined, UserOutlined, LogoutOutlined } from '@ant-design/icons';
 
 import enUS from 'antd/lib/locale/en_US';
 import frFR from 'antd/lib/locale/fr_FR';
@@ -31,7 +31,9 @@ const { Paragraph } = Typography;
 
 type Props = {
     currentLocale: any;
-    handleChange: any;
+    setLang: any;
+    isLogged: boolean;
+    setUser: any;
     installed: any;
 };
 
@@ -44,13 +46,48 @@ const languages = [
 ];
 
 class AppHeader extends Component<Props, State> {
+    constructor(props: Props) {
+        super(props);
+        this.state = {
+            isLogin: false,
+            isLogout: false,
+            user: {},
+        };
+    }
+    logout() {
+        localStorage.clear();
+        this.props.setUser(null, false);
+        return <Navigate to="/login" />;
+    }
+
+    handleChange = (e) => {
+        const res = languages.filter((item) => item.key == e.target.value.locale);
+        this.props.setLang(res[0].value);
+    };
+
+    /*
+    old handle
+    handleChange = (e) => {
+        const localeValue = e.target.value;
+        if (!localeValue) {
+            moment.locale('en');
+        } else {
+            moment.locale(localeValue.locale);
+        }
+        tx.setCurrentLocale(localeValue.locale);
+        setCurrentLocale(localeValue);
+        //localStorage.setItem('locale', tx.getCurrentLocale());
+        localStorage.setItem('locale', localeValue.locale);
+    };
+     */
+
     render() {
-        const { currentLocale, handleChange, installed } = this.props;
+        const { currentLocale, isLogged, installed } = this.props;
         const result = languages.filter((item) => item.value == currentLocale);
         const language = result[0].name;
         const menu = (
             <Menu>
-                <Radio.Group value={currentLocale} onChange={handleChange}>
+                <Radio.Group value={currentLocale} onChange={this.handleChange}>
                     {languages.map(({ name, key, value }) => (
                         <Menu.Item key={key}>
                             <Radio value={value}>{name}</Radio>
@@ -73,14 +110,23 @@ class AppHeader extends Component<Props, State> {
                                     <GlobalOutlined /> {language} <DownOutlined />
                                 </Button>
                             </Dropdown>
-                            <Link className={'ant-btn color-primary'} to={'/login'}>
-                                {' '}
-                                <T _str="Login" />{' '}
-                            </Link>
-                            <Link className={'ant-btn color-primary'} to={'/register'}>
-                                {' '}
-                                <T _str="Sign up" />{' '}
-                            </Link>
+                            {(!isLogged) ? (
+                                <>
+                                    <Link className={'ant-btn color-primary'} to={'/login'}>
+                                        {' '}
+                                        <T _str="Login"/>{' '}
+                                    </Link>
+                                    <Link className={'ant-btn color-primary'} to={'/register'}>
+                                        {' '}
+                                        <T _str="Sign up"/>{' '}
+                                    </Link>
+                                </>
+                            ) : (
+                                <>
+                                    <Button type="primary" icon={<UserOutlined />} className="profil-btn" />
+                                    <Button type="primary" icon={<LogoutOutlined />} className="logout-btn" onClick={() => this.logout()}/>
+                                </>
+                            )}
                         </Space>
                     )}
                 </Paragraph>

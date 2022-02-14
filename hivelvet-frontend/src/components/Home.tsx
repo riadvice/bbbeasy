@@ -17,50 +17,58 @@
  */
 
 import React, { Component } from 'react';
-import AuthService from '../services/auth.service';
+import { Row, Col, Avatar, Typography, Button } from 'antd';
+import { T } from "@transifex/react";
 
-import { Row } from 'antd';
-import { Navigate } from 'react-router-dom';
+const { Title, Paragraph } = Typography;
 
-type Props = {};
-
-type State = {
+type Props = {
     isLogged: boolean;
-    currentUser?: any;
+    user: any;
 };
 
-class Home extends Component<Props, State> {
+type State = {};
+
+class Home extends Component<Props,State> {
+    username = '';
     constructor(props: Props) {
         super(props);
-        this.state = {
-            isLogged: false,
-            currentUser: undefined,
-        };
-    }
-
-    componentDidMount() {
-        const user = AuthService.getCurrentUser();
-        if (user) {
-            this.setState({
-                isLogged: true,
-                currentUser: user,
-            });
-        }
     }
 
     render() {
-        const { isLogged } = this.state;
-
-        /*
-        if (!isLogged) {
-            return <Navigate to="/login" />;
-        }
-        */
+        this.username = this.props.user != null ? this.props.user.username : '';
 
         return (
-            <Row justify="center">
-                <h1>Home page</h1>
-            </Row>
+            <Paragraph className="text-center home-guide">
+                <Title level={3} underline>
+                    {' '}
+                    <T _str="How easy is it to create a room ?" />
+                </Title>
+                <Row justify="center">
+                    <Col span={3}>
+                        <Avatar size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 85, xxl: 100 }} className="ant-btn-primary hivelvet-btn">1</Avatar>
+                        <Title level={4}>
+                            {' '}
+                            <T _str="Give it a name" />
+                        </Title>
+                    </Col>
+                    <Col span={3}>
+                        <Avatar size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 85, xxl: 100 }} className="ant-btn-primary hivelvet-btn">2</Avatar>
+                        <Title level={4}>
+                            {' '}
+                            <T _str="Assign it a preset" />
+                        </Title>
+                    </Col>
+                    <Col span={3}>
+                        <Avatar size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 85, xxl: 100 }} className="ant-btn-primary hivelvet-btn">3</Avatar>
+                        <Title level={4}>
+                            {' '}
+                            <T _str="Mark it with labels" />
+                        </Title>
+                    </Col>
+                </Row>
+                <Button type="primary">Create my first room</Button>
+            </Paragraph>
         );
     }
 }
