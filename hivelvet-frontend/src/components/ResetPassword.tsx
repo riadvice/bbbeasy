@@ -18,15 +18,14 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import AuthService from '../services/auth.service';
-
-import { Form, Input, Button, message, Alert, Col, Row, Typography, Card } from 'antd';
+import { Form, Input, Button, Checkbox, message, Alert, Col, Row, Typography, Card } from 'antd';
 import { T } from '@transifex/react';
-
 const { Text, Title, Paragraph } = Typography;
 
 type Props = {};
 type State = {
     email?: string;
+
     successful: boolean;
     message: string;
 };

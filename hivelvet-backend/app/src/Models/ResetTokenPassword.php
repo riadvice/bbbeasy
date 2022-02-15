@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Models;
 
 use DB\Cortex;
-use Enum\CacheKey;
 use Models\Base as BaseModel;
 
 /**
@@ -39,23 +38,8 @@ class ResetTokenPassword extends BaseModel
 {
     protected $table = 'reset_password_tokens';
 
-    public function __construct($db = null, $table = null, $fluid = null, $ttl = 0)
-    {
-        parent::__construct($db, $table, $fluid, $ttl);
-    }
-
-    public function onCreateCleanUp(): void
-    {
-        $this->f3->clear(CacheKey::AJAX_USERS);
-    }
-
-    public function onUpdateCleanUp(): void
-    {
-        $this->f3->clear(CacheKey::AJAX_USERS);
-    }
-
     /**
-     * Check if USER id already in use.
+     * Check if the user has a reset token password.
      *
      * @param int $userID
      *
@@ -73,7 +57,9 @@ class ResetTokenPassword extends BaseModel
      */
     public function tokenExists(string $token)
     {
-        return \count($this->db->exec('SELECT 1 FROM reset_password_tokens WHERE "token"= ?', $token)) > 0;
+        $this->load(['token = ?', $token]);
+
+        return !$this->dry();
     }
 
     /**

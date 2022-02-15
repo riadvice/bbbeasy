@@ -16,13 +16,12 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, {Component} from "react";
+import React, { Component } from 'react';
 import Icon from '@ant-design/icons';
 import * as AntdIcons from '@ant-design/icons';
-//import ZcaleRightSvg from "../../public/images/ZcaleRight.svg"; //{ ReactComponent as ZcaleRightSvg }
 
 type Props = {
-  type : string
+    type: string;
 };
 type State = {};
 
@@ -33,14 +32,12 @@ const ZcaleRightSvg = () => (
 );
 
 class DynamicIcon extends Component<Props, State> {
-
     render() {
-        const {type} = this.props;
+        const { type } = this.props;
         const AntdIcon = AntdIcons[type];
         if (type == 'ZcaleRight') {
-            return <Icon component={ZcaleRightSvg} className="PresetIcon" />
-        }
-        else {
+            return <Icon component={ZcaleRightSvg} className="PresetIcon" />;
+        } else {
             return <AntdIcon className="PresetIcon" />;
         }
     }

@@ -20,7 +20,6 @@ import React, { Component } from 'react';
 import AuthService from '../services/auth.service';
 
 import { Row } from 'antd';
-import { Navigate } from 'react-router-dom';
 
 type Props = {};
 
@@ -50,12 +49,6 @@ class Home extends Component<Props, State> {
 
     render() {
         const { isLogged } = this.state;
-
-        /*
-        if (!isLogged) {
-            return <Navigate to="/login" />;
-        }
-        */
 
         return (
             <Row justify="center">

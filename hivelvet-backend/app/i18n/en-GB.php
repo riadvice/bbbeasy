@@ -50,6 +50,14 @@ return [
                 'role'   => 'Role',
                 'status' => 'Status',
             ],
+            'mail' => [
+                'hi'               => 'Hi there',
+                'recieved_request' => "We've received a request to reset the password for the Hivelvet account  associated with ",
+                'no_changes'       => 'No changes have been made to your account yet',
+                'reset_label'      => 'You can reset your password by clicking the link below',
+                'reset_link'       => 'Reset your password',
+                'expires_at'       => 'this link is valid for 15 minutes it will expires at',
+            ],
         ],
     ],
 ];

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Actions\Account;
 
 use Actions\Base as BaseAction;
+use Enum\ResetTokenStatus;
 use Enum\ResponseCode;
 use Models\ResetTokenPassword;
 use Models\User;
@@ -42,10 +43,11 @@ class ChangePassword extends BaseAction
         $password = $form['password'];
 
         $resetToken = $resetToken->getByToken($token);
+        $this->logger->error('reset token password', ['reset token' => $resetToken->toArray()]);
 
-        $user               = $user->getByID($resetToken->user_id);
+        $user               = $user->getById($resetToken->user_id);
         $user->password     = $password;
-        $resetToken->status = 'consumed';
+        $resetToken->status = ResetTokenStatus::CONSUMED;
 
         try {
             $resetToken->save();

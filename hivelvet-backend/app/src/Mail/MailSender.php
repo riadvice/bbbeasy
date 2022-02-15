@@ -26,8 +26,6 @@ use Base;
 use Exception;
 use Log\LogWriterTrait;
 use Mailer;
-use Models\ResetTokenPassword;
-use Models\User;
 use Nette\Utils\Strings;
 use Prefab;
 use Template;
@@ -94,33 +92,7 @@ class MailSender extends Prefab
         $vars['PORT']      = $this->f3->get('PORT');
         $vars['BASE']      = $this->f3->get('BASE');
 
-        $vars['to'] = $to;
-        $t          = bin2hex(random_bytes(16));
-        $user       = new User();
-        $resettoken = new ResetTokenPassword();
-        $user       = $user->getByEmail($to);
-        if ($resettoken->userExists($user->id)) {
-            $resettoken             = $resettoken->getByUserID($user->id);
-            $resettoken->expires_at = date('Y-m-d  H:i:s', strtotime('+1 min'));
-
-            $resettoken->status = 'new';
-            $resettoken->token  = $t;
-
-            $resettoken->save();
-        } else {
-            $resettoken->expires_at = date('Y-m-d H:i:s', strtotime('+15 min'));
-
-            $resettoken->user_id = $user->id;
-            $resettoken->status  = 'new';
-            $resettoken->token   = $t;
-        }
-        $resettoken->save();
-
-        $vars['token']      = $t;
-        $vars['from_name']  = $this->f3->get('from_name');
-        $vars['expires_at'] = $resettoken->expires_at;
-
-        $message = Template::instance()->render('mail/' . $template . '.html', null, $vars);
+        $message = Template::instance()->render('mail/' . $template . '.phtml', null, $vars);
 
         /*
         //replace the db template variables with provided $vars
@@ -147,7 +119,8 @@ class MailSender extends Prefab
 
         $message = str_replace('[C-NAME]', \Cache::instance()->get(CacheKey::ORGANISATION), $message);
         */
-        return $this->smtpSend(null, $to, $title, $subject, $message, $messageId);
+
+        return $this->smtpSend($this->f3->get('from_mail'), $to, $title, $subject, $message, $messageId);
     }
 
     /**
@@ -158,10 +131,8 @@ class MailSender extends Prefab
      * @param $message
      * @param $messageId
      */
-    private function smtpSend($from, $to, $title, $subject, $message): bool
+    private function smtpSend($from, $to, $title, $subject, $message, $messageId): bool
     {
-        $messageId = $this->generateId();
-
         if (\is_array($to)) {
             foreach ($to as $email) {
                 $this->mailer->addTo($email);
@@ -170,13 +141,13 @@ class MailSender extends Prefab
             $this->mailer->addTo($to, $title);
         }
 
-        if (null === $from) {
-            $this->mailer->setFrom($this->f3->get('from_mail'));
+        if (null !== $from) {
+            $this->mailer->setFrom($from);
         }
         $this->mailer->setHTML($message);
         $this->mailer->set('Message-Id', $messageId);
-        $sent = $this->mailer->send($subject, Environment::isNotProduction());
 
+        $sent = $this->mailer->send($subject, Environment::isNotProduction());
         if (false !== $sent && Environment::isNotProduction()) {
             @file_put_contents(
                 $this->f3->get('MAIL_STORAGE') . mb_substr($messageId, 1, -1) . '.eml',
@@ -186,7 +157,7 @@ class MailSender extends Prefab
 
         $this->logger->info('Sending email | Status: ' . ($sent ? 'true' : 'false') . " | Log:\n" . $this->mailer->log());
 
-        return (true === $sent) ? $messageId : $sent;
+        return (true === $sent) ? $sent : !$sent;
     }
 
     /**

@@ -131,7 +131,7 @@ class User extends BaseModel
      *
      * @return Cortex
      */
-    public function getByID($id)
+    public function getById($id)
     {
         $this->load(['id = ?', $id]);
 
@@ -179,12 +179,5 @@ class User extends BaseModel
     public function verifyPassword($password): bool
     {
         return password_verify(trim($password), $this->password);
-    }
-
-    public function getByResetToken($token)
-    {
-        $this->load(['token = ?', $token]);
-
-        return $this;
     }
 }

@@ -21,7 +21,7 @@ class Login extends Component<Props, State> {
         this.state = {
             successful: false,
             message: '',
-            errors:[]
+            errors: [],
         };
     }
 
@@ -43,20 +43,20 @@ class Login extends Component<Props, State> {
             })
             .catch((error) => {
                 this.setState({
-                    errors: []
+                    errors: [],
                 });
                 const response = error.response.data;
                 if (response.errors) {
                     const errors = Object.values(response.errors);
                     const err = [];
-                    errors.forEach(function (value : any) {
+                    errors.forEach(function (value: any) {
                         const keys = Object.keys(value);
                         keys.forEach(function (key) {
                             err.push(value[key]);
                         });
                     });
                     this.setState({
-                        errors: err
+                        errors: err,
                     });
                 }
 
@@ -72,7 +72,7 @@ class Login extends Component<Props, State> {
         const { successful, message, errors } = this.state;
         const initialValues = {
             email: '',
-            password: ''
+            password: '',
         };
 
         if (successful) {
@@ -94,17 +94,19 @@ class Login extends Component<Props, State> {
                         {errors.length > 0 && !successful && (
                             <Alert
                                 type="error"
-                               className="alert-msg"
-                               message={errors.length > 1 ? (
-                                   <ul className="errors-list">
-                                       {errors.map((item,index) => (
-                                           <li key={index}>{item}</li>
-                                       ))}
-                                   </ul>
-                               ) : (
-                                   <T _str={errors.toString()} />
-                               )}
-                               showIcon
+                                className="alert-msg"
+                                message={
+                                    errors.length > 1 ? (
+                                        <ul className="errors-list">
+                                            {errors.map((item, index) => (
+                                                <li key={index}>{item}</li>
+                                            ))}
+                                        </ul>
+                                    ) : (
+                                        <T _str={errors.toString()} />
+                                    )
+                                }
+                                showIcon
                             />
                         )}
                         {message && !successful && (
@@ -115,12 +117,10 @@ class Login extends Component<Props, State> {
                             layout="vertical"
                             name="login_form"
                             className="login-form"
-
                             initialValues={initialValues}
                             requiredMark={false}
                             scrollToFirstError={true}
                             validateTrigger="onBlur"
-
                             onFinish={this.handleLogin}
                         >
                             <Form.Item

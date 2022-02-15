@@ -42,7 +42,7 @@ class Register extends Component<Props, State> {
         this.state = {
             successful: false,
             message: '',
-            errors:[]
+            errors: [],
         };
     }
 
@@ -57,20 +57,20 @@ class Register extends Component<Props, State> {
             })
             .catch((error) => {
                 this.setState({
-                    errors: []
+                    errors: [],
                 });
                 const response = error.response.data;
                 if (response.errors) {
                     const errors = Object.values(response.errors);
                     const err = [];
-                    errors.forEach(function (value : any) {
+                    errors.forEach(function (value: any) {
                         const keys = Object.keys(value);
                         keys.forEach(function (key) {
                             err.push(value[key]);
                         });
                     });
                     this.setState({
-                        errors: err
+                        errors: err,
                     });
                 }
 
@@ -89,12 +89,12 @@ class Register extends Component<Props, State> {
             email: '',
             password: '',
             confirmPassword: '',
-            agreement: false
+            agreement: false,
         };
 
         return (
             <Row>
-                { successful ?
+                {successful ? (
                     <Col span={10} offset={7} className="section-top">
                         <Result
                             status="success"
@@ -107,7 +107,7 @@ class Register extends Component<Props, State> {
                             }
                         />
                     </Col>
-                    :
+                ) : (
                     <Col span={8} offset={8} className="section-top">
                         <Card className="form-content">
                             <Paragraph className="form-header text-center">
@@ -121,17 +121,19 @@ class Register extends Component<Props, State> {
                             {errors.length > 0 && (
                                 <Alert
                                     type="error"
-                                   className="alert-msg"
-                                   message={errors.length > 1 ? (
-                                       <ul className="errors-list">
-                                           {errors.map((item,index) => (
-                                               <li key={index}>{item}</li>
-                                           ))}
-                                       </ul>
-                                   ) : (
-                                       <T _str={errors.toString()} />
-                                   )}
-                                   showIcon
+                                    className="alert-msg"
+                                    message={
+                                        errors.length > 1 ? (
+                                            <ul className="errors-list">
+                                                {errors.map((item, index) => (
+                                                    <li key={index}>{item}</li>
+                                                ))}
+                                            </ul>
+                                        ) : (
+                                            <T _str={errors.toString()} />
+                                        )
+                                    }
+                                    showIcon
                                 />
                             )}
 
@@ -143,12 +145,10 @@ class Register extends Component<Props, State> {
                                 layout="vertical"
                                 name="register"
                                 className="register-form"
-                                
                                 initialValues={initialValues}
                                 requiredMark={false}
                                 scrollToFirstError={true}
                                 validateTrigger="onBlur"
-                                
                                 onFinish={this.handleRegistration}
                             >
                                 <Form.Item
@@ -269,7 +269,7 @@ class Register extends Component<Props, State> {
                             </Form>
                         </Card>
                     </Col>
-                }
+                )}
             </Row>
         );
     }

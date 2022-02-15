@@ -16,15 +16,16 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import AuthService from '../services/auth.service';
 
-import { Form, Input, Button, message, Alert, Col, Row, Typography, Space, Card } from 'antd';
+import { Form, Input, Button, message, Alert, Col, Row, Typography, Card, Result } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import { T } from '@transifex/react';
 import authService from '../services/auth.service';
 const { Title, Paragraph } = Typography;
 import ReactDOMServer from 'react-dom/server';
+import PageNotFound from './PageNotFound';
 
 type Props = {};
 
@@ -33,22 +34,23 @@ type State = {
     email?: string;
     successful?: boolean;
     message?: string;
-    pageexists?: boolean;
+    available_token?: boolean;
 };
 
 class ChangePassword extends Component<Props, State> {
     constructor(props) {
         const params = new URLSearchParams(window.location.search);
+
         authService
-            .getUser(params.get('token'))
+            .getResetTokenPasswordByToken(params.get('token'))
             .then((response) => {
                 this.setState({
-                    pageexists: true,
+                    available_token: true,
                 });
             })
             .catch((error) => {
                 this.setState({
-                    pageexists: false,
+                    available_token: false,
                     message: error.response.data.message,
                 });
             });
@@ -61,7 +63,7 @@ class ChangePassword extends Component<Props, State> {
             email: '',
             successful: false,
             message: '',
-            pageexists: false,
+            available_token: false,
         };
     }
 
@@ -90,12 +92,13 @@ class ChangePassword extends Component<Props, State> {
                 this.setState({
                     successful: false,
                     message: responseMessage,
+                    available_token: false,
                 });
             });
     }
 
     render() {
-        const { successful, message, pageexists } = this.state;
+        const { successful, message, available_token } = this.state;
         const initialValues = {
             email: '',
 
@@ -104,127 +107,128 @@ class ChangePassword extends Component<Props, State> {
         };
 
         return (
-            <Row>
-                { pageexists ? (
-                    <Col span={8} offset={8} className="section-top">
-                        <Card className="form-content">
-                            <Paragraph className="pricing-header text-center">
-                                <Title style={{ fontWeight: 500 }}>
-                                    {' '}
-                                    <T _str="Change your password" />
-                                </Title>
-                            </Paragraph>
-                            <Space direction="horizontal" style={{ width: '100%', justifyContent: 'center' }}>
-                                <Paragraph className="pricing-table page-login">
-                                    <Paragraph className="pricing-table-inner is-revealing">
-                                        {message && !successful && (
-                                            <Alert
-                                                style={{ marginBottom: 24 }}
-                                                message="Error"
-                                                description={<T _str={message} />}
-                                                type="error"
-                                                showIcon
-                                            />
-                                        )}
-                                        <Form
-                                            layout="vertical"
-                                            name="normal_login"
-                                            className="login-form"
-                                            initialValues={initialValues}
-                                            onFinish={this.handleChange}
-                                        >
-                                            <Form.Item
-                                                label={<T _str="Password" />}
-                                                name="password"
-                                                hasFeedback
-                                                rules={[
-                                                    {
-                                                        min: 4,
-                                                        message: <T _str="Password must be at least 4 characters" />,
-                                                    },
-                                                    {
-                                                        required: true,
-                                                        message: <T _str="Password is required" />,
-                                                    },
-                                                ]}
-                                            >
-                                                <Input.Password iconRender={(visible) => visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />}/>
-                                            </Form.Item>
-                                            <Form.Item
-                                                label={<T _str="Confirm Password" />}
-                                                name="confirmPassword"
-                                                dependencies={['password']}
-                                                hasFeedback
-                                                rules={[
-                                                    {
-                                                        min: 4,
-                                                        message: (
-                                                            <T _str="Confirm password must be at least 4 characters" />
-                                                        ),
-                                                    },
-                                                    {
-                                                        required: true,
-                                                        message: <T _str="Confirm password is required" />,
-                                                    },
-                                                    ({ getFieldValue }) => ({
-                                                        validator(_, value) {
-                                                            if (!value || getFieldValue('password') === value) {
-                                                                return Promise.resolve();
-                                                            }
-                                                            return Promise.reject(
-                                                                new Error(
-                                                                    ReactDOMServer.renderToString(
-                                                                        <T _str="The two passwords that you entered do not match" />
-                                                                    )
-                                                                )
-                                                            );
-                                                        },
-                                                    }),
-                                                ]}
-                                            >
-                                                <Input.Password />
-                                            </Form.Item>
-
-                                            <Form.Item>
-                                                <Button
-                                                    type="primary"
-                                                    htmlType="submit"
-                                                    className="login-form-button"
-                                                    size="large"
-                                                >
-                                                    <T _str="Submit" />
-                                                </Button>
-                                            </Form.Item>
-                                        </Form>
-                                        <Paragraph className="form-footer text-center">
-                                            <Link to={'/login'}>
-                                                <T _str="Back to login" />{' '}
-                                            </Link>
-                                        </Paragraph>
-                                    </Paragraph>
-                                </Paragraph>
-                            </Space>
-                        </Card>
-                    </Col>
-                ) : (
-                    <Col span={8} offset={8} className="section-top">
-                        <Paragraph className="pricing-header text-center">
-                            <Title style={{ fontWeight: 500 }}> </Title>
-                        </Paragraph>
-                        <Space direction="horizontal" style={{ width: '100%', justifyContent: 'center' }}>
-                            <Paragraph className="pricing-table page-login">
-                                <Alert
-                                    style={{ marginBottom: 24 }}
-                                    message="Error"
-                                    description={<T _str={message} />}
-                                    type="error"
-                                    showIcon
+            <div>
+                {available_token && (
+                    <Row>
+                        {successful ? (
+                            <Col span={10} offset={7} className="section-top">
+                                <Result
+                                    status="success"
+                                    title="Password changed successfully"
+                                    extra={
+                                        <Link to={'/login'} className="ant-btn ant-btn-lg">
+                                            Login now
+                                        </Link>
+                                    }
                                 />
-                            </Paragraph>
-                        </Space>
-                    </Col>
+                            </Col>
+                        ) : (
+                            <Col span={8} offset={8} className="section-top">
+                                <Card className="form-content">
+                                    <Paragraph className="form-header text-center">
+                                        <img className="form-img" src="images/logo_02.png" alt="Logo" />
+                                        <Title level={4}>
+                                            {' '}
+                                            <T _str="Change password" />
+                                        </Title>
+                                    </Paragraph>
+                                    {message && !successful && (
+                                        <Alert
+                                            type="error"
+                                            className="alert-msg"
+                                            message={<T _str={message} />}
+                                            showIcon
+                                        />
+                                    )}
+
+                                    <Form
+                                        layout="vertical"
+                                        name="login_form"
+                                        className="login-form"
+                                        initialValues={initialValues}
+                                        onFinish={this.handleChange}
+                                    >
+                                        <Form.Item
+                                            label={<T _str="Password" />}
+                                            name="password"
+                                            hasFeedback
+                                            rules={[
+                                                {
+                                                    min: 4,
+                                                    message: <T _str="Password must be at least 4 characters" />,
+                                                },
+                                                {
+                                                    required: true,
+                                                    message: <T _str="Password is required" />,
+                                                },
+                                            ]}
+                                        >
+                                            <Input.Password
+                                                iconRender={(visible) =>
+                                                    visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                                                }
+                                            />
+                                        </Form.Item>
+                                        <Form.Item
+                                            label={<T _str="Confirm Password" />}
+                                            name="confirmPassword"
+                                            dependencies={['password']}
+                                            hasFeedback
+                                            rules={[
+                                                {
+                                                    min: 4,
+                                                    message: (
+                                                        <T _str="Confirm password must be at least 4 characters" />
+                                                    ),
+                                                },
+                                                {
+                                                    required: true,
+                                                    message: <T _str="Confirm password is required" />,
+                                                },
+                                                ({ getFieldValue }) => ({
+                                                    validator(_, value) {
+                                                        if (!value || getFieldValue('password') === value) {
+                                                            return Promise.resolve();
+                                                        }
+                                                        return Promise.reject(
+                                                            new Error(
+                                                                ReactDOMServer.renderToString(
+                                                                    <T _str="The two passwords that you entered do not match" />
+                                                                )
+                                                            )
+                                                        );
+                                                    },
+                                                }),
+                                            ]}
+                                        >
+                                            <Input.Password />
+                                        </Form.Item>
+
+                                        <Form.Item>
+                                            <Button
+                                                type="primary"
+                                                htmlType="submit"
+                                                className="login-form-button"
+                                                size="large"
+                                                block
+                                            >
+                                                <T _str="Change password" />
+                                            </Button>
+                                        </Form.Item>
+                                    </Form>
+
+                                    <Paragraph className="form-footer text-center">
+                                        <Link to={'/login'}>
+                                            <T _str="Back to login" />{' '}
+                                        </Link>
+                                    </Paragraph>
+                                </Card>
+                            </Col>
+                        )}
+                    </Row>
                 )}
-            </Row>
+                {!available_token && <PageNotFound />}
+            </div>
         );
     }
 }

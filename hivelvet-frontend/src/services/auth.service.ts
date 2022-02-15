@@ -23,7 +23,7 @@ const API_URL = process.env.REACT_APP_API_URL;
 class AuthService {
     register(data: object) {
         return axios.post(API_URL + '/account/register', {
-            data
+            data,
         });
     }
     login(email: string, password: string) {
@@ -47,8 +47,8 @@ class AuthService {
             password,
         });
     }
-    getUser(token: string) {
-        return axios.get(API_URL + '/account/get-user?token=' + token, {});
+    getResetTokenPasswordByToken(token: string) {
+        return axios.get(API_URL + '/account/get-reset-token?token=' + token, {});
     }
     getCurrentUser() {
         const userStr = localStorage.getItem('user');

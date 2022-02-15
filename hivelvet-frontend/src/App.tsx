@@ -31,7 +31,6 @@ import PageNotFound from './components/PageNotFound';
 import LandingPage from './components/LandingPage';
 import Register from './components/Register';
 import Login from './components/Login';
-import ResetPwd from './components/ResetPwd';
 import Reset from './components/ResetPassword';
 import ChangePassword from './components/ChangePassword';
 import Home from './components/Home';
@@ -83,15 +82,14 @@ function App() {
 
     return (
         <Layout>
-            <ConfigProvider locale={currentLocale} direction={direction} componentSize='large'>
+            <ConfigProvider locale={currentLocale} direction={direction} componentSize="large">
                 <AppHeader currentLocale={currentLocale} handleChange={handleChange} installed={installed} />
                 <Content className="site-content">
-                    { installed ? (
+                    {installed ? (
                         <Routes>
                             <Route path="/" element={<LandingPage />} />
                             <Route path="/register" element={<Register />} />
                             <Route path="/login" element={<Login />} />
-                            <Route path="/reset" element={<ResetPwd />} />
                             <Route path="/home" element={<Home />} />
                             <Route path="/reset-password" element={<Reset />} />
                             <Route path="/change-password" element={<ChangePassword />} />

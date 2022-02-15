@@ -20,7 +20,22 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import InstallService from '../services/install.service';
 
-import { Steps, Button, message, Row, Col, Form, Input, Typography, Upload, Card, Modal, Switch, Result, Alert } from 'antd';
+import {
+    Steps,
+    Button,
+    message,
+    Row,
+    Col,
+    Form,
+    Input,
+    Typography,
+    Upload,
+    Card,
+    Modal,
+    Switch,
+    Result,
+    Alert,
+} from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone, InboxOutlined, CloseOutlined, CheckOutlined } from '@ant-design/icons';
 import ColorPicker from 'rc-color-picker/lib/ColorPicker';
 import DynamicIcon from './DynamicIcon';
@@ -39,7 +54,7 @@ type Props = {
     handleInstall: any;
 };
 
-const Install = (props : Props) => {
+const Install = (props: Props) => {
     const { handleInstall } = props;
     const [stepForm] = Form.useForm();
     const initialValues = {
@@ -47,14 +62,14 @@ const Install = (props : Props) => {
         email: '',
         password: '',
 
-        company_name:'',
-        company_url:'',
-        platform_name:'',
-        term_url:'',
-        policy_url:'',
-        branding_colors : {},
+        company_name: '',
+        company_url: '',
+        platform_name: '',
+        term_url: '',
+        policy_url: '',
+        branding_colors: {},
 
-        presetsConfig: []
+        presetsConfig: [],
     };
 
     const [activeStep, setActiveStep] = React.useState(0);
@@ -84,9 +99,9 @@ const Install = (props : Props) => {
                 if (settings) {
                     setSettings(settings);
                     stepForm.setFieldsValue({
-                        company_name : settings.company_name,
-                        company_url : settings.company_website,
-                        platform_name : settings.platform_name,
+                        company_name: settings.company_name,
+                        company_url: settings.company_website,
+                        platform_name: settings.platform_name,
                     });
                     setPrimaryColor(settings.primary_color);
                     setSecondaryColor(settings.secondary_color);
@@ -116,18 +131,22 @@ const Install = (props : Props) => {
                     </Title>
                 </Paragraph>
                 {errorsStep1.length > 0 && (
-                    <Alert type="error"
-                           className="alert-msg"
-                           message={errorsStep1.length > 1 ? (
-                               <ul className="errors-list">
-                                   {errorsStep1.map((item,index) => (
-                                       <li key={index}>{item}</li>
-                                   ))}
-                               </ul>
-                           ) : (
-                               <T _str={errorsStep1.toString()} />
-                           )}
-                           showIcon />
+                    <Alert
+                        type="error"
+                        className="alert-msg"
+                        message={
+                            errorsStep1.length > 1 ? (
+                                <ul className="errors-list">
+                                    {errorsStep1.map((item, index) => (
+                                        <li key={index}>{item}</li>
+                                    ))}
+                                </ul>
+                            ) : (
+                                <T _str={errorsStep1.toString()} />
+                            )
+                        }
+                        showIcon
+                    />
                 )}
                 <Form.Item
                     label={<T _str="Username" />}
@@ -186,7 +205,7 @@ const Install = (props : Props) => {
             /*stepForm.setFieldsValue({
                 platform_name : company_value + " Hivelvet"
             });*/
-        }
+        };
         const normFile = (e: any) => {
             if (Array.isArray(e)) {
                 return e;
@@ -196,7 +215,10 @@ const Install = (props : Props) => {
         const handleChangeFile = (info: any) => {
             let fileList: any = [...info.fileList];
             fileList = fileList.slice(-1);
-            const img = fileList[0].type === 'image/jpg' || fileList[0].type === 'image/jpeg' || fileList[0].type === 'image/png';
+            const img =
+                fileList[0].type === 'image/jpg' ||
+                fileList[0].type === 'image/jpeg' ||
+                fileList[0].type === 'image/png';
             if (img) {
                 setFileList(fileList);
                 setFile(fileList[0]);
@@ -213,18 +235,22 @@ const Install = (props : Props) => {
                         </Title>
                     </Paragraph>
                     {errorsStep2.length > 0 && (
-                        <Alert type="error"
-                               className="alert-msg"
-                               message={errorsStep2.length > 1 ? (
-                                   <ul className="errors-list">
-                                       {errorsStep2.map((item,index) => (
-                                           <li key={index}>{item}</li>
-                                       ))}
-                                   </ul>
-                               ) : (
-                                   <T _str={errorsStep2.toString()} />
-                               )}
-                               showIcon />
+                        <Alert
+                            type="error"
+                            className="alert-msg"
+                            message={
+                                errorsStep2.length > 1 ? (
+                                    <ul className="errors-list">
+                                        {errorsStep2.map((item, index) => (
+                                            <li key={index}>{item}</li>
+                                        ))}
+                                    </ul>
+                                ) : (
+                                    <T _str={errorsStep2.toString()} />
+                                )
+                            }
+                            showIcon
+                        />
                     )}
                     <Form.Item
                         label={<T _str="Company name" />}
@@ -309,9 +335,15 @@ const Install = (props : Props) => {
                                 showUploadList={{ showRemoveIcon: false }}
                                 fileList={fileList}
                                 accept=".png,.jpg,.jpeg"
-                                onChange={(info) => { handleChangeFile(info) }}
+                                onChange={(info) => {
+                                    handleChangeFile(info);
+                                }}
                                 beforeUpload={(file: RcFile) => {
-                                    if (file.type === 'image/jpg' || file.type === 'image/png' || file.type === 'image/jpeg') {
+                                    if (
+                                        file.type === 'image/jpg' ||
+                                        file.type === 'image/png' ||
+                                        file.type === 'image/jpeg'
+                                    ) {
                                         message.success('file uploaded successfully');
                                         return false;
                                     }
@@ -334,7 +366,7 @@ const Install = (props : Props) => {
                             <ColorPicker
                                 animation="slide-up"
                                 defaultColor={primaryColor}
-                                onClose={ (color) => {
+                                onClose={(color) => {
                                     setPrimaryColor(color.color);
                                 }}
                                 placement="bottomLeft"
@@ -348,7 +380,7 @@ const Install = (props : Props) => {
                             <ColorPicker
                                 animation="slide-up"
                                 defaultColor={secondaryColor}
-                                onClose={ (color) => {
+                                onClose={(color) => {
                                     setSecondaryColor(color.color);
                                 }}
                                 placement="bottomLeft"
@@ -362,7 +394,7 @@ const Install = (props : Props) => {
                             <ColorPicker
                                 animation="slide-up"
                                 defaultColor={accentColor}
-                                onClose={ (color) => {
+                                onClose={(color) => {
                                     setAccentColor(color.color);
                                 }}
                                 placement="bottomLeft"
@@ -376,7 +408,7 @@ const Install = (props : Props) => {
                             <ColorPicker
                                 animation="slide-up"
                                 defaultColor={addColor}
-                                onClose={ (color) => {
+                                onClose={(color) => {
                                     setAddColor(color.color);
                                 }}
                                 placement="bottomLeft"
@@ -415,20 +447,16 @@ const Install = (props : Props) => {
                         <T _str="BigBlueButton settings" />
                     </Title>
 
-                    <Alert
-                        className="settings-info"
-                        message="Informational Notes"
-                        type="info"
-                        showIcon
-                    />
+                    <Alert className="settings-info" message="Informational Notes" type="info" showIcon />
                 </Paragraph>
                 <Card bordered={false}>
-                    {presets.map((item,index) => (
-                        <Card.Grid key={item.name} className="presets-grid" onClick={() => showModal(item.name,item.subcategories,index)}>
-                            <Meta
-                                avatar={<DynamicIcon type={item.icon} />}
-                                title={item.name}
-                            />
+                    {presets.map((item, index) => (
+                        <Card.Grid
+                            key={item.name}
+                            className="presets-grid"
+                            onClick={() => showModal(item.name, item.subcategories, index)}
+                        >
+                            <Meta avatar={<DynamicIcon type={item.icon} />} title={item.name} />
                         </Card.Grid>
                     ))}
 
@@ -443,11 +471,11 @@ const Install = (props : Props) => {
                         footer={[
                             <Button key="submit" className="ant-btn-primary" onClick={handleOk}>
                                 Confirm
-                            </Button>
+                            </Button>,
                         ]}
                     >
                         <div className="presets-body">
-                            {modalContent.map(item => (
+                            {modalContent.map((item) => (
                                 <div key={item.id}>
                                     <Form.Item
                                         label={item.name}
@@ -457,7 +485,9 @@ const Install = (props : Props) => {
                                             checkedChildren={<CheckOutlined />}
                                             unCheckedChildren={<CloseOutlined />}
                                             defaultChecked={item.status == true ? true : false}
-                                            onChange={ (checked) => { item.status = checked }}
+                                            onChange={(checked) => {
+                                                item.status = checked;
+                                            }}
                                         />
                                     </Form.Item>
                                 </div>
@@ -508,10 +538,10 @@ const Install = (props : Props) => {
         } else {
             const formData = stepForm.getFieldsValue(true);
             formData.branding_colors = {
-                'primary_color' : primaryColor,
-                'secondary_color' : secondaryColor,
-                'accent_color' : accentColor,
-                'add_color' : addColor,
+                'primary_color': primaryColor,
+                'secondary_color': secondaryColor,
+                'accent_color': accentColor,
+                'add_color': addColor,
             };
             formData.presetsConfig = presets;
             InstallService.install(formData)
@@ -527,7 +557,7 @@ const Install = (props : Props) => {
                     if (responseMessage.userErrors) {
                         const userErrors = Object.values(responseMessage.userErrors);
                         const err = [];
-                        userErrors.forEach(function (value : any) {
+                        userErrors.forEach(function (value: any) {
                             const keys = Object.keys(value);
                             keys.forEach(function (key) {
                                 err.push(value[key]);
@@ -539,7 +569,7 @@ const Install = (props : Props) => {
                     if (responseMessage.settingsErrors) {
                         const settingsErrors = Object.values(responseMessage.settingsErrors);
                         const err = [];
-                        settingsErrors.forEach(function (value : any) {
+                        settingsErrors.forEach(function (value: any) {
                             const keys = Object.keys(value);
                             keys.forEach(function (key) {
                                 err.push(value[key]);
@@ -548,7 +578,7 @@ const Install = (props : Props) => {
                         setErrorsStep2(err);
                         setActiveStep(1);
                     }
-                    if (responseMessage.userErrors && responseMessage.settingsErrors){
+                    if (responseMessage.userErrors && responseMessage.settingsErrors) {
                         setActiveStep(0);
                     }
                     setSuccessful(false);
@@ -573,7 +603,7 @@ const Install = (props : Props) => {
 
     return (
         <Row>
-            { successful ? (
+            {successful ? (
                 <Col span={10} offset={7} className="section-top">
                     <Result
                         status="success"
@@ -586,7 +616,7 @@ const Install = (props : Props) => {
                         }
                     />
                 </Col>
-                ) : (
+            ) : (
                 <>
                     <Col span={4}>
                         <Steps className="install-steps" size="small" direction="vertical" current={activeStep}>
@@ -600,24 +630,23 @@ const Install = (props : Props) => {
                             layout="vertical"
                             name="install_form"
                             className="install-form steps-content"
-
                             form={stepForm}
                             initialValues={initialValues}
-
                             requiredMark={false}
                             scrollToFirstError={true}
                             validateTrigger="onBlur"
-
                             onFinish={onFinish}
                         >
                             {steps[activeStep].content}
                             <Form.Item
                                 className={
-                                    activeStep === steps.length - 1 ? "button-container final-step-btn" : "button-container"
+                                    activeStep === steps.length - 1
+                                        ? 'button-container final-step-btn'
+                                        : 'button-container'
                                 }
                             >
                                 {activeStep > 0 && (
-                                    <Button className='prev' onClick={() => prev()} block>
+                                    <Button className="prev" onClick={() => prev()} block>
                                         Previous
                                     </Button>
                                 )}

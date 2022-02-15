@@ -29,7 +29,7 @@ class InstallService {
     }
     install(data: object) {
         return axios.post(API_URL + '/install', {
-            data
+            data,
         });
     }
 }
