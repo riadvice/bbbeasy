@@ -1,96 +1,80 @@
 parserOptions:
-   ecmaVersion : 2020 
-   sourceType : "module"
-   ecmaFeatures :
-      jsx: true
-      modules: true
-      
+  ecmaVersion: 2020
+  sourceType: "module"
+  ecmaFeatures:
+    jsx: true
+    modules: true
+
 env:
-   browser: true
-   node: true
-   jest/globals: true
+  browser: true
+  node: true
+  jest/globals: true
 plugins:
   - react
   - prettier
-  -  jest
+  - jest
 extends:
   - eslint:recommended
   - plugin:@typescript-eslint/recommended
   - plugin:react/recommended
   - plugin:jest/recommended
   - prettier
-   
+
 rules:
 
-    "@typescript-eslint/no-explicit-any" : off
-    no-shadow: off
-    "@typescript-eslint/no-shadow":
-       - off
-       - error
-       - ignoreTypeValueShadow : true
-    no-use-before-define: off
-    "@typescript-eslint/no-use-before-define":
-       - error
-       
-    react/jsx-filename-extension:
-      - warn
-      - extensions:
+  "@typescript-eslint/no-explicit-any": off
+  no-shadow: off
+  "@typescript-eslint/no-shadow":
+    - off
+    - error
+    - ignoreTypeValueShadow: true
+  no-use-before-define: off
+  "@typescript-eslint/no-use-before-define":
+    - error
+
+  react/jsx-filename-extension:
+    - warn
+    - extensions:
         - .tsx
-    complexity:
-     - error
-     - 10
-    no-await-in-loop: warn
-    no-eval: error
-    no-implied-eval: error
-    prefer-promise-reject-errors: warn
-    "@typescript-eslint/ban-types":
-      - error 
-      - extendDefaults: true
-        types: 
-           "{}": false
+  complexity:
+    - error
+    - 10
+  no-await-in-loop: warn
+  no-eval: error
+  no-implied-eval: error
+  prefer-promise-reject-errors: warn
+  "@typescript-eslint/ban-types":
+    - error
+    - extendDefaults: true
+      types:
+        "{}": false
 
 settings:
-     react: 
-        pragma: React
-        version :  detect 
+  react:
+    pragma: React
+    version: detect
 
-overrides: 
-       - files  :  "**/*.+(ts|tsx)" 
-         parser :  "@typescript-eslint/parser"   
-         parserOptions : 
-          compilerOptions:
-                target : esnext  
-                module :  esnext 
-                moduleResolution :  node  
-                allowJs : true 
-                noEmit : false 
-                strict : false 
-                isolatedModules : true 
-                esModuleInterop : true 
-                noImplicitAny : false 
-                jsx :  react 
-          include:
-             - src/**/*.tsx
-         plugins: 
-          - "@typescript-eslint/eslint-plugin"     
-         extends:
-           - "plugin:@typescript-eslint/eslint-recommended"
-           - "plugin:@typescript-eslint/recommended"
+overrides:
+  - files: "**/*.+(ts|tsx)"
+    parser: "@typescript-eslint/parser"
+    parserOptions:
+      compilerOptions:
+        target: esnext
+        module: esnext
+        moduleResolution: node
+        allowJs: true
+        noEmit: false
+        strict: false
+        isolatedModules: true
+        esModuleInterop: true
+        noImplicitAny: false
+        jsx: react
+      include:
+        - src/**/*.tsx
+    plugins:
+      - "@typescript-eslint/eslint-plugin"
+    extends:
+      - "plugin:@typescript-eslint/eslint-recommended"
+      - "plugin:@typescript-eslint/recommended"
 ignorePatterns:
-    node_modules/  
-             
-   
-   
-
-
-
-
-
-      
-
-
-
-
-
-
-
+  node_modules/
