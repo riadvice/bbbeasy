@@ -42,24 +42,27 @@ class ChangePassword extends BaseAction
         $token    = $form['token'];
         $password = $form['password'];
 
-        $resetToken = $resetToken->getByToken($token);
-        $this->logger->error('reset token password', ['reset token' => $resetToken->toArray()]);
+        if ($resetToken->tokenExists($token)) {
+            if (!$resetToken->dry()) {
+                $user               = $user->getById($resetToken->user_id);
+                $user->password     = $password;
+                $resetToken->status = ResetTokenStatus::CONSUMED;
 
-        $user               = $user->getById($resetToken->user_id);
-        $user->password     = $password;
-        $resetToken->status = ResetTokenStatus::CONSUMED;
+                try {
+                    $resetToken->save();
+                    $user->save();
+                } catch (\Exception $e) {
+                    $message = 'password could not be changed';
+                    $this->logger->error('reset password error : password could not be changed', ['error' => $message]);
+                    $this->renderJson(['message' => $e->getMessage()], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
 
-        try {
-            $resetToken->save();
-            $user->save();
-        } catch (\Exception $e) {
-            $message = 'password could not be changed';
-            $this->logger->error('reset password error : password could not be changed', ['error' => $message]);
-            $this->renderJson(['message' => $e->getMessage()], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+                    return;
+                }
 
-            return;
+                $this->renderJson(['message' => 'password changed successfully', 'user' => $user->toArray()]);
+            }
+        } else {
+            $this->logger->error('reset password error : password could not be changed');
         }
-
-        $this->renderJson(['message' => 'password changed successfully', 'user' => $user->toArray()]);
     }
 }

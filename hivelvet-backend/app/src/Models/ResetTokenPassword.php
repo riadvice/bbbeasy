@@ -22,21 +22,26 @@ declare(strict_types=1);
 
 namespace Models;
 
-use DB\Cortex;
 use Models\Base as BaseModel;
 
 /**
  * Class User.
  *
- * @property int      $id
- * @property int      $user_id
- * @property string   $token
- * @property string   $status
- * @property DateTime $expires_at
+ * @property int       $id
+ * @property int       $user_id
+ * @property string    $token
+ * @property string    $status
+ * @property \DateTime $expires_at
  */
 class ResetTokenPassword extends BaseModel
 {
     protected $table = 'reset_password_tokens';
+
+    public function __construct($db = null, $table = null, $fluid = null, $ttl = 0)
+    {
+        parent::__construct($db, $table, $fluid, $ttl);
+        $this->token = bin2hex(random_bytes(16));
+    }
 
     /**
      * Check if the user has a reset token password.
@@ -47,7 +52,7 @@ class ResetTokenPassword extends BaseModel
      */
     public function userExists($userID)
     {
-        return \count($this->db->exec('SELECT 1 FROM reset_password_tokens WHERE  user_id = ?', $userID)) > 0;
+        return $this->load(['user_id= ?', $userID]);
     }
 
     /**
@@ -57,32 +62,6 @@ class ResetTokenPassword extends BaseModel
      */
     public function tokenExists(string $token)
     {
-        $this->load(['token = ?', $token]);
-
-        return !$this->dry();
-    }
-
-    /**
-     * Get user record by userID value.
-     *
-     * @return Cortex
-     */
-    public function getByUserID(int $userID)
-    {
-        $this->load(['user_id = ?', $userID]);
-
-        return $this;
-    }
-
-    /**
-     * Get user record by token value.
-     *
-     * @return Cortex
-     */
-    public function getByToken(string $token)
-    {
-        $this->load(['token = ?', $token]);
-
-        return $this;
+        return $this->load(['token = ?', $token]);
     }
 }

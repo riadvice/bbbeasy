@@ -57,7 +57,7 @@ class Login extends BaseAction
 
             if ($v->allValid()) {
                 if ($user->emailExists($email)) {
-                    $user = $user->getByEmail($email);
+                    //$user = $user->getByEmail($email);
                     //$user->status === UserStatus::ACTIVE &&
                     if (UserRole::API !== $user->role && $user->verifyPassword($password)) {
                         // valid credentials

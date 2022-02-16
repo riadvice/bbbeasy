@@ -24,7 +24,6 @@ namespace Models;
 
 use DateTime;
 use DB\Cortex;
-use Enum\CacheKey;
 use Enum\UserStatus;
 use Models\Base as BaseModel;
 
@@ -52,16 +51,6 @@ class User extends BaseModel
     {
         parent::__construct($db, $table, $fluid, $ttl);
         $this->onset('password', fn($self, $value) => password_hash($value, PASSWORD_BCRYPT));
-    }
-
-    public function onCreateCleanUp(): void
-    {
-        $this->f3->clear(CacheKey::AJAX_USERS);
-    }
-
-    public function onUpdateCleanUp(): void
-    {
-        $this->f3->clear(CacheKey::AJAX_USERS);
     }
 
     /**
@@ -147,7 +136,7 @@ class User extends BaseModel
      */
     public function emailExists($email)
     {
-        return \count($this->db->exec('SELECT 1 FROM users WHERE email= ?', $email)) > 0;
+        return $this->load(['email = ?', $email]);
     }
 
     //@todo: will be used to detect if the course is full or not yet

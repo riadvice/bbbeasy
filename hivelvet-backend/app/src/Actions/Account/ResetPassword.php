@@ -31,7 +31,6 @@ use Models\User;
 
 class ResetPassword extends BaseAction
 {
-
     public function execute($f3): void
     {
         $user = new User();
@@ -40,36 +39,36 @@ class ResetPassword extends BaseAction
         $email = $form['email'];
 
         if ($user->emailExists($email)) {
-            $user = $user->getByEmail($email);
-
             $this->logger->info('user', ['user' => $user->toArray()]);
 
             if (!$user->dry()) {
-                // valid credentials
+                   // valid credentials
                 $this->session->authorizeUser($user);
 
                 // $this->session->set('locale', $user->locale);
 
-                $mailSent       = new MailSender();
+                $mailSent   = new MailSender();
                 $template   = 'common/reset_password';
                 $resetToken = new ResetTokenPassword();
 
                 $this->logger->info('user', ['user' => $user->toArray()]);
-                $tokenValue = bin2hex(random_bytes(16));
-                //if reset token has a row contains the id user then will update the current row with new status,new token and expires_at date
+
+                //if user does not have a reset token
+
                 if (!$resetToken->userExists($user->id)) {
+                    $resetToken          = new ResetTokenPassword();
                     $resetToken->user_id = $user->id;
-                    $this->logger->info('reset token of this user', ['reset token' => $resetToken->toArray()]);
                 }
-                //otherwise will create a new row
+
+                //otherwise will update the existing row
                 $resetToken->expires_at = date('Y-m-d H:i:s', strtotime('+15 min'));
-                $resetToken->status  = ResetTokenStatus::NEW;
-                $resetToken->token   = $tokenValue;
+                $resetToken->status     = ResetTokenStatus::NEW;
+
                 $resetToken->save();
 
-                $emailTokens['token']            = $tokenValue;
                 $emailTokens['from_name']        = $this->f3->get('from_name');
                 $emailTokens['expires_at']       = $resetToken->expires_at;
+                $emailTokens['token']            = $resetToken->token;
                 $emailTokens['message_template'] = [$f3->format(
                     $f3->get('i18n.label.mail.hi'),
                     $f3->format($f3->get('i18n.label.mail.recieved_request')),

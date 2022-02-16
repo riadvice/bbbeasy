@@ -26,7 +26,6 @@ use Actions\Base as BaseAction;
 use Enum\ResetTokenStatus;
 use Enum\ResponseCode;
 use Models\ResetTokenPassword;
-use Models\User;
 
 class GetResetTokenPassword extends BaseAction
 {
@@ -38,27 +37,25 @@ class GetResetTokenPassword extends BaseAction
     public function execute($f3, $params): void
     {
         $token = $f3->get('GET.token');
-        echo $token;
 
-        $user       = new User();
         $resetToken = new ResetTokenPassword();
         if ($resetToken->tokenExists($token)) {
-            $this->logger->info('token exists', ['token' => $token]);
-            $resetToken->getByToken($token);
-            if (ResetTokenStatus::NEW === $resetToken->status) {
-                if ($resetToken->expires_at <= date('Y-m-d H:i:s')) {
-                    $resetToken->status = ResetTokenStatus::EXPIRED;
-
-                    $this->logger->error('token was expired');
-                    $this->renderJson(['message' => 'token was expired'], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-                } else {
-                    $user = $user->getById($resetToken->user_id);
-                    $this->renderJson(['user' => $user->toArray(), ResponseCode::HTTP_OK]);
+            if (!$resetToken->dry()) {
+                $this->logger->info('token exists', ['token' => $token]);
+                if (ResetTokenStatus::NEW === $resetToken->status) {
+                    if ($resetToken->expires_at <= date('Y-m-d H:i:s')) {
+                        $resetToken->status = ResetTokenStatus::EXPIRED;
+                        $resetToken->save();
+                        $this->logger->error('token was expired');
+                        $this->renderJson(['message' => 'token was expired'], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+                    } else {
+                        $this->renderJson(['reset token' => $resetToken->toArray(), ResponseCode::HTTP_OK]);
+                    }
                 }
-            }
-            if (ResetTokenStatus::CONSUMED === $resetToken->status) {
-                $this->logger->error('token was consumed');
-                $this->renderJson(['message' => 'token was consumed , you should request to reset your password again '], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+                if (ResetTokenStatus::CONSUMED === $resetToken->status) {
+                    $this->logger->error('token was consumed');
+                    $this->renderJson(['message' => 'token was consumed , you should request to reset your password again '], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+                }
             }
         } else {
             $this->logger->error('token does not exist');

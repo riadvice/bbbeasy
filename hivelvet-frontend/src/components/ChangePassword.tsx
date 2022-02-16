@@ -63,7 +63,6 @@ class ChangePassword extends Component<Props, State> {
             email: '',
             successful: false,
             message: '',
-            available_token: false,
         };
     }
 

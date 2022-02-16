@@ -37,7 +37,7 @@ class AuthService {
     }
 
     reset_password(email: string) {
-        return axios.post(API_URL + '/account/reset', {
+        return axios.post(API_URL + '/account/reset-password', {
             email,
         });
     }
