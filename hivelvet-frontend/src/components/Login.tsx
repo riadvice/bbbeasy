@@ -150,7 +150,7 @@ class Login extends Component<Props, State> {
                             initialValues={initialValues}
                             requiredMark={false}
                             scrollToFirstError={true}
-                            validateTrigger="onBlur"
+                            validateTrigger="onFinish"
 
                             onFinish={this.handleLogin}
                         >

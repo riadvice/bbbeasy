@@ -147,7 +147,7 @@ class Register extends Component<Props, State> {
                                 initialValues={initialValues}
                                 requiredMark={false}
                                 scrollToFirstError={true}
-                                validateTrigger="onBlur"
+                                validateTrigger="onFinish"
                                 
                                 onFinish={this.handleRegistration}
                             >
