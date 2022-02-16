@@ -22,7 +22,8 @@ import * as AntdIcons from '@ant-design/icons';
 //import ZcaleRightSvg from "../../public/images/ZcaleRight.svg"; //{ ReactComponent as ZcaleRightSvg }
 
 type Props = {
-  type : string
+    type: string;
+    className?: string;
 };
 type State = {};
 
@@ -35,13 +36,13 @@ const ZcaleRightSvg = () => (
 class DynamicIcon extends Component<Props, State> {
 
     render() {
-        const {type} = this.props;
+        const {type, className } = this.props;
         const AntdIcon = AntdIcons[type];
         if (type == 'ZcaleRight') {
-            return <Icon component={ZcaleRightSvg} className="PresetIcon" />
+            return <Icon component={ZcaleRightSvg} className={className} />
         }
         else {
-            return <AntdIcon className="PresetIcon" />;
+            return <AntdIcon className={className} />;
         }
     }
 }

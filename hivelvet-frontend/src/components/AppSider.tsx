@@ -16,80 +16,129 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, {Component} from 'react';
+import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
+
 import { Button, Dropdown, Layout, Menu } from 'antd';
-import { PlusOutlined, DownOutlined, UserOutlined, TagsOutlined, UserAddOutlined, ContainerOutlined, QuestionCircleOutlined } from "@ant-design/icons";
+import { PlusOutlined, DownOutlined } from "@ant-design/icons";
+import DynamicIcon from "./DynamicIcon";
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
 
-type Props = {};
+const AppSider = () => {
+    const location = useLocation();
+    const [currentPath, setCurrentPath] = React.useState(location.pathname);
 
-type State = {
-    collapsed: boolean
-};
-
-class AppSider extends Component<Props,State> {
-    state = {
-        collapsed: false,
+    const newMenu = (
+        <Menu>
+            <Menu.Item key="1">
+                Room
+            </Menu.Item>
+            <Menu.Item key="2">
+                Label
+            </Menu.Item>
+            <Menu.Item key="3">
+                Preset
+            </Menu.Item>
+        </Menu>
+    );
+    const menuData = [
+        {
+            name: 'Rooms',
+            icon: 'UserOutlined',
+            path: '/home'
+        },
+        {
+            name: 'Labels',
+            icon: 'TagsOutlined',
+            path: '/labels'
+        },
+        {
+            name: 'Presets',
+            icon: 'UserAddOutlined',
+            path: '/presets'
+        },
+        {
+            name: 'Settings',
+            icon: 'ContainerOutlined',
+            path: 'sub1',
+            children: [
+                {
+                    name: 'Company & Branding',
+                    path: '/company',
+                },
+                {
+                    name: 'Users',
+                    path: '/users',
+                },
+                {
+                    name: 'Roles',
+                    path: '/roles',
+                },
+                {
+                    name: 'Notifications',
+                    path: '/notifications',
+                },
+                {
+                    name: 'BigBlueButton',
+                    path: '/bbb',
+                }
+            ],
+        },
+        {
+            name: 'Help',
+            icon: 'QuestionCircleOutlined',
+            path: '/help'
+        },
+    ];
+    const handleClick = e => {
+        setCurrentPath(e.key);
     };
-    toggleCollapsed = () => {
-        this.setState({
-            collapsed: !this.state.collapsed,
-        });
-    };
 
-    render() {
-        const { collapsed } = this.state;
-        const menu = (
-            <Menu>
-                <Menu.Item key="1">
-                    Room
-                </Menu.Item>
-                <Menu.Item key="2">
-                    Label
-                </Menu.Item>
-                <Menu.Item key="3">
-                    Preset
-                </Menu.Item>
-            </Menu>
-        );
+    return (
+        <Sider
+            className="site-sider"
+            width={250}
+        >
+            <Dropdown overlay={newMenu}>
+                <Button size="middle" className="sider-new-btn">
+                    <PlusOutlined /> New <DownOutlined />
+                </Button>
+            </Dropdown>
 
-        return (
-            <Sider
-                className="site-sider"
-                width={250}
-                collapsible
-                collapsed={collapsed}
-                onCollapse={this.toggleCollapsed}
+            <Menu
+                className="site-menu"
+                mode="inline"
+                onClick={handleClick}
+                selectedKeys={[currentPath]}
+                defaultSelectedKeys={['/home']}
+                defaultOpenKeys={['sub1']}
             >
-                <Dropdown overlay={menu}>
-                    <Button size="middle" className="sider-new-btn">
-                        <PlusOutlined /> New <DownOutlined />
-                    </Button>
-                </Dropdown>
-
-                <Menu
-                    mode="inline"
-                    defaultSelectedKeys={['1']}
-                    defaultOpenKeys={['sub1']}
-                    style={{ height: '100%', borderRight: 0 }}
-                >
-                    <Menu.Item key="1" icon={<UserOutlined />}>Rooms</Menu.Item>
-                    <Menu.Item key="2" icon={<TagsOutlined />}>Labels</Menu.Item>
-                    <Menu.Item key="3" icon={<UserAddOutlined />}>Presets</Menu.Item>
-                    <SubMenu key="sub1" icon={<ContainerOutlined />} title="Settings">
-                        <Menu.Item key="4">Company & Branding</Menu.Item>
-                        <Menu.Item key="5">Users</Menu.Item>
-                        <Menu.Item key="6">Roles</Menu.Item>
-                        <Menu.Item key="7">Notifications</Menu.Item>
-                        <Menu.Item key="8">BigBlueButton</Menu.Item>
-                    </SubMenu>
-                    <Menu.Item key="9" icon={<QuestionCircleOutlined />}>Help</Menu.Item>
-                </Menu>
-            </Sider>
-        );
-    }
+                {menuData.map((item) => (
+                    item.children!= null ?
+                        <SubMenu
+                            key={item.path}
+                            icon={<DynamicIcon type={item.icon} />}
+                            title={item.name}
+                        >
+                            {item.children.map((subItem) => (
+                                <Menu.Item key={subItem.path}>
+                                    <Link to={subItem.path}>{subItem.name}</Link>
+                                </Menu.Item>
+                            ))}
+                        </SubMenu>
+                        :
+                        <Menu.Item
+                            key={item.path}
+                            icon={<DynamicIcon type={item.icon} />}
+                        >
+                            <Link to={item.path}>{item.name}</Link>
+                        </Menu.Item>
+                ))}
+            </Menu>
+        </Sider>
+    );
 }
 
 export default AppSider;

@@ -154,19 +154,19 @@ class Register extends Component<Props, State> {
                                 <Form.Item
                                     label={<T _str="Username" />}
                                     name="username"
-                                    /*rules={[
+                                    rules={[
                                         {
                                             required: true,
                                             message: <T _str="Username is required" />,
                                         },
-                                    ]}*/
+                                    ]}
                                 >
                                     <Input placeholder="Username" />
                                 </Form.Item>
                                 <Form.Item
                                     label={<T _str="Email" />}
                                     name="email"
-                                    /*rules={[
+                                    rules={[
                                         {
                                             type: 'email',
                                             message: <T _str="Invalid Email" />,
@@ -175,14 +175,14 @@ class Register extends Component<Props, State> {
                                             required: true,
                                             message: <T _str="Email is required" />,
                                         },
-                                    ]}*/
+                                    ]}
                                 >
                                     <Input placeholder="Email" />
                                 </Form.Item>
                                 <Form.Item
                                     label={<T _str="Password" />}
                                     name="password"
-                                    /*rules={[
+                                    rules={[
                                         {
                                             min: 4,
                                             message: <T _str="Password must be at least 4 characters" />,
@@ -191,10 +191,10 @@ class Register extends Component<Props, State> {
                                             required: true,
                                             message: <T _str="Password is required" />,
                                         },
-                                    ]}*/
+                                    ]}
                                 >
                                     <Input.Password
-                                        placeholder="Password"
+                                        placeholder="**********"
                                         iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
                                     />
                                 </Form.Item>
@@ -202,7 +202,7 @@ class Register extends Component<Props, State> {
                                     label={<T _str="Confirm Password" />}
                                     name="confirmPassword"
                                     dependencies={['password']}
-                                    /*rules={[
+                                    rules={[
                                         {
                                             min: 4,
                                             message: <T _str="Confirm password must be at least 4 characters" />,
@@ -223,16 +223,16 @@ class Register extends Component<Props, State> {
                                                 );
                                             },
                                         }),
-                                    ]}*/
+                                    ]}
                                 >
-                                    <Input.Password placeholder="Confirm Password" />
+                                    <Input.Password placeholder="**********" />
                                 </Form.Item>
 
                                 <Form.Item
                                     className="form-agree"
                                     name="agreement"
                                     valuePropName="checked"
-                                    /*rules={[
+                                    rules={[
                                         {
                                             validator: (_, value) =>
                                                 value
@@ -245,7 +245,7 @@ class Register extends Component<Props, State> {
                                                           )
                                                       ),
                                         },
-                                    ]}*/
+                                    ]}
                                 >
                                     <Checkbox>
                                         <T _str="I agree to the" />

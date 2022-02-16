@@ -157,7 +157,7 @@ class Login extends Component<Props, State> {
                             <Form.Item
                                 label={<T _str="Email" />}
                                 name="email"
-                                /*rules={[
+                                rules={[
                                     {
                                         type: 'email',
                                         message: <T _str="Invalid Email" />,
@@ -166,14 +166,14 @@ class Login extends Component<Props, State> {
                                         required: true,
                                         message: <T _str="Email is required" />,
                                     },
-                                ]}*/
+                                ]}
                             >
                                 <Input placeholder="Email" />
                             </Form.Item>
                             <Form.Item
                                 label={<T _str="Password" />}
                                 name="password"
-                                /*rules={[
+                                rules={[
                                     {
                                         min: 4,
                                         message: <T _str="Password must be at least 4 characters" />,
@@ -182,10 +182,10 @@ class Login extends Component<Props, State> {
                                         required: true,
                                         message: <T _str="Password is required" />,
                                     },
-                                ]}*/
+                                ]}
                             >
                                 <Input.Password
-                                    placeholder="Password"
+                                    placeholder="**********"
                                     iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
                                 />
                             </Form.Item>

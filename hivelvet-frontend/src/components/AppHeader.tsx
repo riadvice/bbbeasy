@@ -65,26 +65,10 @@ class AppHeader extends Component<Props, State> {
         this.props.setLang(res[0].value);
     };
 
-    /*
-    old handle
-    handleChange = (e) => {
-        const localeValue = e.target.value;
-        if (!localeValue) {
-            moment.locale('en');
-        } else {
-            moment.locale(localeValue.locale);
-        }
-        tx.setCurrentLocale(localeValue.locale);
-        setCurrentLocale(localeValue);
-        //localStorage.setItem('locale', tx.getCurrentLocale());
-        localStorage.setItem('locale', localeValue.locale);
-    };
-     */
-
     render() {
         const { currentLocale, isLogged, installed } = this.props;
         const result = languages.filter((item) => item.value == currentLocale);
-        const language = result[0].name;
+        const language = result[0].key;
         const menu = (
             <Menu>
                 <Radio.Group value={currentLocale} onChange={this.handleChange}>
@@ -105,8 +89,8 @@ class AppHeader extends Component<Props, State> {
                     </Link>
                     {installed && (
                         <Space size="large">
-                            <Dropdown overlay={menu}>
-                                <Button size="middle">
+                            <Dropdown overlay={menu} arrow trigger={['click']}>
+                                <Button size="middle" className="text-uppercase">
                                     <GlobalOutlined /> {language} <DownOutlined />
                                 </Button>
                             </Dropdown>

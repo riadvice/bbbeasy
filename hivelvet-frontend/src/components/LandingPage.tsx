@@ -17,14 +17,60 @@
  */
 
 import React, { Component } from 'react';
-import { Row } from 'antd';
+import { Link } from 'react-router-dom';
+
+import { Row, Col, Typography, Avatar } from 'antd';
+import { AppstoreAddOutlined, BgColorsOutlined, PlayCircleOutlined, ControlOutlined } from '@ant-design/icons';
+import {T} from "@transifex/react";
+
+const { Title, Paragraph } = Typography;
 
 class LandingPage extends Component<any, any> {
     render() {
         return (
-            <Row justify="center">
-                <img className="landing-img" src="images/landing.png" />
-            </Row>
+            <>
+                <Row justify="center" align="top" className="landing-content">
+                    <Col span={12}>
+                        <Title>Welcome to Hivelvet</Title>
+                        <p className="mb-30">Create fully customisable rooms for <strong>BigBlueButton</strong></p>
+                        <Paragraph className="landing-btn">
+                            <Link className='ant-btn ant-btn-primary text-white' to={'/login'}>
+                                {' '}
+                                <T _str="Login"/>{' '}
+                            </Link>
+                            <Link className={'ant-btn color-primary'} to={'/register'}>
+                                {' '}
+                                <T _str="Sign up"/>{' '}
+                            </Link>
+                        </Paragraph>
+                    </Col>
+                    <Col span={12} className="text-end">
+                        <img className="landing-img" src="images/landing2.png" />
+                    </Col>
+                </Row>
+                <Row gutter={[40, 8]} justify="center" className="features text-center">
+                    <Col span={3}>
+                        <Avatar size={45} icon={<AppstoreAddOutlined />} className="ant-btn-primary hivelvet-btn"/>
+                        <p>Personal Rooms</p>
+                    </Col>
+                    <Col span={3}>
+                        <Avatar size={45} icon={<BgColorsOutlined />} className="ant-btn-primary hivelvet-btn"/>
+                        <p>Full Branding</p>
+                    </Col>
+                    <Col span={3}>
+                        <Avatar size={45} icon={<PlayCircleOutlined />} className="ant-btn-primary hivelvet-btn"/>
+                        <p>Recordings management</p>
+                    </Col>
+                    <Col span={3}>
+                        <Avatar size={45} icon={<ControlOutlined />} className="ant-btn-primary hivelvet-btn"/>
+                        <p>Flexible Configuration</p>
+                    </Col>
+                    <Col span={3}>
+                        <Avatar size={45} icon={<ControlOutlined />} className="ant-btn-primary hivelvet-btn"/>
+                        <p>ZcaleRight <br/>Support</p>
+                    </Col>
+                </Row>
+            </>
         );
     }
 }

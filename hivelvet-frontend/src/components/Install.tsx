@@ -20,7 +20,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import InstallService from '../services/install.service';
 
-import { Steps, Button, message, Row, Col, Form, Input, Typography, Upload, Card, Modal, Switch, Result, Alert } from 'antd';
+import { Steps, Button, message, Row, Col, Form, Input, Typography, Upload, Card, Modal, Switch, Result, Alert, Tooltip } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone, InboxOutlined, CloseOutlined, CheckOutlined } from '@ant-design/icons';
 import ColorPicker from 'rc-color-picker/lib/ColorPicker';
 import DynamicIcon from './DynamicIcon';
@@ -31,7 +31,7 @@ import axios from 'axios';
 const API_URL = process.env.REACT_APP_API_URL;
 const { Title, Text, Paragraph } = Typography;
 const { Step } = Steps;
-const { Meta } = Card;
+const { Grid, Meta } = Card;
 const { Dragger } = Upload;
 
 type Props = {
@@ -132,12 +132,12 @@ const Install = (props : Props) => {
                 <Form.Item
                     label={<T _str="Username" />}
                     name="username"
-                    /*rules={[
+                    rules={[
                         {
                             required: true,
                             message: 'Username is required',
                         },
-                    ]}*/
+                    ]}
                 >
                     <Input placeholder="Username" />
                 </Form.Item>
@@ -145,7 +145,7 @@ const Install = (props : Props) => {
                 <Form.Item
                     label={<T _str="Email" />}
                     name="email"
-                    /*rules={[
+                    rules={[
                         {
                             type: 'email',
                             message: 'Email is invalid',
@@ -154,14 +154,14 @@ const Install = (props : Props) => {
                             required: true,
                             message: 'Email is required',
                         },
-                    ]}*/
+                    ]}
                 >
                     <Input placeholder="Email" />
                 </Form.Item>
                 <Form.Item
                     label={<T _str="Password" />}
                     name="password"
-                    /*rules={[
+                    rules={[
                         {
                             min: 4,
                             message: 'Password must be at least 4 characters',
@@ -170,7 +170,7 @@ const Install = (props : Props) => {
                             required: true,
                             message: 'Password is required',
                         },
-                    ]}*/
+                    ]}
                 >
                     <Input.Password
                         placeholder="Password"
@@ -229,12 +229,12 @@ const Install = (props : Props) => {
                     <Form.Item
                         label={<T _str="Company name" />}
                         name="company_name"
-                        /*rules={[
+                        rules={[
                             {
                                 required: true,
                                 message: 'Company name is required',
                             },
-                        ]}*/
+                        ]}
                     >
                         <Input placeholder="Company name" onChange={changeCompany} />
                     </Form.Item>
@@ -242,7 +242,7 @@ const Install = (props : Props) => {
                     <Form.Item
                         label={<T _str="Company website" />}
                         name="company_url"
-                        /*rules={[
+                        rules={[
                             {
                                 required: true,
                                 message: 'Company website is required',
@@ -251,7 +251,7 @@ const Install = (props : Props) => {
                                 type: 'url',
                                 message: 'Company website is not a valid url',
                             },
-                        ]}*/
+                        ]}
                     >
                         <Input placeholder="Company website" />
                     </Form.Item>
@@ -259,12 +259,12 @@ const Install = (props : Props) => {
                     <Form.Item
                         label={<T _str="Platform name" />}
                         name="platform_name"
-                        /*rules={[
+                        rules={[
                             {
                                 required: true,
                                 message: 'Platform name is required',
                             },
-                        ]}*/
+                        ]}
                     >
                         <Input placeholder="Platform name" />
                     </Form.Item>
@@ -272,12 +272,12 @@ const Install = (props : Props) => {
                     <Form.Item
                         label={<T _str="Terms of use URL" />}
                         name="term_url"
-                        /*rules={[
+                        rules={[
                             {
                                 type: 'url',
                                 message: 'Term of use url is not a valid url',
                             },
-                        ]}*/
+                        ]}
                     >
                         <Input placeholder="Term of use URL" />
                     </Form.Item>
@@ -285,12 +285,12 @@ const Install = (props : Props) => {
                     <Form.Item
                         label={<T _str="Privacy Policy URL" />}
                         name="policy_url"
-                        /*rules={[
+                        rules={[
                             {
                                 type: 'url',
                                 message: 'Privacy Policy url is not a valid url',
                             },
-                        ]}*/
+                        ]}
                     >
                         <Input placeholder="Privacy Policy URL" />
                     </Form.Item>
@@ -412,24 +412,35 @@ const Install = (props : Props) => {
                 <Paragraph className="final-form-header">
                     <Title level={4} className="final-form-header">
                         {' '}
-                        <T _str="BigBlueButton settings" />
+                        <T _str="BigBlueButton rooms settings" />
                     </Title>
 
                     <Alert
                         className="settings-info"
-                        message="Informational Notes"
+                        message="Click on each button to customise the configuration group and hover it to get its summary."
                         type="info"
-                        showIcon
+                        closeText="I understand, thank you!"
                     />
                 </Paragraph>
                 <Card bordered={false}>
                     {presets.map((item,index) => (
-                        <Card.Grid key={item.name} className="presets-grid" onClick={() => showModal(item.name,item.subcategories,index)}>
-                            <Meta
-                                avatar={<DynamicIcon type={item.icon} />}
-                                title={item.name}
-                            />
-                        </Card.Grid>
+                        <Tooltip
+                            key={item.name}
+                            placement="rightTop"
+                            title={
+                                <ul>
+                                    {item.subcategories.map((subItem) => (
+                                        <li key={subItem.name} className={subItem.status == true ? 'text-black':'text-grey'}>{subItem.name}</li>
+                                    ))}
+                                </ul>
+                            }>
+                            <Grid key={item.name} className="presets-grid" onClick={() => showModal(item.name,item.subcategories,index)}>
+                                <Meta
+                                    avatar={<DynamicIcon type={item.icon} className="PresetIcon" />}
+                                    title={item.name}
+                                />
+                            </Grid>
+                        </Tooltip>
                     ))}
 
                     <Modal
@@ -441,7 +452,7 @@ const Install = (props : Props) => {
                         onCancel={handleCancel}
                         cancelButtonProps={{ style: { display: 'none' } }}
                         footer={[
-                            <Button key="submit" className="ant-btn-primary" onClick={handleOk}>
+                            <Button key="submit" type="primary" onClick={handleOk}>
                                 Confirm
                             </Button>
                         ]}
@@ -577,10 +588,10 @@ const Install = (props : Props) => {
                 <Col span={10} offset={7} className="section-top">
                     <Result
                         status="success"
+                        icon={<DynamicIcon type='CheckOutlined' className="success-install-icon" />}
                         title={successMessage}
-                        subTitle="Your application setup is complete"
                         extra={
-                            <Link to={'/login'} onClick={handleInstall} className="ant-btn ant-btn-lg color-green">
+                            <Link to={'/login'} onClick={handleInstall} className="ant-btn ant-btn-primary ant-btn-lg">
                                 Start using Hivelvet
                             </Link>
                         }
