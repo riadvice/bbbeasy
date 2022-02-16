@@ -32,7 +32,7 @@ use Models\Base as BaseModel;
  * @property int      $user_id
  * @property string   $token
  * @property string   $status
- * @property datetime $expires_at
+ * @property DateTime $expires_at
  */
 class ResetTokenPassword extends BaseModel
 {
