@@ -40,17 +40,12 @@ class Bootstrap extends Boot
 {
     public function __construct()
     {
-        if (\PHP_SAPI !== 'cli') {
-            $this->logFileName = 'app';
-        } else {
-            $this->logFileName = 'cli';
-        }
-        $this->logSession = true;
+        $this->logFileName = \PHP_SAPI !== 'cli' ? 'app' : 'cli';
+        $this->logSession  = true;
 
         parent::__construct();
 
-        // @fixme: must update for PHP 8.1
-        // $this->setupMailer();
+        $this->setupMailer();
         $this->handleException();
         $this->createDatabaseConnection();
         $this->prepareSession();
@@ -94,9 +89,9 @@ class Bootstrap extends Boot
                 function(): void {
                     header('Expires:  ' . Time::http(time() + Base::instance()->get('error.ttl')));
                     if ('404' === Base::instance()->get('ERROR.code')) {
-                        include_once 'templates/error/404.phtml';
+                        include_once '/templates/error/404.phtml';
                     } else {
-                        include_once 'templates/error/error.phtml';
+                        include_once '/templates/error/error.phtml';
                     }
                 }
             );
@@ -110,11 +105,7 @@ class Bootstrap extends Boot
             // Load global settings
             foreach ([]
                      as $entry => $cacheKey) {
-                if ('locale' === $entry) {
-                    $exists = $this->session->get($entry);
-                } else {
-                    $exists = $this->f3->exists($entry);
-                }
+                $exists = 'locale' === $entry ? $this->session->get($entry) : $this->f3->exists($entry);
                 if (!$exists) {
                     $setting = new Setting();
                     $setting->load();
@@ -141,7 +132,7 @@ class Bootstrap extends Boot
             $this->f3->config('config/routes-' . $this->environment . '.ini');
         }
 
-        if (!$this->isCli) {
+        if ('' === $this->isCli || '0' === $this->isCli) {
             // load routes access policy
             $this->f3->config('config/access' . $this->f3->get('config.extension') . '.ini');
         } else {

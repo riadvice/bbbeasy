@@ -26,9 +26,9 @@ use Base;
 
 class Environment
 {
-    public const TEST        = 'test';
-    public const DEVELOPMENT = 'development';
-    public const PRODUCTION  = 'production';
+    final public const TEST        = 'test';
+    final public const DEVELOPMENT = 'development';
+    final public const PRODUCTION  = 'production';
 
     public static function isProduction(): bool
     {

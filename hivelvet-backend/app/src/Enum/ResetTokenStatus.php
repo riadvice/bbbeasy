@@ -24,7 +24,7 @@ namespace Enum;
 
 class ResetTokenStatus extends Enum
 {
-    public const NEW      = 'new';
-    public const CONSUMED = 'consumed';
-    public const EXPIRED  = 'expired';
+    final public const NEW      = 'new';
+    final public const CONSUMED = 'consumed';
+    final public const EXPIRED  = 'expired';
 }

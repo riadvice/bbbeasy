@@ -24,7 +24,7 @@ namespace Enum;
 
 class Locale extends Enum
 {
-    public const EN_GB = 'en-GB';
-    public const FR_FR = 'fr_FR';
-    public const AR_AE = 'ar_AE';
+    final public const EN_GB = 'en-GB';
+    final public const FR_FR = 'fr_FR';
+    final public const AR_AE = 'ar_AE';
 }

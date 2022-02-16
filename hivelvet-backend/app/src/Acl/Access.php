@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Acl;
 
 /**
- * Class Access origin https://github.com/ikkez/f3-pagination/tree/master/lib.
+ * Class Access origin https://github.com/ikkez/f3-access/blob/master/lib/access.php.
  */
 class Access extends \Prefab
 {

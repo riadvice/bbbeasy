@@ -66,7 +66,7 @@ class Scenario
      */
     public function responseHasFlash($response, $text, $type): bool
     {
-        return 1 === preg_match('/{text:"' . $text . '", type: "' . $type . '"}/', $response, $matches);
+        return 1 === preg_match('/{text:"' . $text . '", type: "' . $type . '"}/', (string) $response, $matches);
     }
 
     /**
@@ -136,9 +136,6 @@ class Scenario
         return $array;
     }
 
-    /**
-     * @return ?string
-     */
     protected function rerouted(): ?string
     {
         return Base::instance()->get('utest.rerouted');

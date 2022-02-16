@@ -40,11 +40,8 @@ use Utils\CliUtils;
 
 class Statera
 {
-    private $cli = false;
+    private bool $cli = false;
 
-    /**
-     * @var CodeCoverage
-     */
     private static $coverage;
 
     private static $coverageEnabled;
@@ -82,7 +79,7 @@ class Statera
             exit;
         }
         $_GET['test'] = $_GET['test'] ?: 'all';
-        $tests        = explode(',', $_GET['test']);
+        $tests        = explode(',', (string) $_GET['test']);
         CliUtils::instance()->write('Selected tests: ' . $_GET['test']);
 
         // Delete test result file
@@ -105,7 +102,7 @@ class Statera
         $totalSuccess         = 0;
         $totalFail            = 0;
         foreach ($results as &$result) {
-            $total             = \count($result);
+            $total             = is_countable($result) ? \count($result) : 0;
             $success           = \count(array_filter(array_column($result, 'status')));
             $fail              = $total - $success;
             $result['success'] = $success;
@@ -117,7 +114,7 @@ class Statera
             $totalFail += $fail;
         }
 
-        $f3->set('utest.statera_folder', !$this->cli ? '/statera/' : '');
+        $f3->set('utest.statera_folder', $this->cli ? '' : '/statera/');
         $f3->set('utest.delay', 1);
         $f3->set('utest.success', $totalSuccess);
         $f3->set('utest.fail', $totalFail);
@@ -189,7 +186,7 @@ class Statera
         } else {
             //CliUtils::instance()->writeTestPassed('All teest passed');
             foreach (Base::instance()->get('SERVER')['argv'] as $arg) {
-                if (Strings::startsWith($arg, '-o=')) {
+                if (str_starts_with($arg, '-o=')) {
                     Base::instance()->write(Strings::after($arg, '-o='), $result);
                 }
             }

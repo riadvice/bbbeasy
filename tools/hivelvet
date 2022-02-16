@@ -199,12 +199,8 @@ zip_logs() {
 #
 fix_styles() {
   echo "► Running PHP Code Style Fixer"
-
   cd "$BASEDIR/../hivelvet-backend/"
-
-  sudo phpdismod -s cli xdebug
-  composer format
-  sudo phpenmod -s cli xdebug
+  composer csfix
   echo "✔ PHP Code Style Fixed"
 }
 

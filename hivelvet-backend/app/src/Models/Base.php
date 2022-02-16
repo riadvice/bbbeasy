@@ -75,7 +75,7 @@ abstract class Base extends Cortex
      */
     public function __construct($db = null, $table = null, $fluid = null, $ttl = 0)
     {
-        $this->db = !$db ? \Registry::get('db') : $db;
+        $this->db = $db ?: \Registry::get('db');
 
         parent::__construct($this->db, $table, $fluid, $ttl);
 
@@ -136,7 +136,7 @@ abstract class Base extends Cortex
 
     protected function setCreatedOnDate(): void
     {
-        if (false !== array_search('created_on', $this->fields(), true)) {
+        if (\in_array('created_on', $this->fields(), true)) {
             $this->created_on = Time::db();
         }
         if (method_exists($this, 'onCreateCleanUp')
@@ -149,7 +149,7 @@ abstract class Base extends Cortex
 
     protected function setUpdatedOnDate(): void
     {
-        if (false !== array_search('updated_on', $this->fields(), true)) {
+        if (\in_array('updated_on', $this->fields(), true)) {
             $this->updated_on = Time::db();
         }
         if (method_exists($this, 'onUpdateCleanUp')

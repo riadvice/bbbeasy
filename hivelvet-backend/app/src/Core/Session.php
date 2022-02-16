@@ -41,15 +41,11 @@ class Session extends Prefab
      */
     protected $f3;
 
-    /**
-     * @var SQLSession
-     */
-    private $internalSession;
+    private readonly SQLSession $internalSession;
 
     /**
      * Session constructor.
      *
-     * @param SQL    $db
      * @param string $table
      * @param bool   $force
      * @param null   $onsuspect
@@ -120,8 +116,6 @@ class Session extends Prefab
      *    Garbage collector.
      *
      * @param $max int
-     *
-     * @return true
      */
     public function cleanup($max): bool
     {

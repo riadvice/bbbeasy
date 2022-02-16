@@ -24,8 +24,8 @@ namespace Enum;
 
 class UserStatus extends Enum
 {
-    public const ACTIVE   = 'active';
-    public const INACTIVE = 'inactive';
-    public const PENDING  = 'pending';
-    public const DELETED  = 'deleted';
+    final public const ACTIVE   = 'active';
+    final public const INACTIVE = 'inactive';
+    final public const PENDING  = 'pending';
+    final public const DELETED  = 'deleted';
 }

@@ -24,14 +24,14 @@ namespace Enum;
 
 class CacheKey extends Enum
 {
-    public const CONFIG_LOADED = 'config.loaded';
+    final public const CONFIG_LOADED = 'config.loaded';
 
-    public const ORGANISATION = 'organisation';
-    public const SITE_LOGO    = 'site.logo_';
+    final public const ORGANISATION = 'organisation';
+    final public const SITE_LOGO    = 'site.logo_';
 
-    public const API_VERSION = 'api.version_';
+    final public const API_VERSION = 'api.version_';
 
-    public const AJAX_USERS = 'ajax.users';
+    final public const AJAX_USERS = 'ajax.users';
 
     /**
      * Returns cache key for site logo plus size.

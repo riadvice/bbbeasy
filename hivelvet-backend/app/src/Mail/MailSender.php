@@ -148,16 +148,16 @@ class MailSender extends Prefab
         $this->mailer->set('Message-Id', $messageId);
 
         $sent = $this->mailer->send($subject, Environment::isNotProduction());
-        if (false !== $sent && Environment::isNotProduction()) {
+        if ($sent && Environment::isNotProduction()) {
             @file_put_contents(
                 $this->f3->get('MAIL_STORAGE') . mb_substr($messageId, 1, -1) . '.eml',
-                explode("354 Go ahead\n", explode("250 OK\nQUIT", $this->mailer->log())[0])[1]
+                explode("354 Go ahead\n", explode("250 OK\nQUIT", (string) $this->mailer->log())[0])[1]
             );
         }
 
         $this->logger->info('Sending email | Status: ' . ($sent ? 'true' : 'false') . " | Log:\n" . $this->mailer->log());
 
-        return (true === $sent) ? $sent : !$sent;
+        return $sent ?: !$sent;
     }
 
     /**

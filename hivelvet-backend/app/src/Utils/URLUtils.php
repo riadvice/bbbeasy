@@ -24,7 +24,6 @@ namespace Utils;
 
 use Base;
 use Enum\BBBApiParams;
-use Nette\Utils\Strings;
 
 class URLUtils
 {
@@ -64,7 +63,7 @@ class URLUtils
         // $value = str_replace('%2B', '+', $value);
         // Some integrations start their query with &, we need to add it back for the checksum calculation
         // even if it is removed later by the load balancer
-        return Strings::startsWith(Base::instance()->get('QUERY'), '&') ? '&' . $value : $value;
+        return str_starts_with(Base::instance()->get('QUERY'), '&') ? '&' . $value : $value;
     }
 
     /**

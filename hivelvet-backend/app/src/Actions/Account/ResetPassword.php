@@ -42,7 +42,7 @@ class ResetPassword extends BaseAction
             $this->logger->info('user', ['user' => $user->toArray()]);
 
             if (!$user->dry()) {
-                   // valid credentials
+                // valid credentials
                 $this->session->authorizeUser($user);
 
                 // $this->session->set('locale', $user->locale);

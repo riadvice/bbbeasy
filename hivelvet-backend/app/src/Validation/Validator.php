@@ -29,10 +29,7 @@ use Respect\Validation\Validator as RespectValidator;
  */
 class Validator extends RespectValidator
 {
-    /**
-     * @var array
-     */
-    private $errors;
+    private array $errors;
 
     /**
      * @param $name
@@ -41,11 +38,11 @@ class Validator extends RespectValidator
      *
      * @return $this|bool
      */
-    public function verify($name, $input = null, $messages = null)
+    public function verify($name, $input = null, $messages = null): static|bool
     {
         $exceptions    = $this->validateRules($input);
         $numRules      = \count($this->rules);
-        $numExceptions = \count($exceptions);
+        $numExceptions = is_countable($exceptions) ? \count($exceptions) : 0;
         $summary       = [
             'total'  => $numRules,
             'failed' => $numExceptions,
@@ -55,12 +52,8 @@ class Validator extends RespectValidator
         // Remove rules once the validation has been finished
         $this->removeRules();
         if (!empty($exceptions)) {
-            $exception = $this->reportError($input, $summary)->setRelated($exceptions);
-            if ($messages) {
-                $this->errors[$name] = $exception->findMessages($messages);
-            } else {
-                $this->errors[$name] = $exception->getFullMessage();
-            }
+            $exception           = $this->reportError($input, $summary)->setRelated($exceptions);
+            $this->errors[$name] = $messages ? $exception->findMessages($messages) : $exception->getFullMessage();
 
             return false;
         }

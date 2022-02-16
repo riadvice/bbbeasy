@@ -43,7 +43,7 @@ class Time
      *
      * @todo add a switch for the f3 database driver and set the timestamp
      */
-    public static function db($unixTime = null, $dbms = null)
+    public static function db(DateTime|int|string $unixTime = null, $dbms = null): bool|string
     {
         // use current time if bad time value or unset
         if (\is_string($unixTime)) {
@@ -60,11 +60,9 @@ class Time
         // format date/time according to database driver
         $dbms = empty($dbms) ? Base::instance()->get('db.driver') : $dbms;
 
-        switch ($dbms) {
-            default:
-            case 'mysql':
-                return date('Y-m-d H:i:s', $unixTime);
-        }
+        return match ($dbms) {
+            'pgsql', 'mysql' => date('Y-m-d H:i:s', $unixTime),
+        };
     }
 
     /**
@@ -84,16 +82,15 @@ class Time
         }
 
         // if its not a 3 letter timezone set it to GMT
-        if (3 !== mb_strlen($zone)) {
-            $zone = 'GMT';
-        } else {
-            $zone = mb_strtoupper($zone);
-        }
+        $zone = 3 !== mb_strlen($zone) ? 'GMT' : mb_strtoupper($zone);
 
         return gmdate('D, d M Y H:i:s', $unixtime) . ' ' . $zone;
     }
 
-    public static function formattedTime($dateTime = null)
+    /**
+     * @param $dateTime
+     */
+    public static function formattedTime($dateTime = null): array
     {
         $formatTime = ' G:i';
         $dateMonth  = lcfirst(date('F', strtotime($dateTime)));

@@ -29,10 +29,7 @@ use Colors\Color;
  */
 class CliUtils extends \Prefab
 {
-    /**
-     * @var Color
-     */
-    private $console;
+    private readonly \Colors\Color $console;
 
     public function __construct()
     {
@@ -71,7 +68,7 @@ class CliUtils extends \Prefab
             $testsNumber      = 0;
             $successfullTests = 0;
             foreach ($suite as $key => $value) {
-                $testsNumber += \count($suite[$key]);
+                $testsNumber += is_countable($suite[$key]) ? \count($suite[$key]) : 0;
                 $successfullTests += \count(array_filter(array_column($suite[$key], 'status')));
             }
 
