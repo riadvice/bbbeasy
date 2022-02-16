@@ -450,7 +450,7 @@ const Install = (props : Props) => {
                         visible={isModalVisible}
                         onOk={handleOk}
                         onCancel={handleCancel}
-                        cancelButtonProps={{ style: { display: 'none' } }}
+                        cancelButtonProps={{ className: 'hidden' }}
                         footer={[
                             <Button key="submit" type="primary" onClick={handleOk}>
                                 Confirm
@@ -617,7 +617,7 @@ const Install = (props : Props) => {
 
                             requiredMark={false}
                             scrollToFirstError={true}
-                            validateTrigger="onBlur"
+                            validateTrigger="onFinish"
 
                             onFinish={onFinish}
                         >

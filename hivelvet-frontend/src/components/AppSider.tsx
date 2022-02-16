@@ -66,30 +66,30 @@ const AppSider = () => {
             children: [
                 {
                     name: 'Company & Branding',
-                    path: '/company',
+                    path: '/settings/company',
                 },
                 {
                     name: 'Users',
-                    path: '/users',
+                    path: '/settings/users',
                 },
                 {
                     name: 'Roles',
-                    path: '/roles',
+                    path: '/settings/roles',
                 },
                 {
                     name: 'Notifications',
-                    path: '/notifications',
+                    path: '/settings/notifications',
                 },
                 {
                     name: 'BigBlueButton',
-                    path: '/bbb',
+                    path: '/settings/bigbluebutton',
                 }
             ],
         },
         {
             name: 'Help',
             icon: 'QuestionCircleOutlined',
-            path: '/help'
+            path: 'https://riadvice.tn/'
         },
     ];
     const handleClick = e => {
@@ -128,12 +128,16 @@ const AppSider = () => {
                                 </Menu.Item>
                             ))}
                         </SubMenu>
-                        :
+                    :
                         <Menu.Item
                             key={item.path}
                             icon={<DynamicIcon type={item.icon} />}
                         >
-                            <Link to={item.path}>{item.name}</Link>
+                            { (item.path.includes('http')) ?
+                                <a target="_blank" rel="noopener noreferrer" href={item.path}>{item.name}</a>
+                                :
+                                <Link to={item.path}>{item.name}</Link>
+                            }
                         </Menu.Item>
                 ))}
             </Menu>
