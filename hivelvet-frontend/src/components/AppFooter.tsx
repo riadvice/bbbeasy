@@ -17,7 +17,7 @@
  */
 
 import React from 'react';
-import { Button, Layout, Space, Typography } from 'antd';
+import { Button, Layout, Typography } from 'antd';
 
 const { Footer } = Layout;
 const { Text } = Typography;
@@ -25,12 +25,10 @@ const { Text } = Typography;
 const AppFooter = () => {
     return (
         <Footer className="site-footer">
-            <Space size="middle">
-                <Text type="secondary">Term & Conditions | Privacy Policy</Text>
-                <Text type="secondary">
-                    ©2022 <Button type="link">RIADVICE</Button> All rights reserved
-                </Text>
-            </Space>
+            <Text type="secondary">
+                ©2022 <Button type="link">RIADVICE</Button> All rights reserved
+            </Text>
+            <Text type="secondary">Term & Conditions | Privacy Policy</Text>
         </Footer>
     );
 };

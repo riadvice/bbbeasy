@@ -118,7 +118,6 @@ class Install extends BaseAction
                 if ('' !== $form['policy_url']) {
                     $defaultSettings->privacy_policy = $form['policy_url'];
                 }
-                //$defaultSettings->logo = $form['logo'];
                 $colors                            = $form['branding_colors'];
                 $defaultSettings->primary_color    = $colors['primary_color'];
                 $defaultSettings->secondary_color  = $colors['secondary_color'];
@@ -150,7 +149,7 @@ class Install extends BaseAction
                         }
                     }
                     //$this->logger->info('administrator and settings and presets successfully added', ['user' => $user->toArray()]);
-                    $this->renderJson(['message' => 'Application is ready now !']);
+                    $this->renderJson(['message' => 'Application installed !']);
                 } catch (\Exception $e) {
                     $message = $e->getMessage();
                     $this->logger->error('settings could not be added', ['error' => $message]);
