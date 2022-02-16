@@ -129,11 +129,11 @@ class Scenario
     /**
      * @param $array
      */
-    protected function postData($array): array
+    protected function postJsonData($array): string
     {
         $array['csrf_token'] = \Registry::get('session')->generateToken();
 
-        return $array;
+        return json_encode($array);
     }
 
     protected function rerouted(): ?string

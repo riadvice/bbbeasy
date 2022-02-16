@@ -46,25 +46,25 @@ final class LoginTest extends Scenario
      */
     public function testAuthenticateInvalidUser($f3)
     {
-        $test  = $this->newTest();
+        $test = $this->newTest();
         $faker = Faker::create();
 
         $data = ['email' => $faker->email, 'password' => $faker->password(8)];
-        $f3->mock('POST /account/login', $this->postData($data));
+        $f3->mock('POST /account/login', null, null, $this->postJsonData($data));
         $test->expect('Invalid password' === $f3->get('form_errors.email'), 'Login with non existing credentials shows error');
 
         $data = ['email' => $email = $faker->firstName, 'password' => $faker->password(8)];
-        $f3->mock('POST /account/login', $this->postData($data));
+        $f3->mock('POST /account/login', null, null, $this->postJsonData($data));
         $test->expect($f3->get('form_errors.email') === "- \"{$email}\" must be valid email", 'Login with invalid email format show an error');
 
         $dataUsedCsrf = ['email' => $faker->email, 'password' => $faker->password(8), 'csrf_token' => $faker->md5];
-        $f3->mock('POST /account/login', $dataUsedCsrf);
+        $f3->mock('POST /account/login', null, null, $this->postJsonData($dataUsedCsrf));
         $test->expect('CSRF token used or not set' === $f3->get('SESSION.form_errors.csrf_token'), 'Login with used CSRF Token refused');
 
         $dataHackedCsrf = ['email' => $faker->email, 'password' => $faker->password(8), 'csrf_token' => $faker->md5];
-        $this->postData($dataHackedCsrf);
+        $this->postJsonData($dataHackedCsrf);
         $dataHackedCsrf['csrf_token'] = $faker->md5;
-        $f3->mock('POST /account/login', $dataHackedCsrf);
+        $f3->mock('POST /account/login', null, null, $this->postJsonData($dataHackedCsrf));
         $test->expect('Invalid CSRF token' === $f3->get('SESSION.form_errors.csrf_token'), 'Login with invalid CSRF Token refused');
 
         return $test->results();
@@ -73,9 +73,9 @@ final class LoginTest extends Scenario
     /**
      * @param $f3
      *
+     * @return array
      * @throws ReflectionException
      *
-     * @return array
      */
     public function testAuthenticateExistingUser($f3)
     {
@@ -83,7 +83,7 @@ final class LoginTest extends Scenario
         $user = UserFaker::create(UserRole::ADMIN);
 
         $data = ['email' => $user->email, 'password' => UserRole::ADMIN . UserRole::ADMIN];
-        $f3->mock('POST /account/login', $this->postData($data));
+        $f3->mock('POST /account/login', null, null, $this->postJsonData($data));
 
         // $test->expect($this->reroutedTo('dashboard'), 'Login with correct credentials rerouted to dashboard');
         $test->expect($f3->exists('SESSION.user'), 'Sessions is aware that the user us logged in');
@@ -91,10 +91,7 @@ final class LoginTest extends Scenario
         UserFaker::logout();
 
         $data = ['email' => $user->email, 'password' => UserRole::ADMIN . UserRole::ADMIN];
-        $f3->mock('POST /account/login', $this->postData($data));
-
-        $f3->mock('GET /account/login');
-        // $test->expect($this->reroutedTo('dashboard'), 'Already logged in user is rerouted to dashboard');
+        $f3->mock('POST /account/login', null, null, $this->postJsonData($data));
 
         return $test->results();
     }
@@ -106,21 +103,19 @@ final class LoginTest extends Scenario
      */
     public function testAuthenticateExistingInactiveUser($f3)
     {
-        $test           = $this->newTest();
-        $faker          = Faker::create();
-        $raw_password   = $faker->password(8);
-        $status         = UserStatus::INACTIVE;
-        $user           = new User();
-        $user->email    = $faker->email;
+        $test = $this->newTest();
+        $faker = Faker::create();
+        $raw_password = $faker->password(8);
+        $status = UserStatus::INACTIVE;
+        $user = new User();
+        $user->email = $faker->email;
         $user->username = $faker->userName;
         $user->password = $raw_password;
-        $user->status   = $status;
+        $user->status = $status;
         $user->save();
 
-        $f3->mock('GET /account/login');
-
         $data = ['email' => $user->email, 'password' => $raw_password];
-        $f3->mock('POST /account/login', $this->postData($data));
+        $f3->mock('POST /account/login', null, null, $this->postJsonData($data));
 
         // $test->expect($this->reroutedTo('login'), 'Login with correct credentials and ' . $status . ' account rerouted lo login');
 

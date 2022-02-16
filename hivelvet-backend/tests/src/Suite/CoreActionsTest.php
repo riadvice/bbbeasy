@@ -31,7 +31,7 @@ use Test\TestGroup;
  */
 final class CoreActionsTest extends TestGroup
 {
-    // protected $classes = [GetLocaleTest::class];
+    protected $classes = [GetLocaleTest::class];
 
     protected $quiet = true;
 }

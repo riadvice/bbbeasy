@@ -31,7 +31,7 @@ use Test\TestGroup;
  */
 final class AccountActionsTest extends TestGroup
 {
-    // protected $classes = [LoginTest::class];
+    protected $classes = [LoginTest::class];
 
     protected $quiet = true;
 }

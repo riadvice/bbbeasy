@@ -164,7 +164,9 @@ abstract class Base extends \Prefab
     public function renderJson($json, $statusCode = 200): void
     {
         header('HTTP/1.1 ' . $statusCode);
-        header(self::JSON);
+        if (!Environment::isTest()){
+            header(self::JSON);
+        }
         echo \is_string($json) ? $json : json_encode($json);
     }
 
