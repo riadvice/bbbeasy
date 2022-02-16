@@ -35,7 +35,7 @@ class Time
      * format a database-specific date/time string.
      *
      * @param DateTime|int|string $unixTime (optional) the unix time (null = now)
-     * @param string              $dbms     (optional) the database software the timestamp is for
+     * @param null|string         $dbms     (optional) the database software the timestamp is for
      *
      * @throws Exception
      *
@@ -43,7 +43,7 @@ class Time
      *
      * @todo add a switch for the f3 database driver and set the timestamp
      */
-    public static function db(DateTime|int|string $unixTime = null, $dbms = null): bool|string
+    public static function db(DateTime|int|string $unixTime = null, string $dbms = null): bool|string
     {
         // use current time if bad time value or unset
         if (\is_string($unixTime)) {

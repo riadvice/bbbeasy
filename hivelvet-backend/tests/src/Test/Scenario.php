@@ -60,6 +60,18 @@ class Scenario
     }
 
     /**
+     * @param mixed $path
+     *
+     * @throws \JsonException
+     */
+    public function compareTemplateToResponse($path): bool
+    {
+        $f3 = Base::instance();
+
+        return empty(array_diff($this->loadResult($path), json_decode($f3->get('RESPONSE'), true, 512, JSON_THROW_ON_ERROR)));
+    }
+
+    /**
      * @param $response
      * @param $text
      * @param $type
@@ -168,5 +180,17 @@ class Scenario
     protected function hashError($error): string
     {
         return Base::instance()->hash(serialize($error));
+    }
+
+    /**
+     * @param mixed $path
+     *
+     * @throws \JsonException
+     */
+    private function loadResult($path)
+    {
+        $string = file_get_contents('../tests/templates/' . $path);
+
+        return json_decode($string, true, 512, JSON_THROW_ON_ERROR);
     }
 }

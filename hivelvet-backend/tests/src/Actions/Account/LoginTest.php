@@ -42,16 +42,18 @@ final class LoginTest extends Scenario
     /**
      * @param Base $f3
      *
+     * @throws \JsonException
+     *
      * @return array
      */
     public function testAuthenticateInvalidUser($f3)
     {
-        $test = $this->newTest();
+        $test  = $this->newTest();
         $faker = Faker::create();
 
         $data = ['email' => $faker->email, 'password' => $faker->password(8)];
         $f3->mock('POST /account/login', null, null, $this->postJsonData($data));
-        $test->expect('Invalid password' === $f3->get('form_errors.email'), 'Login with non existing credentials shows error');
+        $test->expect($this->compareTemplateToResponse('login/invalid_email.json'), 'Login with non existing credentials shows error');
 
         $data = ['email' => $email = $faker->firstName, 'password' => $faker->password(8)];
         $f3->mock('POST /account/login', null, null, $this->postJsonData($data));
@@ -73,9 +75,9 @@ final class LoginTest extends Scenario
     /**
      * @param $f3
      *
-     * @return array
      * @throws ReflectionException
      *
+     * @return array
      */
     public function testAuthenticateExistingUser($f3)
     {
@@ -103,15 +105,15 @@ final class LoginTest extends Scenario
      */
     public function testAuthenticateExistingInactiveUser($f3)
     {
-        $test = $this->newTest();
-        $faker = Faker::create();
-        $raw_password = $faker->password(8);
-        $status = UserStatus::INACTIVE;
-        $user = new User();
-        $user->email = $faker->email;
+        $test           = $this->newTest();
+        $faker          = Faker::create();
+        $raw_password   = $faker->password(8);
+        $status         = UserStatus::INACTIVE;
+        $user           = new User();
+        $user->email    = $faker->email;
         $user->username = $faker->userName;
         $user->password = $raw_password;
-        $user->status = $status;
+        $user->status   = $status;
         $user->save();
 
         $data = ['email' => $user->email, 'password' => $raw_password];

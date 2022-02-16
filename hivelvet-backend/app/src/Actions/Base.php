@@ -136,45 +136,19 @@ abstract class Base extends \Prefab
     }
 
     /**
-     * @param null   $view
-     * @param null   $partial
-     * @param string $mime
-     */
-    public function render($view = null, $partial = null, $mime = 'text/html'): void
-    {
-        // automatically load the partial from the class namespace
-        if (null === $partial) {
-            $partial = str_replace(['\\_'], '/', str_replace('actions\\_', '', $this->f3->snakecase(static::class)));
-        }
-        $this->f3->set('partial', $this->setPartial($partial));
-        if (null === $view) {
-            $view = $this->view ?: $this->f3->get('view.default');
-        }
-        // This required to register the template extensions before rendering it
-        // We do it at this time because we are sure that we want to render starting from here
-        HTML::instance();
-        // add controller assets to assets.css and assets.js hive properties
-        echo Template::instance()->render($view . '.phtml', $mime);
-    }
-
-    /**
      * @param array|string $json
      * @param int          $statusCode
      */
     public function renderJson($json, $statusCode = 200): void
     {
         header('HTTP/1.1 ' . $statusCode);
-        if (!Environment::isTest()){
+        if (!Environment::isTest()) {
             header(self::JSON);
         }
         echo \is_string($json) ? $json : json_encode($json);
     }
 
-    /**
-     * @param array|string $text
-     * @param int          $statusCode
-     */
-    public function renderText($text, $statusCode = 200): void
+    public function renderText(array|string $text, int $statusCode = 200): void
     {
         header('HTTP/1.1 ' . $statusCode);
         header(self::TEXT);
