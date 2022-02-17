@@ -20,21 +20,11 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Models;
+namespace Enum\Presets;
 
-use DateTime;
-use Models\Base as BaseModel;
+use Enum\Enum;
 
-/**
- * Class Setting.
- *
- * @property int      $id
- * @property int      $subcategory_id
- * @property bool     $is_enabled
- * @property DateTime $created_on
- * @property DateTime $updated_on
- */
-class PresetSetting extends BaseModel
+class Screenshare extends Enum
 {
-    protected $table = 'preset_settings';
+    final public const CONFIGURABLE = 'configurable';
 }
