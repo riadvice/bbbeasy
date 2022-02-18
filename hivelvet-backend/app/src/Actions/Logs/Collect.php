@@ -26,7 +26,7 @@ use Actions\Base as BaseAction;
 use Base;
 
 /**
- * Class Clean.
+ * Class Collect.
  */
 class Collect extends BaseAction
 {

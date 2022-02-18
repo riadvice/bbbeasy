@@ -37,15 +37,6 @@ class Add extends BaseAction
      * @param \Base $f3
      * @param array $params
      */
-    public function show($f3, $params): void
-    {
-        $this->render();
-    }
-
-    /**
-     * @param \Base $f3
-     * @param array $params
-     */
     public function save($f3, $params): void
     {
         $v    = new Validator();

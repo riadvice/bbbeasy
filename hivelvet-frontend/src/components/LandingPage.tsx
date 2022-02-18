@@ -20,7 +20,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
 import { Row, Col, Typography, Avatar } from 'antd';
-import { AppstoreAddOutlined, BgColorsOutlined, PlayCircleOutlined, ControlOutlined } from '@ant-design/icons';
+import DynamicIcon from "./DynamicIcon";
 import {T} from "@transifex/react";
 
 const { Title, Paragraph } = Typography;
@@ -50,23 +50,23 @@ class LandingPage extends Component<any, any> {
                 </Row>
                 <Row gutter={[40, 8]} justify="center" className="features text-center">
                     <Col span={3}>
-                        <Avatar size={45} icon={<AppstoreAddOutlined />} className="ant-btn-primary hivelvet-btn"/>
+                        <Avatar size={45} icon={<DynamicIcon type={'AppstoreAddOutlined'} />} className="ant-btn-primary hivelvet-btn"/>
                         <p>Personal Rooms</p>
                     </Col>
                     <Col span={3}>
-                        <Avatar size={45} icon={<BgColorsOutlined />} className="ant-btn-primary hivelvet-btn"/>
+                        <Avatar size={45} icon={<DynamicIcon type={'BgColorsOutlined'} />} className="ant-btn-primary hivelvet-btn"/>
                         <p>Full Branding</p>
                     </Col>
                     <Col span={3}>
-                        <Avatar size={45} icon={<PlayCircleOutlined />} className="ant-btn-primary hivelvet-btn"/>
+                        <Avatar size={45} icon={<DynamicIcon type={'PlayCircleOutlined'} />} className="ant-btn-primary hivelvet-btn"/>
                         <p>Recordings management</p>
                     </Col>
                     <Col span={3}>
-                        <Avatar size={45} icon={<ControlOutlined />} className="ant-btn-primary hivelvet-btn"/>
+                        <Avatar size={45} icon={<DynamicIcon type={'ControlOutlined'} />} className="ant-btn-primary hivelvet-btn"/>
                         <p>Flexible Configuration</p>
                     </Col>
                     <Col span={3}>
-                        <Avatar size={45} icon={<ControlOutlined />} className="ant-btn-primary hivelvet-btn"/>
+                        <Avatar size={45} icon={<DynamicIcon type={'ZcaleRight'} iconClassName="zcaleright-icon" />} className="ant-btn-primary hivelvet-btn"/>
                         <p>ZcaleRight <br/>Support</p>
                     </Col>
                 </Row>

@@ -147,7 +147,7 @@
                                  initialValues={initialValues}
                                  requiredMark={false}
                                  scrollToFirstError={true}
-                                 validateTrigger="onFinish"
+                                 validateTrigger="onSubmit"
                                  
                                  onFinish={this.handleRegistration}
                              >

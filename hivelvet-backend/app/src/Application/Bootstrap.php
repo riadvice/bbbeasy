@@ -132,7 +132,7 @@ class Bootstrap extends Boot
             $this->f3->config('config/routes-' . $this->environment . '.ini');
         }
 
-        if ('' === $this->isCli || '0' === $this->isCli) {
+        if (!$this->isCli) {
             // load routes access policy
             $this->f3->config('config/access' . $this->f3->get('config.extension') . '.ini');
         } else {

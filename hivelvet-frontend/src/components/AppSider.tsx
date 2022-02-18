@@ -20,7 +20,7 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 import { Button, Dropdown, Layout, Menu } from 'antd';
-import { PlusOutlined, DownOutlined } from "@ant-design/icons";
+import { PlusOutlined, DownOutlined, RightOutlined } from "@ant-design/icons";
 import DynamicIcon from "./DynamicIcon";
 
 const { Sider } = Layout;
@@ -123,7 +123,10 @@ const AppSider = () => {
                             title={item.name}
                         >
                             {item.children.map((subItem) => (
-                                <Menu.Item key={subItem.path}>
+                                <Menu.Item
+                                    key={subItem.path}
+                                    icon={<RightOutlined />}
+                                >
                                     <Link to={subItem.path}>{subItem.name}</Link>
                                 </Menu.Item>
                             ))}

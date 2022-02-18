@@ -427,6 +427,7 @@
                          <Tooltip
                              key={item.name}
                              placement="rightTop"
+                             overlayClassName="install-tooltip"
                              title={
                                  <ul>
                                      {item.subcategories.map((subItem) => (
@@ -617,7 +618,7 @@
  
                              requiredMark={false}
                              scrollToFirstError={true}
-                             validateTrigger="onFinish"
+                             validateTrigger="onSubmit"
  
                              onFinish={onFinish}
                          >

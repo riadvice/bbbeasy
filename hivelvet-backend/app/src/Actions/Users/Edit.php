@@ -37,21 +37,6 @@ class Edit extends BaseAction
      * @param Base  $f3
      * @param array $params
      */
-    public function show($f3, $params): void
-    {
-        $user = $this->loadData($params['id']);
-
-        if ($user->valid()) {
-            $this->renderJson(['data' => $user->toArray()]);
-        } else {
-            $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
-        }
-    }
-
-    /**
-     * @param Base  $f3
-     * @param array $params
-     */
     public function save($f3, $params): void
     {
         $v    = new Validator();
