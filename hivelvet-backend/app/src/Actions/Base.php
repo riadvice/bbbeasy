@@ -104,7 +104,7 @@ abstract class Base extends \Prefab
         $this->parseHeaderAuthorization();
 
         $this->templatesDir = $this->f3->get('ROOT') . $this->f3->get('BASE') . '/../app/ui/';
-        $this->f3->set('title', 'BBB LB');
+        $this->f3->set('title', 'Hivelvet');
 
         $this->f3->set('init.js', ['Locale', 'Plugins', 'Common']);
     }
@@ -120,12 +120,10 @@ abstract class Base extends \Prefab
             $this->f3->reroute($this->f3->get('PATH'));
         }
         // Rerouted paged uri having the page value less than one
-        if ($this->f3->exists('PARAMS.page')) {
-            if ($this->f3->get('PARAMS.page') < 1) {
-                $uri = $this->f3->get('PATH');
-                $uri = preg_replace('/\/' . $this->f3->get('PARAMS.page') . '$/', '/1', $uri);
-                $this->f3->reroute($uri);
-            }
+        if ($this->f3->exists('PARAMS.page') && $this->f3->get('PARAMS.page') < 1) {
+            $uri = $this->f3->get('PATH');
+            $uri = preg_replace('/\/' . $this->f3->get('PARAMS.page') . '$/', '/1', $uri);
+            $this->f3->reroute($uri);
         }
     }
 

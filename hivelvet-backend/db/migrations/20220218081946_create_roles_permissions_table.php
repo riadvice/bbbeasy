@@ -22,26 +22,25 @@ declare(strict_types=1);
 
 use Phinx\Migration\AbstractMigration;
 
-final class CreateResetPasswordTokenTable extends AbstractMigration
+final class CreateRolesPermissionsTable extends AbstractMigration
 {
     public function up(): void
     {
-        $table = $this->table('reset_password_tokens');
+        $table = $this->table('roles_permissions');
         $table
-            ->addColumn('user_id', 'integer', ['null' => false])
-            ->addColumn('token', 'string', ['null' => false])
-            ->addColumn('status', 'string', ['null' => false])
+            ->addColumn('role_id', 'integer', ['null' => false])
+            ->addColumn('group', 'string', ['limit' => 64, 'null' => false])
+            ->addColumn('name', 'string', ['limit' => 64, 'null' => false])
+            ->addColumn('granted', 'boolean', ['default' => false, 'null' => false])
             ->addColumn('created_on', 'datetime', ['default' => '0001-01-01 00:00:00', 'timezone' => true])
-            ->addColumn('expires_at', 'datetime', ['null' => false, 'timezone' => true])
-            ->addForeignKey(['user_id'], 'users', ['id'], ['constraint' => 'users_id'])
-            ->addIndex('token', ['unique' => true, 'name' => 'idx_reset_tokens'])
-
-            ->create()
+            ->addColumn('updated_on', 'datetime', ['default' => '0001-01-01 00:00:00', 'timezone' => true])
+            ->addForeignKey(['role_id'], 'roles', ['id'], ['constraint' => 'roles_id'])
+            ->save()
         ;
     }
 
     public function down(): void
     {
-        $this->table('reset_password_tokens')->drop()->save();
+        $this->table('roles_permissions')->drop()->save();
     }
 }
