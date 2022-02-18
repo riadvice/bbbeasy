@@ -41,10 +41,9 @@ class Login extends BaseAction
 
     public function authorise($f3): void
     {
-        $user = new User();
         $form = $this->getDecodedBody();
-        $v    = new Validator();
 
+        $v        = new Validator();
         $email    = $form['email'];
         $password = $form['password'];
 
@@ -56,6 +55,7 @@ class Login extends BaseAction
             $v->length(4)->verify('password', $password, ['length' => 'Password must be at least 4 characters']);
 
             if ($v->allValid()) {
+                $user = new User();
                 if ($user->emailExists($email)) {
                     //$user = $user->getByEmail($email);
                     //$user->status === UserStatus::ACTIVE &&
@@ -74,7 +74,7 @@ class Login extends BaseAction
                             'role'     => $user->role,
                         ];
                         $this->logger->info('user successfully login', ['message' => $message]);
-                        $this->renderJson(['message' => $message, 'user' => json_encode($userInfos)]);
+                        $this->renderJson(['message' => $message, 'user' => json_encode($userInfos, JSON_THROW_ON_ERROR)]);
                     } else {
                         //password invalid
                         $message = 'Invalid Password';

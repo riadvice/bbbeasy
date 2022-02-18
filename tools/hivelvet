@@ -37,7 +37,7 @@ BASEDIR=$(dirname "$SCRIPT")
 # Formatted current date
 NOW=$(date +"%Y-%m-%d_%H.%M.%S")
 
-# Production BBB LB directory
+# Production Hivelvet directory
 APP_DIR=$BASEDIR/../
 
 # Current git branch name transforms '* dev-0.5' to 'dev-0.5'
@@ -53,12 +53,12 @@ usage() {
   echo
   echo "#========================================================================================================"
   echo "#"
-  echo "# hivelvet Configuration Utility for BBB LB - Version $GIT_VERSION on $GIT_BRANCH branch"
+  echo "# hivelvet Configuration Utility for Hivelvet - Version $GIT_VERSION on $GIT_BRANCH branch"
   echo "#"
   echo "#    hivelvet [options]"
   echo "#"
   echo "# Configuration:"
-  echo "#    --version                        Display BBB LB version"
+  echo "#    --version                        Display Hivelvet version"
   echo "#    --selfinstall                    Make hivelvet runnable from anywhere"
   echo "#"
   echo "# Development:"
