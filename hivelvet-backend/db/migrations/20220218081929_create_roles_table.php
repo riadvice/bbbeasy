@@ -20,21 +20,23 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Models;
+use Phinx\Migration\AbstractMigration;
 
-use DateTime;
-use Models\Base as BaseModel;
-
-/**
- * Class Setting.
- *
- * @property int      $id
- * @property int      $subcategory_id
- * @property bool     $is_enabled
- * @property DateTime $created_on
- * @property DateTime $updated_on
- */
-class PresetSetting extends BaseModel
+final class CreateRolesTable extends AbstractMigration
 {
-    protected $table = 'preset_settings';
+    public function up(): void
+    {
+        $table = $this->table('roles');
+        $table
+            ->addColumn('name', 'string', ['limit' => 64, 'null' => false])
+            ->addColumn('created_on', 'datetime', ['default' => '0001-01-01 00:00:00', 'timezone' => true])
+            ->addColumn('updated_on', 'datetime', ['default' => '0001-01-01 00:00:00', 'timezone' => true])
+            ->save()
+        ;
+    }
+
+    public function down(): void
+    {
+        $this->table('roles')->drop()->save();
+    }
 }

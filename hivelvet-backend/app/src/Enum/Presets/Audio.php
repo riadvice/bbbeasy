@@ -20,21 +20,15 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Models;
+namespace Enum\Presets;
 
-use DateTime;
-use Models\Base as BaseModel;
+use Enum\Enum;
 
-/**
- * Class Setting.
- *
- * @property int      $id
- * @property string   $name
- * @property int      $category_id
- * @property DateTime $created_on
- * @property DateTime $updated_on
- */
-class PresetSubCategory extends BaseModel
+class Audio extends Enum
 {
-    protected $table = 'preset_sub_categories';
+    final public const USERS_JOIN_MUTED                   = 'title';
+    final public const MODERATORS_ALLOWED_TO_UNMUTE_USERS = 'moderators_allowed_to_unmute_users';
+    final public const AUTO_JOIN                          = 'auto_join';
+    final public const LISTEN_ONLY                        = 'listen_only_enabled';
+    final public const SKIP_ECHO_TEST                     = 'skip_echo_test';
 }

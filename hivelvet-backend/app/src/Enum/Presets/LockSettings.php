@@ -20,28 +20,16 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Actions\Logs;
+namespace Enum\Presets;
 
-use Actions\Base as BaseAction;
-use Actions\RequirePrivilegeTrait;
-use Base;
+use Enum\Enum;
 
-/**
- * Class Collect.
- */
-class Collect extends BaseAction
+class LockSettings extends Enum
 {
-    use RequirePrivilegeTrait;
-
-    /**
-     * @param Base  $f3
-     * @param array $params
-     */
-    public function execute($f3, $params): void
-    {
-        if ('server' === $f3->get('client.logs_target')) {
-            $logs = $this->getDecodedBody();
-            $this->logger->info('React logs :', ['logs' => $logs]);
-        }
-    }
+    final public const WEBCAMS      = 'webcams';
+    final public const MICROPHONES  = 'microphones';
+    final public const PRIVATE_CHAT = 'private_chat';
+    final public const PUBLIC_CHAT  = 'public_chat';
+    final public const SHARED_NOTES = 'shared_notes';
+    final public const LAYOUT       = 'layout';
 }

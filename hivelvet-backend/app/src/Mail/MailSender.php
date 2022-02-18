@@ -68,7 +68,7 @@ class MailSender extends Prefab
         $snooze       = strtotime('1 day') - time();
         $messageId    = $this->generateId();
         if (@filemtime($mailSentPath) + $snooze < time() && @file_put_contents($mailSentPath, 'sent')) {
-            $this->f3->set('mailer.from_name', 'BBB LB Debugger');
+            $this->f3->set('mailer.from_name', 'Hivelvet Debugger');
             $subject = "PHP: An error occurred on server {$this->f3->get('HOST')} ERROR ID '{$hash}'";
             $message = 'An error occurred on <b>' . $this->f3->get('HOST') . '</b><br />' . nl2br($exception->getTraceAsString());
             $this->smtpSend(null, $this->f3->get('debug.email'), 'BigBlueButton Load Balancer DevOps', $subject, $message, $messageId);
