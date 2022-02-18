@@ -22,21 +22,21 @@ declare(strict_types=1);
 
 namespace Utils;
 
-use Composer\Autoload\ClassLoader;
-use RectorPrefix20220209\Tracy\Debugger;
+use Base;
 
 class PrivilegeUtils
 {
     public static function listSystemPrivileges(): array
     {
-        $privileges = [];
-        $trait = 'Actions\RequirePrivilegeTrait';
+        $privileges     = [];
+        $prvilegeTtrait = 'Actions\RequirePrivilegeTrait';
 
-        $res = get_declared_classes();
+        $res                 = get_declared_classes();
         $autoloaderClassName = '';
         foreach ($res as $className) {
             if (str_starts_with($className, 'ComposerAutoloaderInit')) {
                 $autoloaderClassName = $className;
+
                 break;
             }
         }
@@ -51,22 +51,17 @@ class PrivilegeUtils
          * 5 - Later put the list in redis cache when the application starts the first time
          */
         $classMap = $classLoader->getClassMap();
-        $actions = preg_filter('/^Actions\\\[A-Z a-z]*\\\[A-Z a-z]*/', '$0', array_keys($classMap));
-        Debugger::dump($actions);
+        $actions  = preg_filter('/^Actions\\\[A-Z a-z]*\\\[A-Z a-z]*/', '$0', array_keys($classMap));
 
         foreach ($actions as $action) {
             $class = new \ReflectionClass($action);
-            if(!empty($class->getTraits()) && in_array($trait,$class->getTraitNames())) {
-                $privilegeInfos = explode("\\", $action);
+            if (\in_array($prvilegeTtrait, $class->getTraitNames(), true)) {
+                $privilegeInfos = explode('\\', $action);
                 array_shift($privilegeInfos);
-                $privilege = [];
-                $privilege['group'] = $privilegeInfos[0];
-                $privilege['name'] = $privilegeInfos[1];
-                array_push($privileges,$privilege);
+                $privileges[Base::instance()->snakecase($privilegeInfos[0])][] = Base::instance()->snakecase($privilegeInfos[1]);
             }
         }
 
-        Debugger::dump($privileges);
         return $privileges;
     }
 }
