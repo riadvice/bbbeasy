@@ -30,6 +30,7 @@ class PrivilegeUtils
     public static function listSystemPrivileges(): array
     {
         $privileges = [];
+        $trait = 'Actions\RequirePrivilegeTrait';
 
         $res = get_declared_classes();
         $autoloaderClassName = '';
@@ -41,18 +42,31 @@ class PrivilegeUtils
         }
         $classLoader = $autoloaderClassName::getLoader();
 
-        $trait = 'Action\RequirePrivilegeTrait';
         /*
          * @todo:
-         * 1 - Filter classes starting with Action\
-         * 2 - Retain classes having only a secondary names space (2 \)
-         * 3 - Action\Group\PrivilegeName
-         * 4 - Later put the list in redis cache when the application starts the first time
+         * 1 - Filter classes starting with Actions\                        => done
+         * 2 - Retain classes having only a secondary names space (2 \)     => done
+         * 3 - Filter classes having RequirePrivilegeTrait                  => done
+         * 4 - Actions\Group\PrivilegeName                                  => done
+         * 5 - Later put the list in redis cache when the application starts the first time
          */
         $classMap = $classLoader->getClassMap();
-        Debugger::dump($classMap);
-        exit;
+        $actions = preg_filter('/^Actions\\\[A-Z a-z]*\\\[A-Z a-z]*/', '$0', array_keys($classMap));
+        Debugger::dump($actions);
 
+        foreach ($actions as $action) {
+            $class = new \ReflectionClass($action);
+            if(!empty($class->getTraits()) && in_array($trait,$class->getTraitNames())) {
+                $privilegeInfos = explode("\\", $action);
+                array_shift($privilegeInfos);
+                $privilege = [];
+                $privilege['group'] = $privilegeInfos[0];
+                $privilege['name'] = $privilegeInfos[1];
+                array_push($privileges,$privilege);
+            }
+        }
+
+        Debugger::dump($privileges);
         return $privileges;
     }
 }
