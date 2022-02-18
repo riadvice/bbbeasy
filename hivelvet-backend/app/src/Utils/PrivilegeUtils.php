@@ -22,10 +22,37 @@ declare(strict_types=1);
 
 namespace Utils;
 
+use Composer\Autoload\ClassLoader;
+use RectorPrefix20220209\Tracy\Debugger;
+
 class PrivilegeUtils
 {
     public static function listSystemPrivileges(): array
     {
-        // $privilege
+        $privileges = [];
+
+        $res = get_declared_classes();
+        $autoloaderClassName = '';
+        foreach ($res as $className) {
+            if (str_starts_with($className, 'ComposerAutoloaderInit')) {
+                $autoloaderClassName = $className;
+                break;
+            }
+        }
+        $classLoader = $autoloaderClassName::getLoader();
+
+        $trait = 'Action\RequirePrivilegeTrait';
+        /*
+         * @todo:
+         * 1 - Filter classes starting with Action\
+         * 2 - Retain classes having only a secondary names space (2 \)
+         * 3 - Action\Group\PrivilegeName
+         * 4 - Later put the list in redis cache when the application starts the first time
+         */
+        $classMap = $classLoader->getClassMap();
+        Debugger::dump($classMap);
+        exit;
+
+        return $privileges;
     }
 }
