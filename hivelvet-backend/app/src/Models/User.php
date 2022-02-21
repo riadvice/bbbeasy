@@ -103,10 +103,8 @@ class User extends BaseModel
      * Get user record by email value.
      *
      * @param string $email
-     *
-     * @return Cortex
      */
-    public function getByEmail($email)
+    public function getByEmail($email): self
     {
         $this->load(['lower(email) = ?', mb_strtolower($email)]);
 

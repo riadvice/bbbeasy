@@ -22,20 +22,18 @@ declare(strict_types=1);
 
 namespace Utils;
 
-use Composer\Autoload\ClassLoader;
-use RectorPrefix20220209\Tracy\Debugger;
-
 class PrivilegeUtils
 {
     public static function listSystemPrivileges(): array
     {
         $privileges = [];
 
-        $res = get_declared_classes();
+        $res                 = get_declared_classes();
         $autoloaderClassName = '';
         foreach ($res as $className) {
             if (str_starts_with($className, 'ComposerAutoloaderInit')) {
                 $autoloaderClassName = $className;
+
                 break;
             }
         }
@@ -50,8 +48,6 @@ class PrivilegeUtils
          * 4 - Later put the list in redis cache when the application starts the first time
          */
         $classMap = $classLoader->getClassMap();
-        Debugger::dump($classMap);
-        exit;
 
         return $privileges;
     }

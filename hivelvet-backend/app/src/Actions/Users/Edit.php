@@ -26,7 +26,7 @@ use Actions\Base as BaseAction;
 use Base;
 use Enum\ResponseCode;
 use Models\User;
-use Validation\Validator;
+use Validation\DataChecker;
 
 /**
  * Class Edit.
@@ -54,7 +54,7 @@ class Edit extends BaseAction
      */
     public function save($f3, $params): void
     {
-        $v    = new Validator();
+        $v    = new DataChecker();
         $form = $this->getDecodedBody();
         $user = $this->loadData($params['id']);
 

@@ -32,7 +32,7 @@ use Models\PresetSetting;
 use Models\PresetSubCategory;
 use Models\Setting;
 use Models\User;
-use Validation\Validator;
+use Validation\DataChecker;
 
 /**
  * Class Install.
@@ -51,8 +51,8 @@ class Install extends BaseAction
          */
         $body = $this->getDecodedBody();
         $form = $body['data'];
-        $v1   = new Validator();
-        $v2   = new Validator();
+        $v1   = new DataChecker();
+        $v2   = new DataChecker();
 
         $step1Validated = false;
         $step2Validated = false;
@@ -232,7 +232,7 @@ class Install extends BaseAction
          */
         $files = $f3->get('FILES');
         $form  = $f3->get('POST');
-        $v     = new Validator();
+        $v     = new DataChecker();
 
         $v->notEmpty()->verify('logo_name', $form['logo_name']);
         //if files not empty

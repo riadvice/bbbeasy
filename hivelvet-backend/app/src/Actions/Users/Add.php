@@ -26,7 +26,7 @@ use Actions\Base as BaseAction;
 use Enum\ResponseCode;
 use Enum\UserStatus;
 use Models\User;
-use Validation\Validator;
+use Validation\DataChecker;
 
 /**
  * Class Add.
@@ -48,7 +48,7 @@ class Add extends BaseAction
      */
     public function save($f3, $params): void
     {
-        $v    = new Validator();
+        $v    = new DataChecker();
         $form = $this->getDecodedBody();
         $user = new User();
 

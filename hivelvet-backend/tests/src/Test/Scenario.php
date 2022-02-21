@@ -60,7 +60,7 @@ class Scenario
     }
 
     /**
-     * @param mixed $path
+     * @param $path
      *
      * @throws \JsonException
      */
@@ -69,6 +69,18 @@ class Scenario
         $f3 = Base::instance();
 
         return empty(array_diff($this->loadResult($path), json_decode($f3->get('RESPONSE'), true, 512, JSON_THROW_ON_ERROR)));
+    }
+
+    /**
+     * @param $array
+     *
+     * @throws \JsonException
+     */
+    public function compareArrayToResponse($array): bool
+    {
+        $f3 = Base::instance();
+
+        return empty(array_diff($array, json_decode($f3->get('RESPONSE'), true, 512, JSON_THROW_ON_ERROR)));
     }
 
     /**

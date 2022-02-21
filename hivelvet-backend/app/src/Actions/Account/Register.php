@@ -27,7 +27,7 @@ use Enum\ResponseCode;
 use Enum\UserRole;
 use Enum\UserStatus;
 use Models\User;
-use Validation\Validator;
+use Validation\DataChecker;
 
 /**
  * Class Register.
@@ -44,7 +44,7 @@ class Register extends BaseAction
         $user = new User();
         $body = $this->getDecodedBody();
         $form = $body['data'];
-        $v    = new Validator();
+        $v    = new DataChecker();
 
         $v->notEmpty()->verify('username', $form['username'], ['notEmpty' => 'Username is required']);
         $v->notEmpty()->verify('email', $form['email'], ['notEmpty' => 'Email is required']);

@@ -24,7 +24,7 @@ namespace Helpers;
 
 use Log\LogWriterTrait;
 use Utils\Environment;
-use Validation\Validator;
+use Validation\DataChecker;
 
 /**
  * Class Upload.
@@ -43,7 +43,7 @@ class Upload extends \Prefab
     /**
      * Validator.
      *
-     * @var Validator
+     * @var DataChecker
      */
     protected $v;
 
@@ -58,7 +58,7 @@ class Upload extends \Prefab
     public function __construct()
     {
         $this->f3      = \Base::instance();
-        $this->v       = new Validator();
+        $this->v       = new DataChecker();
         $this->uploads = [];
         $this->initLogger();
     }

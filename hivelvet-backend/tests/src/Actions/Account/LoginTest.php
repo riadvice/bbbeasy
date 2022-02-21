@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Actions\Account;
 
-use Base;
 use Enum\UserRole;
 use Enum\UserStatus;
 use Fake\UserFaker;
@@ -40,7 +39,7 @@ final class LoginTest extends Scenario
     protected $group = 'Action User Login';
 
     /**
-     * @param Base $f3
+     * @param $f3
      *
      * @throws \JsonException
      *
@@ -53,21 +52,19 @@ final class LoginTest extends Scenario
 
         $data = ['email' => $faker->email, 'password' => $faker->password(8)];
         $f3->mock('POST /account/login', null, null, $this->postJsonData($data));
-        $test->expect($this->compareTemplateToResponse('login/invalid_email.json'), 'Login with non existing credentials shows error');
+        $test->expect($this->compareTemplateToResponse('login/authentication_error.json'), 'Login with non existing credentials shows error');
 
-        $data = ['email' => $email = $faker->firstName, 'password' => $faker->password(8)];
+        $data = ['email' => $faker->firstName, 'password' => $faker->password(8)];
         $f3->mock('POST /account/login', null, null, $this->postJsonData($data));
-        $test->expect($f3->get('form_errors.email') === "- \"{$email}\" must be valid email", 'Login with invalid email format show an error');
+        $test->expect($this->compareTemplateToResponse('login/authentication_error.json'), 'Login with invalid email format show an error');
 
-        $dataUsedCsrf = ['email' => $faker->email, 'password' => $faker->password(8), 'csrf_token' => $faker->md5];
-        $f3->mock('POST /account/login', null, null, $this->postJsonData($dataUsedCsrf));
-        $test->expect('CSRF token used or not set' === $f3->get('SESSION.form_errors.csrf_token'), 'Login with used CSRF Token refused');
+        $data = ['email' => $faker->email, 'password' => $faker->password(3)];
+        $f3->mock('POST /account/login', null, null, $this->postJsonData($data));
+        $test->expect($this->compareTemplateToResponse('login/authentication_error.json'), 'Login with too short password');
 
-        $dataHackedCsrf = ['email' => $faker->email, 'password' => $faker->password(8), 'csrf_token' => $faker->md5];
-        $this->postJsonData($dataHackedCsrf);
-        $dataHackedCsrf['csrf_token'] = $faker->md5;
-        $f3->mock('POST /account/login', null, null, $this->postJsonData($dataHackedCsrf));
-        $test->expect('Invalid CSRF token' === $f3->get('SESSION.form_errors.csrf_token'), 'Login with invalid CSRF Token refused');
+        $data = ['email' => $faker->firstName, 'password' => $faker->password(3)];
+        $f3->mock('POST /account/login', null, null, $this->postJsonData($data));
+        $test->expect($this->compareTemplateToResponse('login/authentication_error.json'), 'Login with too short password and invalid email');
 
         return $test->results();
     }
@@ -86,20 +83,23 @@ final class LoginTest extends Scenario
 
         $data = ['email' => $user->email, 'password' => UserRole::ADMIN . UserRole::ADMIN];
         $f3->mock('POST /account/login', null, null, $this->postJsonData($data));
+        $test->expect(
+            $this->compareArrayToResponse(['username' => $user->username, 'email' => $user->email, 'role' => $user->role]),
+            'Login with user "' . $user->email . '" with status ' . $user->status
+        );
 
         // $test->expect($this->reroutedTo('dashboard'), 'Login with correct credentials rerouted to dashboard');
         $test->expect($f3->exists('SESSION.user'), 'Sessions is aware that the user us logged in');
 
         UserFaker::logout();
 
-        $data = ['email' => $user->email, 'password' => UserRole::ADMIN . UserRole::ADMIN];
-        $f3->mock('POST /account/login', null, null, $this->postJsonData($data));
-
         return $test->results();
     }
 
     /**
-     * @param Base $f3
+     * @param $f3
+     *
+     * @throws \JsonException
      *
      * @return array
      */
@@ -119,7 +119,7 @@ final class LoginTest extends Scenario
         $data = ['email' => $user->email, 'password' => $raw_password];
         $f3->mock('POST /account/login', null, null, $this->postJsonData($data));
 
-        // $test->expect($this->reroutedTo('login'), 'Login with correct credentials and ' . $status . ' account rerouted lo login');
+        $test->expect($this->compareTemplateToResponse('login/authentication_error.json'), 'Login with correct credentials and "' . $status . '" status');
 
         return $test->results();
     }

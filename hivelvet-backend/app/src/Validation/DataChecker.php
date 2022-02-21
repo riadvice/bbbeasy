@@ -22,14 +22,24 @@ declare(strict_types=1);
 
 namespace Validation;
 
-use Respect\Validation\Validator as RespectValidator;
+use Respect\Validation\Validator;
+use Tracy\Debugger;
 
 /**
  * Class Validator.
  */
-class Validator extends RespectValidator
+class Verifier
 {
     private array $errors;
+
+    public array $validators = [];
+
+    public function &newValidator($name, $value): Validator
+    {
+        $this->validators[$name]['rule'] = new Validator();
+        $this->validators[$name]['value'] = $value;
+        return $this->validators[$name]['rule'];
+    }
 
     /**
      * @param $name
@@ -40,11 +50,26 @@ class Validator extends RespectValidator
      */
     public function verify($name, $input = null, $messages = null): static|bool
     {
-        $exceptions    = $this->validateRules($input);
-        $numRules      = \count($this->rules);
+      //  Debugger::dump($this->validators);
+
+        $exception = null;
+        foreach ($this->validators as $rule) {
+            try {
+                Debugger::dump($rule['rule']);
+                Debugger::dump($rule['value']);
+                $rule['rule']->check($rule['value']); // true
+            } catch(\Exception $exception) {
+                \Tracy\Debugger::dump($exception);
+                break;
+            }
+        //   Debugger::dump($this->validators);
+        }
+        exit;
+        $exceptions = $this->v->check($input);
+        $numRules = \count($this->rules);
         $numExceptions = is_countable($exceptions) ? \count($exceptions) : 0;
-        $summary       = [
-            'total'  => $numRules,
+        $summary = [
+            'total' => $numRules,
             'failed' => $numExceptions,
             'passed' => $numRules - $numExceptions,
         ];
@@ -52,7 +77,7 @@ class Validator extends RespectValidator
         // Remove rules once the validation has been finished
         $this->removeRules();
         if (!empty($exceptions)) {
-            $exception           = $this->reportError($input, $summary)->setRelated($exceptions);
+            $exception = $this->reportError($input, $summary)->setRelated($exceptions);
             $this->errors[$name] = $messages ? $exception->findMessages($messages) : $exception->getFullMessage();
 
             return false;

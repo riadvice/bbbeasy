@@ -143,7 +143,7 @@ abstract class Base extends \Prefab
         if (!Environment::isTest()) {
             header(self::JSON);
         }
-        echo \is_string($json) ? $json : json_encode($json);
+        echo \is_string($json) ? $json : json_encode($json, JSON_THROW_ON_ERROR);
     }
 
     public function renderText(array|string $text, int $statusCode = 200): void
