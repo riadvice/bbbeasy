@@ -29,11 +29,6 @@ use Models\ResetTokenPassword;
 
 class GetResetTokenPassword extends BaseAction
 {
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
     public function execute($f3, $params): void
     {
         $token = $f3->get('GET.token');

@@ -35,15 +35,14 @@ class ChangePassword extends BaseAction
 {
     public function execute($f3): void
     {
-        $user       = new User();
+        $form = $this->getDecodedBody();
+
+        $password   = $form['password'];
         $resetToken = new ResetTokenPassword();
-        $form       = $this->getDecodedBody();
 
-        $token    = $form['token'];
-        $password = $form['password'];
-
-        if ($resetToken->tokenExists($token)) {
+        if ($resetToken->tokenExists($form['token'])) {
             if (!$resetToken->dry()) {
+                $user               = new User();
                 $user               = $user->getById($resetToken->user_id);
                 $user->password     = $password;
                 $resetToken->status = ResetTokenStatus::CONSUMED;

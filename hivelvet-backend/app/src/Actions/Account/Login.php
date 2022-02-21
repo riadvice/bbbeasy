@@ -48,6 +48,7 @@ class Login extends BaseAction
         if ($dataChecker->allValid()) {
             $user = new User();
             $user = $user->getByEmail($email);
+            $this->logger->info('Login attempt using email', ['email' => $email]);
             // Check if the user exists
             if ($user->valid() && UserStatus::ACTIVE === $user->status && UserRole::API !== $user->role && $user->verifyPassword($form['password'])) {
                 // valid credentials
@@ -63,7 +64,7 @@ class Login extends BaseAction
                     'email'    => $user->email,
                     'role'     => $user->role,
                 ];
-                $this->logger->info('User successfully login', ['email' => $email]);
+                $this->logger->info('User successfully logged in', ['email' => $email]);
                 $this->renderJson(json_encode($userInfos, JSON_THROW_ON_ERROR));
             }
         }

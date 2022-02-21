@@ -31,6 +31,8 @@ class Logout extends BaseAction
 {
     /**
      * @param $f3
+     *
+     * @throws \JsonException
      */
     public function execute($f3): void
     {

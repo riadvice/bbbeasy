@@ -22,65 +22,44 @@ declare(strict_types=1);
 
 namespace Validation;
 
-use Respect\Validation\Validator;
-use Tracy\Debugger;
+use Respect\Validation\Exceptions\NestedValidationException;
+use Respect\Validation\Validatable;
 
 /**
  * Class Validator.
  */
-class Verifier
+class DataChecker
 {
     private array $errors;
 
-    public array $validators = [];
-
-    public function &newValidator($name, $value): Validator
-    {
-        $this->validators[$name]['rule'] = new Validator();
-        $this->validators[$name]['value'] = $value;
-        return $this->validators[$name]['rule'];
-    }
-
     /**
-     * @param $name
      * @param $input
-     * @param $messages
-     *
-     * @return $this|bool
      */
-    public function verify($name, $input = null, $messages = null): static|bool
+    public function verify($input, Validatable $validator): bool
     {
-      //  Debugger::dump($this->validators);
+        if (null !== $validator->getName()) {
+            $validationException = null;
 
-        $exception = null;
-        foreach ($this->validators as $rule) {
             try {
-                Debugger::dump($rule['rule']);
-                Debugger::dump($rule['value']);
-                $rule['rule']->check($rule['value']); // true
-            } catch(\Exception $exception) {
-                \Tracy\Debugger::dump($exception);
-                break;
+                $validator->assert($input);
+            } catch (NestedValidationException $exception) {
+                $validationException = $exception;
             }
-        //   Debugger::dump($this->validators);
-        }
-        exit;
-        $exceptions = $this->v->check($input);
-        $numRules = \count($this->rules);
-        $numExceptions = is_countable($exceptions) ? \count($exceptions) : 0;
-        $summary = [
-            'total' => $numRules,
-            'failed' => $numExceptions,
-            'passed' => $numRules - $numExceptions,
-        ];
 
-        // Remove rules once the validation has been finished
-        $this->removeRules();
-        if (!empty($exceptions)) {
-            $exception = $this->reportError($input, $summary)->setRelated($exceptions);
-            $this->errors[$name] = $messages ? $exception->findMessages($messages) : $exception->getFullMessage();
+            $numRules      = \count($validator->getRules());
+            $numExceptions = null !== $validationException ? \count($validationException->getChildren()) : 0;
+            $summary       = [
+                'total'  => $numRules,
+                'failed' => $numExceptions,
+                'passed' => $numRules - $numExceptions,
+            ];
+            if (null !== $validationException) {
+                $this->errors[$validator->getName()] = $validator->reportError($input, $summary)->getFullMessage();
 
-            return false;
+                return false;
+            }
+        } else {
+            throw new \RuntimeException('The validator must have a name');
         }
 
         return true;
@@ -92,14 +71,17 @@ class Verifier
      *
      * @return bool
      */
-    public function allValid($popErrors = true, $errorsHiveKey = 'form_errors')
+
+    /**
+     * @param $popErrors
+     * @param $errorsHiveKey
+     *
+     * @return bool
+     */
+    public function allValid($popErrors = true, $errorsHiveKey = 'api_errors')
     {
         if (!empty($this->errors) && $popErrors) {
-            foreach ($this->getErrors() as $key => $errors) {
-                if (\is_array($errors)) {
-                    \Base::instance()->set($errorsHiveKey . '.' . $key, array_values($errors)[0]);
-                }
-            }
+            \Base::instance()->set($errorsHiveKey, $this->errors);
         }
 
         return empty($this->errors);
@@ -107,6 +89,6 @@ class Verifier
 
     public function getErrors()
     {
-        return $this->errors;
+        return !empty($this->errors) ?: [];
     }
 }
