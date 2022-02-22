@@ -36,7 +36,8 @@ use Test\Scenario;
  */
 final class LoginTest extends Scenario
 {
-    protected $group = 'Action User Login';
+    final protected const LOGIN_ROUTE = 'POST /account/login';
+    protected $group                  = 'Action User Login';
 
     /**
      * @param $f3
@@ -51,20 +52,20 @@ final class LoginTest extends Scenario
         $faker = Faker::create();
 
         $data = ['email' => $faker->email, 'password' => $faker->password(8)];
-        $f3->mock('POST /account/login', null, null, $this->postJsonData($data));
-        $test->expect($this->compareTemplateToResponse('login/authentication_error.json'), 'Login with non existing credentials shows error');
+        $f3->mock(self::LOGIN_ROUTE, null, null, $this->postJsonData($data));
+        $test->expect($this->compareTemplateToResponse('account/authentication_error.json'), 'Login with non existing credentials shows error');
 
         $data = ['email' => $faker->firstName, 'password' => $faker->password(8)];
-        $f3->mock('POST /account/login', null, null, $this->postJsonData($data));
-        $test->expect($this->compareTemplateToResponse('login/authentication_error.json'), 'Login with invalid email format show an error');
+        $f3->mock(self::LOGIN_ROUTE, null, null, $this->postJsonData($data));
+        $test->expect($this->compareTemplateToResponse('account/authentication_error.json'), 'Login with invalid email format show an error');
 
         $data = ['email' => $faker->email, 'password' => $faker->password(3)];
-        $f3->mock('POST /account/login', null, null, $this->postJsonData($data));
-        $test->expect($this->compareTemplateToResponse('login/authentication_error.json'), 'Login with too short password');
+        $f3->mock(self::LOGIN_ROUTE, null, null, $this->postJsonData($data));
+        $test->expect($this->compareTemplateToResponse('account/authentication_error.json'), 'Login with too short password');
 
         $data = ['email' => $faker->firstName, 'password' => $faker->password(3)];
-        $f3->mock('POST /account/login', null, null, $this->postJsonData($data));
-        $test->expect($this->compareTemplateToResponse('login/authentication_error.json'), 'Login with too short password and invalid email');
+        $f3->mock(self::LOGIN_ROUTE, null, null, $this->postJsonData($data));
+        $test->expect($this->compareTemplateToResponse('account/authentication_error.json'), 'Login with too short password and invalid email');
 
         return $test->results();
     }
@@ -82,7 +83,7 @@ final class LoginTest extends Scenario
         $user = UserFaker::create(UserRole::ADMIN);
 
         $data = ['email' => $user->email, 'password' => UserRole::ADMIN . UserRole::ADMIN];
-        $f3->mock('POST /account/login', null, null, $this->postJsonData($data));
+        $f3->mock(self::LOGIN_ROUTE, null, null, $this->postJsonData($data));
         $test->expect(
             $this->compareArrayToResponse(['username' => $user->username, 'email' => $user->email, 'role' => $user->role]),
             'Login with user "' . $user->email . '" with status ' . $user->status
@@ -117,9 +118,9 @@ final class LoginTest extends Scenario
         $user->save();
 
         $data = ['email' => $user->email, 'password' => $raw_password];
-        $f3->mock('POST /account/login', null, null, $this->postJsonData($data));
+        $f3->mock(self::LOGIN_ROUTE, null, null, $this->postJsonData($data));
 
-        $test->expect($this->compareTemplateToResponse('login/authentication_error.json'), 'Login with correct credentials and "' . $status . '" status');
+        $test->expect($this->compareTemplateToResponse('account/authentication_error.json'), 'Login with correct credentials and "' . $status . '" status');
 
         return $test->results();
     }

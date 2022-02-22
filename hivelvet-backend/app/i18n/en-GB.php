@@ -52,7 +52,7 @@ return [
             ],
             'mail' => [
                 'hi'               => 'Hi there',
-                'recieved_request' => 'We\'ve received a request to reset the password for the Hivelvet account  associated with',
+                'received_request' => 'We\'ve received a request to reset the password for the Hivelvet account  associated with',
                 'no_changes'       => 'No changes have been made to your account yet',
                 'reset_label'      => 'You can reset your password by clicking the link below',
                 'reset_link'       => 'Reset your password',

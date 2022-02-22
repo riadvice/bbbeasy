@@ -20,19 +20,33 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Suite;
+namespace Actions\Account;
 
-use Actions\Account\GetResetPasswordTokenTest;
-use Actions\Account\LoginTest;
-use Test\TestGroup;
+use Faker\Factory as Faker;
+use Test\Scenario;
 
 /**
  * @internal
  * @coversNothing
  */
-final class AccountActionsTest extends TestGroup
+final class GetResetPasswordTokenTest extends Scenario
 {
-    protected $classes = [LoginTest::class, GetResetPasswordTokenTest::class];
+    final protected const CHECK_TOKEN_ROUTE = 'GET /account/reset-token/';
+    protected $group                        = 'Action Get Reset Password Token';
 
-    protected $quiet = true;
+    /**
+     * @param $f3
+     *
+     * @throws \JsonException
+     */
+    public function testRequestInvalidResetPasswordToken($f3): array
+    {
+        $test = $this->newTest();
+        $f3->mock(self::CHECK_TOKEN_ROUTE . Faker::create()->md5, null, null);
+        $test->expect($this->compareTemplateToResponse('account/password_reset_token_error.json'), 'Fetch data for a non existing password reset token');
+
+        // @todo: test a valid token for a non-active user
+
+        return $test->results();
+    }
 }

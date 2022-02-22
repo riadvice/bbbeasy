@@ -18,6 +18,8 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
+use Application\Bootstrap;
+
 if (PHP_SAPI === 'cli') {
     parse_str(str_replace('/?', '', $argv[1]), $_GET);
 }
@@ -33,5 +35,5 @@ chdir(realpath(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'app'));
 // require bootstrap to init the application
 require_once 'src/Application/Bootstrap.php';
 
-$app = new \Application\Bootstrap();
+$app = new Bootstrap();
 $app->start();

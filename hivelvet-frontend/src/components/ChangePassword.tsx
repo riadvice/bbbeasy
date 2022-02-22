@@ -42,7 +42,7 @@ class ChangePassword extends Component<Props, State> {
         const params = new URLSearchParams(window.location.search);
 
         authService
-            .getResetTokenPasswordByToken(params.get('token'))
+            .getResetPasswordByToken(params.get('token'))
             .then((response) => {
                 this.setState({
                     available_token: true,

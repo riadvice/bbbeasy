@@ -37,6 +37,6 @@ class Logout extends BaseAction
     public function execute($f3): void
     {
         $this->session->revokeUser();
-        $this->renderJson(['redirect' => true]);
+        $this->renderJson(['logged_out' => true]);
     }
 }

@@ -20,19 +20,38 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Suite;
+namespace Fake;
 
-use Actions\Account\GetResetPasswordTokenTest;
-use Actions\Account\LoginTest;
-use Test\TestGroup;
+use Enum\ResetTokenStatus;
+use Models\ResetPasswordToken;
+use models\User;
 
-/**
- * @internal
- * @coversNothing
- */
-final class AccountActionsTest extends TestGroup
+class PasswordResetTokenFaker
 {
-    protected $classes = [LoginTest::class, GetResetPasswordTokenTest::class];
+    private static array $storage = [];
 
-    protected $quiet = true;
+    public static function create(User $user, string $status = ResetTokenStatus::NEW, $storageName = null)
+    {
+        // To make testing easier, the user is password is the same as its role
+        $token          = new ResetPasswordToken();
+        $token->status  = $status;
+        $token->user_id = $user->id;
+
+        $token->save();
+        if (null !== $storageName) {
+            self::$storage[$storageName] = $user;
+        }
+
+        return $token;
+    }
+
+    /**
+     * @param $storageName
+     *
+     * @return User
+     */
+    public static function get($storageName)
+    {
+        return self::$storage[$storageName];
+    }
 }

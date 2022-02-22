@@ -99,4 +99,16 @@ class Time
 
         return [$dateMonth, $dateYear, $time];
     }
+
+    /**
+     * Check if a particular DateTime is prior to now.
+     *
+     * @param $dateTime
+     *
+     * @throws Exception
+     */
+    public static function isInPast($dateTime): bool
+    {
+        return new DateTime($dateTime) < new DateTime();
+    }
 }

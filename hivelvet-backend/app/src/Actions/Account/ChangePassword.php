@@ -25,7 +25,7 @@ namespace Actions\Account;
 use Actions\Base as BaseAction;
 use Enum\ResetTokenStatus;
 use Enum\ResponseCode;
-use Models\ResetTokenPassword;
+use Models\ResetPasswordToken;
 use Models\User;
 
 /**
@@ -38,9 +38,9 @@ class ChangePassword extends BaseAction
         $form = $this->getDecodedBody();
 
         $password   = $form['password'];
-        $resetToken = new ResetTokenPassword();
+        $resetToken = new ResetPasswordToken();
 
-        if ($resetToken->tokenExists($form['token'])) {
+        if ($resetToken->getByToken($form['token'])) {
             if (!$resetToken->dry()) {
                 $user               = new User();
                 $user               = $user->getById($resetToken->user_id);
