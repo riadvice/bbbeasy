@@ -20,8 +20,8 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 import { Button, Dropdown, Layout, Menu } from 'antd';
-import { PlusOutlined, DownOutlined } from "@ant-design/icons";
-import DynamicIcon from "./DynamicIcon";
+import { PlusOutlined, DownOutlined } from '@ant-design/icons';
+import DynamicIcon from './DynamicIcon';
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
@@ -32,32 +32,26 @@ const AppSider = () => {
 
     const newMenu = (
         <Menu>
-            <Menu.Item key="1">
-                Room
-            </Menu.Item>
-            <Menu.Item key="2">
-                Label
-            </Menu.Item>
-            <Menu.Item key="3">
-                Preset
-            </Menu.Item>
+            <Menu.Item key="1">Room</Menu.Item>
+            <Menu.Item key="2">Label</Menu.Item>
+            <Menu.Item key="3">Preset</Menu.Item>
         </Menu>
     );
     const menuData = [
         {
             name: 'Rooms',
             icon: 'UserOutlined',
-            path: '/home'
+            path: '/home',
         },
         {
             name: 'Labels',
             icon: 'TagsOutlined',
-            path: '/labels'
+            path: '/labels',
         },
         {
             name: 'Presets',
             icon: 'UserAddOutlined',
-            path: '/presets'
+            path: '/presets',
         },
         {
             name: 'Settings',
@@ -83,24 +77,21 @@ const AppSider = () => {
                 {
                     name: 'BigBlueButton',
                     path: '/settings/bigbluebutton',
-                }
+                },
             ],
         },
         {
             name: 'Help',
             icon: 'QuestionCircleOutlined',
-            path: 'https://riadvice.tn/'
+            path: 'https://riadvice.tn/',
         },
     ];
-    const handleClick = e => {
+    const handleClick = (e) => {
         setCurrentPath(e.key);
     };
 
     return (
-        <Sider
-            className="site-sider"
-            width={250}
-        >
+        <Sider className="site-sider" width={250}>
             <Dropdown overlay={newMenu}>
                 <Button size="middle" className="sider-new-btn">
                     <PlusOutlined /> New <DownOutlined />
@@ -115,34 +106,30 @@ const AppSider = () => {
                 defaultSelectedKeys={['/home']}
                 defaultOpenKeys={['sub1']}
             >
-                {menuData.map((item) => (
-                    item.children!= null ?
-                        <SubMenu
-                            key={item.path}
-                            icon={<DynamicIcon type={item.icon} />}
-                            title={item.name}
-                        >
+                {menuData.map((item) =>
+                    item.children != null ? (
+                        <SubMenu key={item.path} icon={<DynamicIcon type={item.icon} />} title={item.name}>
                             {item.children.map((subItem) => (
                                 <Menu.Item key={subItem.path}>
                                     <Link to={subItem.path}>{subItem.name}</Link>
                                 </Menu.Item>
                             ))}
                         </SubMenu>
-                    :
-                        <Menu.Item
-                            key={item.path}
-                            icon={<DynamicIcon type={item.icon} />}
-                        >
-                            { (item.path.includes('http')) ?
-                                <a target="_blank" rel="noopener noreferrer" href={item.path}>{item.name}</a>
-                                :
+                    ) : (
+                        <Menu.Item key={item.path} icon={<DynamicIcon type={item.icon} />}>
+                            {item.path.includes('http') ? (
+                                <a target="_blank" rel="noopener noreferrer" href={item.path}>
+                                    {item.name}
+                                </a>
+                            ) : (
                                 <Link to={item.path}>{item.name}</Link>
-                            }
+                            )}
                         </Menu.Item>
-                ))}
+                    )
+                )}
             </Menu>
         </Sider>
     );
-}
+};
 
 export default AppSider;

@@ -64,12 +64,7 @@ class ResetPwd extends Component<Props, State> {
                                 <Input placeholder="Email" />
                             </Form.Item>
                             <Form.Item>
-                                <Button
-                                    type="primary"
-                                    htmlType="submit"
-                                    className="login-form-button"
-                                    block
-                                >
+                                <Button type="primary" htmlType="submit" className="login-form-button" block>
                                     <T _str="Reset password" />
                                 </Button>
                             </Form.Item>

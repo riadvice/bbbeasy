@@ -94,21 +94,26 @@ class AppHeader extends Component<Props, State> {
                                     <GlobalOutlined /> {language} <DownOutlined />
                                 </Button>
                             </Dropdown>
-                            {(!isLogged) ? (
+                            {!isLogged ? (
                                 <>
                                     <Link className={'ant-btn color-primary'} to={'/login'}>
                                         {' '}
-                                        <T _str="Login"/>{' '}
+                                        <T _str="Login" />{' '}
                                     </Link>
                                     <Link className={'ant-btn color-primary'} to={'/register'}>
                                         {' '}
-                                        <T _str="Sign up"/>{' '}
+                                        <T _str="Sign up" />{' '}
                                     </Link>
                                 </>
                             ) : (
                                 <>
                                     <Button type="primary" icon={<UserOutlined />} className="profil-btn" />
-                                    <Button type="primary" icon={<LogoutOutlined />} className="logout-btn" onClick={() => this.logout()}/>
+                                    <Button
+                                        type="primary"
+                                        icon={<LogoutOutlined />}
+                                        className="logout-btn"
+                                        onClick={() => this.logout()}
+                                    />
                                 </>
                             )}
                         </Space>
