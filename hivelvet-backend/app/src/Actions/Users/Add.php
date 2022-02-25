@@ -37,15 +37,6 @@ class Add extends BaseAction
      * @param \Base $f3
      * @param array $params
      */
-    public function show($f3, $params): void
-    {
-        $this->render();
-    }
-
-    /**
-     * @param \Base $f3
-     * @param array $params
-     */
     public function save($f3, $params): void
     {
         $v    = new DataChecker();
@@ -58,12 +49,11 @@ class Add extends BaseAction
         $v->notEmpty()->verify('role', $form['role'], ['notEmpty' => $this->i18n->err('users.role')]);
 
         if ($v->allValid()) {
-            $user->email      = $form['email'];
-            $user->username   = $form['username'];
-            $user->password   = $form['password'];
-            $user->role       = $form['role'];
-            $user->status     = UserStatus::ACTIVE;
-            $user->created_on = date('Y-m-d H:i:s');
+            $user->email    = $form['email'];
+            $user->username = $form['username'];
+            $user->password = $form['password'];
+            $user->role     = $form['role'];
+            $user->status   = UserStatus::ACTIVE;
 
             try {
                 $user->save();

@@ -24,7 +24,6 @@ namespace Actions;
 
 use Actions\Base as BaseAction;
 use Enum\ResponseCode;
-use Helpers\Flash;
 use Models\Base as Model;
 use Nette\Utils\Strings;
 
@@ -90,10 +89,9 @@ abstract class Delete extends BaseAction
                 if (null !== $this->messageArg) {
                     $message  = $this->i18n->msg(mb_strtolower($this->model) . '.delete_success');
                     $argument = Strings::startsWith($message, '{0}') ? Strings::capitalize($this->modelInstance[$this->messageArg]) : $this->modelInstance[$this->messageArg];
-                    Flash::instance()->addMessage($this->f3->format($message, $argument), Flash::SUCCESS);
-                } else {
-                    Flash::instance()->addMessage($this->f3->format($this->i18n->msg(mb_strtolower($this->model) . '.delete_success')), Flash::SUCCESS);
+                    // Flash::instance()->addMessage($this->f3->format($message, $argument), Flash::SUCCESS);
                 }
+                // Flash::instance()->addMessage($this->f3->format($this->i18n->msg(mb_strtolower($this->model) . '.delete_success')), Flash::SUCCESS);
             }
         } else {
             $resultCode = ResponseCode::HTTP_NOT_FOUND;

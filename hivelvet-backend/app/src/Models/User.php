@@ -118,7 +118,7 @@ class User extends BaseModel
      *
      * @return Cortex
      */
-    public function getById($id)
+    public function getById($id): self
     {
         $this->load(['id = ?', $id]);
 

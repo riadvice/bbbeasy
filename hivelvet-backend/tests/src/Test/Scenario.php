@@ -84,16 +84,6 @@ class Scenario
     }
 
     /**
-     * @param $response
-     * @param $text
-     * @param $type
-     */
-    public function responseHasFlash($response, $text, $type): bool
-    {
-        return 1 === preg_match('/{text:"' . $text . '", type: "' . $type . '"}/', (string) $response, $matches);
-    }
-
-    /**
      * @param $name
      * @param $file
      */
