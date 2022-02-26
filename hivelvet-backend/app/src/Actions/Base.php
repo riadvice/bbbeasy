@@ -25,6 +25,7 @@ namespace Actions;
 use Acl\Access;
 use Core\Session;
 use DOMDocument;
+use Enum\ResponseCode;
 use Enum\UserRole;
 use Enum\UserStatus;
 use Helpers\I18n;
@@ -134,14 +135,20 @@ abstract class Base extends \Prefab
     }
 
     /**
-     * @param array|string $json
-     * @param int          $statusCode
+     * @throws \JsonException
      */
-    public function renderJson($json, $statusCode = 200): void
+    public function renderJson(array|string $json, int $statusCode = 200): void
     {
         header('HTTP/1.1 ' . $statusCode);
         if (!Environment::isTest()) {
             header(self::JSON);
+        }
+        // Set the status code in the response everytime we build the response
+        if (ResponseCode::HTTP_OK !== $statusCode) {
+            if (!empty($this->f3->get('api_errors'))) {
+                $json['errors'] = $this->f3->get('api_errors');
+            }
+            $json['status'] = $statusCode;
         }
         echo \is_string($json) ? $json : json_encode($json, JSON_THROW_ON_ERROR);
     }

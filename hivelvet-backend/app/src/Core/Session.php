@@ -26,6 +26,7 @@ use Base;
 use DB\SQL;
 use DB\SQL\Session as SQLSession;
 use Log\LogWriterTrait;
+use Models\User;
 use Prefab;
 use Session as F3Session;
 
