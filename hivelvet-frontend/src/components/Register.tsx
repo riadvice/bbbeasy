@@ -61,14 +61,14 @@
                  });
                  const response = error.response.data;
                  if (response.errors) {
-                     const errors = Object.values(response.errors);
                      const err = [];
-                     errors.forEach(function (value : any) {
-                         const keys = Object.keys(value);
-                         keys.forEach(function (key) {
+                     const errors = response.errors;
+                     Object.values(errors).map((value) => {
+                         Object.keys(value).map((key) => {
                              err.push(value[key]);
                          });
                      });
+
                      this.setState({
                          errors: err
                      });

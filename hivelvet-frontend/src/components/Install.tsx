@@ -76,7 +76,7 @@
      const [modalContent, setModalContent] = React.useState([]);
      const [isModalVisible, setIsModalVisible] = React.useState(false);
      const [selectedCategory, setSelectedCategory] = React.useState('');
- 
+
      if (presets.length == 0 && settings.length == 0) {
          InstallService.collect_settings()
              .then((response) => {
@@ -105,7 +105,7 @@
                  console.log(error);
              });
      }
- 
+
      const Step1Form = () => {
          return (
              <div>
@@ -399,14 +399,14 @@
              setSelectedCategory(indexCateg);
          };
          const handleOk = () => {
-             presets[selectedCategory].subcategories = modalContent;
-             setPresets(presets);
+             //set old content of selected category
+             /*presets[selectedCategory].subcategories = modalContent;
+             setPresets(presets);*/
              setIsModalVisible(false);
          };
          const handleCancel = () => {
              setIsModalVisible(false);
          };
- 
          return (
              <>
                  <Paragraph className="final-form-header">
@@ -414,7 +414,7 @@
                          {' '}
                          <T _str="BigBlueButton rooms settings" />
                      </Title>
- 
+
                      <Alert
                          className="settings-info"
                          message="Click on each button to customise the configuration group and hover it to get its summary."
@@ -443,7 +443,7 @@
                              </Grid>
                          </Tooltip>
                      ))}
- 
+
                      <Modal
                          title={modalTitle}
                          className="presets-modal"
@@ -480,7 +480,7 @@
              </>
          );
      };
- 
+
      function next() {
          const nextStep = activeStep + 1;
          setActiveStep(nextStep);
@@ -489,7 +489,7 @@
          const prevStep = activeStep - 1;
          setActiveStep(prevStep);
      }
- 
+
      const steps = [
          {
              title: 'Administrator account',
@@ -513,7 +513,7 @@
              offset: 1,
          },
      ];
- 
+
      const onFinish = () => {
          if (activeStep < steps.length - 1) {
              next();
@@ -526,10 +526,11 @@
                  'add_color' : addColor,
              };
              formData.presetsConfig = presets;
+
              InstallService.install(formData)
                  .then((response) => {
                      setSuccessful(true);
-                     setSuccessMessage(response.data.message);
+                     setSuccessMessage('Application installed !');
                  })
                  .catch((error) => {
                      console.log(error);
@@ -537,11 +538,10 @@
                      setErrorsStep2([]);
                      const responseMessage = error.response.data;
                      if (responseMessage.userErrors) {
-                         const userErrors = Object.values(responseMessage.userErrors);
                          const err = [];
-                         userErrors.forEach(function (value : any) {
-                             const keys = Object.keys(value);
-                             keys.forEach(function (key) {
+                         const userErrors = responseMessage.userErrors;
+                         Object.values(userErrors).map((value) => {
+                             Object.keys(value).map((key) => {
                                  err.push(value[key]);
                              });
                          });
@@ -549,11 +549,10 @@
                          setActiveStep(0);
                      }
                      if (responseMessage.settingsErrors) {
-                         const settingsErrors = Object.values(responseMessage.settingsErrors);
                          const err = [];
-                         settingsErrors.forEach(function (value : any) {
-                             const keys = Object.keys(value);
-                             keys.forEach(function (key) {
+                         const settingsErrors = responseMessage.settingsErrors;
+                         Object.values(settingsErrors).map((value) => {
+                             Object.keys(value).map((key) => {
                                  err.push(value[key]);
                              });
                          });
@@ -565,7 +564,7 @@
                      }
                      setSuccessful(false);
                  });
- 
+
              if (file != undefined) {
                  const fdata = new FormData();
                  fdata.append('logo', file.originFileObj, file.originFileObj.name);

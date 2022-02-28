@@ -32,4 +32,6 @@ class LockSettings extends Enum
     final public const PUBLIC_CHAT  = 'public_chat';
     final public const SHARED_NOTES = 'shared_notes';
     final public const LAYOUT       = 'layout';
+
+    public static string $icon = 'UnlockOutlined';
 }

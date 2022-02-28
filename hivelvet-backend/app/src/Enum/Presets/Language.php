@@ -27,4 +27,6 @@ use Enum\Enum;
 class Language extends Enum
 {
     final public const DEFAULT_LANGUAGE = 'default_language';
+
+    public static string $icon = 'TranslationOutlined';
 }

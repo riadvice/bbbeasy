@@ -26,7 +26,9 @@ use Enum\Enum;
 
 class Whiteboard extends Enum
 {
-    final public const MULTI_USER_PEN   = 'default_language';
+    final public const MULTI_USER_PEN   = 'multi_user_pen_only';
     final public const PRESENTER_TOOLS  = 'presenter_tools';
     final public const MULTI_USER_TOOLS = 'multi_user_tools';
+
+    public static string $icon = 'FundProjectionScreenOutlined';
 }

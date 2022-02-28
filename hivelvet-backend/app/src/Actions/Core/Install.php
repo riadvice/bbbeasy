@@ -27,7 +27,6 @@ use Base;
 use Enum\ResponseCode;
 use Enum\UserRole;
 use Enum\UserStatus;
-use Models\PresetSetting;
 use Models\Setting;
 use Models\User;
 use Validation\Validator;
@@ -127,6 +126,7 @@ class Install extends BaseAction
                     $this->logger->info('App configuration', ['setting' => $defaultSettings->toArray()]);
 
                     $presets = $form['presetsConfig'];
+                    /*
                     foreach ($presets as $preset) {
                         $subcategories = $preset['subcategories'];
                         foreach ($subcategories as $subcategory) {
@@ -146,6 +146,7 @@ class Install extends BaseAction
                             }
                         }
                     }
+                    */
                     //$this->logger->info('administrator and settings and presets successfully added', ['user' => $user->toArray()]);
                     $this->renderJson(['message' => 'Application installed !']);
                 } catch (\Exception $e) {

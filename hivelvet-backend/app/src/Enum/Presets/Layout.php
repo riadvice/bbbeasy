@@ -31,4 +31,6 @@ class Layout extends Enum
     final public const CHAT           = 'chat';
     final public const NAVIGATION_BAR = 'navigation_bar';
     final public const ACTIONS_BAR    = 'actions_bar';
+
+    public static string $icon = 'LayoutOutlined';
 }

@@ -24,8 +24,6 @@ namespace Actions\Presets;
 
 use Actions\Base as BaseAction;
 use Base;
-use Models\PresetCategory;
-use Models\PresetSubCategory;
 
 /**
  * Class Collect.
@@ -38,29 +36,50 @@ class Collect extends BaseAction
      */
     public function execute($f3, $params): void
     {
-        $data            = [];
-        $preset_category = new PresetCategory();
-        $categories      = $preset_category->find([], ['order' => 'id']);
+        $data                = [];
+        $res                 = get_declared_classes();
+        $autoloaderClassName = '';
+        foreach ($res as $className) {
+            if (str_starts_with($className, 'ComposerAutoloaderInit')) {
+                $autoloaderClassName = $className;
+                break;
+            }
+        }
+        $classLoader = $autoloaderClassName::getLoader();
+        $classMap = $classLoader->getClassMap();
 
+        $categories = preg_filter('/^Enum\\\Presets\\\[A-Z a-z]*/', '$0', array_keys($classMap));
+
+        $counter = 1;
         if ($categories) {
             foreach ($categories as $category) {
+                $categoryName = explode("\\", $category)[2];
+                preg_match_all('/[A-Z]/', $categoryName,$matches, PREG_OFFSET_CAPTURE);
+                $secondMajOcc = array_key_exists(1, $matches[0]) ? $matches[0][1][1] : null;
+                if ($secondMajOcc and $categoryName != 'ZcaleRight')
+                    $categoryName = substr($categoryName,0,$secondMajOcc).' '.substr($categoryName,$secondMajOcc);
+
+                $class          = new \ReflectionClass($category);
+                $modelInstance  = $class->newInstance();
+                $categoryIcon   = $modelInstance::staticProperties()['icon'];
                 $categoryData = [
-                    'name'          => $category->name,
-                    'icon'          => $category->icon,
+                    'name'          => $categoryName,
+                    'icon'          => $categoryIcon,
                     'subcategories' => [],
                 ];
-                $preset_subcategory = new PresetSubCategory();
-                $subcategories      = $preset_subcategory->find(['category_id = ?', $category->id], ['order' => 'id']);
-                if ($subcategories) {
-                    foreach ($subcategories as $subcategory) {
-                        $subCategoryData = [
-                            'id'     => $subcategory->id,
-                            'name'   => $subcategory->name,
-                            'status' => false,
-                        ];
-                        $categoryData['subcategories'][] = $subCategoryData;
-                    }
+                $subCategories  = $modelInstance::values();
+                foreach ($subCategories as $key => $subCategory) {
+                    //$subCategories[$key] = ucfirst(str_replace('_',' ',$subCategory));
+                    $subCategory = ucfirst(str_replace('_',' ',$subCategory));
+                    $subCategoryData = [
+                        'id'     =>$counter,
+                        'name'   => $subCategory,
+                        'status' => false,
+                    ];
+                    $categoryData['subcategories'][] = $subCategoryData;
+                    $counter++;
                 }
+
                 $data[] = $categoryData;
             }
         }

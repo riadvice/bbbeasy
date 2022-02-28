@@ -32,4 +32,6 @@ class General extends Enum
     final public const OPEN_FOR_EVERYONE     = 'open_for_everyone';
     final public const ALL_JOIN_AS_MODERATOR = 'all_join_as_moderator';
     final public const LOGGED_IN_USERS_ONLY  = 'logged_in_users_only';
+
+    public static string $icon = 'GlobalOutlined';
 }

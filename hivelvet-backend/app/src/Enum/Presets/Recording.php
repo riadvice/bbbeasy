@@ -29,4 +29,6 @@ class Recording extends Enum
     final public const CONFIGURABLE     = 'configurable';
     final public const AUTO_START       = 'auto_start';
     final public const ALLOW_START_STOP = 'allow_start_stop';
+
+    public static string $icon = 'PlayCircleOutlined';
 }

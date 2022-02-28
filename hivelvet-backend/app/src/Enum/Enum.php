@@ -48,6 +48,16 @@ class Enum
     }
 
     /**
+     * @throws ReflectionException
+     */
+    public static function staticProperties(): array
+    {
+        $class = new ReflectionClass(static::class);
+
+        return $class->getStaticProperties();
+    }
+
+    /**
      * @param $value string The class constant name
      *
      * @throws ReflectionException

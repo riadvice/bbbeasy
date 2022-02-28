@@ -27,4 +27,6 @@ use Enum\Enum;
 class ZcaleRight extends Enum
 {
     final public const POOL_NAME = 'pool_name';
+
+    public static string $icon = 'ZcaleRight';
 }
