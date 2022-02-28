@@ -44,10 +44,10 @@ class PrivilegeUtils
 
         /*
          * @todo:
-         * 1 - Filter classes starting with Actions\                        => done
-         * 2 - Retain classes having only a secondary names space (2 \)     => done
-         * 3 - Filter classes having RequirePrivilegeTrait                  => done
-         * 4 - Actions\Group\PrivilegeName                                  => done
+         * 1 - Filter classes starting with Actions\
+         * 2 - Retain classes having only a secondary names space (2 \)
+         * 3 - Filter classes having RequirePrivilegeTrait
+         * 4 - Actions\Group\PrivilegeName
          * 5 - Later put the list in redis cache when the application starts the first time
          */
         $classMap = $classLoader->getClassMap();

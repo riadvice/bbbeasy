@@ -25,7 +25,7 @@ namespace Models;
 use Models\Base as BaseModel;
 
 /**
- * Class User.
+ * Class ResetTokenPassword.
  *
  * @property int       $id
  * @property int       $user_id

@@ -125,7 +125,7 @@ const AppSider = () => {
                             {item.children.map((subItem) => (
                                 <Menu.Item
                                     key={subItem.path}
-                                    icon={<RightOutlined />}
+                                    //icon={<RightOutlined />}
                                 >
                                     <Link to={subItem.path}>{subItem.name}</Link>
                                 </Menu.Item>

@@ -1,8 +1,4 @@
-<?php
-
-declare(strict_types=1);
-
-/*
+/**
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -20,35 +16,35 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Actions\Logs;
+import axios from 'axios';
 
-use Actions\Base as BaseAction;
-use Actions\RequirePrivilegeTrait;
-use Base;
+const API_URL = process.env.REACT_APP_API_URL;
 
-/**
- * Class Clean.
- */
-class Clean extends BaseAction
-{
-    use RequirePrivilegeTrait;
+class RolesService {
+    list_roles() {
+        return axios.get(API_URL + '/roles/list');
+    }
+    list_users() {
+        return axios.get(API_URL + '/roles/collect-users');
+    }
+    list_permissions() {
+        return axios.get(API_URL + '/roles/collect-privileges');
+    }
 
-    /**
-     * @param Base  $f3
-     * @param array $params
-     */
-    public function execute($f3, $params): void
-    {
-        $files = glob($f3->get('LOGS') . '*.log');
-        $now   = time();
+    add_role(data: object) {
+        return axios.post(API_URL + '/roles/add',{
+            data
+        });
+    }
+    edit_role(data: object,id: number) {
+        return axios.put(API_URL + '/roles/edit/'+id,{
+            data
+        });
+    }
 
-        foreach ($files as $file) {
-            if (is_file($file)) {
-                if ($now - filemtime($file) >= 60 * 60 * 24 * $f3->get('log.keep')) { // 7 days by default
-                    $this->logger->info('Deleting old log file', ['log_file' => $file]);
-                    unlink($file);
-                }
-            }
-        }
+    delete_role(id: number) {
+        return axios.delete(API_URL + '/roles/delete/'+id);
     }
 }
+
+export default new RolesService();

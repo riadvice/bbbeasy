@@ -37,8 +37,10 @@
  import ResetPwd from './components/ResetPwd';
  import Reset from './components/ResetPassword';
  import ChangePassword from './components/ChangePassword';
+
  import Home from './components/Home';
- 
+ import Roles from './components/Roles';
+
  import enUS from 'antd/lib/locale/en_US';
  import moment from 'moment';
  import 'moment/locale/fr';
@@ -146,6 +148,8 @@
                                                  <Home isLogged={isLogged} user={currentUser} />
                                              </PrivateRoute>
                                          }
+                                     />
+                                     <Route path="/settings/roles" element={<PrivateRoute><Roles /></PrivateRoute>}
                                      />
                                  </Routes>
                              ) : (

@@ -20,35 +20,36 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Actions\Logs;
+namespace Actions\Users;
 
 use Actions\Base as BaseAction;
-use Actions\RequirePrivilegeTrait;
 use Base;
+use Enum\UserStatus;
+use Models\User;
 
 /**
- * Class Clean.
+ * Class Collect.
  */
-class Clean extends BaseAction
+class Collect extends BaseAction
 {
-    use RequirePrivilegeTrait;
-
     /**
      * @param Base  $f3
      * @param array $params
      */
     public function execute($f3, $params): void
     {
-        $files = glob($f3->get('LOGS') . '*.log');
-        $now   = time();
-
-        foreach ($files as $file) {
-            if (is_file($file)) {
-                if ($now - filemtime($file) >= 60 * 60 * 24 * $f3->get('log.keep')) { // 7 days by default
-                    $this->logger->info('Deleting old log file', ['log_file' => $file]);
-                    unlink($file);
-                }
+        $data   = [];
+        $user = new User();
+        $users  = $user->find(['status != ?',UserStatus::DELETED], ['order' => 'id']);
+        if ($users) {
+            foreach ($users as $user) {
+                $data[] = [
+                    'key'    => $user->id,
+                    'username'  => $user->username,
+                ];
             }
         }
+        $this->logger->info('collecting users for manage roles', ['roles' => json_encode($data)]);
+        $this->renderJson(json_encode($data));
     }
 }

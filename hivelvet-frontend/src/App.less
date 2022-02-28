@@ -73,10 +73,75 @@ body,button,input,select,textarea{
   width: 25%;
   margin-top: 40px;
 }
+.roles-modal .ant-form {
+  padding: 15px;
+}
+.actions-expanded {
+  margin-top: 16px;
+  float: right;
+}
+.table-actions.editable a {
+  color: @primary-color;
+}
+.table-actions a {
+    color: #bfbfbf;
+}
+.table-actions a.ant-popover-open {
+  color: red;
+}
+
+.table-search-bloc {
+  padding: 8px;
+}
+
+.table-search-input {
+  margin-bottom: 8px;
+  display: block;
+}
+
+.table-search-btn {
+  width: 90px;
+}
+
+.search-icon-filtered {
+  color: @primary-color;
+  //#1890ff
+}
 
 .labels-content {
   margin: 0 24px;
 }
+
+.hivelvet-table .ant-table-expanded-row .ant-table-cell {
+  padding: 0;
+}
+.hivelvet-table .ant-table-expanded-row .ant-table-cell .ant-card-head {
+  background: #464a53;
+  color: white;
+}
+
+.hivelvet-table .card-parent {
+  background: transparent;
+}
+
+.hivelvet-table .input-editable label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::before,
+.hivelvet-table .input-editable .ant-form-item-label > label::after {
+  content: '';
+}
+
+.hivelvet-table .input-editable label {
+  text-transform: capitalize;
+  text-decoration: underline;
+  color: black !important;
+  font-weight: 500;
+}
+
+/*.hivelvet-table .ant-table-row-expand-icon::after {
+  top: unset;
+  bottom: unset;
+  left: unset;
+  width: unset;
+}*/
 
 .labels-header {
   padding: 16px 24px;
@@ -318,6 +383,10 @@ body,button,input,select,textarea{
   clip-path: polygon(50% 0, 50% 0, 95% 25%, 95% 75%, 50% 100%, 50% 100%, 5% 75%, 5% 25%);
 }
 
+.modal-submit-btn .ant-form-item-control {
+  margin: 0 auto;
+}
+
 .content-center {
   display: flex;
   align-items: center;
@@ -466,7 +535,9 @@ body,button,input,select,textarea{
   margin-right: auto;
   margin-top: 60px !important;
 }
-
+.text-capitalize {
+  text-transform: capitalize;
+}
 .hidden {
   display: none;
 }

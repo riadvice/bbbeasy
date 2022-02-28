@@ -20,35 +20,21 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Actions\Logs;
+use Phinx\Migration\AbstractMigration;
 
-use Actions\Base as BaseAction;
-use Actions\RequirePrivilegeTrait;
-use Base;
-
-/**
- * Class Clean.
- */
-class Clean extends BaseAction
+final class RemoveGrantedInRolePermission extends AbstractMigration
 {
-    use RequirePrivilegeTrait;
-
-    /**
-     * @param Base  $f3
-     * @param array $params
-     */
-    public function execute($f3, $params): void
+    public function up(): void
     {
-        $files = glob($f3->get('LOGS') . '*.log');
-        $now   = time();
+        $table = $this->table('roles_permissions');
+        $table->removeColumn('granted')
+            ->save();
+    }
 
-        foreach ($files as $file) {
-            if (is_file($file)) {
-                if ($now - filemtime($file) >= 60 * 60 * 24 * $f3->get('log.keep')) { // 7 days by default
-                    $this->logger->info('Deleting old log file', ['log_file' => $file]);
-                    unlink($file);
-                }
-            }
-        }
+    public function down(): void
+    {
+        $table = $this->table('roles_permissions');
+        $table->addColumn('granted', 'boolean', ['default' => false, 'null' => false])
+            ->save();
     }
 }

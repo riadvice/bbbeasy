@@ -20,34 +20,32 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Actions\Logs;
+namespace Actions\Roles;
 
-use Actions\Base as BaseAction;
-use Actions\RequirePrivilegeTrait;
-use Base;
+use Actions\Delete as DeleteAction;
+use Enum\ResponseCode;
+use Models\Role;
 
 /**
- * Class Clean.
+ * Class Delete.
  */
-class Clean extends BaseAction
+class Delete extends DeleteAction
 {
-    use RequirePrivilegeTrait;
 
-    /**
-     * @param Base  $f3
-     * @param array $params
-     */
     public function execute($f3, $params): void
     {
-        $files = glob($f3->get('LOGS') . '*.log');
-        $now   = time();
+        $role       = new Role();
+        $role_id    = $params['id'];
+        $nbUsers    = count($role->getRoleUsers($role_id));
 
-        foreach ($files as $file) {
-            if (is_file($file)) {
-                if ($now - filemtime($file) >= 60 * 60 * 24 * $f3->get('log.keep')) { // 7 days by default
-                    $this->logger->info('Deleting old log file', ['log_file' => $file]);
-                    unlink($file);
-                }
+        $resultCode1 = $role->switchAllRoleUser($role_id);
+        $resultCode2 = $role->deleteRolePermissions($role_id);
+
+        if ($resultCode1 == ResponseCode::HTTP_OK and $resultCode2 == ResponseCode::HTTP_OK) {
+            parent::execute($f3,$params);
+            if ($nbUsers > 0) {
+                $result = $role->getAllRoles();
+                $this->renderJson(json_encode($result));
             }
         }
     }

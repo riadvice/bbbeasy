@@ -29,8 +29,10 @@ final class CreateRolesTable extends AbstractMigration
         $table = $this->table('roles');
         $table
             ->addColumn('name', 'string', ['limit' => 64, 'null' => false])
+            ->addColumn('status', 'string', ['limit' => 32, 'default' => 'inactive', 'null' => false])
             ->addColumn('created_on', 'datetime', ['default' => '0001-01-01 00:00:00', 'timezone' => true])
             ->addColumn('updated_on', 'datetime', ['default' => '0001-01-01 00:00:00', 'timezone' => true])
+            ->addIndex('name', ['unique' => true, 'name' => 'idx_roles_name'])
             ->save()
         ;
     }

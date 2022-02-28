@@ -20,35 +20,25 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Actions\Logs;
+namespace Actions\RolesPermissions;
 
 use Actions\Base as BaseAction;
-use Actions\RequirePrivilegeTrait;
 use Base;
+use Utils\PrivilegeUtils;
 
 /**
- * Class Clean.
+ * Class Collect.
  */
-class Clean extends BaseAction
+class Collect extends BaseAction
 {
-    use RequirePrivilegeTrait;
-
     /**
      * @param Base  $f3
      * @param array $params
      */
     public function execute($f3, $params): void
     {
-        $files = glob($f3->get('LOGS') . '*.log');
-        $now   = time();
-
-        foreach ($files as $file) {
-            if (is_file($file)) {
-                if ($now - filemtime($file) >= 60 * 60 * 24 * $f3->get('log.keep')) { // 7 days by default
-                    $this->logger->info('Deleting old log file', ['log_file' => $file]);
-                    unlink($file);
-                }
-            }
-        }
+        $privileges = PrivilegeUtils::listSystemPrivileges();
+        $this->logger->info('collecting privileges for manage roles', ['roles' => json_encode($privileges)]);
+        $this->renderJson(json_encode($privileges));
     }
 }
