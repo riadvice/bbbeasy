@@ -28,7 +28,7 @@ use Models\Role;
 use Models\RolePermission;
 use Models\User;
 use Models\UserRole;
-use Validation\Validator;
+use Validation\DataChecker;
 
 /**
  * Class Edit.
@@ -52,7 +52,7 @@ class Edit extends BaseAction
         }
         else {
             if (isset($form['name'])) {
-                $v  = new Validator();
+                $v  = new DataChecker();
                 $v->notEmpty()->verify('name', $form['name'], ['notEmpty' => 'Name is required']);
                 if ($v->allValid()) {
                     $checkRole = new Role();

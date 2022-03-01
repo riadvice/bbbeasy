@@ -29,7 +29,7 @@ use Enum\UserRole;
 use Enum\UserStatus;
 use Models\Setting;
 use Models\User;
-use Validation\Validator;
+use Validation\DataChecker;
 
 /**
  * Class Install.
@@ -48,8 +48,8 @@ class Install extends BaseAction
          */
         $body = $this->getDecodedBody();
         $form = $body['data'];
-        $v1   = new Validator();
-        $v2   = new Validator();
+        $v1   = new DataChecker();
+        $v2   = new DataChecker();
 
         $step1Validated = false;
         $step2Validated = false;

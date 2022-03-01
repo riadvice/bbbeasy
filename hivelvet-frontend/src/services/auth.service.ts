@@ -47,8 +47,8 @@ class AuthService {
             password,
         });
     }
-    getResetTokenPasswordByToken(token: string) {
-        return axios.get(API_URL + '/account/get-reset-token?token=' + token, {});
+    getResetPasswordByToken(token: string) {
+        return axios.get(API_URL + '/account/reset-token/' + token, {});
     }
     getCurrentUser() {
         const userStr = localStorage.getItem('user');

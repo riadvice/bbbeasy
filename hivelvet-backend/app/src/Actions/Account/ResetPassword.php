@@ -23,10 +23,9 @@ declare(strict_types=1);
 namespace Actions\Account;
 
 use Actions\Base as BaseAction;
-use Enum\ResetTokenStatus;
 use Enum\ResponseCode;
 use Mail\MailSender;
-use Models\ResetTokenPassword;
+use Models\ResetPasswordToken;
 use Models\User;
 
 class ResetPassword extends BaseAction
@@ -48,36 +47,31 @@ class ResetPassword extends BaseAction
                 // $this->session->set('locale', $user->locale);
 
                 $mailSent   = new MailSender();
-                $template   = 'common/reset_password';
-                $resetToken = new ResetTokenPassword();
+                $resetToken = new ResetPasswordToken();
 
                 $this->logger->info('user', ['user' => $user->toArray()]);
 
                 //if user does not have a reset token
-
                 if (!$resetToken->userExists($user->id)) {
-                    $resetToken          = new ResetTokenPassword();
+                    $resetToken          = new ResetPasswordToken();
                     $resetToken->user_id = $user->id;
                 }
 
-                //otherwise will update the existing row
-                $resetToken->expires_at = date('Y-m-d H:i:s', strtotime('+15 min'));
-                $resetToken->status     = ResetTokenStatus::NEW;
-
-                $resetToken->save();
+                //otherwise, will update the existing row
+                $resetToken->insert();
 
                 $emailTokens['from_name']        = $this->f3->get('from_name');
                 $emailTokens['expires_at']       = $resetToken->expires_at;
                 $emailTokens['token']            = $resetToken->token;
                 $emailTokens['message_template'] = [$f3->format(
                     $f3->get('i18n.label.mail.hi'),
-                    $f3->format($f3->get('i18n.label.mail.recieved_request')),
+                    $f3->format($f3->get('i18n.label.mail.received_request')),
                     $f3->format($f3->get('i18n.label.mail.no_changes')),
                     $f3->format($f3->get('i18n.label.mail.reset_label')),
                     $f3->format($f3->get('i18n.label.mail.reset_link'))
                 ),
                     $f3->format($f3->get('i18n.label.mail.expires_at')), ];
-                $mailSent->send($template, $emailTokens, $email, 'reset password', 'reset password');
+                $mailSent->send('common/reset_password', $emailTokens, $email, 'reset password', 'reset password');
                 $this->logger->info('mail', ['mail' => $mailSent]);
                 if ($mailSent) {
                     $this->renderJson(['message' => 'Please check your email to reset your password'], ResponseCode::HTTP_OK);

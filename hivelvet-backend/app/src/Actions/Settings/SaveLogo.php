@@ -26,7 +26,7 @@ use Actions\Base as BaseAction;
 use Base;
 use Enum\ResponseCode;
 use Models\Setting;
-use Validation\Validator;
+use Validation\DataChecker;
 
 /**
  * Class SaveLogo.
@@ -45,7 +45,7 @@ class SaveLogo extends BaseAction
          */
         $files = $f3->get('FILES');
         $form  = $f3->get('POST');
-        $v     = new Validator();
+        $v     = new DataChecker();
 
         $v->notEmpty()->verify('logo_name', $form['logo_name']);
         //if files not empty

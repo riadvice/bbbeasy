@@ -16,7 +16,7 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from "react";
+import React from 'react';
 import { Navigate } from 'react-router-dom';
 import authService from '../services/auth.service';
 

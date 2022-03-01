@@ -25,75 +25,53 @@ namespace Actions\Account;
 use Actions\Base as BaseAction;
 use Enum\ResponseCode;
 use Enum\UserRole;
+use Enum\UserStatus;
 use Helpers\Time;
 use Models\User;
-use Validation\Validator;
+use Respect\Validation\Validator;
+use Validation\DataChecker;
 
 /**
  * Class Login.
  */
 class Login extends BaseAction
 {
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
     public function authorise($f3): void
     {
         $form = $this->getDecodedBody();
 
-        $v        = new Validator();
-        $email    = $form['email'];
-        $password = $form['password'];
+        $dataChecker = new DataChecker();
+        $dataChecker->verify($email = $form['email'], Validator::email()->setName('email'));
+        $dataChecker->verify($form['password'], Validator::length(4)->setName('password'));
 
-        $v->notEmpty()->verify('email', $email, ['notEmpty' => 'Email is required']);
-        $v->notEmpty()->verify('password', $password, ['notEmpty' => 'Password is required']);
+        $userInfos = [];
+        if ($dataChecker->allValid()) {
+            $user = new User();
+            $user = $user->getByEmail($email);
+            $this->logger->info('Login attempt using email', ['email' => $email]);
+            // Check if the user exists
+            if ($user->valid() && UserStatus::ACTIVE === $user->status && UserRole::API !== $user->role && $user->verifyPassword($form['password'])) {
+                // valid credentials
+                $this->session->authorizeUser($user);
 
-        if ($v->allValid()) {
-            $v->email()->verify('email', $email, ['email' => 'Email is invalid']);
-            $v->length(4)->verify('password', $password, ['length' => 'Password must be at least 4 characters']);
+                $user->last_login = Time::db();
+                $user->save();
 
-            if ($v->allValid()) {
-                $user = new User();
-                if ($user->emailExists($email)) {
-                    //$user = $user->getByEmail($email);
-                    //$user->status === UserStatus::ACTIVE &&
-                    if (UserRole::API !== $user->role && $user->verifyPassword($password)) {
-                        // valid credentials
-                        $this->session->authorizeUser($user);
-
-                        $user->last_login = Time::db();
-                        $user->save();
-
-                        $this->session->set('locale', $user->locale);
-                        $message   = 'Welcome back ' . $user->username . ' !';
-                        $userInfos = [
-                            'username' => $user->username,
-                            'email'    => $user->email,
-                            'role'     => $user->role,
-                        ];
-                        $this->logger->info('user successfully login', ['message' => $message]);
-                        $this->renderJson(['message' => $message, 'user' => json_encode($userInfos, JSON_THROW_ON_ERROR)]);
-                    } else {
-                        //password invalid
-                        $message = 'Invalid Password';
-                        $this->logger->error('Login error : user could not logged', ['error' => $message]);
-                        $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-                    }
-                } else {
-                    // email invalid or user no exist
-                    $message = 'Invalid Email';
-                    $this->logger->error('Login error : user could not logged', ['error' => $message]);
-                    $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-                }
-            } else {
-                $this->logger->error('Login error', ['errors' => $v->getErrors()]);
-                $this->renderJson(['errors' => $v->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
+                // @todo: store locale in user prefs table
+                // $this->session->set('locale', $user->locale);
+                $userInfos = [
+                    'username' => $user->username,
+                    'email'    => $user->email,
+                    'role'     => $user->role,
+                ];
+                $this->logger->info('User successfully logged in', ['email' => $email]);
+                $this->renderJson(json_encode($userInfos, JSON_THROW_ON_ERROR));
             }
-        } else {
-            $this->logger->error('Login error', ['errors' => $v->getErrors()]);
-            $this->renderJson(['errors' => $v->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        if (empty($userInfos) || \count($dataChecker->getErrors()) > 0) {
+            $this->logger->error('Could not authenticate user with email', ['email' => $email]);
+            $this->renderJson(['message' => 'Invalid Authentication data'], ResponseCode::HTTP_BAD_REQUEST);
         }
     }
 }

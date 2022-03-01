@@ -27,7 +27,7 @@ use Actions\RequirePrivilegeTrait;
 use Enum\ResponseCode;
 use Enum\UserStatus;
 use Models\User;
-use Validation\Validator;
+use Validation\DataChecker;
 
 /**
  * Class Add.
@@ -42,7 +42,7 @@ class Add extends BaseAction
      */
     public function save($f3, $params): void
     {
-        $v    = new Validator();
+        $v    = new DataChecker();
         $form = $this->getDecodedBody();
         $user = new User();
 
@@ -52,12 +52,11 @@ class Add extends BaseAction
         $v->notEmpty()->verify('role', $form['role'], ['notEmpty' => $this->i18n->err('users.role')]);
 
         if ($v->allValid()) {
-            $user->email      = $form['email'];
-            $user->username   = $form['username'];
-            $user->password   = $form['password'];
-            $user->role       = $form['role'];
-            $user->status     = UserStatus::ACTIVE;
-            $user->created_on = date('Y-m-d H:i:s');
+            $user->email    = $form['email'];
+            $user->username = $form['username'];
+            $user->password = $form['password'];
+            $user->role     = $form['role'];
+            $user->status   = UserStatus::ACTIVE;
 
             try {
                 $user->save();

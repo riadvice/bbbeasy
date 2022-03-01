@@ -32,15 +32,17 @@ class LandingPage extends Component<any, any> {
                 <Row justify="center" align="top" className="landing-content">
                     <Col span={12}>
                         <Title>Welcome to Hivelvet</Title>
-                        <p className="mb-30">Create fully customisable rooms for <strong>BigBlueButton</strong></p>
+                        <p className="mb-30">
+                            Create fully customisable rooms for <strong>BigBlueButton</strong>
+                        </p>
                         <Paragraph className="landing-btn">
-                            <Link className='ant-btn ant-btn-primary text-white' to={'/login'}>
+                            <Link className="ant-btn ant-btn-primary text-white" to={'/login'}>
                                 {' '}
-                                <T _str="Login"/>{' '}
+                                <T _str="Login" />{' '}
                             </Link>
                             <Link className={'ant-btn color-primary'} to={'/register'}>
                                 {' '}
-                                <T _str="Sign up"/>{' '}
+                                <T _str="Sign up" />{' '}
                             </Link>
                         </Paragraph>
                     </Col>

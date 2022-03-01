@@ -30,13 +30,13 @@ use Actions\Base as BaseAction;
 class Logout extends BaseAction
 {
     /**
-     * @param \Base $f3
+     * @param $f3
      *
-     * @return array
+     * @throws \JsonException
      */
-    public function execute($f3)
+    public function execute($f3): void
     {
         $this->session->revokeUser();
-        $this->renderJson(['redirect' => true]);
+        $this->renderJson(['logged_out' => true]);
     }
 }

@@ -25,7 +25,7 @@ namespace Actions\Roles;
 use Actions\Base as BaseAction;
 use Enum\ResponseCode;
 use Models\Role;
-use Validation\Validator;
+use Validation\DataChecker;
 
 /**
  * Class Add.
@@ -40,7 +40,7 @@ class Add extends BaseAction
     {
         $body = $this->getDecodedBody();
         $form = $body['data'];
-        $v    = new Validator();
+        $v    = new DataChecker();
 
         $v->notEmpty()->verify('name', $form['name'], ['notEmpty' => 'Name is required']);
 

@@ -24,7 +24,8 @@ namespace Enum;
 
 class UserRole extends Enum
 {
-    final public const VISITOR = 'visitor';
-    final public const ADMIN   = 'admin';
-    final public const API     = 'api';
+    final public const VISITOR  = 'visitor';
+    final public const LECTURER = 'lecturer';
+    final public const ADMIN    = 'admin';
+    final public const API      = 'api';
 }

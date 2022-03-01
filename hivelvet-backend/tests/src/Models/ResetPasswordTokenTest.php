@@ -22,42 +22,37 @@ declare(strict_types=1);
 
 namespace Models;
 
-use Models\Base as BaseModel;
+use Enum\UserRole;
+use Fake\UserFaker;
+use Test\Scenario;
 
 /**
- * Class ResetTokenPassword.
+ * Class UserTest.
  *
- * @property int       $id
- * @property int       $user_id
- * @property string    $token
- * @property string    $status
- * @property \DateTime $expires_at
+ * @internal
+ * @coversNothing
  */
-class ResetTokenPassword extends BaseModel
+final class ResetPasswordTokenTest extends Scenario
 {
-    protected $table = 'reset_password_tokens';
-
-    public function __construct($db = null, $table = null, $fluid = null, $ttl = 0)
-    {
-        parent::__construct($db, $table, $fluid, $ttl);
-        $this->token = bin2hex(random_bytes(16));
-    }
+    protected $group = 'Reset Password Token Model';
 
     /**
-     * Check if the user has a reset token password.
+     * @param $f3
      *
-     * @param int $userID
+     * @throws \ReflectionException
+     *
+     * @return array
      */
-    public function userExists($userID): bool
+    public function testTokenCreation($f3)
     {
-        return $this->load(['user_id= ?', $userID]);
-    }
+        $user = UserFaker::create(UserRole::ADMIN);
 
-    /**
-     * Check if token already exists.
-     */
-    public function tokenExists(string $token): bool
-    {
-        return $this->load(['token = ?', $token]);
+        $test                = $this->newTest();
+        $resetToken          = new ResetPasswordToken();
+        $resetToken->user_id = $user->id;
+        $resetToken->insert();
+        $test->expect($resetToken->isUsable(), 'Newly inserted password reset token is usable');
+
+        return $test->results();
     }
 }

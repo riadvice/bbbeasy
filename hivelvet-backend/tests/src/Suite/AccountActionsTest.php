@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Suite;
 
+use Actions\Account\GetResetPasswordTokenTest;
 use Actions\Account\LoginTest;
 use Test\TestGroup;
 
@@ -31,7 +32,7 @@ use Test\TestGroup;
  */
 final class AccountActionsTest extends TestGroup
 {
-    protected $classes = [LoginTest::class];
+    protected $classes = [LoginTest::class, GetResetPasswordTokenTest::class];
 
     protected $quiet = true;
 }

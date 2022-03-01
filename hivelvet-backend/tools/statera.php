@@ -18,15 +18,18 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
+use Application\Bootstrap;
+use Core\Statera;
+
 // load composer autoload
 require_once '../vendor/autoload.php';
 
 // Change to application directory to execute the code
-chdir(realpath(dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'app'));
+chdir(realpath(dirname(__DIR__,2) . DIRECTORY_SEPARATOR . 'app'));
 
 $GLOBALS['test_cli'] = PHP_SAPI === 'cli';
 
-\Core\Statera::startCoverage('Application Bootstrapping');
-$app = new \Application\Bootstrap();
-\Core\Statera::stopCoverage();
+Statera::startCoverage('Application Bootstrapping');
+$app = new Bootstrap();
+Statera::stopCoverage();
 $app->start();

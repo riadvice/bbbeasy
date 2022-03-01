@@ -60,7 +60,7 @@ class Scenario
     }
 
     /**
-     * @param mixed $path
+     * @param $path
      *
      * @throws \JsonException
      */
@@ -72,13 +72,15 @@ class Scenario
     }
 
     /**
-     * @param $response
-     * @param $text
-     * @param $type
+     * @param $array
+     *
+     * @throws \JsonException
      */
-    public function responseHasFlash($response, $text, $type): bool
+    public function compareArrayToResponse($array): bool
     {
-        return 1 === preg_match('/{text:"' . $text . '", type: "' . $type . '"}/', (string) $response, $matches);
+        $f3 = Base::instance();
+
+        return empty(array_diff($array, json_decode($f3->get('RESPONSE'), true, 512, JSON_THROW_ON_ERROR)));
     }
 
     /**

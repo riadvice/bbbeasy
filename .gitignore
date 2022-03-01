@@ -7,3 +7,7 @@
 *.log
 
 .idea
+
+settings.json
+
+output/**/*.*

@@ -16,33 +16,33 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
- import React, {Component} from "react";
- import Icon from '@ant-design/icons';
- import * as AntdIcons from '@ant-design/icons';
- import ZcaleRight from "../icons/Icon_ZcaleRight.png";
+import React, {Component} from "react";
+import Icon from '@ant-design/icons';
+import * as AntdIcons from '@ant-design/icons';
+import ZcaleRight from "../icons/Icon_ZcaleRight.png";
 
- type Props = {
-     type: string;
-     className?: string;
-     iconClassName?: string;
- };
- type State = {};
- 
- class DynamicIcon extends Component<Props, State> {
- 
-     render() {
-         const {type, className, iconClassName } = this.props;
-         const AntdIcon = AntdIcons[type];
-         if (type == 'ZcaleRight') {
-             const ZcaleRightIcon = () => (
-                 <img src={ZcaleRight} className={iconClassName}/>
-             );
-             return <Icon component={ZcaleRightIcon} className={className} />
-         }
-         else {
-             return <AntdIcon className={className} />;
-         }
+type Props = {
+ type: string;
+ className?: string;
+ iconClassName?: string;
+};
+type State = {};
+
+class DynamicIcon extends Component<Props, State> {
+
+ render() {
+     const {type, className, iconClassName } = this.props;
+     const AntdIcon = AntdIcons[type];
+     if (type == 'ZcaleRight') {
+         const ZcaleRightIcon = () => (
+             <img src={ZcaleRight} className={iconClassName}/>
+         );
+         return <Icon component={ZcaleRightIcon} className={className} />
+     }
+     else {
+         return <AntdIcon className={className} />;
      }
  }
- 
- export default DynamicIcon;
+}
+
+export default DynamicIcon;
