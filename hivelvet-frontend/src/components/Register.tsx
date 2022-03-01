@@ -22,7 +22,6 @@ import ReactDOMServer from 'react-dom/server';
 import AuthService from '../services/auth.service';
 
 import { Form, Input, Button, Checkbox, Alert, Col, Row, Typography, Card, Result } from 'antd';
-import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import { T } from '@transifex/react';
 
 const { Title, Paragraph } = Typography;
@@ -42,7 +41,7 @@ class Register extends Component<Props, State> {
         this.state = {
             successful: false,
             message: '',
-            errors: [],
+            errors: {},
         };
     }
 
@@ -57,22 +56,14 @@ class Register extends Component<Props, State> {
             })
             .catch((error) => {
                 this.setState({
-                    errors: [],
+                    errors: {},
                 });
                 const response = error.response.data;
                 if (response.errors) {
-                    const err = [];
-                    const errors = response.errors;
-                    Object.values(errors).map((value) => {
-                        Object.keys(value).map((key) => {
-                            err.push(value[key]);
-                        });
-                    });
                     this.setState({
-                        errors: err,
+                        errors: response.errors,
                     });
                 }
-
                 const responseMessage = response.message;
                 this.setState({
                     successful: false,
@@ -117,25 +108,6 @@ class Register extends Component<Props, State> {
                                 </Title>
                             </Paragraph>
 
-                            {errors.length > 0 && (
-                                <Alert
-                                    type="error"
-                                    className="alert-msg"
-                                    message={
-                                        errors.length > 1 ? (
-                                            <ul className="errors-list">
-                                                {errors.map((item, index) => (
-                                                    <li key={index}>{item}</li>
-                                                ))}
-                                            </ul>
-                                        ) : (
-                                            <T _str={errors.toString()} />
-                                        )
-                                    }
-                                    showIcon
-                                />
-                            )}
-
                             {message && (
                                 <Alert type="error" className="alert-msg" message={<T _str={message} />} showIcon />
                             )}
@@ -153,19 +125,27 @@ class Register extends Component<Props, State> {
                                 <Form.Item
                                     label={<T _str="Username" />}
                                     name="username"
-                                    rules={[
+                                    {...(('username' in errors) && {
+                                        help: errors['username'],
+                                        validateStatus: "error"
+                                    })}
+                                    /*rules={[
                                         {
                                             required: true,
                                             message: <T _str="Username is required" />,
                                         },
-                                    ]}
+                                    ]}*/
                                 >
                                     <Input placeholder="Username" />
                                 </Form.Item>
                                 <Form.Item
                                     label={<T _str="Email" />}
                                     name="email"
-                                    rules={[
+                                    {...(('email' in errors) && {
+                                        help: errors['email'],
+                                        validateStatus: "error"
+                                    })}
+                                    /*rules={[
                                         {
                                             type: 'email',
                                             message: <T _str="Invalid Email" />,
@@ -174,14 +154,18 @@ class Register extends Component<Props, State> {
                                             required: true,
                                             message: <T _str="Email is required" />,
                                         },
-                                    ]}
+                                    ]}*/
                                 >
                                     <Input placeholder="Email" />
                                 </Form.Item>
                                 <Form.Item
                                     label={<T _str="Password" />}
                                     name="password"
-                                    rules={[
+                                    {...(('password' in errors) && {
+                                        help: errors['password'],
+                                        validateStatus: "error"
+                                    })}
+                                    /*rules={[
                                         {
                                             min: 4,
                                             message: <T _str="Password must be at least 4 characters" />,
@@ -190,18 +174,19 @@ class Register extends Component<Props, State> {
                                             required: true,
                                             message: <T _str="Password is required" />,
                                         },
-                                    ]}
+                                    ]}*/
                                 >
-                                    <Input.Password
-                                        placeholder="**********"
-                                        iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
-                                    />
+                                    <Input.Password placeholder="**********" />
                                 </Form.Item>
                                 <Form.Item
                                     label={<T _str="Confirm Password" />}
                                     name="confirmPassword"
                                     dependencies={['password']}
-                                    rules={[
+                                    {...(('confirmPassword' in errors) && {
+                                        help: errors['confirmPassword'],
+                                        validateStatus: "error"
+                                    })}
+                                    /*rules={[
                                         {
                                             min: 4,
                                             message: <T _str="Confirm password must be at least 4 characters" />,
@@ -222,7 +207,7 @@ class Register extends Component<Props, State> {
                                                 );
                                             },
                                         }),
-                                    ]}
+                                    ]}*/
                                 >
                                     <Input.Password placeholder="**********" />
                                 </Form.Item>
@@ -231,7 +216,11 @@ class Register extends Component<Props, State> {
                                     className="form-agree"
                                     name="agreement"
                                     valuePropName="checked"
-                                    rules={[
+                                    {...(('agreement' in errors) && {
+                                        help: errors['agreement'],
+                                        validateStatus: "error"
+                                    })}
+                                    /*rules={[
                                         {
                                             validator: (_, value) =>
                                                 value
@@ -244,7 +233,7 @@ class Register extends Component<Props, State> {
                                                         )
                                                     ),
                                         },
-                                    ]}
+                                    ]}*/
                                 >
                                     <Checkbox>
                                         <T _str="I agree to the" />

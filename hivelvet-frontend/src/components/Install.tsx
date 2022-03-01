@@ -75,8 +75,8 @@ const Install = (props: Props) => {
 
     const [activeStep, setActiveStep] = React.useState(0);
     const [successful, setSuccessful] = React.useState(false);
-    const [errorsStep1, setErrorsStep1] = React.useState([]);
-    const [errorsStep2, setErrorsStep2] = React.useState([]);
+    const [errorsStep1, setErrorsStep1] = React.useState({});
+    const [errorsStep2, setErrorsStep2] = React.useState({});
     const [successMessage, setSuccessMessage] = React.useState('');
 
     const [settings, setSettings] = React.useState([]);
@@ -131,33 +131,19 @@ const Install = (props: Props) => {
                         <T _str="Create an administrator account" />
                     </Title>
                 </Paragraph>
-                {errorsStep1.length > 0 && (
-                    <Alert
-                        type="error"
-                        className="alert-msg"
-                        message={
-                            errorsStep1.length > 1 ? (
-                                <ul className="errors-list">
-                                    {errorsStep1.map((item, index) => (
-                                        <li key={index}>{item}</li>
-                                    ))}
-                                </ul>
-                            ) : (
-                                <T _str={errorsStep1.toString()} />
-                            )
-                        }
-                        showIcon
-                    />
-                )}
                 <Form.Item
                     label={<T _str="Username" />}
                     name="username"
-                    rules={[
+                    {...(('username' in errorsStep1) && {
+                        help: errorsStep1['username'],
+                        validateStatus: "error"
+                    })}
+                    /*rules={[
                         {
                             required: true,
                             message: 'Username is required',
                         },
-                    ]}
+                    ]}*/
                 >
                     <Input placeholder="Username" />
                 </Form.Item>
@@ -165,7 +151,11 @@ const Install = (props: Props) => {
                 <Form.Item
                     label={<T _str="Email" />}
                     name="email"
-                    rules={[
+                    {...(('email' in errorsStep1) && {
+                        help: errorsStep1['email'],
+                        validateStatus: "error"
+                    })}
+                    /*rules={[
                         {
                             type: 'email',
                             message: 'Email is invalid',
@@ -174,14 +164,18 @@ const Install = (props: Props) => {
                             required: true,
                             message: 'Email is required',
                         },
-                    ]}
+                    ]}*/
                 >
                     <Input placeholder="Email" />
                 </Form.Item>
                 <Form.Item
                     label={<T _str="Password" />}
                     name="password"
-                    rules={[
+                    {...(('password' in errorsStep1) && {
+                        help: errorsStep1['password'],
+                        validateStatus: "error"
+                    })}
+                    /*rules={[
                         {
                             min: 4,
                             message: 'Password must be at least 4 characters',
@@ -190,12 +184,9 @@ const Install = (props: Props) => {
                             required: true,
                             message: 'Password is required',
                         },
-                    ]}
+                    ]}*/
                 >
-                    <Input.Password
-                        placeholder="Password"
-                        iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
-                    />
+                    <Input.Password placeholder="Password"/>
                 </Form.Item>
             </div>
         );
@@ -235,33 +226,19 @@ const Install = (props: Props) => {
                             <T _str="Company" />
                         </Title>
                     </Paragraph>
-                    {errorsStep2.length > 0 && (
-                        <Alert
-                            type="error"
-                            className="alert-msg"
-                            message={
-                                errorsStep2.length > 1 ? (
-                                    <ul className="errors-list">
-                                        {errorsStep2.map((item, index) => (
-                                            <li key={index}>{item}</li>
-                                        ))}
-                                    </ul>
-                                ) : (
-                                    <T _str={errorsStep2.toString()} />
-                                )
-                            }
-                            showIcon
-                        />
-                    )}
                     <Form.Item
                         label={<T _str="Company name" />}
                         name="company_name"
-                        rules={[
+                        {...(('company_name' in errorsStep2) && {
+                            help: errorsStep2['company_name'],
+                            validateStatus: "error"
+                        })}
+                        /*rules={[
                             {
                                 required: true,
                                 message: 'Company name is required',
                             },
-                        ]}
+                        ]}*/
                     >
                         <Input placeholder="Company name" onChange={changeCompany} />
                     </Form.Item>
@@ -269,7 +246,11 @@ const Install = (props: Props) => {
                     <Form.Item
                         label={<T _str="Company website" />}
                         name="company_url"
-                        rules={[
+                        {...(('company_url' in errorsStep2) && {
+                            help: errorsStep2['company_url'],
+                            validateStatus: "error"
+                        })}
+                        /*rules={[
                             {
                                 required: true,
                                 message: 'Company website is required',
@@ -278,7 +259,7 @@ const Install = (props: Props) => {
                                 type: 'url',
                                 message: 'Company website is not a valid url',
                             },
-                        ]}
+                        ]}*/
                     >
                         <Input placeholder="Company website" />
                     </Form.Item>
@@ -286,12 +267,16 @@ const Install = (props: Props) => {
                     <Form.Item
                         label={<T _str="Platform name" />}
                         name="platform_name"
-                        rules={[
+                        {...(('platform_name' in errorsStep2) && {
+                            help: errorsStep2['platform_name'],
+                            validateStatus: "error"
+                        })}
+                        /*rules={[
                             {
                                 required: true,
                                 message: 'Platform name is required',
                             },
-                        ]}
+                        ]}*/
                     >
                         <Input placeholder="Platform name" />
                     </Form.Item>
@@ -299,12 +284,16 @@ const Install = (props: Props) => {
                     <Form.Item
                         label={<T _str="Terms of use URL" />}
                         name="term_url"
-                        rules={[
+                        {...(('term_url' in errorsStep2) && {
+                            help: errorsStep2['term_url'],
+                            validateStatus: "error"
+                        })}
+                        /*rules={[
                             {
                                 type: 'url',
                                 message: 'Term of use url is not a valid url',
                             },
-                        ]}
+                        ]}*/
                     >
                         <Input placeholder="Term of use URL" />
                     </Form.Item>
@@ -312,12 +301,16 @@ const Install = (props: Props) => {
                     <Form.Item
                         label={<T _str="Privacy Policy URL" />}
                         name="policy_url"
-                        rules={[
+                        {...(('policy_url' in errorsStep2) && {
+                            help: errorsStep2['policy_url'],
+                            validateStatus: "error"
+                        })}
+                        /*rules={[
                             {
                                 type: 'url',
                                 message: 'Privacy Policy url is not a valid url',
                             },
-                        ]}
+                        ]}*/
                     >
                         <Input placeholder="Privacy Policy URL" />
                     </Form.Item>
@@ -578,38 +571,22 @@ const Install = (props: Props) => {
                     setSuccessMessage('Application installed !');
                 })
                 .catch((error) => {
-                    console.log(error);
-                    setErrorsStep1([]);
-                    setErrorsStep2([]);
-                    const responseMessage = error.response.data;
-                    if (responseMessage.userErrors) {
-                        const err = [];
-                        const userErrors = responseMessage.userErrors;
-                        Object.values(userErrors).map((value) => {
-                            Object.keys(value).map((key) => {
-                                err.push(value[key]);
-                            });
-                        });
-                        setErrorsStep1(err);
+                    setErrorsStep1({});
+                    setErrorsStep2({});
+                    const response = error.response.data;
+                    if (response.userErrors) {
+                        setErrorsStep1(response.userErrors);
                         setActiveStep(0);
                     }
-                    if (responseMessage.settingsErrors) {
-                        const err = [];
-                        const settingsErrors = responseMessage.settingsErrors;
-                        Object.values(settingsErrors).map((value) => {
-                            Object.keys(value).map((key) => {
-                                err.push(value[key]);
-                            });
-                        });
-                        setErrorsStep2(err);
+                    if (response.settingsErrors) {
+                        setErrorsStep2(response.settingsErrors);
                         setActiveStep(1);
                     }
-                    if (responseMessage.userErrors && responseMessage.settingsErrors) {
+                    if (response.userErrors && response.settingsErrors) {
                         setActiveStep(0);
                     }
                     setSuccessful(false);
                 });
-
             if (file != undefined) {
                 const fdata = new FormData();
                 fdata.append('logo', file.originFileObj, file.originFileObj.name);

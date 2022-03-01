@@ -29,6 +29,7 @@ use Enum\UserRole;
 use Enum\UserStatus;
 use Models\Setting;
 use Models\User;
+use Respect\Validation\Validator;
 use Validation\DataChecker;
 
 /**
@@ -51,40 +52,21 @@ class Install extends BaseAction
         $v1   = new DataChecker();
         $v2   = new DataChecker();
 
-        $step1Validated = false;
-        $step2Validated = false;
+        // step1 validation
+        $v1->verify($form['username'], Validator::notEmpty()->setName('username'));
+        $v1->verify($form['email'], Validator::notEmpty()->email()->setName('email'));
+        $v1->verify($form['password'], Validator::notEmpty()->length(4)->setName('password'));
 
-        // step1 validation notEmpty
-        $v1->notEmpty()->verify('username', $form['username'], ['notEmpty' => 'Username is required']);
-        $v1->notEmpty()->verify('email', $form['email'], ['notEmpty' => 'Email is required']);
-        $v1->notEmpty()->verify('password', $form['password'], ['notEmpty' => 'Password is required']);
+        // step2 validation
+        $v2->verify($form['company_name'], Validator::notEmpty()->setName('company_name'));
+        $v2->verify($form['company_url'], Validator::notEmpty()->url()->setName('company_url'));
+        $v2->verify($form['platform_name'], Validator::notEmpty()->setName('platform_name'));
 
-        if ($v1->allValid()) {
-            // step1 validation email/length
-            $v1->email()->verify('email', $form['email'], ['email' => 'Email is invalid']);
-            $v1->length(4)->verify('password', $form['password'], ['length' => 'Password must be at least 4 characters']);
-
-            if ($v1->allValid()) {
-                $step1Validated = true;
-            }
-        }
-
-        // step2 validation notEmpty
-        $v2->notEmpty()->verify('company_name', $form['company_name'], ['notEmpty' => 'Company name is required']);
-        $v2->notEmpty()->verify('company_url', $form['company_url'], ['notEmpty' => 'Company website is required']);
-        $v2->notEmpty()->verify('platform_name', $form['platform_name'], ['notEmpty' => 'Platform name is required']);
-
-        if ($v2->allValid()) {
-            //step2 validation url
-            $v2->url()->verify('company_url', $form['company_url'], ['url' => 'Company website is not a valid url']);
-            if ($v2->allValid()) {
-                $step2Validated = true;
-            }
-        }
+        $step1Validated = $v1->allValid();
+        $step2Validated = $v2->allValid();
 
         if (!$step1Validated && !$step2Validated) {
-            $this->logger->error('App configuration', ['user_errors' => $v1->getErrors()]);
-            $this->logger->error('App configuration', ['settings_errors' => $v2->getErrors()]);
+            $this->logger->error('App configuration', ['user_errors' => $v1->getErrors(),'settings_errors' => $v2->getErrors()]);
             $this->renderJson(['userErrors' => $v1->getErrors(), 'settingsErrors' => $v2->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
         } elseif (!$step1Validated) {
             $this->logger->error('App configuration', ['user_errors' => $v1->getErrors()]);
@@ -164,6 +146,5 @@ class Install extends BaseAction
                 return;
             }
         }
-        //}
     }
 }

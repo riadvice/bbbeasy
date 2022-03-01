@@ -45,7 +45,7 @@ class Login extends Component<Props, State> {
         this.state = {
             successful: false,
             message: '',
-            errors: [],
+            errors: {},
             user: null,
             isLogged: false,
         };
@@ -55,46 +55,43 @@ class Login extends Component<Props, State> {
         const { email, password } = formValue;
         AuthService.login(email, password)
             .then((response) => {
-                const responseMessage = response.data.message;
-                const user = response.data.user;
-
-                message.success({
-                    content: responseMessage,
-                    className: 'success-message',
-                });
-                localStorage.setItem('user', JSON.stringify(user));
-                this.props.setUser(user, true);
-                this.setState({
-                    successful: true,
-                    message: responseMessage,
-
-                    user: user,
-                    isLogged: true,
-                });
+                console.log(response.data);
+                if (response.data.username && response.data.email && response.data.role) {
+                    const user_infos = {
+                        username:   response.data.username,
+                        email:      response.data.email,
+                        role:       response.data.role,
+                    };
+                    message.success({
+                        content: 'Welcome back ' + user_infos.username + ' !',
+                        className: 'success-message',
+                    });
+                    localStorage.setItem('user', JSON.stringify(user_infos));
+                    this.props.setUser(user_infos, true);
+                    this.setState({
+                        successful: true,
+                        user: user_infos,
+                        isLogged: true,
+                    });
+                }
             })
             .catch((error) => {
+                console.log(error.response.data);
                 this.setState({
-                    errors: [],
+                    errors: {},
                 });
                 const response = error.response.data;
                 if (response.errors) {
-                    const err = [];
-                    const errors = response.errors;
-                    Object.values(errors).map((value) => {
-                        Object.keys(value).map((key) => {
-                            err.push(value[key]);
-                        });
-                    });
                     this.setState({
-                        errors: err,
+                        errors: response.errors,
                     });
                 }
-
-                const responseMessage = response.message;
-                this.setState({
-                    successful: false,
-                    message: responseMessage,
-                });
+                if (response.message) {
+                    this.setState({
+                        successful: false,
+                        message: response.message,
+                    });
+                }
             });
     }
 
@@ -121,24 +118,6 @@ class Login extends Component<Props, State> {
                             </Title>
                         </Paragraph>
 
-                        {errors.length > 0 && !successful && (
-                            <Alert
-                                type="error"
-                                className="alert-msg"
-                                message={
-                                    errors.length > 1 ? (
-                                        <ul className="errors-list">
-                                            {errors.map((item, index) => (
-                                                <li key={index}>{item}</li>
-                                            ))}
-                                        </ul>
-                                    ) : (
-                                        <T _str={errors.toString()} />
-                                    )
-                                }
-                                showIcon
-                            />
-                        )}
                         {message && !successful && (
                             <Alert type="error" className="alert-msg" message={<T _str={message} />} showIcon />
                         )}
@@ -156,7 +135,11 @@ class Login extends Component<Props, State> {
                             <Form.Item
                                 label={<T _str="Email" />}
                                 name="email"
-                                rules={[
+                                {...(('email' in errors) && {
+                                    help: errors['email'],
+                                    validateStatus: "error"
+                                })}
+                                /*rules={[
                                     {
                                         type: 'email',
                                         message: <T _str="Invalid Email" />,
@@ -165,14 +148,18 @@ class Login extends Component<Props, State> {
                                         required: true,
                                         message: <T _str="Email is required" />,
                                     },
-                                ]}
+                                ]}*/
                             >
                                 <Input placeholder="Email" />
                             </Form.Item>
                             <Form.Item
                                 label={<T _str="Password" />}
                                 name="password"
-                                rules={[
+                                {...(('password' in errors) && {
+                                    help: errors['password'],
+                                    validateStatus: "error"
+                                })}
+                                /*rules={[
                                     {
                                         min: 4,
                                         message: <T _str="Password must be at least 4 characters" />,
@@ -181,12 +168,9 @@ class Login extends Component<Props, State> {
                                         required: true,
                                         message: <T _str="Password is required" />,
                                     },
-                                ]}
+                                ]}*/
                             >
-                                <Input.Password
-                                    placeholder="**********"
-                                    iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
-                                />
+                                <Input.Password placeholder="**********" />
                             </Form.Item>
                             <Form.Item>
                                 <Button type="primary" htmlType="submit" block>
