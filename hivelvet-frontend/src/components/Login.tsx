@@ -55,7 +55,6 @@ class Login extends Component<Props, State> {
         const { email, password } = formValue;
         AuthService.login(email, password)
             .then((response) => {
-                console.log(response.data);
                 if (response.data.username && response.data.email && response.data.role) {
                     const user_infos = {
                         username:   response.data.username,
@@ -76,7 +75,6 @@ class Login extends Component<Props, State> {
                 }
             })
             .catch((error) => {
-                console.log(error.response.data);
                 this.setState({
                     errors: {},
                 });

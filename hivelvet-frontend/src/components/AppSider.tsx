@@ -20,8 +20,8 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 import { Button, Dropdown, Layout, Menu } from 'antd';
-import { PlusOutlined, DownOutlined } from "@ant-design/icons";
-import DynamicIcon from "./DynamicIcon";
+import { PlusOutlined, DownOutlined } from '@ant-design/icons';
+import DynamicIcon from './DynamicIcon';
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
