@@ -573,16 +573,16 @@ const Install = (props: Props) => {
                 .catch((error) => {
                     setErrorsStep1({});
                     setErrorsStep2({});
-                    const response = error.response.data;
-                    if (response.userErrors) {
-                        setErrorsStep1(response.userErrors);
+                    const responseData = error.response.data;
+                    if (responseData.userErrors) {
+                        setErrorsStep1(responseData.userErrors);
                         setActiveStep(0);
                     }
-                    if (response.settingsErrors) {
-                        setErrorsStep2(response.settingsErrors);
+                    if (responseData.settingsErrors) {
+                        setErrorsStep2(responseData.settingsErrors);
                         setActiveStep(1);
                     }
-                    if (response.userErrors && response.settingsErrors) {
+                    if (responseData.userErrors && responseData.settingsErrors) {
                         setActiveStep(0);
                     }
                     setSuccessful(false);

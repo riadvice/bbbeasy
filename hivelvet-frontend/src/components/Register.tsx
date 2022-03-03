@@ -58,16 +58,15 @@ class Register extends Component<Props, State> {
                 this.setState({
                     errors: {},
                 });
-                const response = error.response.data;
-                if (response.errors) {
+                const responseData = error.response.data;
+                if (responseData.errors) {
                     this.setState({
-                        errors: response.errors,
+                        errors: responseData.errors,
                     });
                 }
-                const responseMessage = response.message;
                 this.setState({
                     successful: false,
-                    message: responseMessage,
+                    message: responseData.message,
                 });
             });
     }

@@ -75,8 +75,12 @@ body,button,input,select,textarea{
   width: 25%;
   margin-top: 40px;
 }
+.roles-modal .ant-modal-header {
+  text-align: center;
+}
+
 .roles-modal .ant-form {
-  padding: 15px;
+  padding: 0 15px;
 }
 .actions-expanded {
   margin-top: 16px;
@@ -101,7 +105,7 @@ body,button,input,select,textarea{
   display: block;
 }
 
-.table-search-btn {
+.table-search-btn button {
   width: 90px;
 }
 
@@ -110,7 +114,11 @@ body,button,input,select,textarea{
   //#1890ff
 }
 
-.labels-content {
+.search-text-highlighted {
+  background: @primary-color;
+}
+
+.table-content {
   margin: 0 24px;
 }
 
@@ -126,6 +134,11 @@ body,button,input,select,textarea{
   background: transparent;
 }
 
+.hivelvet-table .card-parent .card-mt {
+  margin-top: 16px;
+}
+
+/*
 .hivelvet-table .input-editable label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::before,
 .hivelvet-table .input-editable .ant-form-item-label > label::after {
   content: '';
@@ -136,6 +149,11 @@ body,button,input,select,textarea{
   text-decoration: underline;
   color: black !important;
   font-weight: 500;
+}
+*/
+
+.hivelvet-table .input-editable {
+  margin-bottom: 0 !important;
 }
 
 /*.hivelvet-table .ant-table-row-expand-icon::after {
@@ -151,6 +169,12 @@ body,button,input,select,textarea{
 
 .cancel-btn {
   background: #c6c6c6;
+  color: white;
+}
+
+.cancel-btn:hover,cancel-btn:focus {
+  border-color: #d9d9d9;
+  background: #d9d9d9;
   color: white;
 }
 
@@ -200,6 +224,10 @@ body,button,input,select,textarea{
 .site-header a.ant-btn {
   width: 100px;
   color: black;
+}
+
+.red-icon {
+  color: red;
 }
 
 .color-primary {
@@ -389,7 +417,7 @@ body,button,input,select,textarea{
 }
 
 .modal-submit-btn .ant-form-item-control {
-  margin: 0 auto;
+  //margin: 0 auto;
 }
 
 .content-center {
@@ -403,16 +431,16 @@ body,button,input,select,textarea{
   line-height: unset !important;
 }
 
-.install-form .button-container {
+.button-container {
   margin-top: 24px;
 }
 
-.install-form .button-container .prev {
+.button-container .prev {
   /*margin: 0px 20px;*/
   margin-right: 20px;
 }
 
-.install-form .button-container .ant-form-item-control-input-content {
+.button-container .ant-form-item-control-input-content {
   display: flex;
 }
 

@@ -28,6 +28,7 @@ use Models\Role;
 use Models\RolePermission;
 use Models\User;
 use Models\UserRole;
+use Respect\Validation\Validator;
 use Validation\DataChecker;
 
 /**
@@ -53,7 +54,7 @@ class Edit extends BaseAction
         else {
             if (isset($form['name'])) {
                 $v  = new DataChecker();
-                $v->notEmpty()->verify('name', $form['name'], ['notEmpty' => 'Name is required']);
+                $v->verify($form['name'], Validator::notEmpty()->setName('name'));
                 if ($v->allValid()) {
                     $checkRole = new Role();
                     $name = strtolower($form['name']);
@@ -62,7 +63,7 @@ class Edit extends BaseAction
                     if ($nameExist) {
                         $message = 'Name already exist';
                         $this->logger->error('role could not be updated', ['error' => $message]);
-                        $this->renderJson(['errors' => ['name'=>$message]], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+                        $this->renderJson(['errors' => ['name' => $message]], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
                         return;
                     }
                     else {

@@ -44,8 +44,8 @@ class Delete extends DeleteAction
         if ($resultCode1 == ResponseCode::HTTP_OK and $resultCode2 == ResponseCode::HTTP_OK) {
             parent::execute($f3,$params);
             if ($nbUsers > 0) {
-                $result = $role->getAllRoles();
-                $this->renderJson(json_encode($result));
+                $result = $role->getLecturerRole();
+                $this->renderJson(['lecturer' => $result]);
             }
         }
     }

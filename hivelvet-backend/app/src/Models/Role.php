@@ -57,6 +57,21 @@ class Role extends BaseModel
         ];
     }
 
+    public function getLecturerRole()
+    {
+        $data   = [];
+        $this->load(['id = ?', [2]]);
+        if ($this->valid()) {
+            $data = [
+                'key'           => $this->id,
+                'name'          => $this->name,
+                'users'         => $this->getRoleUsers($this->id),
+                'permissions'   => $this->getRolePermissions($this->id)
+            ];
+        }
+        return $data;
+    }
+
     public function getRoleUsers($id)
     {
         $userRole = new UserRole();

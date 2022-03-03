@@ -80,16 +80,16 @@ class Login extends Component<Props, State> {
                 this.setState({
                     errors: {},
                 });
-                const response = error.response.data;
-                if (response.errors) {
+                const responseData = error.response.data;
+                if (responseData.errors) {
                     this.setState({
-                        errors: response.errors,
+                        errors: responseData.errors,
                     });
                 }
-                if (response.message) {
+                if (responseData.message) {
                     this.setState({
                         successful: false,
-                        message: response.message,
+                        message: responseData.message,
                     });
                 }
             });

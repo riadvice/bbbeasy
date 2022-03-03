@@ -25,6 +25,10 @@ namespace Actions\Roles;
 use Actions\Base as BaseAction;
 use Enum\ResponseCode;
 use Models\Role;
+use Models\RolePermission;
+use Models\User;
+use Models\UserRole;
+use Respect\Validation\Validator;
 use Validation\DataChecker;
 
 /**
@@ -42,7 +46,7 @@ class Add extends BaseAction
         $form = $body['data'];
         $v    = new DataChecker();
 
-        $v->notEmpty()->verify('name', $form['name'], ['notEmpty' => 'Name is required']);
+        $v->verify($form['name'], Validator::notEmpty()->setName('name'));
 
         if ($v->allValid()) {
             $role = new Role();
@@ -50,9 +54,9 @@ class Add extends BaseAction
             $name = str_replace(' ', '_', $name);
             $nameExist = $role->load(['name = ?', $name]);
             if ($nameExist) {
-                $message = 'Name already exist';
-                $this->logger->error('role could not be added', ['error' => $message]);
-                $this->renderJson(['errors' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+                $error = 'Name already exist';
+                $this->logger->error('role could not be added', ['error' => $error]);
+                $this->renderJson(['errors' => ['name' => $error]], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
             }
             else {
                 $role->name = $name;
@@ -60,6 +64,54 @@ class Add extends BaseAction
                 try {
                     $role->save();
                     $this->logger->info('role successfully added', ['role' => $role->toArray()]);
+
+                    // assign users
+                    $users = $form['users'];
+                    if (!empty($users)) {
+                        foreach ($users as $user_id) {
+                            $user = new User();
+                            $user = $user->getById($user_id);
+                            if ($user->valid()) {
+                                $userRole = new UserRole();
+                                $userRole->user_id = $user->id;
+                                $userRole->role_id = $role->id;
+                                try {
+                                    $userRole->save();
+                                    $this->logger->info('userRole successfully added', ['userRole' => $userRole->toArray()]);
+                                }
+                                catch (\Exception $e) {
+                                    $this->logger->error('user role could not be added', ['error' => $e->getMessage()]);
+                                    $this->renderJson(['errors' => $e->getMessage()], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+
+                                    return;
+                                }
+                            }
+                        }
+                    }
+
+                    //assign permissions
+                    $permissions = $form['permissions'];
+                    if (!empty($permissions)) {
+                        foreach ($permissions as $permission) {
+                            $privilegeInfos = explode('__', $permission);
+                            $name = $privilegeInfos[0];
+                            $group = $privilegeInfos[1];
+                            $rolePermission = new RolePermission();
+                            $rolePermission->group      = $group;
+                            $rolePermission->name       = $name;
+                            $rolePermission->role_id    = $role->id;
+                            try {
+                                $rolePermission->save();
+                                $this->logger->info('rolePermission successfully added', ['rolePermission' => $rolePermission->toArray()]);
+                            }
+                            catch (\Exception $e) {
+                                $this->logger->error('role permission could not be added', ['error' => $e->getMessage()]);
+                                $this->renderJson(['errors' => $e->getMessage()], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+
+                                return;
+                            }
+                        }
+                    }
                 }
                 catch (\Exception $e) {
                     $this->logger->error('role could not be added', ['error' => $e->getMessage()]);
@@ -71,14 +123,14 @@ class Add extends BaseAction
                 $result = [
                     'key'           => $role->id,
                     'name'          => $role->name,
-                    'users'         => [],
-                    'permissions'   => []
+                    'users'         => $role->getRoleUsers($role->id),
+                    'permissions'   => $role->getRolePermissions($role->id)
                 ];
                 $this->renderJson(['result' => 'success','role' => $result]);
             }
         }
         else {
-            $this->renderJson(['errors' => 'Name is required'], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
+            $this->renderJson(['errors' => $v->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
         }
     }
 }

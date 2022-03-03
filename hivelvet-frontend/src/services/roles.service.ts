@@ -36,7 +36,7 @@ class RolesService {
             data
         });
     }
-    edit_role(data: object,id: number) {
+    edit_role(data: object,id) {
         return axios.put(API_URL + '/roles/edit/'+id,{
             data
         });
