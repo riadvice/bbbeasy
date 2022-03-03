@@ -57,20 +57,24 @@ class Login extends Component<Props, State> {
             .then((response) => {
                 const responseMessage = response.data.message;
                 const user = response.data.user;
-
-                message.success({
-                    content: responseMessage,
-                    className: 'success-message',
-                });
-                localStorage.setItem('user', JSON.stringify(user));
-                this.props.setUser(user, true);
-                this.setState({
-                    successful: true,
-                    message: responseMessage,
-
-                    user: user,
-                    isLogged: true,
-                });
+                if (response.data.username && response.data.email && response.data.role) {
+                    const user_infos = {
+                        username: response.data.username,
+                        email: response.data.email,
+                        role: response.data.role,
+                    };
+                    message.success({
+                        content: 'Welcome back ' + user_infos.username + ' !',
+                        className: 'success-message',
+                    });
+                    localStorage.setItem('user', JSON.stringify(user_infos));
+                    this.props.setUser(user_infos, true);
+                    this.setState({
+                        successful: true,
+                        user: user_infos,
+                        isLogged: true,
+                    });
+                }
             })
             .catch((error) => {
                 this.setState({

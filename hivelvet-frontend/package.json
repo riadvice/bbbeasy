@@ -20,7 +20,7 @@
     "chokidar": "^3.5.2",
     "craco": "^0.0.3",
     "craco-less": "^2.0.0",
-    "dotenv-cra": "^3.0.2",
+     "dotenv-cra": "^3.0.2",
     "eslint-plugin-react-hooks": "^4.3.0",
     "formik": "^2.2.9",
     "moment": "^2.29.1",
@@ -52,8 +52,8 @@
     "eject": "craco eject",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx src --color",
     "format": "prettier --write 'src/**/*.{ts,tsx,scss,css,json}'",
-    "isready": "npm run format && npm run lint && npm run build"
-  },
+    "isready": "npm run format && npm run lint && npm run build" 
+     },
   "eslintConfig": {
     "extends": [
       "react-app",

@@ -21,9 +21,6 @@ import { Link, Navigate } from 'react-router-dom';
 import { Layout, Typography, Radio, Button, Menu, Dropdown, Space } from 'antd';
 import { GlobalOutlined, DownOutlined, UserOutlined, LogoutOutlined } from '@ant-design/icons';
 
-import enUS from 'antd/lib/locale/en_US';
-import frFR from 'antd/lib/locale/fr_FR';
-import arEG from 'antd/lib/locale/ar_EG';
 import { T } from '@transifex/react';
 
 const { Header } = Layout;
@@ -40,9 +37,9 @@ type Props = {
 type State = {};
 
 const languages = [
-    { name: 'English', key: 'en', value: enUS },
-    { name: 'Français', key: 'fr', value: frFR },
-    { name: 'العربية', key: 'ar', value: arEG },
+    { name: 'English', key: 'en', value: 'en-US' },
+    { name: 'Français', key: 'fr', value: 'fr-FR' },
+    { name: 'العربية', key: 'ar', value: 'ar' },
 ];
 
 class AppHeader extends Component<Props, State> {
@@ -61,7 +58,7 @@ class AppHeader extends Component<Props, State> {
     }
 
     handleChange = (e) => {
-        const res = languages.filter((item) => item.key == e.target.value.locale);
+        const res = languages.filter((item) => item.value == e.target.value);
         this.props.setLang(res[0].value);
     };
 

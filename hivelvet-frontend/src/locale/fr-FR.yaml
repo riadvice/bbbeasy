@@ -1,0 +1,57 @@
+fr-FR:
+  hello: Bonjour
+  get started: Démarrer
+  sign-in-to-continue: Connectez-vous pour continuer à notre application
+  remember: Souvenez-vous de moi
+  forgot-password: Mot de passe oublié
+  login-now: Se connecter maintenant
+  Dont-t-have-account: Vous n'avez pas de compte
+  register-here: Inscrivez-vous ici
+  email :  
+    label: Adresse email
+    required: L'adresse email est réquis
+    invalid: L'adresse email est invalide
+    already-exists: L'adresse email existe déja
+  password:
+    label: Mot de passe
+    required: Le mot de passe est réquis
+    size: Le mot de passe  doit contenir au moins 4 caractéres
+    invalid: Le mot de passe est invalide
+  join-us: Rejoignez-nous
+  register-now: Inscrivez-vous maintenant et rejoignez notre communauté
+  username:
+    label: Nom d'utilisateur
+    required: Le nom d'utilisateur est réquis
+    already-exists: Le nom d'utilisateur et l'email existent deja
+  confirm-password:
+    label: Confirmer le mot de passe
+    required: La confirmation de mot de passe est requis
+    size:  La confirmation de mot de passe est requis doit contenir au moins 4 caracteres
+  read-agreement: j'ai lu l'accord
+  register: Inscrivez vous maintenant
+  have-already-account: Avez vous deja un compte
+  login-here: Se connecter ici 
+  paswords-not-match: les deux mots de passe ne correspondent pas 
+  user-could-not-logged: l’utilisateur n’a pas pu se connecter
+  success-login: user successfully login
+  success-registration: Félicitations! Votre compte a été créé avec succès
+  username-email-already-exist: le nom d’utilisateur et l’adresse e-mail existent déjà
+  welcome: Bienvenue
+  accept-agreement: Devrait accepter l’accord
+  agree: J’accepte le
+  terms: Conditions d’utilisation
+  and: et
+  privacy-policy: Politique de confidentialité
+  user_not_exists: L'utilisateur existe déjà
+  success_change_password: Mot de passe changé avec succes
+  error_change_password: le mot de passe n’a pas pu être modifié
+  error-registration: l’utilisateur n’a pas pu être ajouté
+  sent-link-successfully : Veuillez vérifier votre adresse e-mail pour réinitialiser votre mot de passe 
+  token:
+    expired: Le jeton a été expiré
+    consumed: Le jeton a été consommé
+
+  
+
+
+  

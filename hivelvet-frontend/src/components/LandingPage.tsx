@@ -31,9 +31,12 @@ class LandingPage extends Component<any, any> {
             <>
                 <Row justify="center" align="top" className="landing-content">
                     <Col span={12}>
-                        <Title>Welcome to Hivelvet</Title>
+                        <Title>
+                            <T _str="Welcome to Hivelvet"></T>
+                        </Title>
                         <p className="mb-30">
-                            Create fully customisable rooms for <strong>BigBlueButton</strong>
+                            <T _str="Create fully customisable rooms for" />
+                            <strong>BigBlueButton</strong>
                         </p>
                         <Paragraph className="landing-btn">
                             <Link className="ant-btn ant-btn-primary text-white" to={'/login'}>
@@ -53,25 +56,33 @@ class LandingPage extends Component<any, any> {
                 <Row gutter={[40, 8]} justify="center" className="features text-center">
                     <Col span={3}>
                         <Avatar size={45} icon={<AppstoreAddOutlined />} className="ant-btn-primary hivelvet-btn" />
-                        <p>Personal Rooms</p>
+                        <p>
+                            <T _str="Personal Rooms"></T>
+                        </p>
                     </Col>
                     <Col span={3}>
                         <Avatar size={45} icon={<BgColorsOutlined />} className="ant-btn-primary hivelvet-btn" />
-                        <p>Full Branding</p>
+                        <p>
+                            <T _str="Full Branding" />
+                        </p>
                     </Col>
                     <Col span={3}>
                         <Avatar size={45} icon={<PlayCircleOutlined />} className="ant-btn-primary hivelvet-btn" />
-                        <p>Recordings management</p>
-                    </Col>
-                    <Col span={3}>
-                        <Avatar size={45} icon={<ControlOutlined />} className="ant-btn-primary hivelvet-btn" />
-                        <p>Flexible Configuration</p>
+                        <p>
+                            <T _str="Recordings management" />
+                        </p>
                     </Col>
                     <Col span={3}>
                         <Avatar size={45} icon={<ControlOutlined />} className="ant-btn-primary hivelvet-btn" />
                         <p>
-                            ZcaleRight <br />
-                            Support
+                            <T _str="Flexible Configuration" />
+                        </p>
+                    </Col>
+                    <Col span={3}>
+                        <Avatar size={45} icon={<ControlOutlined />} className="ant-btn-primary hivelvet-btn" />
+                        <p>
+                            <T _str="ZcaleRight" /> <br />
+                            <T _str="Support" />
                         </p>
                     </Col>
                 </Row>

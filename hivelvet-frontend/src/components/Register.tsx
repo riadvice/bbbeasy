@@ -148,7 +148,7 @@ class Register extends Component<Props, State> {
                                 initialValues={initialValues}
                                 requiredMark={false}
                                 scrollToFirstError={true}
-                                validateTrigger="onFinish"
+                                validateTrigger="onSubmit"
                                 onFinish={this.handleRegistration}
                             >
                                 <Form.Item
