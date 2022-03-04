@@ -22,6 +22,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Button, Dropdown, Layout, Menu } from 'antd';
 import { PlusOutlined, DownOutlined } from '@ant-design/icons';
 import DynamicIcon from './DynamicIcon';
+import { T } from '@transifex/react';
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
@@ -32,9 +33,9 @@ const AppSider = () => {
 
     const newMenu = (
         <Menu>
-            <Menu.Item key="1">Room</Menu.Item>
-            <Menu.Item key="2">Label</Menu.Item>
-            <Menu.Item key="3">Preset</Menu.Item>
+            <Menu.Item key="1"><T _str="Room" /></Menu.Item>
+            <Menu.Item key="2"><T _str="Label" /></Menu.Item>
+            <Menu.Item key="3"><T _str="Preset" /></Menu.Item>
         </Menu>
     );
     const menuData = [
@@ -94,7 +95,7 @@ const AppSider = () => {
         <Sider className="site-sider" width={250}>
             <Dropdown overlay={newMenu}>
                 <Button size="middle" className="sider-new-btn">
-                    <PlusOutlined /> New <DownOutlined />
+                    <PlusOutlined /> <T _str="New" /> <DownOutlined />
                 </Button>
             </Dropdown>
 
@@ -103,17 +104,14 @@ const AppSider = () => {
                 mode="inline"
                 onClick={handleClick}
                 selectedKeys={[currentPath]}
-                defaultSelectedKeys={['/home']}
                 defaultOpenKeys={['sub1']}
             >
                 {menuData.map((item) =>
                     item.children != null ? (
-                        <SubMenu key={item.path} icon={<DynamicIcon type={item.icon} />} title={item.name}>
+                        <SubMenu key={item.path} icon={<DynamicIcon type={item.icon} />} title={<T _str={item.name} />}>
                             {item.children.map((subItem) => (
-                                <Menu.Item
-                                    key={subItem.path}
-                                >
-                                    <Link to={subItem.path}>{subItem.name}</Link>
+                                <Menu.Item key={subItem.path}>
+                                    <Link to={subItem.path}><T _str={subItem.name} /></Link>
                                 </Menu.Item>
                             ))}
                         </SubMenu>
@@ -121,10 +119,10 @@ const AppSider = () => {
                         <Menu.Item key={item.path} icon={<DynamicIcon type={item.icon} />}>
                             {item.path.includes('http') ? (
                                 <a target="_blank" rel="noopener noreferrer" href={item.path}>
-                                    {item.name}
+                                    <T _str={item.name} />
                                 </a>
                             ) : (
-                                <Link to={item.path}>{item.name}</Link>
+                                <Link to={item.path}><T _str={item.name} /></Link>
                             )}
                         </Menu.Item>
                     )

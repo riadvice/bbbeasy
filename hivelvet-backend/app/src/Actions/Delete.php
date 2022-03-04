@@ -85,18 +85,12 @@ abstract class Delete extends BaseAction
                 $this->logger->critical('Error occurred while deleting entity', ['model' => $this->model, 'id' => $this->recordId]);
             } else {
                 $resultCode = ResponseCode::HTTP_OK;
-
-                if (null !== $this->messageArg) {
-                    $message  = $this->i18n->msg(mb_strtolower($this->model) . '.delete_success');
-                    $argument = Strings::startsWith($message, '{0}') ? Strings::capitalize($this->modelInstance[$this->messageArg]) : $this->modelInstance[$this->messageArg];
-                }
+                $this->logger->info('Entity successfully deleted', ['model' => $this->model, 'id' => $this->recordId]);
             }
         } else {
             $resultCode = ResponseCode::HTTP_NOT_FOUND;
             $this->logger->error('Entity could not be deleted', ['model' => $this->model, 'id' => $this->recordId]);
         }
-
-        //$this->renderJson([], $resultCode);
     }
 
     protected function getFilter(): array

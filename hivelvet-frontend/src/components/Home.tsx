@@ -41,48 +41,36 @@ class Home extends Component<Props, State> {
         return (
             <Paragraph className="text-center home-guide">
                 <Title level={3} underline>
-                    {' '}
                     <T _str="How easy is it to create a room ?" />
                 </Title>
                 <Row justify="center">
                     <Col span={3}>
-                        <Avatar
-                            size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 85, xxl: 100 }}
-                            className="ant-btn-primary hivelvet-btn"
-                        >
+                        <Avatar size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 85, xxl: 100 }} className="ant-btn-primary hivelvet-btn">
                             1
                         </Avatar>
                         <Title level={4}>
-                            {' '}
                             <T _str="Give it a name" />
                         </Title>
                     </Col>
                     <Col span={3}>
-                        <Avatar
-                            size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 85, xxl: 100 }}
-                            className="ant-btn-primary hivelvet-btn"
-                        >
+                        <Avatar size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 85, xxl: 100 }} className="ant-btn-primary hivelvet-btn">
                             2
                         </Avatar>
                         <Title level={4}>
-                            {' '}
                             <T _str="Assign it a preset" />
                         </Title>
                     </Col>
                     <Col span={3}>
-                        <Avatar
-                            size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 85, xxl: 100 }}
-                            className="ant-btn-primary hivelvet-btn"
+                        <Avatar size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 85, xxl: 100 }} className="ant-btn-primary hivelvet-btn"
                         >
                             3
                         </Avatar>
                         <Title level={4}>
-                            {' '}
                             <T _str="Mark it with labels" />
                         </Title>
                     </Col>
                 </Row>
-                <Button type="primary">Create my first room</Button>
+                <Button type="primary"><T _str="Create my first room" /></Button>
             </Paragraph>
         );
     }

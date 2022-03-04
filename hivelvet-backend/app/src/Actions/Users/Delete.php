@@ -23,10 +23,12 @@ declare(strict_types=1);
 namespace Actions\Users;
 
 use Actions\Delete as DeleteAction;
+use Actions\RequirePrivilegeTrait;
 
 /**
  * Class Delete.
  */
 class Delete extends DeleteAction
 {
+    use RequirePrivilegeTrait;
 }

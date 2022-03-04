@@ -47,33 +47,21 @@ class Install extends BaseAction
          * @todo for future tasks
          * if ($f3->get('system.installed') === false) {
          */
-        $body = $this->getDecodedBody();
-        $form = $body['data'];
-        $v1   = new DataChecker();
-        $v2   = new DataChecker();
+        $body           = $this->getDecodedBody();
+        $form           = $body['data'];
+        $dataChecker    = new DataChecker();
 
-        // step1 validation
-        $v1->verify($form['username'], Validator::notEmpty()->setName('username'));
-        $v1->verify($form['email'], Validator::notEmpty()->email()->setName('email'));
-        $v1->verify($form['password'], Validator::notEmpty()->length(4)->setName('password'));
+        $dataChecker->verify($form['username'], Validator::length(4)->setName('username'));
+        $dataChecker->verify($form['email'], Validator::email()->setName('email'));
+        $dataChecker->verify($form['password'], Validator::length(4)->setName('password'));
 
-        // step2 validation
-        $v2->verify($form['company_name'], Validator::notEmpty()->setName('company_name'));
-        $v2->verify($form['company_url'], Validator::notEmpty()->url()->setName('company_url'));
-        $v2->verify($form['platform_name'], Validator::notEmpty()->setName('platform_name'));
+        $dataChecker->verify($form['company_url'], Validator::url()->setName('company_url'));
+        $dataChecker->verify($form['term_url'], Validator::url()->setName('term_url'));
+        $dataChecker->verify($form['policy_url'], Validator::url()->setName('policy_url'));
 
-        $step1Validated = $v1->allValid();
-        $step2Validated = $v2->allValid();
-
-        if (!$step1Validated && !$step2Validated) {
-            $this->logger->error('App configuration', ['user_errors' => $v1->getErrors(),'settings_errors' => $v2->getErrors()]);
-            $this->renderJson(['userErrors' => $v1->getErrors(), 'settingsErrors' => $v2->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
-        } elseif (!$step1Validated) {
-            $this->logger->error('App configuration', ['user_errors' => $v1->getErrors()]);
-            $this->renderJson(['userErrors' => $v1->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
-        } elseif (!$step2Validated) {
-            $this->logger->error('App configuration', ['settings_errors' => $v2->getErrors()]);
-            $this->renderJson(['settingsErrors' => $v2->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
+        if (!$dataChecker->allValid()) {
+            $this->logger->error('App configuration', ['errors' => $dataChecker->getErrors()]);
+            $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
         } else {
             $user           = new User();
             $user->email    = $form['email'];

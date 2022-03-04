@@ -43,10 +43,10 @@ class Register extends BaseAction
 
         $dataChecker = new DataChecker();
 
-        $dataChecker->verify($form['username'], Validator::notEmpty()->length(4)->setName('username'));
-        $dataChecker->verify($form['email'], Validator::notEmpty()->email()->setName('email'));
-        $dataChecker->verify($form['password'], Validator::notEmpty()->length(4)->setName('password'));
-        $dataChecker->verify($form['confirmPassword'], Validator::notEmpty()->length(4)->equals($form['password'])->setName('confirmPassword'));
+        $dataChecker->verify($form['username'], Validator::length(4)->setName('username'));
+        $dataChecker->verify($form['email'], Validator::email()->setName('email'));
+        $dataChecker->verify($form['password'], Validator::length(4)->setName('password'));
+        $dataChecker->verify($form['confirmPassword'], Validator::length(4)->equals($form['password'])->setName('confirmPassword'));
         // @fixme: the agreement must be accepted only if there are terms for the website
         // otherwise in the login it should look for available terms of they were not previously available and ask to accept them
         $dataChecker->verify($form['agreement'], Validator::trueVal()->setName('agreement'));

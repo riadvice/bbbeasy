@@ -38,7 +38,7 @@ class Collect extends BaseAction
     public function execute($f3, $params): void
     {
         $privileges = PrivilegeUtils::listSystemPrivileges();
-        $this->logger->info('collecting privileges for manage roles', ['roles' => json_encode($privileges)]);
-        $this->renderJson(json_encode($privileges));
+        $this->logger->debug('collecting privileges for manage roles', ['roles' => json_encode($privileges)]);
+        $this->renderJson($privileges);
     }
 }

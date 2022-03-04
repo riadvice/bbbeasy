@@ -19,20 +19,20 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Result } from 'antd';
+import {T} from "@transifex/react";
 
 const PageNotFound = () => {
     return (
         <Result
             status="404"
             title="404"
-            subTitle="Sorry, the page you visited does not exist."
+            subTitle={<T _str="Sorry, the page you visited does not exist." />}
             className="page-not-found"
             extra={
                 <Link className="ant-btn color-blue" to="/">
-                    Back Home
+                    <T _str="Back Home" />
                 </Link>
             }
-            //extra={<Link className="ant-btn ant-btn-primary" to="/">Back Home</Link>}
         />
     );
 };

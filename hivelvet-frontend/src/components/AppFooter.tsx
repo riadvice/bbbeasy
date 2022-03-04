@@ -18,6 +18,7 @@
 
 import React from 'react';
 import { Button, Layout, Typography } from 'antd';
+import { T } from '@transifex/react';
 
 const { Footer } = Layout;
 const { Text } = Typography;
@@ -26,9 +27,9 @@ const AppFooter = () => {
     return (
         <Footer className="site-footer">
             <Text type="secondary">
-                ©2022 <Button type="link">RIADVICE</Button> All rights reserved
+                ©2022 <Button type="link"> <T _str="RIADVICE" /></Button> <T _str="All rights reserved" />
             </Text>
-            <Text type="secondary">Term & Conditions | Privacy Policy</Text>
+            <Text type="secondary"> <T _str="Term & Conditions" /> | <T _str="Privacy Policy" /></Text>
         </Footer>
     );
 };

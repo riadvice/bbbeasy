@@ -24,7 +24,6 @@ namespace Actions\Core;
 
 use Actions\Base as BaseAction;
 use Base;
-use Utils\PrivilegeUtils;
 
 /**
  * Index Action Class.
@@ -37,6 +36,5 @@ class Main extends BaseAction
      */
     public function execute($f3, $params): void
     {
-        PrivilegeUtils::listSystemPrivileges();
     }
 }

@@ -41,8 +41,8 @@ class Login extends BaseAction
         $form = $this->getDecodedBody();
 
         $dataChecker = new DataChecker();
-        $dataChecker->verify($email = $form['email'], Validator::notEmpty()->email()->setName('email'));
-        $dataChecker->verify($form['password'], Validator::notEmpty()->length(4)->setName('password'));
+        $dataChecker->verify($email = $form['email'], Validator::email()->setName('email'));
+        $dataChecker->verify($form['password'], Validator::length(4)->setName('password'));
 
         $userInfos = [];
         if ($dataChecker->allValid()) {
@@ -65,7 +65,7 @@ class Login extends BaseAction
                     'role'     => $user->role,
                 ];
                 $this->logger->info('User successfully logged in', ['email' => $email]);
-                $this->renderJson(json_encode($userInfos, JSON_THROW_ON_ERROR));
+                $this->renderJson($userInfos);
             }
         }
 

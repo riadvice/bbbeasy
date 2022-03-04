@@ -37,9 +37,9 @@ class Collect extends BaseAction
     public function execute($f3, $params): void
     {
         $data                = [];
-        $res                 = get_declared_classes();
+        $classes             = get_declared_classes();
         $autoloaderClassName = '';
-        foreach ($res as $className) {
+        foreach ($classes as $className) {
             if (str_starts_with($className, 'ComposerAutoloaderInit')) {
                 $autoloaderClassName = $className;
                 break;
@@ -68,8 +68,7 @@ class Collect extends BaseAction
                     'subcategories' => [],
                 ];
                 $subCategories  = $modelInstance::values();
-                foreach ($subCategories as $key => $subCategory) {
-                    //$subCategories[$key] = ucfirst(str_replace('_',' ',$subCategory));
+                foreach ($subCategories as $subCategory) {
                     $subCategory = ucfirst(str_replace('_',' ',$subCategory));
                     $subCategoryData = [
                         'id'     =>$counter,
@@ -84,7 +83,7 @@ class Collect extends BaseAction
             }
         }
 
-        $this->logger->info('collecting presets', ['data' => json_encode($data)]);
-        $this->renderJson(json_encode($data));
+        $this->logger->debug('collecting presets', ['data' => json_encode($data)]);
+        $this->renderJson($data);
     }
 }

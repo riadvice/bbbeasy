@@ -32,15 +32,12 @@ type PaginationType = {
     current?: number;
     pageSize?: number;
 }
-type userType = {
-    key?: number;
-    username?: number;
-}
+
 interface Item {
     key: number;
     name: string;
-    users: [];
-    permissions: [];
+    users: number;
+    permissions: {};
 }
 
 interface EditableRowProps {
@@ -62,7 +59,6 @@ type State = {
     pagination?: PaginationType;
     loading?: boolean;
 
-    allUsers?: userType[];
     allPrivileges?: {};
 
     errorsAdd?: [];
@@ -78,8 +74,7 @@ class Roles extends Component<Props,State> {
     constructor(props: Props) {
         super(props);
         this.state = {
-            allUsers: [],
-            allPrivileges: [],
+            allPrivileges: {},
             data: [],
             pagination: {
                 current: 1,
@@ -97,30 +92,12 @@ class Roles extends Component<Props,State> {
     }
 
     //list
-    getUsers = () => {
-        RolesService.list_users()
-            .then((response) => {
-                const results = response.data;
-                this.setState({ allUsers: results });
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    };
     getPrivileges = () => {
         RolesService.list_permissions()
             .then((response) => {
                 const privileges = response.data;
                 if (privileges instanceof Object) {
-                    const permissions = {};
-                    Object.keys(privileges).forEach(function (group) {
-                        const arr = privileges[group];
-                        arr.map((action) => {
-                            const key = action +"__"+ group;
-                            permissions[key] = key.replace('__',' ');
-                        });
-                    });
-                    this.setState({ allPrivileges: permissions });
+                    this.setState({ allPrivileges: privileges });
                 }
             })
             .catch((error) => {
@@ -144,7 +121,6 @@ class Roles extends Component<Props,State> {
     };
     componentDidMount() {
         //Runs only on the first render
-        this.getUsers();
         this.getPrivileges();
         this.getRoles();
     }
@@ -161,14 +137,11 @@ class Roles extends Component<Props,State> {
 
     //add
     addForm = null;
-    initialValues = {
-        name: '',
-        users: [],
-        permissions: [],
-    };
     handleAdd = (formValues: any) => {
+        const name = formValues.name;
+        delete formValues.name;
         this.setState({ errorsAdd: [] });
-        RolesService.add_role(formValues)
+        RolesService.add_role({ name: name, permissions: formValues })
             .then((response) => {
                 this.setState({
                     loading: true,
@@ -203,7 +176,7 @@ class Roles extends Component<Props,State> {
         });
     };
 
-    //edit users/permissions
+    //edit permissions
     editRow = (response, key) => {
         const result = response.data;
         const newRowData = result.role;
@@ -237,7 +210,7 @@ class Roles extends Component<Props,State> {
         });
     };
     saveEdit = (formValues, key: React.Key) => {
-        RolesService.edit_role(formValues,key)
+        RolesService.edit_role({permissions: formValues},key)
             .then((response) => {
                 this.editRow(response,key);
                 this.setState({
@@ -249,44 +222,27 @@ class Roles extends Component<Props,State> {
             });
     };
     expandedRowRender = (record) => {
-        const usersChecked = record.users;
+        const { allPrivileges } = this.state;
         const permissionsChecked = record.permissions;
 
-        const initialValues = {
-            users: usersChecked,
-            permissions: permissionsChecked,
-        };
-
-        const {allUsers, allPrivileges} = this.state;
         return (
-            <Form initialValues={initialValues} onFinish={(values) => this.saveEdit(values,record.key)}>
+            <Form initialValues={permissionsChecked} onFinish={(values) => this.saveEdit(values,record.key)}>
                 <Card bordered={false} className='card-parent'>
-                    <Card title="Users" type="inner">
-                        <Form.Item name="users">
-                            <Checkbox.Group>
-                                <Row gutter={[32, 16]}>
-                                    {allUsers.map((item,index) => (
-                                        <Col span={allUsers.length > 6 && 4} key={index}>
-                                            <Checkbox value={item.key} className="text-capitalize">{item.username}</Checkbox>
-                                        </Col>
-                                    ))}
-                                </Row>
-                            </Checkbox.Group>
-                        </Form.Item>
-                    </Card>
-                    <Card title="Permissions" className="card-mt" type="inner">
-                        <Form.Item name="permissions">
-                            <Checkbox.Group>
-                                <Row gutter={[32, 16]}>
-                                    {Object.entries(allPrivileges).map(([key, value]) => (
-                                        <Col span={Object.keys(allPrivileges).length > 6 && 4} key={key}>
-                                            <Checkbox value={key} className="text-capitalize">{value}</Checkbox>
-                                        </Col>
-                                    ))}
-                                </Row>
-                            </Checkbox.Group>
-                        </Form.Item>
-                    </Card>
+                    {Object.keys(allPrivileges).map((group) => (
+                        <Card key={group} title={group} className="card-mt text-capitalize" type="inner">
+                            <Form.Item name={group}>
+                                <Checkbox.Group>
+                                    <Row gutter={[32, 16]}>
+                                        {allPrivileges[group].map((action) => (
+                                            <Col span={Object.keys(allPrivileges).length > 6 && 4} key={action}>
+                                                <Checkbox value={action} className="text-capitalize">{action}</Checkbox>
+                                            </Col>
+                                        ))}
+                                    </Row>
+                                </Checkbox.Group>
+                            </Form.Item>
+                        </Card>
+                    ))}
                     <Space size="middle" className="actions-expanded">
                         <Popconfirm title="Sure to cancel edition ?" placement="leftTop" onConfirm={() => this.cancelEdit(record.key)}>
                             <Button size="middle">Cancel</Button>
@@ -363,7 +319,7 @@ class Roles extends Component<Props,State> {
                                 rules={[
                                     {
                                         required: true,
-                                        message: `${title} is required.`,
+                                        message: <T _str={`${title} is required.`} />,
                                     },
                                 ]}
                             >
@@ -414,12 +370,12 @@ class Roles extends Component<Props,State> {
     handleDelete = (key: React.Key, nbUsers) => {
         if (nbUsers > 0) {
             Modal.confirm({
-                title: 'Do you Want to delete this role ?',
+                title: <T _str='Do you Want to delete this role ?' />,
                 icon: <WarningOutlined />,
-                content: 'This role already has users assigned, if you confirm all users switch to role \'Lecturer\'',
+                content: <T _str='This role already has users assigned, if you confirm all users switch to role Lecturer' />,
                 okType: 'danger',
-                okText: 'Yes',
-                cancelText: 'No',
+                okText: <T _str='Yes' />,
+                cancelText: <T _str='No' />,
                 onOk: () => this.deleteRole(key,nbUsers)
             });
         }
@@ -520,7 +476,7 @@ class Roles extends Component<Props,State> {
     });
 
     render() {
-        const { data, pagination, loading, isModalVisible, errorsAdd, allUsers, allPrivileges, expandedKeys } = this.state;
+        const { data, pagination, loading, isModalVisible, errorsAdd, allPrivileges, expandedKeys } = this.state;
 
         const columns = [
             {
@@ -535,25 +491,10 @@ class Roles extends Component<Props,State> {
                 dataIndex: 'users',
                 editable: false,
                 render: (users) => {
-                    const nbUsers = users.length;
                     return (
                         <Space size="small">
                             <UserOutlined />
-                            <span>{nbUsers}</span>
-                        </Space>
-                    )
-                },
-            },
-            {
-                title: 'Permissions',
-                dataIndex: 'permissions',
-                editable: false,
-                render: (permissions) => {
-                    const nbPermissions = permissions.length;
-                    return (
-                        <Space size="small">
-                            <KeyOutlined />
-                            <span>{nbPermissions}</span>
+                            <span>{users}</span>
                         </Space>
                     )
                 },
@@ -573,7 +514,7 @@ class Roles extends Component<Props,State> {
                                 <Popconfirm
                                     title="Are you sure to delete this role ?"
                                     icon={<QuestionCircleOutlined className="red-icon" />}
-                                    onConfirm={() => this.handleDelete(record.key,record.users.length)}>
+                                    onConfirm={() => this.handleDelete(record.key,record.users)}>
                                     <Link>
                                         <DeleteOutlined /> Delete
                                     </Link>
@@ -603,16 +544,16 @@ class Roles extends Component<Props,State> {
             <>
                 <PageHeader
                     className="site-page-header"
-                    title="Roles"
+                    title={<T _str="Roles" />}
                     extra={[
                         <Button key="1" type="primary" onClick={this.toggleAdd}>
-                            New Role
+                            <T _str="New Role" />
                         </Button>
                     ]}
                 />
 
                 <Modal
-                    title="New Role"
+                    title={<T _str="New Role" />}
                     className="roles-modal"
                     centered
                     visible={isModalVisible}
@@ -624,7 +565,7 @@ class Roles extends Component<Props,State> {
                     <Form
                         layout="vertical"
                         ref={(form) => this.addForm = form }
-                        initialValues={this.initialValues}
+                        initialValues={{ name: '' }}
                         hideRequiredMark
                         onFinish={this.handleAdd}
                         validateTrigger="onSubmit"
@@ -645,28 +586,24 @@ class Roles extends Component<Props,State> {
                         >
                             <Input placeholder="Name" />
                         </Form.Item>
-                        <Form.Item label={<T _str="Users" />} name="users">
-                            <Checkbox.Group>
-                                <Row gutter={[32, 16]}>
-                                    {allUsers.map((item,index) => (
-                                        <Col span={allUsers.length > 3 && 8} key={index}>
-                                            <Checkbox value={item.key} className="text-capitalize">{item.username}</Checkbox>
-                                        </Col>
-                                    ))}
-                                </Row>
-                            </Checkbox.Group>
-                        </Form.Item>
-                        <Form.Item label={<T _str="Permissions" />} name="permissions">
-                            <Checkbox.Group>
-                                <Row gutter={[32, 16]}>
-                                    {Object.entries(allPrivileges).map(([key, value]) => (
-                                        <Col span={Object.keys(allPrivileges).length>3 && 8} key={key}>
-                                            <Checkbox value={key} className="text-capitalize">{value}</Checkbox>
-                                        </Col>
-                                    ))}
-                                </Row>
-                            </Checkbox.Group>
-                        </Form.Item>
+                        <div className="ant-col ant-form-item-label">
+                            <label>Permissions</label>
+                        </div>
+                        {Object.keys(allPrivileges).map((group) => (
+                            <Card key={group} title={group} className="card-mb text-capitalize" type="inner">
+                                <Form.Item name={group}>
+                                    <Checkbox.Group>
+                                        <Row gutter={[32, 16]}>
+                                            {allPrivileges[group].map((action) => (
+                                                <Col span={Object.keys(allPrivileges).length > 3 && 8} key={action}>
+                                                    <Checkbox value={action} className="text-capitalize">{action}</Checkbox>
+                                                </Col>
+                                            ))}
+                                        </Row>
+                                    </Checkbox.Group>
+                                </Form.Item>
+                            </Card>
+                        ))}
                         <Form.Item className="modal-submit-btn button-container">
                             <Button type="text" className="cancel-btn prev" block onClick={this.cancelAdd}>
                                 <T _str="Cancel" />

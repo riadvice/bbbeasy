@@ -37,8 +37,8 @@ class Index extends BaseAction
     public function show($f3, $params): void
     {
         $role   = new Role();
-        $result = $role->getAllRoles();
-        $this->logger->info('collecting roles', ['roles' => json_encode($result)]);
-        $this->renderJson(json_encode($result));
+        $roles = $role->getAllRoles();
+        $this->logger->debug('collecting roles', ['roles' => json_encode($roles)]);
+        $this->renderJson($roles);
     }
 }

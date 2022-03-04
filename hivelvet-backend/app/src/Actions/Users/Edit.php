@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Actions\Users;
 
 use Actions\Base as BaseAction;
+use Actions\RequirePrivilegeTrait;
 use Base;
 use Enum\ResponseCode;
 use Models\User;
@@ -33,6 +34,8 @@ use Validation\DataChecker;
  */
 class Edit extends BaseAction
 {
+    use RequirePrivilegeTrait;
+
     /**
      * @param Base  $f3
      * @param array $params

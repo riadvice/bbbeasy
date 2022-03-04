@@ -31,9 +31,9 @@ class PrivilegeUtils
         $privileges     = [];
         $prvilegeTtrait = 'Actions\RequirePrivilegeTrait';
 
-        $res                 = get_declared_classes();
+        $classes             = get_declared_classes();
         $autoloaderClassName = '';
-        foreach ($res as $className) {
+        foreach ($classes as $className) {
             if (str_starts_with($className, 'ComposerAutoloaderInit')) {
                 $autoloaderClassName = $className;
 

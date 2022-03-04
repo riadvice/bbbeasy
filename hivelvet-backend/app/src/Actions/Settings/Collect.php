@@ -54,7 +54,7 @@ class Collect extends BaseAction
             ];
         }
 
-        $this->logger->info('collecting settings', ['data' => json_encode($data)]);
-        $this->renderJson(json_encode($data));
+        $this->logger->debug('collecting settings', ['data' => json_encode($data)]);
+        $this->renderJson($data);
     }
 }

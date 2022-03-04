@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Actions\Logs;
 
 use Actions\Base as BaseAction;
-use Actions\RequirePrivilegeTrait;
 use Base;
 
 /**
@@ -31,8 +30,6 @@ use Base;
  */
 class Clean extends BaseAction
 {
-    use RequirePrivilegeTrait;
-
     /**
      * @param Base  $f3
      * @param array $params

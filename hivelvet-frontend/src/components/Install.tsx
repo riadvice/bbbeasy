@@ -37,7 +37,7 @@ import {
     Alert,
     Tooltip,
 } from 'antd';
-import { EyeInvisibleOutlined, EyeTwoTone, InboxOutlined, CloseOutlined, CheckOutlined } from '@ant-design/icons';
+import { InboxOutlined, CloseOutlined, CheckOutlined } from '@ant-design/icons';
 import ColorPicker from 'rc-color-picker/lib/ColorPicker';
 import DynamicIcon from './DynamicIcon';
 import { RcFile } from 'antd/lib/upload';
@@ -91,7 +91,6 @@ const Install = (props: Props) => {
     const [modalTitle, setModalTitle] = React.useState('');
     const [modalContent, setModalContent] = React.useState([]);
     const [isModalVisible, setIsModalVisible] = React.useState(false);
-    const [selectedCategory, setSelectedCategory] = React.useState('');
 
     if (presets.length == 0 && settings.length == 0) {
         InstallService.collect_settings()
@@ -127,7 +126,6 @@ const Install = (props: Props) => {
             <div>
                 <Paragraph className="form-header text-center">
                     <Title level={4}>
-                        {' '}
                         <T _str="Create an administrator account" />
                     </Title>
                 </Paragraph>
@@ -138,12 +136,16 @@ const Install = (props: Props) => {
                         help: errorsStep1['username'],
                         validateStatus: "error"
                     })}
-                    /*rules={[
+                    rules={[
                         {
                             required: true,
-                            message: 'Username is required',
+                            message: <T _str="Username is required" />,
                         },
-                    ]}*/
+                        {
+                            min: 4,
+                            message: <T _str="Username must be at least 4 characters" />,
+                        }
+                    ]}
                 >
                     <Input placeholder="Username" />
                 </Form.Item>
@@ -155,16 +157,16 @@ const Install = (props: Props) => {
                         help: errorsStep1['email'],
                         validateStatus: "error"
                     })}
-                    /*rules={[
-                        {
-                            type: 'email',
-                            message: 'Email is invalid',
-                        },
+                    rules={[
                         {
                             required: true,
-                            message: 'Email is required',
+                            message: <T _str='Email is required' />,
                         },
-                    ]}*/
+                        {
+                            type: 'email',
+                            message: <T _str='Email is invalid' />,
+                        }
+                    ]}
                 >
                     <Input placeholder="Email" />
                 </Form.Item>
@@ -175,16 +177,16 @@ const Install = (props: Props) => {
                         help: errorsStep1['password'],
                         validateStatus: "error"
                     })}
-                    /*rules={[
+                    rules={[
                         {
                             min: 4,
-                            message: 'Password must be at least 4 characters',
+                            message: <T _str='Password must be at least 4 characters' />,
                         },
                         {
                             required: true,
-                            message: 'Password is required',
+                            message: <T _str='Password is required' />,
                         },
-                    ]}*/
+                    ]}
                 >
                     <Input.Password placeholder="Password"/>
                 </Form.Item>
@@ -222,7 +224,6 @@ const Install = (props: Props) => {
                 <div className="box">
                     <Paragraph className="form-header">
                         <Title level={4}>
-                            {' '}
                             <T _str="Company" />
                         </Title>
                     </Paragraph>
@@ -233,12 +234,12 @@ const Install = (props: Props) => {
                             help: errorsStep2['company_name'],
                             validateStatus: "error"
                         })}
-                        /*rules={[
+                        rules={[
                             {
                                 required: true,
-                                message: 'Company name is required',
+                                message: <T _str='Company name is required' />,
                             },
-                        ]}*/
+                        ]}
                     >
                         <Input placeholder="Company name" onChange={changeCompany} />
                     </Form.Item>
@@ -250,16 +251,16 @@ const Install = (props: Props) => {
                             help: errorsStep2['company_url'],
                             validateStatus: "error"
                         })}
-                        /*rules={[
+                        rules={[
                             {
                                 required: true,
-                                message: 'Company website is required',
+                                message: <T _str='Company website is required' />,
                             },
                             {
                                 type: 'url',
-                                message: 'Company website is not a valid url',
+                                message: <T _str='Company website is not a valid url' />,
                             },
-                        ]}*/
+                        ]}
                     >
                         <Input placeholder="Company website" />
                     </Form.Item>
@@ -271,12 +272,12 @@ const Install = (props: Props) => {
                             help: errorsStep2['platform_name'],
                             validateStatus: "error"
                         })}
-                        /*rules={[
+                        rules={[
                             {
                                 required: true,
-                                message: 'Platform name is required',
+                                message: <T _str='Platform name is required' />,
                             },
-                        ]}*/
+                        ]}
                     >
                         <Input placeholder="Platform name" />
                     </Form.Item>
@@ -288,12 +289,12 @@ const Install = (props: Props) => {
                             help: errorsStep2['term_url'],
                             validateStatus: "error"
                         })}
-                        /*rules={[
+                        rules={[
                             {
                                 type: 'url',
-                                message: 'Term of use url is not a valid url',
+                                message: <T _str='Term of use url is not a valid url' />,
                             },
-                        ]}*/
+                        ]}
                     >
                         <Input placeholder="Term of use URL" />
                     </Form.Item>
@@ -305,12 +306,12 @@ const Install = (props: Props) => {
                             help: errorsStep2['policy_url'],
                             validateStatus: "error"
                         })}
-                        /*rules={[
+                        rules={[
                             {
                                 type: 'url',
-                                message: 'Privacy Policy url is not a valid url',
+                                message: <T _str='Privacy Policy url is not a valid url' />,
                             },
-                        ]}*/
+                        ]}
                     >
                         <Input placeholder="Privacy Policy URL" />
                     </Form.Item>
@@ -318,7 +319,6 @@ const Install = (props: Props) => {
                 <div className="box last">
                     <Paragraph className="form-header">
                         <Title level={4}>
-                            {' '}
                             <T _str="Branding" />
                         </Title>
                     </Paragraph>
@@ -349,7 +349,7 @@ const Install = (props: Props) => {
                                     <InboxOutlined />
                                 </p>
                                 <Text strong className="ant-upload-text">
-                                    Drop your logo here
+                                    <T _str='Drop your logo here' />
                                 </Text>
                                 <p className="ant-upload-hint">.png .jpg .jpeg ...</p>
                             </Dragger>
@@ -360,9 +360,7 @@ const Install = (props: Props) => {
                             <ColorPicker
                                 animation="slide-up"
                                 defaultColor={primaryColor}
-                                onClose={(color) => {
-                                    setPrimaryColor(color.color);
-                                }}
+                                onClose={(color) => { setPrimaryColor(color.color) }}
                                 placement="bottomLeft"
                             >
                                 <span className="rc-color-picker-trigger" />
@@ -374,9 +372,7 @@ const Install = (props: Props) => {
                             <ColorPicker
                                 animation="slide-up"
                                 defaultColor={secondaryColor}
-                                onClose={(color) => {
-                                    setSecondaryColor(color.color);
-                                }}
+                                onClose={(color) => { setSecondaryColor(color.color) }}
                                 placement="bottomLeft"
                             >
                                 <span className="rc-color-picker-trigger" />
@@ -388,9 +384,7 @@ const Install = (props: Props) => {
                             <ColorPicker
                                 animation="slide-up"
                                 defaultColor={accentColor}
-                                onClose={(color) => {
-                                    setAccentColor(color.color);
-                                }}
+                                onClose={(color) => { setAccentColor(color.color) }}
                                 placement="bottomLeft"
                             >
                                 <span className="rc-color-picker-trigger" />
@@ -402,9 +396,7 @@ const Install = (props: Props) => {
                             <ColorPicker
                                 animation="slide-up"
                                 defaultColor={addColor}
-                                onClose={(color) => {
-                                    setAddColor(color.color);
-                                }}
+                                onClose={(color) => { setAddColor(color.color) }}
                                 placement="bottomLeft"
                             >
                                 <span className="rc-color-picker-trigger" />
@@ -422,12 +414,8 @@ const Install = (props: Props) => {
             setIsModalVisible(true);
             setModalTitle(title);
             setModalContent(content);
-            setSelectedCategory(indexCateg);
         };
         const handleOk = () => {
-            //set old content of selected category
-            /*presets[selectedCategory].subcategories = modalContent;
-            setPresets(presets);*/
             setIsModalVisible(false);
         };
         const handleCancel = () => {
@@ -438,15 +426,14 @@ const Install = (props: Props) => {
             <>
                 <Paragraph className="final-form-header">
                     <Title level={4} className="final-form-header">
-                        {' '}
                         <T _str="BigBlueButton rooms settings" />
                     </Title>
 
                     <Alert
                         className="settings-info"
-                        message="Click on each button to customise the configuration group and hover it to get its summary."
                         type="info"
-                        closeText="I understand, thank you!"
+                        message={<T _str="Click on each button to customise the configuration group and hover it to get its summary." />}
+                        closeText={<T _str="I understand, thank you!" />}
                     />
                 </Paragraph>
                 <Card bordered={false}>
@@ -462,7 +449,7 @@ const Install = (props: Props) => {
                                             key={subItem.name}
                                             className={subItem.status == true ? 'text-black' : 'text-grey'}
                                         >
-                                            {subItem.name}
+                                            <T _str={subItem.name} />
                                         </li>
                                     ))}
                                 </ul>
@@ -475,14 +462,14 @@ const Install = (props: Props) => {
                             >
                                 <Meta
                                     avatar={<DynamicIcon type={item.icon} className="PresetIcon" />}
-                                    title={item.name}
+                                    title={<T _str={item.name} />}
                                 />
                             </Grid>
                         </Tooltip>
                     ))}
 
                     <Modal
-                        title={modalTitle}
+                        title={<T _str={modalTitle} />}
                         className="presets-modal"
                         centered
                         visible={isModalVisible}
@@ -491,24 +478,22 @@ const Install = (props: Props) => {
                         cancelButtonProps={{ className: 'hidden' }}
                         footer={[
                             <Button key="submit" type="primary" onClick={handleOk}>
-                                Confirm
-                            </Button>,
+                                <T _str="Confirm" />
+                            </Button>
                         ]}
                     >
                         <div className="presets-body">
                             {modalContent.map((item) => (
                                 <div key={item.id}>
                                     <Form.Item
-                                        label={item.name}
+                                        label={<T _str={item.name} />}
                                         //name={item.id}
                                     >
                                         <Switch
                                             checkedChildren={<CheckOutlined />}
                                             unCheckedChildren={<CloseOutlined />}
                                             defaultChecked={item.status == true ? true : false}
-                                            onChange={(checked) => {
-                                                item.status = checked;
-                                            }}
+                                            onChange={(checked) => { item.status = checked }}
                                         />
                                     </Form.Item>
                                 </div>
@@ -591,8 +576,7 @@ const Install = (props: Props) => {
                 const fdata = new FormData();
                 fdata.append('logo', file.originFileObj, file.originFileObj.name);
                 fdata.append('logo_name', file.originFileObj.name);
-                axios
-                    .post(API_URL + '/save-logo', fdata)
+                axios.post(API_URL + '/save-logo', fdata)
                     .then((response) => {
                         console.log(response);
                     })
@@ -611,10 +595,10 @@ const Install = (props: Props) => {
                     <Result
                         status="success"
                         icon={<DynamicIcon type="CheckOutlined" className="success-install-icon" />}
-                        title={successMessage}
+                        title={<T _str={successMessage} />}
                         extra={
                             <Link to={'/login'} onClick={handleInstall} className="ant-btn ant-btn-primary ant-btn-lg">
-                                Start using Hivelvet
+                                <T _str="Start using Hivelvet" />
                             </Link>
                         }
                     />
@@ -624,7 +608,7 @@ const Install = (props: Props) => {
                     <Col span={4}>
                         <Steps className="install-steps" size="small" direction="vertical" current={activeStep}>
                             {steps.map((item) => (
-                                <Step key={item.title} title={item.title} />
+                                <Step key={item.title} title={<T _str={item.title} />} />
                             ))}
                         </Steps>
                     </Col>
@@ -650,12 +634,12 @@ const Install = (props: Props) => {
                             >
                                 {activeStep > 0 && (
                                     <Button className="prev" onClick={() => prev()} block>
-                                        Previous
+                                        <T _str="Previous" />
                                     </Button>
                                 )}
                                 {activeStep <= steps.length - 1 && (
                                     <Button type="primary" htmlType="submit" block>
-                                        {steps[activeStep].button}
+                                        <T _str={steps[activeStep].button} />
                                     </Button>
                                 )}
                             </Form.Item>

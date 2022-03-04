@@ -87,11 +87,11 @@ class Register extends Component<Props, State> {
                     <Col span={10} offset={7} className="section-top">
                         <Result
                             status="success"
-                            title="Registration completed successfully"
-                            subTitle={message}
+                            title={<T _str="Registration completed successfully" />}
+                            subTitle={<T _str={message} />}
                             extra={
                                 <Link to={'/login'} className="ant-btn ant-btn-lg">
-                                    Login now
+                                    <T _str="Login now" />
                                 </Link>
                             }
                         />
@@ -102,7 +102,6 @@ class Register extends Component<Props, State> {
                             <Paragraph className="form-header text-center">
                                 <img className="form-img" src="images/logo_02.png" alt="Logo" />
                                 <Title level={4}>
-                                    {' '}
                                     <T _str="Sign Up" />
                                 </Title>
                             </Paragraph>
@@ -128,12 +127,16 @@ class Register extends Component<Props, State> {
                                         help: errors['username'],
                                         validateStatus: "error"
                                     })}
-                                    /*rules={[
+                                    rules={[
                                         {
                                             required: true,
                                             message: <T _str="Username is required" />,
                                         },
-                                    ]}*/
+                                        {
+                                            min: 4,
+                                            message: <T _str="Username must be at least 4 characters" />,
+                                        }
+                                    ]}
                                 >
                                     <Input placeholder="Username" />
                                 </Form.Item>
@@ -144,7 +147,7 @@ class Register extends Component<Props, State> {
                                         help: errors['email'],
                                         validateStatus: "error"
                                     })}
-                                    /*rules={[
+                                    rules={[
                                         {
                                             type: 'email',
                                             message: <T _str="Invalid Email" />,
@@ -153,7 +156,7 @@ class Register extends Component<Props, State> {
                                             required: true,
                                             message: <T _str="Email is required" />,
                                         },
-                                    ]}*/
+                                    ]}
                                 >
                                     <Input placeholder="Email" />
                                 </Form.Item>
@@ -164,7 +167,7 @@ class Register extends Component<Props, State> {
                                         help: errors['password'],
                                         validateStatus: "error"
                                     })}
-                                    /*rules={[
+                                    rules={[
                                         {
                                             min: 4,
                                             message: <T _str="Password must be at least 4 characters" />,
@@ -173,7 +176,7 @@ class Register extends Component<Props, State> {
                                             required: true,
                                             message: <T _str="Password is required" />,
                                         },
-                                    ]}*/
+                                    ]}
                                 >
                                     <Input.Password placeholder="**********" />
                                 </Form.Item>
@@ -185,7 +188,7 @@ class Register extends Component<Props, State> {
                                         help: errors['confirmPassword'],
                                         validateStatus: "error"
                                     })}
-                                    /*rules={[
+                                    rules={[
                                         {
                                             min: 4,
                                             message: <T _str="Confirm password must be at least 4 characters" />,
@@ -206,7 +209,7 @@ class Register extends Component<Props, State> {
                                                 );
                                             },
                                         }),
-                                    ]}*/
+                                    ]}
                                 >
                                     <Input.Password placeholder="**********" />
                                 </Form.Item>
@@ -219,7 +222,7 @@ class Register extends Component<Props, State> {
                                         help: errors['agreement'],
                                         validateStatus: "error"
                                     })}
-                                    /*rules={[
+                                    rules={[
                                         {
                                             validator: (_, value) =>
                                                 value
@@ -232,15 +235,15 @@ class Register extends Component<Props, State> {
                                                         )
                                                     ),
                                         },
-                                    ]}*/
+                                    ]}
                                 >
                                     <Checkbox>
                                         <T _str="I agree to the" />
                                         <a href="#">
                                             {' '}
                                             <T _str="Terms of Service" />
-                                        </a>{' '}
-                                        <T _str="and" />{' '}
+                                        </a>
+                                        <T _str="and" />
                                         <a href="#">
                                             {' '}
                                             <T _str="Privacy Policy" />

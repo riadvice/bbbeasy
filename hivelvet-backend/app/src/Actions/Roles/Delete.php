@@ -36,13 +36,18 @@ class Delete extends DeleteAction
     {
         $role       = new Role();
         $role_id    = $params['id'];
-        $nbUsers    = count($role->getRoleUsers($role_id));
+        $nbUsers    = $role->getRoleUsers($role_id);
 
-        $resultCode1 = $role->switchAllRoleUser($role_id);
-        $resultCode2 = $role->deleteRolePermissions($role_id);
+        // switch users of this role to lecturer role
+        $resultCode1 = $role->switchAllRoleUsers($role_id);
+
+        // delete permissions of this role
+        $resultCode2 = $role->deleteAllRolePermissions($role_id);
 
         if ($resultCode1 == ResponseCode::HTTP_OK and $resultCode2 == ResponseCode::HTTP_OK) {
+            // delete role after deleting assigned users and permissions
             parent::execute($f3,$params);
+            // if role have users assigned return lecturer role to get switched users
             if ($nbUsers > 0) {
                 $result = $role->getLecturerRole();
                 $this->renderJson(['lecturer' => $result]);

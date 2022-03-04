@@ -21,7 +21,6 @@ import { Link, Navigate } from 'react-router-dom';
 
 import AuthService from '../services/auth.service';
 import { Form, Input, Button, message, Alert, Col, Row, Typography, Card } from 'antd';
-import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import { T } from '@transifex/react';
 
 const { Text, Title, Paragraph } = Typography;
@@ -111,7 +110,6 @@ class Login extends Component<Props, State> {
                         <Paragraph className="form-header text-center">
                             <img className="form-img" src="images/logo_02.png" alt="Logo" />
                             <Title level={4}>
-                                {' '}
                                 <T _str="Log into Your Account" />
                             </Title>
                         </Paragraph>
@@ -137,7 +135,7 @@ class Login extends Component<Props, State> {
                                     help: errors['email'],
                                     validateStatus: "error"
                                 })}
-                                /*rules={[
+                                rules={[
                                     {
                                         type: 'email',
                                         message: <T _str="Invalid Email" />,
@@ -146,7 +144,7 @@ class Login extends Component<Props, State> {
                                         required: true,
                                         message: <T _str="Email is required" />,
                                     },
-                                ]}*/
+                                ]}
                             >
                                 <Input placeholder="Email" />
                             </Form.Item>
@@ -157,7 +155,7 @@ class Login extends Component<Props, State> {
                                     help: errors['password'],
                                     validateStatus: "error"
                                 })}
-                                /*rules={[
+                                rules={[
                                     {
                                         min: 4,
                                         message: <T _str="Password must be at least 4 characters" />,
@@ -166,7 +164,7 @@ class Login extends Component<Props, State> {
                                         required: true,
                                         message: <T _str="Password is required" />,
                                     },
-                                ]}*/
+                                ]}
                             >
                                 <Input.Password placeholder="**********" />
                             </Form.Item>
@@ -182,7 +180,7 @@ class Login extends Component<Props, State> {
                                 <T _str="Forgot your password ?" />{' '}
                             </Text>
                             <Link to={'/reset-password'}>
-                                <T _str="Reset here" />{' '}
+                                <T _str="Reset here" />
                             </Link>
                         </Paragraph>
                     </Card>

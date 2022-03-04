@@ -121,6 +121,7 @@ class App extends Component<Props, State> {
             <Layout>
                 <ConfigProvider locale={language} direction={this.direction} componentSize="large">
                     <AppHeader
+                        currentUser={currentUser}
                         currentLocale={language}
                         setLang={this.setLang}
                         isLogged={isLogged}
