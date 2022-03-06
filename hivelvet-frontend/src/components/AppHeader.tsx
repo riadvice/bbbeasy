@@ -19,9 +19,19 @@
 import React, { Component } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { Layout, Typography, Radio, Button, Menu, Dropdown, Space, Input } from 'antd';
-import { SearchOutlined, GlobalOutlined, DownOutlined, UserOutlined, StarOutlined, ToolOutlined, QuestionCircleOutlined, DatabaseOutlined, LogoutOutlined } from '@ant-design/icons';
+import {
+    SearchOutlined,
+    GlobalOutlined,
+    DownOutlined,
+    UserOutlined,
+    StarOutlined,
+    ToolOutlined,
+    QuestionCircleOutlined,
+    DatabaseOutlined,
+    LogoutOutlined,
+} from '@ant-design/icons';
 
-import authService from "../services/auth.service";
+import authService from '../services/auth.service';
 
 import enUS from 'antd/lib/locale/en_US';
 import frFR from 'antd/lib/locale/fr_FR';
@@ -35,7 +45,7 @@ type userType = {
     username: string;
     email: string;
     role: string;
-}
+};
 type Props = {
     currentLocale: any;
     setLang: any;
@@ -45,7 +55,7 @@ type Props = {
     currentUser: any;
 };
 type State = {
-    user: userType
+    user: userType;
 };
 
 const languages = [
@@ -59,7 +69,7 @@ class AppHeader extends Component<Props, State> {
         super(props);
         const user = authService.getCurrentUser();
         this.state = {
-            user: user
+            user: user,
         };
     }
     handleChange = (e) => {
@@ -91,15 +101,25 @@ class AppHeader extends Component<Props, State> {
         const menuProfile = (
             <Menu>
                 <Menu.Item key="1" className="username-item text-uppercase">
-                    <T _str="Signed in as" /> { currentUser?.username }
+                    <T _str="Signed in as" /> {currentUser?.username}
                 </Menu.Item>
                 <Menu.Divider />
-                <Menu.Item key="2" icon={<UserOutlined />}><T _str="Profile" /></Menu.Item>
-                <Menu.Item key="3" icon={<StarOutlined />}><T _str="Starred" /></Menu.Item>
-                <Menu.Item key="4" icon={<ToolOutlined />}><T _str="Settings" /></Menu.Item>
-                <Menu.Item key="5" icon={<QuestionCircleOutlined />}><T _str="Help" /></Menu.Item>
+                <Menu.Item key="2" icon={<UserOutlined />}>
+                    <T _str="Profile" />
+                </Menu.Item>
+                <Menu.Item key="3" icon={<StarOutlined />}>
+                    <T _str="Starred" />
+                </Menu.Item>
+                <Menu.Item key="4" icon={<ToolOutlined />}>
+                    <T _str="Settings" />
+                </Menu.Item>
+                <Menu.Item key="5" icon={<QuestionCircleOutlined />}>
+                    <T _str="Help" />
+                </Menu.Item>
                 <Menu.Divider />
-                <Menu.Item key="6" icon={<DatabaseOutlined />}><T _str="Side Administration" /></Menu.Item>
+                <Menu.Item key="6" icon={<DatabaseOutlined />}>
+                    <T _str="Side Administration" />
+                </Menu.Item>
                 <Menu.Divider />
                 <Menu.Item key="7" icon={<LogoutOutlined />}>
                     <a onClick={() => this.logout()}>
@@ -118,7 +138,7 @@ class AppHeader extends Component<Props, State> {
 
                     {installed && (
                         <>
-                            {isLogged &&
+                            {isLogged && (
                                 <Input
                                     className="search-input"
                                     size="middle"
@@ -127,7 +147,7 @@ class AppHeader extends Component<Props, State> {
                                     suffix={<SearchOutlined />}
                                     bordered={false}
                                 />
-                            }
+                            )}
                             <Space size="large">
                                 <Dropdown overlay={menuLang} placement="bottomRight" arrow trigger={['click']}>
                                     <Button size="middle" className="text-uppercase">
@@ -151,7 +171,7 @@ class AppHeader extends Component<Props, State> {
                                         arrow
                                         trigger={['click']}
                                     >
-                                        <Button type="primary" icon={<UserOutlined />} className="profil-btn"/>
+                                        <Button type="primary" icon={<UserOutlined />} className="profil-btn" />
                                     </Dropdown>
                                 )}
                             </Space>

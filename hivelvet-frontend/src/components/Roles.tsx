@@ -16,22 +16,30 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, {useContext, useState, useEffect, useRef, Component} from 'react';
-import RolesService from "../services/roles.service";
+import React, { useContext, useState, useEffect, useRef, Component } from 'react';
+import RolesService from '../services/roles.service';
 
 import { PageHeader, Button, Row, Col, Typography, Table, Space, Modal, Popconfirm, notification, Card } from 'antd';
 import { Form, Input, Checkbox } from 'antd';
-import { DeleteOutlined, SearchOutlined, QuestionCircleOutlined, UserOutlined, EditOutlined, KeyOutlined, WarningOutlined } from '@ant-design/icons';
+import {
+    DeleteOutlined,
+    SearchOutlined,
+    QuestionCircleOutlined,
+    UserOutlined,
+    EditOutlined,
+    KeyOutlined,
+    WarningOutlined,
+} from '@ant-design/icons';
 import Highlighter from 'react-highlight-words/dist/main';
-import {FormInstance} from "antd/lib/form";
-import {T} from "@transifex/react";
+import { FormInstance } from 'antd/lib/form';
+import { T } from '@transifex/react';
 
 const { Paragraph, Link } = Typography;
 
 type PaginationType = {
     current?: number;
     pageSize?: number;
-}
+};
 
 interface Item {
     key: number;
@@ -70,7 +78,7 @@ type State = {
     addForm?: any;
 };
 
-class Roles extends Component<Props,State> {
+class Roles extends Component<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state = {
@@ -87,7 +95,7 @@ class Roles extends Component<Props,State> {
 
             expandedKeys: [],
             searchText: '',
-            searchedColumn: ''
+            searchedColumn: '',
         };
     }
 
@@ -111,7 +119,7 @@ class Roles extends Component<Props,State> {
                 const results = response.data;
                 this.setState({
                     loading: false,
-                    data: results.data
+                    data: results.data,
                 });
             })
             .catch((error) => {
@@ -128,7 +136,7 @@ class Roles extends Component<Props,State> {
         this.setState({ pagination: pagination });
     };
 
-    openNotificationWithIcon = (type,message) => {
+    openNotificationWithIcon = (type, message) => {
         notification[type]({
             message: type[0].toUpperCase() + type.slice(1),
             description: message,
@@ -145,17 +153,17 @@ class Roles extends Component<Props,State> {
             .then((response) => {
                 this.setState({
                     loading: true,
-                    isModalVisible: false
+                    isModalVisible: false,
                 });
                 const result = response.data;
-                const newRowData : Item = result.role;
-                this.openNotificationWithIcon('success','Role successfully added');
+                const newRowData: Item = result.role;
+                this.openNotificationWithIcon('success', 'Role successfully added');
                 //delete data of form
                 this.addForm?.resetFields();
                 //add data to table
                 this.setState({
                     loading: false,
-                    data: [...this.state.data, newRowData]
+                    data: [...this.state.data, newRowData],
                 });
             })
             .catch((error) => {
@@ -166,13 +174,13 @@ class Roles extends Component<Props,State> {
             });
     };
     cancelAdd = () => {
-        this.setState({ isModalVisible: false })
+        this.setState({ isModalVisible: false });
     };
     toggleAdd = () => {
         this.addForm?.resetFields();
         this.setState({
             errorsAdd: [],
-            isModalVisible: true
+            isModalVisible: true,
         });
     };
 
@@ -180,9 +188,9 @@ class Roles extends Component<Props,State> {
     editRow = (response, key) => {
         const result = response.data;
         const newRowData = result.role;
-        this.openNotificationWithIcon('success','Role successfully updated');
+        this.openNotificationWithIcon('success', 'Role successfully updated');
         const newData = [...this.state.data];
-        const index = newData.findIndex(item => key === item.key);
+        const index = newData.findIndex((item) => key === item.key);
         if (index > -1 && newRowData != undefined) {
             const item = newData[index];
             newData.splice(index, 1, {
@@ -190,31 +198,30 @@ class Roles extends Component<Props,State> {
                 ...newRowData,
             });
             this.setState({
-                data: newData
+                data: newData,
             });
         }
     };
     toggleEdit = (key) => {
         let keys = [...this.state.expandedKeys];
         if (keys.includes(key)) {
-            keys = keys.filter(item => item !== key);
-        }
-        else {
+            keys = keys.filter((item) => item !== key);
+        } else {
             keys.push(key);
         }
         this.setState({ expandedKeys: keys });
     };
     cancelEdit = (key: React.Key) => {
         this.setState({
-            expandedKeys: this.state.expandedKeys.filter(item => item !== key)
+            expandedKeys: this.state.expandedKeys.filter((item) => item !== key),
         });
     };
     saveEdit = (formValues, key: React.Key) => {
-        RolesService.edit_role({permissions: formValues},key)
+        RolesService.edit_role({ permissions: formValues }, key)
             .then((response) => {
-                this.editRow(response,key);
+                this.editRow(response, key);
                 this.setState({
-                    expandedKeys: this.state.expandedKeys.filter(item => item !== key)
+                    expandedKeys: this.state.expandedKeys.filter((item) => item !== key),
                 });
             })
             .catch((error) => {
@@ -226,8 +233,8 @@ class Roles extends Component<Props,State> {
         const permissionsChecked = record.permissions;
 
         return (
-            <Form initialValues={permissionsChecked} onFinish={(values) => this.saveEdit(values,record.key)}>
-                <Card bordered={false} className='card-parent'>
+            <Form initialValues={permissionsChecked} onFinish={(values) => this.saveEdit(values, record.key)}>
+                <Card bordered={false} className="card-parent">
                     {Object.keys(allPrivileges).map((group) => (
                         <Card key={group} title={group} className="card-mt text-capitalize" type="inner">
                             <Form.Item name={group}>
@@ -235,7 +242,9 @@ class Roles extends Component<Props,State> {
                                     <Row gutter={[32, 16]}>
                                         {allPrivileges[group].map((action) => (
                                             <Col span={Object.keys(allPrivileges).length > 6 && 4} key={action}>
-                                                <Checkbox value={action} className="text-capitalize">{action}</Checkbox>
+                                                <Checkbox value={action} className="text-capitalize">
+                                                    {action}
+                                                </Checkbox>
                                             </Col>
                                         ))}
                                     </Row>
@@ -244,14 +253,20 @@ class Roles extends Component<Props,State> {
                         </Card>
                     ))}
                     <Space size="middle" className="actions-expanded">
-                        <Popconfirm title="Sure to cancel edition ?" placement="leftTop" onConfirm={() => this.cancelEdit(record.key)}>
+                        <Popconfirm
+                            title="Sure to cancel edition ?"
+                            placement="leftTop"
+                            onConfirm={() => this.cancelEdit(record.key)}
+                        >
                             <Button size="middle">Cancel</Button>
                         </Popconfirm>
-                        <Button size="middle" type="primary" htmlType="submit">Save</Button>
+                        <Button size="middle" type="primary" htmlType="submit">
+                            Save
+                        </Button>
                     </Space>
                 </Card>
             </Form>
-        )
+        );
     };
 
     // edit name
@@ -265,7 +280,7 @@ class Roles extends Component<Props,State> {
             </Form>
         );
     };
-    EditableCell: React.FC<EditableCellProps> = ({title, editable, children, dataIndex, record, ...restProps}) => {
+    EditableCell: React.FC<EditableCellProps> = ({ title, editable, children, dataIndex, record, ...restProps }) => {
         const [editing, setEditing] = useState(false);
         const inputRef = useRef(null);
         const [errorsEdit, setErrorsEdit] = React.useState({});
@@ -282,13 +297,13 @@ class Roles extends Component<Props,State> {
         };
         const saveName = async () => {
             try {
-                const values = await editForm.validateFields() as Item;
+                const values = (await editForm.validateFields()) as Item;
                 const key = record.key;
                 setErrorsEdit({});
-                RolesService.edit_role(values,key)
+                RolesService.edit_role(values, key)
                     .then((response) => {
                         toggleEditName();
-                        this.editRow(response,key);
+                        this.editRow(response, key);
                     })
                     .catch((error) => {
                         const responseData = error.response.data;
@@ -298,55 +313,54 @@ class Roles extends Component<Props,State> {
                             setErrorsEdit(err);
                         }
                     });
-            }
-            catch (errInfo) {
+            } catch (errInfo) {
                 console.log('Save failed:', errInfo);
             }
         };
 
         return (
             <td {...restProps}>
-                {
-                    editable ?
-                        editing ? (
-                            <Form.Item
-                                name={dataIndex}
-                                className="input-editable"
-                                {...((dataIndex in errorsEdit && record.key == errorsEdit['key']) && {
+                {editable ? (
+                    editing ? (
+                        <Form.Item
+                            name={dataIndex}
+                            className="input-editable"
+                            {...(dataIndex in errorsEdit &&
+                                record.key == errorsEdit['key'] && {
                                     help: errorsEdit[dataIndex],
-                                    validateStatus: "error"
+                                    validateStatus: 'error',
                                 })}
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: <T _str={`${title} is required.`} />,
-                                    },
-                                ]}
-                            >
-                                <Input ref={inputRef} onPressEnter={saveName} />
-                            </Form.Item>
-                        ) : (
-                            <div className="editable-cell-value-wrap">
-                                {children}
-                                <Button size="small" type="link" icon={<EditOutlined />} onClick={toggleEditName} />
-                            </div>
-                        )
-                        :
-                        children
-                }
+                            rules={[
+                                {
+                                    required: true,
+                                    message: <T _str={`${title} is required.`} />,
+                                },
+                            ]}
+                        >
+                            <Input ref={inputRef} onPressEnter={saveName} />
+                        </Form.Item>
+                    ) : (
+                        <div className="editable-cell-value-wrap">
+                            {children}
+                            <Button size="small" type="link" icon={<EditOutlined />} onClick={toggleEditName} />
+                        </div>
+                    )
+                ) : (
+                    children
+                )}
             </td>
         );
     };
 
     //delete
-    deleteRole = (key,nbUsers) => {
+    deleteRole = (key, nbUsers) => {
         RolesService.delete_role(key)
             .then((response) => {
                 this.setState({ loading: true });
                 const newData = [...this.state.data];
                 if (nbUsers > 0 && response.data.lecturer) {
                     const LecturerRowData = response.data.lecturer;
-                    const index = newData.findIndex(item => item.key === 2);
+                    const index = newData.findIndex((item) => item.key === 2);
                     if (index > -1 && LecturerRowData != undefined) {
                         const item = newData[index];
                         // update lecturer row to get switched users
@@ -358,58 +372,59 @@ class Roles extends Component<Props,State> {
                 }
                 // delete item of this page and add next role to table
                 this.setState({
-                    data: newData.filter(item => item.key !== key),
-                    loading: false
+                    data: newData.filter((item) => item.key !== key),
+                    loading: false,
                 });
-                this.openNotificationWithIcon('success','Role successfully deleted');
+                this.openNotificationWithIcon('success', 'Role successfully deleted');
             })
             .catch((error) => {
                 console.log(error);
             });
-    }
+    };
     handleDelete = (key: React.Key, nbUsers) => {
         if (nbUsers > 0) {
             Modal.confirm({
-                title: <T _str='Do you Want to delete this role ?' />,
+                title: <T _str="Do you Want to delete this role ?" />,
                 icon: <WarningOutlined />,
-                content: <T _str='This role already has users assigned, if you confirm all users switch to role Lecturer' />,
+                content: (
+                    <T _str="This role already has users assigned, if you confirm all users switch to role Lecturer" />
+                ),
                 okType: 'danger',
-                okText: <T _str='Yes' />,
-                cancelText: <T _str='No' />,
-                onOk: () => this.deleteRole(key,nbUsers)
+                okText: <T _str="Yes" />,
+                cancelText: <T _str="No" />,
+                onOk: () => this.deleteRole(key, nbUsers),
             });
-        }
-        else {
-            this.deleteRole(key,nbUsers);
+        } else {
+            this.deleteRole(key, nbUsers);
         }
     };
 
     //search
     searchInput;
-    handleReset = clearFilters => {
+    handleReset = (clearFilters) => {
         clearFilters();
         this.setState({ searchText: '' });
     };
     handleSearch = (selectedKeys, confirm, dataIndex, closed = false) => {
-        if (closed)
-            confirm({ closeDropdown: false });
-        else
-            confirm();
+        if (closed) confirm({ closeDropdown: false });
+        else confirm();
         this.setState({
             searchText: selectedKeys[0],
             searchedColumn: dataIndex,
         });
     };
-    getColumnSearchProps = dataIndex => ({
+    getColumnSearchProps = (dataIndex) => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
             <div className="table-search-bloc">
                 <Input
                     size="middle"
                     className="table-search-input"
-                    ref={node => { this.searchInput = node }}
+                    ref={(node) => {
+                        this.searchInput = node;
+                    }}
                     placeholder={`Search ${dataIndex}`}
                     value={selectedKeys[0]}
-                    onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+                    onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
                     onPressEnter={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
                 />
                 <Space className="table-search-btn">
@@ -421,10 +436,7 @@ class Roles extends Component<Props,State> {
                     >
                         Search
                     </Button>
-                    <Button
-                        size="small"
-                        onClick={() => this.handleReset(clearFilters)}
-                    >
+                    <Button size="small" onClick={() => this.handleReset(clearFilters)}>
                         Reset
                     </Button>
                     <Button
@@ -437,41 +449,35 @@ class Roles extends Component<Props,State> {
                 </Space>
             </div>
         ),
-        filterIcon: filtered => <SearchOutlined className={ filtered ? 'search-icon-filtered' : undefined } />,
+        filterIcon: (filtered) => <SearchOutlined className={filtered ? 'search-icon-filtered' : undefined} />,
         onFilter: (value, record) => {
             if (value.indexOf(' ') != -1) {
                 value = value[0] == ' ' ? value.slice(1) : value;
                 value = value[value.length - 1] == ' ' ? value.slice(0, -1) : value;
                 value = value.replace(' ', '_');
             }
-            return (
-                record[dataIndex] ?
-                    record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
-                    : ''
-            );
+            return record[dataIndex] ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()) : '';
         },
-        onFilterDropdownVisibleChange: visible => {
+        onFilterDropdownVisibleChange: (visible) => {
             if (visible) {
                 setTimeout(() => this.searchInput.select(), 100);
             }
         },
-        render: text => {
+        render: (text) => {
             if (dataIndex == 'name' && text != '') {
                 text = text.replace('_', ' ');
                 text = text[0].toUpperCase() + text.slice(1);
             }
-            return (
-                this.state.searchedColumn === dataIndex ? (
-                    <Highlighter
-                        //highlightClassName ='search-text-highlighted'
-                        searchWords={[this.state.searchText]}
-                        autoEscape
-                        textToHighlight={text ? text.toString() : ''}
-                    />
-                ) : (
-                    text
-                )
-            )
+            return this.state.searchedColumn === dataIndex ? (
+                <Highlighter
+                    //highlightClassName ='search-text-highlighted'
+                    searchWords={[this.state.searchText]}
+                    autoEscape
+                    textToHighlight={text ? text.toString() : ''}
+                />
+            ) : (
+                text
+            );
         },
     });
 
@@ -496,7 +502,7 @@ class Roles extends Component<Props,State> {
                             <UserOutlined />
                             <span>{users}</span>
                         </Space>
-                    )
+                    );
                 },
             },
             {
@@ -504,28 +510,32 @@ class Roles extends Component<Props,State> {
                 editable: false,
                 render: (text, record) => {
                     return (
-                        <Space size="middle" className={expandedKeys.includes(record.key) ? 'table-actions editable' : 'table-actions'}>
-                            {record.key != 1 &&
+                        <Space
+                            size="middle"
+                            className={expandedKeys.includes(record.key) ? 'table-actions editable' : 'table-actions'}
+                        >
+                            {record.key != 1 && (
                                 <Link onClick={() => this.toggleEdit(record.key)}>
-                                    <KeyOutlined/> Permissions
+                                    <KeyOutlined /> Permissions
                                 </Link>
-                            }
-                            {record.key != 1 && record.key != 2 &&
+                            )}
+                            {record.key != 1 && record.key != 2 && (
                                 <Popconfirm
                                     title="Are you sure to delete this role ?"
                                     icon={<QuestionCircleOutlined className="red-icon" />}
-                                    onConfirm={() => this.handleDelete(record.key,record.users)}>
+                                    onConfirm={() => this.handleDelete(record.key, record.users)}
+                                >
                                     <Link>
                                         <DeleteOutlined /> Delete
                                     </Link>
                                 </Popconfirm>
-                            }
+                            )}
                         </Space>
                     );
                 },
             },
         ];
-        const mergedColumns = columns.map(col => {
+        const mergedColumns = columns.map((col) => {
             if (!col.editable) {
                 return col;
             }
@@ -548,7 +558,7 @@ class Roles extends Component<Props,State> {
                     extra={[
                         <Button key="1" type="primary" onClick={this.toggleAdd}>
                             <T _str="New Role" />
-                        </Button>
+                        </Button>,
                     ]}
                 />
 
@@ -564,7 +574,7 @@ class Roles extends Component<Props,State> {
                 >
                     <Form
                         layout="vertical"
-                        ref={(form) => this.addForm = form }
+                        ref={(form) => (this.addForm = form)}
                         initialValues={{ name: '' }}
                         hideRequiredMark
                         onFinish={this.handleAdd}
@@ -573,9 +583,9 @@ class Roles extends Component<Props,State> {
                         <Form.Item
                             label={<T _str="Name" />}
                             name="name"
-                            {...(('name' in errorsAdd) && {
+                            {...('name' in errorsAdd && {
                                 help: errorsAdd['name'],
-                                validateStatus: "error"
+                                validateStatus: 'error',
                             })}
                             rules={[
                                 {
@@ -596,7 +606,9 @@ class Roles extends Component<Props,State> {
                                         <Row gutter={[32, 16]}>
                                             {allPrivileges[group].map((action) => (
                                                 <Col span={Object.keys(allPrivileges).length > 3 && 8} key={action}>
-                                                    <Checkbox value={action} className="text-capitalize">{action}</Checkbox>
+                                                    <Checkbox value={action} className="text-capitalize">
+                                                        {action}
+                                                    </Checkbox>
                                                 </Col>
                                             ))}
                                         </Row>
@@ -629,11 +641,10 @@ class Roles extends Component<Props,State> {
                         pagination={pagination}
                         loading={loading}
                         onChange={this.handleTableChange}
-
                         expandable={{
                             expandedRowRender: this.expandedRowRender,
                             showExpandColumn: false,
-                            expandedRowKeys: expandedKeys
+                            expandedRowKeys: expandedKeys,
                         }}
                     />
                 </Paragraph>

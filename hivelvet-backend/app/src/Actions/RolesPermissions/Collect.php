@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Actions\RolesPermissions;
 
 use Actions\Base as BaseAction;
-use Base;
 use Utils\PrivilegeUtils;
 
 /**
@@ -32,13 +31,14 @@ use Utils\PrivilegeUtils;
 class Collect extends BaseAction
 {
     /**
-     * @param Base  $f3
-     * @param array $params
+     * @param $f3
+     * @param $params
+     *
+     * @throws \JsonException
      */
     public function execute($f3, $params): void
     {
-        $privileges = PrivilegeUtils::listSystemPrivileges();
-        $this->logger->debug('collecting privileges for manage roles', ['roles' => json_encode($privileges)]);
+        $this->logger->debug('Collecting privileges for manage roles', ['roles' => json_encode($privileges = PrivilegeUtils::listSystemPrivileges())]);
         $this->renderJson($privileges);
     }
 }

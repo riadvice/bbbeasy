@@ -47,9 +47,9 @@ class Install extends BaseAction
          * @todo for future tasks
          * if ($f3->get('system.installed') === false) {
          */
-        $body           = $this->getDecodedBody();
-        $form           = $body['data'];
-        $dataChecker    = new DataChecker();
+        $body        = $this->getDecodedBody();
+        $form        = $body['data'];
+        $dataChecker = new DataChecker();
 
         $dataChecker->verify($form['username'], Validator::length(4)->setName('username'));
         $dataChecker->verify($form['email'], Validator::email()->setName('email'));

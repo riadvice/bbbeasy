@@ -192,8 +192,14 @@ class App extends Component<Props, State> {
                                         }
                                     />
 
-                                    <Route path="/settings/roles" element={<PrivateRoute><Roles /></PrivateRoute>}/>
-
+                                    <Route
+                                        path="/settings/roles"
+                                        element={
+                                            <PrivateRoute>
+                                                <Roles />
+                                            </PrivateRoute>
+                                        }
+                                    />
                                 </Routes>
                             ) : (
                                 <Routes>

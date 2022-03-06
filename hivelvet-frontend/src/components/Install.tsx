@@ -132,9 +132,9 @@ const Install = (props: Props) => {
                 <Form.Item
                     label={<T _str="Username" />}
                     name="username"
-                    {...(('username' in errorsStep1) && {
+                    {...('username' in errorsStep1 && {
                         help: errorsStep1['username'],
-                        validateStatus: "error"
+                        validateStatus: 'error',
                     })}
                     rules={[
                         {
@@ -144,7 +144,7 @@ const Install = (props: Props) => {
                         {
                             min: 4,
                             message: <T _str="Username must be at least 4 characters" />,
-                        }
+                        },
                     ]}
                 >
                     <Input placeholder="Username" />
@@ -153,19 +153,19 @@ const Install = (props: Props) => {
                 <Form.Item
                     label={<T _str="Email" />}
                     name="email"
-                    {...(('email' in errorsStep1) && {
+                    {...('email' in errorsStep1 && {
                         help: errorsStep1['email'],
-                        validateStatus: "error"
+                        validateStatus: 'error',
                     })}
                     rules={[
                         {
                             required: true,
-                            message: <T _str='Email is required' />,
+                            message: <T _str="Email is required" />,
                         },
                         {
                             type: 'email',
-                            message: <T _str='Email is invalid' />,
-                        }
+                            message: <T _str="Email is invalid" />,
+                        },
                     ]}
                 >
                     <Input placeholder="Email" />
@@ -173,22 +173,22 @@ const Install = (props: Props) => {
                 <Form.Item
                     label={<T _str="Password" />}
                     name="password"
-                    {...(('password' in errorsStep1) && {
+                    {...('password' in errorsStep1 && {
                         help: errorsStep1['password'],
-                        validateStatus: "error"
+                        validateStatus: 'error',
                     })}
                     rules={[
                         {
                             min: 4,
-                            message: <T _str='Password must be at least 4 characters' />,
+                            message: <T _str="Password must be at least 4 characters" />,
                         },
                         {
                             required: true,
-                            message: <T _str='Password is required' />,
+                            message: <T _str="Password is required" />,
                         },
                     ]}
                 >
-                    <Input.Password placeholder="Password"/>
+                    <Input.Password placeholder="Password" />
                 </Form.Item>
             </div>
         );
@@ -230,14 +230,14 @@ const Install = (props: Props) => {
                     <Form.Item
                         label={<T _str="Company name" />}
                         name="company_name"
-                        {...(('company_name' in errorsStep2) && {
+                        {...('company_name' in errorsStep2 && {
                             help: errorsStep2['company_name'],
-                            validateStatus: "error"
+                            validateStatus: 'error',
                         })}
                         rules={[
                             {
                                 required: true,
-                                message: <T _str='Company name is required' />,
+                                message: <T _str="Company name is required" />,
                             },
                         ]}
                     >
@@ -247,18 +247,18 @@ const Install = (props: Props) => {
                     <Form.Item
                         label={<T _str="Company website" />}
                         name="company_url"
-                        {...(('company_url' in errorsStep2) && {
+                        {...('company_url' in errorsStep2 && {
                             help: errorsStep2['company_url'],
-                            validateStatus: "error"
+                            validateStatus: 'error',
                         })}
                         rules={[
                             {
                                 required: true,
-                                message: <T _str='Company website is required' />,
+                                message: <T _str="Company website is required" />,
                             },
                             {
                                 type: 'url',
-                                message: <T _str='Company website is not a valid url' />,
+                                message: <T _str="Company website is not a valid url" />,
                             },
                         ]}
                     >
@@ -268,14 +268,14 @@ const Install = (props: Props) => {
                     <Form.Item
                         label={<T _str="Platform name" />}
                         name="platform_name"
-                        {...(('platform_name' in errorsStep2) && {
+                        {...('platform_name' in errorsStep2 && {
                             help: errorsStep2['platform_name'],
-                            validateStatus: "error"
+                            validateStatus: 'error',
                         })}
                         rules={[
                             {
                                 required: true,
-                                message: <T _str='Platform name is required' />,
+                                message: <T _str="Platform name is required" />,
                             },
                         ]}
                     >
@@ -285,14 +285,14 @@ const Install = (props: Props) => {
                     <Form.Item
                         label={<T _str="Terms of use URL" />}
                         name="term_url"
-                        {...(('term_url' in errorsStep2) && {
+                        {...('term_url' in errorsStep2 && {
                             help: errorsStep2['term_url'],
-                            validateStatus: "error"
+                            validateStatus: 'error',
                         })}
                         rules={[
                             {
                                 type: 'url',
-                                message: <T _str='Term of use url is not a valid url' />,
+                                message: <T _str="Term of use url is not a valid url" />,
                             },
                         ]}
                     >
@@ -302,14 +302,14 @@ const Install = (props: Props) => {
                     <Form.Item
                         label={<T _str="Privacy Policy URL" />}
                         name="policy_url"
-                        {...(('policy_url' in errorsStep2) && {
+                        {...('policy_url' in errorsStep2 && {
                             help: errorsStep2['policy_url'],
-                            validateStatus: "error"
+                            validateStatus: 'error',
                         })}
                         rules={[
                             {
                                 type: 'url',
-                                message: <T _str='Privacy Policy url is not a valid url' />,
+                                message: <T _str="Privacy Policy url is not a valid url" />,
                             },
                         ]}
                     >
@@ -349,7 +349,7 @@ const Install = (props: Props) => {
                                     <InboxOutlined />
                                 </p>
                                 <Text strong className="ant-upload-text">
-                                    <T _str='Drop your logo here' />
+                                    <T _str="Drop your logo here" />
                                 </Text>
                                 <p className="ant-upload-hint">.png .jpg .jpeg ...</p>
                             </Dragger>
@@ -360,7 +360,9 @@ const Install = (props: Props) => {
                             <ColorPicker
                                 animation="slide-up"
                                 defaultColor={primaryColor}
-                                onClose={(color) => { setPrimaryColor(color.color) }}
+                                onClose={(color) => {
+                                    setPrimaryColor(color.color);
+                                }}
                                 placement="bottomLeft"
                             >
                                 <span className="rc-color-picker-trigger" />
@@ -372,7 +374,9 @@ const Install = (props: Props) => {
                             <ColorPicker
                                 animation="slide-up"
                                 defaultColor={secondaryColor}
-                                onClose={(color) => { setSecondaryColor(color.color) }}
+                                onClose={(color) => {
+                                    setSecondaryColor(color.color);
+                                }}
                                 placement="bottomLeft"
                             >
                                 <span className="rc-color-picker-trigger" />
@@ -384,7 +388,9 @@ const Install = (props: Props) => {
                             <ColorPicker
                                 animation="slide-up"
                                 defaultColor={accentColor}
-                                onClose={(color) => { setAccentColor(color.color) }}
+                                onClose={(color) => {
+                                    setAccentColor(color.color);
+                                }}
                                 placement="bottomLeft"
                             >
                                 <span className="rc-color-picker-trigger" />
@@ -396,7 +402,9 @@ const Install = (props: Props) => {
                             <ColorPicker
                                 animation="slide-up"
                                 defaultColor={addColor}
-                                onClose={(color) => { setAddColor(color.color) }}
+                                onClose={(color) => {
+                                    setAddColor(color.color);
+                                }}
                                 placement="bottomLeft"
                             >
                                 <span className="rc-color-picker-trigger" />
@@ -432,7 +440,9 @@ const Install = (props: Props) => {
                     <Alert
                         className="settings-info"
                         type="info"
-                        message={<T _str="Click on each button to customise the configuration group and hover it to get its summary." />}
+                        message={
+                            <T _str="Click on each button to customise the configuration group and hover it to get its summary." />
+                        }
                         closeText={<T _str="I understand, thank you!" />}
                     />
                 </Paragraph>
@@ -479,7 +489,7 @@ const Install = (props: Props) => {
                         footer={[
                             <Button key="submit" type="primary" onClick={handleOk}>
                                 <T _str="Confirm" />
-                            </Button>
+                            </Button>,
                         ]}
                     >
                         <div className="presets-body">
@@ -493,7 +503,9 @@ const Install = (props: Props) => {
                                             checkedChildren={<CheckOutlined />}
                                             unCheckedChildren={<CloseOutlined />}
                                             defaultChecked={item.status == true ? true : false}
-                                            onChange={(checked) => { item.status = checked }}
+                                            onChange={(checked) => {
+                                                item.status = checked;
+                                            }}
                                         />
                                     </Form.Item>
                                 </div>
@@ -576,7 +588,8 @@ const Install = (props: Props) => {
                 const fdata = new FormData();
                 fdata.append('logo', file.originFileObj, file.originFileObj.name);
                 fdata.append('logo_name', file.originFileObj.name);
-                axios.post(API_URL + '/save-logo', fdata)
+                axios
+                    .post(API_URL + '/save-logo', fdata)
                     .then((response) => {
                         console.log(response);
                     })

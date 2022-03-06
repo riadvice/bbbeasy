@@ -42,41 +42,43 @@ class Collect extends BaseAction
         foreach ($classes as $className) {
             if (str_starts_with($className, 'ComposerAutoloaderInit')) {
                 $autoloaderClassName = $className;
+
                 break;
             }
         }
         $classLoader = $autoloaderClassName::getLoader();
-        $classMap = $classLoader->getClassMap();
+        $classMap    = $classLoader->getClassMap();
 
         $categories = preg_filter('/^Enum\\\Presets\\\[A-Z a-z]*/', '$0', array_keys($classMap));
 
         $counter = 1;
         if ($categories) {
             foreach ($categories as $category) {
-                $categoryName = explode("\\", $category)[2];
-                preg_match_all('/[A-Z]/', $categoryName,$matches, PREG_OFFSET_CAPTURE);
-                $secondMajOcc = array_key_exists(1, $matches[0]) ? $matches[0][1][1] : null;
-                if ($secondMajOcc and $categoryName != 'ZcaleRight')
-                    $categoryName = substr($categoryName,0,$secondMajOcc).' '.substr($categoryName,$secondMajOcc);
+                $categoryName = explode('\\', $category)[2];
+                preg_match_all('/[A-Z]/', $categoryName, $matches, PREG_OFFSET_CAPTURE);
+                $secondMajOcc = \array_key_exists(1, $matches[0]) ? $matches[0][1][1] : null;
+                if ($secondMajOcc && 'ZcaleRight' !== $categoryName) {
+                    $categoryName = mb_substr($categoryName, 0, $secondMajOcc) . ' ' . mb_substr($categoryName, $secondMajOcc);
+                }
 
-                $class          = new \ReflectionClass($category);
-                $modelInstance  = $class->newInstance();
-                $categoryIcon   = $modelInstance::staticProperties()['icon'];
-                $categoryData = [
+                $class         = new \ReflectionClass($category);
+                $modelInstance = $class->newInstance();
+                $categoryIcon  = $modelInstance::staticProperties()['icon'];
+                $categoryData  = [
                     'name'          => $categoryName,
                     'icon'          => $categoryIcon,
                     'subcategories' => [],
                 ];
-                $subCategories  = $modelInstance::values();
+                $subCategories = $modelInstance::values();
                 foreach ($subCategories as $subCategory) {
-                    $subCategory = ucfirst(str_replace('_',' ',$subCategory));
+                    $subCategory     = ucfirst(str_replace('_', ' ', $subCategory));
                     $subCategoryData = [
-                        'id'     =>$counter,
+                        'id'     => $counter,
                         'name'   => $subCategory,
                         'status' => false,
                     ];
                     $categoryData['subcategories'][] = $subCategoryData;
-                    $counter++;
+                    ++$counter;
                 }
 
                 $data[] = $categoryData;

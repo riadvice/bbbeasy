@@ -56,9 +56,9 @@ class Login extends Component<Props, State> {
             .then((response) => {
                 if (response.data.username && response.data.email && response.data.role) {
                     const user_infos = {
-                        username:   response.data.username,
-                        email:      response.data.email,
-                        role:       response.data.role,
+                        username: response.data.username,
+                        email: response.data.email,
+                        role: response.data.role,
                     };
                     message.success({
                         content: 'Welcome back ' + user_infos.username + ' !',
@@ -131,9 +131,9 @@ class Login extends Component<Props, State> {
                             <Form.Item
                                 label={<T _str="Email" />}
                                 name="email"
-                                {...(('email' in errors) && {
+                                {...('email' in errors && {
                                     help: errors['email'],
-                                    validateStatus: "error"
+                                    validateStatus: 'error',
                                 })}
                                 rules={[
                                     {
@@ -151,9 +151,9 @@ class Login extends Component<Props, State> {
                             <Form.Item
                                 label={<T _str="Password" />}
                                 name="password"
-                                {...(('password' in errors) && {
+                                {...('password' in errors && {
                                     help: errors['password'],
-                                    validateStatus: "error"
+                                    validateStatus: 'error',
                                 })}
                                 rules={[
                                     {
