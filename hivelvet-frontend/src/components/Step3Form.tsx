@@ -63,7 +63,9 @@ export const Step3Form = (props: Props) => {
                 <Alert
                     className="settings-info"
                     type="info"
-                    message={<T _str="Click on each button to customise the configuration group and hover it to get its summary." />}
+                    message={
+                        <T _str="Click on each button to customise the configuration group and hover it to get its summary." />
+                    }
                     closeText={<T _str="I understand, thank you!" />}
                 />
             </Paragraph>
@@ -109,7 +111,7 @@ export const Step3Form = (props: Props) => {
                     footer={[
                         <Button key="submit" type="primary" onClick={() => setIsModalVisible(false)}>
                             <T _str="Confirm" />
-                        </Button>
+                        </Button>,
                     ]}
                 >
                     <div className="presets-body">
@@ -120,7 +122,9 @@ export const Step3Form = (props: Props) => {
                                         checkedChildren={<CheckOutlined />}
                                         unCheckedChildren={<CloseOutlined />}
                                         defaultChecked={item.status == true ? true : false}
-                                        onChange={(checked) => { item.status = checked }}
+                                        onChange={(checked) => {
+                                            item.status = checked;
+                                        }}
                                     />
                                 </Form.Item>
                             </div>

@@ -32,18 +32,18 @@ class RolesService {
     }
 
     add_role(data: object) {
-        return axios.post(API_URL + '/roles/add',{
-            data
+        return axios.post(API_URL + '/roles/add', {
+            data,
         });
     }
-    edit_role(data: object,id) {
-        return axios.put(API_URL + '/roles/edit/'+id,{
-            data
+    edit_role(data: object, id) {
+        return axios.put(API_URL + '/roles/edit/' + id, {
+            data,
         });
     }
 
     delete_role(id: number) {
-        return axios.delete(API_URL + '/roles/delete/'+id);
+        return axios.delete(API_URL + '/roles/delete/' + id);
     }
 }
 

@@ -44,18 +44,16 @@ class PrivilegeUtils
 
         /*
          * @todo:
-         * 1 - Filter classes starting with Actions\
-         * 2 - Retain classes having only a secondary names space (2 \)
-         * 3 - Filter classes having RequirePrivilegeTrait
-         * 4 - Actions\Group\PrivilegeName
          * 5 - Later put the list in redis cache when the application starts the first time
          */
         $classMap = $classLoader->getClassMap();
-        $actions  = preg_filter('/^Actions\\\[A-Z a-z]*\\\[A-Z a-z]*/', '$0', array_keys($classMap));
+        // Filter classes starting with "Actions\" having only a secondary names space (2 \)
+        $actions = preg_filter('/^Actions\\\[A-Z a-z]*\\\[A-Z a-z]*/', '$0', array_keys($classMap));
 
         foreach ($actions as $action) {
             $class = new \ReflectionClass($action);
             if (\in_array($prvilegeTtrait, $class->getTraitNames(), true)) {
+                // Filter classes having RequirePrivilegeTrait
                 $privilegeInfos = explode('\\', $action);
                 array_shift($privilegeInfos);
                 $privileges[Base::instance()->snakecase($privilegeInfos[0])][] = Base::instance()->snakecase($privilegeInfos[1]);

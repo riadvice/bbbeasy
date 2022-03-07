@@ -27,9 +27,17 @@ const AppFooter = () => {
     return (
         <Footer className="site-footer">
             <Text type="secondary">
-                ©2022 <Button type="link"> <T _str="RIADVICE" /></Button> <T _str="All rights reserved" />
+                ©2022{' '}
+                <Button type="link">
+                    {' '}
+                    <T _str="RIADVICE" />
+                </Button>{' '}
+                <T _str="All rights reserved" />
             </Text>
-            <Text type="secondary"> <T _str="Term & Conditions" /> | <T _str="Privacy Policy" /></Text>
+            <Text type="secondary">
+                {' '}
+                <T _str="Term & Conditions" /> | <T _str="Privacy Policy" />
+            </Text>
         </Footer>
     );
 };

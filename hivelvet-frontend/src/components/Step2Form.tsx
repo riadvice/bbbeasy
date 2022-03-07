@@ -74,10 +74,10 @@ export const Step2Form = (props: Props) => {
                 <Form.Item
                     label={<T _str="Company name" />}
                     name="company_name"
-                    {...(('company_name' in errors) && {
+                    {...('company_name' in errors) && {
                         help: errors['company_name'],
                         validateStatus: "error"
-                    })}
+                    }}
                     rules={[
                         {
                             required: true,
@@ -91,10 +91,10 @@ export const Step2Form = (props: Props) => {
                 <Form.Item
                     label={<T _str="Company website" />}
                     name="company_url"
-                    {...(('company_url' in errors) && {
+                    {...('company_url' in errors) && {
                         help: errors['company_url'],
                         validateStatus: "error"
-                    })}
+                    }}
                     rules={[
                         {
                             required: true,
@@ -112,10 +112,10 @@ export const Step2Form = (props: Props) => {
                 <Form.Item
                     label={<T _str="Platform name" />}
                     name="platform_name"
-                    {...(('platform_name' in errors) && {
+                    {...('platform_name' in errors) && {
                         help: errors['platform_name'],
                         validateStatus: "error"
-                    })}
+                    }}
                     rules={[
                         {
                             required: true,
@@ -129,10 +129,10 @@ export const Step2Form = (props: Props) => {
                 <Form.Item
                     label={<T _str="Terms of use URL" />}
                     name="term_url"
-                    {...(('term_url' in errors) && {
+                    {...('term_url' in errors) && {
                         help: errors['term_url'],
                         validateStatus: "error"
-                    })}
+                    }}
                     rules={[
                         {
                             type: 'url',
@@ -146,14 +146,14 @@ export const Step2Form = (props: Props) => {
                 <Form.Item
                     label={<T _str="Privacy Policy URL" />}
                     name="policy_url"
-                    {...(('policy_url' in errors) && {
+                    {...('policy_url' in errors) && {
                         help: errors['policy_url'],
-                        validateStatus: "error"
-                    })}
+                        validateStatus: 'error',
+                    }}
                     rules={[
                         {
                             type: 'url',
-                            message: <T _str='Privacy Policy url is not a valid url' />,
+                            message: <T _str="Privacy Policy url is not a valid url" />,
                         },
                     ]}
                 >
@@ -193,7 +193,7 @@ export const Step2Form = (props: Props) => {
                                 <InboxOutlined />
                             </p>
                             <Text strong className="ant-upload-text">
-                                <T _str='Drop your logo here' />
+                                <T _str="Drop your logo here" />
                             </Text>
                             <p className="ant-upload-hint">.png .jpg .jpeg ...</p>
                         </Dragger>
@@ -204,7 +204,9 @@ export const Step2Form = (props: Props) => {
                         <ColorPicker
                             animation="slide-up"
                             defaultColor={primaryColor}
-                            onClose={(color) => { setPrimaryColor(color.color) }}
+                            onClose={(color) => {
+                                setPrimaryColor(color.color)
+                            }}
                             placement="bottomLeft"
                         >
                             <span className="rc-color-picker-trigger" />
@@ -216,7 +218,9 @@ export const Step2Form = (props: Props) => {
                         <ColorPicker
                             animation="slide-up"
                             defaultColor={secondaryColor}
-                            onClose={(color) => { setSecondaryColor(color.color) }}
+                            onClose={(color) => {
+                                setSecondaryColor(color.color)
+                            }}
                             placement="bottomLeft"
                         >
                             <span className="rc-color-picker-trigger" />
@@ -228,7 +232,9 @@ export const Step2Form = (props: Props) => {
                         <ColorPicker
                             animation="slide-up"
                             defaultColor={accentColor}
-                            onClose={(color) => { setAccentColor(color.color) }}
+                            onClose={(color) => {
+                                setAccentColor(color.color)
+                            }}
                             placement="bottomLeft"
                         >
                             <span className="rc-color-picker-trigger" />
@@ -240,7 +246,9 @@ export const Step2Form = (props: Props) => {
                         <ColorPicker
                             animation="slide-up"
                             defaultColor={addColor}
-                            onClose={(color) => { setAddColor(color.color) }}
+                            onClose={(color) => {
+                                setAddColor(color.color)
+                            }}
                             placement="bottomLeft"
                         >
                             <span className="rc-color-picker-trigger" />

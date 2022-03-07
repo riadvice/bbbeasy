@@ -35,8 +35,10 @@ use Validation\DataChecker;
 class Edit extends BaseAction
 {
     /**
-     * @param \Base $f3
-     * @param array $params
+     * @param $f3
+     * @param $params
+     *
+     * @throws \JsonException
      */
     public function save($f3, $params): void
     {
@@ -48,25 +50,24 @@ class Edit extends BaseAction
 
         if ($role->valid()) {
             if (isset($form['name'])) {
-                $dataChecker  = new DataChecker();
+                $dataChecker = new DataChecker();
                 $dataChecker->verify($form['name'], Validator::notEmpty()->setName('name'));
 
                 if ($dataChecker->allValid()) {
                     $checkRole = new Role();
-                    $name = str_replace(' ', '_', strtolower($form['name']));
+                    $name      = str_replace(' ', '_', mb_strtolower($form['name']));
 
                     if ($checkRole->nameExists($name, $role->id)) {
                         $this->logger->error('Role could not be updated', ['error' => 'Name already exist']);
                         $this->renderJson(['errors' => ['name' => 'Name already exist']], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+
                         return;
                     }
-                    else {
-                        $role->name         = $name;
-                        $role->updated_on   = date('Y-m-d H:i:s');
-                    }
-                }
-                else {
+
+                    $role->name = $name;
+                } else {
                     $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
+
                     return;
                 }
             }
@@ -76,10 +77,10 @@ class Edit extends BaseAction
                 $oldPermissions = $role->getRolePermissions();
                 foreach ($newPermissions as $group => $actions) {
                     // check if role have permissions assigned and group exist
-                    if (gettype($oldPermissions) == 'array' && $oldPermissions[$group]) {
+                    if (\is_array($oldPermissions) && $oldPermissions[$group]) {
                         // delete or add new actions of this group
-                        $deletedActions = array_diff($oldPermissions[$group],$actions);
-                        $addedActions = array_diff($actions, $oldPermissions[$group]);
+                        $deletedActions = array_diff($oldPermissions[$group], $actions);
+                        $addedActions   = array_diff($actions, $oldPermissions[$group]);
                         if (!empty($deletedActions)) {
                             //delete role permissions
                             foreach ($deletedActions as $deletedAction) {
@@ -88,8 +89,7 @@ class Edit extends BaseAction
                                 $deleteResult = $rolePermission->erase();
                                 if ($deleteResult) {
                                     $this->logger->info('Role permission successfully deleted');
-                                }
-                                else {
+                                } else {
                                     $this->logger->critical('Error occurred while deleting role permission', ['rolePermission' => $rolePermission->toArray()]);
                                     $this->renderJson([], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
                                 }
@@ -98,15 +98,15 @@ class Edit extends BaseAction
                         if (!empty($addedActions)) {
                             // add role permissions
                             foreach ($addedActions as $addedAction) {
-                                $rolePermission = new RolePermission();
-                                $rolePermission->group      = $group;
-                                $rolePermission->name       = $addedAction;
-                                $rolePermission->role_id    = $role_id;
+                                $rolePermission          = new RolePermission();
+                                $rolePermission->group   = $group;
+                                $rolePermission->name    = $addedAction;
+                                $rolePermission->role_id = $role_id;
+
                                 try {
                                     $rolePermission->save();
                                     $this->logger->info('Role permission successfully added', ['rolePermission' => $rolePermission->toArray()]);
-                                }
-                                catch (\Exception $e) {
+                                } catch (\Exception $e) {
                                     $this->logger->error('Role permission could not be added', ['error' => $e->getMessage()]);
                                     $this->renderJson(['errors' => $e->getMessage()], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
 
@@ -120,15 +120,15 @@ class Edit extends BaseAction
                         if (!empty($actions)) {
                             // new role permissions
                             foreach ($actions as $newAction) {
-                                $rolePermission = new RolePermission();
-                                $rolePermission->group      = $group;
-                                $rolePermission->name       = $newAction;
-                                $rolePermission->role_id    = $role_id;
+                                $rolePermission          = new RolePermission();
+                                $rolePermission->group   = $group;
+                                $rolePermission->name    = $newAction;
+                                $rolePermission->role_id = $role_id;
+
                                 try {
                                     $rolePermission->save();
                                     $this->logger->info('Role permission successfully added', ['rolePermission' => $rolePermission->toArray()]);
-                                }
-                                catch (\Exception $e) {
+                                } catch (\Exception $e) {
                                     $this->logger->error('Role permission could not be added', ['error' => $e->getMessage()]);
                                     $this->renderJson(['errors' => $e->getMessage()], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
 
@@ -138,12 +138,11 @@ class Edit extends BaseAction
                         }
                     }
                 }
-                $role->updated_on = date('Y-m-d H:i:s');
             }
+
             try {
                 $role->save();
-            }
-            catch (\Exception $e) {
+            } catch (\Exception $e) {
                 $this->logger->error('Role could not be updated', ['error' => $e->getMessage()]);
                 $this->renderJson(['errors' => $e->getMessage()], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
 
@@ -152,14 +151,13 @@ class Edit extends BaseAction
 
             $this->logger->info('Role successfully updated', ['role' => $role->toArray()]);
             $result = [
-                'key'           => $role->id,
-                'name'          => $role->name,
-                'users'         => $role->getRoleUsers(),
-                'permissions'   => $role->getRolePermissions()
+                'key'         => $role->id,
+                'name'        => $role->name,
+                'users'       => $role->getRoleUsers(),
+                'permissions' => $role->getRolePermissions(),
             ];
-            $this->renderJson(['result' => 'success','role' => $result]);
-        }
-        else {
+            $this->renderJson(['result' => 'success', 'role' => $result]);
+        } else {
             $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
         }
     }

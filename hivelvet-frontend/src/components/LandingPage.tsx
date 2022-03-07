@@ -21,8 +21,8 @@ import { Link } from 'react-router-dom';
 
 import { Row, Col, Typography, Avatar } from 'antd';
 import { AppstoreAddOutlined, BgColorsOutlined, PlayCircleOutlined, ControlOutlined } from '@ant-design/icons';
-import DynamicIcon from "./DynamicIcon";
-import {T} from "@transifex/react";
+import DynamicIcon from './DynamicIcon';
+import { T } from '@transifex/react';
 
 const { Title, Paragraph } = Typography;
 
@@ -32,9 +32,14 @@ class LandingPage extends Component<any, any> {
             <>
                 <Row justify="center" align="top" className="landing-content">
                     <Col span={12}>
-                        <Title><T _str="Welcome to Hivelvet" /></Title>
+                        <Title>
+                            <T _str="Welcome to Hivelvet" />
+                        </Title>
                         <p className="mb-30">
-                            <T _str="Create fully customisable rooms for" /> <strong><T _str="BigBlueButton" /></strong>
+                            <T _str="Create fully customisable rooms for" />{' '}
+                            <strong>
+                                <T _str="BigBlueButton" />
+                            </strong>
                         </p>
                         <Paragraph className="landing-btn">
                             <Link className="ant-btn ant-btn-primary text-white" to={'/login'}>
@@ -51,24 +56,39 @@ class LandingPage extends Component<any, any> {
                 </Row>
                 <Row gutter={[40, 8]} justify="center" className="features text-center">
                     <Col span={3}>
-                        <Avatar size={45} icon={<AppstoreAddOutlined />} className="ant-btn-primary hivelvet-btn"/>
-                        <p><T _str="Personal Rooms" /></p>
+                        <Avatar size={45} icon={<AppstoreAddOutlined />} className="ant-btn-primary hivelvet-btn" />
+                        <p>
+                            <T _str="Personal Rooms" />
+                        </p>
                     </Col>
                     <Col span={3}>
-                        <Avatar size={45} icon={<BgColorsOutlined />} className="ant-btn-primary hivelvet-btn"/>
-                        <p><T _str="Full Branding" /></p>
+                        <Avatar size={45} icon={<BgColorsOutlined />} className="ant-btn-primary hivelvet-btn" />
+                        <p>
+                            <T _str="Full Branding" />
+                        </p>
                     </Col>
                     <Col span={3}>
-                        <Avatar size={45} icon={<PlayCircleOutlined />} className="ant-btn-primary hivelvet-btn"/>
-                        <p><T _str="Recordings management" /></p>
+                        <Avatar size={45} icon={<PlayCircleOutlined />} className="ant-btn-primary hivelvet-btn" />
+                        <p>
+                            <T _str="Recordings management" />
+                        </p>
                     </Col>
                     <Col span={3}>
-                        <Avatar size={45} icon={<ControlOutlined />} className="ant-btn-primary hivelvet-btn"/>
-                        <p><T _str="Flexible Configuration" /></p>
+                        <Avatar size={45} icon={<ControlOutlined />} className="ant-btn-primary hivelvet-btn" />
+                        <p>
+                            <T _str="Flexible Configuration" />
+                        </p>
                     </Col>
                     <Col span={3}>
-                        <Avatar size={45} icon={<DynamicIcon type={'ZcaleRight'} iconClassName="zcaleright-icon" />} className="ant-btn-primary hivelvet-btn"/>
-                        <p><T _str="ZcaleRight" /> <br/><T _str="Support" /></p>
+                        <Avatar
+                            size={45}
+                            icon={<DynamicIcon type={'ZcaleRight'} iconClassName="zcaleright-icon" />}
+                            className="ant-btn-primary hivelvet-btn"
+                        />
+                        <p>
+                            <T _str="ZcaleRight" /> <br />
+                            <T _str="Support" />
+                        </p>
                     </Col>
                 </Row>
             </>

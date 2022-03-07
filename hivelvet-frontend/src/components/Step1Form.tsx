@@ -39,10 +39,10 @@ export const Step1Form = (props: Props) => {
             <Form.Item
                 label={<T _str="Username" />}
                 name="username"
-                {...(('username' in errors) && {
+                {...('username' in errors) && {
                     help: errors['username'],
                     validateStatus: "error"
-                })}
+                }}
                 rules={[
                     {
                         required: true,
@@ -51,7 +51,7 @@ export const Step1Form = (props: Props) => {
                     {
                         min: 4,
                         message: <T _str="Username must be at least 4 characters" />,
-                    }
+                    },
                 ]}
             >
                 <Input placeholder="Username" />
@@ -60,19 +60,19 @@ export const Step1Form = (props: Props) => {
             <Form.Item
                 label={<T _str="Email" />}
                 name="email"
-                {...(('email' in errors) && {
+                {...('email' in errors) && {
                     help: errors['email'],
                     validateStatus: "error"
-                })}
+                }}
                 rules={[
                     {
                         required: true,
-                        message: <T _str='Email is required' />,
+                        message: <T _str="Email is required" />,
                     },
                     {
                         type: 'email',
-                        message: <T _str='Email is invalid' />,
-                    }
+                        message: <T _str="Email is invalid" />,
+                    },
                 ]}
             >
                 <Input placeholder="Email" />
@@ -80,10 +80,10 @@ export const Step1Form = (props: Props) => {
             <Form.Item
                 label={<T _str="Password" />}
                 name="password"
-                {...(('password' in errors) && {
+                {...('password' in errors) && {
                     help: errors['password'],
-                    validateStatus: "error"
-                })}
+                    validateStatus: 'error'
+                }}
                 rules={[
                     {
                         min: 4,

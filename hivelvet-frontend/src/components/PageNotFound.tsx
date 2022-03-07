@@ -19,7 +19,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Result } from 'antd';
-import {T} from "@transifex/react";
+import { T } from '@transifex/react';
 
 const PageNotFound = () => {
     return (

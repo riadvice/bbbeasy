@@ -31,10 +31,10 @@ use Models\Base as BaseModel;
  *
  * @property int      $id
  * @property string   $name
- * @property DateTime $created_on
- * @property DateTime $updated_on
  * @property array    $permissions
  * @property array    $users
+ * @property DateTime $created_on
+ * @property DateTime $updated_on
  */
 class Role extends BaseModel
 {
@@ -56,35 +56,37 @@ class Role extends BaseModel
 
     public function getAllRoles()
     {
-        $data   = [];
-        $roles  = $this->find([], ['order' => 'id']);
+        $data  = [];
+        $roles = $this->find([], ['order' => 'id']);
         if ($roles) {
             foreach ($roles as $role) {
                 $data[] = [
-                    'key'           => $role->id,
-                    'name'          => $role->name,
-                    'users'         => $role->getRoleUsers(),
-                    'permissions'   => $role->getRolePermissions()
+                    'key'         => $role->id,
+                    'name'        => $role->name,
+                    'users'       => $role->getRoleUsers(),
+                    'permissions' => $role->getRolePermissions(),
                 ];
             }
         }
+
         return [
-            'data' => $data
+            'data' => $data,
         ];
     }
 
     public function getLecturerRole()
     {
-        $data   = [];
+        $data = [];
         $this->load(['id = ?', [2]]);
         if ($this->valid()) {
             $data = [
-                'key'           => $this->id,
-                'name'          => $this->name,
-                'users'         => $this->getRoleUsers(),
-                'permissions'   => $this->getRolePermissions()
+                'key'         => $this->id,
+                'name'        => $this->name,
+                'users'       => $this->getRoleUsers(),
+                'permissions' => $this->getRolePermissions(),
             ];
         }
+
         return $data;
     }
 
@@ -105,10 +107,10 @@ class Role extends BaseModel
             foreach ($rolePermissions as $rolePermission) {
                 $permissionsRole[$rolePermission->group][] = $rolePermission->name;
             }
+        } else {
+            $permissionsRole = (object) [];
         }
-        else {
-            $permissionsRole = (object)[];
-        }
+
         return $permissionsRole;
     }
 
@@ -150,44 +152,40 @@ class Role extends BaseModel
     public function switchAllRoleUsers()
     {
         $role_id = $this->id;
-
-        if ($role_id != 1 and $role_id != 2) {
+        if (1 !== $role_id && 2 !== $role_id) {
             $users = $this->getRoleUsers();
             if ($users > 0) {
-                $userRole = new UserRole();
-                $usersRole  = $userRole->find(['role_id = ?',$role_id], ['order' => 'id']);
+                $userRole  = new UserRole();
+                $usersRole = $userRole->find(['role_id = ?', $role_id], ['order' => 'id']);
                 foreach ($usersRole as $userRole) {
-                    $defaultRoleUser   = new UserRole();
+                    $defaultRoleUser = new UserRole();
                     //if user have already role lecturer => delete user role
                     $defaultRoleUser->load(['role_id = ? and user_id = ?', 2, $userRole->user_id]);
                     if ($defaultRoleUser->valid()) {
-                        $deleteResult   = $userRole->erase();
-                        $resultCode     = $deleteResult ? ResponseCode::HTTP_OK : ResponseCode::HTTP_INTERNAL_SERVER_ERROR;
-                        if ($resultCode == ResponseCode::HTTP_OK) {
+                        $deleteResult = $userRole->erase();
+                        $resultCode   = $deleteResult ? ResponseCode::HTTP_OK : ResponseCode::HTTP_INTERNAL_SERVER_ERROR;
+                        if (ResponseCode::HTTP_OK === $resultCode) {
                             $this->logger->info('User role successfully deleted');
                         }
                     }
                     //else switch user role to role lecturer
                     else {
-                        $userRole->role_id      = 2;
-                        $userRole->updated_on   = date('Y-m-d H:i:s');
+                        $userRole->role_id = 2;
+
                         try {
                             $userRole->save();
                             $this->logger->info('User role successfully switched', ['userRole' => $userRole->toArray()]);
                             $resultCode = ResponseCode::HTTP_OK;
-                        }
-                        catch (\Exception $e) {
+                        } catch (\Exception $e) {
                             $this->logger->error('User role could not be switched', ['error' => $e->getMessage()]);
                             $resultCode = ResponseCode::HTTP_INTERNAL_SERVER_ERROR;
                         }
                     }
                 }
-            }
-            else {
+            } else {
                 $resultCode = ResponseCode::HTTP_OK;
             }
-        }
-        else {
+        } else {
             $resultCode = ResponseCode::HTTP_INTERNAL_SERVER_ERROR;
         }
 
@@ -198,21 +196,19 @@ class Role extends BaseModel
     {
         $role_id = $this->id;
 
-        if ($role_id != 1) {
+        if (1 !== $role_id) {
             $permissions = $this->getRolePermissions();
-            if (gettype($permissions) == 'array') {
-                $rolePermission  = new RolePermission();
-                $deleteResult = $rolePermission->erase(['role_id = ?', $role_id]);
-                $resultCode = $deleteResult ? ResponseCode::HTTP_OK : ResponseCode::HTTP_INTERNAL_SERVER_ERROR;
-                if ($resultCode == ResponseCode::HTTP_OK) {
+            if ('array' === \gettype($permissions)) {
+                $rolePermission = new RolePermission();
+                $deleteResult   = $rolePermission->erase(['role_id = ?', $role_id]);
+                $resultCode     = $deleteResult ? ResponseCode::HTTP_OK : ResponseCode::HTTP_INTERNAL_SERVER_ERROR;
+                if (ResponseCode::HTTP_OK == $resultCode) {
                     $this->logger->info('All Role permissions successfully deleted');
                 }
-            }
-            else {
+            } else {
                 $resultCode = ResponseCode::HTTP_OK;
             }
-        }
-        else {
+        } else {
             $resultCode = ResponseCode::HTTP_INTERNAL_SERVER_ERROR;
         }
 
@@ -231,11 +227,11 @@ class Role extends BaseModel
         // delete permissions of this role
         $resultCode2 = $this->deleteAllRolePermissions();
 
-        if ($resultCode1 == ResponseCode::HTTP_OK and $resultCode2 == ResponseCode::HTTP_OK) {
+        if (ResponseCode::HTTP_OK == $resultCode1 and ResponseCode::HTTP_OK == $resultCode2) {
             $this->db->commit();
             $this->logger->info('Delete users  and permissions transaction successfully commit.');
             return ResponseCode::HTTP_OK;
         }
     }
-
 }
+

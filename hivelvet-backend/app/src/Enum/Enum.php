@@ -27,9 +27,6 @@ use ReflectionException;
 
 class Enum
 {
-    /**
-     * @throws ReflectionException
-     */
     public static function values(): array
     {
         $class = new ReflectionClass(static::class);
@@ -37,24 +34,14 @@ class Enum
         return array_values($class->getConstants());
     }
 
-    /**
-     * @throws ReflectionException
-     */
     public static function constants(): array
     {
-        $class = new ReflectionClass(static::class);
-
-        return $class->getConstants();
+        return (new ReflectionClass(static::class))->getConstants();
     }
 
-    /**
-     * @throws ReflectionException
-     */
     public static function staticProperties(): array
     {
-        $class = new ReflectionClass(static::class);
-
-        return $class->getStaticProperties();
+        return (new ReflectionClass(static::class))->getStaticProperties();
     }
 
     /**
@@ -62,7 +49,7 @@ class Enum
      *
      * @throws ReflectionException
      */
-    public static function contains($value): bool
+    public static function contains(string $value): bool
     {
         return \in_array($value, self::values(), true);
     }

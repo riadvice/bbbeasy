@@ -123,9 +123,9 @@ class Register extends Component<Props, State> {
                                 <Form.Item
                                     label={<T _str="Username" />}
                                     name="username"
-                                    {...(('username' in errors) && {
+                                    {...('username' in errors && {
                                         help: errors['username'],
-                                        validateStatus: "error"
+                                        validateStatus: 'error',
                                     })}
                                     rules={[
                                         {
@@ -135,7 +135,7 @@ class Register extends Component<Props, State> {
                                         {
                                             min: 4,
                                             message: <T _str="Username must be at least 4 characters" />,
-                                        }
+                                        },
                                     ]}
                                 >
                                     <Input placeholder="Username" />
@@ -143,9 +143,9 @@ class Register extends Component<Props, State> {
                                 <Form.Item
                                     label={<T _str="Email" />}
                                     name="email"
-                                    {...(('email' in errors) && {
+                                    {...('email' in errors && {
                                         help: errors['email'],
-                                        validateStatus: "error"
+                                        validateStatus: 'error',
                                     })}
                                     rules={[
                                         {
@@ -163,9 +163,9 @@ class Register extends Component<Props, State> {
                                 <Form.Item
                                     label={<T _str="Password" />}
                                     name="password"
-                                    {...(('password' in errors) && {
+                                    {...('password' in errors && {
                                         help: errors['password'],
-                                        validateStatus: "error"
+                                        validateStatus: 'error',
                                     })}
                                     rules={[
                                         {
@@ -184,9 +184,9 @@ class Register extends Component<Props, State> {
                                     label={<T _str="Confirm Password" />}
                                     name="confirmPassword"
                                     dependencies={['password']}
-                                    {...(('confirmPassword' in errors) && {
+                                    {...('confirmPassword' in errors && {
                                         help: errors['confirmPassword'],
-                                        validateStatus: "error"
+                                        validateStatus: 'error',
                                     })}
                                     rules={[
                                         {
@@ -218,9 +218,9 @@ class Register extends Component<Props, State> {
                                     className="form-agree"
                                     name="agreement"
                                     valuePropName="checked"
-                                    {...(('agreement' in errors) && {
+                                    {...('agreement' in errors && {
                                         help: errors['agreement'],
-                                        validateStatus: "error"
+                                        validateStatus: 'error',
                                     })}
                                     rules={[
                                         {
@@ -228,12 +228,12 @@ class Register extends Component<Props, State> {
                                                 value
                                                     ? Promise.resolve()
                                                     : Promise.reject(
-                                                        new Error(
-                                                            ReactDOMServer.renderToString(
-                                                                <T _str="Should accept the agreement" />
-                                                            )
-                                                        )
-                                                    ),
+                                                          new Error(
+                                                              ReactDOMServer.renderToString(
+                                                                  <T _str="Should accept the agreement" />
+                                                              )
+                                                          )
+                                                      ),
                                         },
                                     ]}
                                 >

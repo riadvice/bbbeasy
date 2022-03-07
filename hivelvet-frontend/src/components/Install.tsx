@@ -171,7 +171,8 @@ const Install = (props: Props) => {
                 const fdata = new FormData();
                 fdata.append('logo', file.originFileObj, file.originFileObj.name);
                 fdata.append('logo_name', file.originFileObj.name);
-                axios.post(API_URL + '/save-logo', fdata)
+                axios
+                    .post(API_URL + '/save-logo', fdata)
                     .then((response) => {
                         console.log(response);
                     })

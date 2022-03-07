@@ -45,7 +45,10 @@ class Home extends Component<Props, State> {
                 </Title>
                 <Row justify="center">
                     <Col span={3}>
-                        <Avatar size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 85, xxl: 100 }} className="ant-btn-primary hivelvet-btn">
+                        <Avatar
+                            size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 85, xxl: 100 }}
+                            className="ant-btn-primary hivelvet-btn"
+                        >
                             1
                         </Avatar>
                         <Title level={4}>
@@ -53,7 +56,10 @@ class Home extends Component<Props, State> {
                         </Title>
                     </Col>
                     <Col span={3}>
-                        <Avatar size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 85, xxl: 100 }} className="ant-btn-primary hivelvet-btn">
+                        <Avatar
+                            size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 85, xxl: 100 }}
+                            className="ant-btn-primary hivelvet-btn"
+                        >
                             2
                         </Avatar>
                         <Title level={4}>
@@ -61,7 +67,9 @@ class Home extends Component<Props, State> {
                         </Title>
                     </Col>
                     <Col span={3}>
-                        <Avatar size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 85, xxl: 100 }} className="ant-btn-primary hivelvet-btn"
+                        <Avatar
+                            size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 85, xxl: 100 }}
+                            className="ant-btn-primary hivelvet-btn"
                         >
                             3
                         </Avatar>
@@ -70,7 +78,9 @@ class Home extends Component<Props, State> {
                         </Title>
                     </Col>
                 </Row>
-                <Button type="primary"><T _str="Create my first room" /></Button>
+                <Button type="primary">
+                    <T _str="Create my first room" />
+                </Button>
             </Paragraph>
         );
     }

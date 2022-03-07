@@ -31,19 +31,18 @@ use Models\Role;
  */
 class Delete extends DeleteAction
 {
-
     public function execute($f3, $params): void
     {
-        $role       = new Role();
-        $role_id    = $params['id'];
-        $nbUsers    = $role->getRoleUsers();
+        $role    = new Role();
+        $role_id = $params['id'];
+        $nbUsers = $role->getRoleUsers();
 
         //delete users and permissions
         $resultCode = $role->deleteUsersAndPermissions($role_id);
 
-        if ($resultCode == ResponseCode::HTTP_OK) {
+        if (ResponseCode::HTTP_OK === $resultCode) {
             // delete role after deleting assigned users and permissions
-            parent::execute($f3,$params);
+            parent::execute($f3, $params);
             // if role have users assigned return lecturer role to get switched users
             if ($nbUsers > 0) {
                 $result = $role->getLecturerRole();

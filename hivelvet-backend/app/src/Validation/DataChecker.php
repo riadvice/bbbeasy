@@ -54,7 +54,7 @@ class DataChecker
                 'passed' => $numRules - $numExceptions,
             ];
             if (null !== $validationException) {
-                $fullName = str_replace('_', ' ', $validator->reportError($input, $summary)->getFullMessage());
+                $fullName                            = str_replace('_', ' ', $validator->reportError($input, $summary)->getFullMessage());
                 $this->errors[$validator->getName()] = $fullName;
 
                 return false;

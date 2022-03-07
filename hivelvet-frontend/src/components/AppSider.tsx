@@ -33,9 +33,15 @@ const AppSider = () => {
 
     const newMenu = (
         <Menu>
-            <Menu.Item key="1"><T _str="Room" /></Menu.Item>
-            <Menu.Item key="2"><T _str="Label" /></Menu.Item>
-            <Menu.Item key="3"><T _str="Preset" /></Menu.Item>
+            <Menu.Item key="1">
+                <T _str="Room" />
+            </Menu.Item>
+            <Menu.Item key="2">
+                <T _str="Label" />
+            </Menu.Item>
+            <Menu.Item key="3">
+                <T _str="Preset" />
+            </Menu.Item>
         </Menu>
     );
     const menuData = [
@@ -111,7 +117,9 @@ const AppSider = () => {
                         <SubMenu key={item.path} icon={<DynamicIcon type={item.icon} />} title={<T _str={item.name} />}>
                             {item.children.map((subItem) => (
                                 <Menu.Item key={subItem.path}>
-                                    <Link to={subItem.path}><T _str={subItem.name} /></Link>
+                                    <Link to={subItem.path}>
+                                        <T _str={subItem.name} />
+                                    </Link>
                                 </Menu.Item>
                             ))}
                         </SubMenu>
@@ -122,7 +130,9 @@ const AppSider = () => {
                                     <T _str={item.name} />
                                 </a>
                             ) : (
-                                <Link to={item.path}><T _str={item.name} /></Link>
+                                <Link to={item.path}>
+                                    <T _str={item.name} />
+                                </Link>
                             )}
                         </Menu.Item>
                     )
