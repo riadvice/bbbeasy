@@ -19,23 +19,23 @@
 import React, { Component } from 'react';
 import Icon from '@ant-design/icons';
 import * as AntdIcons from '@ant-design/icons';
-import ZcaleRight from '../icons/Icon_ZcaleRight.png';
 
 type Props = {
     type: string;
     className?: string;
-    iconClassName?: string;
 };
 type State = {};
 
 class DynamicIcon extends Component<Props, State> {
     render() {
-        const { type, className, iconClassName } = this.props;
-        const AntdIcon = AntdIcons[type];
-        if (type == 'ZcaleRight') {
-            const ZcaleRightIcon = () => <img src={ZcaleRight} className={iconClassName} />;
-            return <Icon component={ZcaleRightIcon} className={className} />;
+        const { type, className } = this.props;
+        const hivelvetIcons = ['mp4','room','zcaleright', 'role','general-settings','bigbluebutton', 'playback-presentation','playback-podcast', 'activity-reports','preset'];
+
+        if (hivelvetIcons.includes(type.toLowerCase())) {
+            const hivelvetIcon = () => <span className={"icon-hivelvet-"+type.toLowerCase()} />;
+            return <Icon component={hivelvetIcon} className={className} />;
         } else {
+            const AntdIcon = AntdIcons[type];
             return <AntdIcon className={className} />;
         }
     }
