@@ -54,9 +54,8 @@ class Edit extends BaseAction
                 if ($dataChecker->allValid()) {
                     $checkRole = new Role();
                     $name = str_replace(' ', '_', strtolower($form['name']));
-                    $checkRole->load(['name = ? and id != ?', $name,$role->id]);
 
-                    if (!$checkRole->dry()) {
+                    if ($checkRole->nameExists($name, $role->id)) {
                         $this->logger->error('Role could not be updated', ['error' => 'Name already exist']);
                         $this->renderJson(['errors' => ['name' => 'Name already exist']], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
                         return;
@@ -74,7 +73,7 @@ class Edit extends BaseAction
             if (isset($form['permissions'])) {
                 // edit permissions
                 $newPermissions = $form['permissions'];
-                $oldPermissions = $role->getRolePermissions($role_id);
+                $oldPermissions = $role->getRolePermissions();
                 foreach ($newPermissions as $group => $actions) {
                     // check if role have permissions assigned and group exist
                     if (gettype($oldPermissions) == 'array' && $oldPermissions[$group]) {
@@ -155,8 +154,8 @@ class Edit extends BaseAction
             $result = [
                 'key'           => $role->id,
                 'name'          => $role->name,
-                'users'         => $role->getRoleUsers($role_id),
-                'permissions'   => $role->getRolePermissions($role_id)
+                'users'         => $role->getRoleUsers(),
+                'permissions'   => $role->getRolePermissions()
             ];
             $this->renderJson(['result' => 'success','role' => $result]);
         }

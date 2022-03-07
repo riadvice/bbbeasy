@@ -34,7 +34,6 @@ import PageNotFound from './components/PageNotFound';
 import LandingPage from './components/LandingPage';
 import Register from './components/Register';
 import Login from './components/Login';
-import ResetPwd from './components/ResetPwd';
 import Reset from './components/ResetPassword';
 import ChangePassword from './components/ChangePassword';
 
@@ -155,14 +154,6 @@ class App extends Component<Props, State> {
                                         element={
                                             <PublicRoute restricted={true}>
                                                 <Login setUser={this.setUser} />
-                                            </PublicRoute>
-                                        }
-                                    />
-                                    <Route
-                                        path="/reset"
-                                        element={
-                                            <PublicRoute restricted={true}>
-                                                <ResetPwd />
                                             </PublicRoute>
                                         }
                                     />

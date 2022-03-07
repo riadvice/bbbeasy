@@ -33,10 +33,26 @@ use Models\Base as BaseModel;
  * @property string   $name
  * @property DateTime $created_on
  * @property DateTime $updated_on
+ * @property array    $permissions
+ * @property array    $users
  */
 class Role extends BaseModel
 {
+    protected $fieldConf = [
+        'permissions' => [
+            'has-many' => [RolePermission::class, 'role_id']
+        ],
+        'users' => [
+            'has-many' => [UserRole::class, 'role_id']
+        ],
+    ];
+
     protected $table = 'roles';
+
+    public function nameExists($name, $id = null)
+    {
+        return $this->load(['name = ? and id != ?', $name, $id]);
+    }
 
     public function getAllRoles()
     {
@@ -47,8 +63,8 @@ class Role extends BaseModel
                 $data[] = [
                     'key'           => $role->id,
                     'name'          => $role->name,
-                    'users'         => $role->getRoleUsers($role->id),
-                    'permissions'   => $role->getRolePermissions($role->id)
+                    'users'         => $role->getRoleUsers(),
+                    'permissions'   => $role->getRolePermissions()
                 ];
             }
         }
@@ -65,27 +81,27 @@ class Role extends BaseModel
             $data = [
                 'key'           => $this->id,
                 'name'          => $this->name,
-                'users'         => $this->getRoleUsers($this->id),
-                'permissions'   => $this->getRolePermissions($this->id)
+                'users'         => $this->getRoleUsers(),
+                'permissions'   => $this->getRolePermissions()
             ];
         }
         return $data;
     }
 
-    public function getRoleUsers($id)
+    public function getRoleUsers()
     {
-        $userRole = new UserRole();
-        $usersRole  = $userRole->find(['role_id = ?',$id], ['order' => 'id']);
-        return $usersRole ? $usersRole->count() : 0;
+        return $this->users ? count($this->users) : 0;
     }
 
-    public function getRolePermissions($id)
+    public function getRolePermissions()
     {
-        $rolePermission  = new RolePermission();
-        $rolePermissions = $rolePermission->find(['role_id = ?',$id], ['order' => 'id']);
+        $rolePermissions = $this->permissions;
 
         if ($rolePermissions) {
             $permissionsRole = [];
+            /**
+             * @var $rolePermission RolePermission
+             */
             foreach ($rolePermissions as $rolePermission) {
                 $permissionsRole[$rolePermission->group][] = $rolePermission->name;
             }
@@ -96,10 +112,47 @@ class Role extends BaseModel
         return $permissionsRole;
     }
 
-    public function switchAllRoleUsers($role_id)
+    public function saveRoleAndPermissions($permissions)
     {
-        $users = $this->getRoleUsers($role_id);
+        $this->logger->info('Starting save role and permissions transaction.');
+        $this->db->begin();
+        $this->save();
+        $this->logger->info('role successfully added', ['role' => $this->toArray()]);
+
+        if (isset($permissions)) {
+            //add permissions
+            foreach ($permissions as $group => $actions) {
+                if (!empty($actions)) {
+                    foreach ($actions as $action) {
+                        $rolePermission = new RolePermission();
+                        $rolePermission->group      = $group;
+                        $rolePermission->name       = $action;
+                        $rolePermission->role_id    = $this->id;
+                        try {
+                            $rolePermission->save();
+                            $this->logger->info('Role permission successfully added', ['rolePermission' => $rolePermission->toArray()]);
+                        }
+                        catch (\Exception $e) {
+                            $this->logger->error('Role permission could not be added', ['error' => $e->getMessage()]);
+                            return $e;
+                        }
+                    }
+                }
+            }
+        }
+
+        $this->db->commit();
+        $this->logger->info('Save role and permissions transaction successfully commit.');
+
+        return ResponseCode::HTTP_OK;
+    }
+
+    public function switchAllRoleUsers()
+    {
+        $role_id = $this->id;
+
         if ($role_id != 1 and $role_id != 2) {
+            $users = $this->getRoleUsers();
             if ($users > 0) {
                 $userRole = new UserRole();
                 $usersRole  = $userRole->find(['role_id = ?',$role_id], ['order' => 'id']);
@@ -141,19 +194,18 @@ class Role extends BaseModel
         return $resultCode;
     }
 
-    public function deleteAllRolePermissions($role_id)
+    public function deleteAllRolePermissions()
     {
+        $role_id = $this->id;
+
         if ($role_id != 1) {
-            $permissions = $this->getRolePermissions($role_id);
+            $permissions = $this->getRolePermissions();
             if (gettype($permissions) == 'array') {
                 $rolePermission  = new RolePermission();
-                $rolePermissions = $rolePermission->find(['role_id = ?',$role_id]);
-                foreach ($rolePermissions as $rolePermission) {
-                    $deleteResult = $rolePermission->erase();
-                    $resultCode = $deleteResult ? ResponseCode::HTTP_OK : ResponseCode::HTTP_INTERNAL_SERVER_ERROR;
-                    if ($resultCode == ResponseCode::HTTP_OK) {
-                        $this->logger->info('Role permission successfully deleted');
-                    }
+                $deleteResult = $rolePermission->erase(['role_id = ?', $role_id]);
+                $resultCode = $deleteResult ? ResponseCode::HTTP_OK : ResponseCode::HTTP_INTERNAL_SERVER_ERROR;
+                if ($resultCode == ResponseCode::HTTP_OK) {
+                    $this->logger->info('All Role permissions successfully deleted');
                 }
             }
             else {
@@ -166,4 +218,24 @@ class Role extends BaseModel
 
         return $resultCode;
     }
+
+    public function deleteUsersAndPermissions($role_id)
+    {
+        $this->load(['id = ?', [$role_id]]);
+        $this->logger->info('Starting delete users and permissions transaction.');
+        $this->db->begin();
+
+        // switch users of this role to lecturer role
+        $resultCode1 = $this->switchAllRoleUsers();
+
+        // delete permissions of this role
+        $resultCode2 = $this->deleteAllRolePermissions();
+
+        if ($resultCode1 == ResponseCode::HTTP_OK and $resultCode2 == ResponseCode::HTTP_OK) {
+            $this->db->commit();
+            $this->logger->info('Delete users  and permissions transaction successfully commit.');
+            return ResponseCode::HTTP_OK;
+        }
+    }
+
 }

@@ -55,9 +55,16 @@ class Install extends BaseAction
         $dataChecker->verify($form['email'], Validator::email()->setName('email'));
         $dataChecker->verify($form['password'], Validator::length(4)->setName('password'));
 
+        $dataChecker->verify($form['company_name'], Validator::notEmpty()->setName('company_name'));
         $dataChecker->verify($form['company_url'], Validator::url()->setName('company_url'));
-        $dataChecker->verify($form['term_url'], Validator::url()->setName('term_url'));
-        $dataChecker->verify($form['policy_url'], Validator::url()->setName('policy_url'));
+        $dataChecker->verify($form['platform_name'], Validator::notEmpty()->setName('platform_name'));
+
+        if ($form['term_url'] != "") {
+            $dataChecker->verify($form['term_url'], Validator::url()->setName('term_url'));
+        }
+        if ($form['policy_url'] != "") {
+            $dataChecker->verify($form['policy_url'], Validator::url()->setName('policy_url'));
+        }
 
         if (!$dataChecker->allValid()) {
             $this->logger->error('App configuration', ['errors' => $dataChecker->getErrors()]);
@@ -95,8 +102,9 @@ class Install extends BaseAction
                     //$defaultSettings->save();
                     $this->logger->info('App configuration', ['setting' => $defaultSettings->toArray()]);
 
+                    /**
+                     * @todo for future tasks
                     $presets = $form['presetsConfig'];
-                    /*
                     foreach ($presets as $preset) {
                         $subcategories = $preset['subcategories'];
                         foreach ($subcategories as $subcategory) {
@@ -116,8 +124,8 @@ class Install extends BaseAction
                             }
                         }
                     }
+                    $this->logger->info('Administrator, settings and presets successfully added', ['user' => $user->toArray()]);
                     */
-                    //$this->logger->info('administrator and settings and presets successfully added', ['user' => $user->toArray()]);
                     $this->renderJson(['message' => 'Application installed !']);
                 } catch (\Exception $e) {
                     $message = $e->getMessage();

@@ -50,7 +50,6 @@ class Collect extends BaseAction
 
         $categories = preg_filter('/^Enum\\\Presets\\\[A-Z a-z]*/', '$0', array_keys($classMap));
 
-        $counter = 1;
         if ($categories) {
             foreach ($categories as $category) {
                 $categoryName = explode("\\", $category)[2];
@@ -71,12 +70,10 @@ class Collect extends BaseAction
                 foreach ($subCategories as $subCategory) {
                     $subCategory = ucfirst(str_replace('_',' ',$subCategory));
                     $subCategoryData = [
-                        'id'     =>$counter,
                         'name'   => $subCategory,
                         'status' => false,
                     ];
                     $categoryData['subcategories'][] = $subCategoryData;
-                    $counter++;
                 }
 
                 $data[] = $categoryData;

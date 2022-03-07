@@ -37,5 +37,11 @@ use Models\Base as BaseModel;
  */
 class RolePermission extends BaseModel
 {
+    protected $fieldConf = [
+        'role_id' => [
+            'belongs-to-one' => Role::class
+        ],
+    ];
+
     protected $table = 'roles_permissions';
 }

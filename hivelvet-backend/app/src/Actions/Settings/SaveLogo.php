@@ -71,6 +71,5 @@ class SaveLogo extends BaseAction
                 return;
             }
         }
-        //}
     }
 }

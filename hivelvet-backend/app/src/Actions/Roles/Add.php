@@ -25,7 +25,6 @@ namespace Actions\Roles;
 use Actions\Base as BaseAction;
 use Enum\ResponseCode;
 use Models\Role;
-use Models\RolePermission;
 use Respect\Validation\Validator;
 use Validation\DataChecker;
 
@@ -49,8 +48,8 @@ class Add extends BaseAction
         if ($dataChecker->allValid()) {
             $role = new Role();
             $name = str_replace(' ', '_', strtolower($form['name']));
-            $role->load(['name = ?', $name]);
-            if (!$role->dry()) {
+
+            if ($role->nameExists($name)) {
                 $this->logger->error('Role could not be added', ['error' => 'Name already exist']);
                 $this->renderJson(['errors' => ['name' => 'Name already exist']], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
             }
@@ -58,32 +57,10 @@ class Add extends BaseAction
                 $role->name = $name;
 
                 try {
-                    $role->save();
-                    $this->logger->info('role successfully added', ['role' => $role->toArray()]);
-
-                    //add permissions
-                    if (isset($form['permissions'])) {
-                        $permissions = $form['permissions'];
-                        foreach ($permissions as $group => $actions) {
-                            if (!empty($actions)) {
-                                foreach ($actions as $action) {
-                                    $rolePermission = new RolePermission();
-                                    $rolePermission->group      = $group;
-                                    $rolePermission->name       = $action;
-                                    $rolePermission->role_id    = $role->id;
-                                    try {
-                                        $rolePermission->save();
-                                        $this->logger->info('Role permission successfully added', ['rolePermission' => $rolePermission->toArray()]);
-                                    }
-                                    catch (\Exception $e) {
-                                        $this->logger->error('Role permission could not be added', ['error' => $e->getMessage()]);
-                                        $this->renderJson(['errors' => $e->getMessage()], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-
-                                        return;
-                                    }
-                                }
-                            }
-                        }
+                    $result = $role->saveRoleAndPermissions($form['permissions']);
+                    if ($result != ResponseCode::HTTP_OK) {
+                        $this->renderJson(['errors' => $result->getMessage()], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+                        return;
                     }
                 }
                 catch (\Exception $e) {
@@ -96,8 +73,8 @@ class Add extends BaseAction
                 $result = [
                     'key'           => $role->id,
                     'name'          => $role->name,
-                    'users'         => $role->getRoleUsers($role->id),
-                    'permissions'   => $role->getRolePermissions($role->id)
+                    'users'         => $role->getRoleUsers(),
+                    'permissions'   => $role->getRolePermissions()
                 ];
                 $this->renderJson(['result' => 'success','role' => $result]);
             }
