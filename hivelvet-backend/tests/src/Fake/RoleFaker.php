@@ -20,18 +20,37 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Suite;
+namespace Fake;
 
-use Models\ResetPasswordTokenTest;
-use Models\RoleTest;
-use Models\UserTest;
-use Test\TestGroup;
+use Faker\Factory as Faker;
+use Models\Role;
 
-/**
- * @internal
- * @coversNothing
- */
-final class ModelsTest extends TestGroup
+class RoleFaker
 {
-    protected $classes = [UserTest::class, ResetPasswordTokenTest::class, RoleTest::class];
+    private static array $storage = [];
+
+    public static function create($storageName = null)
+    {
+        $faker          = Faker::create();
+        $role           = new Role();
+        $role->name     = str_replace(' ', '_', mb_strtolower($faker->name));
+
+        $role->save();
+
+        if (null !== $storageName) {
+            self::$storage[$storageName] = $role;
+        }
+
+        return $role;
+    }
+
+    /**
+     * @param $storageName
+     *
+     * @return Role
+     */
+    public static function get($storageName)
+    {
+        return self::$storage[$storageName];
+    }
 }

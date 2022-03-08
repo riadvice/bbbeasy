@@ -1,0 +1,4 @@
+{
+  "errors": {"name":"- All of the required rules must pass for name"},
+  "status" : 422
+}

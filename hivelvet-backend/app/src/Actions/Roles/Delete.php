@@ -48,6 +48,9 @@ class Delete extends DeleteAction
                 $result = $role->getLecturerRole();
                 $this->renderJson(['lecturer' => $result]);
             }
+            else {
+                $this->renderJson(['result' => 'success']);
+            }
         }
     }
 }
