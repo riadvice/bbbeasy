@@ -79,7 +79,7 @@ export const Step3Form = (props: Props) => {
                             <ul>
                                 {item.subcategories.map((subItem) => (
                                     <li
-                                        key={subItem.name}
+                                        key={item.name +"_"+ subItem.name}
                                         className={subItem.status == true ? 'text-black' : 'text-grey'}
                                     >
                                         <T _str={subItem.name} />
@@ -115,8 +115,8 @@ export const Step3Form = (props: Props) => {
                     ]}
                 >
                     <div className="presets-body">
-                        {modalContent.map((item,index) => (
-                            <div key={index}>
+                        {modalContent.map((item) => (
+                            <div key={modalTitle +"_"+ item.name}>
                                 <Form.Item label={<T _str={item.name} />}>
                                     <Switch
                                         checkedChildren={<CheckOutlined />}

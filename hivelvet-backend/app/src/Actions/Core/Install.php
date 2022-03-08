@@ -27,9 +27,12 @@ use Base;
 use Enum\ResponseCode;
 use Enum\UserRole;
 use Enum\UserStatus;
+use Models\PresetSetting;
+use Models\Role;
 use Models\Setting;
 use Models\User;
 use Respect\Validation\Validator;
+use Utils\PrivilegeUtils;
 use Validation\DataChecker;
 
 /**
@@ -67,18 +70,19 @@ class Install extends BaseAction
         }
 
         if (!$dataChecker->allValid()) {
-            $this->logger->error('App configuration', ['errors' => $dataChecker->getErrors()]);
+            $this->logger->error('Initial application setup', ['errors' => $dataChecker->getErrors()]);
             $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
         } else {
             $user           = new User();
             $user->email    = $form['email'];
             $user->username = $form['username'];
+            $user->password = $form['password'];
             $user->role     = UserRole::ADMIN;
             $user->status   = UserStatus::ACTIVE;
 
             try {
-                //$user->save();
-                $this->logger->info('App configuration', ['user' => $user->toArray()]);
+                $user->save();
+                $this->logger->info('Initial application setup : Add administrator', ['user' => $user->toArray()]);
 
                 $setting         = new Setting();
                 $defaultSettings = $setting->find([], ['limit' => 1])->current();
@@ -99,45 +103,84 @@ class Install extends BaseAction
                 $defaultSettings->additional_color = $colors['add_color'];
 
                 try {
-                    //$defaultSettings->save();
-                    $this->logger->info('App configuration', ['setting' => $defaultSettings->toArray()]);
+                    $defaultSettings->save();
+                    $this->logger->info('Initial application setup : Add settings', ['settings' => $defaultSettings->toArray()]);
 
-                    /**
-                     * @todo for future tasks
+                    // add configured presets
                     $presets = $form['presetsConfig'];
-                    foreach ($presets as $preset) {
-                        $subcategories = $preset['subcategories'];
-                        foreach ($subcategories as $subcategory) {
-                            $presetSettings                 = new PresetSetting();
-                            $presetSettings->subcategory_id = $subcategory['id'];
-                            $presetSettings->is_enabled     = $subcategory['status'];
+                    if ($presets) {
+                        foreach ($presets as $preset) {
+                            $subcategories  = $preset['subcategories'];
+                            foreach ($subcategories as $subcategory) {
+                                $presetSettings             = new PresetSetting();
+                                $presetSettings->group      = $preset['name'];
+                                $presetSettings->name       = $subcategory['name'];
+                                $presetSettings->enabled    = $subcategory['status'];
+                                try {
+                                    $presetSettings->save();
+                                    $this->logger->info('Initial application setup : Add preset settings', ['preset' => $presetSettings->toArray()]);
+                                } catch (\Exception $e) {
+                                    $message = $e->getMessage();
+                                    $this->logger->error('Initial application setup : Preset settings could not be added', ['error' => $message]);
+                                    $this->renderJson(['errors' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
 
-                            try {
-                                //$presetSettings->save();
-                                $this->logger->info('App configuration', ['preset settings' => $presetSettings->toArray()]);
-                            } catch (\Exception $e) {
-                                $message = $e->getMessage();
-                                $this->logger->error('preset settings could not be added', ['error' => $message]);
-                                $this->renderJson(['presetsErrors' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-
-                                return;
+                                    return;
+                                }
                             }
                         }
                     }
-                    $this->logger->info('Administrator, settings and presets successfully added', ['user' => $user->toArray()]);
-                    */
-                    $this->renderJson(['message' => 'Application installed !']);
+
+                    // add default roles admin and lecturer
+                    $roleAdmin = new Role();
+                    $roleAdmin->name = 'administrator';
+                    try {
+                        // allow all privileges to role admin
+                        $allPrivileges = PrivilegeUtils::listSystemPrivileges();
+                        $result = $roleAdmin->saveRoleAndPermissions($allPrivileges);
+                        if (ResponseCode::HTTP_OK == $result) {
+                            $this->logger->info('Initial application setup : Add administrator role');
+
+                            //assign admin created to role admin
+                            $userRole           = new \Models\UserRole();
+                            $userRole->role_id  = $roleAdmin->id;
+                            $userRole->user_id  = $user->id;
+                            try {
+                                $userRole->save();
+                                $this->logger->info('Initial application setup : Add user role for administrator', ['user_role_admin' => $userRole->toArray()]);
+                            } catch (\Exception $e) {
+                                $this->logger->error('Initial application setup : User role could not be added', ['error' => $e->getMessage()]);
+                                return;
+                            }
+
+                            // add lecturer role
+                            $roleLecturer = new Role();
+                            $roleLecturer->name = 'lecturer';
+                            try {
+                                $roleLecturer->save();
+                                $this->logger->info('Initial application setup : Add lecturer role', ['lecturer role' => $roleLecturer->toArray()]);
+                            } catch (\Exception $e) {
+                                $this->logger->error('Initial application setup : Lecturer role could not be added', ['error' => $e->getMessage()]);
+                                return;
+                            }
+                        }
+                    } catch (\Exception $e) {
+                        $this->logger->info('Initial application setup : Administrator role could not be added', ['error' => $e->getMessage()]);
+                        return;
+                    }
+
+                    $this->logger->info('Initial application setup has been successfully done');
+                    $this->renderJson(['result' => 'success']);
                 } catch (\Exception $e) {
                     $message = $e->getMessage();
-                    $this->logger->error('settings could not be added', ['error' => $message]);
-                    $this->renderJson(['settingsErrors' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+                    $this->logger->error('Initial application setup : Settings could not be updated', ['error' => $message]);
+                    $this->renderJson(['errors' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
 
                     return;
                 }
             } catch (\Exception $e) {
                 $message = $e->getMessage();
-                $this->logger->error('administrator could not be added', ['error' => $message]);
-                $this->renderJson(['userErrors' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+                $this->logger->error('Initial application setup : Administrator could not be added', ['error' => $message]);
+                $this->renderJson(['errors' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
 
                 return;
             }

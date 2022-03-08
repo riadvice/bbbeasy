@@ -119,7 +119,7 @@ class Role extends BaseModel
         $this->logger->info('Starting save role and permissions transaction.');
         $this->db->begin();
         $this->save();
-        $this->logger->info('role successfully added', ['role' => $this->toArray()]);
+        $this->logger->info('Role successfully added', ['role' => $this->toArray()]);
 
         if (isset($permissions)) {
             //add permissions
