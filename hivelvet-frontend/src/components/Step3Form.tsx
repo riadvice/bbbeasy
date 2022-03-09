@@ -19,9 +19,9 @@
 import React from 'react';
 
 import { Button, Form, Typography, Card, Modal, Switch, Alert, Tooltip } from 'antd';
-import { CloseOutlined, CheckOutlined } from '@ant-design/icons';
 import DynamicIcon from './DynamicIcon';
 import { T } from '@transifex/react';
+
 const { Title, Paragraph } = Typography;
 const { Grid, Meta } = Card;
 
@@ -119,8 +119,6 @@ export const Step3Form = (props: Props) => {
                             <div key={modalTitle +"_"+ item.name}>
                                 <Form.Item label={<T _str={item.name} />}>
                                     <Switch
-                                        checkedChildren={<CheckOutlined />}
-                                        unCheckedChildren={<CloseOutlined />}
                                         defaultChecked={item.status == true ? true : false}
                                         onChange={(checked) => {
                                             item.status = checked;

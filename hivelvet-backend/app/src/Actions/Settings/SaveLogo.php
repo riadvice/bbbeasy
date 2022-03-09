@@ -26,6 +26,7 @@ use Actions\Base as BaseAction;
 use Base;
 use Enum\ResponseCode;
 use Models\Setting;
+use Respect\Validation\Validator;
 use Validation\DataChecker;
 
 /**
@@ -43,17 +44,14 @@ class SaveLogo extends BaseAction
          * @todo for future tasks
          * if ($f3->get('system.installed') === false) {
          */
-        $files = $f3->get('FILES');
-        $form  = $f3->get('POST');
-        $v     = new DataChecker();
+        $form           = $f3->get('POST');
+        $dataChecker    = new DataChecker();
 
-        $v->notEmpty()->verify('logo_name', $form['logo_name']);
+        $dataChecker->verify($form['logo_name'], Validator::notEmpty()->setName('logo_name'));
         //if files not empty
 
-        if ($v->allValid()) {
-            $this->logger->info('App configuration saving logo', ['FILES' => $files]);
+        if ($dataChecker->allValid()) {
             // verif format file
-
             //correct
             \Web::instance()->receive();
             $setting        = new Setting();
@@ -61,11 +59,11 @@ class SaveLogo extends BaseAction
             $settings->logo = $form['logo_name'];
 
             try {
-                //$settings->save();
-                $this->logger->info('App configuration saving logo', ['setting' => $settings->toArray()]);
+                $settings->save();
+                $this->logger->info('Initial application setup : Update settings logo', ['setting' => $settings->toArray()]);
             } catch (\Exception $e) {
                 $message = $e->getMessage();
-                $this->logger->error('logo could not be updated', ['error' => $message]);
+                $this->logger->info('Initial application setup : Logo could not be updated', ['error' => $message]);
                 $this->renderJson(['errors' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
 
                 return;

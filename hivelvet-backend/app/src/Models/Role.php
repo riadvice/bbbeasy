@@ -43,7 +43,7 @@ class Role extends BaseModel
             'has-many' => [RolePermission::class, 'role_id']
         ],
         'users' => [
-            'has-many' => [UserRole::class, 'role_id']
+            'has-many' => [User::class, 'role_id']
         ],
     ];
 
@@ -69,9 +69,7 @@ class Role extends BaseModel
             }
         }
 
-        return [
-            'data' => $data,
-        ];
+        return $data;
     }
 
     public function getLecturerRole()
@@ -101,9 +99,7 @@ class Role extends BaseModel
 
         if ($rolePermissions) {
             $permissionsRole = [];
-            /**
-             * @var $rolePermission RolePermission
-             */
+            /** @var $rolePermission RolePermission */
             foreach ($rolePermissions as $rolePermission) {
                 $permissionsRole[$rolePermission->group][] = $rolePermission->name;
             }
@@ -155,31 +151,16 @@ class Role extends BaseModel
         if (1 !== $role_id && 2 !== $role_id) {
             $users = $this->getRoleUsers();
             if ($users > 0) {
-                $userRole  = new UserRole();
-                $usersRole = $userRole->find(['role_id = ?', $role_id], ['order' => 'id']);
-                foreach ($usersRole as $userRole) {
-                    $defaultRoleUser = new UserRole();
-                    //if user have already role lecturer => delete user role
-                    $defaultRoleUser->load(['role_id = ? and user_id = ?', 2, $userRole->user_id]);
-                    if ($defaultRoleUser->valid()) {
-                        $deleteResult = $userRole->erase();
-                        $resultCode   = $deleteResult ? ResponseCode::HTTP_OK : ResponseCode::HTTP_INTERNAL_SERVER_ERROR;
-                        if (ResponseCode::HTTP_OK === $resultCode) {
-                            $this->logger->info('User role successfully deleted');
-                        }
-                    }
-                    //else switch user role to role lecturer
-                    else {
-                        $userRole->role_id = 2;
-
-                        try {
-                            $userRole->save();
-                            $this->logger->info('User role successfully switched', ['userRole' => $userRole->toArray()]);
-                            $resultCode = ResponseCode::HTTP_OK;
-                        } catch (\Exception $e) {
-                            $this->logger->error('User role could not be switched', ['error' => $e->getMessage()]);
-                            $resultCode = ResponseCode::HTTP_INTERNAL_SERVER_ERROR;
-                        }
+                /** @var $user User */
+                foreach ($this->users as $user) {
+                    $user->role_id = 2;
+                    try {
+                        $user->save();
+                        $this->logger->info('User role successfully switched', ['user' => $user->toArray()]);
+                        $resultCode = ResponseCode::HTTP_OK;
+                    } catch (\Exception $e) {
+                        $this->logger->error('User role could not be switched', ['error' => $e->getMessage()]);
+                        $resultCode = ResponseCode::HTTP_INTERNAL_SERVER_ERROR;
                     }
                 }
             } else {
@@ -188,7 +169,6 @@ class Role extends BaseModel
         } else {
             $resultCode = ResponseCode::HTTP_INTERNAL_SERVER_ERROR;
         }
-
         return $resultCode;
     }
 
@@ -215,9 +195,8 @@ class Role extends BaseModel
         return $resultCode;
     }
 
-    public function deleteUsersAndPermissions($role_id)
+    public function deleteUsersAndPermissions()
     {
-        $this->load(['id = ?', [$role_id]]);
         $this->logger->info('Starting delete users and permissions transaction.');
         $this->db->begin();
 
@@ -229,9 +208,10 @@ class Role extends BaseModel
 
         if (ResponseCode::HTTP_OK == $resultCode1 and ResponseCode::HTTP_OK == $resultCode2) {
             $this->db->commit();
-            $this->logger->info('Delete users  and permissions transaction successfully commit.');
+            $this->logger->info('Delete users and permissions transaction successfully commit.');
             return ResponseCode::HTTP_OK;
         }
+        return ResponseCode::HTTP_INTERNAL_SERVER_ERROR;
     }
 }
 

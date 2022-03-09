@@ -20,6 +20,7 @@ import React from 'react';
 
 import { Form, Input, Typography } from 'antd';
 import { T } from '@transifex/react';
+
 const { Title, Paragraph } = Typography;
 
 type Props = {

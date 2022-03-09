@@ -19,17 +19,7 @@
 import React, { Component } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { Layout, Typography, Radio, Button, Menu, Dropdown, Space, Input } from 'antd';
-import {
-    SearchOutlined,
-    GlobalOutlined,
-    DownOutlined,
-    UserOutlined,
-    StarOutlined,
-    ToolOutlined,
-    QuestionCircleOutlined,
-    DatabaseOutlined,
-    LogoutOutlined,
-} from '@ant-design/icons';
+import { SearchOutlined, GlobalOutlined, DownOutlined, UserOutlined, LogoutOutlined } from '@ant-design/icons';
 
 import authService from '../services/auth.service';
 
@@ -39,7 +29,7 @@ import arEG from 'antd/lib/locale/ar_EG';
 import { T } from '@transifex/react';
 
 const { Header } = Layout;
-const { Paragraph } = Typography;
+const { Text,Paragraph } = Typography;
 
 type userType = {
     username: string;
@@ -102,26 +92,14 @@ class AppHeader extends Component<Props, State> {
             <Menu>
                 <Menu.Item key="1" className="username-item text-uppercase">
                     <T _str="Signed in as" /> {currentUser?.username}
+                    <br/>
+                    <Text className="text-lowercase">{currentUser?.email}</Text>
                 </Menu.Item>
                 <Menu.Divider />
                 <Menu.Item key="2" icon={<UserOutlined />}>
                     <T _str="Profile" />
                 </Menu.Item>
-                <Menu.Item key="3" icon={<StarOutlined />}>
-                    <T _str="Starred" />
-                </Menu.Item>
-                <Menu.Item key="4" icon={<ToolOutlined />}>
-                    <T _str="Settings" />
-                </Menu.Item>
-                <Menu.Item key="5" icon={<QuestionCircleOutlined />}>
-                    <T _str="Help" />
-                </Menu.Item>
-                <Menu.Divider />
-                <Menu.Item key="6" icon={<DatabaseOutlined />}>
-                    <T _str="Side Administration" />
-                </Menu.Item>
-                <Menu.Divider />
-                <Menu.Item key="7" icon={<LogoutOutlined />}>
+                <Menu.Item key="3" icon={<LogoutOutlined />}>
                     <a onClick={() => this.logout()}>
                         <T _str="Sign Out" />
                     </a>

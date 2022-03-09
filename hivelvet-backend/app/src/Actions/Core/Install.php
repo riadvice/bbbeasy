@@ -77,7 +77,6 @@ class Install extends BaseAction
             $user->email    = $form['email'];
             $user->username = $form['username'];
             $user->password = $form['password'];
-            $user->role     = UserRole::ADMIN;
             $user->status   = UserStatus::ACTIVE;
 
             try {
@@ -104,7 +103,7 @@ class Install extends BaseAction
 
                 try {
                     $defaultSettings->save();
-                    $this->logger->info('Initial application setup : Add settings', ['settings' => $defaultSettings->toArray()]);
+                    $this->logger->info('Initial application setup : Update settings', ['settings' => $defaultSettings->toArray()]);
 
                     // add configured presets
                     $presets = $form['presetsConfig'];
@@ -138,17 +137,14 @@ class Install extends BaseAction
                         $allPrivileges = PrivilegeUtils::listSystemPrivileges();
                         $result = $roleAdmin->saveRoleAndPermissions($allPrivileges);
                         if (ResponseCode::HTTP_OK == $result) {
-                            $this->logger->info('Initial application setup : Add administrator role');
-
+                            $this->logger->info('Initial application setup : Add administrator role', ['administrator role' => $roleAdmin->toArray()]);
                             //assign admin created to role admin
-                            $userRole           = new \Models\UserRole();
-                            $userRole->role_id  = $roleAdmin->id;
-                            $userRole->user_id  = $user->id;
+                            $user->role_id = $roleAdmin->id;
                             try {
-                                $userRole->save();
-                                $this->logger->info('Initial application setup : Add user role for administrator', ['user_role_admin' => $userRole->toArray()]);
+                                $user->save();
+                                $this->logger->info('Initial application setup : Assign role to administrator user', ['user' => $user->toArray()]);
                             } catch (\Exception $e) {
-                                $this->logger->error('Initial application setup : User role could not be added', ['error' => $e->getMessage()]);
+                                $this->logger->error('Initial application setup : Role could not be assigned', ['error' => $e->getMessage()]);
                                 return;
                             }
 

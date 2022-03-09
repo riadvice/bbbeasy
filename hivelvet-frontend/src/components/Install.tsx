@@ -20,13 +20,13 @@ import React, {useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import InstallService from '../services/install.service';
 
-import { Steps, Button, message, Row, Col, Form, Result } from 'antd';
+import { Steps, Button, Row, Col, Form, Result } from 'antd';
 import DynamicIcon from './DynamicIcon';
 import { T } from '@transifex/react';
 import axios from 'axios';
-import {Step1Form} from "./Step1Form";
-import {Step2Form} from "./Step2Form";
-import {Step3Form} from "./Step3Form";
+import { Step1Form } from "./Step1Form";
+import { Step2Form } from "./Step2Form";
+import { Step3Form } from "./Step3Form";
 
 const API_URL = process.env.REACT_APP_API_URL;
 const { Step } = Steps;
@@ -177,8 +177,7 @@ const Install = (props: Props) => {
                         console.log(response);
                     })
                     .catch((error) => {
-                        const responseErrors = error.response.data.errors;
-                        message.error(responseErrors);
+                        console.log(error);
                     });
             }
         }

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Actions\Roles;
 
 use Actions\Delete as DeleteAction;
+use Actions\RequirePrivilegeTrait;
 use Enum\ResponseCode;
 use Models\Role;
 
@@ -31,14 +32,17 @@ use Models\Role;
  */
 class Delete extends DeleteAction
 {
+    use RequirePrivilegeTrait;
+
     public function execute($f3, $params): void
     {
         $role    = new Role();
         $role_id = $params['id'];
+        $role->load(['id = ?', $role_id]);
         $nbUsers = $role->getRoleUsers();
 
         //delete users and permissions
-        $resultCode = $role->deleteUsersAndPermissions($role_id);
+        $resultCode = $role->deleteUsersAndPermissions();
 
         if (ResponseCode::HTTP_OK === $resultCode) {
             // delete role after deleting assigned users and permissions
