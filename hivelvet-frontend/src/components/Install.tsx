@@ -145,7 +145,7 @@ const Install = (props: Props) => {
                         },
                     ]}
                 >
-                    <Input placeholder={t("username.label")} />
+                    <Input placeholder={t('username.label')} />
                 </Form.Item>
 
                 <Form.Item
@@ -162,7 +162,7 @@ const Install = (props: Props) => {
                         },
                     ]}
                 >
-                    <Input placeholder={t("username.label")} />
+                    <Input placeholder={t('username.label')} />
                 </Form.Item>
                 <Form.Item
                     label={<Trans i18nKey="password.label" />}
@@ -179,7 +179,7 @@ const Install = (props: Props) => {
                     ]}
                 >
                     <Input.Password
-                        placeholder={t("password.label")}
+                        placeholder={t('password.label')}
                         iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
                     />
                 </Form.Item>
@@ -249,7 +249,7 @@ const Install = (props: Props) => {
                             },
                         ]}
                     >
-                        <Input placeholder={t("company.name")} onChange={changeCompany} />
+                        <Input placeholder={t('company.name')} onChange={changeCompany} />
                     </Form.Item>
 
                     <Form.Item
@@ -266,7 +266,7 @@ const Install = (props: Props) => {
                             },
                         ]}
                     >
-                        <Input placeholder={t("company.website.label")} />
+                        <Input placeholder={t('company.website.label')} />
                     </Form.Item>
 
                     <Form.Item
@@ -279,7 +279,7 @@ const Install = (props: Props) => {
                             },
                         ]}
                     >
-                        <Input placeholder={t("platform.label")} />
+                        <Input placeholder={t('platform.label')} />
                     </Form.Item>
 
                     <Form.Item
@@ -292,7 +292,7 @@ const Install = (props: Props) => {
                             },
                         ]}
                     >
-                        <Input placeholder={t("terms_url.label")} />
+                        <Input placeholder={t('terms_url.label')} />
                     </Form.Item>
 
                     <Form.Item
@@ -305,7 +305,7 @@ const Install = (props: Props) => {
                             },
                         ]}
                     >
-                        <Input placeholder={t("privacy_policy_url.label")} />
+                        <Input placeholder={t('privacy_policy_url.label')} />
                     </Form.Item>
                 </div>
                 <div className="box last">
@@ -618,7 +618,7 @@ const Install = (props: Props) => {
                 <Col span={10} offset={7} className="section-top">
                     <Result
                         status="success"
-                        icon={<DynamicIcon type="CheckOutlined" className="success-install-icon"  />}
+                        icon={<DynamicIcon type="CheckOutlined" className="success-install-icon" />}
                         title={successMessage}
                         extra={
                             <Link to={'/login'} onClick={handleInstall} className="ant-btn ant-btn-primary ant-btn-lg">

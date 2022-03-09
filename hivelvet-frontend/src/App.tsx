@@ -114,7 +114,7 @@ class App extends Component<Props, State> {
                         setUser={this.setUser}
                         installed={installed}
                     />
- 
+
                     <Layout>
                         {installed && isLogged && <AppSider />}
                         <Content className="site-content">

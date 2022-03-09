@@ -146,21 +146,19 @@ class Register extends Component<Props, State> {
                                 <Form.Item
                                     label={<Trans i18nKey="username.label" />}
                                     name="username"
-                                    
-                                      rules={[
+                                    rules={[
                                         {
                                             required: true,
                                             message: <Trans i18nKey="username.required" />,
                                         },
-                                    ]} 
+                                    ]}
                                 >
-                                    <Input placeholder={t("username.label")} />
+                                    <Input placeholder={t('username.label')} />
                                 </Form.Item>
                                 <Form.Item
                                     label={<Trans i18nKey="email.label" />}
                                     name="email"
-                                   
-                                     rules={[
+                                    rules={[
                                         {
                                             type: 'email',
                                             message: <Trans i18nKey="email.invalid" />,
@@ -169,14 +167,14 @@ class Register extends Component<Props, State> {
                                             required: true,
                                             message: <Trans i18nKey="email.required" />,
                                         },
-                                    ]} 
+                                    ]}
                                 >
-                                    <Input placeholder={t("email.label")} />
+                                    <Input placeholder={t('email.label')} />
                                 </Form.Item>
                                 <Form.Item
                                     label={<Trans i18nKey="password.label" />}
                                     name="password"
-                                         rules={[
+                                    rules={[
                                         {
                                             min: 4,
                                             message: <Trans i18nKey="password.size" />,
@@ -185,7 +183,7 @@ class Register extends Component<Props, State> {
                                             required: true,
                                             message: <Trans i18nKey="password.required" />,
                                         },
-                                    ]} 
+                                    ]}
                                 >
                                     <Input.Password
                                         placeholder="**********"
@@ -195,7 +193,7 @@ class Register extends Component<Props, State> {
                                 <Form.Item
                                     label={<Trans i18nKey="confirm-password.label" />}
                                     name="confirmPassword"
-                                        rules={[
+                                    rules={[
                                         {
                                             min: 4,
                                             message: <Trans i18nKey="confirm-password.size" />,
@@ -216,7 +214,7 @@ class Register extends Component<Props, State> {
                                                 );
                                             },
                                         }),
-                                    ]} 
+                                    ]}
                                 >
                                     <Input.Password placeholder="**********" />
                                 </Form.Item>
@@ -224,7 +222,7 @@ class Register extends Component<Props, State> {
                                 <Form.Item
                                     className="form-agree"
                                     name="agreement"
-                                        rules={[
+                                    rules={[
                                         {
                                             validator: (_, value) =>
                                                 value
@@ -237,7 +235,7 @@ class Register extends Component<Props, State> {
                                                           )
                                                       ),
                                         },
-                                    ]} 
+                                    ]}
                                 >
                                     <Checkbox>
                                         <Trans i18nKey="agree" />

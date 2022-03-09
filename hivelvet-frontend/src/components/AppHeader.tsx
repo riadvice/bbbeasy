@@ -100,9 +100,12 @@ class AppHeader extends Component<Props, State> {
                                 <>
                                     <Button type="primary" icon={<UserOutlined />} className="profil-btn" />
                                     <Button
-                                      
                                         type="primary"
-                                        icon={<LogoutOutlined  rotate={this.props.currentLocale.includes("ar")?180:0 }  />}
+                                        icon={
+                                            <LogoutOutlined
+                                                rotate={this.props.currentLocale.includes('ar') ? 180 : 0}
+                                            />
+                                        }
                                         className="logout-btn"
                                         onClick={() => this.logout()}
                                     />

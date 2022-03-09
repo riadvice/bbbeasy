@@ -152,28 +152,23 @@ class Login extends Component<Props, State> {
                             <Form.Item
                                 label={<Trans i18nKey="email.label" />}
                                 name="email"
-                               
-                                 rules={[
+                                rules={[
                                     {
                                         type: 'email',
-                                        message:  <Trans i18nKey="email.invalid" />,
+                                        message: <Trans i18nKey="email.invalid" />,
                                     },
                                     {
                                         required: true,
-                                         message: <Trans i18nKey="email.required" />,
+                                        message: <Trans i18nKey="email.required" />,
                                     },
-                                ]}  
+                                ]}
                             >
-                               
- 
-                    
-                                <Input placeholder={t("email.label")} />
+                                <Input placeholder={t('email.label')} />
                             </Form.Item>
                             <Form.Item
                                 label={<Trans i18nKey="password.label" />}
                                 name="password"
-                               
-                                  rules={[
+                                rules={[
                                     {
                                         min: 4,
                                         message: <Trans i18nKey="password.size" />,

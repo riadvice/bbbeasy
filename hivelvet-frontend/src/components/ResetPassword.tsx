@@ -124,7 +124,7 @@ class Reset extends Component<Props, State> {
                                     },
                                 ]}
                             >
-                                <Input placeholder={t("email.label")} />
+                                <Input placeholder={t('email.label')} />
                             </Form.Item>
                             <Form.Item>
                                 <Button

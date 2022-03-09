@@ -37,7 +37,7 @@ i18next.use(initReactI18next).init({
     lng: localStorage.getItem('locale'),
     fallbackLng: 'en',
     interpolation: { escapeValue: false },
-    debug:true
+    debug: true,
 });
 class LocaleService {
     language: any = localStorage.getItem('locale') != null ? localStorage.getItem('locale') : navigator.language;
