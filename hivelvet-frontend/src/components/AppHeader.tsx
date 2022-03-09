@@ -76,7 +76,7 @@ class AppHeader extends Component<Props, State> {
             <Header className="site-header">
                 <Paragraph className="site-header-inner">
                     <Link to={'/'}>
-                        <img className="header-logo-image" src="images/logo_01.png" alt="Logo" />
+                        <img className="header-logo-image" src="//images/logo_01.png" alt="Logo" />
                     </Link>
                     {installed && (
                         <Space size="large">
@@ -103,6 +103,7 @@ class AppHeader extends Component<Props, State> {
                                         type="primary"
                                         icon={
                                             <LogoutOutlined
+                                            // @fixme : use scaleX and direction instead of ar
                                                 rotate={this.props.currentLocale.includes('ar') ? 180 : 0}
                                             />
                                         }
