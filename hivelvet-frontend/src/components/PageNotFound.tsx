@@ -19,17 +19,18 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Result } from 'antd';
+import { Trans, withTranslation } from 'react-i18next';
 
 const PageNotFound = () => {
     return (
         <Result
             status="404"
             title="404"
-            subTitle="Sorry, the page you visited does not exist."
+            subTitle={<Trans i18nKey="not_found" />}
             className="page-not-found"
             extra={
                 <Link className="ant-btn color-blue" to="/">
-                    Back Home
+                    <Trans i18nkey="back-home" />
                 </Link>
             }
             //extra={<Link className="ant-btn ant-btn-primary" to="/">Back Home</Link>}
@@ -37,4 +38,4 @@ const PageNotFound = () => {
     );
 };
 
-export default PageNotFound;
+export default withTranslation()(PageNotFound);

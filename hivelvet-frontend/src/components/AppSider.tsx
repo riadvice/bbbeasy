@@ -22,6 +22,8 @@ import { Link, useLocation } from 'react-router-dom';
 import { Button, Dropdown, Layout, Menu } from 'antd';
 import { PlusOutlined, DownOutlined } from '@ant-design/icons';
 import DynamicIcon from './DynamicIcon';
+import { withTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
@@ -29,49 +31,49 @@ const { SubMenu } = Menu;
 const AppSider = () => {
     const location = useLocation();
     const [currentPath, setCurrentPath] = React.useState(location.pathname);
-
+    const { t, i18n } = useTranslation();
     const newMenu = (
         <Menu>
-            <Menu.Item key="1">Room</Menu.Item>
-            <Menu.Item key="2">Label</Menu.Item>
-            <Menu.Item key="3">Preset</Menu.Item>
+            <Menu.Item key="1">{t('room')}</Menu.Item>
+            <Menu.Item key="2">{t('label')}</Menu.Item>
+            <Menu.Item key="3">{t('preset')}</Menu.Item>
         </Menu>
     );
     const menuData = [
         {
-            name: 'Rooms',
+            name: t('rooms'),
             icon: 'UserOutlined',
             path: '/home',
         },
         {
-            name: 'Labels',
+            name: t('labels'),
             icon: 'TagsOutlined',
             path: '/labels',
         },
         {
-            name: 'Presets',
+            name: t('presets'),
             icon: 'UserAddOutlined',
             path: '/presets',
         },
         {
-            name: 'Settings',
+            name: t('settings'),
             icon: 'ContainerOutlined',
             path: 'sub1',
             children: [
                 {
-                    name: 'Company & Branding',
+                    name: t('Company') + ' & ' + t('branding'),
                     path: '/settings/company',
                 },
                 {
-                    name: 'Users',
+                    name: t('users'),
                     path: '/settings/users',
                 },
                 {
-                    name: 'Roles',
+                    name: t('roles'),
                     path: '/settings/roles',
                 },
                 {
-                    name: 'Notifications',
+                    name: t('notifications'),
                     path: '/settings/notifications',
                 },
                 {
@@ -81,7 +83,7 @@ const AppSider = () => {
             ],
         },
         {
-            name: 'Help',
+            name: t('help'),
             icon: 'QuestionCircleOutlined',
             path: 'https://riadvice.tn/',
         },
@@ -94,7 +96,7 @@ const AppSider = () => {
         <Sider className="site-sider" width={250}>
             <Dropdown overlay={newMenu}>
                 <Button size="middle" className="sider-new-btn">
-                    <PlusOutlined /> New <DownOutlined />
+                    <PlusOutlined /> {t('new')} <DownOutlined />
                 </Button>
             </Dropdown>
 
@@ -132,4 +134,4 @@ const AppSider = () => {
     );
 };
 
-export default AppSider;
+export default withTranslation()(AppSider);

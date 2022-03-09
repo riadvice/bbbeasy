@@ -20,26 +20,51 @@ import moment from 'moment';
 import frFR from 'antd/lib/locale/fr_FR';
 
 import arEG from 'antd/lib/locale/ar_EG';
+import { initReactI18next } from 'react-i18next';
 
-import { tx } from '@transifex/native';
+import i18next from 'i18next';
+import translationEN from '../locale/en-US.json';
+import translationFR from '../locale/fr-FR.json';
+import translationAR from '../locale/ar-TN.json';
+import languages from '../components/Languages';
 
-localStorage.getItem('locale')
-    ? tx.setCurrentLocale(localStorage.getItem('locale'))
-    : tx.setCurrentLocale(navigator.language);
+i18next.use(initReactI18next).init({
+    resources: {
+        en: { translation: translationEN },
+        fr: { translation: translationFR },
+        ar: { translation: translationAR },
+    },
+    lng: localStorage.getItem('locale'),
+    fallbackLng: 'en',
+    interpolation: { escapeValue: false },
+});
 class LocaleService {
     language: any = localStorage.getItem('locale') != null ? localStorage.getItem('locale') : navigator.language;
 
     direction: any = this.language !== 'ar' ? 'ltr' : 'rtl';
 
-    antdlocale: any = this.language.includes('en') ? enUS : this.language.includes('fr') ? frFR : arEG;
+    antdlocale: any = this.language.startsWith('en')
+        ? enUS
+        : this.language.startsWith('fr')
+        ? frFR
+        : this.language.startsWith('ar')
+        ? arEG
+        : enUS;
     changeLocale(locale) {
+        const res = languages.filter((item) => item.value == locale);
+        i18next.changeLanguage(res[0].key);
         moment.locale(locale);
-        tx.setCurrentLocale(locale);
 
         this.language = locale;
         this.direction = locale === 'ar' ? 'rtl' : 'ltr';
         localStorage.setItem('locale', this.language);
-        this.antdlocale = this.language.includes('en') ? enUS : this.language.includes('fr') ? frFR : arEG;
+        this.antdlocale = this.language.startsWith('en')
+            ? enUS
+            : this.language.startsWith('fr')
+            ? frFR
+            : this.language.startsWith('ar')
+            ? arEG
+            : enUS;
     }
 }
 

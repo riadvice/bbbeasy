@@ -42,20 +42,18 @@ import Home from './components/Home';
 import 'moment/locale/fr';
 import 'moment/locale/ar';
 import 'moment/locale/en-au';
-import { tx } from '@transifex/native';
 
 import Logger from './lib/logger';
 
 import authService from './services/auth.service';
 import { Props } from 'react-intl/src/components/relative';
 import LocaleService from './services/LocaleService';
-
+import { Trans } from 'react-i18next';
 const { Content } = Layout;
 
-tx.setCurrentLocale(LocaleService.language);
+import { withTranslation, WithTranslation } from 'react-i18next';
 
 Logger.info('Initialisation Hivelvet Frontend Application');
-
 type State = {
     currentUser?: any;
     isLogged?: boolean;
@@ -91,6 +89,7 @@ class App extends Component<Props, State> {
         this.setState({
             language: lang,
         });
+        LocaleService.changeLocale(lang);
     };
     setInstall = () => {
         // @todo for future tasks change env var REACT_APP_INSTALLED to true
@@ -100,8 +99,6 @@ class App extends Component<Props, State> {
     };
 
     render() {
-        LocaleService.changeLocale(this.state.language);
-
         const { currentUser, isLogged, language, installed } = this.state;
         return (
             <Layout>
@@ -111,12 +108,14 @@ class App extends Component<Props, State> {
                     componentSize="large"
                 >
                     <AppHeader
-                        currentLocale={LocaleService.language}
+                        currentLocale={language}
                         setLang={this.setLang}
                         isLogged={isLogged}
                         setUser={this.setUser}
                         installed={installed}
                     />
+                    <Trans i18nKey="hello" />
+
                     <Layout>
                         {installed && isLogged && <AppSider />}
                         <Content className="site-content">
@@ -202,4 +201,4 @@ class App extends Component<Props, State> {
     }
 }
 
-export default App;
+export default withTranslation()(App);

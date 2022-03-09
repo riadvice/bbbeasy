@@ -21,9 +21,8 @@ import { Link, Navigate } from 'react-router-dom';
 
 import AuthService from '../services/auth.service';
 import { Form, Input, Button, message, Alert, Col, Row, Typography, Card } from 'antd';
-import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
-import { T } from '@transifex/react';
-
+import { Trans, withTranslation } from 'react-i18next';
+import EN_US from '../locale/en-US.json';
 const { Text, Title, Paragraph } = Typography;
 
 type Props = {
@@ -64,7 +63,7 @@ class Login extends Component<Props, State> {
                         role: response.data.role,
                     };
                     message.success({
-                        content: 'Welcome back ' + user_infos.username + ' !',
+                        content: <Trans i18nKey="welcome" /> + ' ' + user_infos.username + ' !',
                         className: 'success-message',
                     });
                     localStorage.setItem('user', JSON.stringify(user_infos));
@@ -83,15 +82,15 @@ class Login extends Component<Props, State> {
                 const response = error.response.data;
                 if (response.errors) {
                     const errors = Object.values(response.errors);
-                    const err = [];
+                    const err = '';
                     errors.forEach(function (value: any) {
                         const keys = Object.keys(value);
                         keys.forEach(function (key) {
-                            err.push(value[key]);
+                            err + value[key];
                         });
                     });
                     this.setState({
-                        errors: err,
+                        errors: response.errors,
                     });
                 }
 
@@ -122,30 +121,21 @@ class Login extends Component<Props, State> {
                             <img className="form-img" src="images/logo_02.png" alt="Logo" />
                             <Title level={4}>
                                 {' '}
-                                <T _str="Log into Your Account" />
+                                <Trans i18nkey="log_into_account" />
                             </Title>
                         </Paragraph>
 
-                        {errors.length > 0 && !successful && (
+                        {message && !successful && (
                             <Alert
                                 type="error"
                                 className="alert-msg"
                                 message={
-                                    errors.length > 1 ? (
-                                        <ul className="errors-list">
-                                            {errors.map((item, index) => (
-                                                <li key={index}>{item}</li>
-                                            ))}
-                                        </ul>
-                                    ) : (
-                                        <T _str={errors.toString()} />
-                                    )
+                                    <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == message)}>
+                                        {' '}
+                                    </Trans>
                                 }
                                 showIcon
                             />
-                        )}
-                        {message && !successful && (
-                            <Alert type="error" className="alert-msg" message={<T _str={message} />} showIcon />
                         )}
 
                         <Form
@@ -155,57 +145,62 @@ class Login extends Component<Props, State> {
                             initialValues={initialValues}
                             requiredMark={false}
                             scrollToFirstError={true}
-                            validateTrigger="onFinish"
+                            validateTrigger="onSubmit"
                             onFinish={this.handleLogin}
                         >
                             <Form.Item
-                                label={<T _str="Email" />}
+                                label={<Trans i18nKey="email.label" />}
                                 name="email"
-                                rules={[
+                                {...('email' in errors && {
+                                    help: <Trans i18nKey="email.required_back" />,
+                                    validateStatus: 'error',
+                                })}
+                                /* rules={[
                                     {
                                         type: 'email',
-                                        message: <T _str="Invalid Email" />,
+                                        message: <Trans i18nKey="email.invalid" />,
                                     },
                                     {
                                         required: true,
-                                        message: <T _str="Email is required" />,
+                                        message: <Trans i18nKey="email.required" />,
                                     },
-                                ]}
+                                ]}*/
                             >
                                 <Input placeholder="Email" />
                             </Form.Item>
                             <Form.Item
-                                label={<T _str="Password" />}
+                                label={<Trans i18nKey="password.label" />}
                                 name="password"
-                                rules={[
+                                {...('password' in errors && {
+                                    help: <Trans i18nKey="password.required_back" />,
+                                    validateStatus: 'error',
+                                })}
+                                /*  rules={[
                                     {
                                         min: 4,
-                                        message: <T _str="Password must be at least 4 characters" />,
+                                        message: <Trans i18nKey="password.size" />,
                                     },
                                     {
                                         required: true,
-                                        message: <T _str="Password is required" />,
+                                        message: <Trans i18nKey="password.required" />,
                                     },
-                                ]}
+                                ]}*/
                             >
-                                <Input.Password
-                                    placeholder="**********"
-                                    iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
-                                />
+                                <Input.Password placeholder="**********" />
                             </Form.Item>
                             <Form.Item>
                                 <Button type="primary" htmlType="submit" block>
-                                    <T _str="Login" />
+                                    <Trans i18nKey="login" />
                                 </Button>
                             </Form.Item>
                         </Form>
 
                         <Paragraph className="form-footer text-center">
                             <Text>
-                                <T _str="Forgot your password ?" />{' '}
+                                <Trans i18nKey="forgot-password" />?{' '}
                             </Text>
                             <Link to={'/reset-password'}>
-                                <T _str="Reset here" />{' '}
+                                <Trans i18nKey="reset-here" />{' '}
                             </Link>
                         </Paragraph>
                     </Card>
@@ -215,4 +210,4 @@ class Login extends Component<Props, State> {
     }
 }
 
-export default Login;
+export default withTranslation()(Login);

@@ -49,7 +49,7 @@ class Register extends BaseAction
         $dataChecker->verify($form['confirmPassword'], Validator::length(4)->equals($form['password'])->setName('confirmPassword'));
         // @fixme: the agreement must be accepted only if there are terms for the website
         // otherwise in the login it should look for available terms of they were not previously available and ask to accept them
-        $dataChecker->verify($form['agreement'], Validator::trueVal($form['agreement'])->setName('agreement'));
+        $dataChecker->verify($form['agreement'], Validator::trueVal()->setName('agreement'));
 
         if ($dataChecker->allValid()) {
             $usernameExist = $user->load(['username = ?', $form['username']]);
@@ -84,3 +84,4 @@ class Register extends BaseAction
         }
     }
 }
+
