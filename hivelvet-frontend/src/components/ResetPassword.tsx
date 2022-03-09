@@ -19,9 +19,10 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import AuthService from '../services/auth.service';
 import { Form, Input, Button, Checkbox, message, Alert, Col, Row, Typography, Card } from 'antd';
-import { Trans } from 'react-i18next';
+import { Trans, withTranslation } from 'react-i18next';
 const { Text, Title, Paragraph } = Typography;
 import EN_US from '../locale/en-US.json';
+import { t } from 'i18next';
 type Props = {};
 type State = {
     email?: string;
@@ -123,7 +124,7 @@ class Reset extends Component<Props, State> {
                                     },
                                 ]}
                             >
-                                <Input placeholder="Email" />
+                                <Input placeholder={t("email.label")} />
                             </Form.Item>
                             <Form.Item>
                                 <Button
@@ -153,4 +154,4 @@ class Reset extends Component<Props, State> {
     }
 }
 
-export default Reset;
+export default withTranslation()(Reset);

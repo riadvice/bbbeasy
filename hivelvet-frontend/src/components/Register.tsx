@@ -24,10 +24,11 @@ import AuthService from '../services/auth.service';
 import { Form, Input, Button, Checkbox, Alert, Col, Row, Typography, Card, Result } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import { T } from '@transifex/react';
-import { Trans } from 'react-i18next';
+import { Trans, withTranslation } from 'react-i18next';
 
 const { Title, Paragraph } = Typography;
 import EN_US from '../locale/en-US.json';
+import { t } from 'i18next';
 type Props = {};
 
 type State = {
@@ -145,27 +146,21 @@ class Register extends Component<Props, State> {
                                 <Form.Item
                                     label={<Trans i18nKey="username.label" />}
                                     name="username"
-                                    {...('username' in errors && {
-                                        help: <Trans i18nKey="username.required_back" />,
-                                        validateStatus: 'error',
-                                    })}
-                                    /* rules={[
+                                    
+                                      rules={[
                                         {
                                             required: true,
                                             message: <Trans i18nKey="username.required" />,
                                         },
-                                    ]}*/
+                                    ]} 
                                 >
-                                    <Input placeholder="Username" />
+                                    <Input placeholder={t("username.label")} />
                                 </Form.Item>
                                 <Form.Item
                                     label={<Trans i18nKey="email.label" />}
                                     name="email"
-                                    {...('email' in errors && {
-                                        help: <Trans i18nKey="email.required_back" />,
-                                        validateStatus: 'error',
-                                    })}
-                                    /*rules={[
+                                   
+                                     rules={[
                                         {
                                             type: 'email',
                                             message: <Trans i18nKey="email.invalid" />,
@@ -174,18 +169,14 @@ class Register extends Component<Props, State> {
                                             required: true,
                                             message: <Trans i18nKey="email.required" />,
                                         },
-                                    ]}*/
+                                    ]} 
                                 >
-                                    <Input placeholder="Email" />
+                                    <Input placeholder={t("email.label")} />
                                 </Form.Item>
                                 <Form.Item
                                     label={<Trans i18nKey="password.label" />}
                                     name="password"
-                                    {...('password' in errors && {
-                                        help: <Trans i18nKey="password.required_back" />,
-                                        validateStatus: 'error',
-                                    })}
-                                    /*  rules={[
+                                         rules={[
                                         {
                                             min: 4,
                                             message: <Trans i18nKey="password.size" />,
@@ -194,7 +185,7 @@ class Register extends Component<Props, State> {
                                             required: true,
                                             message: <Trans i18nKey="password.required" />,
                                         },
-                                    ]}*/
+                                    ]} 
                                 >
                                     <Input.Password
                                         placeholder="**********"
@@ -204,12 +195,7 @@ class Register extends Component<Props, State> {
                                 <Form.Item
                                     label={<Trans i18nKey="confirm-password.label" />}
                                     name="confirmPassword"
-                                    dependencies={['password']}
-                                    {...('confirmPassword' in errors && {
-                                        help: <Trans i18nKey="confirm-password.required_back" />,
-                                        validateStatus: 'error',
-                                    })}
-                                    /*  rules={[
+                                        rules={[
                                         {
                                             min: 4,
                                             message: <Trans i18nKey="confirm-password.size" />,
@@ -230,7 +216,7 @@ class Register extends Component<Props, State> {
                                                 );
                                             },
                                         }),
-                                    ]}*/
+                                    ]} 
                                 >
                                     <Input.Password placeholder="**********" />
                                 </Form.Item>
@@ -238,12 +224,7 @@ class Register extends Component<Props, State> {
                                 <Form.Item
                                     className="form-agree"
                                     name="agreement"
-                                    valuePropName="checked"
-                                    {...('agreement' in errors && {
-                                        help: <Trans i18nKey="agreement.required_back" />,
-                                        validateStatus: 'error',
-                                    })}
-                                    /* rules={[
+                                        rules={[
                                         {
                                             validator: (_, value) =>
                                                 value
@@ -256,7 +237,7 @@ class Register extends Component<Props, State> {
                                                           )
                                                       ),
                                         },
-                                    ]}*/
+                                    ]} 
                                 >
                                     <Checkbox>
                                         <Trans i18nKey="agree" />
@@ -286,4 +267,4 @@ class Register extends Component<Props, State> {
     }
 }
 
-export default Register;
+export default withTranslation()(Register);

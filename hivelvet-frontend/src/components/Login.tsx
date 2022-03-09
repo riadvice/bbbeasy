@@ -23,6 +23,7 @@ import AuthService from '../services/auth.service';
 import { Form, Input, Button, message, Alert, Col, Row, Typography, Card } from 'antd';
 import { Trans, withTranslation } from 'react-i18next';
 import EN_US from '../locale/en-US.json';
+import { t } from 'i18next';
 const { Text, Title, Paragraph } = Typography;
 
 type Props = {
@@ -151,31 +152,28 @@ class Login extends Component<Props, State> {
                             <Form.Item
                                 label={<Trans i18nKey="email.label" />}
                                 name="email"
-                                {...('email' in errors && {
-                                    help: <Trans i18nKey="email.required_back" />,
-                                    validateStatus: 'error',
-                                })}
-                                /* rules={[
+                               
+                                 rules={[
                                     {
                                         type: 'email',
-                                        message: <Trans i18nKey="email.invalid" />,
+                                        message:  <Trans i18nKey="email.invalid" />,
                                     },
                                     {
                                         required: true,
-                                        message: <Trans i18nKey="email.required" />,
+                                         message: <Trans i18nKey="email.required" />,
                                     },
-                                ]}*/
+                                ]}  
                             >
-                                <Input placeholder="Email" />
+                               
+ 
+                    
+                                <Input placeholder={t("email.label")} />
                             </Form.Item>
                             <Form.Item
                                 label={<Trans i18nKey="password.label" />}
                                 name="password"
-                                {...('password' in errors && {
-                                    help: <Trans i18nKey="password.required_back" />,
-                                    validateStatus: 'error',
-                                })}
-                                /*  rules={[
+                               
+                                  rules={[
                                     {
                                         min: 4,
                                         message: <Trans i18nKey="password.size" />,
@@ -184,7 +182,7 @@ class Login extends Component<Props, State> {
                                         required: true,
                                         message: <Trans i18nKey="password.required" />,
                                     },
-                                ]}*/
+                                ]}
                             >
                                 <Input.Password placeholder="**********" />
                             </Form.Item>

@@ -114,8 +114,7 @@ class App extends Component<Props, State> {
                         setUser={this.setUser}
                         installed={installed}
                     />
-                    <Trans i18nKey="hello" />
-
+ 
                     <Layout>
                         {installed && isLogged && <AppSider />}
                         <Content className="site-content">
