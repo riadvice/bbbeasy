@@ -1,0 +1,57 @@
+ar-TN:
+  hello: مرحبًا
+  get started: البدء
+  sign-in-to-continue: تسجيل الدخول لمواصلة تطبيقنا
+  remember: تذكرني
+  forgot-password: نسيت كلمة المرور
+  login-now: تسجيل الدخول الآن
+  Dont-t-have-account: ليس لديك حساب
+  register-here: سجل هنا
+  email :  
+    label: البريد الإلكتروني
+    required: البريد الإلكتروني مطلوب
+    invalid: البريد الإلكتروني غير صالح
+    already-exists: البريد الإلكتروني موجود بالفعل
+  password:
+    label: كلمه مرور
+    required: كلمة المرور مطلوبة
+    size:  يجب أن تكون كلمة المرور 4 أحرف على الأقل
+    invalid: كلمة مرور غير صالحة
+  join-us: انضم إلينا
+  register-now: سجل الآن وانضم إلى مجتمعنا
+  username:
+    label: اسم المستخدم
+    required: مطلوب اسم مستخدم
+    already-exists: اسم المستخدم والبريد الإلكتروني موجودان بالفعل
+  confirm-password:
+    label: تأكيد كلمة المرور
+    required: تأكيد كلمة المرور مطلوب
+    size: يجب أن يكون تأكيد كلمة المرور على الأقل 4 أحرف
+  read-agreement: لقد قرأت الاتفاق
+  register: سجل الآن
+  have-already-account: لديك حساب بالفعل
+  login-here: تسجيل الدخول هنا
+  paswords-not-match: لا تتطابق كلمتا المرور اللذين أدخلتهما
+  user-could-not-logged: تعذر على المستخدم تسجيل الدخول
+  success-login: تسجيل دخول المستخدم بنجاح
+  success-registration: مبروك! تم إنشاء حسابك بنجاح
+  username-email-already-exist: اسم المستخدم والبريد الإلكتروني موجودان بالفعل
+  welcome: مرحباً بك مرة أخرى
+  accept-agreement: يجب أن تقبل الاتفاق
+  agree: أوافق على
+  terms: شروط الخدمة
+  and: و
+  privacy-policy: سياسة الخصوصية
+  user_not_exists: المستخدم غير موجود
+  success_change_password: تم تغيير كلمة المرور بنجاح
+  error_change_password: تعذر تغيير كلمة المرور
+  error-registration: تعذر إضافة المستخدم
+  sent-link-successfully : يرجى التحقق من بريدك الإلكتروني لإعادة تعيين كلمة المرور الخاصة بك 
+  token:
+    expired: انتهت صلاحية الرمز المميز
+    consumed: تم استهلاك الرمز المميز
+
+  
+
+
+  

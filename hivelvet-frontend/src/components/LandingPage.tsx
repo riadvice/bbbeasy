@@ -22,6 +22,7 @@ import { Link } from 'react-router-dom';
 import { Row, Col, Typography, Avatar } from 'antd';
 import { AppstoreAddOutlined, BgColorsOutlined, PlayCircleOutlined, ControlOutlined } from '@ant-design/icons';
 import { T } from '@transifex/react';
+import { Trans, withTranslation } from 'react-i18next';
 
 const { Title, Paragraph } = Typography;
 
@@ -31,18 +32,21 @@ class LandingPage extends Component<any, any> {
             <>
                 <Row justify="center" align="top" className="landing-content">
                     <Col span={12}>
-                        <Title>Welcome to Hivelvet</Title>
+                        <Title>
+                            <Trans i18nKey="welcome_hivelvet" />
+                        </Title>
                         <p className="mb-30">
-                            Create fully customisable rooms for <strong>BigBlueButton</strong>
+                            <Trans i18nKey="create_customizable_rooms" />
+                            <strong>BigBlueButton</strong>
                         </p>
                         <Paragraph className="landing-btn">
                             <Link className="ant-btn ant-btn-primary text-white" to={'/login'}>
                                 {' '}
-                                <T _str="Login" />{' '}
+                                <Trans i18nKey="login" />{' '}
                             </Link>
                             <Link className={'ant-btn color-primary'} to={'/register'}>
                                 {' '}
-                                <T _str="Sign up" />{' '}
+                                <Trans i18nKey="sign-up" />
                             </Link>
                         </Paragraph>
                     </Col>
@@ -53,25 +57,35 @@ class LandingPage extends Component<any, any> {
                 <Row gutter={[40, 8]} justify="center" className="features text-center">
                     <Col span={3}>
                         <Avatar size={45} icon={<AppstoreAddOutlined />} className="ant-btn-primary hivelvet-btn" />
-                        <p>Personal Rooms</p>
+                        <p>
+                            <Trans i18nKey="personal-rooms" />
+                        </p>
                     </Col>
                     <Col span={3}>
                         <Avatar size={45} icon={<BgColorsOutlined />} className="ant-btn-primary hivelvet-btn" />
-                        <p>Full Branding</p>
+                        <p>
+                            <Trans i18nKey="full-brandings" />
+                        </p>
                     </Col>
                     <Col span={3}>
                         <Avatar size={45} icon={<PlayCircleOutlined />} className="ant-btn-primary hivelvet-btn" />
-                        <p>Recordings management</p>
-                    </Col>
-                    <Col span={3}>
-                        <Avatar size={45} icon={<ControlOutlined />} className="ant-btn-primary hivelvet-btn" />
-                        <p>Flexible Configuration</p>
+                        <p>
+                            <Trans i18nKey="recordings-management" />
+                        </p>
                     </Col>
                     <Col span={3}>
                         <Avatar size={45} icon={<ControlOutlined />} className="ant-btn-primary hivelvet-btn" />
                         <p>
-                            ZcaleRight <br />
-                            Support
+                            <Trans i18nKey="flexible-configuration" />
+                        </p>
+                    </Col>
+                    <Col span={3}>
+                        <Avatar size={45} icon={<ControlOutlined />} className="ant-btn-primary hivelvet-btn" />
+                        <p>
+                            <Trans i18nKey="zcaleright" />
+
+                            <br />
+                            <Trans i18nKey="support" />
                         </p>
                     </Col>
                 </Row>
@@ -80,4 +94,4 @@ class LandingPage extends Component<any, any> {
     }
 }
 
-export default LandingPage;
+export default withTranslation()(LandingPage);

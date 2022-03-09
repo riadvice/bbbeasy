@@ -39,32 +39,21 @@ import Reset from './components/ResetPassword';
 import ChangePassword from './components/ChangePassword';
 import Home from './components/Home';
 
-import enUS from 'antd/lib/locale/en_US';
-import frFR from 'antd/lib/locale/fr_FR';
-import arEG from 'antd/lib/locale/ar_EG';
-import moment from 'moment';
 import 'moment/locale/fr';
 import 'moment/locale/ar';
 import 'moment/locale/en-au';
-import { tx } from '@transifex/native';
 
 import Logger from './lib/logger';
 
 import authService from './services/auth.service';
 import { Props } from 'react-intl/src/components/relative';
-
-moment.locale('en');
-
+import LocaleService from './services/LocaleService';
+import { Trans } from 'react-i18next';
 const { Content } = Layout;
 
-tx.init({
-    token: '1/7385d403dc3545240d6771327397811a619efe18',
-});
-
-tx.setCurrentLocale('en');
+import { withTranslation, WithTranslation } from 'react-i18next';
 
 Logger.info('Initialisation Hivelvet Frontend Application');
-
 type State = {
     currentUser?: any;
     isLogged?: boolean;
@@ -73,23 +62,20 @@ type State = {
 };
 
 class App extends Component<Props, State> {
-    direction: any = 'ltr';
     // to be changed by backend after installation
     isInstalled: boolean = JSON.parse(process.env.REACT_APP_INSTALLED) || false;
 
     constructor(props: Props) {
         super(props);
-        tx.setCurrentLocale('en');
 
         this.state = {
             currentUser: null,
             isLogged: false,
-            language: enUS,
+            language: LocaleService.language,
             installed: this.isInstalled,
         };
     }
     componentDidMount = () => {
-        this.setLang(enUS);
         const user = authService.getCurrentUser();
         if (authService.getCurrentUser() != null) this.setUser(user, true);
     };
@@ -103,7 +89,7 @@ class App extends Component<Props, State> {
         this.setState({
             language: lang,
         });
-        this.direction = lang.locale !== 'ar' ? 'ltr' : 'rtl';
+        LocaleService.changeLocale(lang);
     };
     setInstall = () => {
         // @todo for future tasks change env var REACT_APP_INSTALLED to true
@@ -114,10 +100,13 @@ class App extends Component<Props, State> {
 
     render() {
         const { currentUser, isLogged, language, installed } = this.state;
-
         return (
             <Layout>
-                <ConfigProvider locale={language} direction={this.direction} componentSize="large">
+                <ConfigProvider
+                    locale={LocaleService.antdlocale}
+                    direction={LocaleService.direction}
+                    componentSize="large"
+                >
                     <AppHeader
                         currentLocale={language}
                         setLang={this.setLang}
@@ -125,6 +114,7 @@ class App extends Component<Props, State> {
                         setUser={this.setUser}
                         installed={installed}
                     />
+
                     <Layout>
                         {installed && isLogged && <AppSider />}
                         <Content className="site-content">
@@ -210,4 +200,4 @@ class App extends Component<Props, State> {
     }
 }
 
-export default App;
+export default withTranslation()(App);

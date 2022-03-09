@@ -19,9 +19,10 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import AuthService from '../services/auth.service';
 import { Form, Input, Button, Checkbox, message, Alert, Col, Row, Typography, Card } from 'antd';
-import { T } from '@transifex/react';
+import { Trans, withTranslation } from 'react-i18next';
 const { Text, Title, Paragraph } = Typography;
-
+import EN_US from '../locale/en-US.json';
+import { t } from 'i18next';
 type Props = {};
 type State = {
     email?: string;
@@ -86,11 +87,20 @@ class Reset extends Component<Props, State> {
                             <img className="form-img" src="images/logo_02.png" alt="Logo" />
                             <Title level={4}>
                                 {' '}
-                                <T _str="Reset my password" />
+                                <Trans i18nkey="reset-password" />
                             </Title>
                         </Paragraph>
                         {message && !successful && (
-                            <Alert type="error" className="alert-msg" message={<T _str={message} />} showIcon />
+                            <Alert
+                                type="error"
+                                className="alert-msg"
+                                message={
+                                    <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == message)}>
+                                        {' '}
+                                    </Trans>
+                                }
+                                showIcon
+                            />
                         )}
                         <Form
                             layout="vertical"
@@ -100,21 +110,21 @@ class Reset extends Component<Props, State> {
                             onFinish={this.handleReset}
                         >
                             <Form.Item
-                                label="Email"
+                                label={<Trans i18nKey="email.label" />}
                                 name="email"
                                 hasFeedback
                                 rules={[
                                     {
                                         type: 'email',
-                                        message: <T _str="Invalid Email" />,
+                                        message: <Trans i18nKey="email.invalid" />,
                                     },
                                     {
                                         required: true,
-                                        message: <T _str="Email is required" />,
+                                        message: <Trans i18nKey="email.required" />,
                                     },
                                 ]}
                             >
-                                <Input placeholder="Email" />
+                                <Input placeholder={t('email.label')} />
                             </Form.Item>
                             <Form.Item>
                                 <Button
@@ -124,17 +134,17 @@ class Reset extends Component<Props, State> {
                                     size="large"
                                     block
                                 >
-                                    <T _str="Reset password" />
+                                    <Trans i18nKey="reset-password" />
                                 </Button>
                             </Form.Item>
                         </Form>
 
                         <Paragraph className="form-footer text-center">
                             <Text>
-                                <T _str="I remember my password" />{' '}
+                                <Trans i18nKey="remember-password" />{' '}
                             </Text>
                             <Link to={'/login'}>
-                                <T _str="Back to login" />{' '}
+                                <Trans i18nKey="back-to-login" />{' '}
                             </Link>
                         </Paragraph>
                     </Card>
@@ -144,4 +154,4 @@ class Reset extends Component<Props, State> {
     }
 }
 
-export default Reset;
+export default withTranslation()(Reset);

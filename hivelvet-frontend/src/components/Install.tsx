@@ -43,6 +43,7 @@ import DynamicIcon from './DynamicIcon';
 import { RcFile } from 'antd/lib/upload';
 import { T } from '@transifex/react';
 import axios from 'axios';
+import { Trans, useTranslation, withTranslation } from 'react-i18next';
 
 const API_URL = process.env.REACT_APP_API_URL;
 const { Title, Text, Paragraph } = Typography;
@@ -57,6 +58,8 @@ type Props = {
 
 const Install = (props: Props) => {
     const { handleInstall } = props;
+    const { t, i18n } = useTranslation();
+
     const [stepForm] = Form.useForm();
     const initialValues = {
         username: '',
@@ -128,72 +131,55 @@ const Install = (props: Props) => {
                 <Paragraph className="form-header text-center">
                     <Title level={4}>
                         {' '}
-                        <T _str="Create an administrator account" />
+                        <Trans i18nKey="create-administrator-account" />
                     </Title>
                 </Paragraph>
-                {errorsStep1.length > 0 && (
-                    <Alert
-                        type="error"
-                        className="alert-msg"
-                        message={
-                            errorsStep1.length > 1 ? (
-                                <ul className="errors-list">
-                                    {errorsStep1.map((item, index) => (
-                                        <li key={index}>{item}</li>
-                                    ))}
-                                </ul>
-                            ) : (
-                                <T _str={errorsStep1.toString()} />
-                            )
-                        }
-                        showIcon
-                    />
-                )}
+
                 <Form.Item
-                    label={<T _str="Username" />}
+                    label={<Trans i18nKey="username.label" />}
                     name="username"
                     rules={[
                         {
                             required: true,
-                            message: 'Username is required',
+                            message: <Trans i18nKey="username.required" />,
                         },
                     ]}
                 >
-                    <Input placeholder="Username" />
+                    <Input placeholder={t('username.label')} />
                 </Form.Item>
 
                 <Form.Item
-                    label={<T _str="Email" />}
+                    label={<Trans i18nKey="email.label" />}
                     name="email"
                     rules={[
                         {
                             type: 'email',
-                            message: 'Email is invalid',
+                            message: <Trans i18nKey="email.invalid" />,
                         },
                         {
                             required: true,
-                            message: 'Email is required',
+                            message: <Trans i18nKey="email.required" />,
                         },
                     ]}
                 >
-                    <Input placeholder="Email" />
+                    <Input placeholder={t('username.label')} />
                 </Form.Item>
                 <Form.Item
-                    label={<T _str="Password" />}
+                    label={<Trans i18nKey="password.label" />}
                     name="password"
                     rules={[
                         {
                             min: 4,
-                            message: 'Password must be at least 4 characters',
+                            message: <Trans i18nKey="password.size" />,
                         },
                         {
                             required: true,
-                            message: 'Password is required',
+                            message: <Trans i18nKey="password.required" />,
                         },
                     ]}
                 >
                     <Input.Password
-                        placeholder="Password"
+                        placeholder={t('password.label')}
                         iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
                     />
                 </Form.Item>
@@ -232,7 +218,7 @@ const Install = (props: Props) => {
                     <Paragraph className="form-header">
                         <Title level={4}>
                             {' '}
-                            <T _str="Company" />
+                            <Trans i18nKey="company.label" />
                         </Title>
                     </Paragraph>
                     {errorsStep2.length > 0 && (
@@ -254,79 +240,79 @@ const Install = (props: Props) => {
                         />
                     )}
                     <Form.Item
-                        label={<T _str="Company name" />}
+                        label={<Trans i18nKey="company.name" />}
                         name="company_name"
                         rules={[
                             {
                                 required: true,
-                                message: 'Company name is required',
+                                message: <Trans i18nKey="company.required" />,
                             },
                         ]}
                     >
-                        <Input placeholder="Company name" onChange={changeCompany} />
+                        <Input placeholder={t('company.name')} onChange={changeCompany} />
                     </Form.Item>
 
                     <Form.Item
-                        label={<T _str="Company website" />}
+                        label={<Trans i18nKey="company.website.label" />}
                         name="company_url"
                         rules={[
                             {
                                 required: true,
-                                message: 'Company website is required',
+                                message: <Trans i18nKey="company.website.required" />,
                             },
                             {
                                 type: 'url',
-                                message: 'Company website is not a valid url',
+                                message: <Trans i18nKey="company.website.invalid" />,
                             },
                         ]}
                     >
-                        <Input placeholder="Company website" />
+                        <Input placeholder={t('company.website.label')} />
                     </Form.Item>
 
                     <Form.Item
-                        label={<T _str="Platform name" />}
+                        label={<Trans i18nKey="platform.label" />}
                         name="platform_name"
                         rules={[
                             {
                                 required: true,
-                                message: 'Platform name is required',
+                                message: <Trans i18nKey="platform.required" />,
                             },
                         ]}
                     >
-                        <Input placeholder="Platform name" />
+                        <Input placeholder={t('platform.label')} />
                     </Form.Item>
 
                     <Form.Item
-                        label={<T _str="Terms of use URL" />}
+                        label={<Trans i18nKey="terms_url.label" />}
                         name="term_url"
                         rules={[
                             {
                                 type: 'url',
-                                message: 'Term of use url is not a valid url',
+                                message: <Trans i18nKey="terms_url.invalid" />,
                             },
                         ]}
                     >
-                        <Input placeholder="Term of use URL" />
+                        <Input placeholder={t('terms_url.label')} />
                     </Form.Item>
 
                     <Form.Item
-                        label={<T _str="Privacy Policy URL" />}
+                        label={<Trans i18nKey="privacy_policy_url.label" />}
                         name="policy_url"
                         rules={[
                             {
                                 type: 'url',
-                                message: 'Privacy Policy url is not a valid url',
+                                message: <Trans i18nkey="privacy_policy_url.invalid" />,
                             },
                         ]}
                     >
-                        <Input placeholder="Privacy Policy URL" />
+                        <Input placeholder={t('privacy_policy_url.label')} />
                     </Form.Item>
                 </div>
                 <div className="box last">
                     <Paragraph className="form-header">
                         <Title level={4}>
                             {' '}
-                            <T _str="Branding" />
+                            <Trans i18nKey="branding" />
                         </Title>
                     </Paragraph>
                     <Form.Item>
@@ -345,10 +331,10 @@ const Install = (props: Props) => {
                                         file.type === 'image/png' ||
                                         file.type === 'image/jpeg'
                                     ) {
-                                        message.success('file uploaded successfully');
+                                        message.success(t('success-_upload'));
                                         return false;
                                     }
-                                    message.error('wrong file');
+                                    message.error(t('wrong_file'));
                                     return null;
                                 }}
                             >
@@ -356,14 +342,14 @@ const Install = (props: Props) => {
                                     <InboxOutlined />
                                 </p>
                                 <Text strong className="ant-upload-text">
-                                    Drop your logo here
+                                    <Trans i18nKey="drop-logo-here" />
                                 </Text>
                                 <p className="ant-upload-hint">.png .jpg .jpeg ...</p>
                             </Dragger>
                         </Form.Item>
                     </Form.Item>
                     <div className="colors-container">
-                        <Form.Item label={<T _str="Primary color" />}>
+                        <Form.Item label={<Trans i18nKey="primary_color" />}>
                             <ColorPicker
                                 animation="slide-up"
                                 defaultColor={primaryColor}
@@ -377,7 +363,7 @@ const Install = (props: Props) => {
 
                             <span className="color-palette-picker-value">{primaryColor}</span>
                         </Form.Item>
-                        <Form.Item label={<T _str="Secondary color" />}>
+                        <Form.Item label={<Trans i18nKey="secondary_color" />}>
                             <ColorPicker
                                 animation="slide-up"
                                 defaultColor={secondaryColor}
@@ -391,7 +377,7 @@ const Install = (props: Props) => {
 
                             <span className="color-palette-picker-value">{secondaryColor}</span>
                         </Form.Item>
-                        <Form.Item label={<T _str="Accent color" />}>
+                        <Form.Item label={<Trans i18nKey="accent_color" />}>
                             <ColorPicker
                                 animation="slide-up"
                                 defaultColor={accentColor}
@@ -405,7 +391,7 @@ const Install = (props: Props) => {
 
                             <span className="color-palette-picker-value">{accentColor}</span>
                         </Form.Item>
-                        <Form.Item label={<T _str="Additional color" />}>
+                        <Form.Item label={<Trans i18nKey="additional_color" />}>
                             <ColorPicker
                                 animation="slide-up"
                                 defaultColor={addColor}
@@ -445,14 +431,14 @@ const Install = (props: Props) => {
                 <Paragraph className="final-form-header">
                     <Title level={4} className="final-form-header">
                         {' '}
-                        <T _str="BigBlueButton rooms settings" />
+                        <Trans i18nKey="bigbluebutton_rooms_settings" />
                     </Title>
 
                     <Alert
                         className="settings-info"
-                        message="Click on each button to customise the configuration group and hover it to get its summary."
+                        message={<Trans i18nKey="customize_configuration" />}
                         type="info"
-                        closeText="I understand, thank you!"
+                        closeText={<Trans i18nKey="understand" />}
                     />
                 </Paragraph>
                 <Card bordered={false}>
@@ -496,7 +482,7 @@ const Install = (props: Props) => {
                         cancelButtonProps={{ className: 'hidden' }}
                         footer={[
                             <Button key="submit" type="primary" onClick={handleOk}>
-                                Confirm
+                                <Trans i18nKey="confirm" />
                             </Button>,
                         ]}
                     >
@@ -536,23 +522,23 @@ const Install = (props: Props) => {
 
     const steps = [
         {
-            title: 'Administrator account',
+            title: t('administrator_account'),
             content: <Step1Form />,
-            button: 'Create',
+            button: t('create'),
             span: 8,
             offset: 4,
         },
         {
-            title: 'Company & Branding',
+            title: t('company.name') + '&' + t('branding'),
             content: <Step2Form />,
-            button: 'Next',
+            button: t('next'),
             span: 15,
             offset: 2,
         },
         {
-            title: 'BigBlueButton Settings',
+            title: t('bigBlueButton_settings'),
             content: <Step3Form />,
-            button: 'Finish',
+            button: t('finish'),
             span: 18,
             offset: 1,
         },
@@ -576,7 +562,6 @@ const Install = (props: Props) => {
                     setSuccessMessage(response.data.message);
                 })
                 .catch((error) => {
-                    console.log(error);
                     setErrorsStep1([]);
                     setErrorsStep2([]);
                     const responseMessage = error.response.data;
@@ -637,7 +622,7 @@ const Install = (props: Props) => {
                         title={successMessage}
                         extra={
                             <Link to={'/login'} onClick={handleInstall} className="ant-btn ant-btn-primary ant-btn-lg">
-                                Start using Hivelvet
+                                <Trans i18nkey="start-using-hivelvet" />
                             </Link>
                         }
                     />
@@ -660,7 +645,7 @@ const Install = (props: Props) => {
                             initialValues={initialValues}
                             requiredMark={false}
                             scrollToFirstError={true}
-                            validateTrigger="onFinish"
+                            validateTrigger="onSubmit"
                             onFinish={onFinish}
                         >
                             {steps[activeStep].content}
@@ -673,7 +658,7 @@ const Install = (props: Props) => {
                             >
                                 {activeStep > 0 && (
                                     <Button className="prev" onClick={() => prev()} block>
-                                        Previous
+                                        <Trans i18nKey="previous" />
                                     </Button>
                                 )}
                                 {activeStep <= steps.length - 1 && (
@@ -690,4 +675,4 @@ const Install = (props: Props) => {
     );
 };
 
-export default Install;
+export default withTranslation()(Install);

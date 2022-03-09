@@ -46,13 +46,13 @@ class Login extends BaseAction
 
         $userInfos = [];
         if ($dataChecker->allValid()) {
-            $user = new User();
+             $user = new User();
             $user = $user->getByEmail($email);
             $this->logger->info('Login attempt using email', ['email' => $email]);
             // Check if the user exists
-            if ($user->valid() && UserStatus::ACTIVE === $user->status && UserRole::API !== $user->role && $user->verifyPassword($form['password'])) {
+              if ($user->valid() && UserStatus::ACTIVE === $user->status && UserRole::API !== $user->role && $user->verifyPassword($form['password'])) {
                 // valid credentials
-                $this->session->authorizeUser($user);
+                 $this->session->authorizeUser($user);
 
                 $user->last_login = Time::db();
                 $user->save();
