@@ -27,6 +27,8 @@ import translationEN from '../locale/en-US.json';
 import translationFR from '../locale/fr-FR.json';
 import translationAR from '../locale/ar-TN.json';
 import languages from '../components/Languages';
+import { Locale } from 'antd/lib/locale-provider';
+import { DirectionType } from 'antd/lib/config-provider';
 
 i18next.use(initReactI18next).init({
     resources: {
@@ -35,37 +37,38 @@ i18next.use(initReactI18next).init({
         ar: { translation: translationAR },
     },
     lng: localStorage.getItem('locale'),
+    // @todo: put the fallback language in configuration files
     fallbackLng: 'en',
     interpolation: { escapeValue: false },
     debug: true,
 });
 class LocaleService {
-    language: any = localStorage.getItem('locale') != null ? localStorage.getItem('locale') : navigator.language;
+    localeMap: object = { 'en': enUS, 'fr': frFR, 'ar': arEG };
+    rtlLocales: string[] = ['ar'];
+    language: string;
+    antdlocale: Locale;
+    direction: DirectionType;
 
-    direction: any = this.language !== 'ar' ? 'ltr' : 'rtl';
+    constructor() {
+        this.language = localStorage.getItem('locale') != null ? localStorage.getItem('locale') : navigator.language;
+        this.setLocale(this.language);
+    }
 
-    antdlocale: any = this.language.startsWith('en')
-        ? enUS
-        : this.language.startsWith('fr')
-        ? frFR
-        : this.language.startsWith('ar')
-        ? arEG
-        : enUS;
-    changeLocale(locale) {
+    private getLanguageDirection(locale: string) {
+        return !this.rtlLocales.includes(locale) ? 'ltr' : 'rtl';
+    }
+
+    private setLocale(language: string) {
+        this.direction = this.getLanguageDirection(language);
+        this.antdlocale = this.localeMap[language.substring(2)];
+    }
+
+    changeLocale(locale: string) {
         const res = languages.filter((item) => item.value == locale);
         i18next.changeLanguage(res[0].key);
         moment.locale(locale);
 
-        this.language = locale;
-        this.direction = locale === 'ar' ? 'rtl' : 'ltr';
-        localStorage.setItem('locale', this.language);
-        this.antdlocale = this.language.startsWith('en')
-            ? enUS
-            : this.language.startsWith('fr')
-            ? frFR
-            : this.language.startsWith('ar')
-            ? arEG
-            : enUS;
+        this.setLocale(locale);
     }
 }
 
