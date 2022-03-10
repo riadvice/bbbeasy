@@ -20,12 +20,31 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Enum;
+namespace Core;
 
-class UserRole extends Enum
+use Test\Scenario;
+use Utils\PrivilegeUtils;
+
+/**
+ * @internal
+ * @coversNothing
+ */
+final class ReflectionTest extends Scenario
 {
-    final public const VISITOR  = 'visitor';
-    final public const LECTURER = 'lecturer';
-    final public const ADMIN    = 'admin';
-    final public const API      = 'api';
+    protected $group = 'Reflection Based Configuration';
+
+    protected array $permissions = ['logs' => ['collect'],'roles' => ['add','delete','edit'],'users' => ['add','delete','edit']];
+
+    /**
+     * @param $f3 \Base
+     *
+     * @return array
+     */
+    public function testReflectionConfiguration($f3)
+    {
+        $test = $this->newTest();
+        $test->expect($this->permissions === PrivilegeUtils::listSystemPrivileges(), 'Permissions correctly configured in action classes');
+
+        return $test->results();
+    }
 }

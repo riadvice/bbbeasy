@@ -27,4 +27,6 @@ use Enum\Enum;
 class Presentation extends Enum
 {
     final public const PRE_UPLOAD = 'pre_upload';
+
+    public static string $icon = 'FundOutlined';
 }

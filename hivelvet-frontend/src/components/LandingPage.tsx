@@ -21,7 +21,7 @@ import { Link } from 'react-router-dom';
 
 import { Row, Col, Typography, Avatar } from 'antd';
 import { AppstoreAddOutlined, BgColorsOutlined, PlayCircleOutlined, ControlOutlined } from '@ant-design/icons';
-import { T } from '@transifex/react';
+import DynamicIcon from './DynamicIcon';
 import { Trans, withTranslation } from 'react-i18next';
 
 const { Title, Paragraph } = Typography;
@@ -37,21 +37,19 @@ class LandingPage extends Component<any, any> {
                         </Title>
                         <p className="mb-30">
                             <Trans i18nKey="create_customizable_rooms" />
-                            <strong>BigBlueButton</strong>
+                            <strong> BigBlueButton</strong>
                         </p>
                         <Paragraph className="landing-btn">
                             <Link className="ant-btn ant-btn-primary text-white" to={'/login'}>
-                                {' '}
-                                <Trans i18nKey="login" />{' '}
+                                <Trans i18nKey="login" />
                             </Link>
                             <Link className={'ant-btn color-primary'} to={'/register'}>
-                                {' '}
                                 <Trans i18nKey="sign-up" />
                             </Link>
                         </Paragraph>
                     </Col>
                     <Col span={12} className="text-end">
-                        <img className="landing-img" src="images/landing2.png" />
+                        <img className="landing-img" src="/images/landing2.png" />
                     </Col>
                 </Row>
                 <Row gutter={[40, 8]} justify="center" className="features text-center">
@@ -80,10 +78,9 @@ class LandingPage extends Component<any, any> {
                         </p>
                     </Col>
                     <Col span={3}>
-                        <Avatar size={45} icon={<ControlOutlined />} className="ant-btn-primary hivelvet-btn" />
+                        <Avatar size={45} icon={<DynamicIcon type={'ZcaleRight'} />} className="ant-btn-primary hivelvet-btn hivelvet-icon" />
                         <p>
                             <Trans i18nKey="zcaleright" />
-
                             <br />
                             <Trans i18nKey="support" />
                         </p>

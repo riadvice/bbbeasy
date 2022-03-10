@@ -20,24 +20,37 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-use Phinx\Migration\AbstractMigration;
+namespace Fake;
 
-class CreatePresetCategoriesTable extends AbstractMigration
+use Faker\Factory as Faker;
+use Models\Role;
+
+class RoleFaker
 {
-    public function up(): void
+    private static array $storage = [];
+
+    public static function create($storageName = null)
     {
-        $table = $this->table('preset_categories');
-        $table
-            ->addColumn('name', 'string', ['limit' => 256, 'null' => false])
-            ->addColumn('icon', 'string', ['limit' => 256, 'null' => false])
-            ->addColumn('created_on', 'datetime', ['default' => '0001-01-01 00:00:00', 'timezone' => true])
-            ->addColumn('updated_on', 'datetime', ['default' => '0001-01-01 00:00:00', 'timezone' => true])
-            ->save()
-        ;
+        $faker          = Faker::create();
+        $role           = new Role();
+        $role->name     = str_replace(' ', '_', mb_strtolower($faker->name));
+
+        $role->save();
+
+        if (null !== $storageName) {
+            self::$storage[$storageName] = $role;
+        }
+
+        return $role;
     }
 
-    public function down(): void
+    /**
+     * @param $storageName
+     *
+     * @return Role
+     */
+    public static function get($storageName)
     {
-        $this->table('preset_categories')->drop()->save();
+        return self::$storage[$storageName];
     }
 }

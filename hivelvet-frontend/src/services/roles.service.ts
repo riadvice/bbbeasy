@@ -1,8 +1,4 @@
-<?php
-
-declare(strict_types=1);
-
-/*
+/**
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -20,23 +16,35 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-use Phinx\Migration\AbstractMigration;
+import axios from 'axios';
 
-final class CreateRolesTable extends AbstractMigration
-{
-    public function up(): void
-    {
-        $table = $this->table('roles');
-        $table
-            ->addColumn('name', 'string', ['limit' => 64, 'null' => false])
-            ->addColumn('created_on', 'datetime', ['default' => '0001-01-01 00:00:00', 'timezone' => true])
-            ->addColumn('updated_on', 'datetime', ['default' => '0001-01-01 00:00:00', 'timezone' => true])
-            ->save()
-        ;
+const API_URL = process.env.REACT_APP_API_URL;
+
+class RolesService {
+    list_roles() {
+        return axios.get(API_URL + '/roles/list');
+    }
+    list_users() {
+        return axios.get(API_URL + '/roles/collect-users');
+    }
+    list_permissions() {
+        return axios.get(API_URL + '/roles/collect-privileges');
     }
 
-    public function down(): void
-    {
-        $this->table('roles')->drop()->save();
+    add_role(data: object) {
+        return axios.post(API_URL + '/roles/add', {
+            data,
+        });
+    }
+    edit_role(data: object, id) {
+        return axios.put(API_URL + '/roles/edit/' + id, {
+            data,
+        });
+    }
+
+    delete_role(id: number) {
+        return axios.delete(API_URL + '/roles/delete/' + id);
     }
 }
+
+export default new RolesService();

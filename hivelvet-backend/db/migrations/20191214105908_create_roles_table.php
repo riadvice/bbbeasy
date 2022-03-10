@@ -22,25 +22,22 @@ declare(strict_types=1);
 
 use Phinx\Migration\AbstractMigration;
 
-final class CreateUsersRolesTable extends AbstractMigration
+final class CreateRolesTable extends AbstractMigration
 {
     public function up(): void
     {
-        $table = $this->table('users_roles');
+        $table = $this->table('roles');
         $table
-            ->addColumn('user_id', 'integer', ['null' => false])
-            ->addColumn('role_id', 'integer', ['null' => false])
+            ->addColumn('name', 'string', ['limit' => 64, 'null' => false])
             ->addColumn('created_on', 'datetime', ['default' => '0001-01-01 00:00:00', 'timezone' => true])
             ->addColumn('updated_on', 'datetime', ['default' => '0001-01-01 00:00:00', 'timezone' => true])
-            ->addForeignKey(['user_id'], 'users', ['id'], ['constraint' => 'user_role_id'])
-            ->addForeignKey(['role_id'], 'roles', ['id'], ['constraint' => 'role_user_id'])
-
-            ->create()
+            ->addIndex('name', ['unique' => true, 'name' => 'idx_roles_name'])
+            ->save()
         ;
     }
 
     public function down(): void
     {
-        $this->table('users_roles')->drop()->save();
+        $this->table('roles')->drop()->save();
     }
 }

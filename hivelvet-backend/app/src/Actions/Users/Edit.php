@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Actions\Users;
 
 use Actions\Base as BaseAction;
+use Actions\RequirePrivilegeTrait;
 use Base;
 use Enum\ResponseCode;
 use Models\User;
@@ -33,20 +34,7 @@ use Validation\DataChecker;
  */
 class Edit extends BaseAction
 {
-    /**
-     * @param Base  $f3
-     * @param array $params
-     */
-    public function show($f3, $params): void
-    {
-        $user = $this->loadData($params['id']);
-
-        if ($user->valid()) {
-            $this->renderJson(['data' => $user->toArray()]);
-        } else {
-            $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
-        }
-    }
+    use RequirePrivilegeTrait;
 
     /**
      * @param Base  $f3
@@ -54,10 +42,10 @@ class Edit extends BaseAction
      */
     public function save($f3, $params): void
     {
-        $v    = new DataChecker();
         $form = $this->getDecodedBody();
         $user = $this->loadData($params['id']);
 
+        $v = new DataChecker();
         $v->notEmpty()->verify('email', $form['email'], ['notEmpty' => $this->i18n->err('users.email')]);
         $v->notEmpty()->verify('username', $form['username'], ['notEmpty' => $this->i18n->err('users.username')]);
         $v->notEmpty()->verify('role', $form['role'], ['notEmpty' => $this->i18n->err('users.role')]);
@@ -66,11 +54,10 @@ class Edit extends BaseAction
         if (!$user->valid()) {
             $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
         } elseif ($v->allValid()) {
-            $user->email      = $form['email'];
-            $user->username   = $form['username'];
-            $user->role       = $form['role'];
-            $user->status     = $form['status'];
-            $user->updated_on = date('Y-m-d H:i:s');
+            $user->email    = $form['email'];
+            $user->username = $form['username'];
+            $user->role     = $form['role'];
+            $user->status   = $form['status'];
 
             if (!empty($form['password'])) {
                 $user->password = $form['password'];

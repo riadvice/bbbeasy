@@ -24,9 +24,9 @@ namespace Actions\Account;
 
 use Actions\Base as BaseAction;
 use Enum\ResponseCode;
-use Enum\UserRole;
 use Enum\UserStatus;
 use Helpers\Time;
+use Models\Role;
 use Models\User;
 use Respect\Validation\Validator;
 use Validation\DataChecker;
@@ -50,22 +50,28 @@ class Login extends BaseAction
             $user = $user->getByEmail($email);
             $this->logger->info('Login attempt using email', ['email' => $email]);
             // Check if the user exists
-              if ($user->valid() && UserStatus::ACTIVE === $user->status && UserRole::API !== $user->role && $user->verifyPassword($form['password'])) {
+            //@todo: if $user->role !== API role
+            if ($user->valid() && UserStatus::ACTIVE === $user->status && $user->verifyPassword($form['password'])) {
                 // valid credentials
                  $this->session->authorizeUser($user);
 
                 $user->last_login = Time::db();
                 $user->save();
 
+                // @todo: store role in redis cache to allow routes
+                /** @var $role Role */
+                $role = $user->role_id;
+                $this->f3->set('role', $role);
+
                 // @todo: store locale in user prefs table
                 // $this->session->set('locale', $user->locale);
                 $userInfos = [
                     'username' => $user->username,
                     'email'    => $user->email,
-                    'role'     => $user->role,
+                    'role'     => $role->name,
                 ];
                 $this->logger->info('User successfully logged in', ['email' => $email]);
-                $this->renderJson(json_encode($userInfos, JSON_THROW_ON_ERROR));
+                $this->renderJson($userInfos);
             }
         }
 

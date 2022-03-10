@@ -30,18 +30,14 @@ type Props = {
 type State = {};
 
 class Home extends Component<Props, State> {
-    username = '';
     constructor(props: Props) {
         super(props);
     }
 
     render() {
-        this.username = this.props.user != null ? this.props.user.username : '';
-
         return (
             <Paragraph className="text-center home-guide">
                 <Title level={3} underline>
-                    {' '}
                     <Trans i18nKey="create-easy-room" />
                 </Title>
                 <Row justify="center">
@@ -53,7 +49,6 @@ class Home extends Component<Props, State> {
                             1
                         </Avatar>
                         <Title level={4}>
-                            {' '}
                             <Trans i18nKey="give-it-name" />
                         </Title>
                     </Col>
@@ -65,7 +60,6 @@ class Home extends Component<Props, State> {
                             2
                         </Avatar>
                         <Title level={4}>
-                            {' '}
                             <Trans i18nKey="assign-preset" />
                         </Title>
                     </Col>
@@ -77,7 +71,6 @@ class Home extends Component<Props, State> {
                             3
                         </Avatar>
                         <Title level={4}>
-                            {' '}
                             <Trans i18nKey="mark-labels" />
                         </Title>
                     </Col>

@@ -22,8 +22,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Button, Dropdown, Layout, Menu } from 'antd';
 import { PlusOutlined, DownOutlined } from '@ant-design/icons';
 import DynamicIcon from './DynamicIcon';
-import { withTranslation } from 'react-i18next';
-import { useTranslation } from 'react-i18next';
+import { useTranslation, withTranslation } from 'react-i18next';
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
@@ -31,7 +30,7 @@ const { SubMenu } = Menu;
 const AppSider = () => {
     const location = useLocation();
     const [currentPath, setCurrentPath] = React.useState(location.pathname);
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
     const newMenu = (
         <Menu>
             <Menu.Item key="1">{t('room')}</Menu.Item>
@@ -105,7 +104,6 @@ const AppSider = () => {
                 mode="inline"
                 onClick={handleClick}
                 selectedKeys={[currentPath]}
-                defaultSelectedKeys={['/home']}
                 defaultOpenKeys={['sub1']}
             >
                 {menuData.map((item) =>
@@ -120,9 +118,7 @@ const AppSider = () => {
                     ) : (
                         <Menu.Item key={item.path} icon={<DynamicIcon type={item.icon} />}>
                             {item.path.includes('http') ? (
-                                <a target="_blank" rel="noopener noreferrer" href={item.path}>
-                                    {item.name}
-                                </a>
+                                <a target="_blank" rel="noopener noreferrer" href={item.path}>{item.name}</a>
                             ) : (
                                 <Link to={item.path}>{item.name}</Link>
                             )}

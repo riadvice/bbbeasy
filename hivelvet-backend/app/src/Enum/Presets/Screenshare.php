@@ -27,4 +27,6 @@ use Enum\Enum;
 class Screenshare extends Enum
 {
     final public const CONFIGURABLE = 'configurable';
+
+    public static string $icon = 'DesktopOutlined';
 }

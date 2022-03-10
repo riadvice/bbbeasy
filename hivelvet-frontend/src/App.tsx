@@ -34,10 +34,11 @@ import PageNotFound from './components/PageNotFound';
 import LandingPage from './components/LandingPage';
 import Register from './components/Register';
 import Login from './components/Login';
-import ResetPwd from './components/ResetPwd';
 import Reset from './components/ResetPassword';
 import ChangePassword from './components/ChangePassword';
+
 import Home from './components/Home';
+import Roles from './components/Roles';
 
 import 'moment/locale/fr';
 import 'moment/locale/ar';
@@ -108,6 +109,7 @@ class App extends Component<Props, State> {
                     componentSize="large"
                 >
                     <AppHeader
+                        currentUser={currentUser}
                         currentLocale={language}
                         setLang={this.setLang}
                         isLogged={isLogged}
@@ -146,14 +148,6 @@ class App extends Component<Props, State> {
                                         }
                                     />
                                     <Route
-                                        path="/reset"
-                                        element={
-                                            <PublicRoute restricted={true}>
-                                                <ResetPwd />
-                                            </PublicRoute>
-                                        }
-                                    />
-                                    <Route
                                         path="/reset-password"
                                         element={
                                             <PublicRoute restricted={true}>
@@ -175,6 +169,15 @@ class App extends Component<Props, State> {
                                         element={
                                             <PrivateRoute>
                                                 <Home isLogged={isLogged} user={currentUser} />
+                                            </PrivateRoute>
+                                        }
+                                    />
+
+                                    <Route
+                                        path="/settings/roles"
+                                        element={
+                                            <PrivateRoute>
+                                                <Roles />
                                             </PrivateRoute>
                                         }
                                     />

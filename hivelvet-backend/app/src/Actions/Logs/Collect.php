@@ -27,7 +27,7 @@ use Actions\RequirePrivilegeTrait;
 use Base;
 
 /**
- * Class Clean.
+ * Class Collect.
  */
 class Collect extends BaseAction
 {

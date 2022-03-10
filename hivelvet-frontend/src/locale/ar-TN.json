@@ -14,7 +14,7 @@
     "remember": "تذكرني",
     "remember-password": "أتذكر كلمة المرور",
     "reset-password": "إعادة تعيين كلمة المرور",
-    "forgot-password": "نسيت كلمة المرور",
+    "forgot-password": "نسيت كلمة المرور ؟",
     "reset-here": "إعادة التعيين هنا",
     "login-now": "تسجيل الدخول الآن",
     "Dont-t-have-account": "ليس لديك حساب",
@@ -24,33 +24,24 @@
     "email": {
         "label": "البريد الإلكتروني",
         "required": "البريد الإلكتروني مطلوب",
-        "invalid": "Invalid Email",
-        "already-exists": "البريد الإلكتروني موجود مسبقاً",
-        "required_back": "جميع القواعد المطلوبة يجب أن تمر للبريد الإلكتروني"
+        "invalid": "Invalid Email"
     },
     "password": {
         "label": "كلمة المرور",
         "required": "كلمة المرور مطلوبة",
         "size": "يجب أن تتكون كلمة المرور من 4 أحرف على الأقل",
-        "invalid": "كلمة المرور غير صحيحة",
-        "required_back": "جميع القواعد المطلوبة يجب أن تمر لكلمة المرور"
+        "invalid": "كلمة المرور غير صحيحة"
     },
     "join-us": "انضم إلينا",
     "register-now": "قم بالتسجيل الآن وانضم إلى مجتمعنا ",
     "username": {
         "label": "اسم المستخدم",
-        "required": "اسم المستخدم مطلوب",
-        "already-exists": "البريد الإلكتروني موجود مسبقاً",
-        "required_back": "جميع القواعد المطلوبة يجب أن تمر لاسم المستخدم"
+        "required": "اسم المستخدم مطلوب"
     },
     "confirm-password": {
         "label": "تأكيد كلمة المرور",
         "required": "تأكيد كلمة المرور مطلوبة ",
-        "size": "يجب أن تتكون كلمة المرور من 4 أحرف على الأقل",
-        "required_back": "جميع القواعد المطلوبة يجب أن تمر لكلمة المرور"
-    },
-    "agreement": {
-        "required_back": "يجب أن تمر جميع القواعد المطلوبة للاتفاق"
+        "size": "يجب أن تتكون كلمة المرور من 4 أحرف على الأقل"
     },
     "read-agreement": "لقد قرأت الاتفاق",
     "register": "التسجيل الآن",
@@ -61,6 +52,8 @@
     "success-login": "تم تسجيل الدخول بنجاح للمستخدم",
     "success-registration": "تهانينا! لقد تم إنشاء حسابك بنجاح",
     "username-email-already-exist": "اسم المستخدم والبريد الإلكتروني موجود مسبقاً",
+    "email-already-exist": "البريد الإلكتروني موجود مسبقاً",
+    "username-already-exist": "اسم المستخدم موجود مسبقاً",
     "welcome": "مرحبا بعودتك",
     "accept-agreement": "يجب قبول الاتفاق",
     "agree": "أوافق على",
@@ -138,7 +131,7 @@
     "understand": "أنا أفهم، شكراً لك!",
     "welcome_hivelvet": "مرحبا بك في Hivelvet",
     "create_customizable_rooms": "إنشاء غرف قابلة للتخصيص بالكامل لـ",
-    "log_into_account": "تسجيل الدخول إلى حسابك",
+    "log-into-account": "تسجيل الدخول إلى حسابك",
     "completed_registration": "اكتمل التسجيل بنجاح",
     "success_upload": "تم رفع الملف بنجاح",
     "wrong_file": "ملف خاطئ",

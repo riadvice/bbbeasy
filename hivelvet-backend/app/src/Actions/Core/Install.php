@@ -27,11 +27,12 @@ use Base;
 use Enum\ResponseCode;
 use Enum\UserRole;
 use Enum\UserStatus;
-use Models\PresetCategory;
 use Models\PresetSetting;
-use Models\PresetSubCategory;
+use Models\Role;
 use Models\Setting;
 use Models\User;
+use Respect\Validation\Validator;
+use Utils\PrivilegeUtils;
 use Validation\DataChecker;
 
 /**
@@ -49,62 +50,38 @@ class Install extends BaseAction
          * @todo for future tasks
          * if ($f3->get('system.installed') === false) {
          */
-        $body = $this->getDecodedBody();
-        $form = $body['data'];
-        $v1   = new DataChecker();
-        $v2   = new DataChecker();
+        $body        = $this->getDecodedBody();
+        $form        = $body['data'];
+        $dataChecker = new DataChecker();
 
-        $step1Validated = false;
-        $step2Validated = false;
+        $dataChecker->verify($form['username'], Validator::length(4)->setName('username'));
+        $dataChecker->verify($form['email'], Validator::email()->setName('email'));
+        $dataChecker->verify($form['password'], Validator::length(4)->setName('password'));
 
-        // step1 validation notEmpty
-        $v1->notEmpty()->verify('username', $form['username'], ['notEmpty' => 'Username is required']);
-        $v1->notEmpty()->verify('email', $form['email'], ['notEmpty' => 'Email is required']);
-        $v1->notEmpty()->verify('password', $form['password'], ['notEmpty' => 'Password is required']);
+        $dataChecker->verify($form['company_name'], Validator::notEmpty()->setName('company_name'));
+        $dataChecker->verify($form['company_url'], Validator::url()->setName('company_url'));
+        $dataChecker->verify($form['platform_name'], Validator::notEmpty()->setName('platform_name'));
 
-        if ($v1->allValid()) {
-            // step1 validation email/length
-            $v1->email()->verify('email', $form['email'], ['email' => 'Email is invalid']);
-            $v1->length(4)->verify('password', $form['password'], ['length' => 'Password must be at least 4 characters']);
-
-            if ($v1->allValid()) {
-                $step1Validated = true;
-            }
+        if ($form['term_url'] != "") {
+            $dataChecker->verify($form['term_url'], Validator::url()->setName('term_url'));
+        }
+        if ($form['policy_url'] != "") {
+            $dataChecker->verify($form['policy_url'], Validator::url()->setName('policy_url'));
         }
 
-        // step2 validation notEmpty
-        $v2->notEmpty()->verify('company_name', $form['company_name'], ['notEmpty' => 'Company name is required']);
-        $v2->notEmpty()->verify('company_url', $form['company_url'], ['notEmpty' => 'Company website is required']);
-        $v2->notEmpty()->verify('platform_name', $form['platform_name'], ['notEmpty' => 'Platform name is required']);
-
-        if ($v2->allValid()) {
-            //step2 validation url
-            $v2->url()->verify('company_url', $form['company_url'], ['url' => 'Company website is not a valid url']);
-            if ($v2->allValid()) {
-                $step2Validated = true;
-            }
-        }
-
-        if (!$step1Validated && !$step2Validated) {
-            $this->logger->error('App configuration', ['user_errors' => $v1->getErrors()]);
-            $this->logger->error('App configuration', ['settings_errors' => $v2->getErrors()]);
-            $this->renderJson(['userErrors' => $v1->getErrors(), 'settingsErrors' => $v2->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
-        } elseif (!$step1Validated) {
-            $this->logger->error('App configuration', ['user_errors' => $v1->getErrors()]);
-            $this->renderJson(['userErrors' => $v1->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
-        } elseif (!$step2Validated) {
-            $this->logger->error('App configuration', ['settings_errors' => $v2->getErrors()]);
-            $this->renderJson(['settingsErrors' => $v2->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
+        if (!$dataChecker->allValid()) {
+            $this->logger->error('Initial application setup', ['errors' => $dataChecker->getErrors()]);
+            $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
         } else {
             $user           = new User();
             $user->email    = $form['email'];
             $user->username = $form['username'];
-            $user->role     = UserRole::ADMIN;
+            $user->password = $form['password'];
             $user->status   = UserStatus::ACTIVE;
 
             try {
-                //$user->save();
-                $this->logger->info('App configuration', ['user' => $user->toArray()]);
+                $user->save();
+                $this->logger->info('Initial application setup : Add administrator', ['user' => $user->toArray()]);
 
                 $setting         = new Setting();
                 $defaultSettings = $setting->find([], ['limit' => 1])->current();
@@ -125,139 +102,84 @@ class Install extends BaseAction
                 $defaultSettings->additional_color = $colors['add_color'];
 
                 try {
-                    //$defaultSettings->save();
-                    $this->logger->info('App configuration', ['setting' => $defaultSettings->toArray()]);
+                    $defaultSettings->save();
+                    $this->logger->info('Initial application setup : Update settings', ['settings' => $defaultSettings->toArray()]);
 
+                    // add configured presets
                     $presets = $form['presetsConfig'];
-                    foreach ($presets as $preset) {
-                        $subcategories = $preset['subcategories'];
-                        foreach ($subcategories as $subcategory) {
-                            $presetSettings                 = new PresetSetting();
-                            $presetSettings->subcategory_id = $subcategory['id'];
-                            $presetSettings->is_enabled     = $subcategory['status'];
+                    if ($presets) {
+                        foreach ($presets as $preset) {
+                            $subcategories  = $preset['subcategories'];
+                            foreach ($subcategories as $subcategory) {
+                                $presetSettings             = new PresetSetting();
+                                $presetSettings->group      = $preset['name'];
+                                $presetSettings->name       = $subcategory['name'];
+                                $presetSettings->enabled    = $subcategory['status'];
+                                try {
+                                    $presetSettings->save();
+                                    $this->logger->info('Initial application setup : Add preset settings', ['preset' => $presetSettings->toArray()]);
+                                } catch (\Exception $e) {
+                                    $message = $e->getMessage();
+                                    $this->logger->error('Initial application setup : Preset settings could not be added', ['error' => $message]);
+                                    $this->renderJson(['errors' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
 
-                            try {
-                                //$presetSettings->save();
-                                $this->logger->info('App configuration', ['preset settings' => $presetSettings->toArray()]);
-                            } catch (\Exception $e) {
-                                $message = $e->getMessage();
-                                $this->logger->error('preset settings could not be added', ['error' => $message]);
-                                $this->renderJson(['presetsErrors' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-
-                                return;
+                                    return;
+                                }
                             }
                         }
                     }
-                    //$this->logger->info('administrator and settings and presets successfully added', ['user' => $user->toArray()]);
-                    $this->renderJson(['message' => 'Application installed !']);
+
+                    // add default roles admin and lecturer
+                    $roleAdmin = new Role();
+                    $roleAdmin->name = 'administrator';
+                    try {
+                        // allow all privileges to role admin
+                        $allPrivileges = PrivilegeUtils::listSystemPrivileges();
+                        $result = $roleAdmin->saveRoleAndPermissions($allPrivileges);
+                        if (ResponseCode::HTTP_OK == $result) {
+                            $this->logger->info('Initial application setup : Add administrator role', ['administrator role' => $roleAdmin->toArray()]);
+                            //assign admin created to role admin
+                            $user->role_id = $roleAdmin->id;
+                            try {
+                                $user->save();
+                                $this->logger->info('Initial application setup : Assign role to administrator user', ['user' => $user->toArray()]);
+                            } catch (\Exception $e) {
+                                $this->logger->error('Initial application setup : Role could not be assigned', ['error' => $e->getMessage()]);
+                                return;
+                            }
+
+                            // add lecturer role
+                            $roleLecturer = new Role();
+                            $roleLecturer->name = 'lecturer';
+                            try {
+                                $roleLecturer->save();
+                                $this->logger->info('Initial application setup : Add lecturer role', ['lecturer role' => $roleLecturer->toArray()]);
+                            } catch (\Exception $e) {
+                                $this->logger->error('Initial application setup : Lecturer role could not be added', ['error' => $e->getMessage()]);
+                                return;
+                            }
+                        }
+                    } catch (\Exception $e) {
+                        $this->logger->info('Initial application setup : Administrator role could not be added', ['error' => $e->getMessage()]);
+                        return;
+                    }
+
+                    $this->logger->info('Initial application setup has been successfully done');
+                    $this->renderJson(['result' => 'success']);
                 } catch (\Exception $e) {
                     $message = $e->getMessage();
-                    $this->logger->error('settings could not be added', ['error' => $message]);
-                    $this->renderJson(['settingsErrors' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+                    $this->logger->error('Initial application setup : Settings could not be updated', ['error' => $message]);
+                    $this->renderJson(['errors' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
 
                     return;
                 }
             } catch (\Exception $e) {
                 $message = $e->getMessage();
-                $this->logger->error('administrator could not be added', ['error' => $message]);
-                $this->renderJson(['userErrors' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-
-                return;
-            }
-        }
-        //}
-    }
-
-    public function collectPresets($f3, $params): void
-    {
-        $data            = [];
-        $preset_category = new PresetCategory();
-        $categories      = $preset_category->find([], ['order' => 'id']);
-
-        if ($categories) {
-            foreach ($categories as $category) {
-                $categoryData = [
-                    'name'          => $category->name,
-                    'icon'          => $category->icon,
-                    'subcategories' => [],
-                ];
-                $preset_subcategory = new PresetSubCategory();
-                $subcategories      = $preset_subcategory->find(['category_id = ?', $category->id], ['order' => 'id']);
-                if ($subcategories) {
-                    foreach ($subcategories as $subcategory) {
-                        $subCategoryData = [
-                            'id'     => $subcategory->id,
-                            'name'   => $subcategory->name,
-                            'status' => false,
-                        ];
-                        $categoryData['subcategories'][] = $subCategoryData;
-                    }
-                }
-                $data[] = $categoryData;
-            }
-        }
-
-        $this->logger->info('collecting presets', ['data' => json_encode($data)]);
-        $this->renderJson(json_encode($data));
-    }
-
-    public function collectSettings($f3, $params): void
-    {
-        $data            = [];
-        $setting         = new Setting();
-        $defaultSettings = $setting->find([], ['limit' => 1])->current();
-
-        if ($defaultSettings) {
-            $data = [
-                'company_name'    => $defaultSettings->company_name,
-                'company_website' => $defaultSettings->company_website,
-                'platform_name'   => $defaultSettings->platform_name,
-
-                'primary_color'    => $defaultSettings->primary_color,
-                'secondary_color'  => $defaultSettings->secondary_color,
-                'accent_color'     => $defaultSettings->accent_color,
-                'additional_color' => $defaultSettings->additional_color,
-            ];
-        }
-
-        $this->logger->info('collecting settings', ['data' => json_encode($data)]);
-        $this->renderJson(json_encode($data));
-    }
-
-    public function saveLogo($f3, $params): void
-    {
-        /**
-         * @todo for future tasks
-         * if ($f3->get('system.installed') === false) {
-         */
-        $files = $f3->get('FILES');
-        $form  = $f3->get('POST');
-        $v     = new DataChecker();
-
-        $v->notEmpty()->verify('logo_name', $form['logo_name']);
-        //if files not empty
-
-        if ($v->allValid()) {
-            $this->logger->info('App configuration saving logo', ['FILES' => $files]);
-            // verif format file
-
-            //correct
-            \Web::instance()->receive();
-            $setting        = new Setting();
-            $settings       = $setting->find([], ['limit' => 1])->current();
-            $settings->logo = $form['logo_name'];
-
-            try {
-                //$settings->save();
-                $this->logger->info('App configuration saving logo', ['setting' => $settings->toArray()]);
-            } catch (\Exception $e) {
-                $message = $e->getMessage();
-                $this->logger->error('logo could not be updated', ['error' => $message]);
+                $this->logger->error('Initial application setup : Administrator could not be added', ['error' => $message]);
                 $this->renderJson(['errors' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
 
                 return;
             }
         }
-        //}
     }
 }

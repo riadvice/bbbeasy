@@ -28,4 +28,6 @@ class LearningDashboard extends Enum
 {
     final public const CONFIGURABLE  = 'configurable';
     final public const CLEANUP_DELAY = 'cleanup_delay';
+
+    public static string $icon = 'FundViewOutlined';
 }

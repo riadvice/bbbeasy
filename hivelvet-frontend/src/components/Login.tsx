@@ -24,6 +24,7 @@ import { Form, Input, Button, message, Alert, Col, Row, Typography, Card } from 
 import { Trans, withTranslation } from 'react-i18next';
 import EN_US from '../locale/en-US.json';
 import { t } from 'i18next';
+
 const { Text, Title, Paragraph } = Typography;
 
 type Props = {
@@ -45,7 +46,7 @@ class Login extends Component<Props, State> {
         this.state = {
             successful: false,
             message: '',
-            errors: [],
+            errors: {},
             user: null,
             isLogged: false,
         };
@@ -55,8 +56,6 @@ class Login extends Component<Props, State> {
         const { email, password } = formValue;
         AuthService.login(email, password)
             .then((response) => {
-                const responseMessage = response.data.message;
-                const user = response.data.user;
                 if (response.data.username && response.data.email && response.data.role) {
                     const user_infos = {
                         username: response.data.username,
@@ -78,28 +77,20 @@ class Login extends Component<Props, State> {
             })
             .catch((error) => {
                 this.setState({
-                    errors: [],
+                    errors: {},
                 });
-                const response = error.response.data;
-                if (response.errors) {
-                    const errors = Object.values(response.errors);
-                    const err = '';
-                    errors.forEach(function (value: any) {
-                        const keys = Object.keys(value);
-                        keys.forEach(function (key) {
-                            err + value[key];
-                        });
-                    });
+                const responseData = error.response.data;
+                if (responseData.errors) {
                     this.setState({
-                        errors: response.errors,
+                        errors: responseData.errors,
                     });
                 }
-
-                const responseMessage = response.message;
-                this.setState({
-                    successful: false,
-                    message: responseMessage,
-                });
+                if (responseData.message) {
+                    this.setState({
+                        successful: false,
+                        message: responseData.message,
+                    });
+                }
             });
     }
 
@@ -119,10 +110,9 @@ class Login extends Component<Props, State> {
                 <Col span={8} offset={8} className="section-top">
                     <Card className="form-content">
                         <Paragraph className="form-header text-center">
-                            <img className="form-img" src="images/logo_02.png" alt="Logo" />
+                            <img className="form-img" src="/images/logo_02.png" alt="Logo" />
                             <Title level={4}>
-                                {' '}
-                                <Trans i18nkey="log_into_account" />
+                                <Trans i18nKey="log-into-account" />
                             </Title>
                         </Paragraph>
 
@@ -131,9 +121,7 @@ class Login extends Component<Props, State> {
                                 type="error"
                                 className="alert-msg"
                                 message={
-                                    <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == message)}>
-                                        {' '}
-                                    </Trans>
+                                    <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == message)}/>
                                 }
                                 showIcon
                             />
@@ -152,6 +140,10 @@ class Login extends Component<Props, State> {
                             <Form.Item
                                 label={<Trans i18nKey="email.label" />}
                                 name="email"
+                                {...('email' in errors && {
+                                    help: errors['email'],
+                                    validateStatus: 'error',
+                                })}
                                 rules={[
                                     {
                                         type: 'email',
@@ -168,6 +160,10 @@ class Login extends Component<Props, State> {
                             <Form.Item
                                 label={<Trans i18nKey="password.label" />}
                                 name="password"
+                                {...('password' in errors && {
+                                    help: errors['password'],
+                                    validateStatus: 'error',
+                                })}
                                 rules={[
                                     {
                                         min: 4,
@@ -190,10 +186,10 @@ class Login extends Component<Props, State> {
 
                         <Paragraph className="form-footer text-center">
                             <Text>
-                                <Trans i18nKey="forgot-password" />?{' '}
+                                <Trans i18nKey="forgot-password" /> {' '}
                             </Text>
                             <Link to={'/reset-password'}>
-                                <Trans i18nKey="reset-here" />{' '}
+                                <Trans i18nKey="reset-here" />
                             </Link>
                         </Paragraph>
                     </Card>

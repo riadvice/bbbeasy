@@ -30,10 +30,9 @@ const PageNotFound = () => {
             className="page-not-found"
             extra={
                 <Link className="ant-btn color-blue" to="/">
-                    <Trans i18nkey="back-home" />
+                    <Trans i18nKey="back-home" />
                 </Link>
             }
-            //extra={<Link className="ant-btn ant-btn-primary" to="/">Back Home</Link>}
         />
     );
 };

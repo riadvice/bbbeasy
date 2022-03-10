@@ -16,7 +16,6 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-/*@import '~antd/dist/antd.css';*/
 @import '~antd/dist/antd.less';
 @import '~rc-color-picker/assets/index.css';
 
@@ -33,9 +32,57 @@ body,button,input,select,textarea{
   box-shadow: 0 5px 5px rgba(216, 216, 216, 0.8);
 }
 
-.site-header .logout-btn,.site-header .profil-btn {
+.search-input {
+  width: 35%;
+  border-radius: 15px;
+}
+
+.search-input, .search-input.ant-input-affix-wrapper:hover, .search-input.ant-input-affix-wrapper:focus {
+  background: #f8f8f8;
+}
+
+.search-input.ant-input-affix-wrapper-focused {
+  background: #f8f8f8;
+  border: 1px solid #ececec;
+}
+
+.search-input input {
+  padding: 0 15px;
+}
+
+.search-input .anticon-search {
+  color: gray;
+}
+
+.site-header .profil-btn {
   color: black;
   clip-path: polygon(50% 0, 50% 0, 95% 25%, 95% 75%, 50% 100%, 50% 100%, 5% 75%, 5% 25%);
+  border-radius: 50%;
+}
+
+.profil-btn-dropdown .ant-dropdown-menu-item {
+  padding: 5px 20px;
+}
+
+.profil-btn-dropdown .ant-dropdown-menu-item-icon {
+  min-width: 25px;
+  font-size: 13px;
+}
+
+.profil-btn-dropdown .ant-dropdown-menu-item:hover {
+  color: @primary-color;
+  background-color: transparent;
+}
+
+.profil-btn-dropdown .username-item {
+  cursor: default;
+  font-weight: 300;
+  font-size: 90%;
+  text-align: center;
+}
+
+.profil-btn-dropdown .username-item,.profil-btn-dropdown .username-item:hover {
+  color: gray !important;
 }
 
 .home-guide {
@@ -67,15 +114,81 @@ body,button,input,select,textarea{
   font-weight: 600;
   clip-path: polygon(50% 0, 50% 0, 95% 25%, 95% 75%, 50% 100%, 50% 100%, 5% 75%, 5% 25%);
   margin-bottom: 20px;
+  border-radius: 50%;
 }
 
 .home-guide button {
   width: 25%;
   margin-top: 40px;
 }
+.roles-modal .ant-modal-header {
+  text-align: center;
+}
 
-.labels-content {
+.roles-modal .ant-form {
+  padding: 0 15px;
+}
+.actions-expanded {
+  margin-top: 16px;
+  float: right;
+}
+.table-actions.editable a {
+  color: @primary-color;
+}
+.table-actions a {
+    color: #bfbfbf;
+}
+.table-actions a.ant-popover-open {
+  color: red;
+}
+
+.table-search-bloc {
+  padding: 8px;
+}
+
+.table-search-input {
+  margin-bottom: 8px;
+  display: block;
+}
+
+.table-search-btn button {
+  width: 90px;
+}
+
+.search-icon-filtered {
+  color: @primary-color;
+}
+
+.search-text-highlighted {
+  background: @primary-color;
+}
+
+.table-content {
   margin: 0 24px;
+}
+
+.hivelvet-table .ant-table-expanded-row .ant-table-cell {
+  padding: 0;
+}
+.hivelvet-table .ant-table-expanded-row .ant-table-cell .ant-card-head {
+  background: #464a53;
+  color: white;
+}
+
+.hivelvet-table .card-parent {
+  background: transparent;
+}
+
+.hivelvet-table .card-parent .card-mt {
+  margin-top: 16px;
+}
+
+.card-mb {
+  margin-bottom: 16px;
+}
+
+.hivelvet-table .input-editable {
+  margin-bottom: 0 !important;
 }
 
 .labels-header {
@@ -87,11 +200,14 @@ body,button,input,select,textarea{
   color: white;
 }
 
+.cancel-btn:hover, .cancel-btn:focus {
+  border-color: #d9d9d9;
+  background: #d9d9d9;
+  color: white;
+}
+
 .site-sider {
   text-align: center;
-  //width: 250px !important;
-  //margin-top: 10px;
-  /*box-shadow: 5px 0px 5px rgba(216, 216, 216, 0.8);*/
 }
 
 .sider-new-btn {
@@ -107,13 +223,6 @@ body,button,input,select,textarea{
   height: 100%;
   border-right: 0;
 }
-
-/*
-.ant-menu-item .ant-menu-item-icon, .ant-menu-submenu-title .ant-menu-item-icon, .ant-menu-item .anticon, .ant-menu-submenu-title .anticon {
-  min-width: 14px;
-  font-size: 18px !important;
-}
-*/
 
 .ant-menu-sub.ant-menu-inline {
   background: transparent;
@@ -131,7 +240,11 @@ body,button,input,select,textarea{
 }
 
 .site-header a.ant-btn {
-   color: black;
+  color: black;
+}
+
+.red-icon {
+  color: red;
 }
 
 .color-primary {
@@ -171,7 +284,6 @@ body,button,input,select,textarea{
 }
 
 .landing-content {
-  //padding: 5% 0;
   margin: 45px;
   padding: 4%;
   border: 3px solid #fbbc0b !important;
@@ -189,13 +301,13 @@ body,button,input,select,textarea{
 
 .landing-img {
   width: 85%;
-  margin-top: 20px;
 }
 
 .features .hivelvet-btn {
   font-size: 22px;
   clip-path: polygon(50% 0, 50% 0, 95% 25%, 95% 75%, 50% 100%, 50% 100%, 5% 75%, 5% 25%) !important;
   margin-bottom: 14px;
+  border-radius: 50%;
 }
 
 .site-content {
@@ -224,7 +336,7 @@ body,button,input,select,textarea{
 }
 
 .ant-form-item-label label, .ant-checkbox-wrapper {
-  color: gray !important; //#c6c6c6
+  color: gray !important;
 }
 
 .ant-form-item-label label{
@@ -248,7 +360,7 @@ body,button,input,select,textarea{
 }
 
 .form-footer .ant-typography {
-  color: gray !important; //#c6c6c6
+  color: gray !important;
 }
 
 .form-prov {
@@ -294,10 +406,15 @@ body,button,input,select,textarea{
   color: #fff;
   background: @primary-color;
   clip-path: polygon(50% 0, 50% 0, 95% 25%, 95% 75%, 50% 100%, 50% 100%, 5% 75%, 5% 25%);
-  //clip-path: polygon(92.32051% 40%, 93.79385% 43.1596%, 94.69616% 46.52704%, 95% 50%, 94.69616% 53.47296%, 93.79385% 56.8404%, 92.32051% 60%, 79.82051% 81.65064%, 77.82089% 84.50639%, 75.35575% 86.97152%, 72.5% 88.97114%, 69.3404% 90.44449%, 65.97296% 91.34679%, 62.5% 91.65064%, 37.5% 91.65064%, 34.02704% 91.34679%, 30.6596% 90.44449%, 27.5% 88.97114%, 24.64425% 86.97152%, 22.17911% 84.50639%, 20.17949% 81.65064%, 7.67949% 60%, 6.20615% 56.8404%, 5.30384% 53.47296%, 5% 50%, 5.30384% 46.52704%, 6.20615% 43.1596%, 7.67949% 40%, 20.17949% 18.34936%, 22.17911% 15.49361%, 24.64425% 13.02848%, 27.5% 11.02886%, 30.6596% 9.55551%, 34.02704% 8.65321%, 37.5% 8.34936%, 62.5% 8.34936%, 65.97296% 8.65321%, 69.3404% 9.55551%, 72.5% 11.02886%, 75.35575% 13.02848%, 77.82089% 15.49361%, 79.82051% 18.34936%);
-  /*-moz-border-radius: 50%;
-  -webkit-border-radius: 50%;
-  border-radius: 50%;*/
+  border-radius: 50%;
+}
+
+.PresetIcon img {
+  width: 19px;
+}
+
+.hivelvet-icon {
+  line-height: inherit !important;
 }
 
 .success-install-icon {
@@ -306,6 +423,7 @@ body,button,input,select,textarea{
   color: #fff !important;
   background: @primary-color;
   clip-path: polygon(50% 0, 50% 0, 95% 25%, 95% 75%, 50% 100%, 50% 100%, 5% 75%, 5% 25%);
+  border-radius: 50%;
 }
 
 .content-center {
@@ -319,16 +437,15 @@ body,button,input,select,textarea{
   line-height: unset !important;
 }
 
-.install-form .button-container {
+.button-container {
   margin-top: 24px;
 }
 
-.install-form .button-container .prev {
-  /*margin: 0px 20px;*/
+.button-container .prev {
   margin-right: 20px;
 }
 
-.install-form .button-container .ant-form-item-control-input-content {
+.button-container .ant-form-item-control-input-content {
   display: flex;
 }
 
@@ -388,12 +505,12 @@ body,button,input,select,textarea{
   border-radius: 10px;
 }
 
-.ant-tooltip-arrow-content, .ant-tooltip-inner {
+.install-tooltip .ant-tooltip-arrow-content, .install-tooltip .ant-tooltip-inner {
   background: white;
   color: black;
 }
 
-.ant-tooltip-inner ul {
+.install-tooltip .ant-tooltip-inner ul {
   list-style: unset;
   font-size: 13px;
   font-weight: 300;
@@ -405,24 +522,7 @@ body,button,input,select,textarea{
   margin: 0 30px;
 }
 
-/*
-.presets-modal .ant-modal-close-icon {
-  background: white;
-  padding: 5px;
-  -moz-border-radius: 50%;
-  -webkit-border-radius: 50%;
-  border-radius: 50%;
-  font-size: 14px;
-}
-
-.presets-modal .ant-modal-close {
-  top: -40px;
-  right: -40px;
-}
-*/
-
 .presets-modal .presets-body {
-  //padding: 0 70px;
   padding: 0 20px;
 }
 
@@ -456,7 +556,9 @@ body,button,input,select,textarea{
   margin-right: auto;
   margin-top: 60px !important;
 }
-
+.text-capitalize {
+  text-transform: capitalize;
+}
 .hidden {
   display: none;
 }
@@ -478,7 +580,9 @@ body,button,input,select,textarea{
 .text-uppercase {
   text-transform: uppercase;
 }
-
+.text-lowercase {
+  text-transform: lowercase;
+}
 .mb-30 {
   margin-bottom: 30%;
 }
@@ -494,11 +598,6 @@ body,button,input,select,textarea{
 }
 
 .site-footer{
-  //text-align: center;
-  //padding: 0px !important;
-  //position: fixed;
-  //width: 100%;
-  //height: 40px;
   bottom: 0;
   padding: 0 50px !important;
   display:flex;

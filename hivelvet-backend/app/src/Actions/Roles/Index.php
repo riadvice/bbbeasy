@@ -20,25 +20,25 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-use Phinx\Migration\AbstractMigration;
+namespace Actions\Roles;
 
-class CreatePresetSettingsTable extends AbstractMigration
+use Actions\Base as BaseAction;
+use Models\Role;
+
+/**
+ * Class Index.
+ */
+class Index extends BaseAction
 {
-    public function up(): void
+    /**
+     * @param \Base $f3
+     * @param array $params
+     */
+    public function show($f3, $params): void
     {
-        $table = $this->table('preset_settings');
-        $table
-            ->addColumn('subcategory_id', 'integer')
-            ->addColumn('is_enabled', 'boolean', ['default' => false, 'null' => false])
-            ->addColumn('created_on', 'datetime', ['default' => '0001-01-01 00:00:00', 'timezone' => true])
-            ->addColumn('updated_on', 'datetime', ['default' => '0001-01-01 00:00:00', 'timezone' => true])
-            ->addForeignKey(['subcategory_id'], 'preset_sub_categories', ['id'], ['constraint' => 'preset_settings_subcategory_id'])
-            ->save()
-        ;
-    }
-
-    public function down(): void
-    {
-        $this->table('preset_settings')->drop()->save();
+        $role  = new Role();
+        $roles = $role->getAllRoles();
+        $this->logger->debug('collecting roles', ['roles' => json_encode($roles)]);
+        $this->renderJson($roles);
     }
 }

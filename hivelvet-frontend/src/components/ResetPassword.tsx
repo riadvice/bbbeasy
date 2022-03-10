@@ -18,15 +18,16 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import AuthService from '../services/auth.service';
-import { Form, Input, Button, Checkbox, message, Alert, Col, Row, Typography, Card } from 'antd';
+import { Form, Input, Button, message, Alert, Col, Row, Typography, Card } from 'antd';
 import { Trans, withTranslation } from 'react-i18next';
-const { Text, Title, Paragraph } = Typography;
 import EN_US from '../locale/en-US.json';
 import { t } from 'i18next';
+
+const { Text, Title, Paragraph } = Typography;
+
 type Props = {};
 type State = {
     email?: string;
-
     successful: boolean;
     message: string;
 };
@@ -48,7 +49,6 @@ class Reset extends Component<Props, State> {
         AuthService.reset_password(email)
             .then((response) => {
                 const responseMessage = response.data.message;
-
                 message.success({
                     content: responseMessage,
                     style: {
@@ -61,11 +61,9 @@ class Reset extends Component<Props, State> {
                 });
             })
             .catch((error) => {
-                const responseMessage = error.response.data.message;
-
                 this.setState({
                     successful: false,
-                    message: responseMessage,
+                    message: error.response.data.message,
                 });
             });
     }
@@ -74,7 +72,6 @@ class Reset extends Component<Props, State> {
         const { successful, message } = this.state;
         const initialValues = {
             email: '',
-
             successful: false,
             message: '',
         };
@@ -84,10 +81,9 @@ class Reset extends Component<Props, State> {
                 <Col span={8} offset={8} className="section-top">
                     <Card className="form-content">
                         <Paragraph className="form-header text-center">
-                            <img className="form-img" src="images/logo_02.png" alt="Logo" />
+                            <img className="form-img" src="/images/logo_02.png" alt="Logo" />
                             <Title level={4}>
-                                {' '}
-                                <Trans i18nkey="reset-password" />
+                                <Trans i18nKey="reset-password" />
                             </Title>
                         </Paragraph>
                         {message && !successful && (
@@ -95,24 +91,24 @@ class Reset extends Component<Props, State> {
                                 type="error"
                                 className="alert-msg"
                                 message={
-                                    <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == message)}>
-                                        {' '}
-                                    </Trans>
+                                    <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == message)}/>
                                 }
                                 showIcon
                             />
                         )}
                         <Form
                             layout="vertical"
-                            name="login_form"
+                            name="reset"
                             className="login-form"
                             initialValues={initialValues}
+                            requiredMark={false}
+                            scrollToFirstError={true}
+                            validateTrigger="onSubmit"
                             onFinish={this.handleReset}
                         >
                             <Form.Item
                                 label={<Trans i18nKey="email.label" />}
                                 name="email"
-                                hasFeedback
                                 rules={[
                                     {
                                         type: 'email',
@@ -144,7 +140,7 @@ class Reset extends Component<Props, State> {
                                 <Trans i18nKey="remember-password" />{' '}
                             </Text>
                             <Link to={'/login'}>
-                                <Trans i18nKey="back-to-login" />{' '}
+                                <Trans i18nKey="back-to-login" />
                             </Link>
                         </Paragraph>
                     </Card>

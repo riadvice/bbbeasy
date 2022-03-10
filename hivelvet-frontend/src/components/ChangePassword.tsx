@@ -16,17 +16,18 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 import React, { Component } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import AuthService from '../services/auth.service';
 
 import { Form, Input, Button, message, Alert, Col, Row, Typography, Card, Result } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import authService from '../services/auth.service';
-const { Title, Paragraph } = Typography;
 import ReactDOMServer from 'react-dom/server';
 import PageNotFound from './PageNotFound';
 import { Trans, withTranslation } from 'react-i18next';
 import EN_US from '../locale/en-US.json';
+
+const { Title, Paragraph } = Typography;
 
 type Props = {};
 
@@ -117,7 +118,7 @@ class ChangePassword extends Component<Props, State> {
                                     title="Password changed successfully"
                                     extra={
                                         <Link to={'/login'} className="ant-btn ant-btn-lg">
-                                            <Trans i18nkey="login-now" />
+                                            <Trans i18nKey="login-now" />
                                         </Link>
                                     }
                                 />
@@ -126,9 +127,8 @@ class ChangePassword extends Component<Props, State> {
                             <Col span={8} offset={8} className="section-top">
                                 <Card className="form-content">
                                     <Paragraph className="form-header text-center">
-                                        <img className="form-img" src="images/logo_02.png" alt="Logo" />
+                                        <img className="form-img" src="/images/logo_02.png" alt="Logo" />
                                         <Title level={4}>
-                                            {' '}
                                             <Trans i18nKey="change-password" />
                                         </Title>
                                     </Paragraph>
@@ -225,7 +225,7 @@ class ChangePassword extends Component<Props, State> {
 
                                     <Paragraph className="form-footer text-center">
                                         <Link to={'/login'}>
-                                            <Trans i18nKey="back-to-login" />{' '}
+                                            <Trans i18nKey="back-to-login" />
                                         </Link>
                                     </Paragraph>
                                 </Card>

@@ -32,7 +32,7 @@ use Models\Base as BaseModel;
  *
  * @property int      $id
  * @property string   $email
- * @property string   $role
+ * @property int      $role_id
  * @property string   $username
  * @property string   $first_name
  * @property string   $last_name
@@ -45,58 +45,18 @@ use Models\Base as BaseModel;
  */
 class User extends BaseModel
 {
+    protected $fieldConf = [
+        'role_id' => [
+            'belongs-to-one' => Role::class
+        ],
+    ];
+
     protected $table = 'users';
 
     public function __construct($db = null, $table = null, $fluid = null, $ttl = 0)
     {
         parent::__construct($db, $table, $fluid, $ttl);
         $this->onset('password', fn($self, $value) => password_hash($value, PASSWORD_BCRYPT));
-    }
-
-    /**
-     * @param $filter
-     * @param $external
-     *
-     * @return array
-     */
-    public function all($filter, $external)
-    {
-        if (empty($filter)) {
-            $filter = ['email' => '', 'role' => '', 'username' => ''];
-        }
-        $filter = $this->prepareFilter($filter);
-        $page   = Pagination::findCurrentPage();
-        $result = $this->db->exec(
-            'SELECT users.id, users.email, users.username, users.last_login, users.role, users.status,
-             FROM users
-             WHERE role LIKE ?
-             AND email LIKE ?
-             AND username LIKE ?
-             ORDER BY id ASC
-             LIMIT ? OFFSET ?',
-            [$filter['role'], $filter['email'], $filter['username'],
-                $this->pageSize, $this->pageSize * ($page - 1), ]
-        );
-
-        $total = $this->db->exec(
-            'SELECT	count(id) AS total
-             FROM users
-             WHERE role LIKE ?
-             AND email LIKE ?
-             AND username LIKE ?',
-            [$filter['role'], $filter['email'], $filter['username']]
-        )[0]['total'];
-
-        $count = ceil($total / $this->pageSize);
-        $pos   = max(0, min($page - 1, $count - 1));
-
-        return [
-            'subset' => $result,
-            'total'  => $total,
-            'limit'  => $this->pageSize,
-            'count'  => $count,
-            'pos'    => $pos < $count ? $pos : 0,
-        ];
     }
 
     /**

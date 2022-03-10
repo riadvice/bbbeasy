@@ -63,7 +63,7 @@ class Register extends BaseAction
                 $user->email    = $form['email'];
                 $user->username = $form['username'];
                 $user->password = $form['password'];
-                $user->role     = UserRole::LECTURER;
+                $user->role_id  = 2;
                 $user->status   = UserStatus::PENDING;
 
                 try {
@@ -76,7 +76,7 @@ class Register extends BaseAction
                     return;
                 }
                 $this->logger->info('user successfully registered', ['user' => $user->toArray()]);
-                $this->renderJson(['message' => 'User account created.']);
+                $this->renderJson(['result' => 'success']);
             }
         } else {
             $this->logger->error('Registration error', ['errors' => $dataChecker->getErrors()]);

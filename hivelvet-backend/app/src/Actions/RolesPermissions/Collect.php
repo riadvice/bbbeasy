@@ -20,25 +20,25 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-use Phinx\Migration\AbstractMigration;
+namespace Actions\RolesPermissions;
 
-class CreatePresetSubCategoriesTable extends AbstractMigration
+use Actions\Base as BaseAction;
+use Utils\PrivilegeUtils;
+
+/**
+ * Class Collect.
+ */
+class Collect extends BaseAction
 {
-    public function up(): void
+    /**
+     * @param $f3
+     * @param $params
+     *
+     * @throws \JsonException
+     */
+    public function execute($f3, $params): void
     {
-        $table = $this->table('preset_sub_categories');
-        $table
-            ->addColumn('name', 'string', ['limit' => 256, 'null' => false])
-            ->addColumn('category_id', 'integer')
-            ->addColumn('created_on', 'datetime', ['default' => '0001-01-01 00:00:00', 'timezone' => true])
-            ->addColumn('updated_on', 'datetime', ['default' => '0001-01-01 00:00:00', 'timezone' => true])
-            ->addForeignKey(['category_id'], 'preset_categories', ['id'], ['constraint' => 'subcategory_category_id'])
-            ->save()
-        ;
-    }
-
-    public function down(): void
-    {
-        $this->table('preset_sub_categories')->drop()->save();
+        $this->logger->debug('Collecting privileges for manage roles', ['roles' => json_encode($privileges = PrivilegeUtils::listSystemPrivileges())]);
+        $this->renderJson($privileges);
     }
 }

@@ -22,13 +22,12 @@ import ReactDOMServer from 'react-dom/server';
 import AuthService from '../services/auth.service';
 
 import { Form, Input, Button, Checkbox, Alert, Col, Row, Typography, Card, Result } from 'antd';
-import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
-import { T } from '@transifex/react';
 import { Trans, withTranslation } from 'react-i18next';
-
-const { Title, Paragraph } = Typography;
 import EN_US from '../locale/en-US.json';
 import { t } from 'i18next';
+
+const { Title, Paragraph } = Typography;
+
 type Props = {};
 
 type State = {
@@ -44,42 +43,30 @@ class Register extends Component<Props, State> {
         this.state = {
             successful: false,
             message: '',
-            errors: [],
+            errors: {},
         };
     }
 
     handleRegistration(formValue: any) {
         AuthService.register(formValue)
             .then((response) => {
-                const responseMessage = response.data.message;
                 this.setState({
-                    successful: true,
-                    message: responseMessage,
+                    successful: true
                 });
             })
             .catch((error) => {
                 this.setState({
-                    errors: [],
+                    errors: {},
                 });
-                const response = error.response.data;
-                if (response.errors) {
-                    const errors = Object.values(response.errors);
-                    const err = [];
-                    errors.forEach(function (value: any) {
-                        const keys = Object.keys(value);
-                        keys.forEach(function (key) {
-                            err.push(value[key]);
-                        });
-                    });
+                const responseData = error.response.data;
+                if (responseData.errors) {
                     this.setState({
-                        errors: response.errors,
+                        errors: responseData.errors,
                     });
                 }
-
-                const responseMessage = response.message;
                 this.setState({
                     successful: false,
-                    message: responseMessage,
+                    message: responseData.message,
                 });
             });
     }
@@ -101,10 +88,10 @@ class Register extends Component<Props, State> {
                         <Result
                             status="success"
                             title={<Trans i18nKey="completed_registration" />}
-                            subTitle={<Trans i18nKey="user_account_created"> </Trans>}
+                            subTitle={<Trans i18nKey="user_account_created" />}
                             extra={
                                 <Link to={'/login'} className="ant-btn ant-btn-lg">
-                                    <Trans i18nkey="login-now" />
+                                    <Trans i18nKey="login-now" />
                                 </Link>
                             }
                         />
@@ -113,10 +100,9 @@ class Register extends Component<Props, State> {
                     <Col span={8} offset={8} className="section-top">
                         <Card className="form-content">
                             <Paragraph className="form-header text-center">
-                                <img className="form-img" src="images/logo_02.png" alt="Logo" />
+                                <img className="form-img" src="/images/logo_02.png" alt="Logo" />
                                 <Title level={4}>
-                                    {' '}
-                                    <Trans i18nkey="sign-up" />
+                                    <Trans i18nKey="sign-up" />
                                 </Title>
                             </Paragraph>
 
@@ -146,10 +132,18 @@ class Register extends Component<Props, State> {
                                 <Form.Item
                                     label={<Trans i18nKey="username.label" />}
                                     name="username"
+                                    {...('username' in errors && {
+                                        help: errors['username'],
+                                        validateStatus: 'error',
+                                    })}
                                     rules={[
                                         {
                                             required: true,
                                             message: <Trans i18nKey="username.required" />,
+                                        },
+                                        {
+                                            min: 4,
+                                            message: <Trans i18nKey="Username must be at least 4 characters" />,
                                         },
                                     ]}
                                 >
@@ -158,6 +152,10 @@ class Register extends Component<Props, State> {
                                 <Form.Item
                                     label={<Trans i18nKey="email.label" />}
                                     name="email"
+                                    {...('email' in errors && {
+                                        help: errors['email'],
+                                        validateStatus: 'error',
+                                    })}
                                     rules={[
                                         {
                                             type: 'email',
@@ -174,6 +172,10 @@ class Register extends Component<Props, State> {
                                 <Form.Item
                                     label={<Trans i18nKey="password.label" />}
                                     name="password"
+                                    {...('password' in errors && {
+                                        help: errors['password'],
+                                        validateStatus: 'error',
+                                    })}
                                     rules={[
                                         {
                                             min: 4,
@@ -185,14 +187,16 @@ class Register extends Component<Props, State> {
                                         },
                                     ]}
                                 >
-                                    <Input.Password
-                                        placeholder="**********"
-                                        iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
-                                    />
+                                    <Input.Password placeholder="**********" />
                                 </Form.Item>
                                 <Form.Item
                                     label={<Trans i18nKey="confirm-password.label" />}
                                     name="confirmPassword"
+                                    dependencies={['password']}
+                                    {...('confirmPassword' in errors && {
+                                        help: errors['confirmPassword'],
+                                        validateStatus: 'error',
+                                    })}
                                     rules={[
                                         {
                                             min: 4,
@@ -222,6 +226,11 @@ class Register extends Component<Props, State> {
                                 <Form.Item
                                     className="form-agree"
                                     name="agreement"
+                                    valuePropName="checked"
+                                    {...('agreement' in errors && {
+                                        help: errors['agreement'],
+                                        validateStatus: 'error',
+                                    })}
                                     rules={[
                                         {
                                             validator: (_, value) =>
@@ -242,7 +251,8 @@ class Register extends Component<Props, State> {
                                         <a href="#">
                                             {' '}
                                             <Trans i18nKey="terms" />
-                                        </a>{' '}
+                                        </a>
+                                        {' '}
                                         <Trans i18nKey="and" />
                                         <a href="#">
                                             {' '}

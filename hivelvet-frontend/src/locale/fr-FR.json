@@ -14,7 +14,7 @@
     "remember": "Se souvenir de moi",
     "remember-password": "Je me rappelle mon mot de passe",
     "reset-password": "Réinitialiser le mot de passe",
-    "forgot-password": "Mot de passe oublié",
+    "forgot-password": "Mot de passe oublié ?",
     "reset-here": "Réinitialiser ici",
     "login-now": "Connectez-vous maintenant",
     "Dont-t-have-account": "Vous n'avez pas de compte",
@@ -24,33 +24,24 @@
     "email": {
         "label": "E-mail",
         "required": "L'e-mail est requis",
-        "invalid": "Invalid Email",
-        "already-exists": "L'adresse e-mail existe déjà",
-        "required_back": "Toutes les règles requises doivent être validées pour l'e-mail"
+        "invalid": "E-mail invalide"
     },
     "password": {
         "label": "Mot de passe",
         "required": "Le mot de passe est requis",
         "size": "Le mot de passe doit comporter au moins 4 caractères",
-        "invalid": "Mot de passe invalide",
-        "required_back": "Toutes les règles requises doivent être validées pour le mot de passe"
+        "invalid": "Mot de passe invalide"
     },
     "join-us": "Rejoignez-nous",
     "register-now": "Inscrivez-vous maintenant et rejoignez notre communauté ",
     "username": {
         "label": "Nom d'utilisateur",
-        "required": "Le nom d'utilisateur est requis",
-        "already-exists": "l'adresse e-mail existe déjà",
-        "required_back": "Toutes les règles requises doivent être validées pour le nom d'utilisateur"
+        "required": "Le nom d'utilisateur est requis"
     },
     "confirm-password": {
         "label": "Confirmer le mot de passe",
         "required": "La confirmation du mot de passe est requise ",
-        "size": "La confirmation du mot de passe doit comporter au moins 4 caractères",
-        "required_back": "Toutes les règles requises doivent être validées pour la confirmation de mot de passe"
-    },
-    "agreement": {
-        "required_back": "Toutes les règles requises doivent être validées pour l'accord"
+        "size": "La confirmation du mot de passe doit comporter au moins 4 caractères"
     },
     "read-agreement": "J'ai lu l'accord",
     "register": "S'inscrire maintenant",
@@ -61,6 +52,8 @@
     "success-login": "utilisateur connecté avec succès",
     "success-registration": "Félicitations ! Votre compte a été créé avec succès",
     "username-email-already-exist": "nom d'utilisateur et adresse e-mail existent déjà",
+    "username-already-exist": "nom d'utilisateur existe déjà",
+    "email-already-exist": "L'adresse e-mail existe déjà",
     "welcome": "Bienvenue",
     "accept-agreement": "Accepter l'accord",
     "agree": "J'accepte les",
@@ -116,7 +109,7 @@
     "create-administrator-account": "Créer un compte administrateur",
     "support": "Support",
     "zcaleright": "Zcaleright",
-    "flexible-configuration": "configuration flexible",
+    "flexible-configuration": "Configuration flexible",
     "recordings-management": "Gestion des enregistrements",
     "full-brandings": "Branding complet",
     "personal-rooms": "Salles personnelles",
@@ -138,7 +131,7 @@
     "understand": "Je comprends, merci!",
     "welcome_hivelvet": "Bienvenue sur Hivelvet",
     "create_customizable_rooms": "Créer des salles entièrement personnalisables pour",
-    "log_into_account": "Connectez-vous à votre compte",
+    "log-into-account": "Connectez-vous à votre compte",
     "completed_registration": "Inscription terminée avec succès",
     "success_upload": "fichier envoyé avec succès",
     "wrong_file": "fichier incorrect",

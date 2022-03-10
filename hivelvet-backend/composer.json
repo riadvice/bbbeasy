@@ -35,7 +35,8 @@
     "symfony/yaml": "^6.0",
     "linfo/linfo": "^4.0",
     "carbon-cli/carbon-cli": "^1.2",
-    "roave/better-reflection": "^5.0"
+    "roave/better-reflection": "^5.0",
+    "haydenpierce/class-finder": "^0.4.3"
   },
   "require-dev": {
     "roave/security-advisories": "dev-latest",
