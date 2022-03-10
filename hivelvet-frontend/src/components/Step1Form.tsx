@@ -42,10 +42,10 @@ export const Step1Form = (props: Props) => {
             <Form.Item
                 label={<Trans i18nKey="username.label" />}
                 name="username"
-                {...('username' in errors) && {
+                {...('username' in errors && {
                     help: errors['username'],
-                    validateStatus: "error"
-                }}
+                    validateStatus: 'error',
+                })}
                 rules={[
                     {
                         required: true,
@@ -62,10 +62,10 @@ export const Step1Form = (props: Props) => {
             <Form.Item
                 label={<Trans i18nKey="email.label" />}
                 name="email"
-                {...('email' in errors) && {
+                {...('email' in errors && {
                     help: errors['email'],
-                    validateStatus: "error"
-                }}
+                    validateStatus: 'error',
+                })}
                 rules={[
                     {
                         type: 'email',
@@ -82,10 +82,10 @@ export const Step1Form = (props: Props) => {
             <Form.Item
                 label={<Trans i18nKey="password.label" />}
                 name="password"
-                {...('password' in errors) && {
+                {...('password' in errors && {
                     help: errors['password'],
-                    validateStatus: 'error'
-                }}
+                    validateStatus: 'error',
+                })}
                 rules={[
                     {
                         min: 4,

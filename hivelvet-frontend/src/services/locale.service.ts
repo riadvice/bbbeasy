@@ -42,6 +42,7 @@ i18next.use(initReactI18next).init({
     interpolation: { escapeValue: false },
     debug: true,
 });
+
 class LocaleService {
     localeMap: object = { 'en': enUS, 'fr': frFR, 'ar': arEG };
     rtlLocales: string[] = ['ar'];
@@ -67,7 +68,6 @@ class LocaleService {
         const res = languages.filter((item) => item.value == locale);
         i18next.changeLanguage(res[0].key);
         moment.locale(locale);
-
         this.setLocale(locale);
     }
 }

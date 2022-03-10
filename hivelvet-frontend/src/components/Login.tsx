@@ -121,7 +121,7 @@ class Login extends Component<Props, State> {
                                 type="error"
                                 className="alert-msg"
                                 message={
-                                    <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == message)}/>
+                                    <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == message)} />
                                 }
                                 showIcon
                             />
@@ -186,7 +186,7 @@ class Login extends Component<Props, State> {
 
                         <Paragraph className="form-footer text-center">
                             <Text>
-                                <Trans i18nKey="forgot-password" /> {' '}
+                                <Trans i18nKey="forgot-password" />{' '}
                             </Text>
                             <Link to={'/reset-password'}>
                                 <Trans i18nKey="reset-here" />

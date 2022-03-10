@@ -118,7 +118,9 @@ const AppSider = () => {
                     ) : (
                         <Menu.Item key={item.path} icon={<DynamicIcon type={item.icon} />}>
                             {item.path.includes('http') ? (
-                                <a target="_blank" rel="noopener noreferrer" href={item.path}>{item.name}</a>
+                                <a target="_blank" rel="noopener noreferrer" href={item.path}>
+                                    {item.name}
+                                </a>
                             ) : (
                                 <Link to={item.path}>{item.name}</Link>
                             )}

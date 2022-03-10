@@ -26,7 +26,7 @@ import { Trans } from 'react-i18next';
 import Languages from './Languages';
 
 const { Header } = Layout;
-const { Text,Paragraph } = Typography;
+const { Text, Paragraph } = Typography;
 
 type userType = {
     username: string;
@@ -85,7 +85,7 @@ class AppHeader extends Component<Props, State> {
             <Menu>
                 <Menu.Item key="1" className="username-item text-uppercase">
                     <Trans i18nKey="Signed in as" /> {currentUser?.username}
-                    <br/>
+                    <br />
                     <Text className="text-lowercase">{currentUser?.email}</Text>
                 </Menu.Item>
                 <Menu.Divider />
@@ -94,12 +94,12 @@ class AppHeader extends Component<Props, State> {
                 </Menu.Item>
                 <Menu.Item
                     key="3"
-                   icon={
-                       <LogoutOutlined
-                           // @fixme : use scaleX and direction instead of ar
-                           rotate={this.props.currentLocale.includes('ar') ? 180 : 0}
-                       />
-                   }
+                    icon={
+                        <LogoutOutlined
+                            // @fixme : use scaleX and direction instead of ar
+                            rotate={this.props.currentLocale.includes('ar') ? 180 : 0}
+                        />
+                    }
                 >
                     <a onClick={() => this.logout()}>
                         <Trans i18nKey="Sign Out" />

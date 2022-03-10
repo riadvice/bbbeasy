@@ -78,7 +78,11 @@ class LandingPage extends Component<any, any> {
                         </p>
                     </Col>
                     <Col span={3}>
-                        <Avatar size={45} icon={<DynamicIcon type={'ZcaleRight'} />} className="ant-btn-primary hivelvet-btn hivelvet-icon" />
+                        <Avatar
+                            size={45}
+                            icon={<DynamicIcon type={'ZcaleRight'} />}
+                            className="ant-btn-primary hivelvet-btn hivelvet-icon"
+                        />
                         <p>
                             <Trans i18nKey="zcaleright" />
                             <br />

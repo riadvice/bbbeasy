@@ -91,7 +91,7 @@ class Reset extends Component<Props, State> {
                                 type="error"
                                 className="alert-msg"
                                 message={
-                                    <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == message)}/>
+                                    <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == message)} />
                                 }
                                 showIcon
                             />

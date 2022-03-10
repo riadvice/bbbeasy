@@ -48,7 +48,7 @@ import Logger from './lib/logger';
 
 import authService from './services/auth.service';
 import { Props } from 'react-intl/src/components/relative';
-import LocaleService from './services/LocaleService';
+import LocaleService from './services/locale.service';
 import { Trans } from 'react-i18next';
 const { Content } = Layout;
 
