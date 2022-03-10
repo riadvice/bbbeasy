@@ -22,7 +22,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Button, Dropdown, Layout, Menu } from 'antd';
 import { PlusOutlined, DownOutlined } from '@ant-design/icons';
 import DynamicIcon from './DynamicIcon';
-import { T } from '@transifex/react';
+import { useTranslation, withTranslation } from 'react-i18next';
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
@@ -30,55 +30,49 @@ const { SubMenu } = Menu;
 const AppSider = () => {
     const location = useLocation();
     const [currentPath, setCurrentPath] = React.useState(location.pathname);
-
+    const { t } = useTranslation();
     const newMenu = (
         <Menu>
-            <Menu.Item key="1">
-                <T _str="Room" />
-            </Menu.Item>
-            <Menu.Item key="2">
-                <T _str="Label" />
-            </Menu.Item>
-            <Menu.Item key="3">
-                <T _str="Preset" />
-            </Menu.Item>
+            <Menu.Item key="1">{t('room')}</Menu.Item>
+            <Menu.Item key="2">{t('label')}</Menu.Item>
+            <Menu.Item key="3">{t('preset')}</Menu.Item>
         </Menu>
     );
     const menuData = [
         {
-            name: 'Rooms',
+            name: t('rooms'),
             icon: 'UserOutlined',
             path: '/home',
         },
         {
-            name: 'Labels',
+            name: t('labels'),
             icon: 'TagsOutlined',
             path: '/labels',
         },
         {
-            name: 'Presets',
+            name: t('presets'),
             icon: 'UserAddOutlined',
             path: '/presets',
         },
         {
-            name: 'Settings',
+            name: t('settings'),
             icon: 'ContainerOutlined',
             path: 'sub1',
             children: [
                 {
-                    name: 'Company & Branding',
+                    name: t('Company') + ' & ' + t('branding'),
                     path: '/settings/company',
                 },
                 {
-                    name: 'Users',
+                    name: t('users'),
                     path: '/settings/users',
                 },
                 {
-                    name: 'Roles',
+                    name: t('roles'),
                     path: '/settings/roles',
                 },
                 {
-                    name: 'Notifications',
+                    name: t('notifications'),
                     path: '/settings/notifications',
                 },
                 {
@@ -88,7 +82,7 @@ const AppSider = () => {
             ],
         },
         {
-            name: 'Help',
+            name: t('help'),
             icon: 'QuestionCircleOutlined',
             path: 'https://riadvice.tn/',
         },
@@ -101,7 +95,7 @@ const AppSider = () => {
         <Sider className="site-sider" width={250}>
             <Dropdown overlay={newMenu}>
                 <Button size="middle" className="sider-new-btn">
-                    <PlusOutlined /> <T _str="New" /> <DownOutlined />
+                    <PlusOutlined /> {t('new')} <DownOutlined />
                 </Button>
             </Dropdown>
 
@@ -114,25 +108,19 @@ const AppSider = () => {
             >
                 {menuData.map((item) =>
                     item.children != null ? (
-                        <SubMenu key={item.path} icon={<DynamicIcon type={item.icon} />} title={<T _str={item.name} />}>
+                        <SubMenu key={item.path} icon={<DynamicIcon type={item.icon} />} title={item.name}>
                             {item.children.map((subItem) => (
                                 <Menu.Item key={subItem.path}>
-                                    <Link to={subItem.path}>
-                                        <T _str={subItem.name} />
-                                    </Link>
+                                    <Link to={subItem.path}>{subItem.name}</Link>
                                 </Menu.Item>
                             ))}
                         </SubMenu>
                     ) : (
                         <Menu.Item key={item.path} icon={<DynamicIcon type={item.icon} />}>
                             {item.path.includes('http') ? (
-                                <a target="_blank" rel="noopener noreferrer" href={item.path}>
-                                    <T _str={item.name} />
-                                </a>
+                                <a target="_blank" rel="noopener noreferrer" href={item.path}>{item.name}</a>
                             ) : (
-                                <Link to={item.path}>
-                                    <T _str={item.name} />
-                                </Link>
+                                <Link to={item.path}>{item.name}</Link>
                             )}
                         </Menu.Item>
                     )
@@ -142,4 +130,4 @@ const AppSider = () => {
     );
 };
 
-export default AppSider;
+export default withTranslation()(AppSider);

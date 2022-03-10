@@ -22,7 +22,7 @@ import { message, Form, Input, Typography, Upload } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 import ColorPicker from 'rc-color-picker/lib/ColorPicker';
 import { RcFile } from 'antd/lib/upload';
-import { T } from '@transifex/react';
+import { Trans, useTranslation } from 'react-i18next';
 
 const { Title, Text, Paragraph } = Typography;
 const { Dragger } = Upload;
@@ -41,6 +41,7 @@ type Props = {
 };
 
 export const Step2Form = (props: Props) => {
+    const { t } = useTranslation();
     const { errors, primaryColor, secondaryColor, accentColor, addColor, setPrimaryColor, setSecondaryColor, setAccentColor, setAddColor, setFile } = props;
     const [fileList, setFileList] = React.useState();
 
@@ -68,11 +69,11 @@ export const Step2Form = (props: Props) => {
             <div className="box">
                 <Paragraph className="form-header">
                     <Title level={4}>
-                        <T _str="Company" />
+                        <Trans i18nKey="company.label" />
                     </Title>
                 </Paragraph>
                 <Form.Item
-                    label={<T _str="Company name" />}
+                    label={<Trans i18nKey="company.name" />}
                     name="company_name"
                     {...('company_name' in errors) && {
                         help: errors['company_name'],
@@ -81,15 +82,14 @@ export const Step2Form = (props: Props) => {
                     rules={[
                         {
                             required: true,
-                            message: <T _str='Company name is required' />,
+                            message: <Trans i18nKey="company.required" />,
                         },
                     ]}
                 >
-                    <Input placeholder="Company name" />
+                    <Input placeholder={t('company.name')} />
                 </Form.Item>
-
                 <Form.Item
-                    label={<T _str="Company website" />}
+                    label={<Trans i18nKey="company.website.label" />}
                     name="company_url"
                     {...('company_url' in errors) && {
                         help: errors['company_url'],
@@ -98,19 +98,18 @@ export const Step2Form = (props: Props) => {
                     rules={[
                         {
                             required: true,
-                            message: <T _str='Company website is required' />,
+                            message: <Trans i18nKey="company.website.required" />,
                         },
                         {
                             type: 'url',
-                            message: <T _str='Company website is not a valid url' />,
+                            message: <Trans i18nKey="company.website.invalid" />,
                         },
                     ]}
                 >
-                    <Input placeholder="Company website" />
+                    <Input placeholder={t('company.website.label')} />
                 </Form.Item>
-
                 <Form.Item
-                    label={<T _str="Platform name" />}
+                    label={<Trans i18nKey="platform.label" />}
                     name="platform_name"
                     {...('platform_name' in errors) && {
                         help: errors['platform_name'],
@@ -119,15 +118,14 @@ export const Step2Form = (props: Props) => {
                     rules={[
                         {
                             required: true,
-                            message: <T _str='Platform name is required' />,
+                            message: <Trans i18nKey="platform.required" />,
                         },
                     ]}
                 >
-                    <Input placeholder="Platform name" />
+                    <Input placeholder={t('platform.label')} />
                 </Form.Item>
-
                 <Form.Item
-                    label={<T _str="Terms of use URL" />}
+                    label={<Trans i18nKey="terms_url.label" />}
                     name="term_url"
                     {...('term_url' in errors) && {
                         help: errors['term_url'],
@@ -136,15 +134,14 @@ export const Step2Form = (props: Props) => {
                     rules={[
                         {
                             type: 'url',
-                            message: <T _str='Term of use url is not a valid url' />,
+                            message: <Trans i18nKey="terms_url.invalid" />,
                         },
                     ]}
                 >
-                    <Input placeholder="Term of use URL" />
+                    <Input placeholder={t('terms_url.label')} />
                 </Form.Item>
-
                 <Form.Item
-                    label={<T _str="Privacy Policy URL" />}
+                    label={<Trans i18nKey="privacy_policy_url.label" />}
                     name="policy_url"
                     {...('policy_url' in errors) && {
                         help: errors['policy_url'],
@@ -153,17 +150,17 @@ export const Step2Form = (props: Props) => {
                     rules={[
                         {
                             type: 'url',
-                            message: <T _str="Privacy Policy url is not a valid url" />,
+                            message: <Trans i18nkey="privacy_policy_url.invalid" />,
                         },
                     ]}
                 >
-                    <Input placeholder="Privacy Policy URL" />
+                    <Input placeholder={t('privacy_policy_url.label')} />
                 </Form.Item>
             </div>
             <div className="box last">
                 <Paragraph className="form-header">
                     <Title level={4}>
-                        <T _str="Branding" />
+                        <Trans i18nKey="branding" />
                     </Title>
                 </Paragraph>
                 <Form.Item>
@@ -182,10 +179,10 @@ export const Step2Form = (props: Props) => {
                                     file.type === 'image/png' ||
                                     file.type === 'image/jpeg'
                                 ) {
-                                    message.success('file uploaded successfully');
+                                    message.success(t('success-_upload'));
                                     return false;
                                 }
-                                message.error('wrong file');
+                                message.error(t('wrong_file'));
                                 return null;
                             }}
                         >
@@ -193,14 +190,14 @@ export const Step2Form = (props: Props) => {
                                 <InboxOutlined />
                             </p>
                             <Text strong className="ant-upload-text">
-                                <T _str="Drop your logo here" />
+                                <Trans i18nKey="drop-logo-here" />
                             </Text>
                             <p className="ant-upload-hint">.png .jpg .jpeg ...</p>
                         </Dragger>
                     </Form.Item>
                 </Form.Item>
                 <div className="colors-container">
-                    <Form.Item label={<T _str="Primary color" />}>
+                    <Form.Item label={<Trans i18nKey="primary_color" />}>
                         <ColorPicker
                             animation="slide-up"
                             defaultColor={primaryColor}
@@ -214,7 +211,7 @@ export const Step2Form = (props: Props) => {
 
                         <span className="color-palette-picker-value">{primaryColor}</span>
                     </Form.Item>
-                    <Form.Item label={<T _str="Secondary color" />}>
+                    <Form.Item label={<Trans i18nKey="secondary_color" />}>
                         <ColorPicker
                             animation="slide-up"
                             defaultColor={secondaryColor}
@@ -228,7 +225,7 @@ export const Step2Form = (props: Props) => {
 
                         <span className="color-palette-picker-value">{secondaryColor}</span>
                     </Form.Item>
-                    <Form.Item label={<T _str="Accent color" />}>
+                    <Form.Item label={<Trans i18nKey="accent_color" />}>
                         <ColorPicker
                             animation="slide-up"
                             defaultColor={accentColor}
@@ -242,7 +239,7 @@ export const Step2Form = (props: Props) => {
 
                         <span className="color-palette-picker-value">{accentColor}</span>
                     </Form.Item>
-                    <Form.Item label={<T _str="Additional color" />}>
+                    <Form.Item label={<Trans i18nKey="additional_color" />}>
                         <ColorPicker
                             animation="slide-up"
                             defaultColor={addColor}

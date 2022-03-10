@@ -19,7 +19,7 @@
 import React from 'react';
 
 import { Form, Input, Typography } from 'antd';
-import { T } from '@transifex/react';
+import { Trans, useTranslation } from 'react-i18next';
 
 const { Title, Paragraph } = Typography;
 
@@ -28,17 +28,19 @@ type Props = {
 };
 
 export const Step1Form = (props: Props) => {
+    const { t } = useTranslation();
     const { errors } = props;
 
     return (
         <div>
             <Paragraph className="form-header text-center">
                 <Title level={4}>
-                    <T _str="Create an administrator account" />
+                    <Trans i18nKey="create-administrator-account" />
                 </Title>
             </Paragraph>
+
             <Form.Item
-                label={<T _str="Username" />}
+                label={<Trans i18nKey="username.label" />}
                 name="username"
                 {...('username' in errors) && {
                     help: errors['username'],
@@ -47,19 +49,18 @@ export const Step1Form = (props: Props) => {
                 rules={[
                     {
                         required: true,
-                        message: <T _str="Username is required" />,
+                        message: <Trans i18nKey="username.required" />,
                     },
                     {
                         min: 4,
-                        message: <T _str="Username must be at least 4 characters" />,
+                        message: <Trans i18nKey="Username must be at least 4 characters" />,
                     },
                 ]}
             >
-                <Input placeholder="Username" />
+                <Input placeholder={t('username.label')} />
             </Form.Item>
-
             <Form.Item
-                label={<T _str="Email" />}
+                label={<Trans i18nKey="email.label" />}
                 name="email"
                 {...('email' in errors) && {
                     help: errors['email'],
@@ -67,19 +68,19 @@ export const Step1Form = (props: Props) => {
                 }}
                 rules={[
                     {
-                        required: true,
-                        message: <T _str="Email is required" />,
+                        type: 'email',
+                        message: <Trans i18nKey="email.invalid" />,
                     },
                     {
-                        type: 'email',
-                        message: <T _str="Email is invalid" />,
+                        required: true,
+                        message: <Trans i18nKey="email.required" />,
                     },
                 ]}
             >
-                <Input placeholder="Email" />
+                <Input placeholder={t('username.label')} />
             </Form.Item>
             <Form.Item
-                label={<T _str="Password" />}
+                label={<Trans i18nKey="password.label" />}
                 name="password"
                 {...('password' in errors) && {
                     help: errors['password'],
@@ -88,15 +89,15 @@ export const Step1Form = (props: Props) => {
                 rules={[
                     {
                         min: 4,
-                        message: <T _str='Password must be at least 4 characters' />,
+                        message: <Trans i18nKey="password.size" />,
                     },
                     {
                         required: true,
-                        message: <T _str='Password is required' />,
+                        message: <Trans i18nKey="password.required" />,
                     },
                 ]}
             >
-                <Input.Password placeholder="Password"/>
+                <Input.Password placeholder={t('password.label')} />
             </Form.Item>
         </div>
     );

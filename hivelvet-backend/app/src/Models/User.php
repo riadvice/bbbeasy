@@ -125,6 +125,6 @@ class User extends BaseModel
 
     public function verifyPassword($password): bool
     {
-        return password_verify(trim($password), $this->password);
+         return password_verify(trim($password), $this->password);
     }
 }

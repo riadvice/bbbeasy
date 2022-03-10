@@ -22,7 +22,9 @@ import ReactDOMServer from 'react-dom/server';
 import AuthService from '../services/auth.service';
 
 import { Form, Input, Button, Checkbox, Alert, Col, Row, Typography, Card, Result } from 'antd';
-import { T } from '@transifex/react';
+import { Trans, withTranslation } from 'react-i18next';
+import EN_US from '../locale/en-US.json';
+import { t } from 'i18next';
 
 const { Title, Paragraph } = Typography;
 
@@ -48,10 +50,8 @@ class Register extends Component<Props, State> {
     handleRegistration(formValue: any) {
         AuthService.register(formValue)
             .then((response) => {
-                const responseMessage = response.data.message;
                 this.setState({
-                    successful: true,
-                    message: responseMessage,
+                    successful: true
                 });
             })
             .catch((error) => {
@@ -87,11 +87,11 @@ class Register extends Component<Props, State> {
                     <Col span={10} offset={7} className="section-top">
                         <Result
                             status="success"
-                            title={<T _str="Registration completed successfully" />}
-                            subTitle={<T _str={message} />}
+                            title={<Trans i18nKey="completed_registration" />}
+                            subTitle={<Trans i18nKey="user_account_created" />}
                             extra={
                                 <Link to={'/login'} className="ant-btn ant-btn-lg">
-                                    <T _str="Login now" />
+                                    <Trans i18nKey="login-now" />
                                 </Link>
                             }
                         />
@@ -100,14 +100,23 @@ class Register extends Component<Props, State> {
                     <Col span={8} offset={8} className="section-top">
                         <Card className="form-content">
                             <Paragraph className="form-header text-center">
-                                <img className="form-img" src="images/logo_02.png" alt="Logo" />
+                                <img className="form-img" src="/images/logo_02.png" alt="Logo" />
                                 <Title level={4}>
-                                    <T _str="Sign Up" />
+                                    <Trans i18nKey="sign-up" />
                                 </Title>
                             </Paragraph>
 
                             {message && (
-                                <Alert type="error" className="alert-msg" message={<T _str={message} />} showIcon />
+                                <Alert
+                                    type="error"
+                                    className="alert-msg"
+                                    message={
+                                        <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == message)}>
+                                            {' '}
+                                        </Trans>
+                                    }
+                                    showIcon
+                                />
                             )}
 
                             <Form
@@ -121,7 +130,7 @@ class Register extends Component<Props, State> {
                                 onFinish={this.handleRegistration}
                             >
                                 <Form.Item
-                                    label={<T _str="Username" />}
+                                    label={<Trans i18nKey="username.label" />}
                                     name="username"
                                     {...('username' in errors && {
                                         help: errors['username'],
@@ -130,18 +139,18 @@ class Register extends Component<Props, State> {
                                     rules={[
                                         {
                                             required: true,
-                                            message: <T _str="Username is required" />,
+                                            message: <Trans i18nKey="username.required" />,
                                         },
                                         {
                                             min: 4,
-                                            message: <T _str="Username must be at least 4 characters" />,
+                                            message: <Trans i18nKey="Username must be at least 4 characters" />,
                                         },
                                     ]}
                                 >
-                                    <Input placeholder="Username" />
+                                    <Input placeholder={t('username.label')} />
                                 </Form.Item>
                                 <Form.Item
-                                    label={<T _str="Email" />}
+                                    label={<Trans i18nKey="email.label" />}
                                     name="email"
                                     {...('email' in errors && {
                                         help: errors['email'],
@@ -150,18 +159,18 @@ class Register extends Component<Props, State> {
                                     rules={[
                                         {
                                             type: 'email',
-                                            message: <T _str="Invalid Email" />,
+                                            message: <Trans i18nKey="email.invalid" />,
                                         },
                                         {
                                             required: true,
-                                            message: <T _str="Email is required" />,
+                                            message: <Trans i18nKey="email.required" />,
                                         },
                                     ]}
                                 >
-                                    <Input placeholder="Email" />
+                                    <Input placeholder={t('email.label')} />
                                 </Form.Item>
                                 <Form.Item
-                                    label={<T _str="Password" />}
+                                    label={<Trans i18nKey="password.label" />}
                                     name="password"
                                     {...('password' in errors && {
                                         help: errors['password'],
@@ -170,18 +179,18 @@ class Register extends Component<Props, State> {
                                     rules={[
                                         {
                                             min: 4,
-                                            message: <T _str="Password must be at least 4 characters" />,
+                                            message: <Trans i18nKey="password.size" />,
                                         },
                                         {
                                             required: true,
-                                            message: <T _str="Password is required" />,
+                                            message: <Trans i18nKey="password.required" />,
                                         },
                                     ]}
                                 >
                                     <Input.Password placeholder="**********" />
                                 </Form.Item>
                                 <Form.Item
-                                    label={<T _str="Confirm Password" />}
+                                    label={<Trans i18nKey="confirm-password.label" />}
                                     name="confirmPassword"
                                     dependencies={['password']}
                                     {...('confirmPassword' in errors && {
@@ -191,11 +200,11 @@ class Register extends Component<Props, State> {
                                     rules={[
                                         {
                                             min: 4,
-                                            message: <T _str="Confirm password must be at least 4 characters" />,
+                                            message: <Trans i18nKey="confirm-password.size" />,
                                         },
                                         {
                                             required: true,
-                                            message: <T _str="Confirm password is required" />,
+                                            message: <Trans i18nKey="confirm-password.required" />,
                                         },
                                         ({ getFieldValue }) => ({
                                             validator(_, value) {
@@ -204,7 +213,7 @@ class Register extends Component<Props, State> {
                                                 }
                                                 return Promise.reject(
                                                     ReactDOMServer.renderToString(
-                                                        <T _str="The two passwords that you entered do not match" />
+                                                        <Trans i18nKey="paswords-not-match" />
                                                     )
                                                 );
                                             },
@@ -230,7 +239,7 @@ class Register extends Component<Props, State> {
                                                     : Promise.reject(
                                                           new Error(
                                                               ReactDOMServer.renderToString(
-                                                                  <T _str="Should accept the agreement" />
+                                                                  <Trans i18nKey="accept-agreement" />
                                                               )
                                                           )
                                                       ),
@@ -238,22 +247,23 @@ class Register extends Component<Props, State> {
                                     ]}
                                 >
                                     <Checkbox>
-                                        <T _str="I agree to the" />
+                                        <Trans i18nKey="agree" />
                                         <a href="#">
                                             {' '}
-                                            <T _str="Terms of Service" />
+                                            <Trans i18nKey="terms" />
                                         </a>
-                                        <T _str="and" />
+                                        {' '}
+                                        <Trans i18nKey="and" />
                                         <a href="#">
                                             {' '}
-                                            <T _str="Privacy Policy" />
+                                            <Trans i18nKey="privacy-policy" />
                                         </a>
                                     </Checkbox>
                                 </Form.Item>
 
                                 <Form.Item>
                                     <Button type="primary" htmlType="submit" block>
-                                        <T _str="Register" />
+                                        <Trans i18nKey="register" />
                                     </Button>
                                 </Form.Item>
                             </Form>
@@ -265,4 +275,4 @@ class Register extends Component<Props, State> {
     }
 }
 
-export default Register;
+export default withTranslation()(Register);

@@ -18,14 +18,16 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import AuthService from '../services/auth.service';
-import { Form, Input, Button, Checkbox, message, Alert, Col, Row, Typography, Card } from 'antd';
-import { T } from '@transifex/react';
+import { Form, Input, Button, message, Alert, Col, Row, Typography, Card } from 'antd';
+import { Trans, withTranslation } from 'react-i18next';
+import EN_US from '../locale/en-US.json';
+import { t } from 'i18next';
+
 const { Text, Title, Paragraph } = Typography;
 
 type Props = {};
 type State = {
     email?: string;
-
     successful: boolean;
     message: string;
 };
@@ -47,7 +49,6 @@ class Reset extends Component<Props, State> {
         AuthService.reset_password(email)
             .then((response) => {
                 const responseMessage = response.data.message;
-
                 message.success({
                     content: responseMessage,
                     style: {
@@ -60,11 +61,9 @@ class Reset extends Component<Props, State> {
                 });
             })
             .catch((error) => {
-                const responseMessage = error.response.data.message;
-
                 this.setState({
                     successful: false,
-                    message: responseMessage,
+                    message: error.response.data.message,
                 });
             });
     }
@@ -73,7 +72,6 @@ class Reset extends Component<Props, State> {
         const { successful, message } = this.state;
         const initialValues = {
             email: '',
-
             successful: false,
             message: '',
         };
@@ -83,38 +81,46 @@ class Reset extends Component<Props, State> {
                 <Col span={8} offset={8} className="section-top">
                     <Card className="form-content">
                         <Paragraph className="form-header text-center">
-                            <img className="form-img" src="images/logo_02.png" alt="Logo" />
+                            <img className="form-img" src="/images/logo_02.png" alt="Logo" />
                             <Title level={4}>
-                                {' '}
-                                <T _str="Reset my password" />
+                                <Trans i18nKey="reset-password" />
                             </Title>
                         </Paragraph>
                         {message && !successful && (
-                            <Alert type="error" className="alert-msg" message={<T _str={message} />} showIcon />
+                            <Alert
+                                type="error"
+                                className="alert-msg"
+                                message={
+                                    <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == message)}/>
+                                }
+                                showIcon
+                            />
                         )}
                         <Form
                             layout="vertical"
-                            name="login_form"
+                            name="reset"
                             className="login-form"
                             initialValues={initialValues}
+                            requiredMark={false}
+                            scrollToFirstError={true}
+                            validateTrigger="onSubmit"
                             onFinish={this.handleReset}
                         >
                             <Form.Item
-                                label="Email"
+                                label={<Trans i18nKey="email.label" />}
                                 name="email"
-                                hasFeedback
                                 rules={[
                                     {
                                         type: 'email',
-                                        message: <T _str="Invalid Email" />,
+                                        message: <Trans i18nKey="email.invalid" />,
                                     },
                                     {
                                         required: true,
-                                        message: <T _str="Email is required" />,
+                                        message: <Trans i18nKey="email.required" />,
                                     },
                                 ]}
                             >
-                                <Input placeholder="Email" />
+                                <Input placeholder={t('email.label')} />
                             </Form.Item>
                             <Form.Item>
                                 <Button
@@ -124,17 +130,17 @@ class Reset extends Component<Props, State> {
                                     size="large"
                                     block
                                 >
-                                    <T _str="Reset password" />
+                                    <Trans i18nKey="reset-password" />
                                 </Button>
                             </Form.Item>
                         </Form>
 
                         <Paragraph className="form-footer text-center">
                             <Text>
-                                <T _str="I remember my password" />{' '}
+                                <Trans i18nKey="remember-password" />{' '}
                             </Text>
                             <Link to={'/login'}>
-                                <T _str="Back to login" />{' '}
+                                <Trans i18nKey="back-to-login" />
                             </Link>
                         </Paragraph>
                     </Card>
@@ -144,4 +150,4 @@ class Reset extends Component<Props, State> {
     }
 }
 
-export default Reset;
+export default withTranslation()(Reset);

@@ -20,7 +20,7 @@ import React from 'react';
 
 import { Button, Form, Typography, Card, Modal, Switch, Alert, Tooltip } from 'antd';
 import DynamicIcon from './DynamicIcon';
-import { T } from '@transifex/react';
+import { Trans } from 'react-i18next';
 
 const { Title, Paragraph } = Typography;
 const { Grid, Meta } = Card;
@@ -57,16 +57,14 @@ export const Step3Form = (props: Props) => {
         <>
             <Paragraph className="final-form-header">
                 <Title level={4} className="final-form-header">
-                    <T _str="BigBlueButton rooms settings" />
+                    <Trans i18nKey="bigbluebutton_rooms_settings" />
                 </Title>
 
                 <Alert
                     className="settings-info"
+                    message={<Trans i18nKey="customize_configuration" />}
                     type="info"
-                    message={
-                        <T _str="Click on each button to customise the configuration group and hover it to get its summary." />
-                    }
-                    closeText={<T _str="I understand, thank you!" />}
+                    closeText={<Trans i18nKey="understand" />}
                 />
             </Paragraph>
             <Card bordered={false}>
@@ -82,7 +80,7 @@ export const Step3Form = (props: Props) => {
                                         key={item.name +"_"+ subItem.name}
                                         className={subItem.status == true ? 'text-black' : 'text-grey'}
                                     >
-                                        <T _str={subItem.name} />
+                                        <Trans i18nKey={subItem.name} />
                                     </li>
                                 ))}
                             </ul>
@@ -95,14 +93,14 @@ export const Step3Form = (props: Props) => {
                         >
                             <Meta
                                 avatar={<DynamicIcon type={item.icon} className="PresetIcon" />}
-                                title={<T _str={item.name} />}
+                                title={<Trans i18nKey={item.name} />}
                             />
                         </Grid>
                     </Tooltip>
                 ))}
 
                 <Modal
-                    title={<T _str={modalTitle} />}
+                    title={<Trans i18nKey={modalTitle} />}
                     className="presets-modal"
                     centered
                     visible={isModalVisible}
@@ -110,14 +108,14 @@ export const Step3Form = (props: Props) => {
                     onCancel={() => setIsModalVisible(false)}
                     footer={[
                         <Button key="submit" type="primary" onClick={() => setIsModalVisible(false)}>
-                            <T _str="Confirm" />
+                            <Trans i18nKey="confirm" />
                         </Button>,
                     ]}
                 >
                     <div className="presets-body">
                         {modalContent.map((item) => (
                             <div key={modalTitle +"_"+ item.name}>
-                                <Form.Item label={<T _str={item.name} />}>
+                                <Form.Item label={<Trans i18nKey={item.name} />}>
                                     <Switch
                                         defaultChecked={item.status == true ? true : false}
                                         onChange={(checked) => {

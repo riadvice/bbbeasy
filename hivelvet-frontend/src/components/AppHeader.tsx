@@ -22,11 +22,8 @@ import { Layout, Typography, Radio, Button, Menu, Dropdown, Space, Input } from 
 import { SearchOutlined, GlobalOutlined, DownOutlined, UserOutlined, LogoutOutlined } from '@ant-design/icons';
 
 import authService from '../services/auth.service';
-
-import enUS from 'antd/lib/locale/en_US';
-import frFR from 'antd/lib/locale/fr_FR';
-import arEG from 'antd/lib/locale/ar_EG';
-import { T } from '@transifex/react';
+import { Trans } from 'react-i18next';
+import Languages from './Languages';
 
 const { Header } = Layout;
 const { Text,Paragraph } = Typography;
@@ -48,12 +45,6 @@ type State = {
     user: userType;
 };
 
-const languages = [
-    { name: 'English', key: 'en', value: enUS },
-    { name: 'Français', key: 'fr', value: frFR },
-    { name: 'العربية', key: 'ar', value: arEG },
-];
-
 class AppHeader extends Component<Props, State> {
     constructor(props: Props) {
         super(props);
@@ -62,24 +53,26 @@ class AppHeader extends Component<Props, State> {
             user: user,
         };
     }
-    handleChange = (e) => {
-        const res = languages.filter((item) => item.key == e.target.value.locale);
-        this.props.setLang(res[0].value);
-    };
     logout() {
         localStorage.clear();
         this.props.setUser(null, false);
         return <Navigate to="/login" />;
     }
 
+    handleChange = (e) => {
+        const res = Languages.filter((item) => item.value == e.target.value);
+        this.props.setLang(res[0].value);
+    };
+
     render() {
         const { currentLocale, isLogged, installed, currentUser } = this.props;
-        const result = languages.filter((item) => item.value == currentLocale);
-        const language = result[0].key;
+        const result = Languages.filter((item) => item.value == currentLocale);
+        //const language = result[0].key;
+        const language = '';
         const menuLang = (
             <Menu>
                 <Radio.Group value={currentLocale} onChange={this.handleChange}>
-                    {languages.map(({ name, key, value }) => (
+                    {Languages.map(({ name, key, value }) => (
                         <Menu.Item key={key}>
                             <Radio value={value}>{name}</Radio>
                         </Menu.Item>
@@ -91,17 +84,25 @@ class AppHeader extends Component<Props, State> {
         const menuProfile = (
             <Menu>
                 <Menu.Item key="1" className="username-item text-uppercase">
-                    <T _str="Signed in as" /> {currentUser?.username}
+                    <Trans i18nKey="Signed in as" /> {currentUser?.username}
                     <br/>
                     <Text className="text-lowercase">{currentUser?.email}</Text>
                 </Menu.Item>
                 <Menu.Divider />
                 <Menu.Item key="2" icon={<UserOutlined />}>
-                    <T _str="Profile" />
+                    <Trans i18nKey="Profile" />
                 </Menu.Item>
-                <Menu.Item key="3" icon={<LogoutOutlined />}>
+                <Menu.Item
+                    key="3"
+                   icon={
+                       <LogoutOutlined
+                           // @fixme : use scaleX and direction instead of ar
+                           rotate={this.props.currentLocale.includes('ar') ? 180 : 0}
+                       />
+                   }
+                >
                     <a onClick={() => this.logout()}>
-                        <T _str="Sign Out" />
+                        <Trans i18nKey="Sign Out" />
                     </a>
                 </Menu.Item>
             </Menu>
@@ -111,9 +112,8 @@ class AppHeader extends Component<Props, State> {
             <Header className="site-header">
                 <Paragraph className="site-header-inner">
                     <Link to={'/'}>
-                        <img className="header-logo-image" src="images/logo_01.png" alt="Logo" />
+                        <img className="header-logo-image" src="/images/logo_01.png" alt="Logo" />
                     </Link>
-
                     {installed && (
                         <>
                             {isLogged && (
@@ -135,10 +135,10 @@ class AppHeader extends Component<Props, State> {
                                 {!isLogged ? (
                                     <>
                                         <Link className={'ant-btn color-primary'} to={'/login'}>
-                                            <T _str="Login" />
+                                            <Trans i18nKey="login" />
                                         </Link>
                                         <Link className={'ant-btn color-primary'} to={'/register'}>
-                                            <T _str="Sign up" />
+                                            <Trans i18nKey="sign-up" />
                                         </Link>
                                     </>
                                 ) : (

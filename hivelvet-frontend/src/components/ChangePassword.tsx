@@ -16,16 +16,18 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 import React, { Component } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import AuthService from '../services/auth.service';
 
 import { Form, Input, Button, message, Alert, Col, Row, Typography, Card, Result } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
-import { T } from '@transifex/react';
 import authService from '../services/auth.service';
-const { Title, Paragraph } = Typography;
 import ReactDOMServer from 'react-dom/server';
 import PageNotFound from './PageNotFound';
+import { Trans, withTranslation } from 'react-i18next';
+import EN_US from '../locale/en-US.json';
+
+const { Title, Paragraph } = Typography;
 
 type Props = {};
 
@@ -116,7 +118,7 @@ class ChangePassword extends Component<Props, State> {
                                     title="Password changed successfully"
                                     extra={
                                         <Link to={'/login'} className="ant-btn ant-btn-lg">
-                                            Login now
+                                            <Trans i18nKey="login-now" />
                                         </Link>
                                     }
                                 />
@@ -125,17 +127,24 @@ class ChangePassword extends Component<Props, State> {
                             <Col span={8} offset={8} className="section-top">
                                 <Card className="form-content">
                                     <Paragraph className="form-header text-center">
-                                        <img className="form-img" src="images/logo_02.png" alt="Logo" />
+                                        <img className="form-img" src="/images/logo_02.png" alt="Logo" />
                                         <Title level={4}>
-                                            {' '}
-                                            <T _str="Change password" />
+                                            <Trans i18nKey="change-password" />
                                         </Title>
                                     </Paragraph>
                                     {message && !successful && (
                                         <Alert
                                             type="error"
                                             className="alert-msg"
-                                            message={<T _str={message} />}
+                                            message={
+                                                <Trans
+                                                    i18nKey={Object.keys(EN_US).filter(
+                                                        (elem) => EN_US[elem] == message
+                                                    )}
+                                                >
+                                                    {' '}
+                                                </Trans>
+                                            }
                                             showIcon
                                         />
                                     )}
@@ -148,17 +157,17 @@ class ChangePassword extends Component<Props, State> {
                                         onFinish={this.handleChange}
                                     >
                                         <Form.Item
-                                            label={<T _str="Password" />}
+                                            label={<Trans i18nKey="password.label" />}
                                             name="password"
                                             hasFeedback
                                             rules={[
                                                 {
                                                     min: 4,
-                                                    message: <T _str="Password must be at least 4 characters" />,
+                                                    message: <Trans i18nKey="password.size" />,
                                                 },
                                                 {
                                                     required: true,
-                                                    message: <T _str="Password is required" />,
+                                                    message: <Trans i18nKey="password.required" />,
                                                 },
                                             ]}
                                         >
@@ -169,20 +178,18 @@ class ChangePassword extends Component<Props, State> {
                                             />
                                         </Form.Item>
                                         <Form.Item
-                                            label={<T _str="Confirm Password" />}
+                                            label={<Trans i18nKey="confirm-password.label" />}
                                             name="confirmPassword"
                                             dependencies={['password']}
                                             hasFeedback
                                             rules={[
                                                 {
                                                     min: 4,
-                                                    message: (
-                                                        <T _str="Confirm password must be at least 4 characters" />
-                                                    ),
+                                                    message: <Trans i18nKey="password.size" />,
                                                 },
                                                 {
                                                     required: true,
-                                                    message: <T _str="Confirm password is required" />,
+                                                    message: <Trans i18nKey="password.required" />,
                                                 },
                                                 ({ getFieldValue }) => ({
                                                     validator(_, value) {
@@ -192,7 +199,7 @@ class ChangePassword extends Component<Props, State> {
                                                         return Promise.reject(
                                                             new Error(
                                                                 ReactDOMServer.renderToString(
-                                                                    <T _str="The two passwords that you entered do not match" />
+                                                                    <Trans i18nKey="paswords-not-match" />
                                                                 )
                                                             )
                                                         );
@@ -211,14 +218,14 @@ class ChangePassword extends Component<Props, State> {
                                                 size="large"
                                                 block
                                             >
-                                                <T _str="Change password" />
+                                                <Trans i18nKey="change-password" />
                                             </Button>
                                         </Form.Item>
                                     </Form>
 
                                     <Paragraph className="form-footer text-center">
                                         <Link to={'/login'}>
-                                            <T _str="Back to login" />{' '}
+                                            <Trans i18nKey="back-to-login" />
                                         </Link>
                                     </Paragraph>
                                 </Card>
@@ -232,4 +239,4 @@ class ChangePassword extends Component<Props, State> {
     }
 }
 
-export default ChangePassword;
+export default withTranslation()(ChangePassword);

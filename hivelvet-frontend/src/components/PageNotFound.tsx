@@ -19,22 +19,22 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Result } from 'antd';
-import { T } from '@transifex/react';
+import { Trans, withTranslation } from 'react-i18next';
 
 const PageNotFound = () => {
     return (
         <Result
             status="404"
             title="404"
-            subTitle={<T _str="Sorry, the page you visited does not exist." />}
+            subTitle={<Trans i18nKey="not_found" />}
             className="page-not-found"
             extra={
                 <Link className="ant-btn color-blue" to="/">
-                    <T _str="Back Home" />
+                    <Trans i18nKey="back-home" />
                 </Link>
             }
         />
     );
 };
 
-export default PageNotFound;
+export default withTranslation()(PageNotFound);

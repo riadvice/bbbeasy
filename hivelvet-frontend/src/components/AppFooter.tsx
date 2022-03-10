@@ -18,7 +18,7 @@
 
 import React from 'react';
 import { Button, Layout, Typography } from 'antd';
-import { T } from '@transifex/react';
+import { Trans, withTranslation } from 'react-i18next';
 
 const { Footer } = Layout;
 const { Text } = Typography;
@@ -27,19 +27,14 @@ const AppFooter = () => {
     return (
         <Footer className="site-footer">
             <Text type="secondary">
-                ©2022{' '}
-                <Button type="link">
-                    {' '}
-                    <T _str="RIADVICE" />
-                </Button>{' '}
-                <T _str="All rights reserved" />
+                ©2022 <Button type="link">RIADVICE</Button>
+                {' '} <Trans i18nKey="reserved-rights" />
             </Text>
             <Text type="secondary">
-                {' '}
-                <T _str="Term & Conditions" /> | <T _str="Privacy Policy" />
+                <Trans i18nKey="term" /> & <Trans i18nKey="conditions" /> | <Trans i18nKey="privacy-policy" />
             </Text>
         </Footer>
     );
 };
 
-export default AppFooter;
+export default withTranslation()(AppFooter);

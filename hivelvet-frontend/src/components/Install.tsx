@@ -22,8 +22,9 @@ import InstallService from '../services/install.service';
 
 import { Steps, Button, Row, Col, Form, Result } from 'antd';
 import DynamicIcon from './DynamicIcon';
-import { T } from '@transifex/react';
 import axios from 'axios';
+import { Trans, useTranslation, withTranslation } from 'react-i18next';
+
 import { Step1Form } from "./Step1Form";
 import { Step2Form } from "./Step2Form";
 import { Step3Form } from "./Step3Form";
@@ -38,6 +39,8 @@ type Props = {
 
 const Install = (props: Props) => {
     const { handleInstall } = props;
+    const { t } = useTranslation();
+
     const [stepForm] = Form.useForm();
     const initialValues = {
         username: '',
@@ -105,14 +108,14 @@ const Install = (props: Props) => {
 
     const steps = [
         {
-            title: 'Administrator account',
+            title: t('administrator_account'),
             content: <Step1Form errors={errors} />,
-            button: 'Create',
+            button: t('create'),
             span: 8,
             offset: 4,
         },
         {
-            title: 'Company & Branding',
+            title: t('company.name') + ' & ' + t('branding'),
             content: <Step2Form
                 errors={errors}
                 primaryColor={primaryColor}
@@ -124,14 +127,14 @@ const Install = (props: Props) => {
                 setAccentColor={setAccentColor}
                 setAddColor={setAddColor}
                 setFile={setFile} />,
-            button: 'Next',
+            button: t('next'),
             span: 15,
             offset: 2,
         },
         {
-            title: 'BigBlueButton Settings',
+            title: t('bigBlueButton_settings'),
             content: <Step3Form presets={presets} />,
-            button: 'Finish',
+            button: t('finish'),
             span: 18,
             offset: 1,
         },
@@ -190,10 +193,10 @@ const Install = (props: Props) => {
                     <Result
                         status="success"
                         icon={<DynamicIcon type="CheckOutlined" className="success-install-icon" />}
-                        title={<T _str="Application installed !" />}
+                        title={<Trans i18nKey="Application installed !" />}
                         extra={
                             <Link to={'/login'} onClick={handleInstall} className="ant-btn ant-btn-primary ant-btn-lg">
-                                <T _str="Start using Hivelvet" />
+                                <Trans i18nKey="start-using-hivelvet" />
                             </Link>
                         }
                     />
@@ -203,7 +206,7 @@ const Install = (props: Props) => {
                     <Col span={4}>
                         <Steps className="install-steps" size="small" direction="vertical" current={activeStep}>
                             {steps.map((item) => (
-                                <Step key={item.title} title={<T _str={item.title} />} />
+                                <Step key={item.title} title={item.title} />
                             ))}
                         </Steps>
                     </Col>
@@ -229,12 +232,12 @@ const Install = (props: Props) => {
                             >
                                 {activeStep > 0 && (
                                     <Button className="prev" onClick={() => prev()} block>
-                                        <T _str="Previous" />
+                                        <Trans i18nKey="previous" />
                                     </Button>
                                 )}
                                 {activeStep <= steps.length - 1 && (
                                     <Button type="primary" htmlType="submit" block>
-                                        <T _str={steps[activeStep].button} />
+                                        {steps[activeStep].button}
                                     </Button>
                                 )}
                             </Form.Item>
@@ -246,4 +249,4 @@ const Install = (props: Props) => {
     );
 };
 
-export default Install;
+export default withTranslation()(Install);

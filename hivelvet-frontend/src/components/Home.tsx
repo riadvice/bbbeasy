@@ -18,7 +18,7 @@
 
 import React, { Component } from 'react';
 import { Row, Col, Avatar, Typography, Button } from 'antd';
-import { T } from '@transifex/react';
+import { Trans, withTranslation } from 'react-i18next';
 
 const { Title, Paragraph } = Typography;
 
@@ -30,18 +30,15 @@ type Props = {
 type State = {};
 
 class Home extends Component<Props, State> {
-    username = '';
     constructor(props: Props) {
         super(props);
     }
 
     render() {
-        this.username = this.props.user != null ? this.props.user.username : '';
-
         return (
             <Paragraph className="text-center home-guide">
                 <Title level={3} underline>
-                    <T _str="How easy is it to create a room ?" />
+                    <Trans i18nKey="create-easy-room" />
                 </Title>
                 <Row justify="center">
                     <Col span={3}>
@@ -52,7 +49,7 @@ class Home extends Component<Props, State> {
                             1
                         </Avatar>
                         <Title level={4}>
-                            <T _str="Give it a name" />
+                            <Trans i18nKey="give-it-name" />
                         </Title>
                     </Col>
                     <Col span={3}>
@@ -63,7 +60,7 @@ class Home extends Component<Props, State> {
                             2
                         </Avatar>
                         <Title level={4}>
-                            <T _str="Assign it a preset" />
+                            <Trans i18nKey="assign-preset" />
                         </Title>
                     </Col>
                     <Col span={3}>
@@ -74,16 +71,16 @@ class Home extends Component<Props, State> {
                             3
                         </Avatar>
                         <Title level={4}>
-                            <T _str="Mark it with labels" />
+                            <Trans i18nKey="mark-labels" />
                         </Title>
                     </Col>
                 </Row>
                 <Button type="primary">
-                    <T _str="Create my first room" />
+                    <Trans i18nKey="create-first-room" />
                 </Button>
             </Paragraph>
         );
     }
 }
 
-export default Home;
+export default withTranslation()(Home);
