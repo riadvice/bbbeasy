@@ -59,6 +59,8 @@ class Bootstrap extends Boot
         $this->f3->config('config/default.ini');
         if (file_exists('config/config-' . $this->environment . '.ini')) {
             $this->f3->config('config/config-' . $this->environment . '.ini');
+        } else {
+            throw new \RuntimeException('Could not find configuration file "config-' . $this->environment . '.ini"');
         }
 
         // Upload configuration
@@ -148,6 +150,6 @@ class Bootstrap extends Boot
         header('Access-Control-Allow-Origin: *');
         header('Access-Control-Allow-Headers: Content-Type, Origin, Authorization, X-Authorization, Accept, Accept-Language, Access-Control-Request-Method');
         header('Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE');
-        //header("Allow: GET, POST, OPTIONS, PUT, DELETE");
+        // header("Allow: GET, POST, OPTIONS, PUT, DELETE");
     }
 }
