@@ -21,7 +21,15 @@ import RolesService from '../services/roles.service';
 
 import { PageHeader, Button, Row, Col, Typography, Table, Space, Modal, Popconfirm, notification, Card } from 'antd';
 import { Form, Input, Checkbox } from 'antd';
-import { DeleteOutlined, SearchOutlined, QuestionCircleOutlined, UserOutlined, EditOutlined, KeyOutlined, WarningOutlined } from '@ant-design/icons';
+import {
+    DeleteOutlined,
+    SearchOutlined,
+    QuestionCircleOutlined,
+    UserOutlined,
+    EditOutlined,
+    KeyOutlined,
+    WarningOutlined,
+} from '@ant-design/icons';
 import Highlighter from 'react-highlight-words/dist/main';
 import { FormInstance } from 'antd/lib/form';
 import { T } from '@transifex/react';

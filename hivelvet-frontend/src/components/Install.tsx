@@ -16,7 +16,7 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import InstallService from '../services/install.service';
 
@@ -25,9 +25,9 @@ import DynamicIcon from './DynamicIcon';
 import axios from 'axios';
 import { Trans, useTranslation, withTranslation } from 'react-i18next';
 
-import { Step1Form } from "./Step1Form";
-import { Step2Form } from "./Step2Form";
-import { Step3Form } from "./Step3Form";
+import { Step1Form } from './Step1Form';
+import { Step2Form } from './Step2Form';
+import { Step3Form } from './Step3Form';
 
 const API_URL = process.env.REACT_APP_API_URL;
 const { Step } = Steps;
@@ -164,8 +164,7 @@ const Install = (props: Props) => {
                         setErrors(errors);
                         if ('username' in errors || 'email' in errors || 'password' in errors) {
                             setActiveStep(0);
-                        }
-                        else {
+                        } else {
                             setActiveStep(1);
                         }
                     }

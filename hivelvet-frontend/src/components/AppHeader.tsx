@@ -26,7 +26,7 @@ import { Trans } from 'react-i18next';
 import languages from './Languages';
 
 const { Header } = Layout;
-const { Text,Paragraph } = Typography;
+const { Text, Paragraph } = Typography;
 
 type userType = {
     username: string;

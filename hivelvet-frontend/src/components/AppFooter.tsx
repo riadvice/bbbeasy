@@ -27,8 +27,7 @@ const AppFooter = () => {
     return (
         <Footer className="site-footer">
             <Text type="secondary">
-                ©2022 <Button type="link">RIADVICE</Button>
-                {' '} <Trans i18nKey="reserved-rights" />
+                ©2022 <Button type="link">RIADVICE</Button> <Trans i18nKey="reserved-rights" />
             </Text>
             <Text type="secondary">
                 <Trans i18nKey="term" /> & <Trans i18nKey="conditions" /> | <Trans i18nKey="privacy-policy" />

@@ -42,7 +42,18 @@ type Props = {
 
 export const Step2Form = (props: Props) => {
     const { t } = useTranslation();
-    const { errors, primaryColor, secondaryColor, accentColor, addColor, setPrimaryColor, setSecondaryColor, setAccentColor, setAddColor, setFile } = props;
+    const {
+        errors,
+        primaryColor,
+        secondaryColor,
+        accentColor,
+        addColor,
+        setPrimaryColor,
+        setSecondaryColor,
+        setAccentColor,
+        setAddColor,
+        setFile,
+    } = props;
     const [fileList, setFileList] = React.useState();
 
     const normFile = (e: any) => {
@@ -55,9 +66,7 @@ export const Step2Form = (props: Props) => {
         let fileList: any = [...info.fileList];
         fileList = fileList.slice(-1);
         const img =
-            fileList[0].type === 'image/jpg' ||
-            fileList[0].type === 'image/jpeg' ||
-            fileList[0].type === 'image/png';
+            fileList[0].type === 'image/jpg' || fileList[0].type === 'image/jpeg' || fileList[0].type === 'image/png';
         if (img) {
             setFileList(fileList);
             setFile(fileList[0]);
@@ -75,10 +84,10 @@ export const Step2Form = (props: Props) => {
                 <Form.Item
                     label={<Trans i18nKey="company.name" />}
                     name="company_name"
-                    {...('company_name' in errors) && {
+                    {...('company_name' in errors && {
                         help: errors['company_name'],
-                        validateStatus: "error"
-                    }}
+                        validateStatus: 'error',
+                    })}
                     rules={[
                         {
                             required: true,
@@ -91,10 +100,10 @@ export const Step2Form = (props: Props) => {
                 <Form.Item
                     label={<Trans i18nKey="company.website.label" />}
                     name="company_url"
-                    {...('company_url' in errors) && {
+                    {...('company_url' in errors && {
                         help: errors['company_url'],
-                        validateStatus: "error"
-                    }}
+                        validateStatus: 'error',
+                    })}
                     rules={[
                         {
                             required: true,
@@ -111,10 +120,10 @@ export const Step2Form = (props: Props) => {
                 <Form.Item
                     label={<Trans i18nKey="platform.label" />}
                     name="platform_name"
-                    {...('platform_name' in errors) && {
+                    {...('platform_name' in errors && {
                         help: errors['platform_name'],
-                        validateStatus: "error"
-                    }}
+                        validateStatus: 'error',
+                    })}
                     rules={[
                         {
                             required: true,
@@ -127,10 +136,10 @@ export const Step2Form = (props: Props) => {
                 <Form.Item
                     label={<Trans i18nKey="terms_url.label" />}
                     name="term_url"
-                    {...('term_url' in errors) && {
+                    {...('term_url' in errors && {
                         help: errors['term_url'],
-                        validateStatus: "error"
-                    }}
+                        validateStatus: 'error',
+                    })}
                     rules={[
                         {
                             type: 'url',
@@ -143,10 +152,10 @@ export const Step2Form = (props: Props) => {
                 <Form.Item
                     label={<Trans i18nKey="privacy_policy_url.label" />}
                     name="policy_url"
-                    {...('policy_url' in errors) && {
+                    {...('policy_url' in errors && {
                         help: errors['policy_url'],
                         validateStatus: 'error',
-                    }}
+                    })}
                     rules={[
                         {
                             type: 'url',
@@ -202,7 +211,7 @@ export const Step2Form = (props: Props) => {
                             animation="slide-up"
                             defaultColor={primaryColor}
                             onClose={(color) => {
-                                setPrimaryColor(color.color)
+                                setPrimaryColor(color.color);
                             }}
                             placement="bottomLeft"
                         >
@@ -216,7 +225,7 @@ export const Step2Form = (props: Props) => {
                             animation="slide-up"
                             defaultColor={secondaryColor}
                             onClose={(color) => {
-                                setSecondaryColor(color.color)
+                                setSecondaryColor(color.color);
                             }}
                             placement="bottomLeft"
                         >
@@ -230,7 +239,7 @@ export const Step2Form = (props: Props) => {
                             animation="slide-up"
                             defaultColor={accentColor}
                             onClose={(color) => {
-                                setAccentColor(color.color)
+                                setAccentColor(color.color);
                             }}
                             placement="bottomLeft"
                         >
@@ -244,7 +253,7 @@ export const Step2Form = (props: Props) => {
                             animation="slide-up"
                             defaultColor={addColor}
                             onClose={(color) => {
-                                setAddColor(color.color)
+                                setAddColor(color.color);
                             }}
                             placement="bottomLeft"
                         >

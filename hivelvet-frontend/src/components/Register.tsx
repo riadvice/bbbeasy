@@ -50,7 +50,7 @@ class Register extends Component<Props, State> {
         AuthService.register(formValue)
             .then((response) => {
                 this.setState({
-                    successful: true
+                    successful: true,
                 });
             })
             .catch((error) => {
@@ -241,8 +241,7 @@ class Register extends Component<Props, State> {
                                         <a href="#">
                                             {' '}
                                             <Trans i18nKey="terms" />
-                                        </a>
-                                        {' '}
+                                        </a>{' '}
                                         <Trans i18nKey="and" />
                                         <a href="#">
                                             {' '}

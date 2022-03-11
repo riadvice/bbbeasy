@@ -49,11 +49,12 @@ import Logger from './lib/logger';
 import authService from './services/auth.service';
 import { Props } from 'react-intl/src/components/relative';
 import LocaleService from './services/locale.service';
-const { Content } = Layout;
-
 import { withTranslation } from 'react-i18next';
 
+const { Content } = Layout;
+
 Logger.info('Initialisation Hivelvet Frontend Application');
+
 type State = {
     currentUser?: any;
     isLogged?: boolean;
