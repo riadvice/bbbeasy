@@ -41,7 +41,7 @@ final class ConfigurationTest extends Scenario
     {
         $test = $this->newTest();
         $test->expect('Africa/Tunis' === date_default_timezone_get(), 'Timezone set to Africa/Tunis');
-        $test->expect('UTF-8' === ini_get('default_charset'), 'Default charset is UTF-8');
+        $test->expect('UTF-8' === \ini_get('default_charset'), 'Default charset is UTF-8');
         $test->expect('../logs/' === $f3->get('LOGS'), 'Logs folder correctly configured to "logs"');
         $test->expect('../tmp/' === $f3->get('TEMP'), 'Cache folder correctly configured to "tmp/cache/"');
         $test->expect(str_starts_with($f3->get('UI'), 'templates/;../public/;'), 'Templates folder correctly configured to "templates" and "public"');

@@ -93,9 +93,9 @@ class Statera
             if (!\in_array('all', $tests, true) && !\in_array(preg_replace('/[a-z]{1,}\\\|actionstest|test/', '', mb_strtolower($class), -1), $tests, true)) {
                 continue;
             }
-            $object = new $class();
+            $object                                              = new $class();
             CliUtils::instance()->writeSuiteResult($suiteResults = $object->run($f3), Strings::after($class, '\\'));
-            $results = array_merge($results, $suiteResults);
+            $results                                             = array_merge($results, $suiteResults);
         }
 
         $testContainsFailures = false;
@@ -184,7 +184,7 @@ class Statera
         if (!$this->cli) {
             echo $result;
         } else {
-            //CliUtils::instance()->writeTestPassed('All teest passed');
+            // CliUtils::instance()->writeTestPassed('All teest passed');
             foreach (Base::instance()->get('SERVER')['argv'] as $arg) {
                 if (str_starts_with($arg, '-o=')) {
                     Base::instance()->write(Strings::after($arg, '-o='), $result);

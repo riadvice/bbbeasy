@@ -35,6 +35,7 @@ use Models\Base as BaseModel;
  * @property DateTime $created_on
  * @property DateTime $updated_on
  */
-class PresetSetting extends BaseModel {
+class PresetSetting extends BaseModel
+{
     protected $table = 'preset_settings';
 }

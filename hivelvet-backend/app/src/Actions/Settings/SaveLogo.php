@@ -44,15 +44,15 @@ class SaveLogo extends BaseAction
          * @todo for future tasks
          * if ($f3->get('system.installed') === false) {
          */
-        $form           = $f3->get('POST');
-        $dataChecker    = new DataChecker();
+        $form        = $f3->get('POST');
+        $dataChecker = new DataChecker();
 
         $dataChecker->verify($form['logo_name'], Validator::notEmpty()->setName('logo_name'));
-        //if files not empty
+        // if files not empty
 
         if ($dataChecker->allValid()) {
             // verif format file
-            //correct
+            // correct
             \Web::instance()->receive();
             $setting        = new Setting();
             $settings       = $setting->find([], ['limit' => 1])->current();

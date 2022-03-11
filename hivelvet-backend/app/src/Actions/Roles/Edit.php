@@ -85,7 +85,7 @@ class Edit extends BaseAction
                         $deletedActions = array_diff($oldPermissions[$group], $actions);
                         $addedActions   = array_diff($actions, $oldPermissions[$group]);
                         if (!empty($deletedActions)) {
-                            //delete role permissions
+                            // delete role permissions
                             foreach ($deletedActions as $deletedAction) {
                                 $rolePermission = new RolePermission();
                                 $rolePermission->load(['role_id = ? and group = ? and name = ?', $role_id, $group, $deletedAction]);

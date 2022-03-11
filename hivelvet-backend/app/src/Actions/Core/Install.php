@@ -25,7 +25,6 @@ namespace Actions\Core;
 use Actions\Base as BaseAction;
 use Base;
 use Enum\ResponseCode;
-use Enum\UserRole;
 use Enum\UserStatus;
 use Models\PresetSetting;
 use Models\Role;
@@ -62,10 +61,10 @@ class Install extends BaseAction
         $dataChecker->verify($form['company_url'], Validator::url()->setName('company_url'));
         $dataChecker->verify($form['platform_name'], Validator::notEmpty()->setName('platform_name'));
 
-        if ($form['term_url'] != "") {
+        if ('' !== $form['term_url']) {
             $dataChecker->verify($form['term_url'], Validator::url()->setName('term_url'));
         }
-        if ($form['policy_url'] != "") {
+        if ('' !== $form['policy_url']) {
             $dataChecker->verify($form['policy_url'], Validator::url()->setName('policy_url'));
         }
 
@@ -109,12 +108,13 @@ class Install extends BaseAction
                     $presets = $form['presetsConfig'];
                     if ($presets) {
                         foreach ($presets as $preset) {
-                            $subcategories  = $preset['subcategories'];
+                            $subcategories = $preset['subcategories'];
                             foreach ($subcategories as $subcategory) {
-                                $presetSettings             = new PresetSetting();
-                                $presetSettings->group      = $preset['name'];
-                                $presetSettings->name       = $subcategory['name'];
-                                $presetSettings->enabled    = $subcategory['status'];
+                                $presetSettings          = new PresetSetting();
+                                $presetSettings->group   = $preset['name'];
+                                $presetSettings->name    = $subcategory['name'];
+                                $presetSettings->enabled = $subcategory['status'];
+
                                 try {
                                     $presetSettings->save();
                                     $this->logger->info('Initial application setup : Add preset settings', ['preset' => $presetSettings->toArray()]);
@@ -130,37 +130,43 @@ class Install extends BaseAction
                     }
 
                     // add default roles admin and lecturer
-                    $roleAdmin = new Role();
+                    $roleAdmin       = new Role();
                     $roleAdmin->name = 'administrator';
+
                     try {
                         // allow all privileges to role admin
                         $allPrivileges = PrivilegeUtils::listSystemPrivileges();
-                        $result = $roleAdmin->saveRoleAndPermissions($allPrivileges);
-                        if (ResponseCode::HTTP_OK == $result) {
+                        $result        = $roleAdmin->saveRoleAndPermissions($allPrivileges);
+                        if (ResponseCode::HTTP_OK === $result) {
                             $this->logger->info('Initial application setup : Add administrator role', ['administrator role' => $roleAdmin->toArray()]);
-                            //assign admin created to role admin
+                            // assign admin created to role admin
                             $user->role_id = $roleAdmin->id;
+
                             try {
                                 $user->save();
                                 $this->logger->info('Initial application setup : Assign role to administrator user', ['user' => $user->toArray()]);
                             } catch (\Exception $e) {
                                 $this->logger->error('Initial application setup : Role could not be assigned', ['error' => $e->getMessage()]);
+
                                 return;
                             }
 
                             // add lecturer role
-                            $roleLecturer = new Role();
+                            $roleLecturer       = new Role();
                             $roleLecturer->name = 'lecturer';
+
                             try {
                                 $roleLecturer->save();
                                 $this->logger->info('Initial application setup : Add lecturer role', ['lecturer role' => $roleLecturer->toArray()]);
                             } catch (\Exception $e) {
                                 $this->logger->error('Initial application setup : Lecturer role could not be added', ['error' => $e->getMessage()]);
+
                                 return;
                             }
                         }
                     } catch (\Exception $e) {
                         $this->logger->info('Initial application setup : Administrator role could not be added', ['error' => $e->getMessage()]);
+
                         return;
                     }
 

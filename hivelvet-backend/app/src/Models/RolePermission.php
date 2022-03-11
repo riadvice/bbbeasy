@@ -39,7 +39,7 @@ class RolePermission extends BaseModel
 {
     protected $fieldConf = [
         'role_id' => [
-            'belongs-to-one' => Role::class
+            'belongs-to-one' => Role::class,
         ],
     ];
 

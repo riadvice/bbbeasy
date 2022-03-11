@@ -47,7 +47,7 @@ class User extends BaseModel
 {
     protected $fieldConf = [
         'role_id' => [
-            'belongs-to-one' => Role::class
+            'belongs-to-one' => Role::class,
         ],
     ];
 
@@ -97,7 +97,7 @@ class User extends BaseModel
         return $this->load(['email = ?', $email]);
     }
 
-    //@todo: will be used to detect if the course is full or not yet
+    // @todo: will be used to detect if the course is full or not yet
     /**
      * @param $ids
      *
@@ -125,6 +125,6 @@ class User extends BaseModel
 
     public function verifyPassword($password): bool
     {
-         return password_verify(trim($password), $this->password);
+        return password_verify(trim($password), $this->password);
     }
 }

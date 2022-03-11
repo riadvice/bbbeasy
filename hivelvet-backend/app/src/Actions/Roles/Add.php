@@ -59,8 +59,9 @@ class Add extends BaseAction
 
                 try {
                     $result = $role->saveRoleAndPermissions($form['permissions']);
-                    if ($result != ResponseCode::HTTP_OK) {
+                    if (ResponseCode::HTTP_OK !== $result) {
                         $this->renderJson(['errors' => $result->getMessage()], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+
                         return;
                     }
                 } catch (\Exception $e) {

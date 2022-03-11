@@ -20,37 +20,12 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Fake;
+namespace Enum;
 
-use Faker\Factory as Faker;
-use Models\Role;
-
-class RoleFaker
+class UserRole extends Enum
 {
-    private static array $storage = [];
-
-    public static function create($storageName = null)
-    {
-        $faker      = Faker::create();
-        $role       = new Role();
-        $role->name = str_replace(' ', '_', mb_strtolower($faker->name));
-
-        $role->save();
-
-        if (null !== $storageName) {
-            self::$storage[$storageName] = $role;
-        }
-
-        return $role;
-    }
-
-    /**
-     * @param $storageName
-     *
-     * @return Role
-     */
-    public static function get($storageName)
-    {
-        return self::$storage[$storageName];
-    }
+    final public const VISITOR  = 'visitor';
+    final public const LECTURER = 'lecturer';
+    final public const ADMIN    = 'admin';
+    final public const API      = 'api';
 }
