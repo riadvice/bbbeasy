@@ -51,13 +51,13 @@ class ResetPassword extends BaseAction
 
                 $this->logger->info('user', ['user' => $user->toArray()]);
 
-                //if user does not have a reset token
+                // if user does not have a reset token
                 if (!$resetToken->userExists($user->id)) {
                     $resetToken          = new ResetPasswordToken();
                     $resetToken->user_id = $user->id;
                 }
 
-                //otherwise, will update the existing row
+                // otherwise, will update the existing row
                 $resetToken->insert();
 
                 $emailTokens['from_name']        = $this->f3->get('from_name');

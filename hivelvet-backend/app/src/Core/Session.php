@@ -86,7 +86,7 @@ class Session extends Prefab
     public function cleanupOldSessions(): void
     {
         $this->logger->notice('Cleaning up old sessions');
-        $this->cleanup(ini_get('session.gc_maxlifetime'));
+        $this->cleanup(\ini_get('session.gc_maxlifetime'));
     }
 
     /**
@@ -133,7 +133,7 @@ class Session extends Prefab
      */
     public function authorizeUser($user): void
     {
-        /** @var $role Role */
+        /** @var Role $role */
         $role = $user->role_id;
         $this->set('user.id', $user->id);
         $this->set('user.role', $role->name);

@@ -24,7 +24,6 @@ namespace Actions\Account;
 
 use Actions\Base as BaseAction;
 use Enum\ResponseCode;
-use Enum\UserRole;
 use Enum\UserStatus;
 use Models\User;
 use Respect\Validation\Validator;
@@ -84,4 +83,3 @@ class Register extends BaseAction
         }
     }
 }
-

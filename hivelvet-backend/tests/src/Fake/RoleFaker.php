@@ -31,9 +31,9 @@ class RoleFaker
 
     public static function create($storageName = null)
     {
-        $faker          = Faker::create();
-        $role           = new Role();
-        $role->name     = str_replace(' ', '_', mb_strtolower($faker->name));
+        $faker      = Faker::create();
+        $role       = new Role();
+        $role->name = str_replace(' ', '_', mb_strtolower($faker->name));
 
         $role->save();
 

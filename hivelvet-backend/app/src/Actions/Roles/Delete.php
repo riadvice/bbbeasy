@@ -41,7 +41,7 @@ class Delete extends DeleteAction
         $role->load(['id = ?', $role_id]);
         $nbUsers = $role->getRoleUsers();
 
-        //delete users and permissions
+        // delete users and permissions
         $resultCode = $role->deleteUsersAndPermissions();
 
         if (ResponseCode::HTTP_OK === $resultCode) {
@@ -51,8 +51,7 @@ class Delete extends DeleteAction
             if ($nbUsers > 0) {
                 $result = $role->getLecturerRole();
                 $this->renderJson(['lecturer' => $result]);
-            }
-            else {
+            } else {
                 $this->renderJson(['result' => 'success']);
             }
         }

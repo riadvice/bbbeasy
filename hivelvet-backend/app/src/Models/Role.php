@@ -40,10 +40,10 @@ class Role extends BaseModel
 {
     protected $fieldConf = [
         'permissions' => [
-            'has-many' => [RolePermission::class, 'role_id']
+            'has-many' => [RolePermission::class, 'role_id'],
         ],
         'users' => [
-            'has-many' => [User::class, 'role_id']
+            'has-many' => [User::class, 'role_id'],
         ],
     ];
 
@@ -90,7 +90,7 @@ class Role extends BaseModel
 
     public function getRoleUsers()
     {
-        return $this->users ? count($this->users) : 0;
+        return $this->users ? \count($this->users) : 0;
     }
 
     public function getRolePermissions()
@@ -99,7 +99,8 @@ class Role extends BaseModel
 
         if ($rolePermissions) {
             $permissionsRole = [];
-            /** @var $rolePermission RolePermission */
+
+            /** @var RolePermission $rolePermission */
             foreach ($rolePermissions as $rolePermission) {
                 $permissionsRole[$rolePermission->group][] = $rolePermission->name;
             }
@@ -118,20 +119,21 @@ class Role extends BaseModel
         $this->logger->info('Role successfully added', ['role' => $this->toArray()]);
 
         if (isset($permissions)) {
-            //add permissions
+            // add permissions
             foreach ($permissions as $group => $actions) {
                 if (!empty($actions)) {
                     foreach ($actions as $action) {
-                        $rolePermission = new RolePermission();
-                        $rolePermission->group      = $group;
-                        $rolePermission->name       = $action;
-                        $rolePermission->role_id    = $this->id;
+                        $rolePermission          = new RolePermission();
+                        $rolePermission->group   = $group;
+                        $rolePermission->name    = $action;
+                        $rolePermission->role_id = $this->id;
+
                         try {
                             $rolePermission->save();
                             $this->logger->info('Role permission successfully added', ['rolePermission' => $rolePermission->toArray()]);
-                        }
-                        catch (\Exception $e) {
+                        } catch (\Exception $e) {
                             $this->logger->error('Role permission could not be added', ['error' => $e->getMessage()]);
+
                             return $e;
                         }
                     }
@@ -151,9 +153,10 @@ class Role extends BaseModel
         if (1 !== $role_id && 2 !== $role_id) {
             $users = $this->getRoleUsers();
             if ($users > 0) {
-                /** @var $user User */
+                /** @var User $user */
                 foreach ($this->users as $user) {
                     $user->role_id = 2;
+
                     try {
                         $user->save();
                         $this->logger->info('User role successfully switched', ['user' => $user->toArray()]);
@@ -169,6 +172,7 @@ class Role extends BaseModel
         } else {
             $resultCode = ResponseCode::HTTP_INTERNAL_SERVER_ERROR;
         }
+
         return $resultCode;
     }
 
@@ -182,7 +186,7 @@ class Role extends BaseModel
                 $rolePermission = new RolePermission();
                 $deleteResult   = $rolePermission->erase(['role_id = ?', $role_id]);
                 $resultCode     = $deleteResult ? ResponseCode::HTTP_OK : ResponseCode::HTTP_INTERNAL_SERVER_ERROR;
-                if (ResponseCode::HTTP_OK == $resultCode) {
+                if (ResponseCode::HTTP_OK === $resultCode) {
                     $this->logger->info('All Role permissions successfully deleted');
                 }
             } else {
@@ -206,12 +210,13 @@ class Role extends BaseModel
         // delete permissions of this role
         $resultCode2 = $this->deleteAllRolePermissions();
 
-        if (ResponseCode::HTTP_OK == $resultCode1 and ResponseCode::HTTP_OK == $resultCode2) {
+        if (ResponseCode::HTTP_OK === $resultCode1 && ResponseCode::HTTP_OK === $resultCode2) {
             $this->db->commit();
             $this->logger->info('Delete users and permissions transaction successfully commit.');
+
             return ResponseCode::HTTP_OK;
         }
+
         return ResponseCode::HTTP_INTERNAL_SERVER_ERROR;
     }
 }
-

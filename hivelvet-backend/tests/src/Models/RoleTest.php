@@ -22,9 +22,7 @@ declare(strict_types=1);
 
 namespace Models;
 
-use Base;
 use Fake\RoleFaker;
-use Faker\Factory as Faker;
 use Test\Scenario;
 
 /**
@@ -48,7 +46,7 @@ final class RoleTest extends Scenario
      */
     public function testRoleCreation($f3)
     {
-        $test   = $this->newTest();
+        $test = $this->newTest();
 
         $role = RoleFaker::create();
         $test->expect($role->valid(), 'Role mocked & saved to the database');
@@ -71,7 +69,7 @@ final class RoleTest extends Scenario
      */
     public function testRoleUpdate($f3)
     {
-        $test   = $this->newTest();
+        $test = $this->newTest();
 
         $role = RoleFaker::create();
         $test->expect($role->valid(), 'Role mocked & saved to the database');
@@ -80,26 +78,25 @@ final class RoleTest extends Scenario
         $test->expect($role2->valid(), 'Role 2 mocked & saved to the database');
 
         $data = ['data' => ['name' => '']];
-        $f3->mock(self::EDIT_ROLE_ROUTE.$role->id, null, null, $this->postJsonData($data));
+        $f3->mock(self::EDIT_ROLE_ROUTE . $role->id, null, null, $this->postJsonData($data));
         $test->expect($this->compareTemplateToResponse('role/empty_error.json'), 'Update role with empty name show an error');
 
         $data = ['data' => ['name' => $role2->name]];
-        $f3->mock(self::EDIT_ROLE_ROUTE.$role->id, null, null, $this->postJsonData($data));
+        $f3->mock(self::EDIT_ROLE_ROUTE . $role->id, null, null, $this->postJsonData($data));
         $test->expect($this->compareTemplateToResponse('role/exist_error.json'), 'Update role with existing name show an error');
 
         $data = ['data' => ['name' => 'Rooms manager']];
-        $f3->mock(self::EDIT_ROLE_ROUTE.$role->id, null, null, $this->postJsonData($data));
+        $f3->mock(self::EDIT_ROLE_ROUTE . $role->id, null, null, $this->postJsonData($data));
         $result = [
             'key'         => $role->id,
             'name'        => $role->name,
             'users'       => $role->getRoleUsers(),
             'permissions' => $role->getRolePermissions(),
         ];
-        $test->expect($this->compareArrayToResponse(['result' => 'success','role' => $result]), 'Update role pass successfully with id "'.$role->id.'"');
+        $test->expect($this->compareArrayToResponse(['result' => 'success', 'role' => $result]), 'Update role pass successfully with id "' . $role->id . '"');
 
         return $test->results();
     }
-
 
     /**
      * @param \Base $f3
@@ -108,13 +105,13 @@ final class RoleTest extends Scenario
      */
     public function testRoleDelete($f3)
     {
-        $test   = $this->newTest();
+        $test = $this->newTest();
 
         $role = RoleFaker::create();
-        $test->expect($role->valid(), 'Role mocked & saved to the database with id = '.$role->id.'"');
+        $test->expect($role->valid(), 'Role mocked & saved to the database with id = ' . $role->id . '"');
 
-        $f3->mock(self::DELETE_ROLE_ROUTE.$role->id);
-        $test->expect($this->compareArrayToResponse(['result' => 'success']), 'Delete role pass successfully with id = '.$role->id.'"');
+        $f3->mock(self::DELETE_ROLE_ROUTE . $role->id);
+        $test->expect($this->compareArrayToResponse(['result' => 'success']), 'Delete role pass successfully with id = ' . $role->id . '"');
 
         return $test->results();
     }

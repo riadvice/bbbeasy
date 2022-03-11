@@ -27,7 +27,7 @@ namespace Acl;
  */
 class Access extends \Prefab
 {
-    //Constants
+    // Constants
     public const DENY  = 'deny';
     public const ALLOW = 'allow';
 
@@ -151,11 +151,11 @@ class Access extends \Prefab
 
             return false;
         }
-        $verb     = $verbs[0]; //we shouldn't get more than one verb here
+        $verb     = $verbs[0]; // we shouldn't get more than one verb here
         $specific = $this->rules[$subject][$verb] ?? [];
         $global   = $this->rules['*'][$verb] ?? [];
-        $rules    = $specific + $global; //subject-specific rules have precedence over global rules
-        //specific paths are processed first:
+        $rules    = $specific + $global; // subject-specific rules have precedence over global rules
+        // specific paths are processed first:
         $paths = [];
         foreach ($keys = array_keys($rules) as $key) {
             $path = str_replace('@', '*@', $key);

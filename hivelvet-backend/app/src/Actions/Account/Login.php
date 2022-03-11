@@ -40,26 +40,26 @@ class Login extends BaseAction
     {
         $form = $this->getDecodedBody();
 
-        $dataChecker = new DataChecker();
+        $dataChecker                = new DataChecker();
         $dataChecker->verify($email = $form['email'], Validator::email()->setName('email'));
         $dataChecker->verify($form['password'], Validator::length(4)->setName('password'));
 
         $userInfos = [];
         if ($dataChecker->allValid()) {
-             $user = new User();
+            $user = new User();
             $user = $user->getByEmail($email);
             $this->logger->info('Login attempt using email', ['email' => $email]);
             // Check if the user exists
-            //@todo: if $user->role !== API role
+            // @todo: if $user->role !== API role
             if ($user->valid() && UserStatus::ACTIVE === $user->status && $user->verifyPassword($form['password'])) {
                 // valid credentials
-                 $this->session->authorizeUser($user);
+                $this->session->authorizeUser($user);
 
                 $user->last_login = Time::db();
                 $user->save();
 
                 // @todo: store role in redis cache to allow routes
-                /** @var $role Role */
+                /** @var Role $role */
                 $role = $user->role_id;
                 $this->f3->set('role', $role);
 

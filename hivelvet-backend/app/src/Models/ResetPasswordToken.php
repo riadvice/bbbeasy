@@ -44,9 +44,9 @@ class ResetPasswordToken extends BaseModel
         parent::__construct($db, $table, $fluid, $ttl);
         $this->beforeinsert(function(self $self): void {
             $self->setCreatedOnDate();
-            $this->token = bin2hex(random_bytes(16));
+            $this->token      = bin2hex(random_bytes(16));
             $this->expires_at = date('Y-m-d H:i:s', strtotime('+15 min'));
-            $this->status = ResetTokenStatus::NEW;
+            $this->status     = ResetTokenStatus::NEW;
         });
     }
 

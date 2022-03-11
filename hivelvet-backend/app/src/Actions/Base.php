@@ -231,7 +231,7 @@ abstract class Base extends \Prefab
             return
                 $user->valid()
                 && UserStatus::ACTIVE === $user->status
-                //&& UserRole::API === $user->role
+                // && UserRole::API === $user->role
                 && $user->verifyPassword($credentials[1]);
         }
 
