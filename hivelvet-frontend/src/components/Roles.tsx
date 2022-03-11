@@ -235,23 +235,25 @@ class Roles extends Component<Props, State> {
         return (
             <Form initialValues={permissionsChecked} onFinish={(values) => this.saveEdit(values, record.key)}>
                 <Card bordered={false} className="card-parent">
-                    {Object.keys(allPrivileges).map((group) => (
-                        <Card key={group} title={group} className="card-mt text-capitalize" type="inner">
-                            <Form.Item name={group}>
-                                <Checkbox.Group>
-                                    <Row gutter={[32, 16]}>
-                                        {allPrivileges[group].map((action) => (
-                                            <Col span={Object.keys(allPrivileges).length > 6 && 4} key={action}>
-                                                <Checkbox value={action} className="text-capitalize">
-                                                    {action}
-                                                </Checkbox>
-                                            </Col>
-                                        ))}
-                                    </Row>
-                                </Checkbox.Group>
-                            </Form.Item>
-                        </Card>
-                    ))}
+                    <div className="bordered-card">
+                        {Object.keys(allPrivileges).map((group) => (
+                            <Card bordered={false} key={group} title={group} className="text-capitalize" type="inner">
+                                <Form.Item name={group}>
+                                    <Checkbox.Group>
+                                        <Row gutter={[32, 16]}>
+                                            {allPrivileges[group].map((action) => (
+                                                <Col span={Object.keys(allPrivileges).length > 6 && 4} key={action}>
+                                                    <Checkbox value={action} className="text-capitalize">
+                                                        {action}
+                                                    </Checkbox>
+                                                </Col>
+                                            ))}
+                                        </Row>
+                                    </Checkbox.Group>
+                                </Form.Item>
+                            </Card>
+                        ))}
+                    </div>
                     <Space size="middle" className="actions-expanded">
                         <Popconfirm
                             title="Sure to cancel edition ?"
@@ -384,10 +386,15 @@ class Roles extends Component<Props, State> {
     handleDelete = (key: React.Key, nbUsers) => {
         if (nbUsers > 0) {
             Modal.confirm({
-                title: <T _str="Do you Want to delete this role ?" />,
-                icon: <WarningOutlined />,
+                wrapClassName: "delete-wrap",
+                title: undefined,
+                icon: undefined,
                 content: (
-                    <T _str="This role already has users assigned, if you confirm all users switch to role Lecturer" />
+                    <>
+                        <WarningOutlined className="delete-icon" />
+                        <span className="ant-modal-confirm-title">Do you Want to delete this role ?</span>
+                        <T _str="This role already has users assigned, if you confirm all users switch to role Lecturer" />
+                    </>
                 ),
                 okType: 'danger',
                 okText: <T _str="Yes" />,
@@ -506,7 +513,7 @@ class Roles extends Component<Props, State> {
                 },
             },
             {
-                className: 'text-center',
+                title: 'Actions',
                 editable: false,
                 render: (text, record) => {
                     return (
@@ -599,23 +606,25 @@ class Roles extends Component<Props, State> {
                         <div className="ant-col ant-form-item-label">
                             <label>Permissions</label>
                         </div>
-                        {Object.keys(allPrivileges).map((group) => (
-                            <Card key={group} title={group} className="card-mb text-capitalize" type="inner">
-                                <Form.Item name={group}>
-                                    <Checkbox.Group>
-                                        <Row gutter={[32, 16]}>
-                                            {allPrivileges[group].map((action) => (
-                                                <Col span={Object.keys(allPrivileges).length > 3 && 8} key={action}>
-                                                    <Checkbox value={action} className="text-capitalize">
-                                                        {action}
-                                                    </Checkbox>
-                                                </Col>
-                                            ))}
-                                        </Row>
-                                    </Checkbox.Group>
-                                </Form.Item>
-                            </Card>
-                        ))}
+                        <div className="bordered-card">
+                            {Object.keys(allPrivileges).map((group) => (
+                                <Card bordered={false} key={group} title={group} className="text-capitalize" type="inner">
+                                    <Form.Item name={group}>
+                                        <Checkbox.Group>
+                                            <Row gutter={[32, 16]}>
+                                                {allPrivileges[group].map((action) => (
+                                                    <Col span={Object.keys(allPrivileges).length > 3 && 8} key={action}>
+                                                        <Checkbox value={action} className="text-capitalize">
+                                                            {action}
+                                                        </Checkbox>
+                                                    </Col>
+                                                ))}
+                                            </Row>
+                                        </Checkbox.Group>
+                                    </Form.Item>
+                                </Card>
+                            ))}
+                        </div>
                         <Form.Item className="modal-submit-btn button-container">
                             <Button type="text" className="cancel-btn prev" block onClick={this.cancelAdd}>
                                 <T _str="Cancel" />
@@ -627,7 +636,7 @@ class Roles extends Component<Props, State> {
                     </Form>
                 </Modal>
 
-                <Paragraph className="labels-content">
+                <Paragraph>
                     <Table
                         className="hivelvet-table"
                         components={{

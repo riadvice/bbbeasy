@@ -37,7 +37,7 @@ class Home extends Component<Props, State> {
     render() {
         return (
             <Paragraph className="text-center home-guide">
-                <Title level={3} underline>
+                <Title level={2}>
                     <Trans i18nKey="create-easy-room" />
                 </Title>
                 <Row justify="center">

@@ -19,7 +19,7 @@
 import React, { Component } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { Layout, Typography, Radio, Button, Menu, Dropdown, Space, Input } from 'antd';
-import { SearchOutlined, GlobalOutlined, DownOutlined, UserOutlined, LogoutOutlined } from '@ant-design/icons';
+import { SearchOutlined, GlobalOutlined, UserOutlined, LogoutOutlined } from '@ant-design/icons';
 
 import authService from '../services/auth.service';
 import { Trans } from 'react-i18next';
@@ -66,7 +66,9 @@ class AppHeader extends Component<Props, State> {
 
     render() {
         const { currentLocale, isLogged, installed, currentUser } = this.props;
-        const language = currentLocale.substring(0,2);
+        const result = languages.filter((item) => item.value == currentLocale);
+        const language = result[0].name;
+
         const menuLang = (
             <Menu>
                 <Radio.Group value={currentLocale} onChange={this.handleChange}>
@@ -79,12 +81,20 @@ class AppHeader extends Component<Props, State> {
             </Menu>
         );
 
+        const dropdownLang = (
+            <Dropdown overlay={menuLang} placement="bottomCenter" arrow trigger={['click']}>
+                <Button type="link" size="middle" className="lang-btn">
+                    <GlobalOutlined /> {language}
+                </Button>
+            </Dropdown>
+        );
+
         const menuProfile = (
             <Menu>
-                <Menu.Item key="1" className="username-item text-uppercase">
+                <Menu.Item key="1" className="username-item">
                     <Trans i18nKey="signed_as" /> {currentUser?.username}
                     <br/>
-                    <Text className="text-lowercase">{currentUser?.email}</Text>
+                    <Text>{currentUser?.email}</Text>
                 </Menu.Item>
                 <Menu.Divider />
                 <Menu.Item key="2" icon={<UserOutlined />}>
@@ -104,47 +114,46 @@ class AppHeader extends Component<Props, State> {
                     <Link to={'/'}>
                         <img className="header-logo-image" src="/images/logo_01.png" alt="Logo" />
                     </Link>
-                    {installed && (
-                        <>
-                            {isLogged && (
-                                <Input
-                                    className="search-input"
-                                    size="middle"
-                                    placeholder="Search"
-                                    allowClear
-                                    suffix={<SearchOutlined />}
-                                    bordered={false}
-                                />
-                            )}
-                            <Space size="large">
-                                <Dropdown overlay={menuLang} placement="bottomRight" arrow trigger={['click']}>
-                                    <Button size="middle" className="text-uppercase">
-                                        <GlobalOutlined /> {language} <DownOutlined />
-                                    </Button>
-                                </Dropdown>
-                                {!isLogged ? (
-                                    <>
-                                        <Link className={'ant-btn color-primary'} to={'/login'}>
-                                            <Trans i18nKey="login" />
-                                        </Link>
-                                        <Link className={'ant-btn color-primary'} to={'/register'}>
-                                            <Trans i18nKey="sign-up" />
-                                        </Link>
-                                    </>
-                                ) : (
-                                    <Dropdown
-                                        overlay={menuProfile}
-                                        overlayClassName="profil-btn-dropdown"
-                                        placement="bottomRight"
-                                        arrow
-                                        trigger={['click']}
-                                    >
-                                        <Button type="primary" icon={<UserOutlined />} className="profil-btn" />
-                                    </Dropdown>
+                    {!installed ? (
+                        dropdownLang
+                        ) : (
+                            <>
+                                {isLogged && (
+                                    <Input
+                                        className="search-input"
+                                        size="middle"
+                                        placeholder="Search"
+                                        allowClear
+                                        suffix={<SearchOutlined />}
+                                        bordered={false}
+                                    />
                                 )}
-                            </Space>
-                        </>
-                    )}
+                                <Space size={isLogged ? "middle" : "large"}>
+                                    { dropdownLang }
+                                    {!isLogged ? (
+                                        <>
+                                            <Link className={'ant-btn color-primary'} to={'/login'}>
+                                                <Trans i18nKey="login" />
+                                            </Link>
+                                            <Link className={'ant-btn color-primary'} to={'/register'}>
+                                                <Trans i18nKey="sign-up" />
+                                            </Link>
+                                        </>
+                                    ) : (
+                                        <Dropdown
+                                            overlay={menuProfile}
+                                            overlayClassName="profil-btn-dropdown"
+                                            placement="bottomRight"
+                                            arrow
+                                            trigger={['click']}
+                                        >
+                                            <Button type="primary" icon={<UserOutlined />} className="profil-btn" />
+                                        </Dropdown>
+                                    )}
+                                </Space>
+                            </>
+                        )
+                    }
                 </Paragraph>
             </Header>
         );

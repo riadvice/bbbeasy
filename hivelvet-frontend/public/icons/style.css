@@ -38,7 +38,6 @@
 }
 
 .icon-hivelvet-role:before {
-  font-weight: 600;
   content: "\e103";
 }
 
@@ -63,6 +62,5 @@
 }
 
 .icon-hivelvet-preset:before {
-  font-size: 110%;
   content: "\e109";
 }
