@@ -25,7 +25,7 @@ body,button,input,select,textarea{
   font-family: 'Poppins', sans-serif;
 }
 
-.site-header{
+.site-header {
   z-index: 1;
   -moz-box-shadow:0 5px 5px rgba(216, 216, 216, 0.8);
   -webkit-box-shadow: 0 5px 5px rgba(216, 216, 216, 0.8);
@@ -60,6 +60,13 @@ body,button,input,select,textarea{
   border-radius: 50%;
 }
 
+.site-header .ant-typography-rtl .anticon,
+.profil-btn-dropdown.ant-dropdown-rtl .anticon,
+.ant-layout-rtl .anticon {
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+}
+
 .profil-btn-dropdown .ant-dropdown-menu-item {
   padding: 5px 20px;
 }
@@ -88,7 +95,6 @@ body,button,input,select,textarea{
 .home-guide {
   margin-top: 80px;
 }
-
 .home-guide h4 {
   font-size: 16px !important;
 }
@@ -100,15 +106,12 @@ body,button,input,select,textarea{
   flex: 0 0 14.5% !important;
   max-width: 14.5% !important;
 }
-
 .home-guide .ant-row:not(.ant-row-rtl) .ant-col:not(:first-child) {
   border-left: 1px solid #00000021;
 }
-
 .home-guide .ant-row.ant-row-rtl .ant-col:not(:first-child) {
   border-right: 1px solid #00000021;
 }
-
 .home-guide .hivelvet-btn {
   font-size: 45px !important;
   font-weight: 600;
@@ -116,7 +119,6 @@ body,button,input,select,textarea{
   margin-bottom: 20px;
   border-radius: 50%;
 }
-
 .home-guide button {
   width: 25%;
   margin-top: 40px;
@@ -210,6 +212,10 @@ body,button,input,select,textarea{
   text-align: center;
 }
 
+.site-sider .ant-menu-item-icon {
+  font-size: 16px !important;
+}
+
 .sider-new-btn {
   margin: 25px;
   width: 70%;
@@ -245,6 +251,10 @@ body,button,input,select,textarea{
 
 .red-icon {
   color: red;
+}
+
+.text-color-primary {
+  color: @primary-color !important;
 }
 
 .color-primary {
@@ -363,13 +373,6 @@ body,button,input,select,textarea{
   color: gray !important;
 }
 
-.form-prov {
-  width: 30px;
-  margin-left: auto;
-  margin-right: auto;
-  display: block;
-}
-
 .install-form {
   padding: 50px 54px;
 }
@@ -441,8 +444,12 @@ body,button,input,select,textarea{
   margin-top: 24px;
 }
 
-.button-container .prev {
+.button-container:not(.ant-row-rtl) .prev {
   margin-right: 20px;
+}
+
+.button-container.ant-row-rtl .prev {
+  margin-left: 20px;
 }
 
 .button-container .ant-form-item-control-input-content {
@@ -452,12 +459,26 @@ body,button,input,select,textarea{
 .install-form .box,
 .install-form .colors-container .ant-form-item {
   flex: 0 0 50%;
+}
+
+.install-form:not(.ant-form-rtl) .box:not(.last),
+.install-form:not(.ant-form-rtl) .colors-container .ant-form-item {
   padding-right: 20px;
 }
 
-.install-form .box.last {
+.install-form.ant-form-rtl .box:not(.last),
+.install-form.ant-form-rtl .colors-container .ant-form-item {
+  padding-left: 20px;
+}
+
+.install-form:not(.ant-form-rtl) .box.last {
   padding-left: 20px;
   border-left: 1px solid #0000000f;
+}
+
+.install-form.ant-form-rtl .box.last {
+  padding-right: 20px;
+  border-right: 1px solid #0000000f;
 }
 
 .install-form .rc-color-picker-wrap {
@@ -471,10 +492,17 @@ body,button,input,select,textarea{
 }
 
 .install-form .color-palette-picker-value {
-  margin-left: 10px;
   color: gray;
   font-size: 13px;
   font-weight: 500;
+}
+
+.install-form:not(.ant-form-rtl) .color-palette-picker-value {
+  margin-left: 10px;
+}
+
+.install-form.ant-form-rtl .color-palette-picker-value {
+  margin-right: 10px;
 }
 
 .presets-grid {
@@ -535,8 +563,12 @@ body,button,input,select,textarea{
   content: '';
 }
 
-.presets-modal .presets-body .ant-form-item-control {
+.presets-modal .presets-body .ant-form-item-control:not(.ant-col-rtl) {
   text-align: right;
+}
+
+.presets-modal .presets-body .ant-form-item-control.ant-col-rtl {
+  text-align: left;
 }
 
 .presets-modal .ant-modal-footer {
@@ -573,9 +605,6 @@ body,button,input,select,textarea{
 }
 .text-end {
   text-align: end;
-}
-.success-message {
-  margin-top: 20vh;
 }
 .text-uppercase {
   text-transform: uppercase;

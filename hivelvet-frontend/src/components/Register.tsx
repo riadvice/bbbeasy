@@ -18,7 +18,6 @@
 
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import ReactDOMServer from 'react-dom/server';
 import AuthService from '../services/auth.service';
 
 import { Form, Input, Button, Checkbox, Alert, Col, Row, Typography, Card, Result } from 'antd';
@@ -211,11 +210,7 @@ class Register extends Component<Props, State> {
                                                 if (!value || getFieldValue('password') === value) {
                                                     return Promise.resolve();
                                                 }
-                                                return Promise.reject(
-                                                    ReactDOMServer.renderToString(
-                                                        <Trans i18nKey="paswords-not-match" />
-                                                    )
-                                                );
+                                                return Promise.reject(new Error(t('paswords-not-match')));
                                             },
                                         }),
                                     ]}
@@ -234,15 +229,10 @@ class Register extends Component<Props, State> {
                                     rules={[
                                         {
                                             validator: (_, value) =>
-                                                value
-                                                    ? Promise.resolve()
-                                                    : Promise.reject(
-                                                          new Error(
-                                                              ReactDOMServer.renderToString(
-                                                                  <Trans i18nKey="accept-agreement" />
-                                                              )
-                                                          )
-                                                      ),
+                                                value ?
+                                                    Promise.resolve()
+                                                    :
+                                                    Promise.reject(new Error(t("accept-agreement"))),
                                         },
                                     ]}
                                 >

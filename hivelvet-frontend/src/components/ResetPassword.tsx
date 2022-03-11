@@ -18,7 +18,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import AuthService from '../services/auth.service';
-import { Form, Input, Button, message, Alert, Col, Row, Typography, Card } from 'antd';
+
+import { Form, Input, Button, notification, Alert, Col, Row, Typography, Card } from 'antd';
 import { Trans, withTranslation } from 'react-i18next';
 import EN_US from '../locale/en-US.json';
 import { t } from 'i18next';
@@ -29,7 +30,7 @@ type Props = {};
 type State = {
     email?: string;
     successful: boolean;
-    message: string;
+    message?: string;
 };
 
 class Reset extends Component<Props, State> {
@@ -49,15 +50,12 @@ class Reset extends Component<Props, State> {
         AuthService.reset_password(email)
             .then((response) => {
                 const responseMessage = response.data.message;
-                message.success({
-                    content: responseMessage,
-                    style: {
-                        marginTop: '20vh',
-                    },
-                });
                 this.setState({
-                    successful: true,
-                    message: responseMessage,
+                    successful: true
+                });
+                notification['success']({
+                    message: <Trans i18nKey="success-title"/>,
+                    description: <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == responseMessage)}/>,
                 });
             })
             .catch((error) => {

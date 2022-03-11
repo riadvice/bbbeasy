@@ -53,7 +53,7 @@ export const Step1Form = (props: Props) => {
                     },
                     {
                         min: 4,
-                        message: <Trans i18nKey="Username must be at least 4 characters" />,
+                        message: <Trans i18nKey="username.size" />,
                     },
                 ]}
             >
@@ -77,7 +77,7 @@ export const Step1Form = (props: Props) => {
                     },
                 ]}
             >
-                <Input placeholder={t('username.label')} />
+                <Input placeholder={t('email.label')} />
             </Form.Item>
             <Form.Item
                 label={<Trans i18nKey="password.label" />}

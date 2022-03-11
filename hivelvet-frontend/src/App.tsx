@@ -48,11 +48,10 @@ import Logger from './lib/logger';
 
 import authService from './services/auth.service';
 import { Props } from 'react-intl/src/components/relative';
-import LocaleService from './services/LocaleService';
-import { Trans } from 'react-i18next';
+import LocaleService from './services/locale.service';
 const { Content } = Layout;
 
-import { withTranslation, WithTranslation } from 'react-i18next';
+import { withTranslation } from 'react-i18next';
 
 Logger.info('Initialisation Hivelvet Frontend Application');
 type State = {
@@ -68,7 +67,6 @@ class App extends Component<Props, State> {
 
     constructor(props: Props) {
         super(props);
-
         this.state = {
             currentUser: null,
             isLogged: false,
@@ -76,22 +74,26 @@ class App extends Component<Props, State> {
             installed: this.isInstalled,
         };
     }
+
     componentDidMount = () => {
         const user = authService.getCurrentUser();
         if (authService.getCurrentUser() != null) this.setUser(user, true);
     };
+
     setUser = (user, Logged) => {
         this.setState({
             currentUser: user,
             isLogged: Logged,
         });
     };
+
     setLang = (lang) => {
         this.setState({
             language: lang,
         });
         LocaleService.changeLocale(lang);
     };
+
     setInstall = () => {
         // @todo for future tasks change env var REACT_APP_INSTALLED to true
         this.setState({

@@ -179,7 +179,7 @@ export const Step2Form = (props: Props) => {
                                     file.type === 'image/png' ||
                                     file.type === 'image/jpeg'
                                 ) {
-                                    message.success(t('success-_upload'));
+                                    message.success(t('success_upload'));
                                     return false;
                                 }
                                 message.error(t('wrong_file'));

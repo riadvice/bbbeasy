@@ -23,7 +23,7 @@ import { SearchOutlined, GlobalOutlined, DownOutlined, UserOutlined, LogoutOutli
 
 import authService from '../services/auth.service';
 import { Trans } from 'react-i18next';
-import Languages from './Languages';
+import languages from './Languages';
 
 const { Header } = Layout;
 const { Text,Paragraph } = Typography;
@@ -60,19 +60,17 @@ class AppHeader extends Component<Props, State> {
     }
 
     handleChange = (e) => {
-        const res = Languages.filter((item) => item.value == e.target.value);
-        this.props.setLang(res[0].value);
+        const selectedLang = e.target.value;
+        this.props.setLang(selectedLang);
     };
 
     render() {
         const { currentLocale, isLogged, installed, currentUser } = this.props;
-        const result = Languages.filter((item) => item.value == currentLocale);
-        //const language = result[0].key;
-        const language = '';
+        const language = currentLocale.substring(0,2);
         const menuLang = (
             <Menu>
                 <Radio.Group value={currentLocale} onChange={this.handleChange}>
-                    {Languages.map(({ name, key, value }) => (
+                    {languages.map(({ name, key, value }) => (
                         <Menu.Item key={key}>
                             <Radio value={value}>{name}</Radio>
                         </Menu.Item>
@@ -84,25 +82,17 @@ class AppHeader extends Component<Props, State> {
         const menuProfile = (
             <Menu>
                 <Menu.Item key="1" className="username-item text-uppercase">
-                    <Trans i18nKey="Signed in as" /> {currentUser?.username}
+                    <Trans i18nKey="signed_as" /> {currentUser?.username}
                     <br/>
                     <Text className="text-lowercase">{currentUser?.email}</Text>
                 </Menu.Item>
                 <Menu.Divider />
                 <Menu.Item key="2" icon={<UserOutlined />}>
-                    <Trans i18nKey="Profile" />
+                    <Trans i18nKey="user_dropdown.profile" />
                 </Menu.Item>
-                <Menu.Item
-                    key="3"
-                   icon={
-                       <LogoutOutlined
-                           // @fixme : use scaleX and direction instead of ar
-                           rotate={this.props.currentLocale.includes('ar') ? 180 : 0}
-                       />
-                   }
-                >
+                <Menu.Item key="3" icon={<LogoutOutlined />}>
                     <a onClick={() => this.logout()}>
-                        <Trans i18nKey="Sign Out" />
+                        <Trans i18nKey="user_dropdown.logout" />
                     </a>
                 </Menu.Item>
             </Menu>

@@ -115,7 +115,7 @@ const Install = (props: Props) => {
             offset: 4,
         },
         {
-            title: t('company.name') + ' & ' + t('branding'),
+            title: t('company.label') + ' & ' + t('branding'),
             content: <Step2Form
                 errors={errors}
                 primaryColor={primaryColor}
@@ -193,7 +193,7 @@ const Install = (props: Props) => {
                     <Result
                         status="success"
                         icon={<DynamicIcon type="CheckOutlined" className="success-install-icon" />}
-                        title={<Trans i18nKey="Application installed !" />}
+                        title={<Trans i18nKey="success_install" />}
                         extra={
                             <Link to={'/login'} onClick={handleInstall} className="ant-btn ant-btn-primary ant-btn-lg">
                                 <Trans i18nKey="start-using-hivelvet" />

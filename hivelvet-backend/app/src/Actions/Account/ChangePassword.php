@@ -52,13 +52,13 @@ class ChangePassword extends BaseAction
                     $user->save();
                 } catch (\Exception $e) {
                     $message = 'password could not be changed';
-                    $this->logger->error('reset password error : password could not be changed', ['error' => $message]);
-                    $this->renderJson(['message' => $e->getMessage()], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+                    $this->logger->error('reset password error : password could not be changed', ['error' => $e->getMessage()]);
+                    $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
 
                     return;
                 }
 
-                $this->renderJson(['message' => 'password changed successfully', 'user' => $user->toArray()]);
+                $this->renderJson(['result' => 'success']);
             }
         } else {
             $this->logger->error('reset password error : password could not be changed');

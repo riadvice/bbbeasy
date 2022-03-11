@@ -18,9 +18,11 @@
 
 import React, { Component } from 'react';
 import { Link, Navigate } from 'react-router-dom';
-
 import AuthService from '../services/auth.service';
-import { Form, Input, Button, message, Alert, Col, Row, Typography, Card } from 'antd';
+
+import { Form, Input, Button, notification, Alert, Col, Row, Typography, Card } from 'antd';
+import { SmileOutlined } from '@ant-design/icons';
+
 import { Trans, withTranslation } from 'react-i18next';
 import EN_US from '../locale/en-US.json';
 import { t } from 'i18next';
@@ -62,9 +64,11 @@ class Login extends Component<Props, State> {
                         email: response.data.email,
                         role: response.data.role,
                     };
-                    message.success({
-                        content: <Trans i18nKey="welcome" /> + ' ' + user_infos.username + ' !',
-                        className: 'success-message',
+                    notification.open({
+                        message: <Trans i18nKey="success-title"/>,
+                        description: <><Trans i18nKey="welcome" /> {' ' + user_infos.username + ' !'}</>,
+                        icon: <SmileOutlined className="text-color-primary" />,
+                        duration: 2.5
                     });
                     localStorage.setItem('user', JSON.stringify(user_infos));
                     this.props.setUser(user_infos, true);

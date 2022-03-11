@@ -19,13 +19,13 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import AuthService from '../services/auth.service';
 
-import { Form, Input, Button, message, Alert, Col, Row, Typography, Card, Result } from 'antd';
-import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
+import { Form, Input, Button, Alert, Col, Row, Typography, Card, Result } from 'antd';
+import { CheckOutlined } from '@ant-design/icons';
+
 import authService from '../services/auth.service';
-import ReactDOMServer from 'react-dom/server';
-import PageNotFound from './PageNotFound';
 import { Trans, withTranslation } from 'react-i18next';
 import EN_US from '../locale/en-US.json';
+import { t } from 'i18next';
 
 const { Title, Paragraph } = Typography;
 
@@ -42,23 +42,20 @@ type State = {
 class ChangePassword extends Component<Props, State> {
     constructor(props) {
         const params = new URLSearchParams(window.location.search);
-
-        authService
-            .getResetPasswordByToken(params.get('token'))
+        authService.getResetPasswordByToken(params.get('token'))
             .then((response) => {
                 this.setState({
                     available_token: true,
                 });
             })
             .catch((error) => {
+                //console.log(error.response.data.message);
                 this.setState({
                     available_token: false,
                     message: error.response.data.message,
                 });
             });
-
         super(props);
-
         this.handleChange = this.handleChange.bind(this);
         this.state = {
             password: '',
@@ -70,30 +67,17 @@ class ChangePassword extends Component<Props, State> {
 
     handleChange(formValue: any) {
         const { password } = formValue;
-
         const params = new URLSearchParams(window.location.search);
-
         AuthService.change_password(params.get('token'), password)
             .then((response) => {
-                const responseMessage = response.data.message;
-
-                message.success({
-                    content: responseMessage,
-                    style: {
-                        marginTop: '20vh',
-                    },
-                });
                 this.setState({
                     successful: true,
-                    message: responseMessage,
                 });
             })
             .catch((error) => {
-                const responseMessage = error.response.data.message;
                 this.setState({
                     successful: false,
-                    message: responseMessage,
-                    available_token: false,
+                    message: error.response.data.message,
                 });
             });
     }
@@ -102,22 +86,22 @@ class ChangePassword extends Component<Props, State> {
         const { successful, message, available_token } = this.state;
         const initialValues = {
             email: '',
-
             successful: false,
             message: '',
         };
 
         return (
-            <div>
-                {available_token && (
+            <>
+                {available_token ?
                     <Row>
                         {successful ? (
                             <Col span={10} offset={7} className="section-top">
                                 <Result
                                     status="success"
-                                    title="Password changed successfully"
+                                    icon={<CheckOutlined className="success-install-icon" />}
+                                    title={<Trans i18nKey="success_change_password" />}
                                     extra={
-                                        <Link to={'/login'} className="ant-btn ant-btn-lg">
+                                        <Link to={'/login'} className="ant-btn ant-btn-primary ant-btn-lg">
                                             <Trans i18nKey="login-now" />
                                         </Link>
                                     }
@@ -132,18 +116,12 @@ class ChangePassword extends Component<Props, State> {
                                             <Trans i18nKey="change-password" />
                                         </Title>
                                     </Paragraph>
-                                    {message && !successful && (
+                                    {message && (
                                         <Alert
                                             type="error"
                                             className="alert-msg"
                                             message={
-                                                <Trans
-                                                    i18nKey={Object.keys(EN_US).filter(
-                                                        (elem) => EN_US[elem] == message
-                                                    )}
-                                                >
-                                                    {' '}
-                                                </Trans>
+                                                <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == message)} />
                                             }
                                             showIcon
                                         />
@@ -151,15 +129,17 @@ class ChangePassword extends Component<Props, State> {
 
                                     <Form
                                         layout="vertical"
-                                        name="login_form"
+                                        name="change"
                                         className="login-form"
                                         initialValues={initialValues}
+                                        requiredMark={false}
+                                        scrollToFirstError={true}
+                                        validateTrigger="onSubmit"
                                         onFinish={this.handleChange}
                                     >
                                         <Form.Item
                                             label={<Trans i18nKey="password.label" />}
                                             name="password"
-                                            hasFeedback
                                             rules={[
                                                 {
                                                     min: 4,
@@ -171,17 +151,12 @@ class ChangePassword extends Component<Props, State> {
                                                 },
                                             ]}
                                         >
-                                            <Input.Password
-                                                iconRender={(visible) =>
-                                                    visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-                                                }
-                                            />
+                                            <Input.Password placeholder="**********" />
                                         </Form.Item>
                                         <Form.Item
                                             label={<Trans i18nKey="confirm-password.label" />}
                                             name="confirmPassword"
                                             dependencies={['password']}
-                                            hasFeedback
                                             rules={[
                                                 {
                                                     min: 4,
@@ -196,18 +171,12 @@ class ChangePassword extends Component<Props, State> {
                                                         if (!value || getFieldValue('password') === value) {
                                                             return Promise.resolve();
                                                         }
-                                                        return Promise.reject(
-                                                            new Error(
-                                                                ReactDOMServer.renderToString(
-                                                                    <Trans i18nKey="paswords-not-match" />
-                                                                )
-                                                            )
-                                                        );
+                                                        return Promise.reject(new Error(t('paswords-not-match')));
                                                     },
                                                 }),
                                             ]}
                                         >
-                                            <Input.Password />
+                                            <Input.Password placeholder="**********" />
                                         </Form.Item>
 
                                         <Form.Item>
@@ -232,9 +201,22 @@ class ChangePassword extends Component<Props, State> {
                             </Col>
                         )}
                     </Row>
-                )}
-                {!available_token && <PageNotFound />}
-            </div>
+                    :
+                    message && (
+                        <Result
+                            status="500"
+                            title="500"
+                            subTitle={<Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == message)}/>}
+                            className="page-not-found"
+                            extra={
+                                <Link className="ant-btn color-blue" to="/">
+                                    <Trans i18nKey="back-home" />
+                                </Link>
+                            }
+                        />
+                    )
+                }
+            </>
         );
     }
 }

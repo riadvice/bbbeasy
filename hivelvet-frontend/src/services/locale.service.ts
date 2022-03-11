@@ -15,20 +15,36 @@
  * You should have received a copy of the GNU Lesser General Public License along
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
-import enUS from 'antd/lib/locale/en_US';
-import moment from 'moment';
-import frFR from 'antd/lib/locale/fr_FR';
 
+import enUS from 'antd/lib/locale/en_US';
+import frFR from 'antd/lib/locale/fr_FR';
 import arEG from 'antd/lib/locale/ar_EG';
-import { initReactI18next } from 'react-i18next';
+import moment from 'moment';
 
 import i18next from 'i18next';
+import { initReactI18next } from 'react-i18next';
 import translationEN from '../locale/en-US.json';
 import translationFR from '../locale/fr-FR.json';
 import translationAR from '../locale/ar-TN.json';
+
 import languages from '../components/Languages';
 import { Locale } from 'antd/lib/locale-provider';
 import { DirectionType } from 'antd/lib/config-provider';
+
+const defaultLang = process.env.REACT_APP_FALLBACK_LANG;
+
+const initLang = () : string => {
+    if (localStorage.getItem('locale') == null) {
+        const navigLang: string = navigator.language.substring(0,2);
+        const res = languages.filter((item) => item.key == navigLang);
+        return res.length != 0 ? res[0].value : defaultLang;
+    }
+    else {
+        return localStorage.getItem('locale');
+    }
+}
+
+const lang = initLang();
 
 i18next.use(initReactI18next).init({
     resources: {
@@ -36,12 +52,12 @@ i18next.use(initReactI18next).init({
         fr: { translation: translationFR },
         ar: { translation: translationAR },
     },
-    lng: localStorage.getItem('locale'),
-    // @todo: put the fallback language in configuration files
-    fallbackLng: 'en',
+    lng: lang,
+    fallbackLng: defaultLang,
     interpolation: { escapeValue: false },
     debug: true,
 });
+
 class LocaleService {
     localeMap: object = { 'en': enUS, 'fr': frFR, 'ar': arEG };
     rtlLocales: string[] = ['ar'];
@@ -50,7 +66,7 @@ class LocaleService {
     direction: DirectionType;
 
     constructor() {
-        this.language = localStorage.getItem('locale') != null ? localStorage.getItem('locale') : navigator.language;
+        this.language = lang;
         this.setLocale(this.language);
     }
 
@@ -59,15 +75,15 @@ class LocaleService {
     }
 
     private setLocale(language: string) {
+        localStorage.setItem('locale', language);
         this.direction = this.getLanguageDirection(language);
-        this.antdlocale = this.localeMap[language.substring(2)];
+        this.antdlocale = this.localeMap[language.substring(0,2)];
     }
 
     changeLocale(locale: string) {
         const res = languages.filter((item) => item.value == locale);
         i18next.changeLanguage(res[0].key);
         moment.locale(locale);
-
         this.setLocale(locale);
     }
 }

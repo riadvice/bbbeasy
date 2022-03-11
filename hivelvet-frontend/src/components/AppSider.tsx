@@ -41,7 +41,7 @@ const AppSider = () => {
     const menuData = [
         {
             name: t('rooms'),
-            icon: 'UserOutlined',
+            icon: 'Room',
             path: '/home',
         },
         {
@@ -51,32 +51,37 @@ const AppSider = () => {
         },
         {
             name: t('presets'),
-            icon: 'UserAddOutlined',
+            icon: 'Preset',
             path: '/presets',
         },
         {
             name: t('settings'),
-            icon: 'ContainerOutlined',
+            icon: 'General-settings',
             path: 'sub1',
             children: [
                 {
-                    name: t('Company') + ' & ' + t('branding'),
+                    name: t('company.label') + ' & ' + t('branding'),
+                    icon: 'BgColorsOutlined',
                     path: '/settings/company',
                 },
                 {
                     name: t('users'),
+                    icon: 'UserOutlined',
                     path: '/settings/users',
                 },
                 {
                     name: t('roles'),
+                    icon: 'Role',
                     path: '/settings/roles',
                 },
                 {
                     name: t('notifications'),
+                    icon: 'BellOutlined',
                     path: '/settings/notifications',
                 },
                 {
                     name: 'BigBlueButton',
+                    icon: 'Bigbluebutton',
                     path: '/settings/bigbluebutton',
                 },
             ],
@@ -110,7 +115,7 @@ const AppSider = () => {
                     item.children != null ? (
                         <SubMenu key={item.path} icon={<DynamicIcon type={item.icon} />} title={item.name}>
                             {item.children.map((subItem) => (
-                                <Menu.Item key={subItem.path}>
+                                <Menu.Item key={subItem.path} icon={<DynamicIcon type={subItem.icon} />}>
                                     <Link to={subItem.path}>{subItem.name}</Link>
                                 </Menu.Item>
                             ))}

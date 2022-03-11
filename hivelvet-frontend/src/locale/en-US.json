@@ -36,7 +36,8 @@
     "register-now": "Register now and join our community ",
     "username": {
         "label": "Username",
-        "required": "Username is required"
+        "required": "Username is required",
+        "size": "Username must have at least 4 characters"
     },
     "confirm-password": {
         "label": "Confirm Password",
@@ -49,7 +50,8 @@
     "login-here": "Login Here",
     "paswords-not-match": "The two passwords do not match",
     "user-could-not-logged": "User could not be logged",
-    "success-login": "user successfully login",
+    "success-title": "Success",
+    "error-title": "Error",
     "success-registration": "Congratulations ! Your account has been successfully created",
     "username-email-already-exist": "username and email already exist",
     "username-already-exist": "username already exist",
@@ -60,8 +62,8 @@
     "terms": "Terms of Service",
     "and": "and",
     "privacy-policy": "Privacy Policy",
-    "user_not_exists": "user does not exist",
-    "success_change_password": "password changed successfull",
+    "user_not_exists": "User does not exist with this email",
+    "success_change_password": "Password changed successfully",
     "error_change_password": "password could not be changed",
     "error-registration": "user could not be added",
     "sent-link-successfully": "Please check your email to reset your password",
@@ -73,8 +75,9 @@
     "mark-labels": "Mark it with labels",
     "assign-preset": "Assign it a preset",
     "give-it-name": "Give it a name",
-    "create-easy-room": "How easy is it to create a room",
+    "create-easy-room": "How easy is it to create a room ?",
     "previous": "Previous",
+    "success_install": "Application installed !",
     "start-using-hivelvet": "Start using Hivelvet",
     "confirm": "Confirm",
     "drop-logo-here": "Drop your logo here",
@@ -113,7 +116,8 @@
     "recordings-management": "Recordings management",
     "full-brandings": "Full Branding",
     "personal-rooms": "Personal Rooms",
-    "back-home": "Back to  Home",
+    "not_found": "Sorry, the page you visited does not exist.",
+    "back-home": "Back to Home",
     "rooms": "Rooms",
     "labels": "Labels",
     "presets": "Presets",
@@ -133,10 +137,15 @@
     "create_customizable_rooms": "Create fully customizable rooms for",
     "log-into-account": "Log into Your Account",
     "completed_registration": "Registration completed successfully",
-
     "success_upload": "file uploaded successfully",
     "wrong_file": "wrong file",
     "invalid_password_reset_token": "Invalid password reset token",
     "invalid_authentication_data": "Invalid Authentication data",
-    "user_account_created": "User account created"
+    "user_account_created": "User account created",
+    "signed_as": "Signed in as ",
+    "user_dropdown": {
+        "profile": "Profile",
+        "logout": "Sign Out"
+    }
+
 }

@@ -42,7 +42,6 @@ type Props = {
 
 export const Step3Form = (props: Props) => {
     const { presets } = props;
-
     const [modalTitle, setModalTitle] = React.useState('');
     const [modalContent, setModalContent] = React.useState<SubCategoryType[]>([]);
     const [isModalVisible, setIsModalVisible] = React.useState(false);
@@ -80,7 +79,7 @@ export const Step3Form = (props: Props) => {
                                         key={item.name +"_"+ subItem.name}
                                         className={subItem.status == true ? 'text-black' : 'text-grey'}
                                     >
-                                        <Trans i18nKey={subItem.name} />
+                                        {subItem.name}
                                     </li>
                                 ))}
                             </ul>
@@ -93,14 +92,14 @@ export const Step3Form = (props: Props) => {
                         >
                             <Meta
                                 avatar={<DynamicIcon type={item.icon} className="PresetIcon" />}
-                                title={<Trans i18nKey={item.name} />}
+                                title={item.name}
                             />
                         </Grid>
                     </Tooltip>
                 ))}
 
                 <Modal
-                    title={<Trans i18nKey={modalTitle} />}
+                    title={modalTitle}
                     className="presets-modal"
                     centered
                     visible={isModalVisible}
@@ -115,7 +114,7 @@ export const Step3Form = (props: Props) => {
                     <div className="presets-body">
                         {modalContent.map((item) => (
                             <div key={modalTitle +"_"+ item.name}>
-                                <Form.Item label={<Trans i18nKey={item.name} />}>
+                                <Form.Item label={item.name}>
                                     <Switch
                                         defaultChecked={item.status == true ? true : false}
                                         onChange={(checked) => {
