@@ -51,11 +51,13 @@ class Reset extends Component<Props, State> {
             .then((response) => {
                 const responseMessage = response.data.message;
                 this.setState({
-                    successful: true
+                    successful: true,
                 });
                 notification['success']({
-                    message: <Trans i18nKey="success-title"/>,
-                    description: <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == responseMessage)}/>,
+                    message: <Trans i18nKey="success-title" />,
+                    description: (
+                        <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == responseMessage)} />
+                    ),
                 });
             })
             .catch((error) => {

@@ -93,7 +93,7 @@ class AppHeader extends Component<Props, State> {
             <Menu>
                 <Menu.Item key="1" className="username-item">
                     <Trans i18nKey="signed_as" /> {currentUser?.username}
-                    <br/>
+                    <br />
                     <Text>{currentUser?.email}</Text>
                 </Menu.Item>
                 <Menu.Divider />
@@ -116,44 +116,43 @@ class AppHeader extends Component<Props, State> {
                     </Link>
                     {!installed ? (
                         dropdownLang
-                        ) : (
-                            <>
-                                {isLogged && (
-                                    <Input
-                                        className="search-input"
-                                        size="middle"
-                                        placeholder="Search"
-                                        allowClear
-                                        suffix={<SearchOutlined />}
-                                        bordered={false}
-                                    />
+                    ) : (
+                        <>
+                            {isLogged && (
+                                <Input
+                                    className="search-input"
+                                    size="middle"
+                                    placeholder="Search"
+                                    allowClear
+                                    suffix={<SearchOutlined />}
+                                    bordered={false}
+                                />
+                            )}
+                            <Space size={isLogged ? 'middle' : 'large'}>
+                                {dropdownLang}
+                                {!isLogged ? (
+                                    <>
+                                        <Link className={'ant-btn color-primary'} to={'/login'}>
+                                            <Trans i18nKey="login" />
+                                        </Link>
+                                        <Link className={'ant-btn color-primary'} to={'/register'}>
+                                            <Trans i18nKey="sign-up" />
+                                        </Link>
+                                    </>
+                                ) : (
+                                    <Dropdown
+                                        overlay={menuProfile}
+                                        overlayClassName="profil-btn-dropdown"
+                                        placement="bottomRight"
+                                        arrow
+                                        trigger={['click']}
+                                    >
+                                        <Button type="primary" icon={<UserOutlined />} className="profil-btn" />
+                                    </Dropdown>
                                 )}
-                                <Space size={isLogged ? "middle" : "large"}>
-                                    { dropdownLang }
-                                    {!isLogged ? (
-                                        <>
-                                            <Link className={'ant-btn color-primary'} to={'/login'}>
-                                                <Trans i18nKey="login" />
-                                            </Link>
-                                            <Link className={'ant-btn color-primary'} to={'/register'}>
-                                                <Trans i18nKey="sign-up" />
-                                            </Link>
-                                        </>
-                                    ) : (
-                                        <Dropdown
-                                            overlay={menuProfile}
-                                            overlayClassName="profil-btn-dropdown"
-                                            placement="bottomRight"
-                                            arrow
-                                            trigger={['click']}
-                                        >
-                                            <Button type="primary" icon={<UserOutlined />} className="profil-btn" />
-                                        </Dropdown>
-                                    )}
-                                </Space>
-                            </>
-                        )
-                    }
+                            </Space>
+                        </>
+                    )}
                 </Paragraph>
             </Header>
         );

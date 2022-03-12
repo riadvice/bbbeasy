@@ -65,10 +65,14 @@ class Login extends Component<Props, State> {
                         role: response.data.role,
                     };
                     notification.open({
-                        message: <Trans i18nKey="success-title"/>,
-                        description: <><Trans i18nKey="welcome" /> {' ' + user_infos.username + ' !'}</>,
+                        message: <Trans i18nKey="success-title" />,
+                        description: (
+                            <>
+                                <Trans i18nKey="welcome" /> {' ' + user_infos.username + ' !'}
+                            </>
+                        ),
                         icon: <SmileOutlined className="text-color-primary" />,
-                        duration: 2.5
+                        duration: 2.5,
                     });
                     localStorage.setItem('user', JSON.stringify(user_infos));
                     this.props.setUser(user_infos, true);

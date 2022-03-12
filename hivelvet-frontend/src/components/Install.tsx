@@ -116,17 +116,20 @@ const Install = (props: Props) => {
         },
         {
             title: t('company.label') + ' & ' + t('branding'),
-            content: <Step2Form
-                errors={errors}
-                primaryColor={primaryColor}
-                secondaryColor={secondaryColor}
-                accentColor={accentColor}
-                addColor={addColor}
-                setPrimaryColor={setPrimaryColor}
-                setSecondaryColor={setSecondaryColor}
-                setAccentColor={setAccentColor}
-                setAddColor={setAddColor}
-                setFile={setFile} />,
+            content: (
+                <Step2Form
+                    errors={errors}
+                    primaryColor={primaryColor}
+                    secondaryColor={secondaryColor}
+                    accentColor={accentColor}
+                    addColor={addColor}
+                    setPrimaryColor={setPrimaryColor}
+                    setSecondaryColor={setSecondaryColor}
+                    setAccentColor={setAccentColor}
+                    setAddColor={setAddColor}
+                    setFile={setFile}
+                />
+            ),
             button: t('next'),
             span: 15,
             offset: 2,

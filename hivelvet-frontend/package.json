@@ -48,10 +48,11 @@
   },
   "scripts": {
     "start-dev": "CHOKIDAR_USEPOLLING=true PORT=3300 NODE_ENV=development craco start",
-    "build-installer": "craco build src/install.tsx",
+    "build-installer": "craco build DODODOD.tsx",
     "build": "craco build",
     "nyc": "nyc instrument --compact=false src instrumented",
     "cypress": "cypress run",
+    "analyze": "craco analyze",
     "test": "craco test",
     "eject": "craco eject",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx src --color",
@@ -90,7 +91,9 @@
     "lint-staged": "^12.2.1",
     "nyc": "^15.1.0",
     "prettier": "^2.5.1",
+    "react-styleguidist": "^11.2.0",
     "snowpack": "^3.8.8",
+    "source-map-explorer": "^2.5.2",
     "ts-loader": "^9.2.6"
   }
 }

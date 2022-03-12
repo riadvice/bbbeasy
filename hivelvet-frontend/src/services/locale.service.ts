@@ -33,16 +33,15 @@ import { DirectionType } from 'antd/lib/config-provider';
 
 const defaultLang = process.env.REACT_APP_FALLBACK_LANG;
 
-const initLang = () : string => {
+const initLang = (): string => {
     if (localStorage.getItem('locale') == null) {
-        const navigLang: string = navigator.language.substring(0,2);
+        const navigLang: string = navigator.language.substring(0, 2);
         const res = languages.filter((item) => item.key == navigLang);
         return res.length != 0 ? res[0].value : defaultLang;
-    }
-    else {
+    } else {
         return localStorage.getItem('locale');
     }
-}
+};
 
 const lang = initLang();
 
@@ -77,7 +76,7 @@ class LocaleService {
     private setLocale(language: string) {
         localStorage.setItem('locale', language);
         this.direction = this.getLanguageDirection(language);
-        this.antdlocale = this.localeMap[language.substring(0,2)];
+        this.antdlocale = this.localeMap[language.substring(0, 2)];
     }
 
     changeLocale(locale: string) {

@@ -90,10 +90,7 @@ export const Step3Form = (props: Props) => {
                             className="presets-grid"
                             onClick={() => showModal(item.name, item.subcategories)}
                         >
-                            <Meta
-                                avatar={<DynamicIcon type={item.icon} className="PresetIcon" />}
-                                title={item.name}
-                            />
+                            <Meta avatar={<DynamicIcon type={item.icon} className="PresetIcon" />} title={item.name} />
                         </Grid>
                     </Tooltip>
                 ))}

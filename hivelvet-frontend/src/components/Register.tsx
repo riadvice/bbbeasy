@@ -229,10 +229,9 @@ class Register extends Component<Props, State> {
                                     rules={[
                                         {
                                             validator: (_, value) =>
-                                                value ?
-                                                    Promise.resolve()
-                                                    :
-                                                    Promise.reject(new Error(t("accept-agreement"))),
+                                                value
+                                                    ? Promise.resolve()
+                                                    : Promise.reject(new Error(t('accept-agreement'))),
                                         },
                                     ]}
                                 >

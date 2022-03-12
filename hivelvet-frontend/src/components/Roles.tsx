@@ -386,7 +386,7 @@ class Roles extends Component<Props, State> {
     handleDelete = (key: React.Key, nbUsers) => {
         if (nbUsers > 0) {
             Modal.confirm({
-                wrapClassName: "delete-wrap",
+                wrapClassName: 'delete-wrap',
                 title: undefined,
                 icon: undefined,
                 content: (
@@ -608,7 +608,13 @@ class Roles extends Component<Props, State> {
                         </div>
                         <div className="bordered-card">
                             {Object.keys(allPrivileges).map((group) => (
-                                <Card bordered={false} key={group} title={group} className="text-capitalize" type="inner">
+                                <Card
+                                    bordered={false}
+                                    key={group}
+                                    title={group}
+                                    className="text-capitalize"
+                                    type="inner"
+                                >
                                     <Form.Item name={group}>
                                         <Checkbox.Group>
                                             <Row gutter={[32, 16]}>

@@ -106,7 +106,7 @@ class App extends Component<Props, State> {
         const { currentUser, isLogged, language, installed } = this.state;
 
         return (
-            <Layout className={LocaleService.direction == 'rtl' ? "page-layout-content-rtl" : "page-layout-content"}>
+            <Layout className={LocaleService.direction == 'rtl' ? 'page-layout-content-rtl' : 'page-layout-content'}>
                 <ConfigProvider
                     locale={LocaleService.antdlocale}
                     direction={LocaleService.direction}

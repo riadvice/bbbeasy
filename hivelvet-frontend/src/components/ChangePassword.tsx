@@ -42,7 +42,8 @@ type State = {
 class ChangePassword extends Component<Props, State> {
     constructor(props) {
         const params = new URLSearchParams(window.location.search);
-        authService.getResetPasswordByToken(params.get('token'))
+        authService
+            .getResetPasswordByToken(params.get('token'))
             .then((response) => {
                 this.setState({
                     available_token: true,
@@ -92,7 +93,7 @@ class ChangePassword extends Component<Props, State> {
 
         return (
             <>
-                {available_token ?
+                {available_token ? (
                     <Row>
                         {successful ? (
                             <Col span={10} offset={7} className="section-top">
@@ -121,7 +122,11 @@ class ChangePassword extends Component<Props, State> {
                                             type="error"
                                             className="alert-msg"
                                             message={
-                                                <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == message)} />
+                                                <Trans
+                                                    i18nKey={Object.keys(EN_US).filter(
+                                                        (elem) => EN_US[elem] == message
+                                                    )}
+                                                />
                                             }
                                             showIcon
                                         />
@@ -201,12 +206,12 @@ class ChangePassword extends Component<Props, State> {
                             </Col>
                         )}
                     </Row>
-                    :
+                ) : (
                     message && (
                         <Result
                             status="500"
                             title="500"
-                            subTitle={<Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == message)}/>}
+                            subTitle={<Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == message)} />}
                             className="page-not-found"
                             extra={
                                 <Link className="ant-btn color-blue" to="/">
@@ -215,7 +220,7 @@ class ChangePassword extends Component<Props, State> {
                             }
                         />
                     )
-                }
+                )}
             </>
         );
     }
