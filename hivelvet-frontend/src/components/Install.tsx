@@ -32,13 +32,7 @@ import { Step3Form } from './Step3Form';
 const API_URL = process.env.REACT_APP_API_URL;
 const { Step } = Steps;
 
-type Props = {
-    installed: boolean;
-    handleInstall: any;
-};
-
-const Install = (props: Props) => {
-    const { handleInstall } = props;
+const Install = () => {
     const { t } = useTranslation();
 
     const [stepForm] = Form.useForm();
@@ -197,7 +191,7 @@ const Install = (props: Props) => {
                         icon={<DynamicIcon type="CheckOutlined" className="success-install-icon" />}
                         title={<Trans i18nKey="success_install" />}
                         extra={
-                            <Link to={'/login'} onClick={handleInstall} className="ant-btn ant-btn-primary ant-btn-lg">
+                            <Link to={'/login'} className="ant-btn ant-btn-primary ant-btn-lg">
                                 <Trans i18nKey="start-using-hivelvet" />
                             </Link>
                         }

@@ -19,12 +19,24 @@
 /* craco.config.js */
 const CracoLessPlugin = require('craco-less');
 const SimpleProgressWebpackPlugin = require('simple-progress-webpack-plugin')
+const webpack = require('webpack')
+const path = require('path');
 
 module.exports = {
     webpack: {
+        output: {
+            clean: true,
+        },
         plugins: [
-            new SimpleProgressWebpackPlugin()
+            new SimpleProgressWebpackPlugin(),
+            new webpack.DefinePlugin({
+                'INSTALLER_FEATURE': JSON.stringify(process.env.INSTALLER_FEATURE),
+            }),
         ]
+    },
+    babel: {
+        presets: [],
+        plugins: []
     },
     plugins: [
         {

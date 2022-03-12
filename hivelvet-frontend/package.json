@@ -47,9 +47,10 @@
     "yup": "^0.32.11"
   },
   "scripts": {
-    "start-dev": "CHOKIDAR_USEPOLLING=true PORT=3300 NODE_ENV=development craco start",
-    "build-installer": "craco build DODODOD.tsx",
-    "build": "craco build",
+    "start-dev": "CHOKIDAR_USEPOLLING=true PORT=3300 NODE_ENV=development INSTALLER_FEATURE=false craco start",
+    "start-dev-installer": "CHOKIDAR_USEPOLLING=true PORT=3300 NODE_ENV=development INSTALLER_FEATURE=true craco start",
+    "build": "INSTALLER_FEATURE=false craco build",
+    "build-installer": "INSTALLER_FEATURE=true craco build",
     "nyc": "nyc instrument --compact=false src instrumented",
     "cypress": "cypress run",
     "analyze": "craco analyze",
@@ -84,7 +85,6 @@
     "@typescript-eslint/parser": "^5.10.0",
     "babel-plugin-import": "^1.13.3",
     "babel-plugin-istanbul": "^6.1.1",
-    "craco-plugin-custom-tsconfig": "^0.1.1",
     "cypress": "^9.5.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
@@ -96,7 +96,6 @@
     "prettier": "^2.5.1",
     "react-styleguidist": "^11.2.0",
     "simple-progress-webpack-plugin": "^2.0.0",
-    "snowpack": "^3.8.8",
     "source-map-explorer": "^2.5.2",
     "ts-loader": "^9.2.6"
   }

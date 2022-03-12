@@ -33,6 +33,7 @@ sudo apt-get upgrade -y
 
 info "Install ubuntu tools"
 sudo apt-get install -y wget gnupg2 lsb-release curl zip unzip nginx-full bc ntp xmlstarlet bash-completion
+sudo curl https://rclone.org/install.sh | sudo bash
 
 info "Install Redis for caching"
 sudo apt-get install -y redis

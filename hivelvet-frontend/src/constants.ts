@@ -1,0 +1,5 @@
+declare const INSTALLER_FEATURE: boolean;
+
+const _INSTALLER_FEATURE: boolean = INSTALLER_FEATURE;
+
+export { _INSTALLER_FEATURE as INSTALLER_FEATURE };
