@@ -16,7 +16,7 @@
     "@types/node": "^16.7.13",
     "@types/react": "^17.0.20",
     "@types/react-dom": "^17.0.9",
-    "antd": "^4.18.2",
+    "antd": "^4.19.1",
     "axios": "^0.24.0",
     "chokidar": "^3.5.2",
     "craco": "^0.0.3",
@@ -78,10 +78,13 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-proposal-decorators": "^7.17.2",
     "@cypress/code-coverage": "^3.9.12",
     "@types/pino": "^7.0.5",
     "@typescript-eslint/parser": "^5.10.0",
+    "babel-plugin-import": "^1.13.3",
     "babel-plugin-istanbul": "^6.1.1",
+    "craco-plugin-custom-tsconfig": "^0.1.1",
     "cypress": "^9.5.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
@@ -92,6 +95,7 @@
     "nyc": "^15.1.0",
     "prettier": "^2.5.1",
     "react-styleguidist": "^11.2.0",
+    "simple-progress-webpack-plugin": "^2.0.0",
     "snowpack": "^3.8.8",
     "source-map-explorer": "^2.5.2",
     "ts-loader": "^9.2.6"
