@@ -80,9 +80,9 @@ final class LoginTest extends Scenario
     public function testAuthenticateExistingUser($f3)
     {
         $test = $this->newTest();
-        $user = UserFaker::create(UserRole::ADMIN);
+        $user = UserFaker::create(UserRole::ADMINISTRATOR);
 
-        $data = ['email' => $user->email, 'password' => UserRole::ADMIN . UserRole::ADMIN];
+        $data = ['email' => $user->email, 'password' => UserRole::ADMINISTRATOR . UserRole::ADMINISTRATOR];
         $f3->mock(self::LOGIN_ROUTE, null, null, $this->postJsonData($data));
         $test->expect(
             $this->compareArrayToResponse(['username' => $user->username, 'email' => $user->email, 'role' => $user->role]),

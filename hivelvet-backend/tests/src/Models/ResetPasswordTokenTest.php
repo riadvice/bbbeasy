@@ -45,7 +45,7 @@ final class ResetPasswordTokenTest extends Scenario
      */
     public function testTokenCreation($f3)
     {
-        $user = UserFaker::create(UserRole::ADMIN);
+        $user = UserFaker::create(UserRole::ADMINISTRATOR);
 
         $test                = $this->newTest();
         $resetToken          = new ResetPasswordToken();

@@ -22,22 +22,27 @@ declare(strict_types=1);
 
 use Phinx\Migration\AbstractMigration;
 
-class CreatePresetSettingsTable extends AbstractMigration
+final class AddDefaultRoles extends AbstractMigration
 {
     public function up(): void
     {
-        $table = $this->table('preset_settings');
-        $table
-            ->addColumn('group', 'string', ['limit' => 64, 'null' => false])
-            ->addColumn('name', 'string', ['limit' => 64, 'null' => false])
-            ->addColumn('enabled', 'boolean', ['default' => false, 'null' => false])
-            ->addColumn('created_on', 'datetime', ['default' => '0001-01-01 00:00:00', 'timezone' => true])
-            ->addColumn('updated_on', 'datetime', ['default' => '0001-01-01 00:00:00', 'timezone' => true])
-            ->save();
+        $table = $this->table('roles');
+        $data  = [
+            [
+                'name'       => \Enum\UserRole::ADMINISTRATOR,
+                'created_on' => date('Y-m-d H:i:s'),
+            ],
+            [
+                'name'       => \Enum\UserRole::LECTURER,
+                'created_on' => date('Y-m-d H:i:s'), ],
+        ];
+
+        $table->insert($data)->save();
     }
 
     public function down(): void
     {
-        $this->table('preset_settings')->drop()->save();
+        $table = $this->table('roles');
+        $table->getAdapter()->execute("DELETE from roles where name='". \Enum\UserRole::ADMINISTRATOR ."' or name'". \Enum\UserRole::LECTURER ."'");
     }
 }
