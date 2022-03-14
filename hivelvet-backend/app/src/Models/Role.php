@@ -24,6 +24,7 @@ namespace Models;
 
 use DateTime;
 use Enum\ResponseCode;
+use Enum\UserRole;
 use Models\Base as BaseModel;
 
 /**
@@ -72,10 +73,13 @@ class Role extends BaseModel
         return $data;
     }
 
+    /**
+     * @return array
+     */
     public function getLecturerRole()
     {
         $data = [];
-        $this->load(['id = ?', [2]]);
+        $this->load(['name = ?', [UserRole::LECTURER]]);
         if ($this->valid()) {
             $data = [
                 'key'         => $this->id,

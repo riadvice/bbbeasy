@@ -26,6 +26,7 @@ use Enum\UserRole;
 use Enum\UserStatus;
 use Fake\UserFaker;
 use Faker\Factory as Faker;
+use Models\Role;
 use Models\User;
 use ReflectionException;
 use Test\Scenario;
@@ -80,12 +81,14 @@ final class LoginTest extends Scenario
     public function testAuthenticateExistingUser($f3)
     {
         $test = $this->newTest();
-        $user = UserFaker::create(UserRole::ADMIN);
+        $user = UserFaker::create(UserRole::ADMINISTRATOR);
 
-        $data = ['email' => $user->email, 'password' => UserRole::ADMIN . UserRole::ADMIN];
+        $data = ['email' => $user->email, 'password' => UserRole::ADMINISTRATOR . UserRole::ADMINISTRATOR];
         $f3->mock(self::LOGIN_ROUTE, null, null, $this->postJsonData($data));
+        /** @var Role $role */
+        $role = $user->role_id;
         $test->expect(
-            $this->compareArrayToResponse(['username' => $user->username, 'email' => $user->email, 'role' => $user->role]),
+            $this->compareArrayToResponse(['username' => $user->username, 'email' => $user->email, 'role' => $role->name]),
             'Login with user "' . $user->email . '" with status ' . $user->status
         );
 

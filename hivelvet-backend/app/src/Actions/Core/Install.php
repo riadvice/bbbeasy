@@ -25,6 +25,7 @@ namespace Actions\Core;
 use Actions\Base as BaseAction;
 use Base;
 use Enum\ResponseCode;
+use Enum\UserRole;
 use Enum\UserStatus;
 use Models\PresetSetting;
 use Models\Role;
@@ -129,16 +130,15 @@ class Install extends BaseAction
                         }
                     }
 
-                    // add default roles admin and lecturer
-                    $roleAdmin       = new Role();
-                    $roleAdmin->name = 'administrator';
-
-                    try {
-                        // allow all privileges to role admin
+                    // load admin role to allow privileges and assign it to admin user
+                    $roleAdmin = new Role();
+                    $roleAdmin->load(['name = ?', [UserRole::ADMINISTRATOR]]);
+                    if($roleAdmin->valid()) {
+                        // allow all privileges to admin role
                         $allPrivileges = PrivilegeUtils::listSystemPrivileges();
                         $result        = $roleAdmin->saveRoleAndPermissions($allPrivileges);
                         if (ResponseCode::HTTP_OK === $result) {
-                            $this->logger->info('Initial application setup : Add administrator role', ['administrator role' => $roleAdmin->toArray()]);
+                            $this->logger->info('Initial application setup : Allow all privileges to administrator role');
                             // assign admin created to role admin
                             $user->role_id = $roleAdmin->id;
 
@@ -147,27 +147,8 @@ class Install extends BaseAction
                                 $this->logger->info('Initial application setup : Assign role to administrator user', ['user' => $user->toArray()]);
                             } catch (\Exception $e) {
                                 $this->logger->error('Initial application setup : Role could not be assigned', ['error' => $e->getMessage()]);
-
-                                return;
-                            }
-
-                            // add lecturer role
-                            $roleLecturer       = new Role();
-                            $roleLecturer->name = 'lecturer';
-
-                            try {
-                                $roleLecturer->save();
-                                $this->logger->info('Initial application setup : Add lecturer role', ['lecturer role' => $roleLecturer->toArray()]);
-                            } catch (\Exception $e) {
-                                $this->logger->error('Initial application setup : Lecturer role could not be added', ['error' => $e->getMessage()]);
-
-                                return;
                             }
                         }
-                    } catch (\Exception $e) {
-                        $this->logger->info('Initial application setup : Administrator role could not be added', ['error' => $e->getMessage()]);
-
-                        return;
                     }
 
                     $this->logger->info('Initial application setup has been successfully done');

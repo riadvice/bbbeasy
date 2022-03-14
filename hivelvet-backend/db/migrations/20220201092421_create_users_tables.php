@@ -37,7 +37,7 @@ class CreateUsersTables extends AbstractMigration
             ->addColumn('updated_on', 'datetime', ['default' => '0001-01-01 00:00:00', 'timezone' => true])
             ->addIndex('username', ['unique' => true, 'name' => 'idx_users_username'])
             ->addIndex('email', ['unique' => true, 'name' => 'idx_users_email'])
-            ->addForeignKey(['role_id'], 'roles', ['id'], ['constraint' => 'roles_id'])
+            ->addForeignKey(['role_id'], 'roles', ['id'], ['constraint' => 'user_role_id'])
             ->save()
         ;
     }

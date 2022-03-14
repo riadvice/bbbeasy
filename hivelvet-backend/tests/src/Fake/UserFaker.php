@@ -53,9 +53,9 @@ class UserFaker
         if (null === $role) {
             $role = array_rand(UserRole::values());
         }
-        $user->role     = $role;
+        $user->role_id  = 1;
         $user->password = $role;
-        if (UserRole::ADMIN === $role) {
+        if (UserRole::ADMINISTRATOR === $role) {
             $user->password = $role . $role;
         }
         $user->status = $status;
@@ -94,7 +94,7 @@ class UserFaker
     public static function loginUser($user): void
     {
         $password = $role = $user->role;
-        if (UserRole::ADMIN === $role) {
+        if (UserRole::ADMINISTRATOR === $role) {
             $password = $role . $role;
         }
         Base::instance()->mock('POST /account/login', [

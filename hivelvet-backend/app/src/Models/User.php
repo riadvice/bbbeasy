@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Models;
 
 use DateTime;
-use DB\Cortex;
 use Enum\UserStatus;
 use Models\Base as BaseModel;
 
@@ -62,9 +61,9 @@ class User extends BaseModel
     /**
      * Get user record by email value.
      *
-     * @param string $email
+     * @return $this
      */
-    public function getByEmail($email): self
+    public function getByEmail(string $email): self
     {
         $this->load(['lower(email) = ?', mb_strtolower($email)]);
 
@@ -74,11 +73,9 @@ class User extends BaseModel
     /**
      * Get user record by id value.
      *
-     * @param int $id
-     *
-     * @return Cortex
+     * @return $this
      */
-    public function getById($id): self
+    public function getById(int $id): self
     {
         $this->load(['id = ?', $id]);
 
@@ -118,11 +115,15 @@ class User extends BaseModel
     /**
      * @return mixed
      */
-    public function getCountFields()
+    public function getCountFields(): mixed
     {
         return $this->countFields;
     }
 
+    /**
+     * @param $password
+     * @return bool
+     */
     public function verifyPassword($password): bool
     {
         return password_verify(trim($password), $this->password);
