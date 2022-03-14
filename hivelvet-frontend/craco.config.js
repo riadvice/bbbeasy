@@ -30,7 +30,7 @@ module.exports = {
         plugins: [
             new SimpleProgressWebpackPlugin(),
             new webpack.DefinePlugin({
-                'INSTALLER_FEATURE': JSON.stringify(process.env.INSTALLER_FEATURE),
+                'INSTALLER_FEATURE': JSON.parse(process.env.INSTALLER_FEATURE),
             }),
         ]
     },

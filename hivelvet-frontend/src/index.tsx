@@ -33,8 +33,7 @@ if (!INSTALLER_FEATURE) {
         document.getElementById('root')
     );
 }
-
-if (INSTALLER_FEATURE) {
+else {
     ReactDOM.render(
         <BrowserRouter>
             <InstallApp />

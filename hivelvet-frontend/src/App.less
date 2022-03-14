@@ -42,13 +42,13 @@ body,input,select,textarea,
 
 body .page-layout-content, .page-layout-content button, .page-layout-content input,
 .page-layout-content select, .page-layout-content textarea,
-.table-search-input, .ant-modal-wrap, .ant-dropdown {
+.table-search-input, .ant-modal-wrap, .ant-dropdown, .ant-tooltip {
   font-family: 'Poppins', sans-serif !important;
 }
 
 body .page-layout-content-rtl, .page-layout-content-rtl button, .page-layout-content-rtl input,
 .page-layout-content-rtl select, .page-layout-content-rtl textarea,
-.table-search-input.ant-input-rtl, .ant-modal-wrap.ant-modal-wrap-rtl, .ant-dropdown.ant-dropdown-rtl {
+.table-search-input.ant-input-rtl, .ant-modal-wrap.ant-modal-wrap-rtl, .ant-dropdown.ant-dropdown-rtl, .ant-tooltip.ant-tooltip-rtl {
   font-family: 'Tajawal', sans-serif !important;
   font-weight: 450 !important;
 }
@@ -92,7 +92,7 @@ body .page-layout-content-rtl, .page-layout-content-rtl button, .page-layout-con
   border-radius: 15px;
 }
 
-.search-input, .search-input.ant-input-affix-wrapper:hover, .search-input.ant-input-affix-wrapper:focus {
+.search-input,.search-input input, .search-input.ant-input-affix-wrapper:hover, .search-input.ant-input-affix-wrapper:focus {
   background: #f8f8f8;
 }
 
@@ -623,8 +623,10 @@ body .page-layout-content-rtl, .page-layout-content-rtl button, .page-layout-con
   border-radius: 10px;
 }
 
-.install-tooltip .ant-tooltip-arrow-content, .install-tooltip .ant-tooltip-inner {
+.install-tooltip .ant-tooltip-arrow-content,.ant-tooltip-arrow-content::before, .install-tooltip .ant-tooltip-inner {
   background: white;
+}
+.install-tooltip .ant-tooltip-inner {
   color: var(--hv-darken-gray);
 }
 

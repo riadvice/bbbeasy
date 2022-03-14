@@ -18,8 +18,6 @@
 
 import React, { Component } from 'react';
 import { Route, Routes } from 'react-router-dom';
-import PrivateRoute from './components/PrivateRoute';
-import PublicRoute from './components/PublicRoute';
 
 import './App.less';
 import { Layout, ConfigProvider, BackTop, Button } from 'antd';
@@ -27,18 +25,8 @@ import { CaretUpOutlined } from '@ant-design/icons';
 
 import AppHeader from './components/AppHeader';
 import AppFooter from './components/AppFooter';
-import AppSider from './components/AppSider';
-
 import Install from './components/Install';
 import PageNotFound from './components/PageNotFound';
-import LandingPage from './components/LandingPage';
-import Register from './components/Register';
-import Login from './components/Login';
-import Reset from './components/ResetPassword';
-import ChangePassword from './components/ChangePassword';
-
-import Home from './components/Home';
-import Roles from './components/Roles';
 
 import 'moment/locale/fr';
 import 'moment/locale/ar';
@@ -50,7 +38,6 @@ import authService from './services/auth.service';
 import { Props } from 'react-intl/src/components/relative';
 import LocaleService from './services/locale.service';
 import { withTranslation } from 'react-i18next';
-import { INSTALLER_FEATURE } from './constants';
 
 const { Content } = Layout;
 

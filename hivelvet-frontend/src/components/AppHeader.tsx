@@ -24,6 +24,7 @@ import { SearchOutlined, GlobalOutlined, UserOutlined, LogoutOutlined } from '@a
 import authService from '../services/auth.service';
 import { Trans } from 'react-i18next';
 import languages from './Languages';
+import { INSTALLER_FEATURE } from '../constants';
 
 const { Header } = Layout;
 const { Text, Paragraph } = Typography;
@@ -81,7 +82,7 @@ class AppHeader extends Component<Props, State> {
         );
 
         const dropdownLang = (
-            <Dropdown overlay={menuLang} placement="bottomCenter" arrow trigger={['click']}>
+            <Dropdown overlay={menuLang} placement="bottomRight" arrow trigger={['click']}>
                 <Button type="link" size="middle" className="lang-btn">
                     <GlobalOutlined /> {language}
                 </Button>
@@ -114,7 +115,7 @@ class AppHeader extends Component<Props, State> {
                         <img className="header-logo-image" src="/images/logo_01.png" alt="Logo" />
                     </Link>
                     <>
-                        {isLogged && (
+                        {!INSTALLER_FEATURE && isLogged && (
                             <Input
                                 className="search-input"
                                 size="middle"
@@ -126,25 +127,27 @@ class AppHeader extends Component<Props, State> {
                         )}
                         <Space size={isLogged ? 'middle' : 'large'}>
                             {dropdownLang}
-                            {!isLogged ? (
-                                <>
-                                    <Link className={'ant-btn color-primary'} to={'/login'}>
-                                        <Trans i18nKey="login" />
-                                    </Link>
-                                    <Link className={'ant-btn color-primary'} to={'/register'}>
-                                        <Trans i18nKey="sign-up" />
-                                    </Link>
-                                </>
-                            ) : (
-                                <Dropdown
-                                    overlay={menuProfile}
-                                    overlayClassName="profil-btn-dropdown"
-                                    placement="bottomRight"
-                                    arrow
-                                    trigger={['click']}
-                                >
-                                    <Button type="primary" icon={<UserOutlined />} className="profil-btn" />
-                                </Dropdown>
+                            {!INSTALLER_FEATURE && (
+                                !isLogged ? (
+                                    <>
+                                        <Link className={'ant-btn color-primary'} to={'/login'}>
+                                            <Trans i18nKey="login" />
+                                        </Link>
+                                        <Link className={'ant-btn color-primary'} to={'/register'}>
+                                            <Trans i18nKey="sign-up" />
+                                        </Link>
+                                    </>
+                                ) : (
+                                    <Dropdown
+                                        overlay={menuProfile}
+                                        overlayClassName="profil-btn-dropdown"
+                                        placement="bottomRight"
+                                        arrow
+                                        trigger={['click']}
+                                    >
+                                        <Button type="primary" icon={<UserOutlined />} className="profil-btn" />
+                                    </Dropdown>
+                                )
                             )}
                         </Space>
                     </>
