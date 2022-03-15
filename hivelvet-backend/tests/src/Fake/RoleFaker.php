@@ -33,7 +33,7 @@ class RoleFaker
     {
         $faker      = Faker::create();
         $role       = new Role();
-        $role->name = str_replace(' ', '_', mb_strtolower($faker->name));
+        $role->name = $faker->name;
 
         $role->save();
 

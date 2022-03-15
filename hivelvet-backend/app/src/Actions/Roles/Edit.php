@@ -57,17 +57,15 @@ class Edit extends BaseAction
                 $dataChecker->verify($form['name'], Validator::notEmpty()->setName('name'));
 
                 if ($dataChecker->allValid()) {
-                    $checkRole = new Role();
-                    $name      = str_replace(' ', '_', mb_strtolower($form['name']));
+                    $checkRole  = new Role();
+                    $role->name = $form['name'];
 
-                    if ($checkRole->nameExists($name, $role->id)) {
+                    if ($checkRole->nameExists($role->name, $role->id)) {
                         $this->logger->error('Role could not be updated', ['error' => 'Name already exist']);
                         $this->renderJson(['errors' => ['name' => 'Name already exist']], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
 
                         return;
                     }
-
-                    $role->name = $name;
                 } else {
                     $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
 
