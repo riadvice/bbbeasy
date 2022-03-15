@@ -23,8 +23,11 @@ import { SearchOutlined, GlobalOutlined, UserOutlined, LogoutOutlined } from '@a
 
 import authService from '../services/auth.service';
 import { Trans } from 'react-i18next';
+import { t } from 'i18next';
+
 import languages from './Languages';
 import { INSTALLER_FEATURE } from '../constants';
+import LocaleService from "../services/locale.service";
 
 const { Header } = Layout;
 const { Text, Paragraph } = Typography;
@@ -82,7 +85,12 @@ class AppHeader extends Component<Props, State> {
         );
 
         const dropdownLang = (
-            <Dropdown overlay={menuLang} placement="bottomRight" arrow trigger={['click']}>
+            <Dropdown
+                overlay={menuLang}
+                placement={LocaleService.direction == 'rtl' ? 'bottomLeft' : 'bottomRight'}
+                arrow
+                trigger={['click']}
+            >
                 <Button type="link" size="middle" className="lang-btn">
                     <GlobalOutlined /> {language}
                 </Button>
@@ -119,7 +127,7 @@ class AppHeader extends Component<Props, State> {
                             <Input
                                 className="search-input"
                                 size="middle"
-                                placeholder="Search"
+                                placeholder={t('search')}
                                 allowClear
                                 suffix={<SearchOutlined />}
                                 bordered={false}
@@ -140,8 +148,8 @@ class AppHeader extends Component<Props, State> {
                                 ) : (
                                     <Dropdown
                                         overlay={menuProfile}
-                                        overlayClassName="profil-btn-dropdown"
-                                        placement="bottomRight"
+                                        overlayClassName='profil-btn-dropdown'
+                                        placement={LocaleService.direction == 'rtl' ? 'bottomLeft' : 'bottomRight'}
                                         arrow
                                         trigger={['click']}
                                     >

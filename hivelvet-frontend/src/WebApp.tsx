@@ -52,8 +52,6 @@ import { withTranslation } from 'react-i18next';
 
 const { Content } = Layout;
 
-Logger.info('Initialisation Hivelvet Webapp Application');
-
 type State = {
     currentUser?: any;
     isLogged?: boolean;
@@ -68,6 +66,7 @@ class WebApp extends Component<Props, State> {
             isLogged: false,
             language: LocaleService.language,
         };
+        Logger.info('Initialisation Hivelvet Webapp Application');
     }
 
     componentDidMount = () => {
