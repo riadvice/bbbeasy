@@ -16,13 +16,15 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 import { Button, Dropdown, Layout, Menu } from 'antd';
 import { PlusOutlined, DownOutlined } from '@ant-design/icons';
 import DynamicIcon from './DynamicIcon';
 import { useTranslation, withTranslation } from 'react-i18next';
+
+import Scrollbar from 'perfect-scrollbar';
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
@@ -31,6 +33,20 @@ const AppSider = () => {
     const location = useLocation();
     const [currentPath, setCurrentPath] = React.useState(location.pathname);
     const { t } = useTranslation();
+    const comp = useRef();
+
+    useEffect(() => {
+        let ps = new Scrollbar(comp.current, {
+
+        });
+        return () => {
+            if (ps) {
+                ps.destroy();
+                ps = null;
+            }
+        };
+    }, []);
+
     const newMenu = (
         <Menu>
             <Menu.Item key="1">{t('room')}</Menu.Item>
@@ -97,42 +113,49 @@ const AppSider = () => {
     };
 
     return (
-        <Sider className="site-sider" width={250}>
-            <Dropdown overlay={newMenu}>
-                <Button size="middle" className="sider-new-btn">
-                    <PlusOutlined /> {t('new')} <DownOutlined />
-                </Button>
-            </Dropdown>
-
-            <Menu
-                className="site-menu"
-                mode="inline"
-                onClick={handleClick}
-                selectedKeys={[currentPath]}
-                defaultOpenKeys={['sub1']}
-            >
-                {menuData.map((item) =>
-                    item.children != null ? (
-                        <SubMenu key={item.path} icon={<DynamicIcon type={item.icon} />} title={item.name}>
-                            {item.children.map((subItem) => (
-                                <Menu.Item key={subItem.path} icon={<DynamicIcon type={subItem.icon} />}>
-                                    <Link to={subItem.path}>{subItem.name}</Link>
-                                </Menu.Item>
-                            ))}
-                        </SubMenu>
-                    ) : (
-                        <Menu.Item key={item.path} icon={<DynamicIcon type={item.icon} />}>
-                            {item.path.includes('http') ? (
-                                <a target="_blank" rel="noopener noreferrer" href={item.path}>
-                                    {item.name}
-                                </a>
-                            ) : (
-                                <Link to={item.path}>{item.name}</Link>
-                            )}
-                        </Menu.Item>
-                    )
-                )}
-            </Menu>
+        <Sider className="site-sider" ref={comp}>
+            <div className="logo">
+                <Link to={'/'}>
+                    <img className="header-logo-image" src="/images/logo_01.png" alt="Logo" />
+                </Link>
+            </div>
+            <div className="menu-sider">
+                <Dropdown overlay={newMenu}>
+                    <Button size="middle" className="sider-new-btn">
+                        <PlusOutlined /> {t('new')} <DownOutlined />
+                    </Button>
+                </Dropdown>
+                <Menu
+                    className="site-menu"
+                    mode="inline"
+                    theme="light"
+                    onClick={handleClick}
+                    selectedKeys={[currentPath]}
+                    defaultOpenKeys={['sub1']}
+                >
+                    {menuData.map((item) =>
+                        item.children != null ? (
+                            <SubMenu key={item.path} icon={<DynamicIcon type={item.icon} />} title={item.name}>
+                                {item.children.map((subItem) => (
+                                    <Menu.Item key={subItem.path} icon={<DynamicIcon type={subItem.icon} />}>
+                                        <Link to={subItem.path}>{subItem.name}</Link>
+                                    </Menu.Item>
+                                ))}
+                            </SubMenu>
+                        ) : (
+                            <Menu.Item key={item.path} icon={<DynamicIcon type={item.icon} />}>
+                                {item.path.includes('http') ? (
+                                    <a target="_blank" rel="noopener noreferrer" href={item.path}>
+                                        {item.name}
+                                    </a>
+                                ) : (
+                                    <Link to={item.path}>{item.name}</Link>
+                                )}
+                            </Menu.Item>
+                        )
+                    )}
+                </Menu>
+            </div>
         </Sider>
     );
 };

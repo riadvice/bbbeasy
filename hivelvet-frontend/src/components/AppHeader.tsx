@@ -18,7 +18,7 @@
 
 import React, { Component } from 'react';
 import { Link, Navigate } from 'react-router-dom';
-import { Layout, Typography, Radio, Button, Menu, Dropdown, Space, Input } from 'antd';
+import { Layout, Typography, Radio, Button, Menu, Dropdown, Space, Input, Row, Col } from 'antd';
 import { SearchOutlined, GlobalOutlined, UserOutlined, LogoutOutlined } from '@ant-design/icons';
 
 import authService from '../services/auth.service';
@@ -118,25 +118,15 @@ class AppHeader extends Component<Props, State> {
 
         return (
             <Header className="site-header">
-                <Paragraph className="site-header-inner">
-                    <Link to={'/'}>
-                        <img className="header-logo-image" src="/images/logo_01.png" alt="Logo" />
-                    </Link>
-                    <>
-                        {!INSTALLER_FEATURE && isLogged && (
-                            <Input
-                                className="search-input"
-                                size="middle"
-                                placeholder={t('search')}
-                                allowClear
-                                suffix={<SearchOutlined />}
-                                bordered={false}
-                            />
-                        )}
-                        <Space size={isLogged ? 'middle' : 'large'}>
-                            {dropdownLang}
-                            {!INSTALLER_FEATURE && (
-                                !isLogged ? (
+                <>
+                    {!isLogged ? (
+                        <Paragraph className="site-header-inner">
+                            <Link to={'/'}>
+                                <img className="header-logo-image" src="/images/logo_01.png" alt="Logo" />
+                            </Link>
+                            <Space size='large'>
+                                {dropdownLang}
+                                {!INSTALLER_FEATURE && (
                                     <>
                                         <Link className={'ant-btn color-primary'} to={'/login'}>
                                             <Trans i18nKey="login" />
@@ -145,7 +135,24 @@ class AppHeader extends Component<Props, State> {
                                             <Trans i18nKey="sign-up" />
                                         </Link>
                                     </>
-                                ) : (
+                                )}
+                            </Space>
+                        </Paragraph>
+                    ) : (
+                        <Row align="middle">
+                            <Col span={14} offset={5} className='text-center'>
+                                <Input
+                                    className="search-input"
+                                    size="middle"
+                                    placeholder={t('search')}
+                                    allowClear
+                                    suffix={<SearchOutlined />}
+                                    bordered={false}
+                                />
+                            </Col>
+                            <Col span={5} className='text-end'>
+                                <Space size='middle'>
+                                    {dropdownLang}
                                     <Dropdown
                                         overlay={menuProfile}
                                         overlayClassName='profil-btn-dropdown'
@@ -155,11 +162,11 @@ class AppHeader extends Component<Props, State> {
                                     >
                                         <Button type="primary" icon={<UserOutlined />} className="profil-btn" />
                                     </Dropdown>
-                                )
-                            )}
-                        </Space>
-                    </>
-                </Paragraph>
+                                </Space>
+                            </Col>
+                        </Row>
+                    )}
+                </>
             </Header>
         );
     }

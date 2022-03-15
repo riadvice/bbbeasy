@@ -77,6 +77,8 @@ class LocaleService {
         localStorage.setItem('locale', language);
         this.direction = this.getLanguageDirection(language);
         this.antdlocale = this.localeMap[language.substring(0, 2)];
+        document.body.className = this.direction;
+        document.body.dir = this.direction;
     }
 
     changeLocale(locale: string) {

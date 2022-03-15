@@ -379,8 +379,8 @@ class Roles extends Component<Props, State> {
                         >
                             <Input ref={inputRef} onPressEnter={saveName} suffix={
                                 <>
-                                    <CloseOutlined onClick={cancelName} className="cell-input-cancel" />
-                                    <CheckOutlined onClick={saveName} className="cell-input-save" />
+                                    <Button icon={<CloseOutlined />} size="small" onClick={cancelName} className="cell-input-cancel" />
+                                    <Button icon={<CheckOutlined />} size="small" onClick={saveName} type="primary" className="cell-input-save" />
                                 </>
                             } />
                         </Form.Item>
@@ -474,7 +474,7 @@ class Roles extends Component<Props, State> {
                     ref={(node) => {
                         this.searchInput = node;
                     }}
-                    placeholder={`Search ${dataIndex}`}
+                    placeholder={t('search') + ' '+ t(dataIndex+'_col')}
                     value={selectedKeys[0]}
                     onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
                     onPressEnter={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
@@ -543,6 +543,10 @@ class Roles extends Component<Props, State> {
                 editable: true,
                 width: '35%',
                 ...this.getColumnSearchProps('name'),
+                sorter: {
+                    compare: (a, b) => a.name.localeCompare(b.name),
+                    multiple: 2,
+                },
             },
             {
                 title: t('users_col'),
@@ -555,6 +559,10 @@ class Roles extends Component<Props, State> {
                             <span>{users}</span>
                         </Space>
                     );
+                },
+                sorter: {
+                    compare: (a, b) => a.users - b.users,
+                    multiple: 1,
                 },
             },
             {
