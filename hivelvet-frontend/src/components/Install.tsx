@@ -60,6 +60,7 @@ const Install = () => {
     const [accentColor, setAccentColor] = React.useState('');
     const [addColor, setAddColor] = React.useState('');
     const [file, setFile] = React.useState<any>();
+    const [fileList, setFileList] = React.useState();
 
     const [presets, setPresets] = React.useState([]);
 
@@ -122,6 +123,8 @@ const Install = () => {
                     setAccentColor={setAccentColor}
                     setAddColor={setAddColor}
                     setFile={setFile}
+                    fileList={fileList}
+                    setFileList={setFileList}
                 />
             ),
             button: t('next'),
