@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Actions\Core;
 
 use Actions\Base as BaseAction;
-use Base;
 use Enum\ResponseCode;
 use Enum\UserStatus;
 use Models\PresetSetting;
@@ -34,14 +33,13 @@ use Respect\Validation\Validator;
 use Utils\PrivilegeUtils;
 use Validation\DataChecker;
 
-/**
- * Class Install.
- */
 class Install extends BaseAction
 {
     /**
-     * @param Base  $f3
-     * @param array $params
+     * @param $f3
+     * @param $params
+     *
+     * @throws \JsonException
      */
     public function execute($f3, $params): void
     {

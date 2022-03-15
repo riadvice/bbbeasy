@@ -148,30 +148,30 @@
         "logout": "Sign Out"
     },
 
-    "name_col" : "Name",
-    "users_col" : "N◦ Users",
-    "actions_col" : "Actions",
-    "new_role" : "New Role",
+    "name_col": "Name",
+    "users_col": "N◦ Users",
+    "actions_col": "Actions",
+    "new_role": "New Role",
     "name": {
         "label": "Name",
         "required": "Name is required"
     },
     "permissions": {
-        "label" : "Permissions"
+        "label": "Permissions"
     },
-    "search" : "Search",
-    "reset" : "Reset",
-    "filter" : "Filter",
-    "cancel" : "Cancel",
-    "save" : "Save",
-    "add_role_success" : "Role successfully added",
-    "cancel_edit_role" : "Sure to cancel edition ?",
-    "edit_role_success" : "Role successfully updated",
-    "delete" : "Delete",
-    "delete_role_confirm" : "Are you sure to delete this role ?",
-    "delete_role_title" : "Do you Want to delete this role ?",
-    "delete_role_content" : "This role already has users assigned, if you confirm all users switch to role Lecturer",
-    "delete_role_success" : "Role successfully deleted",
-    "confirm_yes" : "Yes",
-    "confirm_no" : "No"
+    "search": "Search",
+    "reset": "Reset",
+    "filter": "Filter",
+    "cancel": "Cancel",
+    "save": "Save",
+    "add_role_success": "Role successfully added",
+    "cancel_edit_role": "Sure to cancel edition ?",
+    "edit_role_success": "Role successfully updated",
+    "delete": "Delete",
+    "delete_role_confirm": "Are you sure to delete this role ?",
+    "delete_role_title": "Do you Want to delete this role ?",
+    "delete_role_content": "This role already has users assigned, if you confirm all users switch to role Lecturer",
+    "delete_role_success": "Role successfully deleted",
+    "confirm_yes": "Yes",
+    "confirm_no": "No"
 }

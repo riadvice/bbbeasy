@@ -148,30 +148,30 @@
         "logout": "خروج"
     },
 
-    "name_col" : "اسم",
-    "users_col" : "عدد المستخدمين",
-    "actions_col" : "العمليات",
-    "new_role" : "دور جديد",
+    "name_col": "اسم",
+    "users_col": "عدد المستخدمين",
+    "actions_col": "العمليات",
+    "new_role": "دور جديد",
     "name": {
         "label": "اسم",
         "required": "الاسم مطلوب"
     },
     "permissions": {
-        "label" : "ضوابط"
+        "label": "ضوابط"
     },
-    "search" : "البحث",
-    "reset" : "إعادة التهيئة",
-    "filter" : "التصفية",
-    "cancel" : "إلغاء",
-    "save" : "حفظ",
-    "add_role_success" : "تمت إضافة الدور بنجاح",
-    "cancel_edit_role" : "هل أنت متأكد أنك تريد التراجع عن التعديل ؟",
-    "edit_role_success" : "تم تحديث الدور بنجاح",
-    "delete" : "حذف",
-    "delete_role_confirm" : "هل أنت متأكد أنك تريد حذف هذا الدور ؟",
-    "delete_role_title" : "هل تريد حذف هذا الدور ؟",
-    "delete_role_content" : "تم تعيين مستخدمين لهذا الدور ، إذا أكدت الحذف ، ينتقل جميع المستخدمين إلى دور القارئ",
-    "delete_role_success" : "تم حذف الدور بنجاح",
-    "confirm_yes" : "نعم",
-    "confirm_no" : "لا"
+    "search": "البحث",
+    "reset": "إعادة التهيئة",
+    "filter": "التصفية",
+    "cancel": "إلغاء",
+    "save": "حفظ",
+    "add_role_success": "تمت إضافة الدور بنجاح",
+    "cancel_edit_role": "هل أنت متأكد أنك تريد التراجع عن التعديل ؟",
+    "edit_role_success": "تم تحديث الدور بنجاح",
+    "delete": "حذف",
+    "delete_role_confirm": "هل أنت متأكد أنك تريد حذف هذا الدور ؟",
+    "delete_role_title": "هل تريد حذف هذا الدور ؟",
+    "delete_role_content": "تم تعيين مستخدمين لهذا الدور ، إذا أكدت الحذف ، ينتقل جميع المستخدمين إلى دور القارئ",
+    "delete_role_success": "تم حذف الدور بنجاح",
+    "confirm_yes": "نعم",
+    "confirm_no": "لا"
 }

@@ -138,6 +138,7 @@ abstract class Base extends \Prefab
      */
     public function renderJson(array|string $json, int $statusCode = 200): void
     {
+        // @fixme: use HTTP/2.0?
         header('HTTP/1.1 ' . $statusCode);
         if (!Environment::isTest()) {
             header(self::JSON);
@@ -154,6 +155,7 @@ abstract class Base extends \Prefab
 
     public function renderText(array|string $text, int $statusCode = 200): void
     {
+        // @fixme: use HTTP/2.0?
         header('HTTP/1.1 ' . $statusCode);
         header(self::TEXT);
         echo \is_string($text) ? $text : implode("\n", $text);
@@ -208,11 +210,6 @@ abstract class Base extends \Prefab
     public function getDecodedBody(): array
     {
         return json_decode($this->f3->get('BODY'), true);
-    }
-
-    protected function setPartial($name)
-    {
-        return "{$name}.phtml";
     }
 
     protected function parseHeaderAuthorization(): void

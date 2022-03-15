@@ -30,13 +30,13 @@ import {
     KeyOutlined,
     WarningOutlined,
     CloseOutlined,
-    CheckOutlined
+    CheckOutlined,
 } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words/dist/main';
 import { FormInstance } from 'antd/lib/form';
 import { Trans, withTranslation } from 'react-i18next';
 import { t } from 'i18next';
-import EN_US from "../locale/en-US.json";
+import EN_US from '../locale/en-US.json';
 
 const { Paragraph, Link } = Typography;
 
@@ -144,7 +144,7 @@ class Roles extends Component<Props, State> {
 
     openNotificationWithIcon = (type, message) => {
         notification[type]({
-            message: t(type+'-title'),
+            message: t(type + '-title'),
             description: message,
         });
     };
@@ -229,7 +229,7 @@ class Roles extends Component<Props, State> {
         const saveEdit = (formValues, key) => {
             let keys = [...this.state.changedKeys];
             if (keys.includes(key)) {
-                keys = keys.filter((item) => item !== key)
+                keys = keys.filter((item) => item !== key);
                 this.setState({ changedKeys: keys });
             }
             RolesService.edit_role({ permissions: formValues }, record.key)
@@ -249,7 +249,7 @@ class Roles extends Component<Props, State> {
                 keys.push(key);
                 this.setState({ changedKeys: keys });
             }
-        }
+        };
 
         return (
             <Form
@@ -281,16 +281,22 @@ class Roles extends Component<Props, State> {
                         <Space size="middle" className="actions-expanded">
                             {this.state.changedKeys.includes(record.key) ? (
                                 <Popconfirm
-                                    title={t("cancel_edit_role")}
+                                    title={t('cancel_edit_role')}
                                     placement="leftTop"
                                     onConfirm={() => cancelEdit(record.key)}
                                 >
-                                    <Button size="middle"><Trans i18nKey="cancel" /></Button>
+                                    <Button size="middle">
+                                        <Trans i18nKey="cancel" />
+                                    </Button>
                                 </Popconfirm>
                             ) : (
-                                <Button size="middle" onClick={() => cancelEdit(record.key)}><Trans i18nKey="cancel" /></Button>
+                                <Button size="middle" onClick={() => cancelEdit(record.key)}>
+                                    <Trans i18nKey="cancel" />
+                                </Button>
                             )}
-                            <Button size="middle" type="primary" htmlType="submit"><Trans i18nKey="save" /></Button>
+                            <Button size="middle" type="primary" htmlType="submit">
+                                <Trans i18nKey="save" />
+                            </Button>
                         </Space>
                     )}
                 </Card>
@@ -327,8 +333,7 @@ class Roles extends Component<Props, State> {
                 nameText = nameText.replace('_', ' ');
                 nameText = nameText[0].toUpperCase() + nameText.slice(1);
                 editForm.setFieldsValue({ [dataIndex]: nameText });
-            }
-            else {
+            } else {
                 editForm.setFieldsValue({ [dataIndex]: record[dataIndex] });
             }
         };
@@ -373,22 +378,48 @@ class Roles extends Component<Props, State> {
                             rules={[
                                 {
                                     required: true,
-                                    message: <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == `${title} is required`)} />,
+                                    message: (
+                                        <Trans
+                                            i18nKey={Object.keys(EN_US).filter(
+                                                (elem) => EN_US[elem] == `${title} is required`
+                                            )}
+                                        />
+                                    ),
                                 },
                             ]}
                         >
-                            <Input ref={inputRef} onPressEnter={saveName} suffix={
-                                <>
-                                    <Button icon={<CloseOutlined />} size="small" onClick={cancelName} className="cell-input-cancel" />
-                                    <Button icon={<CheckOutlined />} size="small" onClick={saveName} type="primary" className="cell-input-save" />
-                                </>
-                            } />
+                            <Input
+                                ref={inputRef}
+                                onPressEnter={saveName}
+                                suffix={
+                                    <>
+                                        <Button
+                                            icon={<CloseOutlined />}
+                                            size="small"
+                                            onClick={cancelName}
+                                            className="cell-input-cancel"
+                                        />
+                                        <Button
+                                            icon={<CheckOutlined />}
+                                            size="small"
+                                            onClick={saveName}
+                                            type="primary"
+                                            className="cell-input-save"
+                                        />
+                                    </>
+                                }
+                            />
                         </Form.Item>
                     ) : (
                         <div className="editable-cell-value-wrap">
                             {children}
                             {isShown && (
-                                <Button size="small" type="link" icon={<EditOutlined className="cell-edit-icon" />} onClick={toggleEditName} />
+                                <Button
+                                    size="small"
+                                    type="link"
+                                    icon={<EditOutlined className="cell-edit-icon" />}
+                                    onClick={toggleEditName}
+                                />
                             )}
                         </div>
                     )
@@ -437,7 +468,9 @@ class Roles extends Component<Props, State> {
                 content: (
                     <>
                         <WarningOutlined className="delete-icon" />
-                        <span className="ant-modal-confirm-title"><Trans i18nKey="delete_role_title" /></span>
+                        <span className="ant-modal-confirm-title">
+                            <Trans i18nKey="delete_role_title" />
+                        </span>
                         <Trans i18nKey="delete_role_content" />
                     </>
                 ),
@@ -474,7 +507,7 @@ class Roles extends Component<Props, State> {
                     ref={(node) => {
                         this.searchInput = node;
                     }}
-                    placeholder={t('search') + ' '+ t(dataIndex+'_col')}
+                    placeholder={t('search') + ' ' + t(dataIndex + '_col')}
                     value={selectedKeys[0]}
                     onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
                     onPressEnter={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
@@ -486,17 +519,17 @@ class Roles extends Component<Props, State> {
                         icon={<SearchOutlined />}
                         onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
                     >
-                        <Trans i18nKey='search' />
+                        <Trans i18nKey="search" />
                     </Button>
                     <Button size="small" onClick={() => this.handleReset(clearFilters)}>
-                        <Trans i18nKey='reset' />
+                        <Trans i18nKey="reset" />
                     </Button>
                     <Button
                         type="link"
                         size="small"
                         onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex, true)}
                     >
-                        <Trans i18nKey='filter' />
+                        <Trans i18nKey="filter" />
                     </Button>
                 </Space>
             </div>
@@ -575,7 +608,7 @@ class Roles extends Component<Props, State> {
                             className={expandedKeys.includes(record.key) ? 'table-actions editable' : 'table-actions'}
                         >
                             <Link onClick={() => this.toggleEdit(record.key)}>
-                                <KeyOutlined /> <Trans i18nKey='permissions.label' />
+                                <KeyOutlined /> <Trans i18nKey="permissions.label" />
                             </Link>
                             {record.key != 1 && record.key != 2 && (
                                 <Popconfirm
@@ -655,7 +688,9 @@ class Roles extends Component<Props, State> {
                             <Input placeholder={t('name.label')} />
                         </Form.Item>
                         <div className="ant-col ant-form-item-label">
-                            <label><Trans i18nKey="permissions.label" /></label>
+                            <label>
+                                <Trans i18nKey="permissions.label" />
+                            </label>
                         </div>
                         <div className="bordered-card">
                             {Object.keys(allPrivileges).map((group) => (

@@ -27,7 +27,7 @@ import { t } from 'i18next';
 
 import languages from './Languages';
 import { INSTALLER_FEATURE } from '../constants';
-import LocaleService from "../services/locale.service";
+import LocaleService from '../services/locale.service';
 
 const { Header } = Layout;
 const { Text, Paragraph } = Typography;
@@ -124,7 +124,7 @@ class AppHeader extends Component<Props, State> {
                             <Link to={'/'}>
                                 <img className="header-logo-image" src="/images/logo_01.png" alt="Logo" />
                             </Link>
-                            <Space size='large'>
+                            <Space size="large">
                                 {dropdownLang}
                                 {!INSTALLER_FEATURE && (
                                     <>
@@ -140,7 +140,7 @@ class AppHeader extends Component<Props, State> {
                         </Paragraph>
                     ) : (
                         <Row align="middle">
-                            <Col span={14} offset={5} className='text-center'>
+                            <Col span={14} offset={5} className="text-center">
                                 <Input
                                     className="search-input"
                                     size="middle"
@@ -150,12 +150,12 @@ class AppHeader extends Component<Props, State> {
                                     bordered={false}
                                 />
                             </Col>
-                            <Col span={5} className='text-end'>
-                                <Space size='middle'>
+                            <Col span={5} className="text-end">
+                                <Space size="middle">
                                     {dropdownLang}
                                     <Dropdown
                                         overlay={menuProfile}
-                                        overlayClassName='profil-btn-dropdown'
+                                        overlayClassName="profil-btn-dropdown"
                                         placement={LocaleService.direction == 'rtl' ? 'bottomLeft' : 'bottomRight'}
                                         arrow
                                         trigger={['click']}

@@ -36,9 +36,7 @@ const AppSider = () => {
     const comp = useRef();
 
     useEffect(() => {
-        let ps = new Scrollbar(comp.current, {
-
-        });
+        let ps = new Scrollbar(comp.current, {});
         return () => {
             if (ps) {
                 ps.destroy();

@@ -56,7 +56,7 @@ export const Step2Form = (props: Props) => {
         setAddColor,
         setFile,
         fileList,
-        setFileList
+        setFileList,
     } = props;
 
     const normFile = (e: any) => {
@@ -69,7 +69,10 @@ export const Step2Form = (props: Props) => {
         let fileList: any = [...info.fileList];
         fileList = fileList.slice(-1);
         if (fileList[0] != undefined) {
-            const img = fileList[0].type === 'image/jpg' || fileList[0].type === 'image/jpeg' || fileList[0].type === 'image/png';
+            const img =
+                fileList[0].type === 'image/jpg' ||
+                fileList[0].type === 'image/jpeg' ||
+                fileList[0].type === 'image/png';
             if (img) {
                 setFileList(fileList);
                 setFile(fileList[0]);
