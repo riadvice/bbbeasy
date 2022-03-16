@@ -21,6 +21,7 @@ import React from 'react';
 import { Button, Form, Typography, Card, Modal, Switch, Alert, Tooltip } from 'antd';
 import DynamicIcon from './DynamicIcon';
 import { Trans } from 'react-i18next';
+import LocaleService from '../services/locale.service';
 
 const { Title, Paragraph } = Typography;
 const { Grid, Meta } = Card;
@@ -70,7 +71,7 @@ export const Step3Form = (props: Props) => {
                 {presets.map((item) => (
                     <Tooltip
                         key={item.name}
-                        placement="rightTop"
+                        placement={LocaleService.direction == 'rtl' ? 'leftTop' : 'rightTop'}
                         overlayClassName="install-tooltip"
                         title={
                             <ul>

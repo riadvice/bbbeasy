@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Actions\Settings;
 
 use Actions\Base as BaseAction;
-use Base;
 use Enum\ResponseCode;
 use Models\Setting;
 use Respect\Validation\Validator;
@@ -35,8 +34,10 @@ use Validation\DataChecker;
 class SaveLogo extends BaseAction
 {
     /**
-     * @param Base  $f3
-     * @param array $params
+     * @param $f3
+     * @param $params
+     *
+     * @throws \JsonException
      */
     public function execute($f3, $params): void
     {
@@ -46,27 +47,32 @@ class SaveLogo extends BaseAction
          */
         $form        = $f3->get('POST');
         $dataChecker = new DataChecker();
-
-        $dataChecker->verify($form['logo_name'], Validator::notEmpty()->setName('logo_name'));
         // if files not empty
+        $dataChecker->verify($form['logo_name'], Validator::notEmpty()->setName('logo_name'));
 
         if ($dataChecker->allValid()) {
-            // verif format file
-            // correct
-            \Web::instance()->receive();
-            $setting        = new Setting();
-            $settings       = $setting->find([], ['limit' => 1])->current();
-            $settings->logo = $form['logo_name'];
+            // verify format file
+            $format       = $f3->get('FILES')['logo']['type'];
+            $validFormats = ['image/jpg', 'image/jpeg', 'image/png'];
+            if (\in_array($format, $validFormats, true)) {
+                // correct
+                \Web::instance()->receive();
+                $setting        = new Setting();
+                $settings       = $setting->find([], ['limit' => 1])->current();
+                $settings->logo = $form['logo_name'];
 
-            try {
-                $settings->save();
-                $this->logger->info('Initial application setup : Update settings logo', ['setting' => $settings->toArray()]);
-            } catch (\Exception $e) {
-                $message = $e->getMessage();
-                $this->logger->info('Initial application setup : Logo could not be updated', ['error' => $message]);
-                $this->renderJson(['errors' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+                try {
+                    $settings->save();
+                    $this->logger->info('Initial application setup : Update settings logo', ['setting' => $settings->toArray()]);
+                } catch (\Exception $e) {
+                    $message = $e->getMessage();
+                    $this->logger->info('Initial application setup : Logo could not be updated', ['error' => $message]);
+                    $this->renderJson(['errors' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
 
-                return;
+                    return;
+                }
+            } else {
+                $this->logger->error('Initial application setup : Logo could not be updated', ['error' => 'invalid file format : ' . $format]);
             }
         }
     }

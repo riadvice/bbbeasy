@@ -38,6 +38,8 @@ type Props = {
     setAccentColor: any;
     setAddColor: any;
     setFile: any;
+    fileList: any;
+    setFileList: any;
 };
 
 export const Step2Form = (props: Props) => {
@@ -53,8 +55,9 @@ export const Step2Form = (props: Props) => {
         setAccentColor,
         setAddColor,
         setFile,
+        fileList,
+        setFileList,
     } = props;
-    const [fileList, setFileList] = React.useState();
 
     const normFile = (e: any) => {
         if (Array.isArray(e)) {
@@ -65,11 +68,15 @@ export const Step2Form = (props: Props) => {
     const handleChangeFile = (info: any) => {
         let fileList: any = [...info.fileList];
         fileList = fileList.slice(-1);
-        const img =
-            fileList[0].type === 'image/jpg' || fileList[0].type === 'image/jpeg' || fileList[0].type === 'image/png';
-        if (img) {
-            setFileList(fileList);
-            setFile(fileList[0]);
+        if (fileList[0] != undefined) {
+            const img =
+                fileList[0].type === 'image/jpg' ||
+                fileList[0].type === 'image/jpeg' ||
+                fileList[0].type === 'image/png';
+            if (img) {
+                setFileList(fileList);
+                setFile(fileList[0]);
+            }
         }
     };
 
@@ -176,12 +183,10 @@ export const Step2Form = (props: Props) => {
                     <Form.Item valuePropName="fileList" getValueFromEvent={normFile} noStyle>
                         <Dragger
                             name="logo"
-                            showUploadList={{ showRemoveIcon: false }}
+                            multiple={false}
+                            showUploadList={{ showRemoveIcon: true }}
                             fileList={fileList}
                             accept=".png,.jpg,.jpeg"
-                            onChange={(info) => {
-                                handleChangeFile(info);
-                            }}
                             beforeUpload={(file: RcFile) => {
                                 if (
                                     file.type === 'image/jpg' ||
@@ -193,6 +198,13 @@ export const Step2Form = (props: Props) => {
                                 }
                                 message.error(t('wrong_file'));
                                 return null;
+                            }}
+                            onChange={(info) => {
+                                handleChangeFile(info);
+                            }}
+                            onRemove={() => {
+                                setFileList(null);
+                                setFile(null);
                             }}
                         >
                             <p className="ant-upload-drag-icon">

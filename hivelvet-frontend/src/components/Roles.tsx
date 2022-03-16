@@ -29,10 +29,14 @@ import {
     EditOutlined,
     KeyOutlined,
     WarningOutlined,
+    CloseOutlined,
+    CheckOutlined,
 } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words/dist/main';
 import { FormInstance } from 'antd/lib/form';
-import { T } from '@transifex/react';
+import { Trans, withTranslation } from 'react-i18next';
+import { t } from 'i18next';
+import EN_US from '../locale/en-US.json';
 
 const { Paragraph, Link } = Typography;
 
@@ -64,6 +68,7 @@ type Props = {};
 type State = {
     data?: any[];
     expandedKeys?: number[];
+    changedKeys?: number[];
     pagination?: PaginationType;
     loading?: boolean;
 
@@ -94,6 +99,7 @@ class Roles extends Component<Props, State> {
             isModalVisible: false,
 
             expandedKeys: [],
+            changedKeys: [],
             searchText: '',
             searchedColumn: '',
         };
@@ -138,7 +144,7 @@ class Roles extends Component<Props, State> {
 
     openNotificationWithIcon = (type, message) => {
         notification[type]({
-            message: type[0].toUpperCase() + type.slice(1),
+            message: t(type + '-title'),
             description: message,
         });
     };
@@ -157,7 +163,7 @@ class Roles extends Component<Props, State> {
                 });
                 const result = response.data;
                 const newRowData: Item = result.role;
-                this.openNotificationWithIcon('success', 'Role successfully added');
+                this.openNotificationWithIcon('success', t('add_role_success'));
                 //delete data of form
                 this.addForm?.resetFields();
                 //add data to table
@@ -188,7 +194,7 @@ class Roles extends Component<Props, State> {
     editRow = (response, key) => {
         const result = response.data;
         const newRowData = result.role;
-        this.openNotificationWithIcon('success', 'Role successfully updated');
+        this.openNotificationWithIcon('success', t('edit_role_success'));
         const newData = [...this.state.data];
         const index = newData.findIndex((item) => key === item.key);
         if (index > -1 && newRowData != undefined) {
@@ -211,35 +217,52 @@ class Roles extends Component<Props, State> {
         }
         this.setState({ expandedKeys: keys });
     };
-    cancelEdit = (key: React.Key) => {
-        this.setState({
-            expandedKeys: this.state.expandedKeys.filter((item) => item !== key),
-        });
-    };
-    saveEdit = (formValues, key: React.Key) => {
-        RolesService.edit_role({ permissions: formValues }, key)
-            .then((response) => {
-                this.editRow(response, key);
-                this.setState({
-                    expandedKeys: this.state.expandedKeys.filter((item) => item !== key),
-                });
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    };
     expandedRowRender = (record) => {
         const { allPrivileges } = this.state;
         const permissionsChecked = record.permissions;
 
+        const cancelEdit = (key: React.Key) => {
+            this.setState({
+                expandedKeys: this.state.expandedKeys.filter((item) => item !== key),
+            });
+        };
+        const saveEdit = (formValues, key) => {
+            let keys = [...this.state.changedKeys];
+            if (keys.includes(key)) {
+                keys = keys.filter((item) => item !== key);
+                this.setState({ changedKeys: keys });
+            }
+            RolesService.edit_role({ permissions: formValues }, record.key)
+                .then((response) => {
+                    this.editRow(response, record.key);
+                    this.setState({
+                        expandedKeys: this.state.expandedKeys.filter((item) => item !== record.key),
+                    });
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        };
+        const changeEdit = (key) => {
+            const keys = [...this.state.changedKeys];
+            if (!keys.includes(key)) {
+                keys.push(key);
+                this.setState({ changedKeys: keys });
+            }
+        };
+
         return (
-            <Form initialValues={permissionsChecked} onFinish={(values) => this.saveEdit(values, record.key)}>
+            <Form
+                initialValues={permissionsChecked}
+                onFinish={(values) => saveEdit(values, record.key)}
+                onChange={() => changeEdit(record.key)}
+            >
                 <Card bordered={false} className="card-parent">
                     <div className="bordered-card">
                         {Object.keys(allPrivileges).map((group) => (
                             <Card bordered={false} key={group} title={group} className="text-capitalize" type="inner">
                                 <Form.Item name={group}>
-                                    <Checkbox.Group>
+                                    <Checkbox.Group disabled={record.key == 1 && true}>
                                         <Row gutter={[32, 16]}>
                                             {allPrivileges[group].map((action) => (
                                                 <Col span={Object.keys(allPrivileges).length > 6 && 4} key={action}>
@@ -254,18 +277,28 @@ class Roles extends Component<Props, State> {
                             </Card>
                         ))}
                     </div>
-                    <Space size="middle" className="actions-expanded">
-                        <Popconfirm
-                            title="Sure to cancel edition ?"
-                            placement="leftTop"
-                            onConfirm={() => this.cancelEdit(record.key)}
-                        >
-                            <Button size="middle">Cancel</Button>
-                        </Popconfirm>
-                        <Button size="middle" type="primary" htmlType="submit">
-                            Save
-                        </Button>
-                    </Space>
+                    {record.key != 1 && (
+                        <Space size="middle" className="actions-expanded">
+                            {this.state.changedKeys.includes(record.key) ? (
+                                <Popconfirm
+                                    title={t('cancel_edit_role')}
+                                    placement="leftTop"
+                                    onConfirm={() => cancelEdit(record.key)}
+                                >
+                                    <Button size="middle">
+                                        <Trans i18nKey="cancel" />
+                                    </Button>
+                                </Popconfirm>
+                            ) : (
+                                <Button size="middle" onClick={() => cancelEdit(record.key)}>
+                                    <Trans i18nKey="cancel" />
+                                </Button>
+                            )}
+                            <Button size="middle" type="primary" htmlType="submit">
+                                <Trans i18nKey="save" />
+                            </Button>
+                        </Space>
+                    )}
                 </Card>
             </Form>
         );
@@ -283,6 +316,7 @@ class Roles extends Component<Props, State> {
         );
     };
     EditableCell: React.FC<EditableCellProps> = ({ title, editable, children, dataIndex, record, ...restProps }) => {
+        const [isShown, setIsShown] = useState(false);
         const [editing, setEditing] = useState(false);
         const inputRef = useRef(null);
         const [errorsEdit, setErrorsEdit] = React.useState({});
@@ -292,10 +326,19 @@ class Roles extends Component<Props, State> {
                 inputRef.current.focus();
             }
         }, [editing]);
-
         const toggleEditName = () => {
             setEditing(!editing);
-            editForm.setFieldsValue({ [dataIndex]: record[dataIndex] });
+            if (dataIndex == 'name') {
+                let nameText = record[dataIndex];
+                nameText = nameText.replace('_', ' ');
+                nameText = nameText[0].toUpperCase() + nameText.slice(1);
+                editForm.setFieldsValue({ [dataIndex]: nameText });
+            } else {
+                editForm.setFieldsValue({ [dataIndex]: record[dataIndex] });
+            }
+        };
+        const cancelName = () => {
+            setEditing(!editing);
         };
         const saveName = async () => {
             try {
@@ -321,7 +364,7 @@ class Roles extends Component<Props, State> {
         };
 
         return (
-            <td {...restProps}>
+            <td {...restProps} onMouseOver={() => setIsShown(true)} onMouseLeave={() => setIsShown(false)}>
                 {editable ? (
                     editing ? (
                         <Form.Item
@@ -335,16 +378,49 @@ class Roles extends Component<Props, State> {
                             rules={[
                                 {
                                     required: true,
-                                    message: <T _str={`${title} is required.`} />,
+                                    message: (
+                                        <Trans
+                                            i18nKey={Object.keys(EN_US).filter(
+                                                (elem) => EN_US[elem] == `${title} is required`
+                                            )}
+                                        />
+                                    ),
                                 },
                             ]}
                         >
-                            <Input ref={inputRef} onPressEnter={saveName} />
+                            <Input
+                                ref={inputRef}
+                                onPressEnter={saveName}
+                                suffix={
+                                    <>
+                                        <Button
+                                            icon={<CloseOutlined />}
+                                            size="small"
+                                            onClick={cancelName}
+                                            className="cell-input-cancel"
+                                        />
+                                        <Button
+                                            icon={<CheckOutlined />}
+                                            size="small"
+                                            onClick={saveName}
+                                            type="primary"
+                                            className="cell-input-save"
+                                        />
+                                    </>
+                                }
+                            />
                         </Form.Item>
                     ) : (
                         <div className="editable-cell-value-wrap">
                             {children}
-                            <Button size="small" type="link" icon={<EditOutlined />} onClick={toggleEditName} />
+                            {isShown && (
+                                <Button
+                                    size="small"
+                                    type="link"
+                                    icon={<EditOutlined className="cell-edit-icon" />}
+                                    onClick={toggleEditName}
+                                />
+                            )}
                         </div>
                     )
                 ) : (
@@ -377,7 +453,7 @@ class Roles extends Component<Props, State> {
                     data: newData.filter((item) => item.key !== key),
                     loading: false,
                 });
-                this.openNotificationWithIcon('success', 'Role successfully deleted');
+                this.openNotificationWithIcon('success', t('delete_role_success'));
             })
             .catch((error) => {
                 console.log(error);
@@ -392,13 +468,15 @@ class Roles extends Component<Props, State> {
                 content: (
                     <>
                         <WarningOutlined className="delete-icon" />
-                        <span className="ant-modal-confirm-title">Do you Want to delete this role ?</span>
-                        <T _str="This role already has users assigned, if you confirm all users switch to role Lecturer" />
+                        <span className="ant-modal-confirm-title">
+                            <Trans i18nKey="delete_role_title" />
+                        </span>
+                        <Trans i18nKey="delete_role_content" />
                     </>
                 ),
                 okType: 'danger',
-                okText: <T _str="Yes" />,
-                cancelText: <T _str="No" />,
+                okText: <Trans i18nKey="confirm_yes" />,
+                cancelText: <Trans i18nKey="confirm_no" />,
                 onOk: () => this.deleteRole(key, nbUsers),
             });
         } else {
@@ -429,7 +507,7 @@ class Roles extends Component<Props, State> {
                     ref={(node) => {
                         this.searchInput = node;
                     }}
-                    placeholder={`Search ${dataIndex}`}
+                    placeholder={t('search') + ' ' + t(dataIndex + '_col')}
                     value={selectedKeys[0]}
                     onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
                     onPressEnter={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
@@ -441,17 +519,17 @@ class Roles extends Component<Props, State> {
                         icon={<SearchOutlined />}
                         onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
                     >
-                        Search
+                        <Trans i18nKey="search" />
                     </Button>
                     <Button size="small" onClick={() => this.handleReset(clearFilters)}>
-                        Reset
+                        <Trans i18nKey="reset" />
                     </Button>
                     <Button
                         type="link"
                         size="small"
                         onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex, true)}
                     >
-                        Filter
+                        <Trans i18nKey="filter" />
                     </Button>
                 </Space>
             </div>
@@ -493,14 +571,18 @@ class Roles extends Component<Props, State> {
 
         const columns = [
             {
-                title: 'Name',
+                title: t('name_col'),
                 dataIndex: 'name',
                 editable: true,
                 width: '35%',
                 ...this.getColumnSearchProps('name'),
+                sorter: {
+                    compare: (a, b) => a.name.localeCompare(b.name),
+                    multiple: 2,
+                },
             },
             {
-                title: 'N◦ Users',
+                title: t('users_col'),
                 dataIndex: 'users',
                 editable: false,
                 render: (users) => {
@@ -511,9 +593,13 @@ class Roles extends Component<Props, State> {
                         </Space>
                     );
                 },
+                sorter: {
+                    compare: (a, b) => a.users - b.users,
+                    multiple: 1,
+                },
             },
             {
-                title: 'Actions',
+                title: t('actions_col'),
                 editable: false,
                 render: (text, record) => {
                     return (
@@ -521,19 +607,17 @@ class Roles extends Component<Props, State> {
                             size="middle"
                             className={expandedKeys.includes(record.key) ? 'table-actions editable' : 'table-actions'}
                         >
-                            {record.key != 1 && (
-                                <Link onClick={() => this.toggleEdit(record.key)}>
-                                    <KeyOutlined /> Permissions
-                                </Link>
-                            )}
+                            <Link onClick={() => this.toggleEdit(record.key)}>
+                                <KeyOutlined /> <Trans i18nKey="permissions.label" />
+                            </Link>
                             {record.key != 1 && record.key != 2 && (
                                 <Popconfirm
-                                    title="Are you sure to delete this role ?"
+                                    title={t('delete_role_confirm')}
                                     icon={<QuestionCircleOutlined className="red-icon" />}
                                     onConfirm={() => this.handleDelete(record.key, record.users)}
                                 >
                                     <Link>
-                                        <DeleteOutlined /> Delete
+                                        <DeleteOutlined /> <Trans i18nKey="delete" />
                                     </Link>
                                 </Popconfirm>
                             )}
@@ -561,16 +645,16 @@ class Roles extends Component<Props, State> {
             <>
                 <PageHeader
                     className="site-page-header"
-                    title={<T _str="Roles" />}
+                    title={<Trans i18nKey="roles" />}
                     extra={[
                         <Button key="1" type="primary" onClick={this.toggleAdd}>
-                            <T _str="New Role" />
+                            <Trans i18nKey="new_role" />
                         </Button>,
                     ]}
                 />
 
                 <Modal
-                    title={<T _str="New Role" />}
+                    title={<Trans i18nKey="new_role" />}
                     className="roles-modal"
                     centered
                     visible={isModalVisible}
@@ -588,7 +672,7 @@ class Roles extends Component<Props, State> {
                         validateTrigger="onSubmit"
                     >
                         <Form.Item
-                            label={<T _str="Name" />}
+                            label={<Trans i18nKey="name.label" />}
                             name="name"
                             {...('name' in errorsAdd && {
                                 help: errorsAdd['name'],
@@ -597,14 +681,16 @@ class Roles extends Component<Props, State> {
                             rules={[
                                 {
                                     required: true,
-                                    message: <T _str="Name is required" />,
+                                    message: <Trans i18nKey="name.required" />,
                                 },
                             ]}
                         >
-                            <Input placeholder="Name" />
+                            <Input placeholder={t('name.label')} />
                         </Form.Item>
                         <div className="ant-col ant-form-item-label">
-                            <label>Permissions</label>
+                            <label>
+                                <Trans i18nKey="permissions.label" />
+                            </label>
                         </div>
                         <div className="bordered-card">
                             {Object.keys(allPrivileges).map((group) => (
@@ -633,10 +719,10 @@ class Roles extends Component<Props, State> {
                         </div>
                         <Form.Item className="modal-submit-btn button-container">
                             <Button type="text" className="cancel-btn prev" block onClick={this.cancelAdd}>
-                                <T _str="Cancel" />
+                                <Trans i18nKey="cancel" />
                             </Button>
                             <Button type="primary" htmlType="submit" block>
-                                <T _str="Create" />
+                                <Trans i18nKey="create" />
                             </Button>
                         </Form.Item>
                     </Form>
@@ -668,4 +754,4 @@ class Roles extends Component<Props, State> {
     }
 }
 
-export default Roles;
+export default withTranslation()(Roles);

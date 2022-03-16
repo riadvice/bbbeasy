@@ -32,8 +32,7 @@ if (!INSTALLER_FEATURE) {
         </BrowserRouter>,
         document.getElementById('root')
     );
-}
-else {
+} else {
     ReactDOM.render(
         <BrowserRouter>
             <InstallApp />

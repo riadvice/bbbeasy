@@ -37,8 +37,10 @@ class Add extends BaseAction
     use RequirePrivilegeTrait;
 
     /**
-     * @param \Base $f3
-     * @param array $params
+     * @param $f3
+     * @param $params
+     *
+     * @throws \JsonException
      */
     public function save($f3, $params): void
     {
@@ -49,14 +51,12 @@ class Add extends BaseAction
         $dataChecker->verify($form['name'], Validator::notEmpty()->setName('name'));
 
         if ($dataChecker->allValid()) {
-            $role = new Role();
-            $name = str_replace(' ', '_', mb_strtolower($form['name']));
-            if ($role->nameExists($name)) {
+            $role       = new Role();
+            $role->name = $form['name'];
+            if ($role->nameExists($role->name)) {
                 $this->logger->error('Role could not be added', ['error' => 'Name already exist']);
                 $this->renderJson(['errors' => ['name' => 'Name already exist']], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
             } else {
-                $role->name = $name;
-
                 try {
                     $result = $role->saveRoleAndPermissions($form['permissions']);
                     if (ResponseCode::HTTP_OK !== $result) {

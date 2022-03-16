@@ -146,5 +146,32 @@
     "user_dropdown": {
         "profile": "Profil",
         "logout": "Se déconnecter"
-    }
+    },
+
+    "name_col": "Nom",
+    "users_col": "N◦ Utilisateurs",
+    "actions_col": "Actions",
+    "new_role": "Nouveau rôle",
+    "name": {
+        "label": "Nom",
+        "required": "Le nom est requis"
+    },
+    "permissions": {
+        "label": "Permissions"
+    },
+    "search": "Chercher",
+    "reset": "Réinitialiser",
+    "filter": "Filtrer",
+    "cancel": "Annuler",
+    "save": "Sauvegarder",
+    "add_role_success": "Rôle ajouté avec succès",
+    "cancel_edit_role": "Vous êtes sûr d'annuler l'édition ?",
+    "edit_role_success": "Rôle mis à jour avec succès",
+    "delete": "Supprimer",
+    "delete_role_confirm": "Êtes-vous sûr de vouloir supprimer ce rôle ?",
+    "delete_role_title": "Voulez-vous supprimer ce rôle ?",
+    "delete_role_content": "Ce rôle a déjà des utilisateurs affectés, si vous confirmez, tous les utilisateurs passent au rôle Lecteur",
+    "delete_role_success": "Rôle supprimé avec succès",
+    "confirm_yes": "Oui",
+    "confirm_no": "Non"
 }

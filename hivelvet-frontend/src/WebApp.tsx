@@ -52,8 +52,6 @@ import { withTranslation } from 'react-i18next';
 
 const { Content } = Layout;
 
-Logger.info('Initialisation Hivelvet Webapp Application');
-
 type State = {
     currentUser?: any;
     isLogged?: boolean;
@@ -68,6 +66,7 @@ class WebApp extends Component<Props, State> {
             isLogged: false,
             language: LocaleService.language,
         };
+        Logger.info('Initialisation Hivelvet Webapp Application');
     }
 
     componentDidMount = () => {
@@ -99,16 +98,15 @@ class WebApp extends Component<Props, State> {
                     direction={LocaleService.direction}
                     componentSize="large"
                 >
-                    <AppHeader
-                        currentUser={currentUser}
-                        currentLocale={language}
-                        setLang={this.setLang}
-                        isLogged={isLogged}
-                        setUser={this.setUser}
-                    />
-
-                    <Layout>
-                        {isLogged && <AppSider />}
+                    {isLogged && <AppSider />}
+                    <Layout className="page-layout-body">
+                        <AppHeader
+                            currentUser={currentUser}
+                            currentLocale={language}
+                            setLang={this.setLang}
+                            isLogged={isLogged}
+                            setUser={this.setUser}
+                        />
                         <Content className="site-content">
                             <Routes>
                                 <Route path="*" element={<PageNotFound />} />
@@ -172,8 +170,8 @@ class WebApp extends Component<Props, State> {
                                 />
                             </Routes>
                         </Content>
+                        <AppFooter />
                     </Layout>
-                    <AppFooter />
                 </ConfigProvider>
                 <BackTop>
                     <Button type="primary" shape="circle" icon={<CaretUpOutlined />} />

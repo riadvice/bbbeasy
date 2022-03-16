@@ -41,8 +41,6 @@ import { withTranslation } from 'react-i18next';
 
 const { Content } = Layout;
 
-Logger.info('Initialisation Hivelvet Installer Application');
-
 type State = {
     currentUser?: any;
     isLogged?: boolean;
@@ -57,6 +55,7 @@ class InstallApp extends Component<Props, State> {
             isLogged: false,
             language: LocaleService.language,
         };
+        Logger.info('Initialisation Hivelvet Installer Application');
     }
 
     componentDidMount = () => {
