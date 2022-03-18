@@ -156,6 +156,8 @@
         "label": "Name",
         "required": "Name is required"
     },
+    "required_name" : "Name is required",
+    "exist_name" : "Name already exist",
     "permissions": {
         "label": "Permissions"
     },
@@ -165,7 +167,7 @@
     "cancel": "Cancel",
     "save": "Save",
     "add_role_success": "Role successfully added",
-    "cancel_edit_role": "Sure to cancel edition ?",
+    "cancel_edit": "Sure to cancel edition ?",
     "edit_role_success": "Role successfully updated",
     "delete": "Delete",
     "delete_role_confirm": "Are you sure to delete this role ?",
@@ -173,5 +175,26 @@
     "delete_role_content": "This role already has users assigned, if you confirm all users switch to role Lecturer",
     "delete_role_success": "Role successfully deleted",
     "confirm_yes": "Yes",
-    "confirm_no": "No"
+    "confirm_no": "No",
+
+    "username_col": "Username",
+    "email_col": "Email",
+    "role_col": "Role",
+    "status_col": "State",
+    "new_user": "New User",
+    "role": {
+        "label": "Role",
+        "required": "Please select a role",
+        "placeholder": "Select a role"
+    },
+    "edit": "Edit",
+    "add_user_success": "User successfully added",
+    "edit_user_success": "User successfully updated",
+    "delete_user_confirm": "Are you sure to delete this user ?",
+    "delete_user_success": "User successfully deleted",
+
+    "active": "Active",
+    "inactive": "Inactive",
+    "pending": "Pending",
+    "deleted": "Deleted"
 }
