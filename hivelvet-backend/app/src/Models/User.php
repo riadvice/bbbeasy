@@ -128,4 +128,25 @@ class User extends BaseModel
     {
         return password_verify(trim($password), $this->password);
     }
+
+    public function getAllUsers()
+    {
+        $data  = [];
+        $users = $this->find([], ['order' => 'id']);
+        if ($users) {
+            foreach ($users as $user) {
+                /** @var Role $role */
+                $role = $user->role_id;
+                $data[] = [
+                    'key'       => $user->id,
+                    'username'  => $user->username,
+                    'email'  => $user->email,
+                    'status'  => $user->status,
+                    'role'  => [$role->id => $role->name],
+                ];
+            }
+        }
+
+        return $data;
+    }
 }

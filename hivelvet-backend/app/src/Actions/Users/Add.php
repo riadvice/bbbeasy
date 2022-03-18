@@ -26,7 +26,9 @@ use Actions\Base as BaseAction;
 use Actions\RequirePrivilegeTrait;
 use Enum\ResponseCode;
 use Enum\UserStatus;
+use Models\Role;
 use Models\User;
+use Respect\Validation\Validator;
 use Validation\DataChecker;
 
 /**
@@ -42,33 +44,60 @@ class Add extends BaseAction
      */
     public function save($f3, $params): void
     {
-        $v    = new DataChecker();
-        $form = $this->getDecodedBody();
-        $user = new User();
+        $body        = $this->getDecodedBody();
+        $form        = $body['data'];
+        $dataChecker = new DataChecker();
 
-        $v->notEmpty()->verify('email', $form['email'], ['notEmpty' => $this->i18n->err('users.email')]);
-        $v->notEmpty()->verify('username', $form['username'], ['notEmpty' => $this->i18n->err('users.username')]);
-        $v->notEmpty()->verify('password', $form['password'], ['notEmpty' => $this->i18n->err('users.password')]);
-        $v->notEmpty()->verify('role', $form['role'], ['notEmpty' => $this->i18n->err('users.role')]);
+        $dataChecker->verify($form['username'], Validator::length(4)->setName('username'));
+        $dataChecker->verify($form['email'], Validator::email()->setName('email'));
+        $dataChecker->verify($form['password'], Validator::length(4)->setName('password'));
+        $dataChecker->verify($form['role'], Validator::notEmpty()->setName('role'));
 
-        if ($v->allValid()) {
-            $user->email    = $form['email'];
-            $user->username = $form['username'];
-            $user->password = $form['password'];
-            $user->role     = $form['role'];
-            $user->status   = UserStatus::ACTIVE;
+        if ($dataChecker->allValid()) {
+            $user = new User();
 
-            try {
-                $user->save();
-            } catch (\Exception $e) {
-                $this->renderJson(['errors' => $e->getMessage()], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+            $usernameExist = $user->load(['username = ?', $form['username']]);
+            $emailExist    = $user->load(['email = ?', $form['email']]);
 
-                return;
+            if ($usernameExist || $emailExist) {
+                $message = ($usernameExist && $emailExist) ? 'username and email already exist' : ($usernameExist ? 'username already exist' : 'email already exist');
+                $this->logger->error('User could not be added', ['error' => $message]);
+                $this->renderJson(['message' => $message], ResponseCode::HTTP_BAD_REQUEST);
+            } else {
+                $role = new Role();
+                $role->load(['id = ?', [$form['role']]]);
+                if ($role->valid()) {
+                    $user->email    = $form['email'];
+                    $user->username = $form['username'];
+                    $user->password = $form['password'];
+                    $user->role_id  = $role->id;
+                    $user->status   = UserStatus::PENDING;
+
+                    try {
+                        $user->save();
+                    } catch (\Exception $e) {
+                        $message = 'user could not be added';
+                        $this->logger->error('Registration error : user could not be added', ['user' => $user->toArray(), 'error' => $e->getMessage()]);
+                        $this->renderJson(['message' => $message], ResponseCode::HTTP_BAD_REQUEST);
+
+                        return;
+                    }
+
+                    $result = [
+                        'key'       => $user->id,
+                        'username'  => $user->username,
+                        'email'  => $user->email,
+                        'status'  => $user->status,
+                        'role'  => [$role->id => $role->name],
+                    ];
+
+                    $this->logger->info('User successfully added', ['user' => $user->toArray()]);
+                    $this->renderJson(['result' => 'success', 'user' => $result]);
+                }
             }
-
-            $this->renderJson(['data' => $user->toArray()]);
         } else {
-            $this->renderJson(['errors' => $v->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
+            $this->logger->error('Add user error', ['errors' => $dataChecker->getErrors()]);
+            $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_BAD_REQUEST);
         }
     }
 }

@@ -38,6 +38,7 @@ import ChangePassword from './components/ChangePassword';
 
 import Home from './components/Home';
 import Roles from './components/Roles';
+import Users from './components/Users';
 
 import 'moment/locale/fr';
 import 'moment/locale/ar';
@@ -165,6 +166,15 @@ class WebApp extends Component<Props, State> {
                                     element={
                                         <PrivateRoute>
                                             <Roles />
+                                        </PrivateRoute>
+                                    }
+                                />
+
+                                <Route
+                                    path="/settings/users"
+                                    element={
+                                        <PrivateRoute>
+                                            <Users />
                                         </PrivateRoute>
                                     }
                                 />

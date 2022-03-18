@@ -1,8 +1,4 @@
-<?php
-
-declare(strict_types=1);
-
-/*
+/**
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -20,26 +16,34 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Actions\Users;
+import axios from 'axios';
 
-use Actions\Base as BaseAction;
-use Base;
-use Models\User;
+const API_URL = process.env.REACT_APP_API_URL;
 
-/**
- * Class Index.
- */
-class Index extends BaseAction
-{
-    /**
-     * @param Base  $f3
-     * @param array $params
-     */
-    public function show($f3, $params): void
-    {
-        $user   = new User();
-        $users  = $user->getAllUsers();
-        $this->logger->debug('collecting users', ['users' => json_encode($users)]);
-        $this->renderJson($users);
+class RolesService {
+    list_users() {
+        return axios.get(API_URL + '/users/list');
+    }
+
+    list_roles() {
+        return axios.get(API_URL + '/roles/collect');
+    }
+
+    add_user(data: object) {
+        return axios.post(API_URL + '/users/add', {
+            data,
+        });
+    }
+
+    edit_user(data: object, id) {
+        return axios.put(API_URL + '/users/edit/' + id, {
+            data,
+        });
+    }
+
+    delete_user(id: number) {
+        return axios.delete(API_URL + '/users/delete/' + id);
     }
 }
+
+export default new RolesService();

@@ -20,26 +20,33 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Actions\Users;
+namespace Actions\Roles;
 
 use Actions\Base as BaseAction;
-use Base;
-use Models\User;
+use Models\Role;
 
 /**
- * Class Index.
+ * Class Collect.
  */
-class Index extends BaseAction
+class Collect extends BaseAction
 {
     /**
-     * @param Base  $f3
+     * @param \Base $f3
      * @param array $params
      */
-    public function show($f3, $params): void
+    public function execute($f3, $params): void
     {
-        $user   = new User();
-        $users  = $user->getAllUsers();
-        $this->logger->debug('collecting users', ['users' => json_encode($users)]);
-        $this->renderJson($users);
+        $role  = new Role();
+        $roles = $role->find();
+        if ($roles) {
+            $rolesData = [];
+            foreach ($roles as $role) {
+                $rolesData[$role->id] = $role->name;
+            }
+        } else {
+            $rolesData = (object) [];
+        }
+        $this->logger->debug('Collecting roles for manage users');
+        $this->renderJson(['roles' => $rolesData]);
     }
 }
