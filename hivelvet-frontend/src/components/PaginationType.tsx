@@ -16,34 +16,9 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import axios from 'axios';
+type PaginationType = {
+    current?: number;
+    pageSize?: number;
+};
 
-const API_URL = process.env.REACT_APP_API_URL;
-
-class RolesService {
-    list_roles() {
-        return axios.get(API_URL + '/roles/list');
-    }
-
-    list_permissions() {
-        return axios.get(API_URL + '/roles/collect-privileges');
-    }
-
-    add_role(data: object) {
-        return axios.post(API_URL + '/roles/add', {
-            data,
-        });
-    }
-
-    edit_role(data: object, id) {
-        return axios.put(API_URL + '/roles/edit/' + id, {
-            data,
-        });
-    }
-
-    delete_role(id: number) {
-        return axios.delete(API_URL + '/roles/delete/' + id);
-    }
-}
-
-export default new RolesService();
+export default PaginationType;

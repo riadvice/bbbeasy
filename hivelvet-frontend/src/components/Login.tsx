@@ -148,10 +148,6 @@ class Login extends Component<Props, State> {
                             <Form.Item
                                 label={<Trans i18nKey="email.label" />}
                                 name="email"
-                                {...('email' in errors && {
-                                    help: errors['email'],
-                                    validateStatus: 'error',
-                                })}
                                 rules={[
                                     {
                                         type: 'email',
@@ -168,10 +164,6 @@ class Login extends Component<Props, State> {
                             <Form.Item
                                 label={<Trans i18nKey="password.label" />}
                                 name="password"
-                                {...('password' in errors && {
-                                    help: errors['password'],
-                                    validateStatus: 'error',
-                                })}
                                 rules={[
                                     {
                                         min: 4,

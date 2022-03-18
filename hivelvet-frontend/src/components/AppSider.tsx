@@ -114,7 +114,7 @@ const AppSider = () => {
         <Sider className="site-sider" ref={comp}>
             <div className="logo">
                 <Link to={'/'}>
-                    <img className="header-logo-image" src="/images/logo_01.png" alt="Logo" />
+                    <img className="sider-logo-image" src="/images/logo_01.png" alt="Logo" />
                 </Link>
             </div>
             <div className="menu-sider">

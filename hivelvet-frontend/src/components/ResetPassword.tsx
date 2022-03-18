@@ -18,8 +18,9 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import AuthService from '../services/auth.service';
+import NotificationsService from "../services/notifications.service";
 
-import { Form, Input, Button, notification, Alert, Col, Row, Typography, Card } from 'antd';
+import { Form, Input, Button, Alert, Col, Row, Typography, Card } from 'antd';
 import { Trans, withTranslation } from 'react-i18next';
 import EN_US from '../locale/en-US.json';
 import { t } from 'i18next';
@@ -53,12 +54,7 @@ class Reset extends Component<Props, State> {
                 this.setState({
                     successful: true,
                 });
-                notification['success']({
-                    message: <Trans i18nKey="success-title" />,
-                    description: (
-                        <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == responseMessage)} />
-                    ),
-                });
+                NotificationsService.openNotificationWithIcon('success', <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == responseMessage)} />);
             })
             .catch((error) => {
                 this.setState({

@@ -110,9 +110,7 @@ class Register extends Component<Props, State> {
                                     type="error"
                                     className="alert-msg"
                                     message={
-                                        <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == message)}>
-                                            {' '}
-                                        </Trans>
+                                        <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == message)} />
                                     }
                                     showIcon
                                 />
@@ -131,10 +129,6 @@ class Register extends Component<Props, State> {
                                 <Form.Item
                                     label={<Trans i18nKey="username.label" />}
                                     name="username"
-                                    {...('username' in errors && {
-                                        help: errors['username'],
-                                        validateStatus: 'error',
-                                    })}
                                     rules={[
                                         {
                                             required: true,
@@ -142,7 +136,7 @@ class Register extends Component<Props, State> {
                                         },
                                         {
                                             min: 4,
-                                            message: <Trans i18nKey="Username must be at least 4 characters" />,
+                                            message: <Trans i18nKey="username.size" />,
                                         },
                                     ]}
                                 >
@@ -151,10 +145,6 @@ class Register extends Component<Props, State> {
                                 <Form.Item
                                     label={<Trans i18nKey="email.label" />}
                                     name="email"
-                                    {...('email' in errors && {
-                                        help: errors['email'],
-                                        validateStatus: 'error',
-                                    })}
                                     rules={[
                                         {
                                             type: 'email',
@@ -171,10 +161,6 @@ class Register extends Component<Props, State> {
                                 <Form.Item
                                     label={<Trans i18nKey="password.label" />}
                                     name="password"
-                                    {...('password' in errors && {
-                                        help: errors['password'],
-                                        validateStatus: 'error',
-                                    })}
                                     rules={[
                                         {
                                             min: 4,
@@ -192,10 +178,6 @@ class Register extends Component<Props, State> {
                                     label={<Trans i18nKey="confirm-password.label" />}
                                     name="confirmPassword"
                                     dependencies={['password']}
-                                    {...('confirmPassword' in errors && {
-                                        help: errors['confirmPassword'],
-                                        validateStatus: 'error',
-                                    })}
                                     rules={[
                                         {
                                             min: 4,
@@ -222,10 +204,6 @@ class Register extends Component<Props, State> {
                                     className="form-agree"
                                     name="agreement"
                                     valuePropName="checked"
-                                    {...('agreement' in errors && {
-                                        help: errors['agreement'],
-                                        validateStatus: 'error',
-                                    })}
                                     rules={[
                                         {
                                             validator: (_, value) =>

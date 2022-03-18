@@ -18,8 +18,10 @@
 
 import React, { useContext, useState, useEffect, useRef, Component } from 'react';
 import RolesService from '../services/roles.service';
+import NotificationsService from "../services/notifications.service";
+import PaginationType from './PaginationType';
 
-import { PageHeader, Button, Row, Col, Typography, Table, Space, Modal, Popconfirm, notification, Card } from 'antd';
+import { PageHeader, Button, Row, Col, Typography, Table, Space, Modal, Popconfirm, Card } from 'antd';
 import { Form, Input, Checkbox } from 'antd';
 import {
     DeleteOutlined,
@@ -39,11 +41,6 @@ import { t } from 'i18next';
 import EN_US from '../locale/en-US.json';
 
 const { Paragraph, Link } = Typography;
-
-type PaginationType = {
-    current?: number;
-    pageSize?: number;
-};
 
 interface Item {
     key: number;
@@ -79,8 +76,6 @@ type State = {
 
     searchText?: string;
     searchedColumn?: string;
-
-    addForm?: any;
 };
 
 class Roles extends Component<Props, State> {
@@ -142,19 +137,12 @@ class Roles extends Component<Props, State> {
         this.setState({ pagination: pagination });
     };
 
-    openNotificationWithIcon = (type, message) => {
-        notification[type]({
-            message: t(type + '-title'),
-            description: message,
-        });
-    };
-
     //add
     addForm = null;
     handleAdd = (formValues: any) => {
+        this.setState({ errorsAdd: [] });
         const name = formValues.name;
         delete formValues.name;
-        this.setState({ errorsAdd: [] });
         RolesService.add_role({ name: name, permissions: formValues })
             .then((response) => {
                 this.setState({
@@ -163,7 +151,7 @@ class Roles extends Component<Props, State> {
                 });
                 const result = response.data;
                 const newRowData: Item = result.role;
-                this.openNotificationWithIcon('success', t('add_role_success'));
+                NotificationsService.openNotificationWithIcon('success', t('add_role_success'));
                 //delete data of form
                 this.addForm?.resetFields();
                 //add data to table
@@ -179,6 +167,9 @@ class Roles extends Component<Props, State> {
                 }
             });
     };
+    failedAdd = () => {
+        this.setState({ errorsAdd: [] });
+    };
     cancelAdd = () => {
         this.setState({ isModalVisible: false });
     };
@@ -192,9 +183,8 @@ class Roles extends Component<Props, State> {
 
     //edit permissions
     editRow = (response, key) => {
-        const result = response.data;
-        const newRowData = result.role;
-        this.openNotificationWithIcon('success', t('edit_role_success'));
+        const newRowData = response.data.role;
+        NotificationsService.openNotificationWithIcon('success', t('edit_role_success'));
         const newData = [...this.state.data];
         const index = newData.findIndex((item) => key === item.key);
         if (index > -1 && newRowData != undefined) {
@@ -218,10 +208,12 @@ class Roles extends Component<Props, State> {
         this.setState({ expandedKeys: keys });
     };
     expandedRowRender = (record) => {
+        let editRowForm = null;
         const { allPrivileges } = this.state;
         const permissionsChecked = record.permissions;
 
         const cancelEdit = (key: React.Key) => {
+            editRowForm?.resetFields();
             this.setState({
                 expandedKeys: this.state.expandedKeys.filter((item) => item !== key),
             });
@@ -253,6 +245,7 @@ class Roles extends Component<Props, State> {
 
         return (
             <Form
+                ref={(form) => (editRowForm = form)}
                 initialValues={permissionsChecked}
                 onFinish={(values) => saveEdit(values, record.key)}
                 onChange={() => changeEdit(record.key)}
@@ -281,7 +274,7 @@ class Roles extends Component<Props, State> {
                         <Space size="middle" className="actions-expanded">
                             {this.state.changedKeys.includes(record.key) ? (
                                 <Popconfirm
-                                    title={t('cancel_edit_role')}
+                                    title={t('cancel_edit')}
                                     placement="leftTop"
                                     onConfirm={() => cancelEdit(record.key)}
                                 >
@@ -338,13 +331,14 @@ class Roles extends Component<Props, State> {
             }
         };
         const cancelName = () => {
+            setErrorsEdit({});
             setEditing(!editing);
         };
         const saveName = async () => {
+            setErrorsEdit({});
             try {
                 const values = (await editForm.validateFields()) as Item;
                 const key = record.key;
-                setErrorsEdit({});
                 RolesService.edit_role(values, key)
                     .then((response) => {
                         toggleEditName();
@@ -372,19 +366,14 @@ class Roles extends Component<Props, State> {
                             className="input-editable"
                             {...(dataIndex in errorsEdit &&
                                 record.key == errorsEdit['key'] && {
-                                    help: errorsEdit[dataIndex],
+                                    help: <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errorsEdit[dataIndex])} />,
                                     validateStatus: 'error',
-                                })}
+                                })
+                            }
                             rules={[
                                 {
                                     required: true,
-                                    message: (
-                                        <Trans
-                                            i18nKey={Object.keys(EN_US).filter(
-                                                (elem) => EN_US[elem] == `${title} is required`
-                                            )}
-                                        />
-                                    ),
+                                    message: t('required_'+dataIndex)
                                 },
                             ]}
                         >
@@ -430,7 +419,7 @@ class Roles extends Component<Props, State> {
         );
     };
 
-    //delete
+    // delete
     deleteRole = (key, nbUsers) => {
         RolesService.delete_role(key)
             .then((response) => {
@@ -448,12 +437,12 @@ class Roles extends Component<Props, State> {
                         });
                     }
                 }
-                // delete item of this page and add next role to table
+                // delete item of this page
                 this.setState({
                     data: newData.filter((item) => item.key !== key),
                     loading: false,
                 });
-                this.openNotificationWithIcon('success', t('delete_role_success'));
+                NotificationsService.openNotificationWithIcon('success', t('delete_role_success'));
             })
             .catch((error) => {
                 console.log(error);
@@ -484,7 +473,7 @@ class Roles extends Component<Props, State> {
         }
     };
 
-    //search
+    // search
     searchInput;
     handleReset = (clearFilters) => {
         clearFilters();
@@ -519,7 +508,7 @@ class Roles extends Component<Props, State> {
                         icon={<SearchOutlined />}
                         onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
                     >
-                        <Trans i18nKey="search" />
+                        {' '} <Trans i18nKey="search" />
                     </Button>
                     <Button size="small" onClick={() => this.handleReset(clearFilters)}>
                         <Trans i18nKey="reset" />
@@ -655,7 +644,7 @@ class Roles extends Component<Props, State> {
 
                 <Modal
                     title={<Trans i18nKey="new_role" />}
-                    className="roles-modal"
+                    className="add-modal"
                     centered
                     visible={isModalVisible}
                     onOk={this.handleAdd}
@@ -669,13 +658,14 @@ class Roles extends Component<Props, State> {
                         initialValues={{ name: '' }}
                         hideRequiredMark
                         onFinish={this.handleAdd}
+                        onFinishFailed={this.failedAdd}
                         validateTrigger="onSubmit"
                     >
                         <Form.Item
                             label={<Trans i18nKey="name.label" />}
                             name="name"
                             {...('name' in errorsAdd && {
-                                help: errorsAdd['name'],
+                                help: <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errorsAdd['name'])} />,
                                 validateStatus: 'error',
                             })}
                             rules={[

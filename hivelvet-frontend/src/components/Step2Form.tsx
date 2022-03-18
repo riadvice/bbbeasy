@@ -91,10 +91,6 @@ export const Step2Form = (props: Props) => {
                 <Form.Item
                     label={<Trans i18nKey="company.name" />}
                     name="company_name"
-                    {...('company_name' in errors && {
-                        help: errors['company_name'],
-                        validateStatus: 'error',
-                    })}
                     rules={[
                         {
                             required: true,
@@ -107,10 +103,6 @@ export const Step2Form = (props: Props) => {
                 <Form.Item
                     label={<Trans i18nKey="company.website.label" />}
                     name="company_url"
-                    {...('company_url' in errors && {
-                        help: errors['company_url'],
-                        validateStatus: 'error',
-                    })}
                     rules={[
                         {
                             required: true,
@@ -127,10 +119,6 @@ export const Step2Form = (props: Props) => {
                 <Form.Item
                     label={<Trans i18nKey="platform.label" />}
                     name="platform_name"
-                    {...('platform_name' in errors && {
-                        help: errors['platform_name'],
-                        validateStatus: 'error',
-                    })}
                     rules={[
                         {
                             required: true,
@@ -143,10 +131,6 @@ export const Step2Form = (props: Props) => {
                 <Form.Item
                     label={<Trans i18nKey="terms_url.label" />}
                     name="term_url"
-                    {...('term_url' in errors && {
-                        help: errors['term_url'],
-                        validateStatus: 'error',
-                    })}
                     rules={[
                         {
                             type: 'url',
@@ -159,10 +143,6 @@ export const Step2Form = (props: Props) => {
                 <Form.Item
                     label={<Trans i18nKey="privacy_policy_url.label" />}
                     name="policy_url"
-                    {...('policy_url' in errors && {
-                        help: errors['policy_url'],
-                        validateStatus: 'error',
-                    })}
                     rules={[
                         {
                             type: 'url',
