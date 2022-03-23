@@ -24,7 +24,6 @@ namespace Actions\Roles;
 
 use Actions\Delete as DeleteAction;
 use Actions\RequirePrivilegeTrait;
-use Enum\ResponseCode;
 use Models\Role;
 
 /**
@@ -42,9 +41,9 @@ class Delete extends DeleteAction
         $nbUsers = $role->getRoleUsers();
 
         // delete users and permissions
-        $resultCode = $role->deleteUsersAndPermissions();
+        $result = $role->deleteUsersAndPermissions();
 
-        if (ResponseCode::HTTP_OK === $resultCode) {
+        if ($result) {
             // delete role after deleting assigned users and permissions
             parent::execute($f3, $params);
             // if role have users assigned return lecturer role to get switched users

@@ -106,13 +106,13 @@ body.rtl {
 
 .search-input {
   //width: 35%;
-  width: 70%;
-  border-radius: 15px;
+  width: 70% !important;
+  border-radius: 15px !important;
 }
 
 .search-input,.search-input input, .search-input.ant-input-affix-wrapper:hover, .search-input.ant-input-affix-wrapper:focus {
   //background: #f8f8f8;
-  background: white;
+  background: white !important;
 }
 
 .search-input.ant-input-affix-wrapper-focused {
@@ -158,6 +158,24 @@ body.rtl {
   transform: scaleX(1);
 }
 
+.ant-pagination.mini .ant-pagination-total-text {
+  height: 32px;
+  line-height: 30px;
+}
+.ant-pagination.mini .ant-pagination-prev, .ant-pagination.mini .ant-pagination-next {
+  min-width: 32px;
+  height: 32px;
+  line-height: 32px;
+}
+.ant-pagination.mini .ant-pagination-prev .ant-pagination-item-link, .ant-pagination.mini .ant-pagination-next .ant-pagination-item-link {
+  border-color: #dddfe1;
+}
+.ant-pagination.mini .ant-pagination-item {
+  min-width: 32px;
+  height: 32px;
+  line-height: 30px;
+}
+
 .profil-btn-dropdown .ant-dropdown-menu-item {
   padding: 5px 20px;
 }
@@ -193,8 +211,6 @@ body.rtl {
 }
 .home-guide .ant-row .ant-col {
   padding: 15px 0;
-  flex: 0 0 14.5% !important;
-  max-width: 14.5% !important;
 }
 .home-guide .ant-row:not(.ant-row-rtl) .ant-col:not(:first-child) {
   border-left: 1px solid var(--hv-border-gray);
@@ -261,6 +277,9 @@ body.rtl {
 .hivelvet-table {
   padding: 0 24px 0 10px;
 }
+.hivelvet-table .ant-pro-card-body {
+  padding: 0 !important;
+}
 
 .hivelvet-table.ant-table-wrapper-rtl {
   padding: 0 10px 0 24px;
@@ -304,12 +323,35 @@ body.rtl {
   margin-bottom: 0;
 }
 
+.hivelvet-table mark {
+  padding: 0;
+  background-color: @primary-color-hover;
+}
+
 .hivelvet-table .input-editable {
   margin-bottom: 0 !important;
 }
 
+.hivelvet-table .input-editable.editable-row {
+  //margin-top: 20px;
+}
+
 .hivelvet-table .input-editable .ant-input-suffix {
   font-size: 13px;
+}
+
+.rtl .ant-input-prefix > :not(:last-child), .rtl .ant-input-suffix > :not(:last-child) {
+  margin-left: 8px;
+  margin-right: unset;
+}
+
+.rtl .ant-form-vertical .ant-form-item-label {
+  text-align: right;
+}
+
+.input-editable .ant-form-item-label > label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::before {
+  content: '';
+  margin-right: 0;
 }
 
 .hivelvet-table .input-editable .ant-input-suffix button {
@@ -343,8 +385,8 @@ body.rtl {
 }
 
 .cancel-btn {
-  background: var(--hv-medimum-gray);
-  color: white;
+  background: var(--hv-medimum-gray) !important;
+  color: white !important;
 }
 
 .cancel-btn:hover, .cancel-btn:focus {
@@ -353,7 +395,7 @@ body.rtl {
   color: white;
 }
 
-.add-modal .select-role .ant-select-selection-item {
+.select-field .ant-select-selection-item {
   text-transform: capitalize;
 }
 
@@ -465,6 +507,14 @@ body.rtl {
   color: red !important;
 }
 
+.text-error {
+  color: red !important;
+}
+
+.text-error .ant-popover-inner-content {
+  color: red !important;
+}
+
 .text-color-primary {
   color: @primary-color !important;
 }
@@ -558,7 +608,7 @@ body.rtl {
   font-size: 95% !important;
 }
 
-.ant-form-item-label label{
+.ant-form-item:not(.input-editable) .ant-form-item-label label{
   font-size: 15px;
 }
 

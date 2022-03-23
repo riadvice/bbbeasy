@@ -52,17 +52,8 @@ class Delete extends DeleteAction
 
                 return;
             }
-            /** @var Role $role */
-            $role = $user->role_id;
-            $result = [
-                'key'       => $user->id,
-                'username'  => $user->username,
-                'email'  => $user->email,
-                'status'  => $user->status,
-                'role'  => [$role->id => $role->name],
-            ];
             $this->logger->info('User successfully deleted', ['user' => $user->toArray()]);
-            $this->renderJson(['result' => 'success', 'user' => $result]);
+            $this->renderJson(['result' => 'success', 'user' => $user->getUserInfos($user->id)]);
         }
     }
 }

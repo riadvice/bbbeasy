@@ -16,18 +16,18 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Component } from 'react';
+import React, {useEffect} from 'react';
 import UsersService from "../services/users.service";
 import PaginationType from './PaginationType';
-
-import { PageHeader, Button, Typography, Table, Space, Modal, Popconfirm, Tag, Alert } from 'antd';
-import { Form, Input, Select } from 'antd';
-import { DeleteOutlined, SearchOutlined, QuestionCircleOutlined, EditOutlined } from '@ant-design/icons';
-import Highlighter from 'react-highlight-words/dist/main';
-import { Trans, withTranslation } from 'react-i18next';
-import { t } from 'i18next';
-import EN_US from '../locale/en-US.json';
 import NotificationsService from "../services/notifications.service";
+import {Trans, withTranslation} from 'react-i18next';
+import EN_US from '../locale/en-US.json';
+import {t} from 'i18next';
+
+import { Alert, Button, Form, Input, Modal, PageHeader, Popconfirm, Select, Space, Table, Tag, Typography } from 'antd';
+import {DeleteOutlined, EditOutlined, QuestionCircleOutlined, SearchOutlined} from '@ant-design/icons';
+import Highlighter from 'react-highlight-words/dist/main';
+import {FormInstance} from 'antd/lib/form';
 
 const { Option } = Select;
 const { Link } = Typography;
@@ -36,144 +36,266 @@ interface Item {
     key: number;
     username: string;
     email: string;
-    role: {};
     status: string;
+    role: string;
 }
 
-type Props = {};
-type State = {
-    data?: any[];
-    editingKeys?: number[];
-    changedKeys?: number[];
-    pagination?: PaginationType;
-    loading?: boolean;
+interface EditableRowProps {
+    index: number;
+}
+interface EditableCellProps {
+    title: React.ReactNode;
+    editing: boolean;
+    children: React.ReactNode;
+    dataIndex: keyof Item;
+    record: Item;
+    inputType: 'text' | 'select';
+    index: number;
+}
+const EditableContext = React.createContext<FormInstance<any> | null>(null);
 
-    allRoles?: {};
-
-    errorsAdd?: string;
-    errorsEdit?: {};
-    isModalVisible?: boolean;
-
-    searchText?: string;
-    searchedColumn?: string;
-};
-
-class Users extends Component<Props, State> {
-    constructor(props: Props) {
-        super(props);
-        this.state = {
-            allRoles: {},
-            data: [],
-            pagination: {
-                current: 1,
-                pageSize: 5,
-            },
-            loading: false,
-
-            errorsAdd: '',
-            errorsEdit: {},
-            isModalVisible: false,
-
-            editingKeys: [],
-            changedKeys: [],
-            searchText: '',
-            searchedColumn: '',
-        };
-    }
+const Users = () => {
+    const [data, setData] = React.useState([]);
+    const [allStates, setAllStates] = React.useState<string[]>([]);
+    const [allRoles, setAllRoles] = React.useState({});
+    //const [editingKeys, setEditingKeys] = React.useState<number[]>([]);
+    const [editingKey, setEditingKey] = React.useState<number>(null);
+    const [pagination, setPagination] = React.useState<PaginationType>({current: 1, pageSize: 5});
+    const [loading, setLoading] = React.useState<boolean>(false);
+    const [errorsAdd, setErrorsAdd] = React.useState('');
+    const [errorsEdit, setErrorsEdit] = React.useState({});
+    const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
+    const [searchText, setSearchText] = React.useState('');
+    const [searchedColumn, setSearchedColumn] = React.useState('');
 
     //list
-    getRoles = () => {
+    const getRoles = () => {
         UsersService.list_roles()
             .then((response) => {
                 const roles = response.data.roles;
                 if (roles instanceof Object) {
-                    this.setState({ allRoles: roles });
+                    setAllRoles(roles);
                 }
             })
             .catch((error) => {
                 console.log(error);
             });
     };
-    getUsers = () => {
-        this.setState({ loading: true });
+    const getUsers = () => {
+        setLoading(true);
         UsersService.list_users()
             .then((response) => {
-                const results = response.data;
-                this.setState({
-                    loading: false,
-                    data: results,
-                });
+                setLoading(false);
+                if (response.data.users) {
+                    setData(response.data.users);
+                }
+                if (response.data.states) {
+                    const states = response.data.states;
+                    setAllStates(states);
+                }
             })
             .catch((error) => {
-                this.setState({ loading: false });
                 console.log(error);
+                setLoading(false);
             });
     };
-    componentDidMount() {
+    useEffect(() => {
         //Runs only on the first render
-        this.getRoles();
-        this.getUsers();
-    }
-    handleTableChange = (pagination) => {
-        this.setState({ pagination: pagination });
+        getRoles();
+        getUsers();
+    }, []);
+    const handleTableChange = (pagination) => {
+        setPagination(pagination);
     };
 
     // add
-    addForm = null;
-    handleAdd = (formValues: any) => {
-        const allRoles = this.state.allRoles;
+    let addForm : FormInstance = null;
+    const initialAddValues = {
+        username: '',
+        email: '',
+        password: '',
+    };
+    const handleAdd = (formValues: any) => {
         const res = Object.keys(allRoles).filter((key) => allRoles[key] == formValues.role);
         formValues.role = res ? res[0] : formValues;
-        this.setState({ errorsAdd: '' });
+        setErrorsAdd('');
         UsersService.add_user(formValues)
             .then((response) => {
-                this.setState({
-                    loading: true,
-                    isModalVisible: false,
-                });
-                const result = response.data;
-                const newRowData: Item = result.user;
+                setLoading(true);
+                setIsModalVisible(false);
+                const newRowData: Item = response.data.user;
                 NotificationsService.openNotificationWithIcon('success', t('add_user_success'));
                 //delete data of form
-                this.addForm?.resetFields();
+                addForm?.resetFields();
                 //add data to table
-                this.setState({
-                    loading: false,
-                    data: [...this.state.data, newRowData],
-                });
+                setLoading(false);
+                setData([...data, newRowData]);
             })
             .catch((error) => {
                 const responseData = error.response.data;
                 if (responseData.message) {
-                    this.setState({
-                        errorsAdd: responseData.message,
-                    });
+                    setErrorsAdd(responseData.message);
                 }
             });
     };
-    cancelAdd = () => {
-        this.setState({ isModalVisible: false });
+    const cancelAdd = () => {
+        setIsModalVisible(false);
     };
-    toggleAdd = () => {
-        this.addForm?.resetFields();
-        this.setState({
-            errorsAdd: '',
-            isModalVisible: true,
-        });
+    const toggleAdd = () => {
+        addForm?.resetFields();
+        setErrorsAdd('');
+        setIsModalVisible(true);
+    };
+
+    // edit
+    const [editForm] = Form.useForm();
+    const EditableRow: React.FC<EditableRowProps> = ({ index, ...props }) => {
+        return (
+            <Form
+                size="middle"
+                form={editForm}
+                component={false}
+                validateTrigger="onSubmit"
+            >
+                <EditableContext.Provider value={editForm}>
+                    <tr {...props} />
+                </EditableContext.Provider>
+            </Form>
+        );
+    };
+    const EditableCell: React.FC<EditableCellProps> = ({ title, editing, children, dataIndex, record, inputType, index, ...restProps }) => {
+        let inputNode;
+        if(inputType === 'select') {
+            if (dataIndex == 'role') {
+                inputNode =
+                    <Select
+                        className="select-field"
+                        showSearch
+                        allowClear
+                        placeholder={t('role.placeholder')}
+                        filterSort={(optionA, optionB) =>
+                            optionA.children.toString().toLowerCase().localeCompare(optionB.children.toString().toLowerCase())
+                        }
+                    >
+                        {Object.entries(allRoles).map(([id, name]) => (
+                            <Option key={id} value={name} className="text-capitalize">{name}</Option>
+                        ))}
+                    </Select>
+            }
+            else if (dataIndex == 'status') {
+                inputNode =
+                    <Select
+                        className="select-field"
+                        showSearch
+                        allowClear
+                        placeholder={t('status.placeholder')}
+                        filterSort={(optionA, optionB) =>
+                            optionA.children.toString().toLowerCase().localeCompare(optionB.children.toString().toLowerCase())
+                        }
+                    >
+                        {allStates.map((item,index) => (
+                            <Option key={index} value={item} className="text-capitalize">{t(item)}</Option>
+                        ))}
+                    </Select>
+            }
+        }
+        else {
+            inputNode = <Input />;
+        }
+        return (
+            <td {...restProps}>
+                {editing ? (
+                    <Form.Item
+                        name={dataIndex}
+                        className="input-editable editable-row"/**/
+                        {...dataIndex in errorsEdit && record.key == errorsEdit['key'] && {
+                            help: <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errorsEdit[dataIndex])} />,
+                            validateStatus: 'error',
+                        }}
+                        rules={[
+                            {
+                                required: true,
+                                message: t('required_'+dataIndex)
+                            },
+                        ]}
+                    >
+                        {inputNode}
+                    </Form.Item>
+                ) : (
+                    children
+                )}
+            </td>
+        );
+    };
+    //const isEditing = (record: Item) => editingKeys.includes(record.key);
+    const isEditing = (record: Item) => record.key == editingKey;
+    const toggleEdit = (record) => {
+        setEditingKey(record.key);
+        /*const keys = [...editingKeys];
+        if (!keys.includes(record.key)) {
+            keys.push(record.key);
+            console.log(keys);
+            setEditingKeys(keys);
+        }*/
+        editForm.setFieldsValue({ username: '', email: '', role: '', status: '', ...record });
+    };
+    const cancelEdit = (key: React.Key) => {
+        setEditingKey(null);
+        //setEditingKeys(editingKeys.filter((item) => item !== key));
+    };
+    const saveEdit = async (key) => {
+        try {
+            const formValues: any = (await editForm.validateFields()) as Item;
+            const res = Object.keys(allRoles).filter((key) => allRoles[key] == formValues.role);
+            formValues.role = res ? res[0] : formValues;
+            setErrorsEdit({});
+            UsersService.edit_user(formValues, key)
+                .then((response) => {
+                    const newRowData = response.data.user;
+                    const newData = [...data];
+                    const index = newData.findIndex((item) => key === item.key);
+                    if (index > -1 && newRowData != undefined) {
+                        const item = newData[index];
+                        newData.splice(index, 1, {
+                            ...item,
+                            ...newRowData,
+                        });
+                        setData(newData);
+                        setEditingKey(null);
+                    }
+                    NotificationsService.openNotificationWithIcon('success', t('edit_user_success'));
+                })
+                .catch((error) => {
+                    const responseData = error.response.data;
+                    if (responseData.errors) {
+                        const err = responseData.errors;
+                        err['key'] = key;
+                        setErrorsEdit(err);
+                    }
+                });
+        } catch (errInfo) {
+            console.log('Save failed:', errInfo);
+            const errors = errInfo.errorFields;
+            const err = {};
+            errors.map((error) => {
+                const errorKey = error['name'][0];
+                err[errorKey] = error['errors'][0];
+            });
+            console.log(err);
+            //setErrorsEdit(err);
+        }
     };
 
     // delete
-    handleDelete = (key: React.Key) => {
+    const handleDelete = (key: React.Key) => {
         UsersService.delete_user(key as number)
             .then((response) => {
-                this.setState({ loading: true });
-                const newData = [...this.state.data];
+                setLoading(true);
+                const newData = [...data];
                 /*
                 // delete item of this page
-                this.setState({
-                    data: newData.filter((item) => item.key !== key),
-                    loading: false,
-                });
+                setLoading(false);
+                setData(newData.filter((item) => item.key !== key));
                 */
                 // update item
                 const newRowData = response.data.user;
@@ -184,10 +306,8 @@ class Users extends Component<Props, State> {
                         ...item,
                         ...newRowData,
                     });
-                    this.setState({
-                        data: newData,
-                        loading: false,
-                    });
+                    setLoading(false);
+                    setData(newData);
                 }
                 NotificationsService.openNotificationWithIcon('success', t('delete_user_success'));
             })
@@ -197,49 +317,47 @@ class Users extends Component<Props, State> {
     };
 
     // search
-    searchInput;
-    handleReset = (clearFilters) => {
+    let searchInput;
+    const handleReset = (clearFilters) => {
         clearFilters();
-        this.setState({ searchText: '' });
+        setSearchText('');
     };
-    handleSearch = (selectedKeys, confirm, dataIndex, closed = false) => {
+    const handleSearch = (selectedKeys, confirm, dataIndex, closed = false) => {
         if (closed) confirm({ closeDropdown: false });
         else confirm();
-        this.setState({
-            searchText: selectedKeys[0],
-            searchedColumn: dataIndex,
-        });
+        setSearchText(selectedKeys[0]);
+        setSearchedColumn(dataIndex);
     };
-    getColumnSearchProps = (dataIndex) => ({
+    const getColumnSearchProps = (dataIndex) => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
             <div className="table-search-bloc">
                 <Input
                     size="middle"
                     className="table-search-input"
                     ref={(node) => {
-                        this.searchInput = node;
+                        searchInput = node;
                     }}
                     placeholder={t('search') + ' ' + t(dataIndex + '_col')}
                     value={selectedKeys[0]}
                     onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-                    onPressEnter={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
+                    onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
                 />
                 <Space className="table-search-btn">
                     <Button
                         type="primary"
                         size="small"
                         icon={<SearchOutlined />}
-                        onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
+                        onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
                     >
                         {' '} <Trans i18nKey="search" />
                     </Button>
-                    <Button size="small" onClick={() => this.handleReset(clearFilters)}>
+                    <Button size="small" onClick={() => handleReset(clearFilters)}>
                         <Trans i18nKey="reset" />
                     </Button>
                     <Button
                         type="link"
                         size="small"
-                        onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex, true)}
+                        onClick={() => handleSearch(selectedKeys, confirm, dataIndex, true)}
                     >
                         <Trans i18nKey="filter" />
                     </Button>
@@ -248,34 +366,20 @@ class Users extends Component<Props, State> {
         ),
         filterIcon: (filtered) => <SearchOutlined className={filtered ? 'search-icon-filtered' : undefined} />,
         onFilter: (value, record) => {
-            let text;
-            if (dataIndex == 'role' && record[dataIndex]) {
-                /*if (value.indexOf(' ') != -1) {
-                    value = value[0] == ' ' ? value.slice(1) : value;
-                    value = value[value.length - 1] == ' ' ? value.slice(0, -1) : value;
-                    value = value.replace(' ', '_');
-                }*/
-                text = Object.values(record[dataIndex])[0];
-                return text.toString().toLowerCase().includes(value.toLowerCase());
-            }
             return record[dataIndex] ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()) : '';
         },
         onFilterDropdownVisibleChange: (visible) => {
             if (visible) {
-                setTimeout(() => this.searchInput.select(), 100);
+                setTimeout(() => searchInput.select(), 100);
             }
         },
         render: (text) => {
-            if (dataIndex == 'username' && text != '') {
+            if (dataIndex == 'username' || dataIndex == 'role') {
                 text = text[0].toUpperCase() + text.slice(1);
             }
-            else if (dataIndex == 'role' && text != '') {
-                text = Object.values(text)[0].toString();
-                text = text[0].toUpperCase() + text.slice(1);
-            }
-            return this.state.searchedColumn === dataIndex ? (
+            return searchedColumn === dataIndex ? (
                 <Highlighter
-                    searchWords={[this.state.searchText]}
+                    searchWords={[searchText]}
                     autoEscape
                     textToHighlight={text ? text.toString() : ''}
                 />
@@ -285,259 +389,277 @@ class Users extends Component<Props, State> {
         },
     });
 
-    render() {
-        const { data, pagination, loading, isModalVisible, errorsAdd, allRoles } = this.state;
-        const initialAddValues = {
-            username: '',
-            email: '',
-            password: '',
-        };
-        const columns = [
-            {
-                title: t('username_col'),
-                dataIndex: 'username',
-                editable: true,
-                ...this.getColumnSearchProps('username'),
-                width: '20%',
-                sorter: {
-                    compare: (a, b) => a.username.localeCompare(b.username),
-                    multiple: 4,
-                },
+    const columns = [
+        {
+            title: t('username_col'),
+            dataIndex: 'username',
+            editable: true,
+            ...getColumnSearchProps('username'),
+            width: '20%',
+            sorter: {
+                compare: (a, b) => a.username.localeCompare(b.username),
+                multiple: 4,
             },
-            {
-                title: t('email_col'),
-                dataIndex: 'email',
-                editable: true,
-                ...this.getColumnSearchProps('email'),
-                width: '30%',
-                sorter: {
-                    compare: (a, b) => a.username.localeCompare(b.username),
-                    multiple: 3,
-                },
+        },
+        {
+            title: t('email_col'),
+            dataIndex: 'email',
+            editable: true,
+            ...getColumnSearchProps('email'),
+            width: '30%',
+            sorter: {
+                compare: (a, b) => a.username.localeCompare(b.username),
+                multiple: 3,
             },
-            {
-                title: t('role_col'),
-                dataIndex: 'role',
-                editable: true,
-                ...this.getColumnSearchProps('role'),
-                width: '15%',
-                sorter: {
-                    compare: (a, b) => a.username.localeCompare(b.username),
-                    multiple: 2,
-                },
+        },
+        {
+            title: t('role_col'),
+            dataIndex: 'role',
+            editable: true,
+            ...getColumnSearchProps('role'),
+            width: '15%',
+            sorter: {
+                compare: (a, b) => a.username.localeCompare(b.username),
+                multiple: 2,
             },
-            {
-                title: t('status_col'),
-                dataIndex: 'status',
-                editable: true,
-                width: '15%',
-                render: (status) => {
-                    let color;
-                    switch (status) {
-                        case 'active':
-                            color = 'success';
-                            break;
-                        case 'inactive':
-                            color = 'default';
-                            break;
-                        case 'pending':
-                            color = 'warning';
-                            break;
-                        case 'deleted':
-                            color = 'error';
-                            break;
-                        default:
-                            color = '';
-                    }
-                    return (
-                        <Tag color={color}>{ t(status) }</Tag>
-                    );
-                },
-                filters: [
-                    {
-                        text: t('active'),
-                        value: 'active',
-                    },
-                    {
-                        text: t('inactive'),
-                        value: 'inactive',
-                    },
-                    {
-                        text: t('pending'),
-                        value: 'pending',
-                    },
-                    {
-                        text: t('deleted'),
-                        value: 'deleted',
-                    },
-                ],
-                onFilter: (value, record) => record.status === value,
-                sorter: {
-                    compare: (a, b) => a.username.localeCompare(b.username),
-                    multiple: 1,
-                },
+        },
+        {
+            title: t('status_col'),
+            dataIndex: 'status',
+            editable: true,
+            width: '15%',
+            render: (status) => {
+                let color;
+                switch (status) {
+                    case 'active':
+                        color = 'success';
+                        break;
+                    case 'inactive':
+                        color = 'default';
+                        break;
+                    case 'pending':
+                        color = 'warning';
+                        break;
+                    case 'deleted':
+                        color = 'error';
+                        break;
+                    default:
+                        color = '';
+                }
+                return (
+                    <Tag color={color}>{ t(status) }</Tag>
+                );
             },
-            {
-                title: t('actions_col'),
-                editable: false,
-                render: (text, record) => {
-                    return (
-                        <Space size="middle" className='table-actions'>
-                            <Link>
-                                <EditOutlined /> <Trans i18nKey="edit" />
-                            </Link>
-                            <Popconfirm
-                                title={t('delete_user_confirm')}
-                                icon={<QuestionCircleOutlined className="red-icon" />}
-                                onConfirm={() => this.handleDelete(record.key)}
-                            >
-                                <Link>
-                                    <DeleteOutlined /> <Trans i18nKey="delete" />
-                                </Link>
-                            </Popconfirm>
-                        </Space>
-                    )
-                },
+            filters: allStates.map((item) => ({
+                text: t(item),
+                value: item,
+            })),
+            onFilter: (value, record) => record.status === value,
+            sorter: {
+                compare: (a, b) => a.username.localeCompare(b.username),
+                multiple: 1,
             },
-        ];
-
-        return (
-            <>
-                <PageHeader
-                    className="site-page-header"
-                    title={<Trans i18nKey="users" />}
-                    extra={[
-                        <Button key="1" type="primary" onClick={this.toggleAdd}>
-                            <Trans i18nKey="new_user" />
-                        </Button>,
-                    ]}
-                />
-
-                <Modal
-                    title={<Trans i18nKey="new_user" />}
-                    className="add-modal"
-                    centered
-                    visible={isModalVisible}
-                    onOk={this.handleAdd}
-                    onCancel={this.cancelAdd}
-                    footer={null}
-                >
-                    <Form
-                        layout="vertical"
-                        ref={(form) => (this.addForm = form)}
-                        initialValues={initialAddValues}
-                        hideRequiredMark
-                        onFinish={this.handleAdd}
-                        validateTrigger="onSubmit"
-                    >
-                        {errorsAdd != '' && (
-                            <Alert
-                                type="error"
-                                className="alert-msg"
-                                message={
-                                    <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errorsAdd)} />
-                                }
-                                showIcon
-                            />
-                        )}
-
-                        <Form.Item
-                            label={<Trans i18nKey="username.label" />}
-                            name="username"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: <Trans i18nKey="username.required" />,
-                                },
-                                {
-                                    min: 4,
-                                    message: <Trans i18nKey="username.size" />,
-                                },
-                            ]}
+        },
+        {
+            title: t('actions_col'),
+            editable: false,
+            render: (text, record) => {
+                const editable = isEditing(record);
+                return editable ? (
+                    <Space size="middle">
+                        <Popconfirm
+                            title={t('cancel_edit')}
+                            placement="leftTop"
+                            onConfirm={() => cancelEdit(record.key)}
                         >
-                            <Input placeholder={t('username.label')} />
-                        </Form.Item>
-
-                        <Form.Item
-                            label={<Trans i18nKey="email.label" />}
-                            name="email"
-                            rules={[
-                                {
-                                    type: 'email',
-                                    message: <Trans i18nKey="email.invalid" />,
-                                },
-                                {
-                                    required: true,
-                                    message: <Trans i18nKey="email.required" />,
-                                },
-                            ]}
-                        >
-                            <Input placeholder={t('email.label')} />
-                        </Form.Item>
-                        <Form.Item
-                            label={<Trans i18nKey="password.label" />}
-                            name="password"
-                            rules={[
-                                {
-                                    min: 4,
-                                    message: <Trans i18nKey="password.size" />,
-                                },
-                                {
-                                    required: true,
-                                    message: <Trans i18nKey="password.required" />,
-                                },
-                            ]}
-                        >
-                            <Input.Password placeholder="**********" />
-                        </Form.Item>
-
-                        <Form.Item
-                            label={<Trans i18nKey="role.label" />}
-                            name="role"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: <Trans i18nKey="role.required" />,
-                                },
-                            ]}
-                        >
-                            <Select
-                                className="select-role"
-                                showSearch
-                                allowClear
-                                placeholder={t('role.placeholder')}
-                                filterSort={(optionA, optionB) =>
-                                    optionA.children.toString().toLowerCase().localeCompare(optionB.children.toString().toLowerCase())
-                                }
-                            >
-                                {Object.entries(allRoles).map(([id, name]) => (
-                                    <Option key={id} value={name} className="text-capitalize">{name}</Option>
-                                ))}
-                            </Select>
-                        </Form.Item>
-
-                        <Form.Item className="modal-submit-btn button-container">
-                            <Button type="text" className="cancel-btn prev" block onClick={this.cancelAdd}>
+                            <Button size="middle">
                                 <Trans i18nKey="cancel" />
                             </Button>
-                            <Button type="primary" htmlType="submit" block>
-                                <Trans i18nKey="create" />
-                            </Button>
-                        </Form.Item>
-                    </Form>
-                </Modal>
+                        </Popconfirm>
+                        <Button size="middle" type="primary" onClick={() => saveEdit(record.key)}>
+                            <Trans i18nKey="save" />
+                        </Button>
+                    </Space>
+                ) : (
+                    <Space size="middle" className='table-actions'>
+                        <Link disabled={editingKey !== null} onClick={() => toggleEdit(record)}>
+                            <EditOutlined /> <Trans i18nKey="edit" />
+                        </Link>
+                        <Popconfirm
+                            title={t('delete_user_confirm')}
+                            icon={<QuestionCircleOutlined className="red-icon" />}
+                            onConfirm={() => handleDelete(record.key)}
+                        >
+                            <Link>
+                                <DeleteOutlined /> <Trans i18nKey="delete" />
+                            </Link>
+                        </Popconfirm>
+                    </Space>
+                );
+            },
+        },
+    ];
+    const mergedColumns = columns.map(col => {
+        if (!col.editable) {
+            return col;
+        }
+        return {
+            ...col,
+            onCell: (record: Item) => ({
+                record,
+                inputType: col.dataIndex === 'role' || col.dataIndex === 'status' ? 'select' : 'text',
+                dataIndex: col.dataIndex,
+                title: col.title,
+                editing: isEditing(record),
+            }),
+            onRow : (record: Item, rowIndex) => ({
+                index: rowIndex,
+            }),
+        };
+    });
 
-                <Table
-                    className="hivelvet-table"
-                    columns={columns}
-                    dataSource={data}
-                    pagination={pagination}
-                    loading={loading}
-                    onChange={this.handleTableChange}
-                />
-            </>
-        );
-    }
+    return (
+        <>
+            <PageHeader
+                className="site-page-header"
+                title={<Trans i18nKey="users" />}
+                extra={[
+                    <Button key="1" type="primary" onClick={toggleAdd}>
+                        <Trans i18nKey="new_user" />
+                    </Button>,
+                ]}
+            />
+
+            <Modal
+                title={<Trans i18nKey="new_user" />}
+                className="add-modal"
+                centered
+                visible={isModalVisible}
+                onOk={handleAdd}
+                onCancel={cancelAdd}
+                footer={null}
+            >
+                <Form
+                    layout="vertical"
+                    ref={(form) => (addForm = form)}
+                    initialValues={initialAddValues}
+                    hideRequiredMark
+                    onFinish={handleAdd}
+                    validateTrigger="onSubmit"
+                >
+                    {errorsAdd != '' && (
+                        <Alert
+                            type="error"
+                            className="alert-msg"
+                            message={
+                                <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errorsAdd)} />
+                            }
+                            showIcon
+                        />
+                    )}
+
+                    <Form.Item
+                        label={<Trans i18nKey="username.label" />}
+                        name="username"
+                        rules={[
+                            {
+                                required: true,
+                                message: <Trans i18nKey="username.required" />,
+                            },
+                            {
+                                min: 4,
+                                message: <Trans i18nKey="username.size" />,
+                            },
+                        ]}
+                    >
+                        <Input placeholder={t('username.label')} />
+                    </Form.Item>
+
+                    <Form.Item
+                        label={<Trans i18nKey="email.label" />}
+                        name="email"
+                        rules={[
+                            {
+                                type: 'email',
+                                message: <Trans i18nKey="email.invalid" />,
+                            },
+                            {
+                                required: true,
+                                message: <Trans i18nKey="email.required" />,
+                            },
+                        ]}
+                    >
+                        <Input placeholder={t('email.label')} />
+                    </Form.Item>
+                    <Form.Item
+                        label={<Trans i18nKey="password.label" />}
+                        name="password"
+                        rules={[
+                            {
+                                min: 4,
+                                message: <Trans i18nKey="password.size" />,
+                            },
+                            {
+                                required: true,
+                                message: <Trans i18nKey="password.required" />,
+                            },
+                        ]}
+                    >
+                        <Input.Password placeholder="**********" />
+                    </Form.Item>
+
+                    <Form.Item
+                        label={<Trans i18nKey="role.label" />}
+                        name="role"
+                        rules={[
+                            {
+                                required: true,
+                                message: <Trans i18nKey="role.required" />,
+                            },
+                        ]}
+                    >
+                        <Select
+                            className="select-field"
+                            showSearch
+                            allowClear
+                            placeholder={t('role.placeholder')}
+                            filterSort={(optionA, optionB) =>
+                                optionA.children.toString().toLowerCase().localeCompare(optionB.children.toString().toLowerCase())
+                            }
+                        >
+                            {Object.entries(allRoles).map(([id, name]) => (
+                                <Option key={id} value={name} className="text-capitalize">{name}</Option>
+                            ))}
+                        </Select>
+                    </Form.Item>
+
+                    <Form.Item className="modal-submit-btn button-container">
+                        <Button type="text" className="cancel-btn prev" block onClick={cancelAdd}>
+                            <Trans i18nKey="cancel" />
+                        </Button>
+                        <Button type="primary" htmlType="submit" block>
+                            <Trans i18nKey="create" />
+                        </Button>
+                    </Form.Item>
+                </Form>
+            </Modal>
+
+            <Table
+                className="hivelvet-table"
+                components={{
+                    body: {
+                        cell: EditableCell,
+                        row: EditableRow,
+                    },
+                }}
+                columns={mergedColumns}
+                dataSource={data}
+                pagination={pagination}
+                loading={loading}
+                onChange={handleTableChange}
+            />
+        </>
+    );
 }
 
 export default withTranslation()(Users);

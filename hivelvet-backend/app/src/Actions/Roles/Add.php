@@ -60,8 +60,8 @@ class Add extends BaseAction
             } else {
                 try {
                     $result = $role->saveRoleAndPermissions($form['permissions']);
-                    if (ResponseCode::HTTP_OK !== $result) {
-                        $this->renderJson(['errors' => $result->getMessage()], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+                    if (!$result) {
+                        $this->renderJson(['errors' => 'role could not be added'], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
 
                         return;
                     }

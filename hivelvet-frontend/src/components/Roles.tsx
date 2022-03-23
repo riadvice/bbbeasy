@@ -136,6 +136,39 @@ class Roles extends Component<Props, State> {
     handleTableChange = (pagination) => {
         this.setState({ pagination: pagination });
     };
+    getPermissionsCard = (key?: React.Key) => {
+        const allPrivileges = this.state.allPrivileges;
+        return (
+            <div className="bordered-card">
+                {Object.keys(allPrivileges).map((group) => {
+                    const newGroup = group.replace('_', ' ');
+                    return (
+                        <Card
+                            bordered={false}
+                            key={group}
+                            title={newGroup}
+                            className="text-capitalize"
+                            type="inner"
+                        >
+                            <Form.Item name={group}>
+                                <Checkbox.Group disabled={key == 1 && true}>
+                                    <Row gutter={[32, 16]}>
+                                        {allPrivileges[group].map((action) => (
+                                            <Col key={action}>
+                                                <Checkbox value={action} className="text-capitalize">
+                                                    {action}
+                                                </Checkbox>
+                                            </Col>
+                                        ))}
+                                    </Row>
+                                </Checkbox.Group>
+                            </Form.Item>
+                        </Card>
+                    );
+                })}
+            </div>
+        );
+    }
 
     //add
     addForm = null;
@@ -152,8 +185,6 @@ class Roles extends Component<Props, State> {
                 const result = response.data;
                 const newRowData: Item = result.role;
                 NotificationsService.openNotificationWithIcon('success', t('add_role_success'));
-                //delete data of form
-                this.addForm?.resetFields();
                 //add data to table
                 this.setState({
                     loading: false,
@@ -209,7 +240,6 @@ class Roles extends Component<Props, State> {
     };
     expandedRowRender = (record) => {
         let editRowForm = null;
-        const { allPrivileges } = this.state;
         const permissionsChecked = record.permissions;
 
         const cancelEdit = (key: React.Key) => {
@@ -251,25 +281,7 @@ class Roles extends Component<Props, State> {
                 onChange={() => changeEdit(record.key)}
             >
                 <Card bordered={false} className="card-parent">
-                    <div className="bordered-card">
-                        {Object.keys(allPrivileges).map((group) => (
-                            <Card bordered={false} key={group} title={group} className="text-capitalize" type="inner">
-                                <Form.Item name={group}>
-                                    <Checkbox.Group disabled={record.key == 1 && true}>
-                                        <Row gutter={[32, 16]}>
-                                            {allPrivileges[group].map((action) => (
-                                                <Col span={Object.keys(allPrivileges).length > 6 && 4} key={action}>
-                                                    <Checkbox value={action} className="text-capitalize">
-                                                        {action}
-                                                    </Checkbox>
-                                                </Col>
-                                            ))}
-                                        </Row>
-                                    </Checkbox.Group>
-                                </Form.Item>
-                            </Card>
-                        ))}
-                    </div>
+                    {this.getPermissionsCard(record.key)}
                     {record.key != 1 && (
                         <Space size="middle" className="actions-expanded">
                             {this.state.changedKeys.includes(record.key) ? (
@@ -301,7 +313,12 @@ class Roles extends Component<Props, State> {
     EditableRow: React.FC<EditableRowProps> = ({ index, ...props }) => {
         const [editForm] = Form.useForm();
         return (
-            <Form size="middle" form={editForm} component={false}>
+            <Form
+                size="middle"
+                form={editForm}
+                component={false}
+                validateTrigger="onSubmit"
+            >
                 <EditableContext.Provider value={editForm}>
                     <tr {...props} />
                 </EditableContext.Provider>
@@ -400,7 +417,7 @@ class Roles extends Component<Props, State> {
                             />
                         </Form.Item>
                     ) : (
-                        <div className="editable-cell-value-wrap">
+                        <>
                             {children}
                             {isShown && (
                                 <Button
@@ -410,7 +427,7 @@ class Roles extends Component<Props, State> {
                                     onClick={toggleEditName}
                                 />
                             )}
-                        </div>
+                        </>
                     )
                 ) : (
                     children
@@ -556,7 +573,7 @@ class Roles extends Component<Props, State> {
     });
 
     render() {
-        const { data, pagination, loading, isModalVisible, errorsAdd, allPrivileges, expandedKeys } = this.state;
+        const { data, pagination, loading, isModalVisible, errorsAdd, expandedKeys } = this.state;
 
         const columns = [
             {
@@ -682,31 +699,7 @@ class Roles extends Component<Props, State> {
                                 <Trans i18nKey="permissions.label" />
                             </label>
                         </div>
-                        <div className="bordered-card">
-                            {Object.keys(allPrivileges).map((group) => (
-                                <Card
-                                    bordered={false}
-                                    key={group}
-                                    title={group}
-                                    className="text-capitalize"
-                                    type="inner"
-                                >
-                                    <Form.Item name={group}>
-                                        <Checkbox.Group>
-                                            <Row gutter={[32, 16]}>
-                                                {allPrivileges[group].map((action) => (
-                                                    <Col span={Object.keys(allPrivileges).length > 3 && 8} key={action}>
-                                                        <Checkbox value={action} className="text-capitalize">
-                                                            {action}
-                                                        </Checkbox>
-                                                    </Col>
-                                                ))}
-                                            </Row>
-                                        </Checkbox.Group>
-                                    </Form.Item>
-                                </Card>
-                            ))}
-                        </div>
+                        {this.getPermissionsCard()}
                         <Form.Item className="modal-submit-btn button-container">
                             <Button type="text" className="cancel-btn prev" block onClick={this.cancelAdd}>
                                 <Trans i18nKey="cancel" />

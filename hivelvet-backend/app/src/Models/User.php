@@ -134,19 +134,25 @@ class User extends BaseModel
         $data  = [];
         $users = $this->find([], ['order' => 'id']);
         if ($users) {
-            foreach ($users as $user) {
-                /** @var Role $role */
-                $role = $user->role_id;
-                $data[] = [
-                    'key'       => $user->id,
-                    'username'  => $user->username,
-                    'email'  => $user->email,
-                    'status'  => $user->status,
-                    'role'  => [$role->id => $role->name],
-                ];
-            }
+            $data = $this->getUserInfos();
         }
-
         return $data;
+    }
+
+    public function getUserInfos(int $id = NULL) : array
+    {
+        if ($id) {
+            $subQuery = 'WHERE u.id = :user_id';
+            $params = [':user_id' => $id];
+        }
+        $result = $this->db->exec(
+            'SELECT
+                u.id AS key, u.username, u.email, u.status, r.name AS role
+            FROM
+                users u
+            LEFT JOIN roles r ON u.role_id = r.id '.$subQuery, $params
+        );
+
+        return $id ? $result[0] : $result ;
     }
 }

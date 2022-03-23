@@ -77,22 +77,14 @@ class Add extends BaseAction
                         $user->save();
                     } catch (\Exception $e) {
                         $message = 'user could not be added';
-                        $this->logger->error('Registration error : user could not be added', ['user' => $user->toArray(), 'error' => $e->getMessage()]);
+                        $this->logger->error('User could not be added', ['user' => $user->toArray(), 'error' => $e->getMessage()]);
                         $this->renderJson(['message' => $message], ResponseCode::HTTP_BAD_REQUEST);
 
                         return;
                     }
 
-                    $result = [
-                        'key'       => $user->id,
-                        'username'  => $user->username,
-                        'email'  => $user->email,
-                        'status'  => $user->status,
-                        'role'  => [$role->id => $role->name],
-                    ];
-
                     $this->logger->info('User successfully added', ['user' => $user->toArray()]);
-                    $this->renderJson(['result' => 'success', 'user' => $result]);
+                    $this->renderJson(['result' => 'success', 'user' => $user->getUserInfos($user->id)]);
                 }
             }
         } else {
