@@ -156,8 +156,8 @@
         "label": "Name",
         "required": "Name is required"
     },
-    "required_name" : "Name is required",
-    "exist_name" : "Name already exist",
+    "required_name": "Name is required",
+    "exist_name": "Name already exist",
     "permissions": {
         "label": "Permissions"
     },
@@ -202,8 +202,8 @@
     "inactive": "Inactive",
     "pending": "Pending",
     "deleted": "Deleted",
-    "required_username" : "Username is required",
-    "required_email" : "Email is required",
-    "required_role" : "Please select a role",
-    "required_status" : "Please select a state"
+    "required_username": "Username is required",
+    "required_email": "Email is required",
+    "required_role": "Please select a role",
+    "required_status": "Please select a state"
 }

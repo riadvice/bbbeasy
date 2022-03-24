@@ -16,8 +16,8 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import {notification} from "antd";
-import {t} from "i18next";
+import { notification } from 'antd';
+import { t } from 'i18next';
 
 class NotificationsService {
     openNotificationWithIcon = (type, message) => {
@@ -29,4 +29,3 @@ class NotificationsService {
 }
 
 export default new NotificationsService();
-

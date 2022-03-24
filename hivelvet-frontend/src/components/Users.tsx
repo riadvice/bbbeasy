@@ -16,18 +16,18 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, {useEffect} from 'react';
-import UsersService from "../services/users.service";
+import React, { useEffect } from 'react';
+import UsersService from '../services/users.service';
 import PaginationType from './PaginationType';
-import NotificationsService from "../services/notifications.service";
-import {Trans, withTranslation} from 'react-i18next';
+import NotificationsService from '../services/notifications.service';
+import { Trans, withTranslation } from 'react-i18next';
 import EN_US from '../locale/en-US.json';
-import {t} from 'i18next';
+import { t } from 'i18next';
 
 import { Alert, Button, Form, Input, Modal, PageHeader, Popconfirm, Select, Space, Table, Tag, Typography } from 'antd';
-import {DeleteOutlined, EditOutlined, QuestionCircleOutlined, SearchOutlined} from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, QuestionCircleOutlined, SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words/dist/main';
-import {FormInstance} from 'antd/lib/form';
+import { FormInstance } from 'antd/lib/form';
 
 const { Option } = Select;
 const { Link } = Typography;
@@ -60,7 +60,7 @@ const Users = () => {
     const [allRoles, setAllRoles] = React.useState({});
     //const [editingKeys, setEditingKeys] = React.useState<number[]>([]);
     const [editingKey, setEditingKey] = React.useState<number>(null);
-    const [pagination, setPagination] = React.useState<PaginationType>({current: 1, pageSize: 5});
+    const [pagination, setPagination] = React.useState<PaginationType>({ current: 1, pageSize: 5 });
     const [loading, setLoading] = React.useState<boolean>(false);
     const [errorsAdd, setErrorsAdd] = React.useState('');
     const [errorsEdit, setErrorsEdit] = React.useState({});
@@ -109,7 +109,7 @@ const Users = () => {
     };
 
     // add
-    let addForm : FormInstance = null;
+    let addForm: FormInstance = null;
     const initialAddValues = {
         username: '',
         email: '',
@@ -151,55 +151,69 @@ const Users = () => {
     const [editForm] = Form.useForm();
     const EditableRow: React.FC<EditableRowProps> = ({ index, ...props }) => {
         return (
-            <Form
-                size="middle"
-                form={editForm}
-                component={false}
-                validateTrigger="onSubmit"
-            >
+            <Form size="middle" form={editForm} component={false} validateTrigger="onSubmit">
                 <EditableContext.Provider value={editForm}>
                     <tr {...props} />
                 </EditableContext.Provider>
             </Form>
         );
     };
-    const EditableCell: React.FC<EditableCellProps> = ({ title, editing, children, dataIndex, record, inputType, index, ...restProps }) => {
+    const EditableCell: React.FC<EditableCellProps> = ({
+        title,
+        editing,
+        children,
+        dataIndex,
+        record,
+        inputType,
+        index,
+        ...restProps
+    }) => {
         let inputNode;
-        if(inputType === 'select') {
+        if (inputType === 'select') {
             if (dataIndex == 'role') {
-                inputNode =
+                inputNode = (
                     <Select
                         className="select-field"
                         showSearch
                         allowClear
                         placeholder={t('role.placeholder')}
                         filterSort={(optionA, optionB) =>
-                            optionA.children.toString().toLowerCase().localeCompare(optionB.children.toString().toLowerCase())
+                            optionA.children
+                                .toString()
+                                .toLowerCase()
+                                .localeCompare(optionB.children.toString().toLowerCase())
                         }
                     >
                         {Object.entries(allRoles).map(([id, name]) => (
-                            <Option key={id} value={name} className="text-capitalize">{name}</Option>
+                            <Option key={id} value={name} className="text-capitalize">
+                                {name}
+                            </Option>
                         ))}
                     </Select>
-            }
-            else if (dataIndex == 'status') {
-                inputNode =
+                );
+            } else if (dataIndex == 'status') {
+                inputNode = (
                     <Select
                         className="select-field"
                         showSearch
                         allowClear
                         placeholder={t('status.placeholder')}
                         filterSort={(optionA, optionB) =>
-                            optionA.children.toString().toLowerCase().localeCompare(optionB.children.toString().toLowerCase())
+                            optionA.children
+                                .toString()
+                                .toLowerCase()
+                                .localeCompare(optionB.children.toString().toLowerCase())
                         }
                     >
-                        {allStates.map((item,index) => (
-                            <Option key={index} value={item} className="text-capitalize">{t(item)}</Option>
+                        {allStates.map((item, index) => (
+                            <Option key={index} value={item} className="text-capitalize">
+                                {t(item)}
+                            </Option>
                         ))}
                     </Select>
+                );
             }
-        }
-        else {
+        } else {
             inputNode = <Input />;
         }
         return (
@@ -207,15 +221,22 @@ const Users = () => {
                 {editing ? (
                     <Form.Item
                         name={dataIndex}
-                        className="input-editable editable-row"/**/
-                        {...dataIndex in errorsEdit && record.key == errorsEdit['key'] && {
-                            help: <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errorsEdit[dataIndex])} />,
-                            validateStatus: 'error',
-                        }}
+                        className="input-editable editable-row" /**/
+                        {...(dataIndex in errorsEdit &&
+                            record.key == errorsEdit['key'] && {
+                                help: (
+                                    <Trans
+                                        i18nKey={Object.keys(EN_US).filter(
+                                            (elem) => EN_US[elem] == errorsEdit[dataIndex]
+                                        )}
+                                    />
+                                ),
+                                validateStatus: 'error',
+                            })}
                         rules={[
                             {
                                 required: true,
-                                message: t('required_'+dataIndex)
+                                message: t('required_' + dataIndex),
                             },
                         ]}
                     >
@@ -349,7 +370,8 @@ const Users = () => {
                         icon={<SearchOutlined />}
                         onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
                     >
-                        {' '} <Trans i18nKey="search" />
+                        {' '}
+                        <Trans i18nKey="search" />
                     </Button>
                     <Button size="small" onClick={() => handleReset(clearFilters)}>
                         <Trans i18nKey="reset" />
@@ -378,11 +400,7 @@ const Users = () => {
                 text = text[0].toUpperCase() + text.slice(1);
             }
             return searchedColumn === dataIndex ? (
-                <Highlighter
-                    searchWords={[searchText]}
-                    autoEscape
-                    textToHighlight={text ? text.toString() : ''}
-                />
+                <Highlighter searchWords={[searchText]} autoEscape textToHighlight={text ? text.toString() : ''} />
             ) : (
                 text
             );
@@ -446,9 +464,7 @@ const Users = () => {
                     default:
                         color = '';
                 }
-                return (
-                    <Tag color={color}>{ t(status) }</Tag>
-                );
+                return <Tag color={color}>{t(status)}</Tag>;
             },
             filters: allStates.map((item) => ({
                 text: t(item),
@@ -481,7 +497,7 @@ const Users = () => {
                         </Button>
                     </Space>
                 ) : (
-                    <Space size="middle" className='table-actions'>
+                    <Space size="middle" className="table-actions">
                         <Link disabled={editingKey !== null} onClick={() => toggleEdit(record)}>
                             <EditOutlined /> <Trans i18nKey="edit" />
                         </Link>
@@ -499,7 +515,7 @@ const Users = () => {
             },
         },
     ];
-    const mergedColumns = columns.map(col => {
+    const mergedColumns = columns.map((col) => {
         if (!col.editable) {
             return col;
         }
@@ -512,7 +528,7 @@ const Users = () => {
                 title: col.title,
                 editing: isEditing(record),
             }),
-            onRow : (record: Item, rowIndex) => ({
+            onRow: (record: Item, rowIndex) => ({
                 index: rowIndex,
             }),
         };
@@ -551,9 +567,7 @@ const Users = () => {
                         <Alert
                             type="error"
                             className="alert-msg"
-                            message={
-                                <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errorsAdd)} />
-                            }
+                            message={<Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errorsAdd)} />}
                             showIcon
                         />
                     )}
@@ -624,11 +638,16 @@ const Users = () => {
                             allowClear
                             placeholder={t('role.placeholder')}
                             filterSort={(optionA, optionB) =>
-                                optionA.children.toString().toLowerCase().localeCompare(optionB.children.toString().toLowerCase())
+                                optionA.children
+                                    .toString()
+                                    .toLowerCase()
+                                    .localeCompare(optionB.children.toString().toLowerCase())
                             }
                         >
                             {Object.entries(allRoles).map(([id, name]) => (
-                                <Option key={id} value={name} className="text-capitalize">{name}</Option>
+                                <Option key={id} value={name} className="text-capitalize">
+                                    {name}
+                                </Option>
                             ))}
                         </Select>
                     </Form.Item>
@@ -660,6 +679,6 @@ const Users = () => {
             />
         </>
     );
-}
+};
 
 export default withTranslation()(Users);

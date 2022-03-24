@@ -18,7 +18,7 @@
 
 import React, { useContext, useState, useEffect, useRef, Component } from 'react';
 import RolesService from '../services/roles.service';
-import NotificationsService from "../services/notifications.service";
+import NotificationsService from '../services/notifications.service';
 import PaginationType from './PaginationType';
 
 import { PageHeader, Button, Row, Col, Typography, Table, Space, Modal, Popconfirm, Card } from 'antd';
@@ -143,13 +143,7 @@ class Roles extends Component<Props, State> {
                 {Object.keys(allPrivileges).map((group) => {
                     const newGroup = group.replace('_', ' ');
                     return (
-                        <Card
-                            bordered={false}
-                            key={group}
-                            title={newGroup}
-                            className="text-capitalize"
-                            type="inner"
-                        >
+                        <Card bordered={false} key={group} title={newGroup} className="text-capitalize" type="inner">
                             <Form.Item name={group}>
                                 <Checkbox.Group disabled={key == 1 && true}>
                                     <Row gutter={[32, 16]}>
@@ -168,7 +162,7 @@ class Roles extends Component<Props, State> {
                 })}
             </div>
         );
-    }
+    };
 
     //add
     addForm = null;
@@ -313,12 +307,7 @@ class Roles extends Component<Props, State> {
     EditableRow: React.FC<EditableRowProps> = ({ index, ...props }) => {
         const [editForm] = Form.useForm();
         return (
-            <Form
-                size="middle"
-                form={editForm}
-                component={false}
-                validateTrigger="onSubmit"
-            >
+            <Form size="middle" form={editForm} component={false} validateTrigger="onSubmit">
                 <EditableContext.Provider value={editForm}>
                     <tr {...props} />
                 </EditableContext.Provider>
@@ -383,14 +372,19 @@ class Roles extends Component<Props, State> {
                             className="input-editable"
                             {...(dataIndex in errorsEdit &&
                                 record.key == errorsEdit['key'] && {
-                                    help: <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errorsEdit[dataIndex])} />,
+                                    help: (
+                                        <Trans
+                                            i18nKey={Object.keys(EN_US).filter(
+                                                (elem) => EN_US[elem] == errorsEdit[dataIndex]
+                                            )}
+                                        />
+                                    ),
                                     validateStatus: 'error',
-                                })
-                            }
+                                })}
                             rules={[
                                 {
                                     required: true,
-                                    message: t('required_'+dataIndex)
+                                    message: t('required_' + dataIndex),
                                 },
                             ]}
                         >
@@ -525,7 +519,8 @@ class Roles extends Component<Props, State> {
                         icon={<SearchOutlined />}
                         onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
                     >
-                        {' '} <Trans i18nKey="search" />
+                        {' '}
+                        <Trans i18nKey="search" />
                     </Button>
                     <Button size="small" onClick={() => this.handleReset(clearFilters)}>
                         <Trans i18nKey="reset" />
@@ -682,7 +677,11 @@ class Roles extends Component<Props, State> {
                             label={<Trans i18nKey="name.label" />}
                             name="name"
                             {...('name' in errorsAdd && {
-                                help: <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errorsAdd['name'])} />,
+                                help: (
+                                    <Trans
+                                        i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errorsAdd['name'])}
+                                    />
+                                ),
                                 validateStatus: 'error',
                             })}
                             rules={[
