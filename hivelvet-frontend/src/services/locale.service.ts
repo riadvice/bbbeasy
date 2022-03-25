@@ -31,7 +31,7 @@ import languages from '../components/Languages';
 import { Locale } from 'antd/lib/locale-provider';
 import { DirectionType } from 'antd/lib/config-provider';
 
-const defaultLang = process.env.REACT_APP_FALLBACK_LANG;
+const defaultLang: string = process.env.REACT_APP_FALLBACK_LANG;
 
 const initLang = (): string => {
     if (localStorage.getItem('locale') == null) {
@@ -82,7 +82,7 @@ class LocaleService {
     }
 
     changeLocale(locale: string) {
-        const res = languages.filter((item) => item.value == locale);
+        const res: object = languages.filter((item) => item.value == locale);
         i18next.changeLanguage(res[0].key);
         moment.locale(locale);
         this.setLocale(locale);

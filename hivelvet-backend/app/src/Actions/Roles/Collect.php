@@ -40,16 +40,8 @@ class Collect extends BaseAction
     public function execute($f3, $params): void
     {
         $role  = new Role();
-        $roles = $role->find();
-        if ($roles) {
-            $rolesData = [];
-            foreach ($roles as $role) {
-                $rolesData[$role->id] = $role->name;
-            }
-        } else {
-            $rolesData = (object) [];
-        }
+        $roles = $role->collectAll();
         $this->logger->debug('Collecting roles for manage users');
-        $this->renderJson(['roles' => $rolesData]);
+        $this->renderJson($roles);
     }
 }

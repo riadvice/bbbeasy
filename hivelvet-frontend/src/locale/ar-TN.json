@@ -155,6 +155,8 @@
         "label": "الإسم",
         "required": "الاسم مطلوب"
     },
+    "required_name": "الاسم مطلوب",
+    "exist_name": "الاسم موجود مسبقاً",
     "permissions": {
         "label": "الصلاحيات"
     },
@@ -176,15 +178,29 @@
     "username_col": "إسم المستخدم",
     "email_col": "البريد الإلكتروني",
     "role_col": "الدور",
+    "status_col": "الحالة",
     "new_user": "مستخدم جديد",
     "role": {
         "label": "الدور",
         "required": "الرجاء اختيار دور",
         "placeholder": "اختيار دور"
     },
+    "status": {
+        "label": "الحالة",
+        "required": "الرجاء اختيار حالة",
+        "placeholder": "اختر حالة"
+    },
     "edit": "تعديل",
     "add_user_success": "تمت إضافة المستخدم بنجاح",
     "edit_user_success": "تم تحديث المستخدم بنجاح",
     "delete_user_confirm": "هل أنت متأكد من حذف هذا المستخدم ؟",
-    "delete_user_success": "تم حذف المستخدم بنجاح"
+    "delete_user_success": "تم حذف المستخدم بنجاح",
+    "active": "مفعل",
+    "inactive": "غير مفعل",
+    "pending": "في انتظار",
+    "deleted": "محذوف",
+    "required_username": "اسم المستخدم مطلوب",
+    "required_email": "البريد الإلكتروني مطلوب",
+    "required_role": "الرجاء اختيار دور",
+    "required_status": "الرجاء اختيار حالة"
 }

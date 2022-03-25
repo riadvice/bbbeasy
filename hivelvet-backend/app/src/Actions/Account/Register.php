@@ -51,11 +51,16 @@ class Register extends BaseAction
         $dataChecker->verify($form['agreement'], Validator::trueVal()->setName('agreement'));
 
         if ($dataChecker->allValid()) {
-            $usernameExist = $user->load(['username = ?', $form['username']]);
-            $emailExist    = $user->load(['email = ?', $form['email']]);
-
-            if ($usernameExist || $emailExist) {
-                $message = ($usernameExist && $emailExist) ? 'username and email already exist' : ($usernameExist ? 'username already exist' : 'email already exist');
+            $users = $user->find(['username = ? or email = ?', $form['username'], $form['email']]);
+            if ($users) {
+                $users = $users->castAll();
+                if (count($users) == 1) {
+                    $usernameExist = $users[0]['username'] == $form['username'];
+                    $emailExist = $users[0]['email'] == $form['email'];
+                    $message = ($usernameExist && $emailExist) ? 'username and email already exist' : ($usernameExist ? 'username already exist' : 'email already exist');
+                } else {
+                    $message = 'username and email already exist';
+                }
                 $this->logger->error('Registration error : user could not be added', ['error' => $message]);
                 $this->renderJson(['message' => $message], ResponseCode::HTTP_BAD_REQUEST);
             } else {

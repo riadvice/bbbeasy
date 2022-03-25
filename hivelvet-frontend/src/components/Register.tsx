@@ -27,12 +27,18 @@ import { t } from 'i18next';
 
 const { Title, Paragraph } = Typography;
 
-type Props = {};
+type formType = {
+    username: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+    agreement: boolean;
+};
 
+type Props = {};
 type State = {
     successful?: boolean;
     message?: string;
-    errors?: any;
 };
 
 class Register extends Component<Props, State> {
@@ -42,27 +48,18 @@ class Register extends Component<Props, State> {
         this.state = {
             successful: false,
             message: '',
-            errors: {},
         };
     }
 
-    handleRegistration(formValue: any) {
+    handleRegistration(formValue: formType) {
         AuthService.register(formValue)
-            .then((response) => {
+            .then(() => {
                 this.setState({
                     successful: true,
                 });
             })
             .catch((error) => {
-                this.setState({
-                    errors: {},
-                });
                 const responseData = error.response.data;
-                if (responseData.errors) {
-                    this.setState({
-                        errors: responseData.errors,
-                    });
-                }
                 this.setState({
                     successful: false,
                     message: responseData.message,
@@ -71,8 +68,8 @@ class Register extends Component<Props, State> {
     }
 
     render() {
-        const { successful, message, errors } = this.state;
-        const initialValues = {
+        const { successful, message } = this.state;
+        const initialValues: formType = {
             username: '',
             email: '',
             password: '',

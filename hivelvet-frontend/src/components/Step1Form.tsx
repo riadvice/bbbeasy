@@ -23,13 +23,8 @@ import { Trans, useTranslation } from 'react-i18next';
 
 const { Title, Paragraph } = Typography;
 
-type Props = {
-    errors: {};
-};
-
-export const Step1Form = (props: Props) => {
+export const Step1Form = () => {
     const { t } = useTranslation();
-    const { errors } = props;
 
     return (
         <div>

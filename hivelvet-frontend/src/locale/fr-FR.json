@@ -155,6 +155,8 @@
         "label": "Nom",
         "required": "Le nom est obligatoire"
     },
+    "required_name": "Le nom est obligatoire",
+    "exist_name": "Ce nom existe déjà",
     "permissions": {
         "label": "Permissions"
     },
@@ -176,15 +178,29 @@
     "username_col": "Nom d'utilisateur",
     "email_col": "E-mail",
     "role_col": "Rôle",
+    "status_col": "Status",
     "new_user": "Nouvel utilisateur",
     "role": {
         "label": "Rôle",
         "required": "Veuillez sélectionner un rôle",
         "placeholder": "Sélectionner un rôle"
     },
+    "status": {
+        "label": "Status",
+        "required": "Veuillez sélectionner une status",
+        "placeholder": "Sélectionner une status"
+    },
     "edit": "Éditer",
     "add_user_success": "Utilisateur ajouté avec succès",
     "edit_user_success": "Utilisateur mis à jour avec succès",
     "delete_user_confirm": "Êtes-vous sûr de vouloir supprimer cet utilisateur ?",
-    "delete_user_success": "Utilisateur supprimé avec succès"
+    "delete_user_success": "Utilisateur supprimé avec succès",
+    "active": "Actif",
+    "inactive": "Inactif",
+    "pending": "En attente",
+    "deleted": "Supprimé",
+    "required_username": "Le nom d'utilisateur est obligatoire",
+    "required_email": "L'e-mail est obligatoire",
+    "required_role": "Veuillez sélectionner un rôle",
+    "required_status": "Veuillez sélectionner une status"
 }

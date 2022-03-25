@@ -53,10 +53,16 @@ import { withTranslation } from 'react-i18next';
 
 const { Content } = Layout;
 
+type userType = {
+    username: string;
+    email: string;
+    role: string;
+};
+
 type State = {
-    currentUser?: any;
+    currentUser?: userType;
     isLogged?: boolean;
-    language?: any;
+    language?: string;
 };
 
 class WebApp extends Component<Props, State> {
@@ -71,18 +77,18 @@ class WebApp extends Component<Props, State> {
     }
 
     componentDidMount = () => {
-        const user = authService.getCurrentUser();
+        const user: userType = authService.getCurrentUser();
         if (authService.getCurrentUser() != null) this.setUser(user, true);
     };
 
-    setUser = (user, Logged) => {
+    setUser = (user: userType, Logged: boolean) => {
         this.setState({
             currentUser: user,
             isLogged: Logged,
         });
     };
 
-    setLang = (lang) => {
+    setLang = (lang: string) => {
         this.setState({
             language: lang,
         });
@@ -156,7 +162,7 @@ class WebApp extends Component<Props, State> {
                                     path="/home"
                                     element={
                                         <PrivateRoute>
-                                            <Home isLogged={isLogged} user={currentUser} />
+                                            <Home />
                                         </PrivateRoute>
                                     }
                                 />

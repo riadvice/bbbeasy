@@ -61,10 +61,18 @@ class Edit extends BaseAction
 
             if ($dataChecker->allValid()) {
                 $checkUser = new User();
-                $usernameExist = $checkUser->load(['username = ? and id != ?', $form['username'], $id]);
-                $emailExist    = $checkUser->load(['email = ? and id != ?', $form['email'], $id]);
-                if ($usernameExist || $emailExist) {
-                    $message = ($usernameExist && $emailExist) ? ['username' => 'username already exist','email' => 'email already exist'] : ($usernameExist ? ['username' => 'username already exist'] : ['email' => 'email already exist']);
+                $users = $checkUser->find(['(username = ? and id != ?) or (email = ? and id != ?)', $form['username'], $id, $form['email'], $id]);
+                if ($users) {
+                    $users = $users->castAll();
+                    if (count($users) == 1) {
+                        $usernameExist = $users[0]['username'] == $form['username'];
+                        $emailExist = $users[0]['email'] == $form['email'];
+                        $message = ($usernameExist && $emailExist) ?
+                            ['username' => 'username already exist','email' => 'email already exist'] :
+                            ($usernameExist ? ['username' => 'username already exist'] : ['email' => 'email already exist']);
+                    } else {
+                        $message = ['username' => 'username already exist','email' => 'email already exist'];
+                    }
                     $this->logger->error('User could not be updated', ['error' => $message]);
                     $this->renderJson(['errors' => $message], ResponseCode::HTTP_BAD_REQUEST);
                 } else {

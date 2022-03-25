@@ -28,52 +28,62 @@ import { Alert, Button, Form, Input, Modal, PageHeader, Popconfirm, Select, Spac
 import { DeleteOutlined, EditOutlined, QuestionCircleOutlined, SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words/dist/main';
 import { FormInstance } from 'antd/lib/form';
+import _ from 'lodash';
 
 const { Option } = Select;
 const { Link } = Typography;
 
-interface Item {
+type Item = {
     key: number;
     username: string;
     email: string;
-    status: string;
     role: string;
-}
+    status: string;
+};
+type roleType = {
+    id?: string;
+    name?: string;
+};
+type formType = {
+    username?: string;
+    email?: string;
+    password?: string;
+    role?: number;
+    status?: number;
+};
 
-interface EditableRowProps {
-    index: number;
-}
 interface EditableCellProps {
-    title: React.ReactNode;
     editing: boolean;
     children: React.ReactNode;
     dataIndex: keyof Item;
     record: Item;
     inputType: 'text' | 'select';
-    index: number;
 }
-const EditableContext = React.createContext<FormInstance<any> | null>(null);
+const EditableContext = React.createContext<FormInstance | null>(null);
+
+let addForm: FormInstance = null;
 
 const Users = () => {
-    const [data, setData] = React.useState([]);
+    const [data, setData] = React.useState<Item[]>([]);
     const [allStates, setAllStates] = React.useState<string[]>([]);
-    const [allRoles, setAllRoles] = React.useState({});
+    const [allRoles, setAllRoles] = React.useState<roleType[]>([]);
     //const [editingKeys, setEditingKeys] = React.useState<number[]>([]);
     const [editingKey, setEditingKey] = React.useState<number>(null);
+    const [cancelVisibility, setCancelVisibility] = React.useState<boolean>(false);
     const [pagination, setPagination] = React.useState<PaginationType>({ current: 1, pageSize: 5 });
     const [loading, setLoading] = React.useState<boolean>(false);
-    const [errorsAdd, setErrorsAdd] = React.useState('');
+    const [errorsAdd, setErrorsAdd] = React.useState<string>('');
     const [errorsEdit, setErrorsEdit] = React.useState({});
     const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
-    const [searchText, setSearchText] = React.useState('');
-    const [searchedColumn, setSearchedColumn] = React.useState('');
+    const [searchText, setSearchText] = React.useState<string>('');
+    const [searchedColumn, setSearchedColumn] = React.useState<string>('');
 
     //list
     const getRoles = () => {
         UsersService.list_roles()
             .then((response) => {
-                const roles = response.data.roles;
-                if (roles instanceof Object) {
+                const roles = response.data;
+                if (roles.length > 0) {
                     setAllRoles(roles);
                 }
             })
@@ -90,7 +100,7 @@ const Users = () => {
                     setData(response.data.users);
                 }
                 if (response.data.states) {
-                    const states = response.data.states;
+                    const states: string[] = response.data.states;
                     setAllStates(states);
                 }
             })
@@ -104,20 +114,64 @@ const Users = () => {
         getRoles();
         getUsers();
     }, []);
-    const handleTableChange = (pagination) => {
+    const handleTableChange = (pagination: PaginationType) => {
         setPagination(pagination);
+    };
+    const getSelectRoles = () => {
+        return (
+            <Select
+                className="select-field"
+                showSearch
+                allowClear
+                placeholder={t('role.placeholder')}
+                filterOption={(input, option) =>
+                    option.children.toString().toLowerCase().indexOf(input.toString().toLowerCase()) >= 0
+                }
+                filterSort={(optionA, optionB) =>
+                    optionA.children.toString().toLowerCase().localeCompare(optionB.children.toString().toLowerCase())
+                }
+                onFocus={() => setCancelVisibility(false)}
+            >
+                {allRoles.map((item) => (
+                    <Option key={item.id} value={item.id} className="text-capitalize">
+                        {item.name}
+                    </Option>
+                ))}
+            </Select>
+        );
+    };
+    const getSelectStatus = () => {
+        return (
+            <Select
+                className="select-field"
+                showSearch
+                allowClear
+                placeholder={t('status.placeholder')}
+                filterOption={(input, option) =>
+                    option.children.toString().toLowerCase().indexOf(input.toString().toLowerCase()) >= 0
+                }
+                filterSort={(optionA, optionB) =>
+                    optionA.children.toString().toLowerCase().localeCompare(optionB.children.toString().toLowerCase())
+                }
+                onFocus={() => setCancelVisibility(false)}
+            >
+                {allStates.map((item, index) => (
+                    <Option key={index} value={item} className="text-capitalize">
+                        {t(item)}
+                    </Option>
+                ))}
+            </Select>
+        );
     };
 
     // add
-    let addForm: FormInstance = null;
-    const initialAddValues = {
+    const initialAddValues: formType = {
         username: '',
         email: '',
         password: '',
     };
-    const handleAdd = (formValues: any) => {
-        const res = Object.keys(allRoles).filter((key) => allRoles[key] == formValues.role);
-        formValues.role = res ? res[0] : formValues;
+    const handleAdd = (values) => {
+        const formValues: formType = values;
         setErrorsAdd('');
         UsersService.add_user(formValues)
             .then((response) => {
@@ -149,7 +203,7 @@ const Users = () => {
 
     // edit
     const [editForm] = Form.useForm();
-    const EditableRow: React.FC<EditableRowProps> = ({ index, ...props }) => {
+    const EditableRow: React.FC = ({ ...props }) => {
         return (
             <Form size="middle" form={editForm} component={false} validateTrigger="onSubmit">
                 <EditableContext.Provider value={editForm}>
@@ -159,69 +213,25 @@ const Users = () => {
         );
     };
     const EditableCell: React.FC<EditableCellProps> = ({
-        title,
         editing,
         children,
         dataIndex,
         record,
         inputType,
-        index,
         ...restProps
     }) => {
-        let inputNode;
+        let inputNode: JSX.Element;
         if (inputType === 'select') {
-            if (dataIndex == 'role') {
-                inputNode = (
-                    <Select
-                        className="select-field"
-                        showSearch
-                        allowClear
-                        placeholder={t('role.placeholder')}
-                        filterSort={(optionA, optionB) =>
-                            optionA.children
-                                .toString()
-                                .toLowerCase()
-                                .localeCompare(optionB.children.toString().toLowerCase())
-                        }
-                    >
-                        {Object.entries(allRoles).map(([id, name]) => (
-                            <Option key={id} value={name} className="text-capitalize">
-                                {name}
-                            </Option>
-                        ))}
-                    </Select>
-                );
-            } else if (dataIndex == 'status') {
-                inputNode = (
-                    <Select
-                        className="select-field"
-                        showSearch
-                        allowClear
-                        placeholder={t('status.placeholder')}
-                        filterSort={(optionA, optionB) =>
-                            optionA.children
-                                .toString()
-                                .toLowerCase()
-                                .localeCompare(optionB.children.toString().toLowerCase())
-                        }
-                    >
-                        {allStates.map((item, index) => (
-                            <Option key={index} value={item} className="text-capitalize">
-                                {t(item)}
-                            </Option>
-                        ))}
-                    </Select>
-                );
-            }
+            inputNode = dataIndex == 'role' ? getSelectRoles() : getSelectStatus();
         } else {
-            inputNode = <Input />;
+            inputNode = <Input onFocus={() => setCancelVisibility(false)} />;
         }
         return (
             <td {...restProps}>
                 {editing ? (
                     <Form.Item
                         name={dataIndex}
-                        className="input-editable editable-row" /**/
+                        className="input-editable editable-row"
                         {...(dataIndex in errorsEdit &&
                             record.key == errorsEdit['key'] && {
                                 help: (
@@ -248,52 +258,58 @@ const Users = () => {
             </td>
         );
     };
-    //const isEditing = (record: Item) => editingKeys.includes(record.key);
     const isEditing = (record: Item) => record.key == editingKey;
-    const toggleEdit = (record) => {
+    const toggleEdit = (record: Item) => {
+        setCancelVisibility(false);
         setEditingKey(record.key);
-        /*const keys = [...editingKeys];
-        if (!keys.includes(record.key)) {
-            keys.push(record.key);
-            console.log(keys);
-            setEditingKeys(keys);
-        }*/
-        editForm.setFieldsValue({ username: '', email: '', role: '', status: '', ...record });
+        editForm.setFieldsValue(record);
     };
-    const cancelEdit = (key: React.Key) => {
+    const cancelEdit = () => {
+        setCancelVisibility(false);
         setEditingKey(null);
-        //setEditingKeys(editingKeys.filter((item) => item !== key));
     };
-    const saveEdit = async (key) => {
+    const compareEdit = (oldRecord, newRecord): boolean => {
+        const newEdit = { ...newRecord };
+        if (typeof newEdit.role == 'number') {
+            const res = allRoles.filter((role) => role.id == newEdit.role);
+            newEdit.role = res[0].name;
+        }
+        return _.isEqual(oldRecord, newEdit);
+    };
+    const saveEdit = async (record: Item, key: number) => {
         try {
-            const formValues: any = (await editForm.validateFields()) as Item;
-            const res = Object.keys(allRoles).filter((key) => allRoles[key] == formValues.role);
-            formValues.role = res ? res[0] : formValues;
+            const formValues = await editForm.validateFields();
             setErrorsEdit({});
-            UsersService.edit_user(formValues, key)
-                .then((response) => {
-                    const newRowData = response.data.user;
-                    const newData = [...data];
-                    const index = newData.findIndex((item) => key === item.key);
-                    if (index > -1 && newRowData != undefined) {
-                        const item = newData[index];
-                        newData.splice(index, 1, {
-                            ...item,
-                            ...newRowData,
-                        });
-                        setData(newData);
-                        setEditingKey(null);
-                    }
-                    NotificationsService.openNotificationWithIcon('success', t('edit_user_success'));
-                })
-                .catch((error) => {
-                    const responseData = error.response.data;
-                    if (responseData.errors) {
-                        const err = responseData.errors;
-                        err['key'] = key;
-                        setErrorsEdit(err);
-                    }
-                });
+            const newData = editForm.getFieldsValue(true);
+            if (!compareEdit(record, newData)) {
+                UsersService.edit_user(formValues, key)
+                    .then((response) => {
+                        const newRowData: Item = response.data.user;
+                        const newData = [...data];
+                        const index = newData.findIndex((item) => key === item.key);
+                        if (index > -1 && newRowData != undefined) {
+                            const item = newData[index];
+                            newData.splice(index, 1, {
+                                ...item,
+                                ...newRowData,
+                            });
+                            setData(newData);
+                            cancelEdit();
+                        }
+                        NotificationsService.openNotificationWithIcon('success', t('edit_user_success'));
+                    })
+                    .catch((error) => {
+                        const responseData = error.response.data;
+                        if (responseData.errors) {
+                            const err = responseData.errors;
+                            err['key'] = key;
+                            setErrorsEdit(err);
+                        }
+                    });
+            } else {
+                NotificationsService.openNotificationWithIcon('info', t('no_changes'));
+                cancelEdit();
+            }
         } catch (errInfo) {
             console.log('Save failed:', errInfo);
             const errors = errInfo.errorFields;
@@ -308,18 +324,13 @@ const Users = () => {
     };
 
     // delete
-    const handleDelete = (key: React.Key) => {
-        UsersService.delete_user(key as number)
+    const handleDelete = (key: number) => {
+        UsersService.delete_user(key)
             .then((response) => {
                 setLoading(true);
                 const newData = [...data];
-                /*
-                // delete item of this page
-                setLoading(false);
-                setData(newData.filter((item) => item.key !== key));
-                */
                 // update item
-                const newRowData = response.data.user;
+                const newRowData: Item = response.data.user;
                 const index = newData.findIndex((item) => key === item.key);
                 if (index > -1 && newRowData != undefined) {
                     const item = newData[index];
@@ -343,13 +354,14 @@ const Users = () => {
         clearFilters();
         setSearchText('');
     };
-    const handleSearch = (selectedKeys, confirm, dataIndex, closed = false) => {
+
+    const handleSearch = (selectedKeys: string[], confirm, dataIndex: string, closed = false) => {
         if (closed) confirm({ closeDropdown: false });
         else confirm();
         setSearchText(selectedKeys[0]);
         setSearchedColumn(dataIndex);
     };
-    const getColumnSearchProps = (dataIndex) => ({
+    const getColumnSearchProps = (dataIndex: string) => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
             <div className="table-search-bloc">
                 <Input
@@ -386,11 +398,11 @@ const Users = () => {
                 </Space>
             </div>
         ),
-        filterIcon: (filtered) => <SearchOutlined className={filtered ? 'search-icon-filtered' : undefined} />,
-        onFilter: (value, record) => {
+        filterIcon: (filtered: boolean) => <SearchOutlined className={filtered ? 'search-icon-filtered' : undefined} />,
+        onFilter: (value, record: Item) => {
             return record[dataIndex] ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()) : '';
         },
-        onFilterDropdownVisibleChange: (visible) => {
+        onFilterDropdownVisibleChange: (visible: boolean) => {
             if (visible) {
                 setTimeout(() => searchInput.select(), 100);
             }
@@ -480,19 +492,27 @@ const Users = () => {
             title: t('actions_col'),
             editable: false,
             render: (text, record) => {
+                const clickCancel = (record) => {
+                    const oldData = record;
+                    const newData = editForm.getFieldsValue(true);
+                    compareEdit(oldData, newData) ? cancelEdit() : setCancelVisibility(true);
+                };
                 const editable = isEditing(record);
                 return editable ? (
                     <Space size="middle">
                         <Popconfirm
                             title={t('cancel_edit')}
                             placement="leftTop"
-                            onConfirm={() => cancelEdit(record.key)}
+                            visible={cancelVisibility}
+                            onVisibleChange={() => clickCancel(record)}
+                            onConfirm={() => cancelEdit()}
+                            onCancel={() => setCancelVisibility(false)}
                         >
                             <Button size="middle">
                                 <Trans i18nKey="cancel" />
                             </Button>
                         </Popconfirm>
-                        <Button size="middle" type="primary" onClick={() => saveEdit(record.key)}>
+                        <Button size="middle" type="primary" onClick={() => saveEdit(record, record.key)}>
                             <Trans i18nKey="save" />
                         </Button>
                     </Space>
@@ -527,9 +547,6 @@ const Users = () => {
                 dataIndex: col.dataIndex,
                 title: col.title,
                 editing: isEditing(record),
-            }),
-            onRow: (record: Item, rowIndex) => ({
-                index: rowIndex,
             }),
         };
     });
@@ -632,24 +649,7 @@ const Users = () => {
                             },
                         ]}
                     >
-                        <Select
-                            className="select-field"
-                            showSearch
-                            allowClear
-                            placeholder={t('role.placeholder')}
-                            filterSort={(optionA, optionB) =>
-                                optionA.children
-                                    .toString()
-                                    .toLowerCase()
-                                    .localeCompare(optionB.children.toString().toLowerCase())
-                            }
-                        >
-                            {Object.entries(allRoles).map(([id, name]) => (
-                                <Option key={id} value={name} className="text-capitalize">
-                                    {name}
-                                </Option>
-                            ))}
-                        </Select>
+                        {getSelectRoles()}
                     </Form.Item>
 
                     <Form.Item className="modal-submit-btn button-container">

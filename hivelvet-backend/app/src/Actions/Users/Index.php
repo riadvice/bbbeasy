@@ -43,8 +43,10 @@ class Index extends BaseAction
     {
         $user   = new User();
         $users  = $user->getAllUsers();
+
         $userStatus = new UserStatus();
         $states = $userStatus::values();
+
         $this->logger->debug('collecting users', ['users' => json_encode($users)]);
         $this->renderJson(['users' => $users, 'states' => $states]);
     }

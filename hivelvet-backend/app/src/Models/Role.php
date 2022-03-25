@@ -78,6 +78,11 @@ class Role extends BaseModel
         return $data;
     }
 
+    public function collectAll() : array
+    {
+        return $this->db->exec('SELECT id, name FROM roles');
+    }
+
     /**
      * @return array
      */

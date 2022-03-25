@@ -55,12 +55,16 @@ class Add extends BaseAction
 
         if ($dataChecker->allValid()) {
             $user = new User();
-
-            $usernameExist = $user->load(['username = ?', $form['username']]);
-            $emailExist    = $user->load(['email = ?', $form['email']]);
-
-            if ($usernameExist || $emailExist) {
-                $message = ($usernameExist && $emailExist) ? 'username and email already exist' : ($usernameExist ? 'username already exist' : 'email already exist');
+            $users = $user->find(['username = ? or email = ?', $form['username'], $form['email']]);
+            if ($users) {
+                $users = $users->castAll();
+                if (count($users) == 1) {
+                    $usernameExist = $users[0]['username'] == $form['username'];
+                    $emailExist = $users[0]['email'] == $form['email'];
+                    $message = ($usernameExist && $emailExist) ? 'username and email already exist' : ($usernameExist ? 'username already exist' : 'email already exist');
+                } else {
+                    $message = 'username and email already exist';
+                }
                 $this->logger->error('User could not be added', ['error' => $message]);
                 $this->renderJson(['message' => $message], ResponseCode::HTTP_BAD_REQUEST);
             } else {

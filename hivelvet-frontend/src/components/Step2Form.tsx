@@ -21,31 +21,38 @@ import React from 'react';
 import { message, Form, Input, Typography, Upload } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 import ColorPicker from 'rc-color-picker/lib/ColorPicker';
-import { RcFile } from 'antd/lib/upload';
+import { RcFile, UploadChangeParam } from 'antd/lib/upload';
 import { Trans, useTranslation } from 'react-i18next';
+
+import { UploadFile } from 'antd/lib/upload/interface';
 
 const { Title, Text, Paragraph } = Typography;
 const { Dragger } = Upload;
 
+type primaryColorFunction = (primary_color: string) => void;
+type secondaryColorFunction = (secondary_color: string) => void;
+type accentColorFunction = (accent_color: string) => void;
+type addColorFunction = (add_color: string) => void;
+type fileFunction = (file: UploadFile) => void;
+type fileListFunction = (fileList: UploadFile[]) => void;
+
 type Props = {
-    errors: {};
     primaryColor: string;
     secondaryColor: string;
     accentColor: string;
     addColor: string;
-    setPrimaryColor: any;
-    setSecondaryColor: any;
-    setAccentColor: any;
-    setAddColor: any;
-    setFile: any;
-    fileList: any;
-    setFileList: any;
+    setPrimaryColor: primaryColorFunction;
+    setSecondaryColor: secondaryColorFunction;
+    setAccentColor: accentColorFunction;
+    setAddColor: addColorFunction;
+    setFile: fileFunction;
+    fileList: UploadFile[];
+    setFileList: fileListFunction;
 };
 
 export const Step2Form = (props: Props) => {
     const { t } = useTranslation();
     const {
-        errors,
         primaryColor,
         secondaryColor,
         accentColor,
@@ -59,17 +66,17 @@ export const Step2Form = (props: Props) => {
         setFileList,
     } = props;
 
-    const normFile = (e: any) => {
+    const normFile = (e: UploadChangeParam<UploadFile<string>>) => {
         if (Array.isArray(e)) {
             return e;
         }
         return e && e.fileList;
     };
-    const handleChangeFile = (info: any) => {
-        let fileList: any = [...info.fileList];
+    const handleChangeFile = (info: UploadChangeParam<UploadFile<string>>) => {
+        let fileList: UploadFile[] = [...info.fileList];
         fileList = fileList.slice(-1);
         if (fileList[0] != undefined) {
-            const img =
+            const img: boolean =
                 fileList[0].type === 'image/jpg' ||
                 fileList[0].type === 'image/jpeg' ||
                 fileList[0].type === 'image/png';

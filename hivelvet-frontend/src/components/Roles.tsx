@@ -40,30 +40,33 @@ import { Trans, withTranslation } from 'react-i18next';
 import { t } from 'i18next';
 import EN_US from '../locale/en-US.json';
 
+import { AxiosResponse } from 'axios';
+
 const { Paragraph, Link } = Typography;
 
-interface Item {
+type Item = {
     key: number;
     name: string;
     users: number;
     permissions: {};
-}
+};
 
-interface EditableRowProps {
-    index: number;
-}
 interface EditableCellProps {
-    title: React.ReactNode;
     editable: boolean;
     children: React.ReactNode;
     dataIndex: keyof Item;
     record: Item;
 }
-const EditableContext = React.createContext<FormInstance<any> | null>(null);
+const EditableContext = React.createContext<FormInstance | null>(null);
+
+type formType = {
+    name?: string;
+    permissions?: {};
+};
 
 type Props = {};
 type State = {
-    data?: any[];
+    data?: Item[];
     expandedKeys?: number[];
     changedKeys?: number[];
     pagination?: PaginationType;
@@ -117,15 +120,14 @@ class Roles extends Component<Props, State> {
         this.setState({ loading: true });
         RolesService.list_roles()
             .then((response) => {
-                const results = response.data;
                 this.setState({
                     loading: false,
-                    data: results,
+                    data: response.data,
                 });
             })
             .catch((error) => {
-                this.setState({ loading: false });
                 console.log(error);
+                this.setState({ loading: false });
             });
     };
     componentDidMount() {
@@ -133,7 +135,7 @@ class Roles extends Component<Props, State> {
         this.getPrivileges();
         this.getRoles();
     }
-    handleTableChange = (pagination) => {
+    handleTableChange = (pagination: PaginationType) => {
         this.setState({ pagination: pagination });
     };
     getPermissionsCard = (key?: React.Key) => {
@@ -166,9 +168,10 @@ class Roles extends Component<Props, State> {
 
     //add
     addForm = null;
-    handleAdd = (formValues: any) => {
+    handleAdd = (values) => {
+        const formValues: formType = values;
         this.setState({ errorsAdd: [] });
-        const name = formValues.name;
+        const name: string = formValues.name;
         delete formValues.name;
         RolesService.add_role({ name: name, permissions: formValues })
             .then((response) => {
@@ -176,8 +179,7 @@ class Roles extends Component<Props, State> {
                     loading: true,
                     isModalVisible: false,
                 });
-                const result = response.data;
-                const newRowData: Item = result.role;
+                const newRowData: Item = response.data.role;
                 NotificationsService.openNotificationWithIcon('success', t('add_role_success'));
                 //add data to table
                 this.setState({
@@ -207,9 +209,9 @@ class Roles extends Component<Props, State> {
     };
 
     //edit permissions
-    editRow = (response, key) => {
-        const newRowData = response.data.role;
+    editRow = (response: AxiosResponse, key: React.Key) => {
         NotificationsService.openNotificationWithIcon('success', t('edit_role_success'));
+        const newRowData: Item = response.data.role;
         const newData = [...this.state.data];
         const index = newData.findIndex((item) => key === item.key);
         if (index > -1 && newRowData != undefined) {
@@ -223,7 +225,7 @@ class Roles extends Component<Props, State> {
             });
         }
     };
-    toggleEdit = (key) => {
+    toggleEdit = (key: number) => {
         let keys = [...this.state.expandedKeys];
         if (keys.includes(key)) {
             keys = keys.filter((item) => item !== key);
@@ -232,7 +234,7 @@ class Roles extends Component<Props, State> {
         }
         this.setState({ expandedKeys: keys });
     };
-    expandedRowRender = (record) => {
+    expandedRowRender = (record: Item) => {
         let editRowForm = null;
         const permissionsChecked = record.permissions;
 
@@ -242,15 +244,15 @@ class Roles extends Component<Props, State> {
                 expandedKeys: this.state.expandedKeys.filter((item) => item !== key),
             });
         };
-        const saveEdit = (formValues, key) => {
+        const saveEdit = (formValues, key: number) => {
             let keys = [...this.state.changedKeys];
             if (keys.includes(key)) {
                 keys = keys.filter((item) => item !== key);
                 this.setState({ changedKeys: keys });
             }
-            RolesService.edit_role({ permissions: formValues }, record.key)
+            RolesService.edit_role({ permissions: formValues }, key)
                 .then((response) => {
-                    this.editRow(response, record.key);
+                    this.editRow(response, key);
                     this.setState({
                         expandedKeys: this.state.expandedKeys.filter((item) => item !== record.key),
                     });
@@ -259,7 +261,7 @@ class Roles extends Component<Props, State> {
                     console.log(error);
                 });
         };
-        const changeEdit = (key) => {
+        const changeEdit = (key: number) => {
             const keys = [...this.state.changedKeys];
             if (!keys.includes(key)) {
                 keys.push(key);
@@ -304,7 +306,7 @@ class Roles extends Component<Props, State> {
     };
 
     // edit name
-    EditableRow: React.FC<EditableRowProps> = ({ index, ...props }) => {
+    EditableRow: React.FC = ({ ...props }) => {
         const [editForm] = Form.useForm();
         return (
             <Form size="middle" form={editForm} component={false} validateTrigger="onSubmit">
@@ -314,9 +316,9 @@ class Roles extends Component<Props, State> {
             </Form>
         );
     };
-    EditableCell: React.FC<EditableCellProps> = ({ title, editable, children, dataIndex, record, ...restProps }) => {
-        const [isShown, setIsShown] = useState(false);
-        const [editing, setEditing] = useState(false);
+    EditableCell: React.FC<EditableCellProps> = ({ editable, children, dataIndex, record, ...restProps }) => {
+        const [isShown, setIsShown] = useState<boolean>(false);
+        const [editing, setEditing] = useState<boolean>(false);
         const inputRef = useRef(null);
         const [errorsEdit, setErrorsEdit] = React.useState({});
         const editForm = useContext(EditableContext);
@@ -431,13 +433,13 @@ class Roles extends Component<Props, State> {
     };
 
     // delete
-    deleteRole = (key, nbUsers) => {
+    deleteRole = (key: number, nbUsers: number) => {
         RolesService.delete_role(key)
             .then((response) => {
                 this.setState({ loading: true });
                 const newData = [...this.state.data];
                 if (nbUsers > 0 && response.data.lecturer) {
-                    const LecturerRowData = response.data.lecturer;
+                    const LecturerRowData: Item = response.data.lecturer;
                     const index = newData.findIndex((item) => item.key === 2);
                     if (index > -1 && LecturerRowData != undefined) {
                         const item = newData[index];
@@ -459,7 +461,7 @@ class Roles extends Component<Props, State> {
                 console.log(error);
             });
     };
-    handleDelete = (key: React.Key, nbUsers) => {
+    handleDelete = (key: number, nbUsers: number) => {
         if (nbUsers > 0) {
             Modal.confirm({
                 wrapClassName: 'delete-wrap',
@@ -490,7 +492,7 @@ class Roles extends Component<Props, State> {
         clearFilters();
         this.setState({ searchText: '' });
     };
-    handleSearch = (selectedKeys, confirm, dataIndex, closed = false) => {
+    handleSearch = (selectedKeys: string[], confirm, dataIndex: string, closed = false) => {
         if (closed) confirm({ closeDropdown: false });
         else confirm();
         this.setState({
@@ -498,7 +500,7 @@ class Roles extends Component<Props, State> {
             searchedColumn: dataIndex,
         });
     };
-    getColumnSearchProps = (dataIndex) => ({
+    getColumnSearchProps = (dataIndex: string) => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
             <div className="table-search-bloc">
                 <Input
@@ -535,8 +537,8 @@ class Roles extends Component<Props, State> {
                 </Space>
             </div>
         ),
-        filterIcon: (filtered) => <SearchOutlined className={filtered ? 'search-icon-filtered' : undefined} />,
-        onFilter: (value, record) => {
+        filterIcon: (filtered: boolean) => <SearchOutlined className={filtered ? 'search-icon-filtered' : undefined} />,
+        onFilter: (value, record: Item) => {
             if (value.indexOf(' ') != -1) {
                 value = value[0] == ' ' ? value.slice(1) : value;
                 value = value[value.length - 1] == ' ' ? value.slice(0, -1) : value;
@@ -544,7 +546,7 @@ class Roles extends Component<Props, State> {
             }
             return record[dataIndex] ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()) : '';
         },
-        onFilterDropdownVisibleChange: (visible) => {
+        onFilterDropdownVisibleChange: (visible: boolean) => {
             if (visible) {
                 setTimeout(() => this.searchInput.select(), 100);
             }
@@ -569,7 +571,6 @@ class Roles extends Component<Props, State> {
 
     render() {
         const { data, pagination, loading, isModalVisible, errorsAdd, expandedKeys } = this.state;
-
         const columns = [
             {
                 title: t('name_col'),

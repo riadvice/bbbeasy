@@ -52,6 +52,7 @@
     "user-could-not-logged": "User could not be logged",
     "success-title": "Success",
     "error-title": "Error",
+    "info-title": "Info",
     "success-registration": "Congratulations ! Your account has been successfully created",
     "username-email-already-exist": "username and email already exist",
     "username-already-exist": "username already exist",
@@ -205,5 +206,6 @@
     "required_username": "Username is required",
     "required_email": "Email is required",
     "required_role": "Please select a role",
-    "required_status": "Please select a state"
+    "required_status": "Please select a state",
+    "no_changes": "No changes made"
 }

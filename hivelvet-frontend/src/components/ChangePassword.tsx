@@ -27,13 +27,17 @@ import { Trans, withTranslation } from 'react-i18next';
 import EN_US from '../locale/en-US.json';
 import { t } from 'i18next';
 
+import { URLSearchParams as _URLSearchParams } from 'url';
+
 const { Title, Paragraph } = Typography;
 
-type Props = {};
+type formType = {
+    password: string;
+    confirmPassword: string;
+};
 
+type Props = {};
 type State = {
-    password?: string;
-    email?: string;
     successful?: boolean;
     message?: string;
     available_token?: boolean;
@@ -41,36 +45,33 @@ type State = {
 
 class ChangePassword extends Component<Props, State> {
     constructor(props) {
-        const params = new URLSearchParams(window.location.search);
+        const params: _URLSearchParams = new URLSearchParams(window.location.search);
         authService
             .getResetPasswordByToken(params.get('token'))
-            .then((response) => {
+            .then(() => {
                 this.setState({
                     available_token: true,
                 });
             })
             .catch((error) => {
-                //console.log(error.response.data.message);
                 this.setState({
                     available_token: false,
                     message: error.response.data.message,
                 });
             });
         super(props);
-        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
         this.state = {
-            password: '',
-            email: '',
             successful: false,
             message: '',
         };
     }
 
-    handleChange(formValue: any) {
+    handleSubmit(formValue: formType) {
         const { password } = formValue;
-        const params = new URLSearchParams(window.location.search);
+        const params: _URLSearchParams = new URLSearchParams(window.location.search);
         AuthService.change_password(params.get('token'), password)
-            .then((response) => {
+            .then(() => {
                 this.setState({
                     successful: true,
                 });
@@ -85,11 +86,6 @@ class ChangePassword extends Component<Props, State> {
 
     render() {
         const { successful, message, available_token } = this.state;
-        const initialValues = {
-            email: '',
-            successful: false,
-            message: '',
-        };
 
         return (
             <>
@@ -136,11 +132,10 @@ class ChangePassword extends Component<Props, State> {
                                         layout="vertical"
                                         name="change"
                                         className="login-form"
-                                        initialValues={initialValues}
                                         requiredMark={false}
                                         scrollToFirstError={true}
                                         validateTrigger="onSubmit"
-                                        onFinish={this.handleChange}
+                                        onFinish={this.handleSubmit}
                                     >
                                         <Form.Item
                                             label={<Trans i18nKey="password.label" />}

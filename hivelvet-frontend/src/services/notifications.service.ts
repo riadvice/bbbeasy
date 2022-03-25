@@ -18,12 +18,15 @@
 
 import { notification } from 'antd';
 import { t } from 'i18next';
+import LocaleService from './locale.service';
 
 class NotificationsService {
-    openNotificationWithIcon = (type, message) => {
+    placement = LocaleService.direction == 'rtl' ? 'topLeft' : 'topRight';
+    openNotificationWithIcon = (type: string, message) => {
         notification[type]({
             message: t(type + '-title'),
             description: message,
+            placement: this.placement,
         });
     };
 }

@@ -22,11 +22,7 @@ import { Trans, withTranslation } from 'react-i18next';
 
 const { Title, Paragraph } = Typography;
 
-type Props = {
-    isLogged: boolean;
-    user: any;
-};
-
+type Props = {};
 type State = {};
 
 class Home extends Component<Props, State> {

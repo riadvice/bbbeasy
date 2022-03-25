@@ -61,7 +61,7 @@ class Login extends BaseAction
                 // @todo: store role in redis cache to allow routes
                 /** @var Role $role */
                 $role = $user->role_id;
-                $this->f3->set('role', $role);
+                $this->f3->set('role', $role->name);
 
                 // @todo: store locale in user prefs table
                 // $this->session->set('locale', $user->locale);

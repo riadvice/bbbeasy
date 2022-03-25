@@ -27,6 +27,10 @@ import { t } from 'i18next';
 
 const { Text, Title, Paragraph } = Typography;
 
+type formType = {
+    email: string;
+};
+
 type Props = {};
 type State = {
     email?: string;
@@ -45,7 +49,7 @@ class Reset extends Component<Props, State> {
         };
     }
 
-    handleReset(formValue: any) {
+    handleReset(formValue: formType) {
         const { email } = formValue;
 
         AuthService.reset_password(email)
@@ -69,10 +73,8 @@ class Reset extends Component<Props, State> {
 
     render() {
         const { successful, message } = this.state;
-        const initialValues = {
+        const initialValues: formType = {
             email: '',
-            successful: false,
-            message: '',
         };
 
         return (

@@ -31,8 +31,8 @@
     "websocket": "^1.0.34"
   },
   "scripts": {
-    "start-dev": "CHOKIDAR_USEPOLLING=true PORT=3300 NODE_ENV=development INSTALLER_FEATURE=false craco start",
-    "start-dev-installer": "CHOKIDAR_USEPOLLING=true PORT=3300 NODE_ENV=development INSTALLER_FEATURE=true craco start",
+    "start-dev": "PORT=3300 NODE_ENV=development INSTALLER_FEATURE=false craco start",
+    "start-dev-installer": "PORT=3300 NODE_ENV=development INSTALLER_FEATURE=true craco start",
     "build": "INSTALLER_FEATURE=false craco build",
     "build-installer": "INSTALLER_FEATURE=true craco build",
     "nyc": "nyc instrument --compact=false src instrumented",
