@@ -18,13 +18,18 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import AuthService from '../services/auth.service';
+import NotificationsService from '../services/notifications.service';
 
-import { Form, Input, Button, notification, Alert, Col, Row, Typography, Card } from 'antd';
+import { Form, Input, Button, Alert, Col, Row, Typography, Card } from 'antd';
 import { Trans, withTranslation } from 'react-i18next';
 import EN_US from '../locale/en-US.json';
 import { t } from 'i18next';
 
 const { Text, Title, Paragraph } = Typography;
+
+type formType = {
+    email: string;
+};
 
 type Props = {};
 type State = {
@@ -44,7 +49,7 @@ class Reset extends Component<Props, State> {
         };
     }
 
-    handleReset(formValue: any) {
+    handleReset(formValue: formType) {
         const { email } = formValue;
 
         AuthService.reset_password(email)
@@ -53,12 +58,10 @@ class Reset extends Component<Props, State> {
                 this.setState({
                     successful: true,
                 });
-                notification['success']({
-                    message: <Trans i18nKey="success-title" />,
-                    description: (
-                        <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == responseMessage)} />
-                    ),
-                });
+                NotificationsService.openNotificationWithIcon(
+                    'success',
+                    <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == responseMessage)} />
+                );
             })
             .catch((error) => {
                 this.setState({
@@ -70,10 +73,8 @@ class Reset extends Component<Props, State> {
 
     render() {
         const { successful, message } = this.state;
-        const initialValues = {
+        const initialValues: formType = {
             email: '',
-            successful: false,
-            message: '',
         };
 
         return (

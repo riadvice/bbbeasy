@@ -26,28 +26,28 @@ import LocaleService from '../services/locale.service';
 const { Title, Paragraph } = Typography;
 const { Grid, Meta } = Card;
 
-type SubCategoryType = {
+type subCategoryType = {
     name: string;
     status: boolean;
 };
 
-type PresetType = {
+type presetType = {
     name: string;
     icon: string;
-    subcategories: SubCategoryType[];
+    subcategories: subCategoryType[];
 };
 
 type Props = {
-    presets: PresetType[];
+    presets: presetType[];
 };
 
 export const Step3Form = (props: Props) => {
     const { presets } = props;
-    const [modalTitle, setModalTitle] = React.useState('');
-    const [modalContent, setModalContent] = React.useState<SubCategoryType[]>([]);
-    const [isModalVisible, setIsModalVisible] = React.useState(false);
+    const [modalTitle, setModalTitle] = React.useState<string>('');
+    const [modalContent, setModalContent] = React.useState<subCategoryType[]>([]);
+    const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
 
-    const showModal = (title, content) => {
+    const showModal = (title: string, content: subCategoryType[]) => {
         setIsModalVisible(true);
         setModalTitle(title);
         setModalContent(content);

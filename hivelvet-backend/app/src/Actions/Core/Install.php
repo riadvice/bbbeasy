@@ -135,7 +135,7 @@ class Install extends BaseAction
                         // allow all privileges to admin role
                         $allPrivileges = PrivilegeUtils::listSystemPrivileges();
                         $result        = $roleAdmin->saveRoleAndPermissions($allPrivileges);
-                        if (ResponseCode::HTTP_OK === $result) {
+                        if ($result) {
                             $this->logger->info('Initial application setup : Allow all privileges to administrator role');
                             // assign admin created to role admin
                             $user->role_id = $roleAdmin->id;

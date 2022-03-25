@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Actions\RolesPermissions;
 
 use Actions\Base as BaseAction;
+use Actions\RequirePrivilegeTrait;
 use Utils\PrivilegeUtils;
 
 /**
@@ -30,6 +31,8 @@ use Utils\PrivilegeUtils;
  */
 class Collect extends BaseAction
 {
+    use RequirePrivilegeTrait;
+
     /**
      * @param $f3
      * @param $params

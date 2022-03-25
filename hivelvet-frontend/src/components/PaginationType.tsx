@@ -16,28 +16,9 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '~antd/dist/antd.css';
+type PaginationType = {
+    current?: number;
+    pageSize?: number;
+};
 
-.login-form {
-    max-width: 300px;
-}
-.login-form-forgot {
-    float: right;
-}
-.ant-col-rtl .login-form-forgot {
-    float: left;
-}
-.login-form-button {
-    width: 100%;
-}
-.login-form .ant-form-item-label label,
-.login-form .ant-checkbox-wrapper,
-.register-form .ant-form-item-label label,
-.register-form .ant-checkbox-wrapper {
-    color: white !important;
-}
-.ant-layout,
-.ant-layout-header,
-.ant-layout-footer {
-    background: transparent !important;
-}
+export default PaginationType;

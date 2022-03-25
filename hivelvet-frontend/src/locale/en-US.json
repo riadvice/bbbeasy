@@ -52,6 +52,7 @@
     "user-could-not-logged": "User could not be logged",
     "success-title": "Success",
     "error-title": "Error",
+    "info-title": "Info",
     "success-registration": "Congratulations ! Your account has been successfully created",
     "username-email-already-exist": "username and email already exist",
     "username-already-exist": "username already exist",
@@ -156,6 +157,8 @@
         "label": "Name",
         "required": "Name is required"
     },
+    "required_name": "Name is required",
+    "exist_name": "Name already exist",
     "permissions": {
         "label": "Permissions"
     },
@@ -165,7 +168,7 @@
     "cancel": "Cancel",
     "save": "Save",
     "add_role_success": "Role successfully added",
-    "cancel_edit_role": "Sure to cancel edition ?",
+    "cancel_edit": "Sure to cancel edition ?",
     "edit_role_success": "Role successfully updated",
     "delete": "Delete",
     "delete_role_confirm": "Are you sure to delete this role ?",
@@ -173,5 +176,36 @@
     "delete_role_content": "This role already has users assigned, if you confirm all users switch to role Lecturer",
     "delete_role_success": "Role successfully deleted",
     "confirm_yes": "Yes",
-    "confirm_no": "No"
+    "confirm_no": "No",
+
+    "username_col": "Username",
+    "email_col": "Email",
+    "role_col": "Role",
+    "status_col": "State",
+    "new_user": "New User",
+    "role": {
+        "label": "Role",
+        "required": "Please select a role",
+        "placeholder": "Select a role"
+    },
+    "status": {
+        "label": "State",
+        "required": "Please select a state",
+        "placeholder": "Select a state"
+    },
+    "edit": "Edit",
+    "add_user_success": "User successfully added",
+    "edit_user_success": "User successfully updated",
+    "delete_user_confirm": "Are you sure to delete this user ?",
+    "delete_user_success": "User successfully deleted",
+
+    "active": "Active",
+    "inactive": "Inactive",
+    "pending": "Pending",
+    "deleted": "Deleted",
+    "required_username": "Username is required",
+    "required_email": "Email is required",
+    "required_role": "Please select a role",
+    "required_status": "Please select a state",
+    "no_changes": "No changes made"
 }

@@ -22,11 +22,7 @@ import { Trans, withTranslation } from 'react-i18next';
 
 const { Title, Paragraph } = Typography;
 
-type Props = {
-    isLogged: boolean;
-    user: any;
-};
-
+type Props = {};
 type State = {};
 
 class Home extends Component<Props, State> {
@@ -41,7 +37,7 @@ class Home extends Component<Props, State> {
                     <Trans i18nKey="create-easy-room" />
                 </Title>
                 <Row justify="center">
-                    <Col span={3}>
+                    <Col span={5}>
                         <Avatar
                             size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 85, xxl: 100 }}
                             className="ant-btn-primary hivelvet-btn"
@@ -52,7 +48,7 @@ class Home extends Component<Props, State> {
                             <Trans i18nKey="give-it-name" />
                         </Title>
                     </Col>
-                    <Col span={3}>
+                    <Col span={5}>
                         <Avatar
                             size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 85, xxl: 100 }}
                             className="ant-btn-primary hivelvet-btn"
@@ -63,7 +59,7 @@ class Home extends Component<Props, State> {
                             <Trans i18nKey="assign-preset" />
                         </Title>
                     </Col>
-                    <Col span={3}>
+                    <Col span={5}>
                         <Avatar
                             size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 85, xxl: 100 }}
                             className="ant-btn-primary hivelvet-btn"

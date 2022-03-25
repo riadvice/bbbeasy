@@ -151,6 +151,7 @@ class Edit extends BaseAction
             }
 
             $this->logger->info('Role successfully updated', ['role' => $role->toArray()]);
+            $role = $this->loadData($role_id);
             $result = [
                 'key'         => $role->id,
                 'name'        => $role->name,

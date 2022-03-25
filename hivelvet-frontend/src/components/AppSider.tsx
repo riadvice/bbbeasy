@@ -23,20 +23,29 @@ import { Button, Dropdown, Layout, Menu } from 'antd';
 import { PlusOutlined, DownOutlined } from '@ant-design/icons';
 import DynamicIcon from './DynamicIcon';
 import { useTranslation, withTranslation } from 'react-i18next';
-
 import Scrollbar from 'perfect-scrollbar';
+
+import PerfectScrollbar from 'perfect-scrollbar';
+import { Location } from 'history';
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
 
+type menuType = {
+    name: string;
+    icon: string;
+    path: string;
+    children?: menuType[];
+};
+
 const AppSider = () => {
-    const location = useLocation();
-    const [currentPath, setCurrentPath] = React.useState(location.pathname);
+    const location: Location = useLocation();
+    const [currentPath, setCurrentPath] = React.useState<string>(location.pathname);
     const { t } = useTranslation();
     const comp = useRef();
 
     useEffect(() => {
-        let ps = new Scrollbar(comp.current, {});
+        let ps: PerfectScrollbar = new Scrollbar(comp.current, {});
         return () => {
             if (ps) {
                 ps.destroy();
@@ -45,14 +54,14 @@ const AppSider = () => {
         };
     }, []);
 
-    const newMenu = (
+    const newMenu: JSX.Element = (
         <Menu>
             <Menu.Item key="1">{t('room')}</Menu.Item>
             <Menu.Item key="2">{t('label')}</Menu.Item>
             <Menu.Item key="3">{t('preset')}</Menu.Item>
         </Menu>
     );
-    const menuData = [
+    const menuData: menuType[] = [
         {
             name: t('rooms'),
             icon: 'Room',
@@ -114,7 +123,7 @@ const AppSider = () => {
         <Sider className="site-sider" ref={comp}>
             <div className="logo">
                 <Link to={'/'}>
-                    <img className="header-logo-image" src="/images/logo_01.png" alt="Logo" />
+                    <img className="sider-logo-image" src="/images/logo_01.png" alt="Logo" />
                 </Link>
             </div>
             <div className="menu-sider">

@@ -18,15 +18,13 @@
 
 import axios from 'axios';
 
-const API_URL = process.env.REACT_APP_API_URL;
+const API_URL: string = process.env.REACT_APP_API_URL;
 
 class RolesService {
     list_roles() {
         return axios.get(API_URL + '/roles/list');
     }
-    list_users() {
-        return axios.get(API_URL + '/roles/collect-users');
-    }
+
     list_permissions() {
         return axios.get(API_URL + '/roles/collect-privileges');
     }
@@ -36,7 +34,8 @@ class RolesService {
             data,
         });
     }
-    edit_role(data: object, id) {
+
+    edit_role(data: object, id: number) {
         return axios.put(API_URL + '/roles/edit/' + id, {
             data,
         });

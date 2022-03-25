@@ -26,6 +26,7 @@ use Acl\Access;
 use Core\Session;
 use DOMDocument;
 use Enum\ResponseCode;
+use Enum\UserRole;
 use Enum\UserStatus;
 use Helpers\I18n;
 use Log\LogWriterTrait;
@@ -228,7 +229,7 @@ abstract class Base extends \Prefab
             return
                 $user->valid()
                 && UserStatus::ACTIVE === $user->status
-                // && UserRole::API === $user->role
+                && UserRole::API === $user->role_id->name
                 && $user->verifyPassword($credentials[1]);
         }
 
@@ -240,9 +241,9 @@ abstract class Base extends \Prefab
         if ($this->session->getRole()) {
             return $this->session->getRole();
         }
-        /*if ($this->isApiUserVerified()) {
+        if ($this->isApiUserVerified()) {
             return UserRole::API;
-        }*/
+        }
 
         return '';
     }

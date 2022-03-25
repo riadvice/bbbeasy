@@ -1,4 +1,8 @@
-/**
+<?php
+
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -16,24 +20,28 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from 'react';
-import { Navigate } from 'react-router-dom';
-import authService from '../services/auth.service';
+namespace Actions\Roles;
 
-type userType = {
-    username: string;
-    email: string;
-    role: string;
-};
+use Actions\Base as BaseAction;
+use Actions\RequirePrivilegeTrait;
+use Models\Role;
 
-const PublicRoute = ({ children, restricted }) => {
-    const user: userType = authService.getCurrentUser();
+/**
+ * Class Collect.
+ */
+class Collect extends BaseAction
+{
+    use RequirePrivilegeTrait;
 
-    // restricted = true meaning restricted route else public route
-    if (user != null && restricted) {
-        return <Navigate to="/home" />;
+    /**
+     * @param \Base $f3
+     * @param array $params
+     */
+    public function execute($f3, $params): void
+    {
+        $role  = new Role();
+        $roles = $role->collectAll();
+        $this->logger->debug('Collecting roles for manage users');
+        $this->renderJson($roles);
     }
-    return children;
-};
-
-export default PublicRoute;
+}

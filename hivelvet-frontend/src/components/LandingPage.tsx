@@ -26,7 +26,10 @@ import { Trans, withTranslation } from 'react-i18next';
 
 const { Title, Paragraph } = Typography;
 
-class LandingPage extends Component<any, any> {
+type Props = {};
+type State = {};
+
+class LandingPage extends Component<Props, State> {
     render() {
         return (
             <>

@@ -128,4 +128,31 @@ class User extends BaseModel
     {
         return password_verify(trim($password), $this->password);
     }
+
+    public function getAllUsers()
+    {
+        $data  = [];
+        $users = $this->find([], ['order' => 'id']);
+        if ($users) {
+            $data = $this->getUserInfos();
+        }
+        return $data;
+    }
+
+    public function getUserInfos(int $id = NULL) : array
+    {
+        if ($id) {
+            $subQuery = 'WHERE u.id = :user_id';
+            $params = [':user_id' => $id];
+        }
+        $result = $this->db->exec(
+            'SELECT
+                u.id AS key, u.username, u.email, u.status, r.name AS role
+            FROM
+                users u
+            LEFT JOIN roles r ON u.role_id = r.id '.$subQuery, $params
+        );
+
+        return $id ? $result[0] : $result ;
+    }
 }

@@ -16,24 +16,19 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from 'react';
-import { Navigate } from 'react-router-dom';
-import authService from '../services/auth.service';
+import { notification } from 'antd';
+import { t } from 'i18next';
+import LocaleService from './locale.service';
 
-type userType = {
-    username: string;
-    email: string;
-    role: string;
-};
+class NotificationsService {
+    placement = LocaleService.direction == 'rtl' ? 'topLeft' : 'topRight';
+    openNotificationWithIcon = (type: string, message) => {
+        notification[type]({
+            message: t(type + '-title'),
+            description: message,
+            placement: this.placement,
+        });
+    };
+}
 
-const PublicRoute = ({ children, restricted }) => {
-    const user: userType = authService.getCurrentUser();
-
-    // restricted = true meaning restricted route else public route
-    if (user != null && restricted) {
-        return <Navigate to="/home" />;
-    }
-    return children;
-};
-
-export default PublicRoute;
+export default new NotificationsService();

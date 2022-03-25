@@ -18,7 +18,7 @@
 
 import axios from 'axios';
 
-const API_URL = process.env.REACT_APP_API_URL;
+const API_URL: string = process.env.REACT_APP_API_URL;
 
 class AuthService {
     register(data: object) {
@@ -51,7 +51,7 @@ class AuthService {
         return axios.get(API_URL + '/account/reset-token/' + token, {});
     }
     getCurrentUser() {
-        const userStr = localStorage.getItem('user');
+        const userStr: string = localStorage.getItem('user');
         if (userStr) return JSON.parse(userStr);
         return null;
     }

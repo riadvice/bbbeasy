@@ -16,7 +16,13 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-const languages = [
+type languageType = {
+    name: string;
+    key: string;
+    value: string;
+};
+
+const languages: languageType[] = [
     { name: 'English', key: 'en', value: 'en-US' },
     { name: 'Français', key: 'fr', value: 'fr-FR' },
     { name: 'العربية', key: 'ar', value: 'ar' },

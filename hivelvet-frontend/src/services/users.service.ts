@@ -16,24 +16,34 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from 'react';
-import { Navigate } from 'react-router-dom';
-import authService from '../services/auth.service';
+import axios from 'axios';
 
-type userType = {
-    username: string;
-    email: string;
-    role: string;
-};
+const API_URL: string = process.env.REACT_APP_API_URL;
 
-const PublicRoute = ({ children, restricted }) => {
-    const user: userType = authService.getCurrentUser();
-
-    // restricted = true meaning restricted route else public route
-    if (user != null && restricted) {
-        return <Navigate to="/home" />;
+class RolesService {
+    list_users() {
+        return axios.get(API_URL + '/users/list');
     }
-    return children;
-};
 
-export default PublicRoute;
+    list_roles() {
+        return axios.get(API_URL + '/roles/collect');
+    }
+
+    add_user(data: object) {
+        return axios.post(API_URL + '/users/add', {
+            data,
+        });
+    }
+
+    edit_user(data: object, id: number) {
+        return axios.put(API_URL + '/users/edit/' + id, {
+            data,
+        });
+    }
+
+    delete_user(id: number) {
+        return axios.delete(API_URL + '/users/delete/' + id);
+    }
+}
+
+export default new RolesService();

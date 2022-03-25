@@ -29,15 +29,24 @@ import { t } from 'i18next';
 
 const { Text, Title, Paragraph } = Typography;
 
-type Props = {
-    setUser: any;
+type userType = {
+    username: string;
+    email: string;
+    role: string;
+};
+type userFunction = (user: userType, Logged: boolean) => void;
+type formType = {
+    email: string;
+    password: string;
 };
 
+type Props = {
+    setUser: userFunction;
+};
 type State = {
     successful?: boolean;
     message?: string;
-    errors?: any;
-    user?: any;
+    user?: userType;
     isLogged?: boolean;
 };
 
@@ -48,18 +57,17 @@ class Login extends Component<Props, State> {
         this.state = {
             successful: false,
             message: '',
-            errors: {},
             user: null,
             isLogged: false,
         };
     }
 
-    handleLogin(formValue: any) {
+    handleLogin(formValue: formType) {
         const { email, password } = formValue;
         AuthService.login(email, password)
             .then((response) => {
                 if (response.data.username && response.data.email && response.data.role) {
-                    const user_infos = {
+                    const user_infos: userType = {
                         username: response.data.username,
                         email: response.data.email,
                         role: response.data.role,
@@ -84,15 +92,7 @@ class Login extends Component<Props, State> {
                 }
             })
             .catch((error) => {
-                this.setState({
-                    errors: {},
-                });
                 const responseData = error.response.data;
-                if (responseData.errors) {
-                    this.setState({
-                        errors: responseData.errors,
-                    });
-                }
                 if (responseData.message) {
                     this.setState({
                         successful: false,
@@ -103,8 +103,8 @@ class Login extends Component<Props, State> {
     }
 
     render() {
-        const { successful, message, errors, user, isLogged } = this.state;
-        const initialValues = {
+        const { successful, message, user, isLogged } = this.state;
+        const initialValues: formType = {
             email: '',
             password: '',
         };
@@ -148,10 +148,6 @@ class Login extends Component<Props, State> {
                             <Form.Item
                                 label={<Trans i18nKey="email.label" />}
                                 name="email"
-                                {...('email' in errors && {
-                                    help: errors['email'],
-                                    validateStatus: 'error',
-                                })}
                                 rules={[
                                     {
                                         type: 'email',
@@ -168,10 +164,6 @@ class Login extends Component<Props, State> {
                             <Form.Item
                                 label={<Trans i18nKey="password.label" />}
                                 name="password"
-                                {...('password' in errors && {
-                                    help: errors['password'],
-                                    validateStatus: 'error',
-                                })}
                                 rules={[
                                     {
                                         min: 4,

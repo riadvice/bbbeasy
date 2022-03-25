@@ -29,7 +29,7 @@ type State = {};
 class DynamicIcon extends Component<Props, State> {
     render() {
         const { type, className } = this.props;
-        const hivelvetIcons = [
+        const hivelvetIcons: string[] = [
             'mp4',
             'room',
             'zcaleright',

@@ -18,7 +18,7 @@
 
 import React, { Component } from 'react';
 import { Link, Navigate } from 'react-router-dom';
-import { Layout, Typography, Radio, Button, Menu, Dropdown, Space, Input, Row, Col } from 'antd';
+import { Layout, Typography, Radio, Button, Menu, Dropdown, Space, Input, Row, Col, RadioChangeEvent } from 'antd';
 import { SearchOutlined, GlobalOutlined, UserOutlined, LogoutOutlined } from '@ant-design/icons';
 
 import authService from '../services/auth.service';
@@ -37,12 +37,20 @@ type userType = {
     email: string;
     role: string;
 };
+type languageType = {
+    name: string;
+    key: string;
+    value: string;
+};
+type userFunction = (user: userType, Logged: boolean) => void;
+type langFunction = (lang: string) => void;
+
 type Props = {
-    currentLocale: any;
-    setLang: any;
+    currentLocale: string;
+    setLang: langFunction;
     isLogged: boolean;
-    setUser: any;
-    currentUser: any;
+    setUser: userFunction;
+    currentUser: userType;
 };
 type State = {
     user: userType;
@@ -51,7 +59,7 @@ type State = {
 class AppHeader extends Component<Props, State> {
     constructor(props: Props) {
         super(props);
-        const user = authService.getCurrentUser();
+        const user: userType = authService.getCurrentUser();
         this.state = {
             user: user,
         };
@@ -62,15 +70,15 @@ class AppHeader extends Component<Props, State> {
         return <Navigate to="/login" />;
     }
 
-    handleChange = (e) => {
+    handleChange = (e: RadioChangeEvent) => {
         const selectedLang = e.target.value;
         this.props.setLang(selectedLang);
     };
 
     render() {
         const { currentLocale, isLogged, currentUser } = this.props;
-        const result = languages.filter((item) => item.value == currentLocale);
-        const language = result[0].name;
+        const result: languageType[] = languages.filter((item) => item.value == currentLocale);
+        const language: string = result[0].name;
 
         const menuLang = (
             <Menu>

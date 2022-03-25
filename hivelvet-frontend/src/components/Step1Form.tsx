@@ -23,13 +23,8 @@ import { Trans, useTranslation } from 'react-i18next';
 
 const { Title, Paragraph } = Typography;
 
-type Props = {
-    errors: {};
-};
-
-export const Step1Form = (props: Props) => {
+export const Step1Form = () => {
     const { t } = useTranslation();
-    const { errors } = props;
 
     return (
         <div>
@@ -42,10 +37,6 @@ export const Step1Form = (props: Props) => {
             <Form.Item
                 label={<Trans i18nKey="username.label" />}
                 name="username"
-                {...('username' in errors && {
-                    help: errors['username'],
-                    validateStatus: 'error',
-                })}
                 rules={[
                     {
                         required: true,
@@ -62,10 +53,6 @@ export const Step1Form = (props: Props) => {
             <Form.Item
                 label={<Trans i18nKey="email.label" />}
                 name="email"
-                {...('email' in errors && {
-                    help: errors['email'],
-                    validateStatus: 'error',
-                })}
                 rules={[
                     {
                         type: 'email',
@@ -82,10 +69,6 @@ export const Step1Form = (props: Props) => {
             <Form.Item
                 label={<Trans i18nKey="password.label" />}
                 name="password"
-                {...('password' in errors && {
-                    help: errors['password'],
-                    validateStatus: 'error',
-                })}
                 rules={[
                     {
                         min: 4,

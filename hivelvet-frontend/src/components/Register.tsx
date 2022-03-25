@@ -27,12 +27,18 @@ import { t } from 'i18next';
 
 const { Title, Paragraph } = Typography;
 
-type Props = {};
+type formType = {
+    username: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+    agreement: boolean;
+};
 
+type Props = {};
 type State = {
     successful?: boolean;
     message?: string;
-    errors?: any;
 };
 
 class Register extends Component<Props, State> {
@@ -42,27 +48,18 @@ class Register extends Component<Props, State> {
         this.state = {
             successful: false,
             message: '',
-            errors: {},
         };
     }
 
-    handleRegistration(formValue: any) {
+    handleRegistration(formValue: formType) {
         AuthService.register(formValue)
-            .then((response) => {
+            .then(() => {
                 this.setState({
                     successful: true,
                 });
             })
             .catch((error) => {
-                this.setState({
-                    errors: {},
-                });
                 const responseData = error.response.data;
-                if (responseData.errors) {
-                    this.setState({
-                        errors: responseData.errors,
-                    });
-                }
                 this.setState({
                     successful: false,
                     message: responseData.message,
@@ -71,8 +68,8 @@ class Register extends Component<Props, State> {
     }
 
     render() {
-        const { successful, message, errors } = this.state;
-        const initialValues = {
+        const { successful, message } = this.state;
+        const initialValues: formType = {
             username: '',
             email: '',
             password: '',
@@ -110,9 +107,7 @@ class Register extends Component<Props, State> {
                                     type="error"
                                     className="alert-msg"
                                     message={
-                                        <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == message)}>
-                                            {' '}
-                                        </Trans>
+                                        <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == message)} />
                                     }
                                     showIcon
                                 />
@@ -131,10 +126,6 @@ class Register extends Component<Props, State> {
                                 <Form.Item
                                     label={<Trans i18nKey="username.label" />}
                                     name="username"
-                                    {...('username' in errors && {
-                                        help: errors['username'],
-                                        validateStatus: 'error',
-                                    })}
                                     rules={[
                                         {
                                             required: true,
@@ -142,7 +133,7 @@ class Register extends Component<Props, State> {
                                         },
                                         {
                                             min: 4,
-                                            message: <Trans i18nKey="Username must be at least 4 characters" />,
+                                            message: <Trans i18nKey="username.size" />,
                                         },
                                     ]}
                                 >
@@ -151,10 +142,6 @@ class Register extends Component<Props, State> {
                                 <Form.Item
                                     label={<Trans i18nKey="email.label" />}
                                     name="email"
-                                    {...('email' in errors && {
-                                        help: errors['email'],
-                                        validateStatus: 'error',
-                                    })}
                                     rules={[
                                         {
                                             type: 'email',
@@ -171,10 +158,6 @@ class Register extends Component<Props, State> {
                                 <Form.Item
                                     label={<Trans i18nKey="password.label" />}
                                     name="password"
-                                    {...('password' in errors && {
-                                        help: errors['password'],
-                                        validateStatus: 'error',
-                                    })}
                                     rules={[
                                         {
                                             min: 4,
@@ -192,10 +175,6 @@ class Register extends Component<Props, State> {
                                     label={<Trans i18nKey="confirm-password.label" />}
                                     name="confirmPassword"
                                     dependencies={['password']}
-                                    {...('confirmPassword' in errors && {
-                                        help: errors['confirmPassword'],
-                                        validateStatus: 'error',
-                                    })}
                                     rules={[
                                         {
                                             min: 4,
@@ -222,10 +201,6 @@ class Register extends Component<Props, State> {
                                     className="form-agree"
                                     name="agreement"
                                     valuePropName="checked"
-                                    {...('agreement' in errors && {
-                                        help: errors['agreement'],
-                                        validateStatus: 'error',
-                                    })}
                                     rules={[
                                         {
                                             validator: (_, value) =>

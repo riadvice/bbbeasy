@@ -23,7 +23,9 @@ declare(strict_types=1);
 namespace Actions\Users;
 
 use Actions\Base as BaseAction;
+use Actions\RequirePrivilegeTrait;
 use Base;
+use Enum\UserStatus;
 use Models\User;
 
 /**
@@ -31,27 +33,21 @@ use Models\User;
  */
 class Index extends BaseAction
 {
+    use RequirePrivilegeTrait;
+
     /**
      * @param Base  $f3
      * @param array $params
      */
     public function show($f3, $params): void
     {
-        $this->assets->addJs('core.js');
-        $this->assets->addJs('core/users.js');
-        $this->assets->addJs('vendors/datatables.min.js');
-        $this->assets->addCss('datatables.min.css');
-        $f3->push('init.js', 'Users');
+        $user   = new User();
+        $users  = $user->getAllUsers();
 
-        $this->render();
-    }
+        $userStatus = new UserStatus();
+        $states = $userStatus::values();
 
-    /**
-     * @param Base  $f3
-     * @param array $params
-     */
-    public function execute($f3, $params): void
-    {
-        $user = new User();
+        $this->logger->debug('collecting users', ['users' => json_encode($users)]);
+        $this->renderJson(['users' => $users, 'states' => $states]);
     }
 }

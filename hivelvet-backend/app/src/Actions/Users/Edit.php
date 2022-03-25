@@ -26,7 +26,10 @@ use Actions\Base as BaseAction;
 use Actions\RequirePrivilegeTrait;
 use Base;
 use Enum\ResponseCode;
+use Enum\UserStatus;
+use Models\Role;
 use Models\User;
+use Respect\Validation\Validator;
 use Validation\DataChecker;
 
 /**
@@ -42,38 +45,64 @@ class Edit extends BaseAction
      */
     public function save($f3, $params): void
     {
-        $form = $this->getDecodedBody();
-        $user = $this->loadData($params['id']);
+        $body   = $this->getDecodedBody();
+        $form   = $body['data'];
 
-        $v = new DataChecker();
-        $v->notEmpty()->verify('email', $form['email'], ['notEmpty' => $this->i18n->err('users.email')]);
-        $v->notEmpty()->verify('username', $form['username'], ['notEmpty' => $this->i18n->err('users.username')]);
-        $v->notEmpty()->verify('role', $form['role'], ['notEmpty' => $this->i18n->err('users.role')]);
-        $v->notEmpty()->verify('status', $form['status'], ['notEmpty' => $this->i18n->err('users.status')]);
+        $id     = $params['id'];
+        $user   = $this->loadData($id);
 
-        if (!$user->valid()) {
-            $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
-        } elseif ($v->allValid()) {
-            $user->email    = $form['email'];
-            $user->username = $form['username'];
-            $user->role     = $form['role'];
-            $user->status   = $form['status'];
+        if ($user->valid()) {
+            $dataChecker = new DataChecker();
 
-            if (!empty($form['password'])) {
-                $user->password = $form['password'];
+            $dataChecker->verify($form['username'], Validator::length(4)->setName('username'));
+            $dataChecker->verify($form['email'], Validator::email()->setName('email'));
+            $dataChecker->verify($form['role'], Validator::notEmpty()->setName('role'));
+            $dataChecker->verify($form['status'], Validator::notEmpty()->setName('status'));
+
+            if ($dataChecker->allValid()) {
+                $checkUser = new User();
+                $users = $checkUser->find(['(username = ? and id != ?) or (email = ? and id != ?)', $form['username'], $id, $form['email'], $id]);
+                if ($users) {
+                    $users = $users->castAll();
+                    if (count($users) == 1) {
+                        $usernameExist = $users[0]['username'] == $form['username'];
+                        $emailExist = $users[0]['email'] == $form['email'];
+                        $message = ($usernameExist && $emailExist) ?
+                            ['username' => 'username already exist','email' => 'email already exist'] :
+                            ($usernameExist ? ['username' => 'username already exist'] : ['email' => 'email already exist']);
+                    } else {
+                        $message = ['username' => 'username already exist','email' => 'email already exist'];
+                    }
+                    $this->logger->error('User could not be updated', ['error' => $message]);
+                    $this->renderJson(['errors' => $message], ResponseCode::HTTP_BAD_REQUEST);
+                } else {
+                    $role = new Role();
+                    $role->load(['id = ?', [$form['role']]]);
+                    if ($role->valid()) {
+                        $user->email = $form['email'];
+                        $user->username = $form['username'];
+                        $user->status = $form['status'];
+                        $user->role_id = $role->id;
+                        try {
+                            $user->save();
+                        } catch (\Exception $e) {
+                            $message = 'user could not be updated';
+                            $this->logger->error('User could not be updated', ['user' => $user->toArray(), 'error' => $e->getMessage()]);
+                            $this->renderJson(['errors' => $message], ResponseCode::HTTP_BAD_REQUEST);
+
+                            return;
+                        }
+
+                        $this->logger->info('User successfully updated', ['user' => $user->toArray()]);
+                        $this->renderJson(['result' => 'success', 'user' => $user->getUserInfos($user->id)]);
+                    }
+                }
+            } else {
+                $this->logger->error('Update user error', ['errors' => $dataChecker->getErrors()]);
+                $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_BAD_REQUEST);
             }
-
-            try {
-                $user->save();
-            } catch (\Exception $e) {
-                $this->renderJson(['errors' => $e->getMessage()], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-
-                return;
-            }
-
-            $this->renderJson([], ResponseCode::HTTP_NO_CONTENT);
         } else {
-            $this->renderJson(['errors' => $v->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
+            $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
         }
     }
 

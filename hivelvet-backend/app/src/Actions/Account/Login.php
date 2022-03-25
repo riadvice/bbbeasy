@@ -24,6 +24,7 @@ namespace Actions\Account;
 
 use Actions\Base as BaseAction;
 use Enum\ResponseCode;
+use Enum\UserRole;
 use Enum\UserStatus;
 use Helpers\Time;
 use Models\Role;
@@ -50,8 +51,7 @@ class Login extends BaseAction
             $user = $user->getByEmail($email);
             $this->logger->info('Login attempt using email', ['email' => $email]);
             // Check if the user exists
-            // @todo: if $user->role !== API role
-            if ($user->valid() && UserStatus::ACTIVE === $user->status && $user->verifyPassword($form['password'])) {
+            if ($user->valid() && UserStatus::ACTIVE === $user->status && UserRole::API !== $user->role_id->name && $user->verifyPassword($form['password'])) {
                 // valid credentials
                 $this->session->authorizeUser($user);
 
@@ -61,7 +61,7 @@ class Login extends BaseAction
                 // @todo: store role in redis cache to allow routes
                 /** @var Role $role */
                 $role = $user->role_id;
-                $this->f3->set('role', $role);
+                $this->f3->set('role', $role->name);
 
                 // @todo: store locale in user prefs table
                 // $this->session->set('locale', $user->locale);

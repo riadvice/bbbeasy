@@ -29,14 +29,59 @@ import { Step1Form } from './Step1Form';
 import { Step2Form } from './Step2Form';
 import { Step3Form } from './Step3Form';
 
+import { UploadFile } from 'antd/lib/upload/interface';
+
 const API_URL = process.env.REACT_APP_API_URL;
 const { Step } = Steps;
+
+type settingsType = {
+    company_name?: string;
+    company_website?: string;
+    platform_name?: string;
+    primary_color?: string;
+    secondary_color?: string;
+    accent_color?: string;
+    additional_color?: string;
+};
+type subCategoryType = {
+    name: string;
+    status: boolean;
+};
+type presetType = {
+    name: string;
+    icon: string;
+    subcategories: subCategoryType[];
+};
+type stepType = {
+    title: string;
+    content: JSX.Element;
+    button: string;
+    span: number;
+    offset: number;
+};
+type formType = {
+    username: string;
+    email: string;
+    password: string;
+    company_name: string;
+    company_url: string;
+    platform_name: string;
+    term_url: string;
+    policy_url: string;
+    branding_colors: {
+        primary_color: string;
+        secondary_color: string;
+        accent_color: string;
+        add_color: string;
+    };
+    presetsConfig: presetType[];
+};
 
 const Install = () => {
     const { t } = useTranslation();
 
     const [stepForm] = Form.useForm();
-    const initialValues = {
+    const initialValues: formType = {
         username: '',
         email: '',
         password: '',
@@ -46,28 +91,32 @@ const Install = () => {
         platform_name: '',
         term_url: '',
         policy_url: '',
-        branding_colors: {},
+        branding_colors: {
+            primary_color: '',
+            secondary_color: '',
+            accent_color: '',
+            add_color: '',
+        },
 
         presetsConfig: [],
     };
 
-    const [activeStep, setActiveStep] = React.useState(0);
-    const [successful, setSuccessful] = React.useState(false);
-    const [errors, setErrors] = React.useState({});
+    const [activeStep, setActiveStep] = React.useState<number>(0);
+    const [successful, setSuccessful] = React.useState<boolean>(false);
 
-    const [primaryColor, setPrimaryColor] = React.useState('');
-    const [secondaryColor, setSecondaryColor] = React.useState('');
-    const [accentColor, setAccentColor] = React.useState('');
-    const [addColor, setAddColor] = React.useState('');
-    const [file, setFile] = React.useState<any>();
-    const [fileList, setFileList] = React.useState();
+    const [primaryColor, setPrimaryColor] = React.useState<string>('');
+    const [secondaryColor, setSecondaryColor] = React.useState<string>('');
+    const [accentColor, setAccentColor] = React.useState<string>('');
+    const [addColor, setAddColor] = React.useState<string>('');
+    const [file, setFile] = React.useState<UploadFile>(null);
+    const [fileList, setFileList] = React.useState<UploadFile[]>(null);
 
-    const [presets, setPresets] = React.useState([]);
+    const [presets, setPresets] = React.useState<presetType[]>([]);
 
     useEffect(() => {
         InstallService.collect_settings()
             .then((response) => {
-                const settings = response.data;
+                const settings: settingsType = response.data;
                 if (settings) {
                     stepForm.setFieldsValue({
                         company_name: settings.company_name,
@@ -93,18 +142,18 @@ const Install = () => {
     }, []);
 
     function next() {
-        const nextStep = activeStep + 1;
+        const nextStep: number = activeStep + 1;
         setActiveStep(nextStep);
     }
     function prev() {
-        const prevStep = activeStep - 1;
+        const prevStep: number = activeStep - 1;
         setActiveStep(prevStep);
     }
 
-    const steps = [
+    const steps: stepType[] = [
         {
             title: t('administrator_account'),
-            content: <Step1Form errors={errors} />,
+            content: <Step1Form />,
             button: t('create'),
             span: 8,
             offset: 4,
@@ -113,7 +162,6 @@ const Install = () => {
             title: t('company.label') + ' & ' + t('branding'),
             content: (
                 <Step2Form
-                    errors={errors}
                     primaryColor={primaryColor}
                     secondaryColor={secondaryColor}
                     accentColor={accentColor}
@@ -144,33 +192,23 @@ const Install = () => {
         if (activeStep < steps.length - 1) {
             next();
         } else {
-            const formData = stepForm.getFieldsValue(true);
+            const formData: formType = stepForm.getFieldsValue(true);
             formData.branding_colors = {
-                'primary_color': primaryColor,
-                'secondary_color': secondaryColor,
-                'accent_color': accentColor,
-                'add_color': addColor,
+                primary_color: primaryColor,
+                secondary_color: secondaryColor,
+                accent_color: accentColor,
+                add_color: addColor,
             };
             formData.presetsConfig = presets;
             InstallService.install(formData)
-                .then((response) => {
+                .then(() => {
                     setSuccessful(true);
                 })
                 .catch((error) => {
-                    setErrors({});
-                    const responseData = error.response.data;
-                    if (responseData.errors) {
-                        const errors = responseData.errors;
-                        setErrors(errors);
-                        if ('username' in errors || 'email' in errors || 'password' in errors) {
-                            setActiveStep(0);
-                        } else {
-                            setActiveStep(1);
-                        }
-                    }
+                    console.log(error.response.data);
                 });
             if (file != undefined) {
-                const fdata = new FormData();
+                const fdata: FormData = new FormData();
                 fdata.append('logo', file.originFileObj, file.originFileObj.name);
                 fdata.append('logo_name', file.originFileObj.name);
                 axios

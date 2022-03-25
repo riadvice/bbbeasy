@@ -18,7 +18,7 @@
 
 import pino from 'pino';
 
-const API_URL = process.env.REACT_APP_API_URL;
+const API_URL: string = process.env.REACT_APP_API_URL;
 
 const levels = {
     http: 10,
@@ -29,9 +29,9 @@ const levels = {
     fatal: 60,
 };
 
-const send = async (level: any, logEvent: any) => {
+const send = async (level, logEvent) => {
     const url = API_URL + '/logs';
-    const response = await fetch(url, {
+    await fetch(url, {
         method: 'POST',
         body: JSON.stringify(logEvent),
     });
