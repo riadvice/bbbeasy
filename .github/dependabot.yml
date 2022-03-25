@@ -1,0 +1,14 @@
+version: 2
+updates:
+  - package-ecosystem: "composer"
+    directory: "/hivelvet-backend"
+    schedule:
+      interval: "daily"
+  - package-ecosystem: "npm"
+    directory: "/hivelvet-docs"
+    schedule:
+      interval: "daily"
+  - package-ecosystem: "npm"
+    directory: "/hivelvet-frontend"
+    schedule:
+      interval: "daily"
