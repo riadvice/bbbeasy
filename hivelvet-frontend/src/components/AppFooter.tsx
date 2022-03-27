@@ -16,7 +16,6 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from 'react';
 import { Button, Layout, Typography } from 'antd';
 import { Trans, withTranslation } from 'react-i18next';
 

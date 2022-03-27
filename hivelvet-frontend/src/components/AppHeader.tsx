@@ -16,7 +16,7 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { Layout, Typography, Radio, Button, Menu, Dropdown, Space, Input, Row, Col, RadioChangeEvent } from 'antd';
 import { SearchOutlined, GlobalOutlined, UserOutlined, LogoutOutlined } from '@ant-design/icons';
@@ -66,7 +66,7 @@ class AppHeader extends Component<Props, State> {
     }
     logout() {
         localStorage.clear();
-        this.props.setUser(null, false);
+        this.props.setUser(null as any, false);
         return <Navigate to="/login" />;
     }
 

@@ -16,9 +16,8 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Component } from 'react';
-import Icon from '@ant-design/icons';
-import * as AntdIcons from '@ant-design/icons';
+import { Component } from 'react';
+import Icon, * as AntdIcons from '@ant-design/icons';
 
 type Props = {
     type: string;
@@ -46,7 +45,7 @@ class DynamicIcon extends Component<Props, State> {
             const hivelvetIcon = () => <span className={'icon-hivelvet-' + type.toLowerCase()} />;
             return <Icon component={hivelvetIcon} className={className} />;
         } else {
-            const AntdIcon = AntdIcons[type];
+            const AntdIcon: any = AntdIcons[type as keyof typeof AntdIcons];
             return <AntdIcon className={className} />;
         }
     }

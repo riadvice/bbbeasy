@@ -42,14 +42,15 @@ const AppSider = () => {
     const location: Location = useLocation();
     const [currentPath, setCurrentPath] = React.useState<string>(location.pathname);
     const { t } = useTranslation();
-    const comp = useRef();
+    const comp = useRef(null);
 
     useEffect(() => {
-        let ps: PerfectScrollbar = new Scrollbar(comp.current, {});
+        const ps: PerfectScrollbar = new Scrollbar(comp.current!, {});
         return () => {
             if (ps) {
                 ps.destroy();
-                ps = null;
+                // @fixme
+                // ps = null;
             }
         };
     }, []);
@@ -115,7 +116,7 @@ const AppSider = () => {
             path: 'https://riadvice.tn/',
         },
     ];
-    const handleClick = (e) => {
+    const handleClick = (e: any) => {
         setCurrentPath(e.key);
     };
 

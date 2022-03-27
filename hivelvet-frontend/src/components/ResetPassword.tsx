@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Lesser General Public License along
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Link } from 'react-router-dom';
 import AuthService from '../services/auth.service';
 import NotificationsService from '../services/notifications.service';
@@ -92,7 +92,11 @@ class Reset extends Component<Props, State> {
                                 type="error"
                                 className="alert-msg"
                                 message={
-                                    <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == message)} />
+                                    <Trans
+                                        i18nKey={Object.keys(EN_US).filter(
+                                            (localeKey) => EN_US[localeKey as keyof typeof EN_US] == message
+                                        )}
+                                    />
                                 }
                                 showIcon
                             />

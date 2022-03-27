@@ -237,7 +237,8 @@ const Users = () => {
                                 help: (
                                     <Trans
                                         i18nKey={Object.keys(EN_US).filter(
-                                            (elem) => EN_US[elem] == errorsEdit[dataIndex]
+                                            (localeKey) =>
+                                                EN_US[localeKey as keyof typeof EN_US] == errorsEdit[dataIndex]
                                         )}
                                     />
                                 ),
@@ -584,7 +585,13 @@ const Users = () => {
                         <Alert
                             type="error"
                             className="alert-msg"
-                            message={<Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errorsAdd)} />}
+                            message={
+                                <Trans
+                                    i18nKey={Object.keys(EN_US).filter(
+                                        (localeKey) => EN_US[localeKey as keyof typeof EN_US] == errorsAdd
+                                    )}
+                                />
+                            }
                             showIcon
                         />
                     )}

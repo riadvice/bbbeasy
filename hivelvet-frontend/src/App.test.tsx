@@ -16,7 +16,6 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from 'react';
 import { render, screen } from '@testing-library/react';
 import App from './WebApp';
 

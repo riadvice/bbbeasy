@@ -377,7 +377,8 @@ class Roles extends Component<Props, State> {
                                     help: (
                                         <Trans
                                             i18nKey={Object.keys(EN_US).filter(
-                                                (elem) => EN_US[elem] == errorsEdit[dataIndex]
+                                                (localeKey) =>
+                                                    EN_US[localeKey as keyof typeof EN_US] == errorsEdit[dataIndex]
                                             )}
                                         />
                                     ),

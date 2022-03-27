@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Lesser General Public License along
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Link } from 'react-router-dom';
 import AuthService from '../services/auth.service';
 
@@ -24,10 +24,10 @@ import { CheckOutlined } from '@ant-design/icons';
 
 import authService from '../services/auth.service';
 import { Trans, withTranslation } from 'react-i18next';
-import EN_US from '../locale/en-US.json';
 import { t } from 'i18next';
 
 import { URLSearchParams as _URLSearchParams } from 'url';
+import EN_US from '../locale/en-US.json';
 
 const { Title, Paragraph } = Typography;
 
@@ -40,56 +40,63 @@ type Props = {};
 type State = {
     successful?: boolean;
     message?: string;
-    available_token?: boolean;
+    tokenAvailable?: boolean;
 };
 
 class ChangePassword extends Component<Props, State> {
-    constructor(props) {
+    constructor(props: Props) {
         const params: _URLSearchParams = new URLSearchParams(window.location.search);
-        authService
-            .getResetPasswordByToken(params.get('token'))
-            .then(() => {
-                this.setState({
-                    available_token: true,
+        const token: string | null = params.get('token');
+        if (typeof token === 'string') {
+            authService
+                .getResetPasswordByToken(token)
+                .then(() => {
+                    this.setState({
+                        tokenAvailable: true,
+                    });
+                })
+                .catch((error) => {
+                    this.setState({
+                        tokenAvailable: false,
+                        message: error.response.data.message,
+                    });
                 });
-            })
-            .catch((error) => {
-                this.setState({
-                    available_token: false,
-                    message: error.response.data.message,
-                });
-            });
+        }
         super(props);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.state = {
             successful: false,
             message: '',
+            tokenAvailable: false,
         };
     }
 
     handleSubmit(formValue: formType) {
         const { password } = formValue;
         const params: _URLSearchParams = new URLSearchParams(window.location.search);
-        AuthService.change_password(params.get('token'), password)
-            .then(() => {
-                this.setState({
-                    successful: true,
+        const token: string | null = params.get('token');
+        if (typeof token === 'string') {
+            AuthService.change_password(token, password)
+                .then(() => {
+                    this.setState({
+                        successful: true,
+                    });
+                })
+                .catch((error) => {
+                    this.setState({
+                        successful: false,
+                        message: error.response.data.message,
+                    });
                 });
-            })
-            .catch((error) => {
-                this.setState({
-                    successful: false,
-                    message: error.response.data.message,
-                });
-            });
+        }
     }
 
     render() {
-        const { successful, message, available_token } = this.state;
+        const { successful, message, tokenAvailable } = this.state;
 
         return (
             <>
-                {available_token ? (
+                {tokenAvailable ? (
                     <Row>
                         {successful ? (
                             <Col span={10} offset={7} className="section-top">
@@ -120,7 +127,8 @@ class ChangePassword extends Component<Props, State> {
                                             message={
                                                 <Trans
                                                     i18nKey={Object.keys(EN_US).filter(
-                                                        (elem) => EN_US[elem] == message
+                                                        (localeKey: string) =>
+                                                            EN_US[localeKey as keyof typeof EN_US] == message
                                                     )}
                                                 />
                                             }
@@ -206,7 +214,13 @@ class ChangePassword extends Component<Props, State> {
                         <Result
                             status="500"
                             title="500"
-                            subTitle={<Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == message)} />}
+                            subTitle={
+                                <Trans
+                                    i18nKey={Object.keys(EN_US).filter(
+                                        (localeKey: string) => (localeKey as keyof typeof EN_US) == message
+                                    )}
+                                />
+                            }
                             className="page-not-found"
                             extra={
                                 <Link className="ant-btn color-blue" to="/">
