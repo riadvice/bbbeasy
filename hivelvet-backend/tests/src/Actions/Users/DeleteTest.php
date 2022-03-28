@@ -20,35 +20,39 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Core;
+namespace Actions\Users;
 
+use Enum\UserRole;
+use Enum\UserStatus;
+use Fake\UserFaker;
+use ReflectionException;
 use Test\Scenario;
-use Utils\PrivilegeUtils;
 
 /**
  * @internal
  * @coversNothing
  */
-final class ReflectionTest extends Scenario
+final class DeleteTest extends Scenario
 {
-    protected $group = 'Reflection Based Configuration';
-
-    protected array $permissions = [
-        'logs' => ['collect'],
-        'roles_permissions' => ['collect'],
-        'roles' => ['add', 'collect', 'delete', 'edit', 'index'],
-        'users' => ['add', 'delete', 'edit', 'index']
-    ];
+    final protected const DELETE_USER_ROUTE = 'DELETE /users/delete/';
+    protected $group                     = 'Action User Delete';
 
     /**
-     * @param $f3 \Base
+     * @param $f3
+     *
+     * @throws ReflectionException
      *
      * @return array
      */
-    public function testReflectionConfiguration($f3)
+    public function testValidUser($f3)
     {
         $test = $this->newTest();
-        $test->expect($this->permissions === PrivilegeUtils::listSystemPrivileges(), 'Permissions correctly configured in action classes');
+
+        $user = UserFaker::create(UserRole::LECTURER);
+        $test->expect($user->valid(), 'User mocked & saved to the database');
+
+        $f3->mock(self::DELETE_USER_ROUTE . $user->id, null, null);
+        $test->expect($this->compareArrayToResponse(['result' => 'success', 'user' => $user->getUserInfos($user->id)]), 'Delete user pass successfully with id "' . $user->id . '"');
 
         return $test->results();
     }

@@ -18,8 +18,8 @@
 
 import React, { useContext, useState, useEffect, useRef, Component } from 'react';
 import RolesService from '../services/roles.service';
-import NotificationsService from '../services/notifications.service';
 import PaginationType from './PaginationType';
+import Notifications from './Notifications';
 
 import { PageHeader, Button, Row, Col, Typography, Table, Space, Modal, Popconfirm, Card } from 'antd';
 import { Form, Input, Checkbox } from 'antd';
@@ -180,7 +180,7 @@ class Roles extends Component<Props, State> {
                     isModalVisible: false,
                 });
                 const newRowData: Item = response.data.role;
-                NotificationsService.openNotificationWithIcon('success', t('add_role_success'));
+                Notifications.openNotificationWithIcon('success', t('add_role_success'));
                 //add data to table
                 this.setState({
                     loading: false,
@@ -210,7 +210,7 @@ class Roles extends Component<Props, State> {
 
     //edit permissions
     editRow = (response: AxiosResponse, key: React.Key) => {
-        NotificationsService.openNotificationWithIcon('success', t('edit_role_success'));
+        Notifications.openNotificationWithIcon('success', t('edit_role_success'));
         const newRowData: Item = response.data.role;
         const newData = [...this.state.data];
         const index = newData.findIndex((item) => key === item.key);
@@ -238,28 +238,69 @@ class Roles extends Component<Props, State> {
         let editRowForm = null;
         const permissionsChecked = record.permissions;
 
+        const compareEdit = (oldRecord: object, newRecord: object): boolean => {
+            let condition = true;
+            const oldGroups = Object.keys(oldRecord);
+            const newGroups = Object.keys(newRecord);
+            if (oldGroups.length != newGroups.length) {
+                return false;
+            } else {
+                const result = oldGroups.every(function (element) {
+                    return newGroups.indexOf(element) !== -1;
+                });
+                if (!result) {
+                    return false;
+                } else {
+                    const groups = Object.keys(oldRecord);
+                    for (let i = 0; i < groups.length; i++) {
+                        const oldActions = oldRecord[groups[i]];
+                        const newActions = newRecord[groups[i]];
+                        if (oldActions.length != newActions.length) {
+                            condition = false;
+                            break;
+                        } else {
+                            const result = oldActions.every(function (element) {
+                                return newActions.indexOf(element) !== -1;
+                            });
+                            if (!result) {
+                                condition = false;
+                                break;
+                            }
+                        }
+                    }
+                    return condition;
+                }
+            }
+        };
         const cancelEdit = (key: React.Key) => {
             editRowForm?.resetFields();
             this.setState({
                 expandedKeys: this.state.expandedKeys.filter((item) => item !== key),
             });
         };
-        const saveEdit = (formValues, key: number) => {
-            let keys = [...this.state.changedKeys];
-            if (keys.includes(key)) {
-                keys = keys.filter((item) => item !== key);
-                this.setState({ changedKeys: keys });
-            }
-            RolesService.edit_role({ permissions: formValues }, key)
-                .then((response) => {
-                    this.editRow(response, key);
-                    this.setState({
-                        expandedKeys: this.state.expandedKeys.filter((item) => item !== record.key),
+        const saveEdit = (key: number) => {
+            const oldData = record.permissions;
+            const newData = editRowForm.getFieldsValue(true);
+            if (!compareEdit(oldData, newData)) {
+                let keys = [...this.state.changedKeys];
+                if (keys.includes(key)) {
+                    keys = keys.filter((item) => item !== key);
+                    this.setState({ changedKeys: keys });
+                }
+                RolesService.edit_role({ permissions: newData }, key)
+                    .then((response) => {
+                        this.editRow(response, key);
+                        this.setState({
+                            expandedKeys: this.state.expandedKeys.filter((item) => item !== record.key),
+                        });
+                    })
+                    .catch((error) => {
+                        console.log(error);
                     });
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
+            } else {
+                Notifications.openNotificationWithIcon('info', t('no_changes'));
+                cancelEdit(key);
+            }
         };
         const changeEdit = (key: number) => {
             const keys = [...this.state.changedKeys];
@@ -273,7 +314,7 @@ class Roles extends Component<Props, State> {
             <Form
                 ref={(form) => (editRowForm = form)}
                 initialValues={permissionsChecked}
-                onFinish={(values) => saveEdit(values, record.key)}
+                onFinish={() => saveEdit(record.key)}
                 onChange={() => changeEdit(record.key)}
             >
                 <Card bordered={false} className="card-parent">
@@ -455,7 +496,7 @@ class Roles extends Component<Props, State> {
                     data: newData.filter((item) => item.key !== key),
                     loading: false,
                 });
-                NotificationsService.openNotificationWithIcon('success', t('delete_role_success'));
+                Notifications.openNotificationWithIcon('success', t('delete_role_success'));
             })
             .catch((error) => {
                 console.log(error);

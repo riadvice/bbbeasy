@@ -207,5 +207,6 @@
     "required_email": "Email is required",
     "required_role": "Please select a role",
     "required_status": "Please select a state",
-    "no_changes": "No changes made"
+    "no_changes": "No changes made",
+    "already_deleted": "User already deleted"
 }

@@ -79,10 +79,11 @@ class Edit extends BaseAction
                     $role = new Role();
                     $role->load(['id = ?', [$form['role']]]);
                     if ($role->valid()) {
-                        $user->email = $form['email'];
+                        $user->email    = $form['email'];
                         $user->username = $form['username'];
-                        $user->status = $form['status'];
-                        $user->role_id = $role->id;
+                        $user->status   = $form['status'];
+                        $user->role_id  = $role->id;
+
                         try {
                             $user->save();
                         } catch (\Exception $e) {

@@ -899,3 +899,21 @@ body.rtl {
 .page-not-found {
   padding: 60px 32px !important;
 }
+
+.progress-bar {
+  height: 8px;
+  margin-top: 15px;
+  //box-shadow: 0 0 5px var(--hv-medimum-gray);
+}
+.percentage {
+  display: block;
+  height: 100%;
+  width: 100%;
+  background-color: var(--hv-medimum-gray);
+  animation: progress 4500ms ease-in 1;
+}
+@keyframes progress {
+  from {
+    width: 0;
+  }
+}

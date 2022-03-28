@@ -1,4 +1,8 @@
-/**
+<?php
+
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -16,19 +20,22 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import { notification } from 'antd';
-import { t } from 'i18next';
-import LocaleService from './locale.service';
+namespace Suite;
 
-class NotificationsService {
-    placement = LocaleService.direction == 'rtl' ? 'topLeft' : 'topRight';
-    openNotificationWithIcon = (type: string, message) => {
-        notification[type]({
-            message: t(type + '-title'),
-            description: message,
-            placement: this.placement,
-        });
-    };
+use Actions\Account\GetResetPasswordTokenTest;
+use Actions\Account\LoginTest;
+use Actions\Users\AddTest;
+use Actions\Users\DeleteTest;
+use Actions\Users\EditTest;
+use Test\TestGroup;
+
+/**
+ * @internal
+ * @coversNothing
+ */
+final class UsersActionsTest extends TestGroup
+{
+    protected $classes = [AddTest::class, EditTest::class, DeleteTest::class];
+
+    protected $quiet = true;
 }
-
-export default new NotificationsService();

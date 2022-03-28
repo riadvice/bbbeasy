@@ -74,8 +74,8 @@ class Add extends BaseAction
                     $user->email    = $form['email'];
                     $user->username = $form['username'];
                     $user->password = $form['password'];
-                    $user->role_id  = $role->id;
                     $user->status   = UserStatus::PENDING;
+                    $user->role_id  = $role->id;
 
                     try {
                         $user->save();

@@ -51,27 +51,29 @@ class Login extends BaseAction
             $user = $user->getByEmail($email);
             $this->logger->info('Login attempt using email', ['email' => $email]);
             // Check if the user exists
-            if ($user->valid() && UserStatus::ACTIVE === $user->status && UserRole::API !== $user->role_id->name && $user->verifyPassword($form['password'])) {
-                // valid credentials
-                $this->session->authorizeUser($user);
-
-                $user->last_login = Time::db();
-                $user->save();
-
-                // @todo: store role in redis cache to allow routes
+            if ($user->valid() && UserStatus::ACTIVE === $user->status && $user->verifyPassword($form['password'])) {
                 /** @var Role $role */
                 $role = $user->role_id;
-                $this->f3->set('role', $role->name);
+                if(UserRole::API !== $role->name) {
+                    // valid credentials
+                    $this->session->authorizeUser($user);
 
-                // @todo: store locale in user prefs table
-                // $this->session->set('locale', $user->locale);
-                $userInfos = [
-                    'username' => $user->username,
-                    'email'    => $user->email,
-                    'role'     => $role->name,
-                ];
-                $this->logger->info('User successfully logged in', ['email' => $email]);
-                $this->renderJson($userInfos);
+                    $user->last_login = Time::db();
+                    $user->save();
+
+                    // @todo: store role in redis cache to allow routes
+                    $this->f3->set('role', $role->name);
+
+                    // @todo: store locale in user prefs table
+                    // $this->session->set('locale', $user->locale);
+                    $userInfos = [
+                        'username' => $user->username,
+                        'email'    => $user->email,
+                        'role'     => $role->name,
+                    ];
+                    $this->logger->info('User successfully logged in', ['email' => $email]);
+                    $this->renderJson($userInfos);
+                }
             }
         }
 
