@@ -16,7 +16,7 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import PrivateRoute from './components/PrivateRoute';
 import PublicRoute from './components/PublicRoute';
@@ -47,7 +47,6 @@ import 'moment/locale/en-au';
 import Logger from './lib/logger';
 
 import authService from './services/auth.service';
-import { Props } from 'react-intl/src/components/relative';
 import LocaleService from './services/locale.service';
 import { withTranslation } from 'react-i18next';
 
@@ -59,142 +58,117 @@ type userType = {
     role: string;
 };
 
-type State = {
-    currentUser?: userType;
-    isLogged?: boolean;
-    language?: string;
-};
+const WebApp = () => {
+    const [currentUser, setCurrentUser] = React.useState<userType>(null);
+    const [isLogged, setIsLogged] = React.useState<boolean>(false);
+    const [language, setLanguage] = React.useState<string>(LocaleService.language);
 
-class WebApp extends Component<Props, State> {
-    constructor(props: Props) {
-        super(props);
-        this.state = {
-            currentUser: null,
-            isLogged: false,
-            language: LocaleService.language,
-        };
-        Logger.info('Initialisation Hivelvet Webapp Application');
-    }
-
-    componentDidMount = () => {
-        const user: userType = authService.getCurrentUser();
-        if (authService.getCurrentUser() != null) this.setUser(user, true);
+    const setUser = (user: userType, logged: boolean) => {
+        setCurrentUser(user);
+        setIsLogged(logged);
     };
-
-    setUser = (user: userType, Logged: boolean) => {
-        this.setState({
-            currentUser: user,
-            isLogged: Logged,
-        });
-    };
-
-    setLang = (lang: string) => {
-        this.setState({
-            language: lang,
-        });
+    const setLang = (lang: string) => {
+        setLanguage(lang);
         LocaleService.changeLocale(lang);
     };
+    useEffect(() => {
+        Logger.info('Initialisation Hivelvet Webapp Application');
+        const user: userType = authService.getCurrentUser();
+        if (authService.getCurrentUser() != null) setUser(user, true);
+    }, []);
 
-    render() {
-        const { currentUser, isLogged, language } = this.state;
+    return (
+        <Layout className={LocaleService.direction == 'rtl' ? 'page-layout-content-rtl' : 'page-layout-content'}>
+            <ConfigProvider locale={LocaleService.antdlocale} direction={LocaleService.direction} componentSize="large">
+                {isLogged && <AppSider />}
+                <Layout className="page-layout-body">
+                    <AppHeader
+                        currentUser={currentUser}
+                        currentLocale={language}
+                        setLang={setLang}
+                        isLogged={isLogged}
+                        setUser={setUser}
+                    />
+                    <Content className="site-content">
+                        <Routes>
+                            <Route path="*" element={<PageNotFound />} />
+                            <Route
+                                path="/"
+                                element={
+                                    <PublicRoute restricted={true}>
+                                        <LandingPage />
+                                    </PublicRoute>
+                                }
+                            />
+                            <Route
+                                path="/register"
+                                element={
+                                    <PublicRoute restricted={true}>
+                                        <Register />
+                                    </PublicRoute>
+                                }
+                            />
+                            <Route
+                                path="/login"
+                                element={
+                                    <PublicRoute restricted={true}>
+                                        <Login setUser={setUser} />
+                                    </PublicRoute>
+                                }
+                            />
+                            <Route
+                                path="/reset-password"
+                                element={
+                                    <PublicRoute restricted={true}>
+                                        <Reset />
+                                    </PublicRoute>
+                                }
+                            />
+                            <Route
+                                path="/change-password"
+                                element={
+                                    <PublicRoute restricted={true}>
+                                        <ChangePassword />
+                                    </PublicRoute>
+                                }
+                            />
 
-        return (
-            <Layout className={LocaleService.direction == 'rtl' ? 'page-layout-content-rtl' : 'page-layout-content'}>
-                <ConfigProvider
-                    locale={LocaleService.antdlocale}
-                    direction={LocaleService.direction}
-                    componentSize="large"
-                >
-                    {isLogged && <AppSider />}
-                    <Layout className="page-layout-body">
-                        <AppHeader
-                            currentUser={currentUser}
-                            currentLocale={language}
-                            setLang={this.setLang}
-                            isLogged={isLogged}
-                            setUser={this.setUser}
-                        />
-                        <Content className="site-content">
-                            <Routes>
-                                <Route path="*" element={<PageNotFound />} />
-                                <Route
-                                    path="/"
-                                    element={
-                                        <PublicRoute restricted={true}>
-                                            <LandingPage />
-                                        </PublicRoute>
-                                    }
-                                />
-                                <Route
-                                    path="/register"
-                                    element={
-                                        <PublicRoute restricted={true}>
-                                            <Register />
-                                        </PublicRoute>
-                                    }
-                                />
-                                <Route
-                                    path="/login"
-                                    element={
-                                        <PublicRoute restricted={true}>
-                                            <Login setUser={this.setUser} />
-                                        </PublicRoute>
-                                    }
-                                />
-                                <Route
-                                    path="/reset-password"
-                                    element={
-                                        <PublicRoute restricted={true}>
-                                            <Reset />
-                                        </PublicRoute>
-                                    }
-                                />
-                                <Route
-                                    path="/change-password"
-                                    element={
-                                        <PublicRoute restricted={true}>
-                                            <ChangePassword />
-                                        </PublicRoute>
-                                    }
-                                />
+                            <Route
+                                path="/home"
+                                element={
+                                    <PrivateRoute>
+                                        <Home />
+                                    </PrivateRoute>
+                                }
+                            />
 
-                                <Route
-                                    path="/home"
-                                    element={
-                                        <PrivateRoute>
-                                            <Home />
-                                        </PrivateRoute>
-                                    }
-                                />
+                            <Route
+                                path="/settings/roles"
+                                element={
+                                    <PrivateRoute>
+                                        <Roles />
+                                    </PrivateRoute>
+                                }
+                            />
 
-                                <Route
-                                    path="/settings/roles"
-                                    element={
-                                        <PrivateRoute>
-                                            <Roles />
-                                        </PrivateRoute>
-                                    }
-                                />
-
-                                <Route
-                                    path="/settings/users"
-                                    element={
-                                        <PrivateRoute>
-                                            <Users />
-                                        </PrivateRoute>
-                                    }
-                                />
-                            </Routes>
-                        </Content>
-                        <AppFooter />
-                    </Layout>
-                </ConfigProvider>
-                <BackTop>
-                    <Button type="primary" shape="circle" icon={<CaretUpOutlined />} />
-                </BackTop>
-            </Layout>
-        );
-    }
-}
+                            <Route
+                                path="/settings/users"
+                                element={
+                                    <PrivateRoute>
+                                        <Users />
+                                    </PrivateRoute>
+                                }
+                            />
+                        </Routes>
+                    </Content>
+                    <AppFooter />
+                </Layout>
+            </ConfigProvider>
+            <BackTop>
+                <Button type="primary" shape="circle" icon={<CaretUpOutlined />} />
+            </BackTop>
+        </Layout>
+    );
+};
 
 export default withTranslation()(WebApp);

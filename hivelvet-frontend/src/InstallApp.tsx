@@ -16,7 +16,7 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
 
 import './App.less';
@@ -35,7 +35,6 @@ import 'moment/locale/en-au';
 import Logger from './lib/logger';
 
 import authService from './services/auth.service';
-import { Props } from 'react-intl/src/components/relative';
 import LocaleService from './services/locale.service';
 import { withTranslation } from 'react-i18next';
 
@@ -46,76 +45,52 @@ type userType = {
     email: string;
     role: string;
 };
-type State = {
-    currentUser?: userType;
-    isLogged?: boolean;
-    language?: string;
-};
 
-class InstallApp extends Component<Props, State> {
-    constructor(props: Props) {
-        super(props);
-        this.state = {
-            currentUser: null,
-            isLogged: false,
-            language: LocaleService.language,
-        };
-        Logger.info('Initialisation Hivelvet Installer Application');
-    }
+const InstallApp = () => {
+    const [currentUser, setCurrentUser] = React.useState<userType>(null);
+    const [isLogged, setIsLogged] = React.useState<boolean>(false);
+    const [language, setLanguage] = React.useState<string>(LocaleService.language);
 
-    componentDidMount = () => {
-        const user: userType = authService.getCurrentUser();
-        if (authService.getCurrentUser() != null) this.setUser(user, true);
+    const setUser = (user: userType, logged: boolean) => {
+        setCurrentUser(user);
+        setIsLogged(logged);
     };
-
-    setUser = (user: userType, Logged: boolean) => {
-        this.setState({
-            currentUser: user,
-            isLogged: Logged,
-        });
-    };
-
-    setLang = (lang: string) => {
-        this.setState({
-            language: lang,
-        });
+    const setLang = (lang: string) => {
+        setLanguage(lang);
         LocaleService.changeLocale(lang);
     };
+    useEffect(() => {
+        Logger.info('Initialisation Hivelvet Installer Application');
+        const user: userType = authService.getCurrentUser();
+        if (authService.getCurrentUser() != null) setUser(user, true);
+    }, []);
 
-    render() {
-        const { currentUser, isLogged, language } = this.state;
+    return (
+        <Layout className={LocaleService.direction == 'rtl' ? 'page-layout-content-rtl' : 'page-layout-content'}>
+            <ConfigProvider locale={LocaleService.antdlocale} direction={LocaleService.direction} componentSize="large">
+                <AppHeader
+                    currentUser={currentUser}
+                    currentLocale={language}
+                    setLang={setLang}
+                    isLogged={isLogged}
+                    setUser={setUser}
+                />
 
-        return (
-            <Layout className={LocaleService.direction == 'rtl' ? 'page-layout-content-rtl' : 'page-layout-content'}>
-                <ConfigProvider
-                    locale={LocaleService.antdlocale}
-                    direction={LocaleService.direction}
-                    componentSize="large"
-                >
-                    <AppHeader
-                        currentUser={currentUser}
-                        currentLocale={language}
-                        setLang={this.setLang}
-                        isLogged={isLogged}
-                        setUser={this.setUser}
-                    />
-
-                    <Layout>
-                        <Content className="site-content">
-                            <Routes>
-                                <Route path="/" element={<Install />} />
-                                <Route path="*" element={<PageNotFound />} />
-                            </Routes>
-                        </Content>
-                    </Layout>
-                    <AppFooter />
-                </ConfigProvider>
-                <BackTop>
-                    <Button type="primary" shape="circle" icon={<CaretUpOutlined />} />
-                </BackTop>
-            </Layout>
-        );
-    }
-}
+                <Layout>
+                    <Content className="site-content">
+                        <Routes>
+                            <Route path="/" element={<Install />} />
+                            <Route path="*" element={<PageNotFound />} />
+                        </Routes>
+                    </Content>
+                </Layout>
+                <AppFooter />
+            </ConfigProvider>
+            <BackTop>
+                <Button type="primary" shape="circle" icon={<CaretUpOutlined />} />
+            </BackTop>
+        </Layout>
+    );
+};
 
 export default withTranslation()(InstallApp);

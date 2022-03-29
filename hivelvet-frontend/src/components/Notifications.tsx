@@ -16,19 +16,27 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
+import React from 'react';
 import { notification } from 'antd';
 import { t } from 'i18next';
-import LocaleService from './locale.service';
 
-class NotificationsService {
-    placement = LocaleService.direction == 'rtl' ? 'topLeft' : 'topRight';
-    openNotificationWithIcon = (type: string, message) => {
+class Notifications {
+    openNotificationWithIcon = (type: string, message, icon?, duration?: number) => {
         notification[type]({
             message: t(type + '-title'),
-            description: message,
-            placement: this.placement,
+            description: (
+                <>
+                    {message}
+                    <div className="progress-bar">
+                        <span className={duration ? 'percentage notif-login' : 'percentage'}></span>
+                    </div>
+                </>
+            ),
+            icon: icon,
+            duration: duration,
+            rtl: true,
         });
     };
 }
 
-export default new NotificationsService();
+export default new Notifications();

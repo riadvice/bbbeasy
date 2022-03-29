@@ -16,7 +16,7 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Component } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import AuthService from '../services/auth.service';
 
@@ -35,207 +35,187 @@ type formType = {
     agreement: boolean;
 };
 
-type Props = {};
-type State = {
-    successful?: boolean;
-    message?: string;
-};
+const Register = () => {
+    const [successful, setSuccessful] = React.useState<boolean>(false);
+    const [message, setMessage] = React.useState<string>('');
+    const initialValues: formType = {
+        username: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+        agreement: false,
+    };
 
-class Register extends Component<Props, State> {
-    constructor(props: Props) {
-        super(props);
-        this.handleRegistration = this.handleRegistration.bind(this);
-        this.state = {
-            successful: false,
-            message: '',
-        };
-    }
-
-    handleRegistration(formValue: formType) {
+    const handleRegistration = (formValue: formType) => {
         AuthService.register(formValue)
             .then(() => {
-                this.setState({
-                    successful: true,
-                });
+                setSuccessful(true);
             })
             .catch((error) => {
                 const responseData = error.response.data;
-                this.setState({
-                    successful: false,
-                    message: responseData.message,
-                });
+                setSuccessful(false);
+                setMessage(responseData.message);
             });
-    }
+    };
 
-    render() {
-        const { successful, message } = this.state;
-        const initialValues: formType = {
-            username: '',
-            email: '',
-            password: '',
-            confirmPassword: '',
-            agreement: false,
-        };
+    return (
+        <Row>
+            {successful ? (
+                <Col span={10} offset={7} className="section-top">
+                    <Result
+                        status="success"
+                        title={<Trans i18nKey="completed_registration" />}
+                        subTitle={<Trans i18nKey="user_account_created" />}
+                        extra={
+                            <Link to={'/login'} className="ant-btn ant-btn-lg">
+                                <Trans i18nKey="login-now" />
+                            </Link>
+                        }
+                    />
+                </Col>
+            ) : (
+                <Col span={8} offset={8} className="section-top">
+                    <Card className="form-content">
+                        <Paragraph className="form-header text-center">
+                            <img className="form-img" src="/images/logo_02.png" alt="Logo" />
+                            <Title level={4}>
+                                <Trans i18nKey="sign-up" />
+                            </Title>
+                        </Paragraph>
 
-        return (
-            <Row>
-                {successful ? (
-                    <Col span={10} offset={7} className="section-top">
-                        <Result
-                            status="success"
-                            title={<Trans i18nKey="completed_registration" />}
-                            subTitle={<Trans i18nKey="user_account_created" />}
-                            extra={
-                                <Link to={'/login'} className="ant-btn ant-btn-lg">
-                                    <Trans i18nKey="login-now" />
-                                </Link>
-                            }
-                        />
-                    </Col>
-                ) : (
-                    <Col span={8} offset={8} className="section-top">
-                        <Card className="form-content">
-                            <Paragraph className="form-header text-center">
-                                <img className="form-img" src="/images/logo_02.png" alt="Logo" />
-                                <Title level={4}>
-                                    <Trans i18nKey="sign-up" />
-                                </Title>
-                            </Paragraph>
+                        {message && (
+                            <Alert
+                                type="error"
+                                className="alert-msg"
+                                message={
+                                    <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == message)} />
+                                }
+                                showIcon
+                            />
+                        )}
 
-                            {message && (
-                                <Alert
-                                    type="error"
-                                    className="alert-msg"
-                                    message={
-                                        <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == message)} />
-                                    }
-                                    showIcon
-                                />
-                            )}
-
-                            <Form
-                                layout="vertical"
-                                name="register"
-                                className="register-form"
-                                initialValues={initialValues}
-                                requiredMark={false}
-                                scrollToFirstError={true}
-                                validateTrigger="onSubmit"
-                                onFinish={this.handleRegistration}
+                        <Form
+                            layout="vertical"
+                            name="register"
+                            className="register-form"
+                            initialValues={initialValues}
+                            requiredMark={false}
+                            scrollToFirstError={true}
+                            validateTrigger="onSubmit"
+                            onFinish={handleRegistration}
+                        >
+                            <Form.Item
+                                label={<Trans i18nKey="username.label" />}
+                                name="username"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: <Trans i18nKey="username.required" />,
+                                    },
+                                    {
+                                        min: 4,
+                                        message: <Trans i18nKey="username.size" />,
+                                    },
+                                ]}
                             >
-                                <Form.Item
-                                    label={<Trans i18nKey="username.label" />}
-                                    name="username"
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message: <Trans i18nKey="username.required" />,
+                                <Input placeholder={t('username.label')} />
+                            </Form.Item>
+                            <Form.Item
+                                label={<Trans i18nKey="email.label" />}
+                                name="email"
+                                rules={[
+                                    {
+                                        type: 'email',
+                                        message: <Trans i18nKey="email.invalid" />,
+                                    },
+                                    {
+                                        required: true,
+                                        message: <Trans i18nKey="email.required" />,
+                                    },
+                                ]}
+                            >
+                                <Input placeholder={t('email.label')} />
+                            </Form.Item>
+                            <Form.Item
+                                label={<Trans i18nKey="password.label" />}
+                                name="password"
+                                rules={[
+                                    {
+                                        min: 4,
+                                        message: <Trans i18nKey="password.size" />,
+                                    },
+                                    {
+                                        required: true,
+                                        message: <Trans i18nKey="password.required" />,
+                                    },
+                                ]}
+                            >
+                                <Input.Password placeholder="**********" />
+                            </Form.Item>
+                            <Form.Item
+                                label={<Trans i18nKey="confirm-password.label" />}
+                                name="confirmPassword"
+                                dependencies={['password']}
+                                rules={[
+                                    {
+                                        min: 4,
+                                        message: <Trans i18nKey="confirm-password.size" />,
+                                    },
+                                    {
+                                        required: true,
+                                        message: <Trans i18nKey="confirm-password.required" />,
+                                    },
+                                    ({ getFieldValue }) => ({
+                                        validator(_, value) {
+                                            if (!value || getFieldValue('password') === value) {
+                                                return Promise.resolve();
+                                            }
+                                            return Promise.reject(new Error(t('paswords-not-match')));
                                         },
-                                        {
-                                            min: 4,
-                                            message: <Trans i18nKey="username.size" />,
-                                        },
-                                    ]}
-                                >
-                                    <Input placeholder={t('username.label')} />
-                                </Form.Item>
-                                <Form.Item
-                                    label={<Trans i18nKey="email.label" />}
-                                    name="email"
-                                    rules={[
-                                        {
-                                            type: 'email',
-                                            message: <Trans i18nKey="email.invalid" />,
-                                        },
-                                        {
-                                            required: true,
-                                            message: <Trans i18nKey="email.required" />,
-                                        },
-                                    ]}
-                                >
-                                    <Input placeholder={t('email.label')} />
-                                </Form.Item>
-                                <Form.Item
-                                    label={<Trans i18nKey="password.label" />}
-                                    name="password"
-                                    rules={[
-                                        {
-                                            min: 4,
-                                            message: <Trans i18nKey="password.size" />,
-                                        },
-                                        {
-                                            required: true,
-                                            message: <Trans i18nKey="password.required" />,
-                                        },
-                                    ]}
-                                >
-                                    <Input.Password placeholder="**********" />
-                                </Form.Item>
-                                <Form.Item
-                                    label={<Trans i18nKey="confirm-password.label" />}
-                                    name="confirmPassword"
-                                    dependencies={['password']}
-                                    rules={[
-                                        {
-                                            min: 4,
-                                            message: <Trans i18nKey="confirm-password.size" />,
-                                        },
-                                        {
-                                            required: true,
-                                            message: <Trans i18nKey="confirm-password.required" />,
-                                        },
-                                        ({ getFieldValue }) => ({
-                                            validator(_, value) {
-                                                if (!value || getFieldValue('password') === value) {
-                                                    return Promise.resolve();
-                                                }
-                                                return Promise.reject(new Error(t('paswords-not-match')));
-                                            },
-                                        }),
-                                    ]}
-                                >
-                                    <Input.Password placeholder="**********" />
-                                </Form.Item>
+                                    }),
+                                ]}
+                            >
+                                <Input.Password placeholder="**********" />
+                            </Form.Item>
 
-                                <Form.Item
-                                    className="form-agree"
-                                    name="agreement"
-                                    valuePropName="checked"
-                                    rules={[
-                                        {
-                                            validator: (_, value) =>
-                                                value
-                                                    ? Promise.resolve()
-                                                    : Promise.reject(new Error(t('accept-agreement'))),
-                                        },
-                                    ]}
-                                >
-                                    <Checkbox>
-                                        <Trans i18nKey="agree" />
-                                        <a href="#">
-                                            {' '}
-                                            <Trans i18nKey="terms" />
-                                        </a>{' '}
-                                        <Trans i18nKey="and" />
-                                        <a href="#">
-                                            {' '}
-                                            <Trans i18nKey="privacy-policy" />
-                                        </a>
-                                    </Checkbox>
-                                </Form.Item>
+                            <Form.Item
+                                className="form-agree"
+                                name="agreement"
+                                valuePropName="checked"
+                                rules={[
+                                    {
+                                        validator: (_, value) =>
+                                            value
+                                                ? Promise.resolve()
+                                                : Promise.reject(new Error(t('accept-agreement'))),
+                                    },
+                                ]}
+                            >
+                                <Checkbox>
+                                    <Trans i18nKey="agree" />
+                                    <a href="#">
+                                        {' '}
+                                        <Trans i18nKey="terms" />
+                                    </a>{' '}
+                                    <Trans i18nKey="and" />
+                                    <a href="#">
+                                        {' '}
+                                        <Trans i18nKey="privacy-policy" />
+                                    </a>
+                                </Checkbox>
+                            </Form.Item>
 
-                                <Form.Item>
-                                    <Button type="primary" htmlType="submit" block>
-                                        <Trans i18nKey="register" />
-                                    </Button>
-                                </Form.Item>
-                            </Form>
-                        </Card>
-                    </Col>
-                )}
-            </Row>
-        );
-    }
-}
+                            <Form.Item>
+                                <Button type="primary" htmlType="submit" block>
+                                    <Trans i18nKey="register" />
+                                </Button>
+                            </Form.Item>
+                        </Form>
+                    </Card>
+                </Col>
+            )}
+        </Row>
+    );
+};
 
 export default withTranslation()(Register);

@@ -16,11 +16,12 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Component } from 'react';
+import React from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import AuthService from '../services/auth.service';
+import Notifications from './Notifications';
 
-import { Form, Input, Button, notification, Alert, Col, Row, Typography, Card } from 'antd';
+import { Form, Input, Button, Alert, Col, Row, Typography, Card } from 'antd';
 import { SmileOutlined } from '@ant-design/icons';
 
 import { Trans, withTranslation } from 'react-i18next';
@@ -43,26 +44,17 @@ type formType = {
 type Props = {
     setUser: userFunction;
 };
-type State = {
-    successful?: boolean;
-    message?: string;
-    user?: userType;
-    isLogged?: boolean;
-};
 
-class Login extends Component<Props, State> {
-    constructor(props: Props) {
-        super(props);
-        this.handleLogin = this.handleLogin.bind(this);
-        this.state = {
-            successful: false,
-            message: '',
-            user: null,
-            isLogged: false,
-        };
-    }
+const Login = (props: Props) => {
+    const { setUser } = props;
+    const [successful, setSuccessful] = React.useState<boolean>(false);
+    const [message, setMessage] = React.useState<string>('');
+    const initialValues: formType = {
+        email: '',
+        password: '',
+    };
 
-    handleLogin(formValue: formType) {
+    const handleLogin = (formValue: formType) => {
         const { email, password } = formValue;
         AuthService.login(email, password)
             .then((response) => {
@@ -72,131 +64,112 @@ class Login extends Component<Props, State> {
                         email: response.data.email,
                         role: response.data.role,
                     };
-                    notification.open({
-                        message: <Trans i18nKey="success-title" />,
-                        description: (
-                            <>
-                                <Trans i18nKey="welcome" /> {' ' + user_infos.username + ' !'}
-                            </>
-                        ),
-                        icon: <SmileOutlined className="text-color-primary" />,
-                        duration: 2.5,
-                    });
+                    Notifications.openNotificationWithIcon(
+                        'success',
+                        <>
+                            <Trans i18nKey="welcome" /> {' ' + user_infos.username + ' !'}
+                        </>,
+                        <SmileOutlined className="text-color-primary" />,
+                        2.5
+                    );
                     localStorage.setItem('user', JSON.stringify(user_infos));
-                    this.props.setUser(user_infos, true);
-                    this.setState({
-                        successful: true,
-                        user: user_infos,
-                        isLogged: true,
-                    });
+                    setUser(user_infos, true);
+                    setSuccessful(true);
                 }
             })
             .catch((error) => {
                 const responseData = error.response.data;
                 if (responseData.message) {
-                    this.setState({
-                        successful: false,
-                        message: responseData.message,
-                    });
+                    setSuccessful(false);
+                    setMessage(responseData.message);
                 }
             });
+    };
+
+    if (successful) {
+        return <Navigate to="/home" />;
     }
+    return (
+        <Row>
+            <Col span={8} offset={8} className="section-top">
+                <Card className="form-content">
+                    <Paragraph className="form-header text-center">
+                        <img className="form-img" src="/images/logo_02.png" alt="Logo" />
+                        <Title level={4}>
+                            <Trans i18nKey="log-into-account" />
+                        </Title>
+                    </Paragraph>
 
-    render() {
-        const { successful, message, user, isLogged } = this.state;
-        const initialValues: formType = {
-            email: '',
-            password: '',
-        };
+                    {message && !successful && (
+                        <Alert
+                            type="error"
+                            className="alert-msg"
+                            message={<Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == message)} />}
+                            showIcon
+                        />
+                    )}
 
-        if (successful) {
-            return <Navigate to="/home" state={{ user: user, isLogged: isLogged }} />;
-        }
-
-        return (
-            <Row>
-                <Col span={8} offset={8} className="section-top">
-                    <Card className="form-content">
-                        <Paragraph className="form-header text-center">
-                            <img className="form-img" src="/images/logo_02.png" alt="Logo" />
-                            <Title level={4}>
-                                <Trans i18nKey="log-into-account" />
-                            </Title>
-                        </Paragraph>
-
-                        {message && !successful && (
-                            <Alert
-                                type="error"
-                                className="alert-msg"
-                                message={
-                                    <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == message)} />
-                                }
-                                showIcon
-                            />
-                        )}
-
-                        <Form
-                            layout="vertical"
-                            name="login_form"
-                            className="login-form"
-                            initialValues={initialValues}
-                            requiredMark={false}
-                            scrollToFirstError={true}
-                            validateTrigger="onSubmit"
-                            onFinish={this.handleLogin}
+                    <Form
+                        layout="vertical"
+                        name="login_form"
+                        className="login-form"
+                        initialValues={initialValues}
+                        requiredMark={false}
+                        scrollToFirstError={true}
+                        validateTrigger="onSubmit"
+                        onFinish={handleLogin}
+                    >
+                        <Form.Item
+                            label={<Trans i18nKey="email.label" />}
+                            name="email"
+                            rules={[
+                                {
+                                    type: 'email',
+                                    message: <Trans i18nKey="email.invalid" />,
+                                },
+                                {
+                                    required: true,
+                                    message: <Trans i18nKey="email.required" />,
+                                },
+                            ]}
                         >
-                            <Form.Item
-                                label={<Trans i18nKey="email.label" />}
-                                name="email"
-                                rules={[
-                                    {
-                                        type: 'email',
-                                        message: <Trans i18nKey="email.invalid" />,
-                                    },
-                                    {
-                                        required: true,
-                                        message: <Trans i18nKey="email.required" />,
-                                    },
-                                ]}
-                            >
-                                <Input placeholder={t('email.label')} />
-                            </Form.Item>
-                            <Form.Item
-                                label={<Trans i18nKey="password.label" />}
-                                name="password"
-                                rules={[
-                                    {
-                                        min: 4,
-                                        message: <Trans i18nKey="password.size" />,
-                                    },
-                                    {
-                                        required: true,
-                                        message: <Trans i18nKey="password.required" />,
-                                    },
-                                ]}
-                            >
-                                <Input.Password placeholder="**********" />
-                            </Form.Item>
-                            <Form.Item>
-                                <Button type="primary" htmlType="submit" block>
-                                    <Trans i18nKey="login" />
-                                </Button>
-                            </Form.Item>
-                        </Form>
+                            <Input placeholder={t('email.label')} />
+                        </Form.Item>
+                        <Form.Item
+                            label={<Trans i18nKey="password.label" />}
+                            name="password"
+                            rules={[
+                                {
+                                    min: 4,
+                                    message: <Trans i18nKey="password.size" />,
+                                },
+                                {
+                                    required: true,
+                                    message: <Trans i18nKey="password.required" />,
+                                },
+                            ]}
+                        >
+                            <Input.Password placeholder="**********" />
+                        </Form.Item>
+                        <Form.Item>
+                            <Button type="primary" htmlType="submit" block>
+                                <Trans i18nKey="login" />
+                            </Button>
+                        </Form.Item>
+                    </Form>
 
-                        <Paragraph className="form-footer text-center">
-                            <Text>
-                                <Trans i18nKey="forgot-password" />{' '}
-                            </Text>
-                            <Link to={'/reset-password'}>
-                                <Trans i18nKey="reset-here" />
-                            </Link>
-                        </Paragraph>
-                    </Card>
-                </Col>
-            </Row>
-        );
-    }
-}
+                    <Paragraph className="form-footer text-center">
+                        <Text>
+                            <Trans i18nKey="forgot-password" />{' '}
+                        </Text>
+                        <Link to={'/reset-password'}>
+                            <Trans i18nKey="reset-here" />
+                        </Link>
+                    </Paragraph>
+                </Card>
+            </Col>
+        </Row>
+    );
+};
 
 export default withTranslation()(Login);

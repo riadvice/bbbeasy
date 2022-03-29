@@ -19,7 +19,7 @@
 import React, { useEffect } from 'react';
 import UsersService from '../services/users.service';
 import PaginationType from './PaginationType';
-import NotificationsService from '../services/notifications.service';
+import Notifications from './Notifications';
 import { Trans, withTranslation } from 'react-i18next';
 import EN_US from '../locale/en-US.json';
 import { t } from 'i18next';
@@ -67,7 +67,6 @@ const Users = () => {
     const [data, setData] = React.useState<Item[]>([]);
     const [allStates, setAllStates] = React.useState<string[]>([]);
     const [allRoles, setAllRoles] = React.useState<roleType[]>([]);
-    //const [editingKeys, setEditingKeys] = React.useState<number[]>([]);
     const [editingKey, setEditingKey] = React.useState<number>(null);
     const [cancelVisibility, setCancelVisibility] = React.useState<boolean>(false);
     const [pagination, setPagination] = React.useState<PaginationType>({ current: 1, pageSize: 5 });
@@ -178,7 +177,7 @@ const Users = () => {
                 setLoading(true);
                 setIsModalVisible(false);
                 const newRowData: Item = response.data.user;
-                NotificationsService.openNotificationWithIcon('success', t('add_user_success'));
+                Notifications.openNotificationWithIcon('success', t('add_user_success'));
                 //delete data of form
                 addForm?.resetFields();
                 //add data to table
@@ -259,29 +258,34 @@ const Users = () => {
         );
     };
     const isEditing = (record: Item) => record.key == editingKey;
+    const changeRoleCol = (record: Item): object => {
+        if (typeof record.role == 'string') {
+            const res = allRoles.filter((role) => role.name == record.role);
+            record.role = res[0].id;
+        }
+        return record;
+    };
     const toggleEdit = (record: Item) => {
         setCancelVisibility(false);
         setEditingKey(record.key);
-        editForm.setFieldsValue(record);
+        let newRecord: object = { ...record };
+        newRecord = changeRoleCol(newRecord as Item);
+        editForm.setFieldsValue(newRecord);
     };
     const cancelEdit = () => {
         setCancelVisibility(false);
         setEditingKey(null);
     };
-    const compareEdit = (oldRecord, newRecord): boolean => {
-        const newEdit = { ...newRecord };
-        if (typeof newEdit.role == 'number') {
-            const res = allRoles.filter((role) => role.id == newEdit.role);
-            newEdit.role = res[0].name;
-        }
-        return _.isEqual(oldRecord, newEdit);
+    const compareEdit = (oldRecord: Item, newRecord: object): boolean => {
+        let oldEdit: object = { ...oldRecord };
+        oldEdit = changeRoleCol(oldEdit as Item);
+        return _.isEqual(oldEdit, newRecord);
     };
     const saveEdit = async (record: Item, key: number) => {
         try {
-            const formValues = await editForm.validateFields();
+            const formValues: object = await editForm.validateFields();
             setErrorsEdit({});
-            const newData = editForm.getFieldsValue(true);
-            if (!compareEdit(record, newData)) {
+            if (!compareEdit(record, editForm.getFieldsValue(true))) {
                 UsersService.edit_user(formValues, key)
                     .then((response) => {
                         const newRowData: Item = response.data.user;
@@ -296,7 +300,7 @@ const Users = () => {
                             setData(newData);
                             cancelEdit();
                         }
-                        NotificationsService.openNotificationWithIcon('success', t('edit_user_success'));
+                        Notifications.openNotificationWithIcon('success', t('edit_user_success'));
                     })
                     .catch((error) => {
                         const responseData = error.response.data;
@@ -307,7 +311,7 @@ const Users = () => {
                         }
                     });
             } else {
-                NotificationsService.openNotificationWithIcon('info', t('no_changes'));
+                Notifications.openNotificationWithIcon('info', t('no_changes'));
                 cancelEdit();
             }
         } catch (errInfo) {
@@ -324,28 +328,32 @@ const Users = () => {
     };
 
     // delete
-    const handleDelete = (key: number) => {
-        UsersService.delete_user(key)
-            .then((response) => {
-                setLoading(true);
-                const newData = [...data];
-                // update item
-                const newRowData: Item = response.data.user;
-                const index = newData.findIndex((item) => key === item.key);
-                if (index > -1 && newRowData != undefined) {
-                    const item = newData[index];
-                    newData.splice(index, 1, {
-                        ...item,
-                        ...newRowData,
-                    });
-                    setLoading(false);
-                    setData(newData);
-                }
-                NotificationsService.openNotificationWithIcon('success', t('delete_user_success'));
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+    const handleDelete = (key: number, status: string) => {
+        if (status == 'deleted') {
+            Notifications.openNotificationWithIcon('info', t('already_deleted'));
+        } else {
+            UsersService.delete_user(key)
+                .then((response) => {
+                    setLoading(true);
+                    const newData = [...data];
+                    // update item
+                    const newRowData: Item = response.data.user;
+                    const index = newData.findIndex((item) => key === item.key);
+                    if (index > -1 && newRowData != undefined) {
+                        const item = newData[index];
+                        newData.splice(index, 1, {
+                            ...item,
+                            ...newRowData,
+                        });
+                        setLoading(false);
+                        setData(newData);
+                    }
+                    Notifications.openNotificationWithIcon('success', t('delete_user_success'));
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        }
     };
 
     // search
@@ -524,7 +532,7 @@ const Users = () => {
                         <Popconfirm
                             title={t('delete_user_confirm')}
                             icon={<QuestionCircleOutlined className="red-icon" />}
-                            onConfirm={() => handleDelete(record.key)}
+                            onConfirm={() => handleDelete(record.key, record.status)}
                         >
                             <Link>
                                 <DeleteOutlined /> <Trans i18nKey="delete" />
