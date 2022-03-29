@@ -112,8 +112,8 @@ const Roles = () => {
         getRoles();
     }, []);
 
-    const handleTableChange = (pagination: PaginationType) => {
-        setPagination(pagination);
+    const handleTableChange = (newPagination: PaginationType) => {
+        setPagination(newPagination);
     };
     const getPermissionsCard = (key?: React.Key) => {
         return (
@@ -212,10 +212,10 @@ const Roles = () => {
             if (oldGroups.length != newGroups.length) {
                 return false;
             } else {
-                const result = oldGroups.every(function (element) {
+                const resultGroup = oldGroups.every(function (element) {
                     return newGroups.indexOf(element) !== -1;
                 });
-                if (!result) {
+                if (!resultGroup) {
                     return false;
                 } else {
                     const groups = Object.keys(oldRecord);
@@ -226,10 +226,10 @@ const Roles = () => {
                             condition = false;
                             break;
                         } else {
-                            const result = oldActions.every(function (element) {
+                            const resultActions = oldActions.every(function (element) {
                                 return newActions.indexOf(element) !== -1;
                             });
-                            if (!result) {
+                            if (!resultActions) {
                                 condition = false;
                                 break;
                             }
@@ -489,7 +489,6 @@ const Roles = () => {
     };
 
     // search
-    let searchInput;
     const handleReset = (clearFilters) => {
         clearFilters();
         setSearchText('');
@@ -506,9 +505,6 @@ const Roles = () => {
                 <Input
                     size="middle"
                     className="table-search-input"
-                    ref={(node) => {
-                        searchInput = node;
-                    }}
                     placeholder={t('search') + ' ' + t(dataIndex + '_col')}
                     value={selectedKeys[0]}
                     onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
@@ -545,11 +541,6 @@ const Roles = () => {
                 value = value.replace(' ', '_');
             }
             return record[dataIndex] ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()) : '';
-        },
-        onFilterDropdownVisibleChange: (visible: boolean) => {
-            if (visible) {
-                setTimeout(() => searchInput.select(), 100);
-            }
         },
         render: (text) => {
             if (dataIndex == 'name' && text != '') {

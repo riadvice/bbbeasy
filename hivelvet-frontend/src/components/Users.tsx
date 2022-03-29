@@ -113,8 +113,8 @@ const Users = () => {
         getRoles();
         getUsers();
     }, []);
-    const handleTableChange = (pagination: PaginationType) => {
-        setPagination(pagination);
+    const handleTableChange = (newPagination: PaginationType) => {
+        setPagination(newPagination);
     };
     const getSelectRoles = () => {
         return (
@@ -357,7 +357,6 @@ const Users = () => {
     };
 
     // search
-    let searchInput;
     const handleReset = (clearFilters) => {
         clearFilters();
         setSearchText('');
@@ -375,9 +374,6 @@ const Users = () => {
                 <Input
                     size="middle"
                     className="table-search-input"
-                    ref={(node) => {
-                        searchInput = node;
-                    }}
                     placeholder={t('search') + ' ' + t(dataIndex + '_col')}
                     value={selectedKeys[0]}
                     onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
@@ -409,11 +405,6 @@ const Users = () => {
         filterIcon: (filtered: boolean) => <SearchOutlined className={filtered ? 'search-icon-filtered' : undefined} />,
         onFilter: (value, record: Item) => {
             return record[dataIndex] ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()) : '';
-        },
-        onFilterDropdownVisibleChange: (visible: boolean) => {
-            if (visible) {
-                setTimeout(() => searchInput.select(), 100);
-            }
         },
         render: (text) => {
             if (dataIndex == 'username' || dataIndex == 'role') {
