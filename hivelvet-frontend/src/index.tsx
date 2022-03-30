@@ -19,27 +19,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
-import WebApp from './WebApp';
-import InstallApp from './InstallApp';
-
 import reportWebVitals from './reportWebVitals';
-import { INSTALLER_FEATURE } from './constants';
+import App from './App';
 
-if (!INSTALLER_FEATURE) {
-    ReactDOM.render(
-        <BrowserRouter>
-            <WebApp />
-        </BrowserRouter>,
-        document.getElementById('root')
-    );
-} else {
-    ReactDOM.render(
-        <BrowserRouter>
-            <InstallApp />
-        </BrowserRouter>,
-        document.getElementById('root')
-    );
-}
+ReactDOM.render(
+    <BrowserRouter>
+        <App />
+    </BrowserRouter>,
+    document.getElementById('root')
+);
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

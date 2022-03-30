@@ -17,7 +17,11 @@
  */
 
 import React, { useEffect } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { INSTALLER_FEATURE } from './constants';
+import { webRoutes } from './routing/config';
+import { installRoutes } from './routing/config-install';
+
+import Router from './routing/Router';
 
 import './App.less';
 import { Layout, ConfigProvider, BackTop, Button } from 'antd';
@@ -25,8 +29,7 @@ import { CaretUpOutlined } from '@ant-design/icons';
 
 import AppHeader from './components/AppHeader';
 import AppFooter from './components/AppFooter';
-import Install from './components/Install';
-import PageNotFound from './components/PageNotFound';
+import AppSider from './components/AppSider';
 
 import 'moment/locale/fr';
 import 'moment/locale/ar';
@@ -46,7 +49,7 @@ type userType = {
     role: string;
 };
 
-const InstallApp = () => {
+const App = () => {
     const [currentUser, setCurrentUser] = React.useState<userType>(null);
     const [isLogged, setIsLogged] = React.useState<boolean>(false);
     const [language, setLanguage] = React.useState<string>(LocaleService.language);
@@ -60,7 +63,8 @@ const InstallApp = () => {
         LocaleService.changeLocale(lang);
     };
     useEffect(() => {
-        Logger.info('Initialisation Hivelvet Installer Application');
+        if (INSTALLER_FEATURE) Logger.info('Initialisation Hivelvet Installer Application');
+        else Logger.info('Initialisation Hivelvet Webapp Application');
         const user: userType = authService.getCurrentUser();
         if (authService.getCurrentUser() != null) setUser(user, true);
     }, []);
@@ -68,23 +72,20 @@ const InstallApp = () => {
     return (
         <Layout className={LocaleService.direction == 'rtl' ? 'page-layout-content-rtl' : 'page-layout-content'}>
             <ConfigProvider locale={LocaleService.antdlocale} direction={LocaleService.direction} componentSize="large">
-                <AppHeader
-                    currentUser={currentUser}
-                    currentLocale={language}
-                    setLang={setLang}
-                    isLogged={isLogged}
-                    setUser={setUser}
-                />
-
-                <Layout>
+                {isLogged && !INSTALLER_FEATURE && <AppSider />}
+                <Layout className="page-layout-body">
+                    <AppHeader
+                        currentUser={currentUser}
+                        currentLocale={language}
+                        setLang={setLang}
+                        isLogged={isLogged}
+                        setUser={setUser}
+                    />
                     <Content className="site-content">
-                        <Routes>
-                            <Route path="/" element={<Install />} />
-                            <Route path="*" element={<PageNotFound />} />
-                        </Routes>
+                        <Router routes={INSTALLER_FEATURE ? installRoutes : webRoutes} setUser={setUser} />
                     </Content>
+                    <AppFooter />
                 </Layout>
-                <AppFooter />
             </ConfigProvider>
             <BackTop>
                 <Button type="primary" shape="circle" icon={<CaretUpOutlined />} />
@@ -93,4 +94,4 @@ const InstallApp = () => {
     );
 };
 
-export default withTranslation()(InstallApp);
+export default withTranslation()(App);

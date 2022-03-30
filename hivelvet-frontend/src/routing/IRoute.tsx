@@ -16,12 +16,9 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from 'react';
-import { render, screen } from '@testing-library/react';
-import App from './App';
-
-test('renders learn react link', () => {
-    render(<App />);
-    const linkElement = screen.getByText(/learn react/i);
-    expect(linkElement).toBeInTheDocument();
-});
+export interface IRoute {
+    path: string;
+    element?: JSX.Element;
+    private?: boolean;
+    restricted?: boolean;
+}

@@ -113,7 +113,6 @@ const Users = () => {
         getRoles();
         getUsers();
     }, []);
-
     const getSelectRoles = () => {
         return (
             <Select

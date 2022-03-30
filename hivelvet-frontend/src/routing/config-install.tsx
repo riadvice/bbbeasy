@@ -17,11 +17,18 @@
  */
 
 import React from 'react';
-import { render, screen } from '@testing-library/react';
-import App from './App';
+import { IRoute } from './IRoute';
 
-test('renders learn react link', () => {
-    render(<App />);
-    const linkElement = screen.getByText(/learn react/i);
-    expect(linkElement).toBeInTheDocument();
-});
+import PageNotFound from '../components/PageNotFound';
+import Install from '../components/Install';
+
+export const installRoutes: IRoute[] = [
+    {
+        path: '*',
+        element: <PageNotFound />,
+    },
+    {
+        path: '/',
+        element: <Install />,
+    },
+];

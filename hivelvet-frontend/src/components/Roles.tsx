@@ -18,8 +18,8 @@
 
 import React, { useContext, useState, useEffect, useRef } from 'react';
 import RolesService from '../services/roles.service';
-import PaginationType from './PaginationType';
 import Notifications from './Notifications';
+import PaginationType from './PaginationType';
 
 import { PageHeader, Button, Row, Col, Typography, Table, Space, Modal, Popconfirm, Card } from 'antd';
 import { Form, Input, Checkbox } from 'antd';
@@ -105,28 +105,30 @@ const Roles = () => {
                 setLoading(false);
             });
     };
-
     useEffect(() => {
         //Runs only on the first render
         getPrivileges();
         getRoles();
     }, []);
-
+    const transformText = (text: string): string => {
+        if (text != '') {
+            text = text.replace('_', ' ');
+            return text[0].toUpperCase() + text.slice(1);
+        }
+    };
     const getPermissionsCard = (key?: React.Key) => {
         return (
             <div className="bordered-card">
                 {Object.keys(allPrivileges).map((group) => {
-                    const newGroup = group.replace('_', ' ');
+                    const newGroup = transformText(group);
                     return (
-                        <Card bordered={false} key={group} title={newGroup} className="text-capitalize" type="inner">
+                        <Card bordered={false} key={group} title={newGroup} type="inner">
                             <Form.Item name={group}>
                                 <Checkbox.Group disabled={key == 1 && true}>
                                     <Row gutter={[32, 16]}>
                                         {allPrivileges[group].map((action) => (
                                             <Col key={action}>
-                                                <Checkbox value={action} className="text-capitalize">
-                                                    {action}
-                                                </Checkbox>
+                                                <Checkbox value={action}>{action}</Checkbox>
                                             </Col>
                                         ))}
                                     </Row>
@@ -221,24 +223,29 @@ const Roles = () => {
                 }
             }
             return condition;
-        }
-        const compareGroups = (oldRecord: object, newRecord: object, oldGroups: string[], newGroups: string[]): boolean => {
+        };
+        const compareGroups = (
+            oldRecord: object,
+            newRecord: object,
+            oldGroups: string[],
+            newGroups: string[]
+        ): boolean => {
             const resultGroup = oldGroups.every(function (element) {
                 return newGroups.indexOf(element) !== -1;
             });
             if (!resultGroup) {
                 return false;
             } else {
-                return compareActions(oldRecord,newRecord,oldGroups);
+                return compareActions(oldRecord, newRecord, oldGroups);
             }
-        }
+        };
         const compareEditData = (oldRecord: object, newRecord: object): boolean => {
             const oldGroups = Object.keys(oldRecord);
             const newGroups = Object.keys(newRecord);
             if (oldGroups.length != newGroups.length) {
                 return false;
             } else {
-                return compareGroups(oldRecord,newRecord, oldGroups, newGroups);
+                return compareGroups(oldRecord, newRecord, oldGroups, newGroups);
             }
         };
         const cancelEdit = (key: React.Key) => {
@@ -246,22 +253,22 @@ const Roles = () => {
             setExpandedKeys(expandedKeys.filter((item) => item !== key));
             setChangedKeys(changedKeys.filter((item) => item !== key));
         };
-        const saveRole = (data: object, key: number) => {
-            RolesService.edit_role({ permissions: data }, key)
+        const saveRole = (formValues: object, key: number) => {
+            RolesService.edit_role({ permissions: formValues }, key)
                 .then((response) => {
-                    editRow(response,key);
+                    editRow(response, key);
                     setExpandedKeys(expandedKeys.filter((item) => item !== key));
                     setChangedKeys(changedKeys.filter((item) => item !== key));
                 })
                 .catch((error) => {
                     console.log(error);
                 });
-        }
+        };
         const saveEdit = (key: number) => {
             const oldData = record.permissions;
             const newData = editRowForm.getFieldsValue(true);
             if (!compareEditData(oldData, newData)) {
-                saveRole(newData,key);
+                saveRole(newData, key);
             } else {
                 Notifications.openNotificationWithIcon('info', t('no_changes'));
                 cancelEdit(key);
@@ -335,14 +342,11 @@ const Roles = () => {
         }, [editing]);
         const toggleEditName = () => {
             setEditing(!editing);
+            let nameText = record[dataIndex] as string;
             if (dataIndex == 'name') {
-                let nameText = record[dataIndex];
-                nameText = nameText.replace('_', ' ');
-                nameText = nameText[0].toUpperCase() + nameText.slice(1);
-                editForm.setFieldsValue({ [dataIndex]: nameText });
-            } else {
-                editForm.setFieldsValue({ [dataIndex]: record[dataIndex] });
+                nameText = transformText(nameText);
             }
+            editForm.setFieldsValue({ [dataIndex]: nameText });
         };
         const cancelName = () => {
             setErrorsEdit({});
@@ -537,30 +541,39 @@ const Roles = () => {
         ),
         filterIcon: (filtered: boolean) => <SearchOutlined className={filtered && 'search-icon-filtered'} />,
         onFilter: (value, record: Item) => {
-            const deleteWhiteSpaces = (text: string): string => {
-                if (text[0] == ' ') {
-                    text = text.slice(1);
-                }
+            const deleteLastWhiteSpace = (text: string): string => {
                 if (text[text.length - 1]) {
                     text = text.slice(0, -1);
                 }
                 return text;
-            }
-            if (value.indexOf(' ') != -1) {
-                value = deleteWhiteSpaces(value);
-                //value = value.replace(' ', '_');
-            }
+            };
+            const deleteFirstWhiteSpace = (text: string): string => {
+                if (text[0] == ' ') {
+                    text = text.slice(1);
+                }
+                return text;
+            };
+            const deleteWhiteSpaces = (text: string): string => {
+                if (text.indexOf(' ') != -1) {
+                    text = deleteFirstWhiteSpace(text);
+                    text = deleteLastWhiteSpace(text);
+                }
+                return text;
+            };
+            value = deleteWhiteSpaces(value);
             return record[dataIndex] ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()) : '';
         },
         render: (text) => {
-            if (dataIndex == 'name' && text != '') {
-                text = text.replace('_', ' ');
-                text = text[0].toUpperCase() + text.slice(1);
+            const renderColumn = () => {
+                if (searchedColumn === dataIndex) {
+                    return <Highlighter searchWords={[searchText]} autoEscape textToHighlight={text.toString()} />;
+                }
+                return text;
+            };
+            if (dataIndex == 'name') {
+                text = transformText(text);
             }
-            if (searchedColumn === dataIndex) {
-                return <Highlighter searchWords={[searchText]} autoEscape textToHighlight={text && text.toString()} />;
-            }
-            return text;
+            return renderColumn();
         },
     });
 

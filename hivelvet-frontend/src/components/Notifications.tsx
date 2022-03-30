@@ -19,10 +19,12 @@
 import React from 'react';
 import { notification } from 'antd';
 import { t } from 'i18next';
+import LocaleService from '../services/locale.service';
 
 class Notifications {
     openNotificationWithIcon = (type: string, message, icon?, duration?: number) => {
         notification[type]({
+            placement: LocaleService.direction == 'rtl' ? 'topLeft' : 'topRight',
             message: t(type + '-title'),
             description: (
                 <>
@@ -34,7 +36,6 @@ class Notifications {
             ),
             icon: icon,
             duration: duration,
-            rtl: true,
         });
     };
 }
