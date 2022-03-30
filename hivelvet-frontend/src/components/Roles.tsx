@@ -112,9 +112,6 @@ const Roles = () => {
         getRoles();
     }, []);
 
-    const handleTableChange = (newPagination: PaginationType) => {
-        setPagination(newPagination);
-    };
     const getPermissionsCard = (key?: React.Key) => {
         return (
             <div className="bordered-card">
@@ -205,61 +202,66 @@ const Roles = () => {
         let editRowForm = null;
         const permissionsChecked = record.permissions;
 
-        const compareEdit = (oldRecord: object, newRecord: object): boolean => {
+        const compareActions = (oldRecord: object, newRecord: object, groups: string[]): boolean => {
             let condition = true;
+            for (const group of groups) {
+                const oldActions = oldRecord[group];
+                const newActions = newRecord[group];
+                if (oldActions.length != newActions.length) {
+                    condition = false;
+                    break;
+                } else {
+                    const resultActions: boolean = oldActions.every(function (element) {
+                        return newActions.indexOf(element) !== -1;
+                    });
+                    if (!resultActions) {
+                        condition = false;
+                        break;
+                    }
+                }
+            }
+            return condition;
+        }
+        const compareGroups = (oldRecord: object, newRecord: object, oldGroups: string[], newGroups: string[]): boolean => {
+            const resultGroup = oldGroups.every(function (element) {
+                return newGroups.indexOf(element) !== -1;
+            });
+            if (!resultGroup) {
+                return false;
+            } else {
+                return compareActions(oldRecord,newRecord,oldGroups);
+            }
+        }
+        const compareEditData = (oldRecord: object, newRecord: object): boolean => {
             const oldGroups = Object.keys(oldRecord);
             const newGroups = Object.keys(newRecord);
             if (oldGroups.length != newGroups.length) {
                 return false;
             } else {
-                const resultGroup = oldGroups.every(function (element) {
-                    return newGroups.indexOf(element) !== -1;
-                });
-                if (!resultGroup) {
-                    return false;
-                } else {
-                    const groups = Object.keys(oldRecord);
-                    for (let i = 0; i < groups.length; i++) {
-                        const oldActions = oldRecord[groups[i]];
-                        const newActions = newRecord[groups[i]];
-                        if (oldActions.length != newActions.length) {
-                            condition = false;
-                            break;
-                        } else {
-                            const resultActions = oldActions.every(function (element) {
-                                return newActions.indexOf(element) !== -1;
-                            });
-                            if (!resultActions) {
-                                condition = false;
-                                break;
-                            }
-                        }
-                    }
-                    return condition;
-                }
+                return compareGroups(oldRecord,newRecord, oldGroups, newGroups);
             }
         };
         const cancelEdit = (key: React.Key) => {
             editRowForm?.resetFields();
             setExpandedKeys(expandedKeys.filter((item) => item !== key));
+            setChangedKeys(changedKeys.filter((item) => item !== key));
         };
+        const saveRole = (data: object, key: number) => {
+            RolesService.edit_role({ permissions: data }, key)
+                .then((response) => {
+                    editRow(response,key);
+                    setExpandedKeys(expandedKeys.filter((item) => item !== key));
+                    setChangedKeys(changedKeys.filter((item) => item !== key));
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        }
         const saveEdit = (key: number) => {
             const oldData = record.permissions;
             const newData = editRowForm.getFieldsValue(true);
-            if (!compareEdit(oldData, newData)) {
-                let keys = [...changedKeys];
-                if (keys.includes(key)) {
-                    keys = keys.filter((item) => item !== key);
-                    setChangedKeys(keys);
-                }
-                RolesService.edit_role({ permissions: newData }, key)
-                    .then((response) => {
-                        editRow(response, key);
-                        setExpandedKeys(expandedKeys.filter((item) => item !== record.key));
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                    });
+            if (!compareEditData(oldData, newData)) {
+                saveRole(newData,key);
             } else {
                 Notifications.openNotificationWithIcon('info', t('no_changes'));
                 cancelEdit(key);
@@ -507,7 +509,7 @@ const Roles = () => {
                     className="table-search-input"
                     placeholder={t('search') + ' ' + t(dataIndex + '_col')}
                     value={selectedKeys[0]}
-                    onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+                    onChange={(e) => setSelectedKeys(e.target.value && [e.target.value])}
                     onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
                 />
                 <Space className="table-search-btn">
@@ -533,12 +535,20 @@ const Roles = () => {
                 </Space>
             </div>
         ),
-        filterIcon: (filtered: boolean) => <SearchOutlined className={filtered ? 'search-icon-filtered' : undefined} />,
+        filterIcon: (filtered: boolean) => <SearchOutlined className={filtered && 'search-icon-filtered'} />,
         onFilter: (value, record: Item) => {
+            const deleteWhiteSpaces = (text: string): string => {
+                if (text[0] == ' ') {
+                    text = text.slice(1);
+                }
+                if (text[text.length - 1]) {
+                    text = text.slice(0, -1);
+                }
+                return text;
+            }
             if (value.indexOf(' ') != -1) {
-                value = value[0] == ' ' ? value.slice(1) : value;
-                value = value[value.length - 1] == ' ' ? value.slice(0, -1) : value;
-                value = value.replace(' ', '_');
+                value = deleteWhiteSpaces(value);
+                //value = value.replace(' ', '_');
             }
             return record[dataIndex] ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()) : '';
         },
@@ -547,16 +557,10 @@ const Roles = () => {
                 text = text.replace('_', ' ');
                 text = text[0].toUpperCase() + text.slice(1);
             }
-            return searchedColumn === dataIndex ? (
-                <Highlighter
-                    //highlightClassName ='search-text-highlighted'
-                    searchWords={[searchText]}
-                    autoEscape
-                    textToHighlight={text ? text.toString() : ''}
-                />
-            ) : (
-                text
-            );
+            if (searchedColumn === dataIndex) {
+                return <Highlighter searchWords={[searchText]} autoEscape textToHighlight={text && text.toString()} />;
+            }
+            return text;
         },
     });
 
@@ -713,7 +717,7 @@ const Roles = () => {
                     dataSource={data}
                     pagination={pagination}
                     loading={loading}
-                    onChange={handleTableChange}
+                    onChange={(newPagination: PaginationType) => setPagination(newPagination)}
                     expandable={{
                         expandedRowRender: expandedRowRender,
                         showExpandColumn: false,

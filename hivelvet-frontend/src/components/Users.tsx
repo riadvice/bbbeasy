@@ -113,9 +113,7 @@ const Users = () => {
         getRoles();
         getUsers();
     }, []);
-    const handleTableChange = (newPagination: PaginationType) => {
-        setPagination(newPagination);
-    };
+
     const getSelectRoles = () => {
         return (
             <Select
@@ -376,7 +374,7 @@ const Users = () => {
                     className="table-search-input"
                     placeholder={t('search') + ' ' + t(dataIndex + '_col')}
                     value={selectedKeys[0]}
-                    onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+                    onChange={(e) => setSelectedKeys(e.target.value && [e.target.value])}
                     onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
                 />
                 <Space className="table-search-btn">
@@ -402,7 +400,7 @@ const Users = () => {
                 </Space>
             </div>
         ),
-        filterIcon: (filtered: boolean) => <SearchOutlined className={filtered ? 'search-icon-filtered' : undefined} />,
+        filterIcon: (filtered: boolean) => <SearchOutlined className={filtered && 'search-icon-filtered'} />,
         onFilter: (value, record: Item) => {
             return record[dataIndex] ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()) : '';
         },
@@ -410,11 +408,10 @@ const Users = () => {
             if (dataIndex == 'username' || dataIndex == 'role') {
                 text = text[0].toUpperCase() + text.slice(1);
             }
-            return searchedColumn === dataIndex ? (
-                <Highlighter searchWords={[searchText]} autoEscape textToHighlight={text ? text.toString() : ''} />
-            ) : (
-                text
-            );
+            if (searchedColumn === dataIndex) {
+                return <Highlighter searchWords={[searchText]} autoEscape textToHighlight={text && text.toString()} />;
+            }
+            return text;
         },
     });
 
@@ -674,7 +671,7 @@ const Users = () => {
                 dataSource={data}
                 pagination={pagination}
                 loading={loading}
-                onChange={handleTableChange}
+                onChange={(newPagination: PaginationType) => setPagination(newPagination)}
             />
         </>
     );
