@@ -360,7 +360,6 @@ const Users = () => {
         clearFilters();
         setSearchText('');
     };
-
     const handleSearch = (selectedKeys: string[], confirm, dataIndex: string, closed = false) => {
         if (closed) confirm({ closeDropdown: false });
         else confirm();
@@ -375,7 +374,7 @@ const Users = () => {
                     className="table-search-input"
                     placeholder={t('search') + ' ' + t(dataIndex + '_col')}
                     value={selectedKeys[0]}
-                    onChange={(e) => setSelectedKeys(e.target.value && [e.target.value])}
+                    onChange={(e) => setSelectedKeys([e.target.value])}
                     onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
                 />
                 <Space className="table-search-btn">

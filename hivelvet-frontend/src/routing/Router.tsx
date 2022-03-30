@@ -37,25 +37,25 @@ interface IProps {
 }
 
 const Router: React.FC<IProps> = ({ routes, setUser }) => {
+    const checkAccess = (route: IRoute) => {
+        if (route.private) return <PrivateRoute>{route.element}</PrivateRoute>;
+        else {
+            const component = route.path == '/login' ? <Login setUser={setUser} /> : route.element;
+            return <PublicRoute restricted={route.restricted}>{component}</PublicRoute>;
+        }
+    };
+    const RenderComponent = (props): JSX.Element => {
+        const route = props.route;
+        if (route.path == '*') return route.element;
+        else {
+            return checkAccess(route);
+        }
+    };
     return (
         <Routes>
             {routes &&
                 routes.map((route: IRoute, index) => (
-                    <Route
-                        key={index}
-                        path={route.path}
-                        element={
-                            route.path == '*' ? (
-                                route.element
-                            ) : route.private ? (
-                                <PrivateRoute>{route.element}</PrivateRoute>
-                            ) : (
-                                <PublicRoute restricted={route.restricted}>
-                                    {route.path == '/login' ? <Login setUser={setUser} /> : route.element}
-                                </PublicRoute>
-                            )
-                        }
-                    />
+                    <Route key={index} path={route.path} element={<RenderComponent route={route} />} />
                 ))}
         </Routes>
     );

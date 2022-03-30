@@ -21,12 +21,11 @@ import { Link, Navigate } from 'react-router-dom';
 import AuthService from '../services/auth.service';
 import Notifications from './Notifications';
 
-import { Form, Input, Button, Alert, Col, Row, Typography, Card } from 'antd';
+import { Form, Button, Alert, Col, Row, Typography, Card } from 'antd';
 import { SmileOutlined } from '@ant-design/icons';
 
 import { Trans, withTranslation } from 'react-i18next';
 import EN_US from '../locale/en-US.json';
-import { t } from 'i18next';
 import AddUserForm from './AddUserForm';
 
 const { Text, Title, Paragraph } = Typography;
