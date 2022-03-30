@@ -19,6 +19,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import AuthService from '../services/auth.service';
+import AddUserForm from './AddUserForm';
 
 import { Form, Input, Button, Checkbox, Alert, Col, Row, Typography, Card, Result } from 'antd';
 import { Trans, withTranslation } from 'react-i18next';
@@ -104,54 +105,7 @@ const Register = () => {
                             validateTrigger="onSubmit"
                             onFinish={handleRegistration}
                         >
-                            <Form.Item
-                                label={<Trans i18nKey="username.label" />}
-                                name="username"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: <Trans i18nKey="username.required" />,
-                                    },
-                                    {
-                                        min: 4,
-                                        message: <Trans i18nKey="username.size" />,
-                                    },
-                                ]}
-                            >
-                                <Input placeholder={t('username.label')} />
-                            </Form.Item>
-                            <Form.Item
-                                label={<Trans i18nKey="email.label" />}
-                                name="email"
-                                rules={[
-                                    {
-                                        type: 'email',
-                                        message: <Trans i18nKey="email.invalid" />,
-                                    },
-                                    {
-                                        required: true,
-                                        message: <Trans i18nKey="email.required" />,
-                                    },
-                                ]}
-                            >
-                                <Input placeholder={t('email.label')} />
-                            </Form.Item>
-                            <Form.Item
-                                label={<Trans i18nKey="password.label" />}
-                                name="password"
-                                rules={[
-                                    {
-                                        min: 4,
-                                        message: <Trans i18nKey="password.size" />,
-                                    },
-                                    {
-                                        required: true,
-                                        message: <Trans i18nKey="password.required" />,
-                                    },
-                                ]}
-                            >
-                                <Input.Password placeholder="**********" />
-                            </Form.Item>
+                            <AddUserForm />
                             <Form.Item
                                 label={<Trans i18nKey="confirm-password.label" />}
                                 name="confirmPassword"
@@ -177,7 +131,6 @@ const Register = () => {
                             >
                                 <Input.Password placeholder="**********" />
                             </Form.Item>
-
                             <Form.Item
                                 className="form-agree"
                                 name="agreement"

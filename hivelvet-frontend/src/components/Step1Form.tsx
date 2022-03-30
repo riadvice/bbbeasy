@@ -17,15 +17,13 @@
  */
 
 import React from 'react';
-
-import { Form, Input, Typography } from 'antd';
-import { Trans, useTranslation } from 'react-i18next';
+import { Typography } from 'antd';
+import AddUserForm from './AddUserForm';
+import { Trans } from 'react-i18next';
 
 const { Title, Paragraph } = Typography;
 
 export const Step1Form = () => {
-    const { t } = useTranslation();
-
     return (
         <div>
             <Paragraph className="form-header text-center">
@@ -33,55 +31,7 @@ export const Step1Form = () => {
                     <Trans i18nKey="create-administrator-account" />
                 </Title>
             </Paragraph>
-
-            <Form.Item
-                label={<Trans i18nKey="username.label" />}
-                name="username"
-                rules={[
-                    {
-                        required: true,
-                        message: <Trans i18nKey="username.required" />,
-                    },
-                    {
-                        min: 4,
-                        message: <Trans i18nKey="username.size" />,
-                    },
-                ]}
-            >
-                <Input placeholder={t('username.label')} />
-            </Form.Item>
-            <Form.Item
-                label={<Trans i18nKey="email.label" />}
-                name="email"
-                rules={[
-                    {
-                        type: 'email',
-                        message: <Trans i18nKey="email.invalid" />,
-                    },
-                    {
-                        required: true,
-                        message: <Trans i18nKey="email.required" />,
-                    },
-                ]}
-            >
-                <Input placeholder={t('email.label')} />
-            </Form.Item>
-            <Form.Item
-                label={<Trans i18nKey="password.label" />}
-                name="password"
-                rules={[
-                    {
-                        min: 4,
-                        message: <Trans i18nKey="password.size" />,
-                    },
-                    {
-                        required: true,
-                        message: <Trans i18nKey="password.required" />,
-                    },
-                ]}
-            >
-                <Input.Password placeholder={t('password.label')} />
-            </Form.Item>
+            <AddUserForm />
         </div>
     );
 };

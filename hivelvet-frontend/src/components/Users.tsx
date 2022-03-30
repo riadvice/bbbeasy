@@ -20,6 +20,8 @@ import React, { useEffect } from 'react';
 import UsersService from '../services/users.service';
 import PaginationType from './PaginationType';
 import Notifications from './Notifications';
+import AddUserForm from './AddUserForm';
+
 import { Trans, withTranslation } from 'react-i18next';
 import EN_US from '../locale/en-US.json';
 import { t } from 'i18next';
@@ -583,57 +585,7 @@ const Users = () => {
                             showIcon
                         />
                     )}
-
-                    <Form.Item
-                        label={<Trans i18nKey="username.label" />}
-                        name="username"
-                        rules={[
-                            {
-                                required: true,
-                                message: <Trans i18nKey="username.required" />,
-                            },
-                            {
-                                min: 4,
-                                message: <Trans i18nKey="username.size" />,
-                            },
-                        ]}
-                    >
-                        <Input placeholder={t('username.label')} />
-                    </Form.Item>
-
-                    <Form.Item
-                        label={<Trans i18nKey="email.label" />}
-                        name="email"
-                        rules={[
-                            {
-                                type: 'email',
-                                message: <Trans i18nKey="email.invalid" />,
-                            },
-                            {
-                                required: true,
-                                message: <Trans i18nKey="email.required" />,
-                            },
-                        ]}
-                    >
-                        <Input placeholder={t('email.label')} />
-                    </Form.Item>
-                    <Form.Item
-                        label={<Trans i18nKey="password.label" />}
-                        name="password"
-                        rules={[
-                            {
-                                min: 4,
-                                message: <Trans i18nKey="password.size" />,
-                            },
-                            {
-                                required: true,
-                                message: <Trans i18nKey="password.required" />,
-                            },
-                        ]}
-                    >
-                        <Input.Password placeholder="**********" />
-                    </Form.Item>
-
+                    <AddUserForm />
                     <Form.Item
                         label={<Trans i18nKey="role.label" />}
                         name="role"

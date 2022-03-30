@@ -17,10 +17,7 @@
  */
 
 import React, { useEffect } from 'react';
-import { INSTALLER_FEATURE } from './constants';
-import { webRoutes } from './routing/config';
-import { installRoutes } from './routing/config-install';
-
+import { IRoute } from './routing/IRoute';
 import Router from './routing/Router';
 
 import './App.less';
@@ -49,7 +46,12 @@ type userType = {
     role: string;
 };
 
-const App = () => {
+interface IProps {
+    routes?: IRoute[];
+    isSider?: boolean;
+    logs?: string;
+}
+const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
     const [currentUser, setCurrentUser] = React.useState<userType>(null);
     const [isLogged, setIsLogged] = React.useState<boolean>(false);
     const [language, setLanguage] = React.useState<string>(LocaleService.language);
@@ -63,8 +65,7 @@ const App = () => {
         LocaleService.changeLocale(lang);
     };
     useEffect(() => {
-        if (INSTALLER_FEATURE) Logger.info('Initialisation Hivelvet Installer Application');
-        else Logger.info('Initialisation Hivelvet Webapp Application');
+        Logger.info(logs);
         const user: userType = authService.getCurrentUser();
         if (authService.getCurrentUser() != null) setUser(user, true);
     }, []);
@@ -72,7 +73,7 @@ const App = () => {
     return (
         <Layout className={LocaleService.direction == 'rtl' ? 'page-layout-content-rtl' : 'page-layout-content'}>
             <ConfigProvider locale={LocaleService.antdlocale} direction={LocaleService.direction} componentSize="large">
-                {isLogged && !INSTALLER_FEATURE && <AppSider />}
+                {isLogged && isSider && <AppSider />}
                 <Layout className="page-layout-body">
                     <AppHeader
                         currentUser={currentUser}
@@ -82,7 +83,7 @@ const App = () => {
                         setUser={setUser}
                     />
                     <Content className="site-content">
-                        <Router routes={INSTALLER_FEATURE ? installRoutes : webRoutes} setUser={setUser} />
+                        <Router routes={routes} setUser={setUser} />
                     </Content>
                     <AppFooter />
                 </Layout>

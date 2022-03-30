@@ -27,6 +27,7 @@ import { SmileOutlined } from '@ant-design/icons';
 import { Trans, withTranslation } from 'react-i18next';
 import EN_US from '../locale/en-US.json';
 import { t } from 'i18next';
+import AddUserForm from './AddUserForm';
 
 const { Text, Title, Paragraph } = Typography;
 
@@ -119,38 +120,7 @@ const Login = (props: Props) => {
                         validateTrigger="onSubmit"
                         onFinish={handleLogin}
                     >
-                        <Form.Item
-                            label={<Trans i18nKey="email.label" />}
-                            name="email"
-                            rules={[
-                                {
-                                    type: 'email',
-                                    message: <Trans i18nKey="email.invalid" />,
-                                },
-                                {
-                                    required: true,
-                                    message: <Trans i18nKey="email.required" />,
-                                },
-                            ]}
-                        >
-                            <Input placeholder={t('email.label')} />
-                        </Form.Item>
-                        <Form.Item
-                            label={<Trans i18nKey="password.label" />}
-                            name="password"
-                            rules={[
-                                {
-                                    min: 4,
-                                    message: <Trans i18nKey="password.size" />,
-                                },
-                                {
-                                    required: true,
-                                    message: <Trans i18nKey="password.required" />,
-                                },
-                            ]}
-                        >
-                            <Input.Password placeholder="**********" />
-                        </Form.Item>
+                        <AddUserForm isLogin={true} />
                         <Form.Item>
                             <Button type="primary" htmlType="submit" block>
                                 <Trans i18nKey="login" />

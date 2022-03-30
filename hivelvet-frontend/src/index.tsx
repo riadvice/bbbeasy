@@ -22,12 +22,25 @@ import { BrowserRouter } from 'react-router-dom';
 import reportWebVitals from './reportWebVitals';
 import App from './App';
 
-ReactDOM.render(
-    <BrowserRouter>
-        <App />
-    </BrowserRouter>,
-    document.getElementById('root')
-);
+import { INSTALLER_FEATURE } from './constants';
+import { webRoutes } from './routing/config';
+import { installRoutes } from './routing/config-install';
+
+if (INSTALLER_FEATURE) {
+    ReactDOM.render(
+        <BrowserRouter>
+            <App routes={installRoutes} isSider={false} logs={'Initialisation Hivelvet Installer Application'} />
+        </BrowserRouter>,
+        document.getElementById('root')
+    );
+} else {
+    ReactDOM.render(
+        <BrowserRouter>
+            <App routes={webRoutes} isSider={true} logs={'Initialisation Hivelvet Webapp Application'} />
+        </BrowserRouter>,
+        document.getElementById('root')
+    );
+}
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
