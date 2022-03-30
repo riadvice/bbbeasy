@@ -37,6 +37,7 @@ class ResponseCode extends Enum
     final public const HTTP_MULTI_STATUS                                              = 207;  // RFC4918
     final public const HTTP_ALREADY_REPORTED                                          = 208;  // RFC5842
     final public const HTTP_IM_USED                                                   = 226;  // RFC3229
+
     final public const HTTP_MULTIPLE_CHOICES                                          = 300;
     final public const HTTP_MOVED_PERMANENTLY                                         = 301;
     final public const HTTP_FOUND                                                     = 302;
@@ -46,6 +47,7 @@ class ResponseCode extends Enum
     final public const HTTP_RESERVED                                                  = 306;
     final public const HTTP_TEMPORARY_REDIRECT                                        = 307;
     final public const HTTP_PERMANENT_REDIRECT                                        = 308;  // RFC7238
+
     final public const HTTP_BAD_REQUEST                                               = 400;
     final public const HTTP_UNAUTHORIZED                                              = 401;
     final public const HTTP_PAYMENT_REQUIRED                                          = 402;
@@ -75,6 +77,7 @@ class ResponseCode extends Enum
     final public const HTTP_TOO_MANY_REQUESTS                                         = 429;  // RFC6585
     final public const HTTP_REQUEST_HEADER_FIELDS_TOO_LARGE                           = 431;  // RFC6585
     final public const HTTP_UNAVAILABLE_FOR_LEGAL_REASONS                             = 451;
+
     final public const HTTP_INTERNAL_SERVER_ERROR                                     = 500;
     final public const HTTP_NOT_IMPLEMENTED                                           = 501;
     final public const HTTP_BAD_GATEWAY                                               = 502;

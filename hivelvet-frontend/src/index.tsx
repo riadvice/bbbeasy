@@ -26,17 +26,19 @@ import { INSTALLER_FEATURE } from './constants';
 import { webRoutes } from './routing/config';
 import { installRoutes } from './routing/config-install';
 
+if (!INSTALLER_FEATURE) {
+    ReactDOM.render(
+        <BrowserRouter>
+            <App routes={webRoutes} isSider={true} logs={'Initialisation Hivelvet Webapp Application'} />
+        </BrowserRouter>,
+        document.getElementById('root')
+    );
+}
+
 if (INSTALLER_FEATURE) {
     ReactDOM.render(
         <BrowserRouter>
             <App routes={installRoutes} isSider={false} logs={'Initialisation Hivelvet Installer Application'} />
-        </BrowserRouter>,
-        document.getElementById('root')
-    );
-} else {
-    ReactDOM.render(
-        <BrowserRouter>
-            <App routes={webRoutes} isSider={true} logs={'Initialisation Hivelvet Webapp Application'} />
         </BrowserRouter>,
         document.getElementById('root')
     );

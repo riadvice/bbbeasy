@@ -233,20 +233,14 @@ const Roles = () => {
             const resultGroup = oldGroups.every(function (element) {
                 return newGroups.indexOf(element) !== -1;
             });
-            if (!resultGroup) {
-                return false;
-            } else {
-                return compareActions(oldRecord, newRecord, oldGroups);
-            }
+            if (!resultGroup) return false;
+            return compareActions(oldRecord, newRecord, oldGroups);
         };
         const compareEditData = (oldRecord: object, newRecord: object): boolean => {
             const oldGroups = Object.keys(oldRecord);
             const newGroups = Object.keys(newRecord);
-            if (oldGroups.length != newGroups.length) {
-                return false;
-            } else {
-                return compareGroups(oldRecord, newRecord, oldGroups, newGroups);
-            }
+            if (oldGroups.length != newGroups.length) return false;
+            return compareGroups(oldRecord, newRecord, oldGroups, newGroups);
         };
         const cancelEdit = (key: React.Key) => {
             editRowForm?.resetFields();
@@ -541,22 +535,14 @@ const Roles = () => {
         ),
         filterIcon: (filtered: boolean) => <SearchOutlined className={filtered && 'search-icon-filtered'} />,
         onFilter: (value, record: Item) => {
-            const deleteLastWhiteSpace = (text: string): string => {
-                if (text[text.length - 1]) {
-                    text = text.slice(0, -1);
-                }
-                return text;
-            };
-            const deleteFirstWhiteSpace = (text: string): string => {
-                if (text[0] == ' ') {
-                    text = text.slice(1);
-                }
-                return text;
-            };
             const deleteWhiteSpaces = (text: string): string => {
                 if (text.indexOf(' ') != -1) {
-                    text = deleteFirstWhiteSpace(text);
-                    text = deleteLastWhiteSpace(text);
+                    if (text[0] == ' ') {
+                        text = text.slice(1);
+                    }
+                    if (text[text.length - 1]) {
+                        text = text.slice(0, -1);
+                    }
                 }
                 return text;
             };

@@ -62,7 +62,7 @@ class Edit extends BaseAction
 
                     if ($checkRole->nameExists($role->name, $role->id)) {
                         $this->logger->error('Role could not be updated', ['error' => 'Name already exist']);
-                        $this->renderJson(['errors' => ['name' => 'Name already exist']], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+                        $this->renderJson(['errors' => ['name' => 'Name already exist']], ResponseCode::HTTP_PRECONDITION_FAILED);
 
                         return;
                     }
@@ -152,13 +152,7 @@ class Edit extends BaseAction
 
             $this->logger->info('Role successfully updated', ['role' => $role->toArray()]);
             $role = $this->loadData($role_id);
-            $result = [
-                'key'         => $role->id,
-                'name'        => $role->name,
-                'users'       => $role->getRoleUsers(),
-                'permissions' => $role->getRolePermissions(),
-            ];
-            $this->renderJson(['result' => 'success', 'role' => $result]);
+            $this->renderJson(['result' => 'success', 'role' => $role->getRoleInfos()]);
         } else {
             $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
         }

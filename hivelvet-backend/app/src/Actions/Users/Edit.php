@@ -26,7 +26,6 @@ use Actions\Base as BaseAction;
 use Actions\RequirePrivilegeTrait;
 use Base;
 use Enum\ResponseCode;
-use Enum\UserStatus;
 use Models\Role;
 use Models\User;
 use Respect\Validation\Validator;
@@ -74,7 +73,7 @@ class Edit extends BaseAction
                         $message = ['username' => 'username already exist','email' => 'email already exist'];
                     }
                     $this->logger->error('User could not be updated', ['error' => $message]);
-                    $this->renderJson(['errors' => $message], ResponseCode::HTTP_BAD_REQUEST);
+                    $this->renderJson(['errors' => $message], ResponseCode::HTTP_PRECONDITION_FAILED);
                 } else {
                     $role = new Role();
                     $role->load(['id = ?', [$form['role']]]);
@@ -88,7 +87,7 @@ class Edit extends BaseAction
                         } catch (\Exception $e) {
                             $message = 'user could not be updated';
                             $this->logger->error('User could not be updated', ['user' => $user->toArray(), 'error' => $e->getMessage()]);
-                            $this->renderJson(['errors' => $message], ResponseCode::HTTP_BAD_REQUEST);
+                            $this->renderJson(['errors' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
 
                             return;
                         }
@@ -99,7 +98,7 @@ class Edit extends BaseAction
                 }
             } else {
                 $this->logger->error('Update user error', ['errors' => $dataChecker->getErrors()]);
-                $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_BAD_REQUEST);
+                $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
             }
         } else {
             $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);

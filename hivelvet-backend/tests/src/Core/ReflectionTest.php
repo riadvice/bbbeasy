@@ -33,7 +33,12 @@ final class ReflectionTest extends Scenario
 {
     protected $group = 'Reflection Based Configuration';
 
-    protected array $permissions = ['logs' => ['collect'], 'roles' => ['add', 'delete', 'edit'], 'users' => ['add', 'delete', 'edit']];
+    protected array $permissions = [
+        'logs' => ['collect'],
+        'roles_permissions' => ['collect'],
+        'roles' => ['add', 'collect', 'delete', 'edit', 'index'],
+        'users' => ['add', 'delete', 'edit', 'index']
+    ];
 
     /**
      * @param $f3 \Base

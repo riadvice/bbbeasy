@@ -66,7 +66,7 @@ class Add extends BaseAction
                     $message = 'username and email already exist';
                 }
                 $this->logger->error('User could not be added', ['error' => $message]);
-                $this->renderJson(['message' => $message], ResponseCode::HTTP_BAD_REQUEST);
+                $this->renderJson(['message' => $message], ResponseCode::HTTP_PRECONDITION_FAILED);
             } else {
                 $role = new Role();
                 $role->load(['id = ?', [$form['role']]]);
@@ -82,18 +82,18 @@ class Add extends BaseAction
                     } catch (\Exception $e) {
                         $message = 'user could not be added';
                         $this->logger->error('User could not be added', ['user' => $user->toArray(), 'error' => $e->getMessage()]);
-                        $this->renderJson(['message' => $message], ResponseCode::HTTP_BAD_REQUEST);
+                        $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
 
                         return;
                     }
 
                     $this->logger->info('User successfully added', ['user' => $user->toArray()]);
-                    $this->renderJson(['result' => 'success', 'user' => $user->getUserInfos($user->id)]);
+                    $this->renderJson(['result' => 'success', 'user' => $user->getUserInfos($user->id)], ResponseCode::HTTP_CREATED);
                 }
             }
         } else {
             $this->logger->error('Add user error', ['errors' => $dataChecker->getErrors()]);
-            $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_BAD_REQUEST);
+            $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
         }
     }
 }

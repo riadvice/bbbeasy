@@ -75,16 +75,16 @@ class Register extends BaseAction
                 } catch (\Exception $e) {
                     $message = 'user could not be added';
                     $this->logger->error('Registration error : user could not be added', ['user' => $user->toArray(), 'error' => $e->getMessage()]);
-                    $this->renderJson(['message' => $message], ResponseCode::HTTP_BAD_REQUEST);
+                    $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
 
                     return;
                 }
                 $this->logger->info('user successfully registered', ['user' => $user->toArray()]);
-                $this->renderJson(['result' => 'success']);
+                $this->renderJson(['result' => 'success', ResponseCode::HTTP_CREATED]);
             }
         } else {
             $this->logger->error('Registration error', ['errors' => $dataChecker->getErrors()]);
-            $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_BAD_REQUEST);
+            $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
         }
     }
 }
