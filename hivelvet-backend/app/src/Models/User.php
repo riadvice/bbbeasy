@@ -112,9 +112,6 @@ class User extends BaseModel
         return (int) $result[0]['total'];
     }
 
-    /**
-     * @return mixed
-     */
     public function getCountFields(): mixed
     {
         return $this->countFields;
@@ -122,7 +119,6 @@ class User extends BaseModel
 
     /**
      * @param $password
-     * @return bool
      */
     public function verifyPassword($password): bool
     {
@@ -136,23 +132,25 @@ class User extends BaseModel
         if ($users) {
             $data = $this->getUserInfos();
         }
+
         return $data;
     }
 
-    public function getUserInfos(int $id = NULL) : array
+    public function getUserInfos(int $id = null): array
     {
         if ($id) {
             $subQuery = 'WHERE u.id = :user_id';
-            $params = [':user_id' => $id];
+            $params   = [':user_id' => $id];
         }
         $result = $this->db->exec(
             'SELECT
                 u.id AS key, u.username, u.email, u.status, r.name AS role
             FROM
                 users u
-            LEFT JOIN roles r ON u.role_id = r.id '.$subQuery, $params
+            LEFT JOIN roles r ON u.role_id = r.id ' . $subQuery,
+            $params
         );
 
-        return $id ? $result[0] : $result ;
+        return $id ? $result[0] : $result;
     }
 }

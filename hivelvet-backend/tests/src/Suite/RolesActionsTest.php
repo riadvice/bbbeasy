@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Suite;
 
 use Actions\Roles\AddTest;
-use Actions\Roles\EditTest;
 use Actions\Roles\DeleteTest;
+use Actions\Roles\EditTest;
 use Test\TestGroup;
 
 /**

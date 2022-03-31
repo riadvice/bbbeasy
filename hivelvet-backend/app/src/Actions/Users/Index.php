@@ -41,11 +41,11 @@ class Index extends BaseAction
      */
     public function show($f3, $params): void
     {
-        $user   = new User();
-        $users  = $user->getAllUsers();
+        $user  = new User();
+        $users = $user->getAllUsers();
 
         $userStatus = new UserStatus();
-        $states = $userStatus::values();
+        $states     = $userStatus::values();
 
         $this->logger->debug('collecting users', ['users' => json_encode($users)]);
         $this->renderJson(['users' => $users, 'states' => $states]);

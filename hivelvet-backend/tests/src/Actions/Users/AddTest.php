@@ -50,7 +50,7 @@ final class AddTest extends Scenario
         $user = UserFaker::create(UserRole::LECTURER);
         $data = ['data' => ['username' => $user->username, 'email' => $user->email, 'password' => UserRole::LECTURER,  'role' => 2]];
         $f3->mock(self::ADD_USER_ROUTE, null, null, $this->postJsonData($data));
-        $test->expect($this->compareTemplateToResponse('user/exist_error.json'),'Add user with existing username and email shown an error');
+        $test->expect($this->compareTemplateToResponse('user/exist_error.json'), 'Add user with existing username and email shown an error');
 
         return $test->results();
     }
@@ -69,7 +69,7 @@ final class AddTest extends Scenario
         $user = UserFaker::create(UserRole::LECTURER);
         $data = ['data' => ['username' => $user->username, 'email' => 'email@gmail.com', 'password' => UserRole::LECTURER,  'role' => 2]];
         $f3->mock(self::ADD_USER_ROUTE, null, null, $this->postJsonData($data));
-        $test->expect($this->compareTemplateToResponse('user/exist_username_error.json'),'Add user with existing username shown an error');
+        $test->expect($this->compareTemplateToResponse('user/exist_username_error.json'), 'Add user with existing username shown an error');
 
         return $test->results();
     }
@@ -88,7 +88,7 @@ final class AddTest extends Scenario
         $user = UserFaker::create(UserRole::LECTURER);
         $data = ['data' => ['username' => 'test', 'email' => $user->email, 'password' => UserRole::LECTURER,  'role' => 2]];
         $f3->mock(self::ADD_USER_ROUTE, null, null, $this->postJsonData($data));
-        $test->expect($this->compareTemplateToResponse('user/exist_email_error.json'),'Add user with existing email shown an error');
+        $test->expect($this->compareTemplateToResponse('user/exist_email_error.json'), 'Add user with existing email shown an error');
 
         return $test->results();
     }

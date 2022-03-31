@@ -22,9 +22,7 @@ declare(strict_types=1);
 
 namespace Actions\Roles;
 
-use Enum\UserRole;
 use Fake\RoleFaker;
-use Fake\UserFaker;
 use ReflectionException;
 use Test\Scenario;
 
@@ -35,7 +33,7 @@ use Test\Scenario;
 final class DeleteTest extends Scenario
 {
     final protected const DELETE_ROLE_ROUTE = 'DELETE /roles/delete/';
-    protected $group                     = 'Action Role Delete';
+    protected $group                        = 'Action Role Delete';
 
     /**
      * @param $f3

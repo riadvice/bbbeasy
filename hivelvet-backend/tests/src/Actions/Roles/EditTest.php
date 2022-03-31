@@ -22,10 +22,7 @@ declare(strict_types=1);
 
 namespace Actions\Roles;
 
-use Enum\UserRole;
-use Enum\UserStatus;
 use Fake\RoleFaker;
-use Fake\UserFaker;
 use ReflectionException;
 use Test\Scenario;
 
@@ -36,7 +33,7 @@ use Test\Scenario;
 final class EditTest extends Scenario
 {
     final protected const EDIT_ROLE_ROUTE = 'PUT /roles/edit/';
-    protected $group                     = 'Action Role Edit';
+    protected $group                      = 'Action Role Edit';
 
     /**
      * @param $f3
@@ -70,7 +67,7 @@ final class EditTest extends Scenario
 
         $faker_1 = RoleFaker::create();
         $faker_2 = RoleFaker::create();
-        $data = ['data' => ['name' => $faker_2->name]];
+        $data    = ['data' => ['name' => $faker_2->name]];
         $f3->mock(self::EDIT_ROLE_ROUTE . $faker_1->id, null, null, $this->postJsonData($data));
         $test->expect($this->compareTemplateToResponse('role/exist_error.json'), 'Update role with existing name show an error');
 

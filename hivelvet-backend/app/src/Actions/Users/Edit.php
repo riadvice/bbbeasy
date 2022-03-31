@@ -26,7 +26,6 @@ use Actions\Base as BaseAction;
 use Actions\RequirePrivilegeTrait;
 use Base;
 use Enum\ResponseCode;
-use Enum\UserStatus;
 use Models\Role;
 use Models\User;
 use Respect\Validation\Validator;
@@ -45,11 +44,11 @@ class Edit extends BaseAction
      */
     public function save($f3, $params): void
     {
-        $body   = $this->getDecodedBody();
-        $form   = $body['data'];
+        $body = $this->getDecodedBody();
+        $form = $body['data'];
 
-        $id     = $params['id'];
-        $user   = $this->loadData($id);
+        $id   = $params['id'];
+        $user = $this->loadData($id);
 
         if ($user->valid()) {
             $dataChecker = new DataChecker();
@@ -61,17 +60,17 @@ class Edit extends BaseAction
 
             if ($dataChecker->allValid()) {
                 $checkUser = new User();
-                $users = $checkUser->find(['(username = ? and id != ?) or (email = ? and id != ?)', $form['username'], $id, $form['email'], $id]);
+                $users     = $checkUser->find(['(username = ? and id != ?) or (email = ? and id != ?)', $form['username'], $id, $form['email'], $id]);
                 if ($users) {
                     $users = $users->castAll();
-                    if (count($users) == 1) {
-                        $usernameExist = $users[0]['username'] == $form['username'];
-                        $emailExist = $users[0]['email'] == $form['email'];
-                        $message = ($usernameExist && $emailExist) ?
-                            ['username' => 'username already exist','email' => 'email already exist'] :
+                    if (1 === \count($users)) {
+                        $usernameExist = $users[0]['username'] === $form['username'];
+                        $emailExist    = $users[0]['email'] === $form['email'];
+                        $message       = ($usernameExist && $emailExist) ?
+                            ['username' => 'username already exist', 'email' => 'email already exist'] :
                             ($usernameExist ? ['username' => 'username already exist'] : ['email' => 'email already exist']);
                     } else {
-                        $message = ['username' => 'username already exist','email' => 'email already exist'];
+                        $message = ['username' => 'username already exist', 'email' => 'email already exist'];
                     }
                     $this->logger->error('User could not be updated', ['error' => $message]);
                     $this->renderJson(['errors' => $message], ResponseCode::HTTP_BAD_REQUEST);

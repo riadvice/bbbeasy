@@ -85,6 +85,7 @@ final class LoginTest extends Scenario
 
         $data = ['email' => $user->email, 'password' => UserRole::ADMINISTRATOR . UserRole::ADMINISTRATOR];
         $f3->mock(self::LOGIN_ROUTE, null, null, $this->postJsonData($data));
+
         /** @var Role $role */
         $role = $user->role_id;
         $test->expect(

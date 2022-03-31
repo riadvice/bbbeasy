@@ -22,9 +22,7 @@ declare(strict_types=1);
 
 namespace Actions\Roles;
 
-use Enum\UserRole;
 use Fake\RoleFaker;
-use Fake\UserFaker;
 use ReflectionException;
 use Test\Scenario;
 

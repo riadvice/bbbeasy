@@ -54,7 +54,7 @@ class Login extends BaseAction
             if ($user->valid() && UserStatus::ACTIVE === $user->status && $user->verifyPassword($form['password'])) {
                 /** @var Role $role */
                 $role = $user->role_id;
-                if(UserRole::API !== $role->name) {
+                if (UserRole::API !== $role->name) {
                     // valid credentials
                     $this->session->authorizeUser($user);
 
