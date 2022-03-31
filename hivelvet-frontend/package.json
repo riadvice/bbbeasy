@@ -7,7 +7,7 @@
     "axios": "^0.26.1",
     "craco-less": "^2.0.0",
     "dotenv-cra": "^3.0.2",
-    "eslint-plugin-react-hooks": "^4.3.0",
+    "eslint-plugin-react-hooks": "^4.4.0",
     "i18next": "^21.6.13",
     "moment": "^2.29.1",
     "perfect-scrollbar": "^1.5.5",
