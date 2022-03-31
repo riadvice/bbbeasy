@@ -30,7 +30,7 @@ import AppSider from './components/AppSider';
 
 import 'moment/locale/fr';
 import 'moment/locale/ar';
-import 'moment/locale/en-au';
+import 'moment/locale/en-gb';
 
 import Logger from './lib/logger';
 
