@@ -42,7 +42,7 @@ final class GetResetPasswordTokenTest extends Scenario
     public function testRequestInvalidResetPasswordToken($f3): array
     {
         $test = $this->newTest();
-        $f3->mock(self::CHECK_TOKEN_ROUTE . Faker::create()->md5, null, null);
+        $f3->mock(self::CHECK_TOKEN_ROUTE . Faker::create()->md5);
         $test->expect($this->compareTemplateToResponse('account/password_reset_token_error.json'), 'Fetch data for a non existing password reset token');
 
         // @todo: test a valid token for a non-active user

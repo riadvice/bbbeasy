@@ -50,12 +50,9 @@ final class EditTest extends Scenario
 
         $faker_1 = UserFaker::create(UserRole::LECTURER);
         $faker_2 = UserFaker::create(UserRole::LECTURER);
-        $test->expect($faker_1->valid(), 'User 1 mocked & saved to the database');
-        $test->expect($faker_2->valid(), 'User 2 mocked & saved to the database');
-
         $data = ['data' => ['username' => $faker_1->username, 'email' => $faker_1->email, 'role' => 2, 'status' => UserStatus::INACTIVE ]];
         $f3->mock(self::EDIT_USER_ROUTE . $faker_2->id, null, null, $this->postJsonData($data));
-        $test->expect($this->compareTemplateToResponse('user/update_exist_error.json'),'Add user with existing username and email shown an error');
+        $test->expect($this->compareTemplateToResponse('user/update_exist_error.json'),'Update user with existing username and email shown an error');
 
         return $test->results();
     }
@@ -73,12 +70,9 @@ final class EditTest extends Scenario
 
         $faker_1 = UserFaker::create(UserRole::LECTURER);
         $faker_2 = UserFaker::create(UserRole::LECTURER);
-        $test->expect($faker_1->valid(), 'User 1 mocked & saved to the database');
-        $test->expect($faker_2->valid(), 'User 2 mocked & saved to the database');
-
         $data = ['data' => ['username' => $faker_1->username, 'email' => $faker_2->email, 'role' => 2, 'status' => UserStatus::INACTIVE ]];
         $f3->mock(self::EDIT_USER_ROUTE . $faker_2->id, null, null, $this->postJsonData($data));
-        $test->expect($this->compareTemplateToResponse('user/update_exist_username_error.json'),'Add user with existing username and email shown an error');
+        $test->expect($this->compareTemplateToResponse('user/update_exist_username_error.json'),'Update user with existing username shown an error');
 
         return $test->results();
     }
@@ -96,12 +90,9 @@ final class EditTest extends Scenario
 
         $faker_1 = UserFaker::create(UserRole::LECTURER);
         $faker_2 = UserFaker::create(UserRole::LECTURER);
-        $test->expect($faker_1->valid(), 'User 1 mocked & saved to the database');
-        $test->expect($faker_2->valid(), 'User 2 mocked & saved to the database');
-
         $data = ['data' => ['username' => $faker_2->username, 'email' => $faker_1->email, 'role' => 2, 'status' => UserStatus::INACTIVE ]];
         $f3->mock(self::EDIT_USER_ROUTE . $faker_2->id, null, null, $this->postJsonData($data));
-        $test->expect($this->compareTemplateToResponse('user/update_exist_email_error.json'),'Add user with existing username and email shown an error');
+        $test->expect($this->compareTemplateToResponse('user/update_exist_email_error.json'),'Update user with existing email shown an error');
 
         return $test->results();
     }
@@ -118,8 +109,6 @@ final class EditTest extends Scenario
         $test = $this->newTest();
 
         $user = UserFaker::create(UserRole::LECTURER);
-        $test->expect($user->valid(), 'User mocked & saved to the database');
-
         $data = ['data' => ['username' => 'new_username', 'email' => 'new_email@gmail.com', 'role' => 2, 'status' => UserStatus::INACTIVE ]];
         $f3->mock(self::EDIT_USER_ROUTE . $user->id, null, null, $this->postJsonData($data));
         $test->expect($this->compareArrayToResponse(['result' => 'success', 'user' => $user->getUserInfos($user->id)]), 'Update user pass successfully with id "' . $user->id . '"');

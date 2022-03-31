@@ -46,9 +46,8 @@ final class AddTest extends Scenario
     public function testExistingUser($f3)
     {
         $test = $this->newTest();
-        $user = UserFaker::create(UserRole::LECTURER);
-        $test->expect($user->valid(), 'User mocked & saved to the database');
 
+        $user = UserFaker::create(UserRole::LECTURER);
         $data = ['data' => ['username' => $user->username, 'email' => $user->email, 'password' => UserRole::LECTURER,  'role' => 2]];
         $f3->mock(self::ADD_USER_ROUTE, null, null, $this->postJsonData($data));
         $test->expect($this->compareTemplateToResponse('user/exist_error.json'),'Add user with existing username and email shown an error');
@@ -66,9 +65,8 @@ final class AddTest extends Scenario
     public function testExistingUsername($f3)
     {
         $test = $this->newTest();
-        $user = UserFaker::create(UserRole::LECTURER);
-        $test->expect($user->valid(), 'User mocked & saved to the database');
 
+        $user = UserFaker::create(UserRole::LECTURER);
         $data = ['data' => ['username' => $user->username, 'email' => 'email@gmail.com', 'password' => UserRole::LECTURER,  'role' => 2]];
         $f3->mock(self::ADD_USER_ROUTE, null, null, $this->postJsonData($data));
         $test->expect($this->compareTemplateToResponse('user/exist_username_error.json'),'Add user with existing username shown an error');
@@ -86,9 +84,8 @@ final class AddTest extends Scenario
     public function testExistingEmail($f3)
     {
         $test = $this->newTest();
-        $user = UserFaker::create(UserRole::LECTURER);
-        $test->expect($user->valid(), 'User mocked & saved to the database');
 
+        $user = UserFaker::create(UserRole::LECTURER);
         $data = ['data' => ['username' => 'test', 'email' => $user->email, 'password' => UserRole::LECTURER,  'role' => 2]];
         $f3->mock(self::ADD_USER_ROUTE, null, null, $this->postJsonData($data));
         $test->expect($this->compareTemplateToResponse('user/exist_email_error.json'),'Add user with existing email shown an error');

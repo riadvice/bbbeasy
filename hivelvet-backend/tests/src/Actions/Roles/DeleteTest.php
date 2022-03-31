@@ -20,20 +20,38 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Suite;
+namespace Actions\Roles;
 
-use Actions\Users\AddTest;
-use Actions\Users\DeleteTest;
-use Actions\Users\EditTest;
-use Test\TestGroup;
+use Enum\UserRole;
+use Fake\RoleFaker;
+use Fake\UserFaker;
+use ReflectionException;
+use Test\Scenario;
 
 /**
  * @internal
  * @coversNothing
  */
-final class UsersActionsTest extends TestGroup
+final class DeleteTest extends Scenario
 {
-    protected $classes = [AddTest::class, EditTest::class, DeleteTest::class];
+    final protected const DELETE_ROLE_ROUTE = 'DELETE /roles/delete/';
+    protected $group                     = 'Action Role Delete';
 
-    protected $quiet = true;
+    /**
+     * @param $f3
+     *
+     * @throws ReflectionException
+     *
+     * @return array
+     */
+    public function testValidRole($f3)
+    {
+        $test = $this->newTest();
+
+        $role = RoleFaker::create();
+        $f3->mock(self::DELETE_ROLE_ROUTE . $role->id);
+        $test->expect($this->compareArrayToResponse(['result' => 'success']), 'Delete role pass successfully with id = ' . $role->id . '"');
+
+        return $test->results();
+    }
 }

@@ -20,9 +20,10 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Actions\Users;
+namespace Actions\Roles;
 
 use Enum\UserRole;
+use Fake\RoleFaker;
 use Fake\UserFaker;
 use ReflectionException;
 use Test\Scenario;
@@ -31,10 +32,10 @@ use Test\Scenario;
  * @internal
  * @coversNothing
  */
-final class DeleteTest extends Scenario
+final class AddTest extends Scenario
 {
-    final protected const DELETE_USER_ROUTE = 'DELETE /users/delete/';
-    protected $group                     = 'Action User Delete';
+    final protected const ADD_ROLE_ROUTE = 'POST /roles/add';
+    protected $group                     = 'Action Role Add';
 
     /**
      * @param $f3
@@ -43,13 +44,32 @@ final class DeleteTest extends Scenario
      *
      * @return array
      */
-    public function testValidUser($f3)
+    public function testEmptyName($f3)
     {
         $test = $this->newTest();
 
-        $user = UserFaker::create(UserRole::LECTURER);
-        $f3->mock(self::DELETE_USER_ROUTE . $user->id);
-        $test->expect($this->compareArrayToResponse(['result' => 'success', 'user' => $user->getUserInfos($user->id)]), 'Delete user pass successfully with id "' . $user->id . '"');
+        $data = ['data' => ['name' => '']];
+        $f3->mock(self::ADD_ROLE_ROUTE, null, null, $this->postJsonData($data));
+        $test->expect($this->compareTemplateToResponse('role/empty_error.json'), 'Add role with empty name show an error');
+
+        return $test->results();
+    }
+
+    /**
+     * @param $f3
+     *
+     * @throws ReflectionException
+     *
+     * @return array
+     */
+    public function testExistingName($f3)
+    {
+        $test = $this->newTest();
+
+        $role = RoleFaker::create();
+        $data = ['data' => ['name' => $role->name]];
+        $f3->mock(self::ADD_ROLE_ROUTE, null, null, $this->postJsonData($data));
+        $test->expect($this->compareTemplateToResponse('role/exist_error.json'), 'Add role with existing name show an error');
 
         return $test->results();
     }

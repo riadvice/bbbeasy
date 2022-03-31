@@ -22,16 +22,16 @@ declare(strict_types=1);
 
 namespace Suite;
 
-use Actions\Users\AddTest;
-use Actions\Users\DeleteTest;
-use Actions\Users\EditTest;
+use Actions\Roles\AddTest;
+use Actions\Roles\EditTest;
+use Actions\Roles\DeleteTest;
 use Test\TestGroup;
 
 /**
  * @internal
  * @coversNothing
  */
-final class UsersActionsTest extends TestGroup
+final class RolesActionsTest extends TestGroup
 {
     protected $classes = [AddTest::class, EditTest::class, DeleteTest::class];
 

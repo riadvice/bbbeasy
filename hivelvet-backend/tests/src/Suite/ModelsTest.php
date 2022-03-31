@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Suite;
 
 use Models\ResetPasswordTokenTest;
-use Models\RoleTest;
 use Models\UserTest;
 use Test\TestGroup;
 
@@ -33,5 +32,5 @@ use Test\TestGroup;
  */
 final class ModelsTest extends TestGroup
 {
-    protected $classes = [UserTest::class, ResetPasswordTokenTest::class, RoleTest::class];
+    protected $classes = [UserTest::class, ResetPasswordTokenTest::class];
 }
