@@ -52,7 +52,7 @@ class Register extends BaseAction
             $error = $user->usernameOrEmailExists($form['username'], $form['email']);
             if ($error) {
                 $this->logger->error('Registration error : user could not be added', ['error' => $error]);
-                $this->renderJson(['message' => $error], ResponseCode::HTTP_BAD_REQUEST);
+                $this->renderJson(['message' => $error], ResponseCode::HTTP_PRECONDITION_FAILED);
             } else {
                 $user->email    = $form['email'];
                 $user->username = $form['username'];
