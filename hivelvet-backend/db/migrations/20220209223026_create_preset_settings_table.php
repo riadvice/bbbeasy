@@ -33,7 +33,8 @@ class CreatePresetSettingsTable extends AbstractMigration
             ->addColumn('enabled', 'boolean', ['default' => false, 'null' => false])
             ->addColumn('created_on', 'datetime', ['default' => '0001-01-01 00:00:00', 'timezone' => true])
             ->addColumn('updated_on', 'datetime', ['default' => '0001-01-01 00:00:00', 'timezone' => true])
-            ->save();
+            ->save()
+        ;
     }
 
     public function down(): void

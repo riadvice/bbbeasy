@@ -52,6 +52,7 @@
     "user-could-not-logged": "لم يتمكن المستخدم من تسجيل الدخول",
     "success-title": "تم الإجراء بنجاح",
     "error-title": "خطأ",
+    "info-title": "معلومات",
     "success-registration": "تهانينا! لقد تم إنشاء حسابك بنجاح",
     "username-email-already-exist": "اسم المستخدم والبريد الإلكتروني موجودين مسبقا",
     "username-already-exist": "اسم المستخدم موجود مسبقاً",
@@ -202,5 +203,6 @@
     "required_username": "اسم المستخدم مطلوب",
     "required_email": "البريد الإلكتروني مطلوب",
     "required_role": "الرجاء اختيار دور",
-    "required_status": "الرجاء اختيار حالة"
+    "required_status": "الرجاء اختيار حالة",
+    "no_changes": "لا توجد تغييرات أجريت"
 }

@@ -19,23 +19,26 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
-import WebApp from './WebApp';
-import InstallApp from './InstallApp';
-
 import reportWebVitals from './reportWebVitals';
+import App from './App';
+
 import { INSTALLER_FEATURE } from './constants';
+import { webRoutes } from './routing/config';
+import { installRoutes } from './routing/config-install';
 
 if (!INSTALLER_FEATURE) {
     ReactDOM.render(
         <BrowserRouter>
-            <WebApp />
+            <App routes={webRoutes} isSider={true} logs={'Initialisation Hivelvet Webapp Application'} />
         </BrowserRouter>,
         document.getElementById('root')
     );
-} else {
+}
+
+if (INSTALLER_FEATURE) {
     ReactDOM.render(
         <BrowserRouter>
-            <InstallApp />
+            <App routes={installRoutes} isSider={false} logs={'Initialisation Hivelvet Installer Application'} />
         </BrowserRouter>,
         document.getElementById('root')
     );

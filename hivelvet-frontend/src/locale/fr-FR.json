@@ -52,6 +52,7 @@
     "user-could-not-logged": "L'utilisateur n'a pas pu se connecter",
     "success-title": "Succès",
     "error-title": "Erreur",
+    "info-title": "Info",
     "success-registration": "Félicitations ! Votre compte a été créé avec succès",
     "username-email-already-exist": "ce nom d'utilisateur et Cette adresse e-mail existent déjà",
     "username-already-exist": "ce nom d’utilisateur existe déjà",
@@ -202,5 +203,6 @@
     "required_username": "Le nom d'utilisateur est obligatoire",
     "required_email": "L'e-mail est obligatoire",
     "required_role": "Veuillez sélectionner un rôle",
-    "required_status": "Veuillez sélectionner une status"
+    "required_status": "Veuillez sélectionner une status",
+    "no_changes": "Aucune modification n'a été effectuée"
 }

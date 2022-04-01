@@ -26,7 +26,6 @@ use Base;
 use DB\SQL;
 use DB\SQL\Session as SQLSession;
 use Log\LogWriterTrait;
-use Models\Role;
 use Models\User;
 use Prefab;
 use Session as F3Session;
@@ -133,10 +132,8 @@ class Session extends Prefab
      */
     public function authorizeUser($user): void
     {
-        /** @var Role $role */
-        $role = $user->role_id;
         $this->set('user.id', $user->id);
-        $this->set('user.role', $role->name);
+        $this->set('user.role', $user->role->name);
         $this->set('user.username', $user->username);
         $this->set('user.email', $user->email);
         $this->set('user.loggedIn', true);

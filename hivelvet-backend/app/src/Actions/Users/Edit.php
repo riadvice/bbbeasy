@@ -26,7 +26,6 @@ use Actions\Base as BaseAction;
 use Actions\RequirePrivilegeTrait;
 use Base;
 use Enum\ResponseCode;
-use Enum\UserStatus;
 use Models\Role;
 use Models\User;
 use Respect\Validation\Validator;
@@ -45,11 +44,11 @@ class Edit extends BaseAction
      */
     public function save($f3, $params): void
     {
-        $body   = $this->getDecodedBody();
-        $form   = $body['data'];
+        $body = $this->getDecodedBody();
+        $form = $body['data'];
 
-        $id     = $params['id'];
-        $user   = $this->loadData($id);
+        $id   = $params['id'];
+        $user = $this->loadData($id);
 
         if ($user->valid()) {
             $dataChecker = new DataChecker();
@@ -61,34 +60,35 @@ class Edit extends BaseAction
 
             if ($dataChecker->allValid()) {
                 $checkUser = new User();
-                $users = $checkUser->find(['(username = ? and id != ?) or (email = ? and id != ?)', $form['username'], $id, $form['email'], $id]);
+                $users     = $checkUser->find(['(username = ? and id != ?) or (email = ? and id != ?)', $form['username'], $id, $form['email'], $id]);
                 if ($users) {
                     $users = $users->castAll();
-                    if (count($users) == 1) {
-                        $usernameExist = $users[0]['username'] == $form['username'];
-                        $emailExist = $users[0]['email'] == $form['email'];
-                        $message = ($usernameExist && $emailExist) ?
-                            ['username' => 'username already exist','email' => 'email already exist'] :
+                    if (1 === \count($users)) {
+                        $usernameExist = $users[0]['username'] === $form['username'];
+                        $emailExist    = $users[0]['email'] === $form['email'];
+                        $message       = ($usernameExist && $emailExist) ?
+                            ['username' => 'username already exist', 'email' => 'email already exist'] :
                             ($usernameExist ? ['username' => 'username already exist'] : ['email' => 'email already exist']);
                     } else {
-                        $message = ['username' => 'username already exist','email' => 'email already exist'];
+                        $message = ['username' => 'username already exist', 'email' => 'email already exist'];
                     }
                     $this->logger->error('User could not be updated', ['error' => $message]);
-                    $this->renderJson(['errors' => $message], ResponseCode::HTTP_BAD_REQUEST);
+                    $this->renderJson(['errors' => $message], ResponseCode::HTTP_PRECONDITION_FAILED);
                 } else {
                     $role = new Role();
                     $role->load(['id = ?', [$form['role']]]);
                     if ($role->valid()) {
-                        $user->email = $form['email'];
+                        $user->email    = $form['email'];
                         $user->username = $form['username'];
-                        $user->status = $form['status'];
-                        $user->role_id = $role->id;
+                        $user->status   = $form['status'];
+                        $user->role_id  = $role->id;
+
                         try {
                             $user->save();
                         } catch (\Exception $e) {
                             $message = 'user could not be updated';
                             $this->logger->error('User could not be updated', ['user' => $user->toArray(), 'error' => $e->getMessage()]);
-                            $this->renderJson(['errors' => $message], ResponseCode::HTTP_BAD_REQUEST);
+                            $this->renderJson(['errors' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
 
                             return;
                         }
@@ -99,7 +99,7 @@ class Edit extends BaseAction
                 }
             } else {
                 $this->logger->error('Update user error', ['errors' => $dataChecker->getErrors()]);
-                $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_BAD_REQUEST);
+                $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
             }
         } else {
             $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);

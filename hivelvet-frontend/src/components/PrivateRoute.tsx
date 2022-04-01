@@ -27,10 +27,10 @@ type userType = {
 };
 
 const PrivateRoute = ({ children }) => {
-    const location: Location = useLocation();
+    const { state }: Location = useLocation();
     const user: userType = authService.getCurrentUser();
 
-    if (location) {
+    if (state) {
         return children;
     } else {
         if (user != null) {

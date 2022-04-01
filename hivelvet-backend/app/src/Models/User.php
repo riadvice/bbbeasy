@@ -32,6 +32,7 @@ use Models\Base as BaseModel;
  * @property int      $id
  * @property string   $email
  * @property int      $role_id
+ * @property Role     $role
  * @property string   $username
  * @property string   $first_name
  * @property string   $last_name
@@ -56,6 +57,7 @@ class User extends BaseModel
     {
         parent::__construct($db, $table, $fluid, $ttl);
         $this->onset('password', fn($self, $value) => password_hash($value, PASSWORD_BCRYPT));
+        $this->virtual('role', fn() => $this->role_id);
     }
 
     /**
@@ -94,6 +96,32 @@ class User extends BaseModel
         return $this->load(['email = ?', $email]);
     }
 
+    /**
+     * Check if email or username already in use.
+     *
+     * @param string $username
+     * @param string $email
+     *
+     * @return string
+     */
+    public function usernameOrEmailExists($username, $email)
+    {
+        $users = $this->find(['username = ? or email = ?', $username, $email]);
+        if ($users) {
+            $users = $users->castAll();
+            if (1 === \count($users)) {
+                $usernameExist = $users[0]['username'] === $username;
+                $emailExist    = $users[0]['email'] === $email;
+
+                return ($usernameExist && $emailExist) ? 'username and email already exist' : ($usernameExist ? 'username already exist' : 'email already exist');
+            }
+
+            return 'username and email already exist';
+        }
+
+        return null;
+    }
+
     // @todo: will be used to detect if the course is full or not yet
     /**
      * @param $ids
@@ -105,16 +133,13 @@ class User extends BaseModel
         $result = $this->db->exec(
             'SELECT COUNT(us.id) AS total
              FROM users AS us
-             WHERE (us.status= ?) AND (us.id IN ("' . implode('","', $ids) . '"))',
+             WHERE (us.status = ?) AND (us.id IN ("' . implode('","', $ids) . '"))',
             [UserStatus::ACTIVE]
         );
 
         return (int) $result[0]['total'];
     }
 
-    /**
-     * @return mixed
-     */
     public function getCountFields(): mixed
     {
         return $this->countFields;
@@ -122,7 +147,6 @@ class User extends BaseModel
 
     /**
      * @param $password
-     * @return bool
      */
     public function verifyPassword($password): bool
     {
@@ -136,23 +160,25 @@ class User extends BaseModel
         if ($users) {
             $data = $this->getUserInfos();
         }
+
         return $data;
     }
 
-    public function getUserInfos(int $id = NULL) : array
+    public function getUserInfos(int $id = null): array
     {
         if ($id) {
             $subQuery = 'WHERE u.id = :user_id';
-            $params = [':user_id' => $id];
+            $params   = [':user_id' => $id];
         }
         $result = $this->db->exec(
             'SELECT
                 u.id AS key, u.username, u.email, u.status, r.name AS role
             FROM
                 users u
-            LEFT JOIN roles r ON u.role_id = r.id '.$subQuery, $params
+            LEFT JOIN roles r ON u.role_id = r.id ' . $subQuery,
+            $params
         );
 
-        return $id ? $result[0] : $result ;
+        return $id ? $result[0] : $result;
     }
 }

@@ -54,19 +54,11 @@ class Add extends BaseAction
         $dataChecker->verify($form['role'], Validator::notEmpty()->setName('role'));
 
         if ($dataChecker->allValid()) {
-            $user = new User();
-            $users = $user->find(['username = ? or email = ?', $form['username'], $form['email']]);
-            if ($users) {
-                $users = $users->castAll();
-                if (count($users) == 1) {
-                    $usernameExist = $users[0]['username'] == $form['username'];
-                    $emailExist = $users[0]['email'] == $form['email'];
-                    $message = ($usernameExist && $emailExist) ? 'username and email already exist' : ($usernameExist ? 'username already exist' : 'email already exist');
-                } else {
-                    $message = 'username and email already exist';
-                }
-                $this->logger->error('User could not be added', ['error' => $message]);
-                $this->renderJson(['message' => $message], ResponseCode::HTTP_BAD_REQUEST);
+            $user  = new User();
+            $error = $user->usernameOrEmailExists($form['username'], $form['email']);
+            if ($error) {
+                $this->logger->error('User could not be added', ['error' => $error]);
+                $this->renderJson(['message' => $error], ResponseCode::HTTP_PRECONDITION_FAILED);
             } else {
                 $role = new Role();
                 $role->load(['id = ?', [$form['role']]]);
@@ -82,18 +74,18 @@ class Add extends BaseAction
                     } catch (\Exception $e) {
                         $message = 'user could not be added';
                         $this->logger->error('User could not be added', ['user' => $user->toArray(), 'error' => $e->getMessage()]);
-                        $this->renderJson(['message' => $message], ResponseCode::HTTP_BAD_REQUEST);
+                        $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
 
                         return;
                     }
 
                     $this->logger->info('User successfully added', ['user' => $user->toArray()]);
-                    $this->renderJson(['result' => 'success', 'user' => $user->getUserInfos($user->id)]);
+                    $this->renderJson(['result' => 'success', 'user' => $user->getUserInfos($user->id)], ResponseCode::HTTP_CREATED);
                 }
             }
         } else {
             $this->logger->error('Add user error', ['errors' => $dataChecker->getErrors()]);
-            $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_BAD_REQUEST);
+            $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
         }
     }
 }
