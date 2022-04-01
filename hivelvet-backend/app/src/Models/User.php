@@ -96,6 +96,32 @@ class User extends BaseModel
         return $this->load(['email = ?', $email]);
     }
 
+    /**
+     * Check if email or username already in use.
+     *
+     * @param string $username
+     * @param string $email
+     *
+     * @return string
+     */
+    public function usernameOrEmailExists($username, $email)
+    {
+        $users = $this->find(['username = ? or email = ?', $username, $email]);
+        if ($users) {
+            $users = $users->castAll();
+            if (1 === \count($users)) {
+                $usernameExist = $users[0]['username'] === $username;
+                $emailExist    = $users[0]['email'] === $email;
+
+                return ($usernameExist && $emailExist) ? 'username and email already exist' : ($usernameExist ? 'username already exist' : 'email already exist');
+            }
+
+            return 'username and email already exist';
+        }
+
+        return null;
+    }
+
     // @todo: will be used to detect if the course is full or not yet
     /**
      * @param $ids

@@ -36,10 +36,7 @@ class Register extends BaseAction
 {
     public function signup($f3): void
     {
-        // @fixme: must comply to user creation policy
-        $user = new User();
-        $form = $this->getDecodedBody()['data'];
-
+        $form        = $this->getDecodedBody()['data'];
         $dataChecker = new DataChecker();
 
         $dataChecker->verify($form['username'], Validator::length(4)->setName('username'));
@@ -51,18 +48,11 @@ class Register extends BaseAction
         $dataChecker->verify($form['agreement'], Validator::trueVal()->setName('agreement'));
 
         if ($dataChecker->allValid()) {
-            $users = $user->find(['username = ? or email = ?', $form['username'], $form['email']]);
-            if ($users) {
-                $users = $users->castAll();
-                if (1 === \count($users)) {
-                    $usernameExist = $users[0]['username'] === $form['username'];
-                    $emailExist    = $users[0]['email'] === $form['email'];
-                    $message       = ($usernameExist && $emailExist) ? 'username and email already exist' : ($usernameExist ? 'username already exist' : 'email already exist');
-                } else {
-                    $message = 'username and email already exist';
-                }
-                $this->logger->error('Registration error : user could not be added', ['error' => $message]);
-                $this->renderJson(['message' => $message], ResponseCode::HTTP_BAD_REQUEST);
+            $user  = new User();
+            $error = $user->usernameOrEmailExists($form['username'], $form['email']);
+            if ($error) {
+                $this->logger->error('Registration error : user could not be added', ['error' => $error]);
+                $this->renderJson(['message' => $error], ResponseCode::HTTP_BAD_REQUEST);
             } else {
                 $user->email    = $form['email'];
                 $user->username = $form['username'];
