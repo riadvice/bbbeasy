@@ -422,6 +422,7 @@ run() {
     fi
 
     if [ "$1" = "--test" -o "$1" = "-test" -o "$1" = "-t" ]; then
+      fix_styles
       run_tests "$2" "$3"
 
       shift

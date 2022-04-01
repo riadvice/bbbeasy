@@ -66,8 +66,8 @@ class Add extends BaseAction
                     $user->email    = $form['email'];
                     $user->username = $form['username'];
                     $user->password = $form['password'];
-                    $user->role_id  = $role->id;
                     $user->status   = UserStatus::PENDING;
+                    $user->role_id  = $role->id;
 
                     try {
                         $user->save();
@@ -81,6 +81,8 @@ class Add extends BaseAction
 
                     $this->logger->info('User successfully added', ['user' => $user->toArray()]);
                     $this->renderJson(['result' => 'success', 'user' => $user->getUserInfos($user->id)], ResponseCode::HTTP_CREATED);
+                } else {
+                    $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
                 }
             }
         } else {

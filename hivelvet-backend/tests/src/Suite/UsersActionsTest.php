@@ -20,16 +20,20 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Enum;
+namespace Suite;
 
-class UserRole extends Enum
+use Actions\Users\AddTest;
+use Actions\Users\DeleteTest;
+use Actions\Users\EditTest;
+use Test\TestGroup;
+
+/**
+ * @internal
+ * @coversNothing
+ */
+final class UsersActionsTest extends TestGroup
 {
-    final public const VISITOR       = 'visitor';
-    final public const LECTURER      = 'lecturer';
-    final public const ADMINISTRATOR = 'administrator';
-    final public const API           = 'api';
+    protected $classes = [AddTest::class, EditTest::class, DeleteTest::class];
 
-    final public const ADMINISTRATOR_ID = 1;
-    final public const LECTURER_ID      = 2;
-    final public const NON_EXISTING_ID  = 1000;
+    protected $quiet = true;
 }

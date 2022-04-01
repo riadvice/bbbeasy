@@ -18,8 +18,8 @@
 
 import React, { useContext, useState, useEffect, useRef } from 'react';
 import RolesService from '../services/roles.service';
-import Notifications from './Notifications';
 import PaginationType from './PaginationType';
+import Notifications from './Notifications';
 
 import { PageHeader, Button, Row, Col, Typography, Table, Space, Modal, Popconfirm, Card } from 'antd';
 import { Form, Input, Checkbox } from 'antd';

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Models;
 
 use DateTime;
+use Enum\UserRole;
 use Models\Base as BaseModel;
 
 /**
@@ -93,7 +94,7 @@ class Role extends BaseModel
     public function getLecturerRole()
     {
         $data = [];
-        $this->load(['id = ?', [2]]);
+        $this->load(['id = ?', [UserRole::LECTURER_ID]]);
         if ($this->valid()) {
             $data = $this->getRoleInfos();
         }

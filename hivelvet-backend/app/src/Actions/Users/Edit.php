@@ -95,6 +95,8 @@ class Edit extends BaseAction
 
                         $this->logger->info('User successfully updated', ['user' => $user->toArray()]);
                         $this->renderJson(['result' => 'success', 'user' => $user->getUserInfos($user->id)]);
+                    } else {
+                        $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
                     }
                 }
             } else {
