@@ -1,4 +1,4 @@
 {
   "message":"email already exist",
-  "status":400
+  "status":412
 }

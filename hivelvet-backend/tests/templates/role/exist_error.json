@@ -1,4 +1,4 @@
 {
   "errors": {"name":"Name already exist"},
-  "status" : 500
+  "status" : 412
 }

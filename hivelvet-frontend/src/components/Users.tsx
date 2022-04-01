@@ -20,6 +20,8 @@ import React, { useEffect } from 'react';
 import UsersService from '../services/users.service';
 import PaginationType from './PaginationType';
 import Notifications from './Notifications';
+import AddUserForm from './AddUserForm';
+
 import { Trans, withTranslation } from 'react-i18next';
 import EN_US from '../locale/en-US.json';
 import { t } from 'i18next';
@@ -113,9 +115,6 @@ const Users = () => {
         getRoles();
         getUsers();
     }, []);
-    const handleTableChange = (pagination: PaginationType) => {
-        setPagination(pagination);
-    };
     const getSelectRoles = () => {
         return (
             <Select
@@ -357,12 +356,10 @@ const Users = () => {
     };
 
     // search
-    let searchInput;
     const handleReset = (clearFilters) => {
         clearFilters();
         setSearchText('');
     };
-
     const handleSearch = (selectedKeys: string[], confirm, dataIndex: string, closed = false) => {
         if (closed) confirm({ closeDropdown: false });
         else confirm();
@@ -375,12 +372,9 @@ const Users = () => {
                 <Input
                     size="middle"
                     className="table-search-input"
-                    ref={(node) => {
-                        searchInput = node;
-                    }}
                     placeholder={t('search') + ' ' + t(dataIndex + '_col')}
                     value={selectedKeys[0]}
-                    onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+                    onChange={(e) => setSelectedKeys([e.target.value])}
                     onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
                 />
                 <Space className="table-search-btn">
@@ -406,24 +400,18 @@ const Users = () => {
                 </Space>
             </div>
         ),
-        filterIcon: (filtered: boolean) => <SearchOutlined className={filtered ? 'search-icon-filtered' : undefined} />,
+        filterIcon: (filtered: boolean) => <SearchOutlined className={filtered && 'search-icon-filtered'} />,
         onFilter: (value, record: Item) => {
             return record[dataIndex] ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()) : '';
-        },
-        onFilterDropdownVisibleChange: (visible: boolean) => {
-            if (visible) {
-                setTimeout(() => searchInput.select(), 100);
-            }
         },
         render: (text) => {
             if (dataIndex == 'username' || dataIndex == 'role') {
                 text = text[0].toUpperCase() + text.slice(1);
             }
-            return searchedColumn === dataIndex ? (
-                <Highlighter searchWords={[searchText]} autoEscape textToHighlight={text ? text.toString() : ''} />
-            ) : (
-                text
-            );
+            if (searchedColumn === dataIndex) {
+                return <Highlighter searchWords={[searchText]} autoEscape textToHighlight={text && text.toString()} />;
+            }
+            return text;
         },
     });
 
@@ -596,57 +584,7 @@ const Users = () => {
                             showIcon
                         />
                     )}
-
-                    <Form.Item
-                        label={<Trans i18nKey="username.label" />}
-                        name="username"
-                        rules={[
-                            {
-                                required: true,
-                                message: <Trans i18nKey="username.required" />,
-                            },
-                            {
-                                min: 4,
-                                message: <Trans i18nKey="username.size" />,
-                            },
-                        ]}
-                    >
-                        <Input placeholder={t('username.label')} />
-                    </Form.Item>
-
-                    <Form.Item
-                        label={<Trans i18nKey="email.label" />}
-                        name="email"
-                        rules={[
-                            {
-                                type: 'email',
-                                message: <Trans i18nKey="email.invalid" />,
-                            },
-                            {
-                                required: true,
-                                message: <Trans i18nKey="email.required" />,
-                            },
-                        ]}
-                    >
-                        <Input placeholder={t('email.label')} />
-                    </Form.Item>
-                    <Form.Item
-                        label={<Trans i18nKey="password.label" />}
-                        name="password"
-                        rules={[
-                            {
-                                min: 4,
-                                message: <Trans i18nKey="password.size" />,
-                            },
-                            {
-                                required: true,
-                                message: <Trans i18nKey="password.required" />,
-                            },
-                        ]}
-                    >
-                        <Input.Password placeholder="**********" />
-                    </Form.Item>
-
+                    <AddUserForm />
                     <Form.Item
                         label={<Trans i18nKey="role.label" />}
                         name="role"
@@ -683,7 +621,7 @@ const Users = () => {
                 dataSource={data}
                 pagination={pagination}
                 loading={loading}
-                onChange={handleTableChange}
+                onChange={(newPagination: PaginationType) => setPagination(newPagination)}
             />
         </>
     );

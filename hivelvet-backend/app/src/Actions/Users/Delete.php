@@ -47,8 +47,8 @@ class Delete extends DeleteAction
                 $user->save();
             } catch (\Exception $e) {
                 $message = 'user could not be deleted';
-                $this->logger->error('Registration error : user could not be deleted', ['user' => $user->toArray(), 'error' => $e->getMessage()]);
-                $this->renderJson(['message' => $message], ResponseCode::HTTP_BAD_REQUEST);
+                $this->logger->error('User could not be deleted', ['user' => $user->toArray(), 'error' => $e->getMessage()]);
+                $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
 
                 return;
             }

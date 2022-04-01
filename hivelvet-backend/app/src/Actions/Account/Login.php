@@ -52,28 +52,25 @@ class Login extends BaseAction
             $this->logger->info('Login attempt using email', ['email' => $email]);
             // Check if the user exists
             if ($user->valid() && UserStatus::ACTIVE === $user->status && $user->verifyPassword($form['password'])) {
-                /** @var Role $role */
-                $role = $user->role_id;
-                if (UserRole::API !== $role->name) {
-                    // valid credentials
-                    $this->session->authorizeUser($user);
+                // @todo: test UserRole::API !== $user->role->name
+                // valid credentials
+                $this->session->authorizeUser($user);
 
-                    $user->last_login = Time::db();
-                    $user->save();
+                $user->last_login = Time::db();
+                $user->save();
 
-                    // @todo: store role in redis cache to allow routes
-                    $this->f3->set('role', $role->name);
+                // @todo: store role in redis cache to allow routes
+                $this->f3->set('role', $user->role->name);
 
-                    // @todo: store locale in user prefs table
-                    // $this->session->set('locale', $user->locale);
-                    $userInfos = [
-                        'username' => $user->username,
-                        'email'    => $user->email,
-                        'role'     => $role->name,
-                    ];
-                    $this->logger->info('User successfully logged in', ['email' => $email]);
-                    $this->renderJson($userInfos);
-                }
+                // @todo: store locale in user prefs table
+                // $this->session->set('locale', $user->locale);
+                $userInfos = [
+                    'username' => $user->username,
+                    'email'    => $user->email,
+                    'role'     => $user->role->name,
+                ];
+                $this->logger->info('User successfully logged in', ['email' => $email]);
+                $this->renderJson($userInfos);
             }
         }
 

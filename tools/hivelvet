@@ -60,6 +60,8 @@ usage() {
   echo "# Configuration:"
   echo "#    --version                        Display Hivelvet version"
   echo "#    --selfinstall                    Make hivelvet runnable from anywhere"
+  echo "#    --enableinstaller                Enable Hivelvet installer app"
+  echo "#    --enableweb                      Enable Hivelvet Web app"
   echo "#"
   echo "# Development:"
   echo "#    --enabletests                    Enable running unit tests"
@@ -202,6 +204,31 @@ fix_styles() {
   cd "$BASEDIR/../hivelvet-backend/"
   composer csfix
   echo "✔ PHP Code Style Fixed"
+}
+
+#
+# Enable backend installer app
+#
+enable_installer() {
+  echo "► Enabling backend installer app"
+    if [ $(grep -c "config.extension =" "$BASEDIR/../hivelvet-backend/app/config/default.ini") != 0 ]; then
+      #c cmd to replace the matched line in one go
+      sed -i '/config.extension =/ c config.extension = -install' "$BASEDIR/../hivelvet-backend/app/config/default.ini"
+      printf "%s %s [✔ - DONE]\n"
+    fi
+  echo "✔ Installer app enabled"
+}
+
+#
+# Enable backend web app
+#
+enable_web() {
+  echo "► Enabling backend installer app"
+    if [ $(grep -c "config.extension = -install" "$BASEDIR/../hivelvet-backend/app/config/default.ini") != 0 ]; then
+      sed -i '/config.extension = -install/ c config.extension =' "$BASEDIR/../hivelvet-backend/app/config/default.ini"
+      printf "%s %s [✔ - DONE]\n"
+    fi
+  echo "✔ Web app enabled"
 }
 
 #
@@ -372,6 +399,18 @@ run() {
 
     if [ "$1" = "--selfinstall" -o "$1" = "-selfinstall" -o "$1" = "-si" ]; then
       self_install
+      shift
+      continue
+    fi
+
+    if [ "$1" = "--enableinstaller" -o "$1" = "-enableinstaller" -o "$1" = "-ei" ]; then
+      enable_installer
+      shift
+      continue
+    fi
+
+    if [ "$1" = "--enableweb" -o "$1" = "-enableweb" -o "$1" = "-ew" ]; then
+      enable_web
       shift
       continue
     fi

@@ -56,7 +56,7 @@ class Add extends BaseAction
             $role->name = $form['name'];
             if ($checkRole->nameExists($role->name)) {
                 $this->logger->error('Role could not be added', ['error' => 'Name already exist']);
-                $this->renderJson(['errors' => ['name' => 'Name already exist']], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+                $this->renderJson(['errors' => ['name' => 'Name already exist']], ResponseCode::HTTP_PRECONDITION_FAILED);
             } else {
                 try {
                     $result = $role->saveRoleAndPermissions($form['permissions']);
@@ -71,14 +71,7 @@ class Add extends BaseAction
 
                     return;
                 }
-
-                $result = [
-                    'key'         => $role->id,
-                    'name'        => $role->name,
-                    'users'       => $role->getRoleUsers(),
-                    'permissions' => $role->getRolePermissions(),
-                ];
-                $this->renderJson(['result' => 'success', 'role' => $result]);
+                $this->renderJson(['result' => 'success', 'role' => $role->getRoleInfos()], ResponseCode::HTTP_CREATED);
             }
         } else {
             $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);

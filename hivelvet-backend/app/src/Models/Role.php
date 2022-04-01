@@ -66,12 +66,7 @@ class Role extends BaseModel
         $roles = $this->find([], ['order' => 'id']);
         if ($roles) {
             foreach ($roles as $role) {
-                $data[] = [
-                    'key'         => $role->id,
-                    'name'        => $role->name,
-                    'users'       => $role->getRoleUsers(),
-                    'permissions' => $role->getRolePermissions(),
-                ];
+                $data[] = $role->getRoleInfos();
             }
         }
 
@@ -83,6 +78,16 @@ class Role extends BaseModel
         return $this->db->exec('SELECT id, name FROM roles');
     }
 
+    public function getRoleInfos(): array
+    {
+        return [
+            'key'         => $this->id,
+            'name'        => $this->name,
+            'users'       => $this->getRoleUsers(),
+            'permissions' => $this->getRolePermissions(),
+        ];
+    }
+
     /**
      * @return array
      */
@@ -91,12 +96,7 @@ class Role extends BaseModel
         $data = [];
         $this->load(['id = ?', [UserRole::LECTURER_ID]]);
         if ($this->valid()) {
-            $data = [
-                'key'         => $this->id,
-                'name'        => $this->name,
-                'users'       => $this->getRoleUsers(),
-                'permissions' => $this->getRolePermissions(),
-            ];
+            $data = $this->getRoleInfos();
         }
 
         return $data;

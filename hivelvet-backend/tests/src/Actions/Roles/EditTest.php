@@ -110,13 +110,7 @@ final class EditTest extends Scenario
         $role  = RoleFaker::create();
         $data  = ['data' => ['name' => $faker->name]];
         $f3->mock(self::EDIT_ROLE_ROUTE . $role->id, null, null, $this->postJsonData($data));
-        $result = [
-            'key'         => $role->id,
-            'name'        => $role->name,
-            'users'       => $role->getRoleUsers(),
-            'permissions' => $role->getRolePermissions(),
-        ];
-        $test->expect($this->compareArrayToResponse(['result' => 'success', 'role' => $result]), 'Update existing role with id "' . $role->id . '" using new name "' . $role->name . '" successfully');
+        $test->expect($this->compareArrayToResponse(['result' => 'success', 'role' => $role->getRoleInfos()]), 'Update existing role with id "' . $role->id . '" using new name "' . $role->name . '" successfully');
 
         return $test->results();
     }

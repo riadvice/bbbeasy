@@ -74,14 +74,14 @@ class ResetPassword extends BaseAction
                 $mailSent->send('common/reset_password', $emailTokens, $email, 'reset password', 'reset password');
                 $this->logger->info('mail', ['mail' => $mailSent]);
                 if ($mailSent) {
-                    $this->renderJson(['message' => 'Please check your email to reset your password'], ResponseCode::HTTP_OK);
+                    $this->renderJson(['message' => 'Please check your email to reset your password']);
                 }
             }
         } else {
             // email invalid or user no exist
             $message = 'User does not exist with this email';
-            $this->logger->error('Login error : user could not logged', ['error' => $message]);
-            $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+            $this->logger->error('Reset password error : user not exist', ['error' => $message]);
+            $this->renderJson(['message' => $message], ResponseCode::HTTP_NOT_FOUND);
         }
     }
 }

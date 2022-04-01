@@ -73,7 +73,7 @@ class Edit extends BaseAction
                         $message = ['username' => 'username already exist', 'email' => 'email already exist'];
                     }
                     $this->logger->error('User could not be updated', ['error' => $message]);
-                    $this->renderJson(['errors' => $message], ResponseCode::HTTP_BAD_REQUEST);
+                    $this->renderJson(['errors' => $message], ResponseCode::HTTP_PRECONDITION_FAILED);
                 } else {
                     $role = new Role();
                     $role->load(['id = ?', [$form['role']]]);
@@ -88,7 +88,7 @@ class Edit extends BaseAction
                         } catch (\Exception $e) {
                             $message = 'user could not be updated';
                             $this->logger->error('User could not be updated', ['user' => $user->toArray(), 'error' => $e->getMessage()]);
-                            $this->renderJson(['errors' => $message], ResponseCode::HTTP_BAD_REQUEST);
+                            $this->renderJson(['errors' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
 
                             return;
                         }

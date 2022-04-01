@@ -16,22 +16,19 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component } from 'react';
+import React from 'react';
+import { IRoute } from './IRoute';
 
-const client = new WebSocket('ws://hivelvet.test:8800');
+import PageNotFound from '../components/PageNotFound';
+import Install from '../components/Install';
 
-class AppSocket extends Component<unknown, unknown> {
-    UNSAFE_componentWillMount() {
-        client.onopen = () => {
-            console.log('WebSocket Client Connected');
-        };
-        client.onmessage = (message) => {
-            console.log(message);
-        };
-    }
-
-    render() {
-        return '';
-    }
-}
-export default AppSocket;
+export const installRoutes: IRoute[] = [
+    {
+        path: '*',
+        element: <PageNotFound />,
+    },
+    {
+        path: '/',
+        element: <Install />,
+    },
+];
