@@ -28,4 +28,8 @@ class UserRole extends Enum
     final public const LECTURER      = 'lecturer';
     final public const ADMINISTRATOR = 'administrator';
     final public const API           = 'api';
+
+    final public const ADMINISTRATOR_ID = 1;
+    final public const LECTURER_ID      = 2;
+    final public const NON_EXISTING_ID  = 1000;
 }

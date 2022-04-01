@@ -20,6 +20,7 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
+use Enum\UserRole;
 use Phinx\Migration\AbstractMigration;
 
 final class AddDefaultRoles extends AbstractMigration
@@ -29,12 +30,13 @@ final class AddDefaultRoles extends AbstractMigration
         $table = $this->table('roles');
         $data  = [
             [
-                'name'       => \Enum\UserRole::ADMINISTRATOR,
+                'name'       => UserRole::ADMINISTRATOR,
                 'created_on' => date('Y-m-d H:i:s'),
             ],
             [
-                'name'       => \Enum\UserRole::LECTURER,
-                'created_on' => date('Y-m-d H:i:s'), ],
+                'name'       => UserRole::LECTURER,
+                'created_on' => date('Y-m-d H:i:s'),
+            ],
         ];
 
         $table->insert($data)->save();

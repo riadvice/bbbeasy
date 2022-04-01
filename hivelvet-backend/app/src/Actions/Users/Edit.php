@@ -95,11 +95,13 @@ class Edit extends BaseAction
 
                         $this->logger->info('User successfully updated', ['user' => $user->toArray()]);
                         $this->renderJson(['result' => 'success', 'user' => $user->getUserInfos($user->id)]);
+                    } else {
+                        $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
                     }
                 }
             } else {
                 $this->logger->error('Update user error', ['errors' => $dataChecker->getErrors()]);
-                $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_BAD_REQUEST);
+                $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
             }
         } else {
             $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);

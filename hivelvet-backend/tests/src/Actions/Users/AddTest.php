@@ -24,6 +24,7 @@ namespace Actions\Users;
 
 use Enum\UserRole;
 use Fake\UserFaker;
+use Faker\Factory as Faker;
 use ReflectionException;
 use Test\Scenario;
 
@@ -43,14 +44,32 @@ final class AddTest extends Scenario
      *
      * @return array
      */
+    public function testEmptyData($f3)
+    {
+        $test = $this->newTest();
+
+        $data = ['data' => ['username' => '', 'email' => '', 'password' => '',  'role' => '']];
+        $f3->mock(self::ADD_USER_ROUTE, null, null, $this->postJsonData($data));
+        $test->expect($this->compareTemplateToResponse('user/empty_error.json'), 'Add user with an empty data shown an error');
+
+        return $test->results();
+    }
+
+    /**
+     * @param $f3
+     *
+     * @throws ReflectionException
+     *
+     * @return array
+     */
     public function testExistingUser($f3)
     {
         $test = $this->newTest();
 
         $user = UserFaker::create(UserRole::LECTURER);
-        $data = ['data' => ['username' => $user->username, 'email' => $user->email, 'password' => UserRole::LECTURER,  'role' => 2]];
+        $data = ['data' => ['username' => $user->username, 'email' => $user->email, 'password' => UserRole::LECTURER,  'role' => UserRole::LECTURER_ID]];
         $f3->mock(self::ADD_USER_ROUTE, null, null, $this->postJsonData($data));
-        $test->expect($this->compareTemplateToResponse('user/exist_error.json'), 'Add user with existing username and email shown an error');
+        $test->expect($this->compareTemplateToResponse('user/exist_error.json'), 'Add user with existing username "' . $user->username . '" and existing email "' . $user->email . '" shown an error');
 
         return $test->results();
     }
@@ -66,10 +85,11 @@ final class AddTest extends Scenario
     {
         $test = $this->newTest();
 
-        $user = UserFaker::create(UserRole::LECTURER);
-        $data = ['data' => ['username' => $user->username, 'email' => 'email@gmail.com', 'password' => UserRole::LECTURER,  'role' => 2]];
+        $faker = Faker::create();
+        $user  = UserFaker::create(UserRole::LECTURER);
+        $data  = ['data' => ['username' => $user->username, 'email' => $faker->email, 'password' => $faker->password,  'role' => UserRole::LECTURER_ID]];
         $f3->mock(self::ADD_USER_ROUTE, null, null, $this->postJsonData($data));
-        $test->expect($this->compareTemplateToResponse('user/exist_username_error.json'), 'Add user with existing username shown an error');
+        $test->expect($this->compareTemplateToResponse('user/exist_username_error.json'), 'Add user with an existing username "' . $user->username . '" shown an error');
 
         return $test->results();
     }
@@ -85,10 +105,29 @@ final class AddTest extends Scenario
     {
         $test = $this->newTest();
 
-        $user = UserFaker::create(UserRole::LECTURER);
-        $data = ['data' => ['username' => 'test', 'email' => $user->email, 'password' => UserRole::LECTURER,  'role' => 2]];
+        $faker = Faker::create();
+        $user  = UserFaker::create(UserRole::LECTURER);
+        $data  = ['data' => ['username' => $faker->userName, 'email' => $user->email, 'password' => $faker->password,  'role' => UserRole::LECTURER_ID]];
         $f3->mock(self::ADD_USER_ROUTE, null, null, $this->postJsonData($data));
-        $test->expect($this->compareTemplateToResponse('user/exist_email_error.json'), 'Add user with existing email shown an error');
+        $test->expect($this->compareTemplateToResponse('user/exist_email_error.json'), 'Add user with an existing email "' . $user->email . '" shown an error');
+
+        return $test->results();
+    }
+
+    /**
+     * @param $f3
+     *
+     * @throws ReflectionException
+     *
+     * @return array
+     */
+    public function testNonExistingRole($f3)
+    {
+        $test  = $this->newTest();
+        $faker = Faker::create();
+        $data  = ['data' => ['username' => $faker->userName, 'email' => $faker->email, 'password' => $faker->password, 'role' => UserRole::NON_EXISTING_ID]];
+        $f3->mock(self::ADD_USER_ROUTE, null, null, $this->postJsonData($data));
+        $test->expect($this->compareTemplateToResponse('not_found_error.json'), 'Add user with non existing role "' . UserRole::NON_EXISTING_ID . '" shown an error');
 
         return $test->results();
     }

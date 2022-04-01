@@ -54,6 +54,8 @@ class Delete extends DeleteAction
             }
             $this->logger->info('User successfully deleted', ['user' => $user->toArray()]);
             $this->renderJson(['result' => 'success', 'user' => $user->getUserInfos($user->id)]);
+        } else {
+            $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
         }
     }
 }

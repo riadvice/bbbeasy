@@ -42,6 +42,25 @@ final class EditTest extends Scenario
      * @param $f3
      *
      * @throws ReflectionException
+     *
+     * @return array
+     */
+    public function testEmptyData($f3)
+    {
+        $test = $this->newTest();
+
+        $user = UserFaker::create(UserRole::LECTURER);
+        $data = ['data' => ['username' => '', 'email' => '', 'password' => '',  'role' => '']];
+        $f3->mock(self::EDIT_USER_ROUTE . $user->id, null, null, $this->postJsonData($data));
+        $test->expect($this->compareTemplateToResponse('user/empty_error.json'), 'Update existing user with id "' . $user->id . '" using an empty data shown an error');
+
+        return $test->results();
+    }
+
+    /**
+     * @param $f3
+     *
+     * @throws ReflectionException
      * @throws \JsonException
      *
      * @return array
@@ -52,9 +71,9 @@ final class EditTest extends Scenario
 
         $userLecturerOne = UserFaker::create(UserRole::LECTURER);
         $userLecturerTwo = UserFaker::create(UserRole::LECTURER);
-        $data            = ['data' => ['username' => $userLecturerOne->username, 'email' => $userLecturerOne->email, 'role' => 2, 'status' => UserStatus::INACTIVE]];
+        $data            = ['data' => ['username' => $userLecturerOne->username, 'email' => $userLecturerOne->email, 'role' => UserRole::LECTURER_ID, 'status' => UserStatus::INACTIVE]];
         $f3->mock(self::EDIT_USER_ROUTE . $userLecturerTwo->id, null, null, $this->postJsonData($data));
-        $test->expect($this->compareTemplateToResponse('user/update_exist_error.json'), 'Update user with existing username and email shown an error');
+        $test->expect($this->compareTemplateToResponse('user/update_exist_error.json'), 'Update existing user with id "' . $userLecturerTwo->id . '" using an existing username "' . $userLecturerOne->username . '" and an existing email "' . $userLecturerOne->email . '" shown an error');
 
         return $test->results();
     }
@@ -72,9 +91,9 @@ final class EditTest extends Scenario
 
         $userLecturerOne = UserFaker::create(UserRole::LECTURER);
         $userLecturerTwo = UserFaker::create(UserRole::LECTURER);
-        $data            = ['data' => ['username' => $userLecturerOne->username, 'email' => $userLecturerTwo->email, 'role' => 2, 'status' => UserStatus::INACTIVE]];
+        $data            = ['data' => ['username' => $userLecturerOne->username, 'email' => $userLecturerTwo->email, 'role' => UserRole::LECTURER_ID, 'status' => UserStatus::INACTIVE]];
         $f3->mock(self::EDIT_USER_ROUTE . $userLecturerTwo->id, null, null, $this->postJsonData($data));
-        $test->expect($this->compareTemplateToResponse('user/update_exist_username_error.json'), 'Update user with existing username shown an error');
+        $test->expect($this->compareTemplateToResponse('user/update_exist_username_error.json'), 'Update existing user with id "' . $userLecturerTwo->id . '" using an existing username "' . $userLecturerOne->username . '" shown an error');
 
         return $test->results();
     }
@@ -92,9 +111,48 @@ final class EditTest extends Scenario
 
         $userLecturerOne = UserFaker::create(UserRole::LECTURER);
         $userLecturerTwo = UserFaker::create(UserRole::LECTURER);
-        $data            = ['data' => ['username' => $userLecturerTwo->username, 'email' => $userLecturerOne->email, 'role' => 2, 'status' => UserStatus::INACTIVE]];
+        $data            = ['data' => ['username' => $userLecturerTwo->username, 'email' => $userLecturerOne->email, 'role' => UserRole::LECTURER_ID, 'status' => UserStatus::INACTIVE]];
         $f3->mock(self::EDIT_USER_ROUTE . $userLecturerTwo->id, null, null, $this->postJsonData($data));
-        $test->expect($this->compareTemplateToResponse('user/update_exist_email_error.json'), 'Update user with existing email shown an error');
+        $test->expect($this->compareTemplateToResponse('user/update_exist_email_error.json'), 'Update existing user with id "' . $userLecturerTwo->id . '" using an existing email "' . $userLecturerOne->email . '" shown an error');
+
+        return $test->results();
+    }
+
+    /**
+     * @param $f3
+     *
+     * @throws ReflectionException
+     *
+     * @return array
+     */
+    public function testNonExistingRole($f3)
+    {
+        $test = $this->newTest();
+
+        $faker = Faker::create();
+        $user  = UserFaker::create(UserRole::LECTURER);
+        $data  = ['data' => ['username' => $faker->userName, 'email' => $faker->email, 'role' => UserRole::NON_EXISTING_ID, 'status' => UserStatus::INACTIVE]];
+        $f3->mock(self::EDIT_USER_ROUTE . $user->id, null, null, $this->postJsonData($data));
+        $test->expect($this->compareTemplateToResponse('not_found_error.json'), 'Update existing user with id "' . $user->id . '" using non existing role "' . UserRole::NON_EXISTING_ID . '" shown an error');
+
+        return $test->results();
+    }
+
+    /**
+     * @param $f3
+     *
+     * @throws ReflectionException
+     *
+     * @return array
+     */
+    public function testNonExistingUser($f3)
+    {
+        $test = $this->newTest();
+
+        $faker = Faker::create();
+        $data  = ['data' => ['username' => $faker->userName, 'email' => $faker->email, 'role' => UserRole::LECTURER_ID, 'status' => UserStatus::INACTIVE]];
+        $f3->mock(self::EDIT_USER_ROUTE . UserRole::NON_EXISTING_ID, null, null, $this->postJsonData($data));
+        $test->expect($this->compareTemplateToResponse('not_found_error.json'), 'Update non existing user with id "' . UserRole::NON_EXISTING_ID . '" show an error');
 
         return $test->results();
     }
@@ -112,9 +170,9 @@ final class EditTest extends Scenario
         $faker = Faker::create();
 
         $userLecturer = UserFaker::create(UserRole::LECTURER);
-        $data         = ['data' => ['username' => $faker->userName, 'email' => $faker->email, 'role' => 2, 'status' => UserStatus::INACTIVE]];
+        $data         = ['data' => ['username' => $faker->userName, 'email' => $faker->email, 'role' => UserRole::LECTURER_ID, 'status' => UserStatus::INACTIVE]];
         $f3->mock(self::EDIT_USER_ROUTE . $userLecturer->id, null, null, $this->postJsonData($data));
-        $test->expect($this->compareArrayToResponse(['result' => 'success', 'user' => $userLecturer->getUserInfos($userLecturer->id)]), 'Update existing user with id "' . $userLecturer->id . '" using new email  "' . $userLecturer->email . '" and new username "' . $userLecturer->username . '" successfully');
+        $test->expect($this->compareArrayToResponse(['result' => 'success', 'user' => $userLecturer->getUserInfos($userLecturer->id)]), 'Update existing user with id "' . $userLecturer->id . '" using new email "' . $userLecturer->email . '" and new username "' . $userLecturer->username . '" successfully');
 
         return $test->results();
     }

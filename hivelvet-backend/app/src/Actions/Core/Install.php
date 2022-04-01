@@ -130,7 +130,7 @@ class Install extends BaseAction
 
                     // load admin role to allow privileges and assign it to admin user
                     $roleAdmin = new Role();
-                    $roleAdmin->load(['name = ?', [UserRole::ADMINISTRATOR]]);
+                    $roleAdmin->load(['id = ?', [UserRole::ADMINISTRATOR_ID]]);
                     if ($roleAdmin->valid()) {
                         // allow all privileges to admin role
                         $allPrivileges = PrivilegeUtils::listSystemPrivileges();

@@ -22,7 +22,9 @@ declare(strict_types=1);
 
 namespace Actions\Roles;
 
+use Enum\UserRole;
 use Fake\RoleFaker;
+use Faker\Factory as Faker;
 use ReflectionException;
 use Test\Scenario;
 
@@ -49,7 +51,7 @@ final class EditTest extends Scenario
         $role = RoleFaker::create();
         $data = ['data' => ['name' => '']];
         $f3->mock(self::EDIT_ROLE_ROUTE . $role->id, null, null, $this->postJsonData($data));
-        $test->expect($this->compareTemplateToResponse('role/empty_error.json'), 'Update role with empty name show an error');
+        $test->expect($this->compareTemplateToResponse('role/empty_error.json'), 'Update existing role with id "' . $role->id . '" using an empty name show an error');
 
         return $test->results();
     }
@@ -65,11 +67,30 @@ final class EditTest extends Scenario
     {
         $test = $this->newTest();
 
-        $faker_1 = RoleFaker::create();
-        $faker_2 = RoleFaker::create();
-        $data    = ['data' => ['name' => $faker_2->name]];
-        $f3->mock(self::EDIT_ROLE_ROUTE . $faker_1->id, null, null, $this->postJsonData($data));
-        $test->expect($this->compareTemplateToResponse('role/exist_error.json'), 'Update role with existing name show an error');
+        $roleOne = RoleFaker::create();
+        $roleTwo = RoleFaker::create();
+        $data    = ['data' => ['name' => $roleTwo->name]];
+        $f3->mock(self::EDIT_ROLE_ROUTE . $roleOne->id, null, null, $this->postJsonData($data));
+        $test->expect($this->compareTemplateToResponse('role/exist_error.json'), 'Update existing role with id "' . $roleOne->id . '" using an existing name "' . $roleTwo->name . '" show an error');
+
+        return $test->results();
+    }
+
+    /**
+     * @param $f3
+     *
+     * @throws ReflectionException
+     *
+     * @return array
+     */
+    public function testNonExistingRole($f3)
+    {
+        $test = $this->newTest();
+
+        $faker = Faker::create();
+        $data  = ['data' => ['name' => $faker->name]];
+        $f3->mock(self::EDIT_ROLE_ROUTE . UserRole::NON_EXISTING_ID, null, null, $this->postJsonData($data));
+        $test->expect($this->compareTemplateToResponse('not_found_error.json'), 'Edit non existing role with id "' . UserRole::NON_EXISTING_ID . '" show an error');
 
         return $test->results();
     }
@@ -85,8 +106,9 @@ final class EditTest extends Scenario
     {
         $test = $this->newTest();
 
-        $role = RoleFaker::create();
-        $data = ['data' => ['name' => 'Rooms manager']];
+        $faker = Faker::create();
+        $role  = RoleFaker::create();
+        $data  = ['data' => ['name' => $faker->name]];
         $f3->mock(self::EDIT_ROLE_ROUTE . $role->id, null, null, $this->postJsonData($data));
         $result = [
             'key'         => $role->id,
@@ -94,7 +116,7 @@ final class EditTest extends Scenario
             'users'       => $role->getRoleUsers(),
             'permissions' => $role->getRolePermissions(),
         ];
-        $test->expect($this->compareArrayToResponse(['result' => 'success', 'role' => $result]), 'Update role pass successfully with id "' . $role->id . '"');
+        $test->expect($this->compareArrayToResponse(['result' => 'success', 'role' => $result]), 'Update existing role with id "' . $role->id . '" using new name "' . $role->name . '" successfully');
 
         return $test->results();
     }

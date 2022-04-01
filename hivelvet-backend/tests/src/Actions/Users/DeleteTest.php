@@ -43,13 +43,30 @@ final class DeleteTest extends Scenario
      *
      * @return array
      */
+    public function testNonExistingUser($f3)
+    {
+        $test = $this->newTest();
+
+        $f3->mock(self::DELETE_USER_ROUTE . UserRole::NON_EXISTING_ID);
+        $test->expect($this->compareTemplateToResponse('not_found_error.json'), 'Delete non existing user with id "' . UserRole::NON_EXISTING_ID . '" show an error');
+
+        return $test->results();
+    }
+
+    /**
+     * @param $f3
+     *
+     * @throws ReflectionException
+     *
+     * @return array
+     */
     public function testValidUser($f3)
     {
         $test = $this->newTest();
 
         $user = UserFaker::create(UserRole::LECTURER);
         $f3->mock(self::DELETE_USER_ROUTE . $user->id);
-        $test->expect($this->compareArrayToResponse(['result' => 'success', 'user' => $user->getUserInfos($user->id)]), 'Delete user pass successfully with id "' . $user->id . '"');
+        $test->expect($this->compareArrayToResponse(['result' => 'success', 'user' => $user->getUserInfos($user->id)]), 'Delete existing user with id "' . $user->id . '" successfully');
 
         return $test->results();
     }

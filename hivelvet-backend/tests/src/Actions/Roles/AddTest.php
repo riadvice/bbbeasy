@@ -48,7 +48,7 @@ final class AddTest extends Scenario
 
         $data = ['data' => ['name' => '']];
         $f3->mock(self::ADD_ROLE_ROUTE, null, null, $this->postJsonData($data));
-        $test->expect($this->compareTemplateToResponse('role/empty_error.json'), 'Add role with empty name show an error');
+        $test->expect($this->compareTemplateToResponse('role/empty_error.json'), 'Add role with an empty name show an error');
 
         return $test->results();
     }
@@ -67,7 +67,7 @@ final class AddTest extends Scenario
         $role = RoleFaker::create();
         $data = ['data' => ['name' => $role->name]];
         $f3->mock(self::ADD_ROLE_ROUTE, null, null, $this->postJsonData($data));
-        $test->expect($this->compareTemplateToResponse('role/exist_error.json'), 'Add role with existing name show an error');
+        $test->expect($this->compareTemplateToResponse('role/exist_error.json'), 'Add role with an existing name "' . $role->name . '" show an error');
 
         return $test->results();
     }

@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Actions\Roles;
 
+use Enum\UserRole;
 use Fake\RoleFaker;
 use ReflectionException;
 use Test\Scenario;
@@ -42,13 +43,30 @@ final class DeleteTest extends Scenario
      *
      * @return array
      */
+    public function testNonExistingRole($f3)
+    {
+        $test = $this->newTest();
+
+        $f3->mock(self::DELETE_ROLE_ROUTE . UserRole::NON_EXISTING_ID);
+        $test->expect($this->compareTemplateToResponse('not_found_error.json'), 'Delete non existing role with id "' . UserRole::NON_EXISTING_ID . '" show an error');
+
+        return $test->results();
+    }
+
+    /**
+     * @param $f3
+     *
+     * @throws ReflectionException
+     *
+     * @return array
+     */
     public function testValidRole($f3)
     {
         $test = $this->newTest();
 
         $role = RoleFaker::create();
         $f3->mock(self::DELETE_ROLE_ROUTE . $role->id);
-        $test->expect($this->compareArrayToResponse(['result' => 'success']), 'Delete role pass successfully with id = ' . $role->id . '"');
+        $test->expect($this->compareArrayToResponse(['result' => 'success']), 'Delete existing role with id "' . $role->id . '" successfully');
 
         return $test->results();
     }

@@ -89,7 +89,7 @@ class Role extends BaseModel
     public function getLecturerRole()
     {
         $data = [];
-        $this->load(['name = ?', [UserRole::LECTURER]]);
+        $this->load(['id = ?', [UserRole::LECTURER_ID]]);
         if ($this->valid()) {
             $data = [
                 'key'         => $this->id,
