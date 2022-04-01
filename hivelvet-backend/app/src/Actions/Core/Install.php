@@ -24,7 +24,6 @@ namespace Actions\Core;
 
 use Actions\Base as BaseAction;
 use Enum\ResponseCode;
-use Enum\UserRole;
 use Enum\UserStatus;
 use Models\PresetSetting;
 use Models\Role;
@@ -131,7 +130,7 @@ class Install extends BaseAction
                     // load admin role to allow privileges and assign it to admin user
                     $roleAdmin = new Role();
                     $roleAdmin->load(['id = ?', [1]]);
-                    if($roleAdmin->valid()) {
+                    if ($roleAdmin->valid()) {
                         // allow all privileges to admin role
                         $allPrivileges = PrivilegeUtils::listSystemPrivileges();
                         $result        = $roleAdmin->saveRoleAndPermissions($allPrivileges);

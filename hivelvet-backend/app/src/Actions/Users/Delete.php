@@ -42,6 +42,7 @@ class Delete extends DeleteAction
         $user->load(['id = ?', $user_id]);
         if ($user->valid()) {
             $user->status = UserStatus::DELETED;
+
             try {
                 $user->save();
             } catch (\Exception $e) {

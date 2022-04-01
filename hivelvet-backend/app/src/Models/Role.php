@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Models;
 
 use DateTime;
-use Enum\UserRole;
 use Models\Base as BaseModel;
 
 /**
@@ -73,12 +72,12 @@ class Role extends BaseModel
         return $data;
     }
 
-    public function collectAll() : array
+    public function collectAll(): array
     {
         return $this->db->exec('SELECT id, name FROM roles');
     }
 
-    public function getRoleInfos() : array
+    public function getRoleInfos(): array
     {
         return [
             'key'         => $this->id,
@@ -147,6 +146,7 @@ class Role extends BaseModel
                             $this->logger->info('Role permission successfully added', ['rolePermission' => $rolePermission->toArray()]);
                         } catch (\Exception $e) {
                             $this->logger->error('Role permission could not be added', ['error' => $e->getMessage()]);
+
                             return false;
                         }
                     }
@@ -175,12 +175,15 @@ class Role extends BaseModel
                         $this->logger->info('User role successfully switched', ['user' => $user->toArray()]);
                     } catch (\Exception $e) {
                         $this->logger->error('User role could not be switched', ['error' => $e->getMessage()]);
+
                         return false;
                     }
                 }
             }
+
             return true;
         }
+
         return false;
     }
 
@@ -194,12 +197,16 @@ class Role extends BaseModel
                 $deleteResult   = $rolePermission->erase(['role_id = ?', $role_id]);
                 if ($deleteResult) {
                     $this->logger->info('All Role permissions successfully deleted');
+
                     return true;
                 }
+
                 return false;
             }
+
             return true;
         }
+
         return false;
     }
 
@@ -217,8 +224,10 @@ class Role extends BaseModel
         if ($result1 && $result2) {
             $this->db->commit();
             $this->logger->info('Delete users and permissions transaction successfully commit.');
+
             return true;
         }
+
         return false;
     }
 }
