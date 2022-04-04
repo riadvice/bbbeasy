@@ -9,7 +9,7 @@
     "dotenv-cra": "^3.0.2",
     "eslint-plugin-react-hooks": "^4.4.0",
     "i18next": "^21.6.13",
-    "moment": "^2.29.1",
+    "moment": "^2.29.2",
     "perfect-scrollbar": "^1.5.5",
     "pino": "^7.6.4",
     "pino-pretty": "^7.5.0",
