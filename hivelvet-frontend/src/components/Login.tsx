@@ -27,22 +27,18 @@ import { SmileOutlined } from '@ant-design/icons';
 import { Trans, withTranslation } from 'react-i18next';
 import EN_US from '../locale/en-US.json';
 import AddUserForm from './AddUserForm';
+import { UserType } from "../types/UserType";
+import { UserFunctionType } from "../types/UserFunctionType";
 
 const { Text, Title, Paragraph } = Typography;
 
-type userType = {
-    username: string;
-    email: string;
-    role: string;
-};
-type userFunction = (user: userType, Logged: boolean) => void;
 type formType = {
     email: string;
     password: string;
 };
 
 type Props = {
-    setUser: userFunction;
+    setUser: UserFunctionType;
 };
 
 const Login = (props: Props) => {
@@ -59,7 +55,7 @@ const Login = (props: Props) => {
         AuthService.login(email, password)
             .then((response) => {
                 if (response.data.username && response.data.email && response.data.role) {
-                    const user_infos: userType = {
+                    const user_infos: UserType = {
                         username: response.data.username,
                         email: response.data.email,
                         role: response.data.role,

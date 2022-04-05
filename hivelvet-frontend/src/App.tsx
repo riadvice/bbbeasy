@@ -28,35 +28,27 @@ import AppHeader from './components/AppHeader';
 import AppFooter from './components/AppFooter';
 import AppSider from './components/AppSider';
 
-import 'moment/locale/fr';
-import 'moment/locale/ar';
-import 'moment/locale/en-gb';
-
 import Logger from './lib/logger';
 
-import authService from './services/auth.service';
+import AuthService from './services/auth.service';
 import LocaleService from './services/locale.service';
 import { withTranslation } from 'react-i18next';
+import { UserType } from "./types/UserType";
 
 const { Content } = Layout;
-
-type userType = {
-    username: string;
-    email: string;
-    role: string;
-};
 
 interface IProps {
     routes?: IRoute[];
     isSider?: boolean;
     logs?: string;
 }
+
 const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
-    const [currentUser, setCurrentUser] = React.useState<userType>(null);
+    const [currentUser, setCurrentUser] = React.useState<UserType>(null);
     const [isLogged, setIsLogged] = React.useState<boolean>(false);
     const [language, setLanguage] = React.useState<string>(LocaleService.language);
 
-    const setUser = (user: userType, logged: boolean) => {
+    const setUser = (user: UserType, logged: boolean) => {
         setCurrentUser(user);
         setIsLogged(logged);
     };
@@ -66,8 +58,8 @@ const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
     };
     useEffect(() => {
         Logger.info(logs);
-        const user: userType = authService.getCurrentUser();
-        if (authService.getCurrentUser() != null) setUser(user, true);
+        const user: UserType = AuthService.getCurrentUser();
+        if (AuthService.getCurrentUser() != null) setUser(user, true);
     }, []);
 
     return (
@@ -76,10 +68,10 @@ const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
                 {isLogged && isSider && <AppSider />}
                 <Layout className="page-layout-body">
                     <AppHeader
-                        currentUser={currentUser}
                         currentLocale={language}
                         setLang={setLang}
                         isLogged={isLogged}
+                        currentUser={currentUser}
                         setUser={setUser}
                     />
                     <Content className="site-content">

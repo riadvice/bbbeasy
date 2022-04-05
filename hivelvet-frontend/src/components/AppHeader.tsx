@@ -24,53 +24,52 @@ import { SearchOutlined, GlobalOutlined, UserOutlined, LogoutOutlined } from '@a
 import { Trans, withTranslation } from 'react-i18next';
 import { t } from 'i18next';
 
-import languages from './Languages';
+import { Languages } from './Languages';
 import { INSTALLER_FEATURE } from '../constants';
 import LocaleService from '../services/locale.service';
+import AuthService from "../services/auth.service";
+
+import { LanguageType } from "../types/LanguageType";
+import { UserFunctionType } from "../types/UserFunctionType";
+import { UserType } from "../types/UserType";
+import { LanguageFunctionType } from "../types/LanguageFunctionType";
 
 const { Header } = Layout;
 const { Text, Paragraph } = Typography;
 
-type userType = {
-    username: string;
-    email: string;
-    role: string;
-};
-type languageType = {
-    name: string;
-    key: string;
-    value: string;
-};
-type userFunction = (user: userType, Logged: boolean) => void;
-type langFunction = (lang: string) => void;
-
 type Props = {
     currentLocale: string;
-    setLang: langFunction;
-    isLogged: boolean;
-    currentUser: userType;
-    setUser: userFunction;
+    setLang: LanguageFunctionType;
+    isLogged: boolean; //header btns
+    currentUser: UserType; //display profil dropdown
+    setUser: UserFunctionType; //logout
 };
 
 const AppHeader = (props: Props) => {
-    const { currentLocale, isLogged, currentUser } = props;
-    const result: languageType[] = languages.filter((item) => item.value == currentLocale);
+    const { currentLocale, setLang, isLogged, currentUser, setUser } = props;
+    const result: LanguageType[] = Languages.filter((item) => item.value == currentLocale);
     const language: string = result[0].name;
 
     const logout = () => {
-        localStorage.clear();
-        props.setUser(null, false);
-        return <Navigate to="/login" />;
+        AuthService.logout()
+            .then(() => {
+                localStorage.removeItem('user');
+                setUser(null, false);
+                return <Navigate to="/login" />;
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     };
     const handleChange = (e: RadioChangeEvent) => {
-        const selectedLang = e.target.value;
-        props.setLang(selectedLang);
+        const selectedLang: string = e.target.value;
+        setLang(selectedLang);
     };
 
     const menuLang = (
         <Menu>
             <Radio.Group value={currentLocale} onChange={handleChange}>
-                {languages.map(({ name, key, value }) => (
+                {Languages.map(({ name, key, value }) => (
                     <Menu.Item key={key}>
                         <Radio value={value}>{name}</Radio>
                     </Menu.Item>

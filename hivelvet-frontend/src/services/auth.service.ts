@@ -33,7 +33,7 @@ class AuthService {
         });
     }
     logout() {
-        localStorage.removeItem('user');
+        return axios.get(API_URL + '/account/logout');
     }
 
     reset_password(email: string) {

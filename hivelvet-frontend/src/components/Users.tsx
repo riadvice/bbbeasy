@@ -18,9 +18,9 @@
 
 import React, { useEffect } from 'react';
 import UsersService from '../services/users.service';
-import PaginationType from './PaginationType';
 import Notifications from './Notifications';
 import AddUserForm from './AddUserForm';
+import { PaginationType } from '../types/PaginationType';
 
 import { Trans, withTranslation } from 'react-i18next';
 import EN_US from '../locale/en-US.json';

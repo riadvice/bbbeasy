@@ -16,9 +16,12 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-type PaginationType = {
-    current?: number;
-    pageSize?: number;
+export type SettingsType = {
+    company_name: string;
+    company_website: string;
+    platform_name: string;
+    primary_color: string;
+    secondary_color: string;
+    accent_color: string;
+    additional_color: string;
 };
-
-export default PaginationType;

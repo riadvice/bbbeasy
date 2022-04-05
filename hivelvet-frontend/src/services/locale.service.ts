@@ -21,14 +21,18 @@ import frFR from 'antd/lib/locale/fr_FR';
 import arEG from 'antd/lib/locale/ar_EG';
 import moment from 'moment';
 
+import 'moment/locale/fr';
+import 'moment/locale/ar';
+import 'moment/locale/en-gb';
+
 import i18next from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import translationEN from '../locale/en-US.json';
 import translationFR from '../locale/fr-FR.json';
 import translationAR from '../locale/ar-TN.json';
 
-import languages from '../components/Languages';
 import { Locale } from 'antd/lib/locale-provider';
+import { Languages } from '../components/Languages';
 import { DirectionType } from 'antd/lib/config-provider';
 
 const defaultLang: string = process.env.REACT_APP_FALLBACK_LANG;
@@ -36,7 +40,7 @@ const defaultLang: string = process.env.REACT_APP_FALLBACK_LANG;
 const initLang = (): string => {
     if (localStorage.getItem('locale') == null) {
         const navigLang: string = navigator.language.substring(0, 2);
-        const res = languages.filter((item) => item.key == navigLang);
+        const res = Languages.filter((item) => item.key == navigLang);
         return res.length != 0 ? res[0].value : defaultLang;
     } else {
         return localStorage.getItem('locale');
@@ -82,7 +86,7 @@ class LocaleService {
     }
 
     changeLocale(locale: string) {
-        const res: object = languages.filter((item) => item.value == locale);
+        const res: object = Languages.filter((item) => item.value == locale);
         i18next.changeLanguage(res[0].key);
         moment.locale(locale);
         this.setLocale(locale);

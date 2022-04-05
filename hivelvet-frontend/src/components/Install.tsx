@@ -30,28 +30,12 @@ import { Step2Form } from './Step2Form';
 import { Step3Form } from './Step3Form';
 
 import { UploadFile } from 'antd/lib/upload/interface';
+import { SettingsType } from "../types/SettingsType";
+import { PresetType } from "../types/PresetType";
 
 const API_URL = process.env.REACT_APP_API_URL;
 const { Step } = Steps;
 
-type settingsType = {
-    company_name?: string;
-    company_website?: string;
-    platform_name?: string;
-    primary_color?: string;
-    secondary_color?: string;
-    accent_color?: string;
-    additional_color?: string;
-};
-type subCategoryType = {
-    name: string;
-    status: boolean;
-};
-type presetType = {
-    name: string;
-    icon: string;
-    subcategories: subCategoryType[];
-};
 type stepType = {
     title: string;
     content: JSX.Element;
@@ -74,7 +58,7 @@ type formType = {
         accent_color: string;
         add_color: string;
     };
-    presetsConfig: presetType[];
+    presetsConfig: PresetType[];
 };
 
 const Install = () => {
@@ -111,12 +95,12 @@ const Install = () => {
     const [file, setFile] = React.useState<UploadFile>(null);
     const [fileList, setFileList] = React.useState<UploadFile[]>(null);
 
-    const [presets, setPresets] = React.useState<presetType[]>([]);
+    const [presets, setPresets] = React.useState<PresetType[]>([]);
 
     useEffect(() => {
         InstallService.collect_settings()
             .then((response) => {
-                const settings: settingsType = response.data;
+                const settings: SettingsType = response.data;
                 if (settings) {
                     stepForm.setFieldsValue({
                         company_name: settings.company_name,

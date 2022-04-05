@@ -18,16 +18,11 @@
 
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import authService from '../services/auth.service';
-
-type userType = {
-    username: string;
-    email: string;
-    role: string;
-};
+import AuthService from '../services/auth.service';
+import { UserType } from "../types/UserType";
 
 const PublicRoute = ({ children, restricted }) => {
-    const user: userType = authService.getCurrentUser();
+    const user: UserType = AuthService.getCurrentUser();
 
     // restricted = true meaning restricted route else public route
     if (user != null && restricted) {
