@@ -134,7 +134,7 @@ class Bootstrap extends Boot
             $this->f3->config('config/routes-' . $this->environment . '.ini');
         }
 
-        if ('' === $this->isCli || '0' === $this->isCli) {
+        if (!$this->isCli) {
             // load routes access policy
             $this->f3->config('config/access' . $this->f3->get('config.extension') . '.ini');
         } else {
@@ -148,8 +148,8 @@ class Bootstrap extends Boot
 
         // enable cors to allow cross-origin requests from frontend react client
         header('Access-Control-Allow-Origin: *');
-        header('Access-Control-Allow-Headers: Content-Type, Origin, Authorization, X-Authorization, Accept, Accept-Language, Access-Control-Request-Method');
         header('Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE');
+        header('Access-Control-Allow-Headers: Content-Type, Origin, Authorization, X-Authorization, Accept, Accept-Language, Access-Control-Request-Method');
         // header("Allow: GET, POST, OPTIONS, PUT, DELETE");
     }
 }

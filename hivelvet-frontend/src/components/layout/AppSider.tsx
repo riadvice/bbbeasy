@@ -21,9 +21,8 @@ import { Link, useLocation } from 'react-router-dom';
 
 import { Button, Dropdown, Layout, Menu } from 'antd';
 import { PlusOutlined, DownOutlined } from '@ant-design/icons';
-import DynamicIcon from './DynamicIcon';
+import DynamicIcon from '../DynamicIcon';
 import { useTranslation, withTranslation } from 'react-i18next';
-import Scrollbar from 'perfect-scrollbar';
 
 import PerfectScrollbar from 'perfect-scrollbar';
 import { Location } from 'history';
@@ -45,7 +44,7 @@ const AppSider = () => {
     const comp = useRef();
 
     useEffect(() => {
-        let ps: PerfectScrollbar = new Scrollbar(comp.current, {});
+        let ps: PerfectScrollbar = new PerfectScrollbar(comp.current);
         return () => {
             if (ps) {
                 ps.destroy();

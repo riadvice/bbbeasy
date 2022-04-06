@@ -16,19 +16,12 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from 'react';
-import { Navigate } from 'react-router-dom';
-import AuthService from '../services/auth.service';
-import { UserType } from '../types/UserType';
-
-const PublicRoute = ({ children, restricted }) => {
-    const user: UserType = AuthService.getCurrentUser();
-
-    // restricted = true meaning restricted route else public route
-    if (user != null && restricted) {
-        return <Navigate to="/home" />;
-    }
-    return children;
+export type SettingsType = {
+    company_name: string;
+    company_website: string;
+    platform_name: string;
+    primary_color: string;
+    secondary_color: string;
+    accent_color: string;
+    additional_color: string;
 };
-
-export default PublicRoute;

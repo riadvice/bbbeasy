@@ -1,0 +1,46 @@
+/**
+ * Hivelvet open source platform - https://riadvice.tn/
+ *
+ * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
+ *
+ * This program is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free Software
+ * Foundation; either version 3.0 of the License, or (at your option) any later
+ * version.
+ *
+ * Hivelvet is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License along
+ * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
+ */
+
+const API_URL: string = process.env.REACT_APP_API_URL;
+
+export const apiRoutes = {
+    REGISTER_URL: API_URL + '/account/register',
+    LOGIN_URL: API_URL + '/account/login',
+    LOGOUT_URL: API_URL + '/account/logout',
+    RESET_PASSWORD_URL: API_URL + '/account/reset-password',
+    CHANGE_PASSWORD_URL: API_URL + '/account/change-password',
+    RESET_TOKEN_URL: API_URL + '/account/reset-token/',
+
+    LOGS_URL: API_URL + '/logs',
+
+    COLLECT_PRESETS_URL: API_URL + '/collect-presets',
+    COLLECT_SETTINGS_URL: API_URL + '/collect-settings',
+    INSTALL_URL: API_URL + '/install',
+
+    LIST_ROLE_URL: API_URL + '/roles/list',
+    ADD_ROLE_URL: API_URL + '/roles/add',
+    EDIT_ROLE_URL: API_URL + '/roles/edit/',
+    DELETE_ROLE_URL: API_URL + '/roles/delete/',
+    COLLECT_PRIVILEGES_URL: API_URL + '/roles/collect-privileges',
+    COLLECT_ROLES_URL: API_URL + '/roles/collect',
+
+    LIST_USER_URL: API_URL + '/users/list',
+    ADD_USER_URL: API_URL + '/users/add',
+    EDIT_USER_URL: API_URL + '/users/edit',
+    DELETE_USER_URL: API_URL + '/users/delete',
+};

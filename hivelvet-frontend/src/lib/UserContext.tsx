@@ -16,42 +16,6 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import pino from 'pino';
+import { createContext } from 'react';
 
-const API_URL: string = process.env.REACT_APP_API_URL;
-
-const levels = {
-    http: 10,
-    debug: 20,
-    info: 30,
-    warn: 40,
-    error: 50,
-    fatal: 60,
-};
-
-const send = async (level, logEvent) => {
-    const url = API_URL + '/logs';
-    await fetch(url, {
-        method: 'POST',
-        body: JSON.stringify(logEvent),
-    });
-};
-
-const Logger = pino({
-    customLevels: levels,
-    useOnlyCustomLevels: true,
-    prettyPrint: {
-        colorize: true,
-        levelFirst: true,
-        translateTime: 'yyyy-dd-mm, h:MM:ss TT',
-    },
-    browser: {
-        serialize: true,
-        asObject: true,
-        transmit: {
-            send,
-        },
-    },
-});
-
-export default Logger;
+export const UserContext = createContext(null);

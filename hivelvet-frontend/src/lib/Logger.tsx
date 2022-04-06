@@ -16,19 +16,41 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from 'react';
-import { Navigate } from 'react-router-dom';
-import AuthService from '../services/auth.service';
-import { UserType } from '../types/UserType';
+import pino from 'pino';
+import { apiRoutes } from '../routing/backend-config';
 
-const PublicRoute = ({ children, restricted }) => {
-    const user: UserType = AuthService.getCurrentUser();
-
-    // restricted = true meaning restricted route else public route
-    if (user != null && restricted) {
-        return <Navigate to="/home" />;
-    }
-    return children;
+const levels = {
+    http: 10,
+    debug: 20,
+    info: 30,
+    warn: 40,
+    error: 50,
+    fatal: 60,
 };
 
-export default PublicRoute;
+const send = async (_level, logEvent) => {
+    const url = apiRoutes.LOGS_URL;
+    await fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(logEvent),
+    });
+};
+
+const Logger = pino({
+    customLevels: levels,
+    useOnlyCustomLevels: true,
+    prettyPrint: {
+        colorize: true,
+        levelFirst: true,
+        translateTime: 'yyyy-dd-mm, h:MM:ss TT',
+    },
+    browser: {
+        serialize: true,
+        asObject: true,
+        transmit: {
+            send,
+        },
+    },
+});
+
+export default Logger;

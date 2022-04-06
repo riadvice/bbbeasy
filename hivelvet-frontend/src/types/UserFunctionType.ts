@@ -16,9 +16,6 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-type PaginationType = {
-    current?: number;
-    pageSize?: number;
-};
+import { UserType } from './UserType';
 
-export default PaginationType;
+export type UserFunctionType = (user: UserType, Logged: boolean) => void;

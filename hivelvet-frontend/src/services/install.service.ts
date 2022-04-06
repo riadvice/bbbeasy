@@ -17,18 +17,17 @@
  */
 
 import axios from 'axios';
-
-const API_URL: string = process.env.REACT_APP_API_URL;
+import { apiRoutes } from '../routing/backend-config';
 
 class InstallService {
     collect_presets() {
-        return axios.get(API_URL + '/collect-presets');
+        return axios.get(apiRoutes.COLLECT_PRESETS_URL);
     }
     collect_settings() {
-        return axios.get(API_URL + '/collect-settings');
+        return axios.get(apiRoutes.COLLECT_SETTINGS_URL);
     }
     install(data: object) {
-        return axios.post(API_URL + '/install', {
+        return axios.post(apiRoutes.INSTALL_URL, {
             data,
         });
     }

@@ -22,7 +22,7 @@ import { t } from 'i18next';
 import LocaleService from '../services/locale.service';
 
 class Notifications {
-    openNotificationWithIcon = (type: string, message, icon?, duration?: number) => {
+    openNotificationWithIcon = (type: string, message, icon?: React.ReactNode, duration?: number) => {
         notification[type]({
             placement: LocaleService.direction == 'rtl' ? 'topLeft' : 'topRight',
             message: t(type + '-title'),

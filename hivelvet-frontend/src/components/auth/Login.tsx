@@ -18,35 +18,27 @@
 
 import React from 'react';
 import { Link, Navigate } from 'react-router-dom';
-import AuthService from '../services/auth.service';
-import Notifications from './Notifications';
+import AuthService from '../../services/auth.service';
+import Notifications from '../Notifications';
 
 import { Form, Button, Alert, Col, Row, Typography, Card } from 'antd';
 import { SmileOutlined } from '@ant-design/icons';
 
 import { Trans, withTranslation } from 'react-i18next';
-import EN_US from '../locale/en-US.json';
-import AddUserForm from './AddUserForm';
+import EN_US from '../../locale/en-US.json';
+import AddUserForm from '../AddUserForm';
+import { UserType } from '../../types/UserType';
+import { UserContext } from '../../lib/UserContext';
 
 const { Text, Title, Paragraph } = Typography;
 
-type userType = {
-    username: string;
-    email: string;
-    role: string;
-};
-type userFunction = (user: userType, Logged: boolean) => void;
 type formType = {
     email: string;
     password: string;
 };
 
-type Props = {
-    setUser: userFunction;
-};
-
-const Login = (props: Props) => {
-    const { setUser } = props;
+const Login = () => {
+    const { setIsLogged, setCurrentUser } = React.useContext(UserContext);
     const [successful, setSuccessful] = React.useState<boolean>(false);
     const [message, setMessage] = React.useState<string>('');
     const initialValues: formType = {
@@ -59,7 +51,7 @@ const Login = (props: Props) => {
         AuthService.login(email, password)
             .then((response) => {
                 if (response.data.username && response.data.email && response.data.role) {
-                    const user_infos: userType = {
+                    const user_infos: UserType = {
                         username: response.data.username,
                         email: response.data.email,
                         role: response.data.role,
@@ -73,7 +65,8 @@ const Login = (props: Props) => {
                         2.5
                     );
                     localStorage.setItem('user', JSON.stringify(user_infos));
-                    setUser(user_infos, true);
+                    setCurrentUser(user_infos);
+                    setIsLogged(true);
                     setSuccessful(true);
                 }
             })

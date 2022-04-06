@@ -22,27 +22,14 @@ import { Route, Routes } from 'react-router-dom';
 import PrivateRoute from '../components/PrivateRoute';
 import PublicRoute from '../components/PublicRoute';
 
-import Login from '../components/Login';
-
-type userType = {
-    username: string;
-    email: string;
-    role: string;
-};
-type userFunction = (user: userType, Logged: boolean) => void;
-
 interface IProps {
     routes: IRoute[];
-    setUser: userFunction;
 }
 
-const Router: React.FC<IProps> = ({ routes, setUser }) => {
+const Router: React.FC<IProps> = ({ routes }) => {
     const checkAccess = (route: IRoute) => {
         if (route.private) return <PrivateRoute>{route.element}</PrivateRoute>;
-        else {
-            const component = route.path == '/login' ? <Login setUser={setUser} /> : route.element;
-            return <PublicRoute restricted={route.restricted}>{component}</PublicRoute>;
-        }
+        else return <PublicRoute restricted={route.restricted}>{route.element}</PublicRoute>;
     };
     const RenderComponent = (props): JSX.Element => {
         const route = props.route;

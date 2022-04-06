@@ -22,32 +22,23 @@ import { Button, Form, Typography, Card, Modal, Switch, Alert, Tooltip } from 'a
 import DynamicIcon from './DynamicIcon';
 import { Trans } from 'react-i18next';
 import LocaleService from '../services/locale.service';
+import { PresetType } from '../types/PresetType';
+import { SubCategoryType } from '../types/SubCategoryType';
 
 const { Title, Paragraph } = Typography;
 const { Grid, Meta } = Card;
 
-type subCategoryType = {
-    name: string;
-    status: boolean;
-};
-
-type presetType = {
-    name: string;
-    icon: string;
-    subcategories: subCategoryType[];
-};
-
 type Props = {
-    presets: presetType[];
+    presets: PresetType[];
 };
 
 export const Step3Form = (props: Props) => {
     const { presets } = props;
     const [modalTitle, setModalTitle] = React.useState<string>('');
-    const [modalContent, setModalContent] = React.useState<subCategoryType[]>([]);
+    const [modalContent, setModalContent] = React.useState<SubCategoryType[]>([]);
     const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
 
-    const showModal = (title: string, content: subCategoryType[]) => {
+    const showModal = (title: string, content: SubCategoryType[]) => {
         setIsModalVisible(true);
         setModalTitle(title);
         setModalContent(content);

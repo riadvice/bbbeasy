@@ -17,18 +17,13 @@
  */
 
 import { Navigate, useLocation } from 'react-router-dom';
-import authService from '../services/auth.service';
+import AuthService from '../services/auth.service';
 import { Location } from 'history';
-
-type userType = {
-    username: string;
-    email: string;
-    role: string;
-};
+import { UserType } from '../types/UserType';
 
 const PrivateRoute = ({ children }) => {
     const { state }: Location = useLocation();
-    const user: userType = authService.getCurrentUser();
+    const user: UserType = AuthService.getCurrentUser();
 
     if (state) {
         return children;
