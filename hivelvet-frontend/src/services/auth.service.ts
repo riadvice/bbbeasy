@@ -17,38 +17,37 @@
  */
 
 import axios from 'axios';
-
-const API_URL: string = process.env.REACT_APP_API_URL;
+import { apiRoutes } from '../routing/backend-config';
 
 class AuthService {
     register(data: object) {
-        return axios.post(API_URL + '/account/register', {
+        return axios.post(apiRoutes.REGISTER_URL, {
             data,
         });
     }
     login(email: string, password: string) {
-        return axios.post(API_URL + '/account/login', {
+        return axios.post(apiRoutes.LOGIN_URL, {
             email,
             password,
         });
     }
     logout() {
-        return axios.get(API_URL + '/account/logout');
+        return axios.get(apiRoutes.LOGOUT_URL);
     }
 
     reset_password(email: string) {
-        return axios.post(API_URL + '/account/reset-password', {
+        return axios.post(apiRoutes.RESET_PASSWORD_URL, {
             email,
         });
     }
     change_password(token: string, password: string) {
-        return axios.post(API_URL + '/account/change-password', {
+        return axios.post(apiRoutes.CHANGE_PASSWORD_URL, {
             token,
             password,
         });
     }
     getResetPasswordByToken(token: string) {
-        return axios.get(API_URL + '/account/reset-token/' + token, {});
+        return axios.get(apiRoutes.RESET_TOKEN_URL + token, {});
     }
     getCurrentUser() {
         const userStr: string = localStorage.getItem('user');

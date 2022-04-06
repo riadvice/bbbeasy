@@ -17,32 +17,31 @@
  */
 
 import axios from 'axios';
-
-const API_URL: string = process.env.REACT_APP_API_URL;
+import { apiRoutes } from '../routing/backend-config';
 
 class RolesService {
     list_roles() {
-        return axios.get(API_URL + '/roles/list');
+        return axios.get(apiRoutes.LIST_ROLE_URL);
     }
 
     list_permissions() {
-        return axios.get(API_URL + '/roles/collect-privileges');
+        return axios.get(apiRoutes.COLLECT_PRIVILEGES_URL);
     }
 
     add_role(data: object) {
-        return axios.post(API_URL + '/roles/add', {
+        return axios.post(apiRoutes.ADD_ROLE_URL, {
             data,
         });
     }
 
     edit_role(data: object, id: number) {
-        return axios.put(API_URL + '/roles/edit/' + id, {
+        return axios.put(apiRoutes.EDIT_ROLE_URL + id, {
             data,
         });
     }
 
     delete_role(id: number) {
-        return axios.delete(API_URL + '/roles/delete/' + id);
+        return axios.delete(apiRoutes.DELETE_ROLE_URL + id);
     }
 }
 

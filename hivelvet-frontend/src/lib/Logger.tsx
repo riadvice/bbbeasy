@@ -17,8 +17,7 @@
  */
 
 import pino from 'pino';
-
-const API_URL: string = process.env.REACT_APP_API_URL;
+import { apiRoutes } from '../routing/backend-config';
 
 const levels = {
     http: 10,
@@ -30,7 +29,7 @@ const levels = {
 };
 
 const send = async (_level, logEvent) => {
-    const url = API_URL + '/logs';
+    const url = apiRoutes.LOGS_URL;
     await fetch(url, {
         method: 'POST',
         body: JSON.stringify(logEvent),
