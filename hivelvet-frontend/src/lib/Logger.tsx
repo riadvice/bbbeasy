@@ -29,7 +29,7 @@ const levels = {
     fatal: 60,
 };
 
-const send = async (level, logEvent) => {
+const send = async (_level, logEvent) => {
     const url = API_URL + '/logs';
     await fetch(url, {
         method: 'POST',

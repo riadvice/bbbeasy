@@ -38,8 +38,6 @@ class ResetPassword extends BaseAction
         $email = $form['email'];
 
         if ($user->emailExists($email)) {
-            $this->logger->info('user', ['user' => $user->toArray()]);
-
             if (!$user->dry()) {
                 // valid credentials
                 $this->session->authorizeUser($user);
@@ -48,8 +46,6 @@ class ResetPassword extends BaseAction
 
                 $mailSent   = new MailSender();
                 $resetToken = new ResetPasswordToken();
-
-                $this->logger->info('user', ['user' => $user->toArray()]);
 
                 // if user does not have a reset token
                 if (!$resetToken->userExists($user->id)) {
