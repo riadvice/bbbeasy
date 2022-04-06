@@ -18,17 +18,17 @@
 
 import React from 'react';
 import { Link, Navigate } from 'react-router-dom';
-import AuthService from '../services/auth.service';
-import Notifications from './Notifications';
+import AuthService from '../../services/auth.service';
+import Notifications from '../Notifications';
 
 import { Form, Button, Alert, Col, Row, Typography, Card } from 'antd';
 import { SmileOutlined } from '@ant-design/icons';
 
 import { Trans, withTranslation } from 'react-i18next';
-import EN_US from '../locale/en-US.json';
-import AddUserForm from './AddUserForm';
-import { UserType } from "../types/UserType";
-import { UserFunctionType } from "../types/UserFunctionType";
+import EN_US from '../../locale/en-US.json';
+import AddUserForm from '../AddUserForm';
+import { UserType } from '../../types/UserType';
+import { UserContext } from '../../lib/UserContext';
 
 const { Text, Title, Paragraph } = Typography;
 
@@ -37,12 +37,8 @@ type formType = {
     password: string;
 };
 
-type Props = {
-    setUser: UserFunctionType;
-};
-
-const Login = (props: Props) => {
-    const { setUser } = props;
+const Login = () => {
+    const { setIsLogged, setCurrentUser } = React.useContext(UserContext);
     const [successful, setSuccessful] = React.useState<boolean>(false);
     const [message, setMessage] = React.useState<string>('');
     const initialValues: formType = {
@@ -69,7 +65,8 @@ const Login = (props: Props) => {
                         2.5
                     );
                     localStorage.setItem('user', JSON.stringify(user_infos));
-                    setUser(user_infos, true);
+                    setCurrentUser(user_infos);
+                    setIsLogged(true);
                     setSuccessful(true);
                 }
             })

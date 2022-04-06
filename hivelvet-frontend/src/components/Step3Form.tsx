@@ -22,8 +22,8 @@ import { Button, Form, Typography, Card, Modal, Switch, Alert, Tooltip } from 'a
 import DynamicIcon from './DynamicIcon';
 import { Trans } from 'react-i18next';
 import LocaleService from '../services/locale.service';
-import { PresetType } from "../types/PresetType";
-import { SubCategoryType } from "../types/SubCategoryType";
+import { PresetType } from '../types/PresetType';
+import { SubCategoryType } from '../types/SubCategoryType';
 
 const { Title, Paragraph } = Typography;
 const { Grid, Meta } = Card;

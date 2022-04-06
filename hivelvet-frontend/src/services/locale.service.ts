@@ -78,11 +78,12 @@ class LocaleService {
     }
 
     private setLocale(language: string) {
-        localStorage.setItem('locale', language);
-        this.direction = this.getLanguageDirection(language);
+        this.language = language;
         this.antdlocale = this.localeMap[language.substring(0, 2)];
+        this.direction = this.getLanguageDirection(language);
         document.body.className = this.direction;
         document.body.dir = this.direction;
+        localStorage.setItem('locale', language);
     }
 
     changeLocale(locale: string) {

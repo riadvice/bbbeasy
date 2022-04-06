@@ -18,13 +18,13 @@
 
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import AuthService from '../services/auth.service';
+import AuthService from '../../services/auth.service';
 
 import { Form, Input, Button, Alert, Col, Row, Typography, Card, Result } from 'antd';
 import { CheckOutlined } from '@ant-design/icons';
 
 import { Trans, withTranslation } from 'react-i18next';
-import EN_US from '../locale/en-US.json';
+import EN_US from '../../locale/en-US.json';
 import { t } from 'i18next';
 
 import { URLSearchParams as _URLSearchParams } from 'url';
@@ -43,8 +43,7 @@ const ChangePassword = () => {
     const params: _URLSearchParams = new URLSearchParams(window.location.search);
 
     useEffect(() => {
-        AuthService
-            .getResetPasswordByToken(params.get('token'))
+        AuthService.getResetPasswordByToken(params.get('token'))
             .then(() => {
                 setAvailableToken(true);
             })

@@ -21,9 +21,10 @@ import { IRoute } from './IRoute';
 
 import PageNotFound from '../components/PageNotFound';
 import LandingPage from '../components/LandingPage';
-import Register from '../components/Register';
-import Reset from '../components/ResetPassword';
-import ChangePassword from '../components/ChangePassword';
+import Login from '../components/auth/Login';
+import Register from '../components/auth/Register';
+import Reset from '../components/auth/ResetPassword';
+import ChangePassword from '../components/auth/ChangePassword';
 
 import Home from '../components/Home';
 import Roles from '../components/Roles';
@@ -42,6 +43,7 @@ export const webRoutes: IRoute[] = [
     },
     {
         path: '/login',
+        element: <Login />,
         private: false,
         restricted: true,
     },

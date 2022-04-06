@@ -24,29 +24,20 @@ import { SearchOutlined, GlobalOutlined, UserOutlined, LogoutOutlined } from '@a
 import { Trans, withTranslation } from 'react-i18next';
 import { t } from 'i18next';
 
-import { Languages } from './Languages';
-import { INSTALLER_FEATURE } from '../constants';
-import LocaleService from '../services/locale.service';
-import AuthService from "../services/auth.service";
+import { Languages } from '../Languages';
+import { INSTALLER_FEATURE } from '../../constants';
+import LocaleService from '../../services/locale.service';
+import AuthService from '../../services/auth.service';
 
-import { LanguageType } from "../types/LanguageType";
-import { UserFunctionType } from "../types/UserFunctionType";
-import { UserType } from "../types/UserType";
-import { LanguageFunctionType } from "../types/LanguageFunctionType";
+import { LanguageType } from '../../types/LanguageType';
+import { UserContext } from '../../lib/UserContext';
 
 const { Header } = Layout;
 const { Text, Paragraph } = Typography;
 
-type Props = {
-    currentLocale: string;
-    setLang: LanguageFunctionType;
-    isLogged: boolean; //header btns
-    currentUser: UserType; //display profil dropdown
-    setUser: UserFunctionType; //logout
-};
-
-const AppHeader = (props: Props) => {
-    const { currentLocale, setLang, isLogged, currentUser, setUser } = props;
+const AppHeader = () => {
+    const { isLogged, setIsLogged, currentUser, setCurrentUser } = React.useContext(UserContext);
+    const currentLocale = LocaleService.language;
     const result: LanguageType[] = Languages.filter((item) => item.value == currentLocale);
     const language: string = result[0].name;
 
@@ -54,7 +45,8 @@ const AppHeader = (props: Props) => {
         AuthService.logout()
             .then(() => {
                 localStorage.removeItem('user');
-                setUser(null, false);
+                setCurrentUser(null);
+                setIsLogged(false);
                 return <Navigate to="/login" />;
             })
             .catch((error) => {
@@ -63,7 +55,7 @@ const AppHeader = (props: Props) => {
     };
     const handleChange = (e: RadioChangeEvent) => {
         const selectedLang: string = e.target.value;
-        setLang(selectedLang);
+        LocaleService.changeLocale(selectedLang);
     };
 
     const menuLang = (

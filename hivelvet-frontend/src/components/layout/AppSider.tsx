@@ -21,7 +21,7 @@ import { Link, useLocation } from 'react-router-dom';
 
 import { Button, Dropdown, Layout, Menu } from 'antd';
 import { PlusOutlined, DownOutlined } from '@ant-design/icons';
-import DynamicIcon from './DynamicIcon';
+import DynamicIcon from '../DynamicIcon';
 import { useTranslation, withTranslation } from 'react-i18next';
 import Scrollbar from 'perfect-scrollbar';
 

@@ -16,6 +16,6 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import { UserType } from "./UserType";
+import { UserType } from './UserType';
 
 export type UserFunctionType = (user: UserType, Logged: boolean) => void;

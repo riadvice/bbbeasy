@@ -17,7 +17,6 @@
  */
 
 import React, { useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import InstallService from '../services/install.service';
 
 import { Steps, Button, Row, Col, Form, Result } from 'antd';
@@ -30,8 +29,8 @@ import { Step2Form } from './Step2Form';
 import { Step3Form } from './Step3Form';
 
 import { UploadFile } from 'antd/lib/upload/interface';
-import { SettingsType } from "../types/SettingsType";
-import { PresetType } from "../types/PresetType";
+import { SettingsType } from '../types/SettingsType';
+import { PresetType } from '../types/PresetType';
 
 const API_URL = process.env.REACT_APP_API_URL;
 const { Step } = Steps;
@@ -98,6 +97,7 @@ const Install = () => {
     const [presets, setPresets] = React.useState<PresetType[]>([]);
 
     useEffect(() => {
+        localStorage.removeItem('user');
         InstallService.collect_settings()
             .then((response) => {
                 const settings: SettingsType = response.data;
@@ -215,11 +215,6 @@ const Install = () => {
                         status="success"
                         icon={<DynamicIcon type="CheckOutlined" className="success-install-icon" />}
                         title={<Trans i18nKey="success_install" />}
-                        extra={
-                            <Link to={'/login'} className="ant-btn ant-btn-primary ant-btn-lg">
-                                <Trans i18nKey="start-using-hivelvet" />
-                            </Link>
-                        }
                     />
                 </Col>
             ) : (

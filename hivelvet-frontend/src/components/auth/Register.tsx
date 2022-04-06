@@ -18,12 +18,12 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import AuthService from '../services/auth.service';
-import AddUserForm from './AddUserForm';
+import AuthService from '../../services/auth.service';
+import AddUserForm from '../AddUserForm';
 
 import { Form, Input, Button, Checkbox, Alert, Col, Row, Typography, Card, Result } from 'antd';
 import { Trans, withTranslation } from 'react-i18next';
-import EN_US from '../locale/en-US.json';
+import EN_US from '../../locale/en-US.json';
 import { t } from 'i18next';
 
 const { Title, Paragraph } = Typography;

@@ -16,7 +16,7 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import { LanguageType } from "../types/LanguageType";
+import { LanguageType } from '../types/LanguageType';
 
 export const Languages: LanguageType[] = [
     { name: 'English', key: 'en', value: 'en-US' },
