@@ -84,7 +84,7 @@
     "husky": "7.0.4",
     "lint-staged": "^12.2.1",
     "nyc": "^15.1.0",
-    "prettier": "^2.5.1",
+    "prettier": "^2.6.2",
     "react-styleguidist": "^11.2.0",
     "simple-progress-webpack-plugin": "^2.0.0",
     "source-map-explorer": "^2.5.2",
