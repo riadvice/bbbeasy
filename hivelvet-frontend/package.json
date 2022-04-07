@@ -62,7 +62,7 @@
     ]
   },
   "devDependencies": {
-    "@babel/plugin-proposal-decorators": "^7.17.2",
+    "@babel/plugin-proposal-decorators": "^7.17.9",
     "@craco/craco": "^6.4.3",
     "@crowdin/cli": "3",
     "@cypress/code-coverage": "^3.9.12",
