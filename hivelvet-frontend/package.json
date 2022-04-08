@@ -12,7 +12,7 @@
     "moment": "^2.29.2",
     "perfect-scrollbar": "^1.5.5",
     "pino": "^7.6.4",
-    "pino-pretty": "^7.5.0",
+    "pino-pretty": "^7.6.1",
     "pino-transmit-http": "^1.0.1",
     "pm2": "^5.1.2",
     "rc-color-picker": "^1.2.6",
