@@ -211,9 +211,9 @@ fix_styles() {
 #
 enable_installer() {
   echo "► Enabling backend installer app"
-    if [ $(grep -c "config.extension =" "$BASEDIR/../hivelvet-backend/app/config/default.ini") != 0 ]; then
+    if [ $(grep -c "config.extension =" "$BASEDIR/../hivelvet-backend/app/config/config-$ENVIRONMENT.ini") != 0 ]; then
       #c cmd to replace the matched line in one go
-      sed -i '/config.extension =/ c config.extension = -install' "$BASEDIR/../hivelvet-backend/app/config/default.ini"
+      sed -i '/config.extension =/ c config.extension = -install' "$BASEDIR/../hivelvet-backend/app/config/config-$ENVIRONMENT.ini"
       printf "%s %s [✔ - DONE]\n"
     fi
   echo "✔ Installer app enabled"
@@ -224,8 +224,8 @@ enable_installer() {
 #
 enable_web() {
   echo "► Enabling backend installer app"
-    if [ $(grep -c "config.extension = -install" "$BASEDIR/../hivelvet-backend/app/config/default.ini") != 0 ]; then
-      sed -i '/config.extension = -install/ c config.extension =' "$BASEDIR/../hivelvet-backend/app/config/default.ini"
+    if [ $(grep -c "config.extension = -install" "$BASEDIR/../hivelvet-backend/app/config/config-$ENVIRONMENT.ini") != 0 ]; then
+      sed -i '/config.extension = -install/ c config.extension =' "$BASEDIR/../hivelvet-backend/app/config/config-$ENVIRONMENT.ini"
       printf "%s %s [✔ - DONE]\n"
     fi
   echo "✔ Web app enabled"
