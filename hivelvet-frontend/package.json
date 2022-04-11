@@ -8,7 +8,7 @@
     "craco-less": "^2.0.0",
     "dotenv-cra": "^3.0.2",
     "eslint-plugin-react-hooks": "^4.4.0",
-    "i18next": "^21.6.13",
+    "i18next": "^21.6.15",
     "moment": "^2.29.2",
     "perfect-scrollbar": "^1.5.5",
     "pino": "^7.6.4",
@@ -62,7 +62,7 @@
     ]
   },
   "devDependencies": {
-    "@babel/plugin-proposal-decorators": "^7.17.2",
+    "@babel/plugin-proposal-decorators": "^7.17.9",
     "@craco/craco": "^6.4.3",
     "@crowdin/cli": "3",
     "@cypress/code-coverage": "^3.9.12",
