@@ -35,7 +35,7 @@ use Test\Scenario;
  */
 final class EditTest extends Scenario
 {
-    final protected const EDIT_USER_ROUTE = 'PUT /users/edit/';
+    final protected const EDIT_USER_ROUTE = 'PUT /users/';
     protected $group                      = 'Action User Edit';
 
     /**
