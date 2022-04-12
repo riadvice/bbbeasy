@@ -91,19 +91,19 @@ const config = {
             items: [
               {
                 label: 'User Guide',
-                to: '/user-guide',
+                to: '/user-guide/create-a-page',
               },
               {
                 label: 'Administrator Guide',
-                to: '/administrator-guide',
+                to: '/administrator-guide/translate-your-site',
               },
               {
                 label: 'Developer Guide',
-                to: '/developer-guide',
+                to: '/developer-guide/translate-your-site',
               },
               {
                 label: 'API',
-                to: '/api-reference',
+                to: '/api-reference/overview',
               },
             ],
           },
