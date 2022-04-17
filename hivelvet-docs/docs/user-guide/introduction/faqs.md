@@ -33,6 +33,8 @@ manager experience easy behind the very wide choice of managing all the configur
 * Conference rooms configuration without redundancy.
 * Rooms categorisation by labelling.
 * Roles with customisable permissions' matrix.
+* Easy to install with the minimum system command line knowledge.
+* Full branding part of the experience.
 
 ## Is Hivelvet open-source?
 
