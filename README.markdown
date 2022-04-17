@@ -41,7 +41,7 @@ Backend test:
 
 ## Technologies
 
-[FatFree Framework](https://github.com/bcosca/fatfree)
+[![Fat-Free Framework](https://github.com/bcosca/fatfree/raw/master/ui/images/logo.png)](https://fatfreeframework.com)
 
 [Node.js](https://nodejs.org/en/)
 

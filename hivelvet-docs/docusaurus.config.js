@@ -45,7 +45,7 @@ const config = {
         items: [
           {
             type: 'doc',
-            docId: 'user-guide/create-a-page',
+            docId: 'user-guide/introduction/introduction-welcome',
             position: 'left',
             sidebarId: 'user',
             label: 'User Guide',
@@ -91,7 +91,7 @@ const config = {
             items: [
               {
                 label: 'User Guide',
-                to: '/user-guide/create-a-page',
+                to: '/user-guide/introduction/welcome',
               },
               {
                 label: 'Administrator Guide',
