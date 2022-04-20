@@ -11963,10 +11963,10 @@ react-hook-form@^7.29.0:
   resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.29.0.tgz#5e7e41a483b70731720966ed8be52163ea1fecf1"
   integrity sha512-NcJqWRF6el5HMW30fqZRt27s+lorvlCCDbTpAyHoodQeYWXgQCvZJJQLC1kRMKdrJknVH0NIg3At6TUzlZJFOQ==
 
-react-i18next@^11.15.5:
-  version "11.16.5"
-  resolved "https://registry.yarnpkg.com/react-i18next/-/react-i18next-11.16.5.tgz#5258784b9b617c443811307072a434ec7447c70a"
-  integrity sha512-dkDN9suVU/jaD9A0xM4qNU9++LwgueWZn5XGTDEKTZeBgsd3q17ssTQXlSbEb0Gl0iLDdUKU7MrdjQjDc33ztA==
+react-i18next@^11.16.7:
+  version "11.16.7"
+  resolved "https://registry.yarnpkg.com/react-i18next/-/react-i18next-11.16.7.tgz#8d0680b7f4c8e43f59996336b7183ad576a28df7"
+  integrity sha512-7yotILJLnKfvUfrl/nt9eK9vFpVFjZPLWAwBzWL6XppSZZEvlmlKk0GBGDCAPfLfs8oND7WAbry8wGzdoiW5Nw==
   dependencies:
     "@babel/runtime" "^7.14.5"
     html-escaper "^2.0.2"
