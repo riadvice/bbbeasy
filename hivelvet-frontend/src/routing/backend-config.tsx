@@ -32,15 +32,16 @@ export const apiRoutes = {
     COLLECT_SETTINGS_URL: API_URL + '/collect-settings',
     INSTALL_URL: API_URL + '/install',
 
-    LIST_ROLE_URL: API_URL + '/roles/list',
-    ADD_ROLE_URL: API_URL + '/roles/add',
-    EDIT_ROLE_URL: API_URL + '/roles/edit/',
-    DELETE_ROLE_URL: API_URL + '/roles/delete/',
-    COLLECT_PRIVILEGES_URL: API_URL + '/roles/collect-privileges',
+    LIST_ROLE_URL: API_URL + '/roles',
+    ADD_ROLE_URL: API_URL + '/roles',
+    EDIT_ROLE_URL: API_URL + '/roles/',
+    DELETE_ROLE_URL: API_URL + '/roles/',
     COLLECT_ROLES_URL: API_URL + '/roles/collect',
 
-    LIST_USER_URL: API_URL + '/users/list',
-    ADD_USER_URL: API_URL + '/users/add',
-    EDIT_USER_URL: API_URL + '/users/edit',
-    DELETE_USER_URL: API_URL + '/users/delete',
+    LIST_USER_URL: API_URL + '/users',
+    ADD_USER_URL: API_URL + '/users',
+    EDIT_USER_URL: API_URL + '/users/',
+    DELETE_USER_URL: API_URL + '/users/',
+
+    COLLECT_PRIVILEGES_URL: API_URL + '/roles_permissions/collect',
 };

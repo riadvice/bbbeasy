@@ -33,7 +33,7 @@ use Test\Scenario;
  */
 final class DeleteTest extends Scenario
 {
-    final protected const DELETE_USER_ROUTE = 'DELETE /users/delete/';
+    final protected const DELETE_USER_ROUTE = 'DELETE /users/';
     protected $group                        = 'Action User Delete';
 
     /**

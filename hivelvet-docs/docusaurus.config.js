@@ -7,33 +7,27 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'Hivelvet Documentation',
-  tagline: 'Dinosaurs are cool',
+  tagline: 'The Multi-purpose rooms manager for BigBlueButton',
   url: 'https://your-docusaurus-test-site.com',
   baseUrl: '/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
-  favicon: 'img/favicon.ico',
+  favicon: 'img/favicon.png',
   organizationName: 'RIADVICE', // Usually your GitHub org/user name.
   projectName: 'hivelvet', // Usually your repo name.
-  staticDirectories: ['public', 'static'],
+
   presets: [
     [
       'classic',
       /** @type {import('@docusaurus/preset-classic').Options} */
       ({
         docs: {
+          routeBasePath: "/",
           sidebarPath: require.resolve('./sidebars.js'),
-          // Please change this to your repo.
-          editUrl: 'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
-        },
-        blog: {
-          showReadingTime: true,
-          // Please change this to your repo.
-          editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+          editUrl: 'https://github.com/riadvice/hivelvet/tree/develop/hivelvet-docs',
         },
         theme: {
-          customCss: require.resolve('./src/css/custom.css'),
+          customCss: require.resolve('./src/css/hivelvet.css'),
         },
       }),
     ],
@@ -43,19 +37,45 @@ const config = {
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       navbar: {
-        title: 'My Site',
+        title: 'Hivelvet',
         logo: {
-          alt: 'My Site Logo',
+          alt: 'Hivelvet Logo',
           src: 'img/logo.svg',
         },
         items: [
           {
             type: 'doc',
-            docId: 'intro',
+            docId: 'user-guide/introduction/introduction-welcome',
             position: 'left',
-            label: 'Tutorial',
+            sidebarId: 'user',
+            label: 'User Guide',
           },
-          {to: '/blog', label: 'Blog', position: 'left'},
+          {
+            type: 'doc',
+            docId: 'administrator-guide/translate-your-site',
+            sidebarId: 'administrator',
+            position: 'left',
+            label: 'Administrator Guide',
+          },
+          {
+            type: 'doc',
+            docId: 'developer-guide/translate-your-site',
+            sidebarId: 'developer',
+            position: 'left',
+            label: 'Developer Guide',
+          },
+          {
+            type: 'doc',
+            docId: 'api-reference/overview',
+            position: 'left',
+            sidebarId: 'api',
+            label: 'API',
+          },
+          {
+            label: 'Discussions',
+            href: 'https://github.com/riadvice/hivelvet/discussions',
+            position: 'right',
+          },
           {
             href: 'https://github.com/facebook/docusaurus',
             label: 'GitHub',
@@ -70,8 +90,20 @@ const config = {
             title: 'Docs',
             items: [
               {
-                label: 'Tutorial',
-                to: '/docs/intro',
+                label: 'User Guide',
+                to: '/user-guide/introduction/welcome',
+              },
+              {
+                label: 'Administrator Guide',
+                to: '/administrator-guide/translate-your-site',
+              },
+              {
+                label: 'Developer Guide',
+                to: '/developer-guide/translate-your-site',
+              },
+              {
+                label: 'API',
+                to: '/api-reference/overview',
               },
             ],
           },
@@ -79,34 +111,26 @@ const config = {
             title: 'Community',
             items: [
               {
-                label: 'Stack Overflow',
-                href: 'https://stackoverflow.com/questions/tagged/docusaurus',
+                label: 'Discussions',
+                href: 'https://github.com/riadvice/hivelvet/discussions',
               },
               {
-                label: 'Discord',
-                href: 'https://discordapp.com/invite/docusaurus',
-              },
-              {
-                label: 'Twitter',
-                href: 'https://twitter.com/docusaurus',
+                label: 'GitHub',
+                href: 'https://github.com/riadvice/hivelvet',
               },
             ],
           },
           {
-            title: 'More',
+            title: 'Commercial Support',
             items: [
               {
-                label: 'Blog',
-                to: '/blog',
-              },
-              {
-                label: 'GitHub',
-                href: 'https://github.com/facebook/docusaurus',
+                label: 'RIADVICE',
+                href: 'https://riadvice.tn/',
               },
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+        copyright: `Copyright © ${new Date().getFullYear()} Hivelvet, RIADVICE SUARL. Built with Docusaurus.`,
       },
       prism: {
         theme: lightCodeTheme,
