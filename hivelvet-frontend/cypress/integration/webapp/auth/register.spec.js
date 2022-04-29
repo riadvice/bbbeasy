@@ -40,8 +40,8 @@ describe('Test register form', () => {
     })
 
     it('should check for passwords matching', () => {
-        const pwd1 = 'pass1'
-        const pwd2 = 'pass2'
+        const pwd1 = 'test1'
+        const pwd2 = 'test2'
 
         cy.get('input#register_form_password').type(pwd1).should('have.value', pwd1)
         cy.get('input#register_form_confirmPassword').type(pwd2).should('have.value', pwd2)

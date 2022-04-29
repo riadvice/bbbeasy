@@ -15,7 +15,6 @@ describe('Test login form', () => {
         cy.get('button#submit-btn').click()
 
         cy.get('form#login_form').children('.ant-form-item').get('.ant-form-item-has-error').should('be.visible')
-        //cy.get('div.ant-form-item-has-error').last().should('be.visible').should('contain.text', t('password.required'));
     })
 
     it('should check for email type and password length', () => {
