@@ -9,33 +9,15 @@ describe('Test install process', () => {
         cy.get('footer').should('be.visible')
         cy.get('.install-steps').should('exist')
 
-        cy.get('form#install_form').should('exist').within(() => {
-            cy.get('input#install_form_username').should('be.visible')
-            cy.get('input#install_form_email').should('be.visible')
-            cy.get('input#install_form_password').should('be.visible')
-            cy.get('button#submit-btn').should('be.visible')
-        })
+        cy.checkExistFormFields('install')
     })
 
     it('should display errors when submitting empty step 1 form', () => {
-        cy.get('button#submit-btn').click()
-
-        cy.get('form#install_form').children('.ant-form-item').get('.ant-form-item-has-error').should('be.visible')
+        cy.checkEmptyForm('install')
     })
 
     it('should validate fields of step 1 form', () => {
-        const shortUsername = 'abc'
-        const invalidEmail = 'test'
-        const shortPwd = 'pas'
-
-        cy.get('input#install_form_username').type(shortUsername).should('have.value', shortUsername)
-        cy.get('input#install_form_email').type(invalidEmail).should('have.value', invalidEmail)
-        cy.get('input#install_form_password').type(shortPwd).should('have.value', shortPwd)
-        cy.get('button#submit-btn').click()
-
-        cy.get('input#install_form_username').parent().parent().parent().parent().get('div.ant-form-item-has-error').should('be.visible');
-        cy.get('input#install_form_email').parent().parent().parent().parent().get('div.ant-form-item-has-error').should('be.visible');
-        cy.get('input#install_form_password').parent().parent().parent().parent().get('div.ant-form-item-has-error').should('be.visible');
+        cy.checkInvalidForm('install')
     })
 
     it('should display errors when submitting empty step 2 form', () => {
