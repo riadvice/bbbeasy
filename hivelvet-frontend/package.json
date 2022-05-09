@@ -36,7 +36,9 @@
     "build": "INSTALLER_FEATURE=false craco build",
     "build-installer": "INSTALLER_FEATURE=true craco build",
     "nyc": "nyc instrument --compact=false src instrumented",
-    "cypress": "cypress run",
+    "nyc-summary": "nyc report --reporter=text-summary",
+    "cypress-dev": "cypress run --config '{\"ignoreTestFiles\":[\"**/installer/*/*.js\",\"**/installer/*.js\"]}' && npm run nyc-summary",
+    "cypress-installer": "hivelvet -ei && cypress run --config '{\"ignoreTestFiles\":[\"**/webapp/*/*.js\",\"**/webapp/*.js\"]}' && hivelvet -ew && npm run nyc-summary",
     "analyze": "craco analyze",
     "test": "craco test",
     "eject": "craco eject",
@@ -71,8 +73,8 @@
     "@testing-library/user-event": "^14.0.1",
     "@types/node": "^17.0.23",
     "@types/pino": "^7.0.5",
-    "@types/react": "^18.0.1",
-    "@types/react-dom": "^18.0.0",
+    "@types/react": "^17.0.20",
+    "@types/react-dom": "^17.0.9",
     "@typescript-eslint/parser": "^5.18.0",
     "babel-plugin-import": "^1.13.3",
     "babel-plugin-istanbul": "^6.1.1",
@@ -88,6 +90,6 @@
     "react-styleguidist": "^11.2.0",
     "simple-progress-webpack-plugin": "^2.0.0",
     "source-map-explorer": "^2.5.2",
-    "ts-loader": "^9.2.6"
+    "ts-loader": "^9.3.0"
   }
 }
