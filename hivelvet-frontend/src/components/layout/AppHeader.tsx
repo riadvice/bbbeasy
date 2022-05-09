@@ -127,7 +127,7 @@ const AppHeader = () => {
                     <Row align="middle">
                         <Col span={14} offset={5} className="text-center">
                             <Input
-                                className="search-input"
+                                className="search-input global-search"
                                 size="middle"
                                 placeholder={t('search')}
                                 allowClear
