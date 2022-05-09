@@ -36,7 +36,7 @@ module.exports = {
     },
     babel: {
         presets: [],
-        plugins: []
+        plugins: ["istanbul"]
     },
     plugins: [
         {

@@ -39,10 +39,10 @@ const LandingPage = () => {
                         <strong> BigBlueButton</strong>
                     </p>
                     <Paragraph className="landing-btn">
-                        <Link className="ant-btn ant-btn-primary text-white" to={'/login'}>
+                        <Link className="ant-btn ant-btn-primary text-white login-btn" to={'/login'}>
                             <Trans i18nKey="login" />
                         </Link>
-                        <Link className={'ant-btn color-primary'} to={'/register'}>
+                        <Link className="ant-btn color-primary register-btn" to={'/register'}>
                             <Trans i18nKey="sign-up" />
                         </Link>
                     </Paragraph>
