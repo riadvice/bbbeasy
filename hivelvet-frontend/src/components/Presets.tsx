@@ -86,9 +86,9 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, mypresets, deleteCl
     const [presetName, setPresetName] = useState<string>(preset['name']);
     const props = {
         beforeUpload: (file) => {
-            const isPNG = file.type === 'image/png';
+            const isPNG = file.type === 'image/png' || file.type ==='image/jpeg' ||file.type==='image/jpg';
             if (!isPNG) {
-                message.error(`${file.name} is not a png file`);
+                message.error(`${file.name} is not a img file`);
             }
             return isPNG || Upload.LIST_IGNORE;
         },
