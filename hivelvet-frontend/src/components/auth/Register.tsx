@@ -49,7 +49,8 @@ const Register = () => {
 
     const handleRegistration = (formValue: formType) => {
         AuthService.register(formValue)
-            .then(() => {
+            .then((formValue) => {
+                console.log('form value', formValue);
                 setSuccessful(true);
             })
             .catch((error) => {

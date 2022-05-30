@@ -16,33 +16,136 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { ReactPropTypes, useEffect, useState } from 'react';
+import Notifications from './Notifications';
 
-import { Button, Card, Row, Col, Form, Input, Modal, PageHeader, Popconfirm, Popover, Typography, Tooltip } from 'antd';
+import {
+    Button,
+    Card,
+    Row,
+    Col,
+    Form,
+    Input,
+    Modal,
+    PageHeader,
+    Popconfirm,
+    Popover,
+    Typography,
+    Tooltip,
+    Switch,
+    Upload,
+    message,
+    InputNumber,
+    Space,
+} from 'antd';
 import { DeleteOutlined, EditOutlined, QuestionCircleOutlined, SearchOutlined } from '@ant-design/icons';
 import { FormInstance } from 'antd/lib/form';
+import ColorPicker from 'rc-color-picker/lib/ColorPicker';
 
 import { Trans, withTranslation } from 'react-i18next';
 import { t } from 'i18next';
 import EN_US from '../locale/en-US.json';
 import LocaleService from '../services/locale.service';
-import { PresetType } from '../types/PresetType';
-import InstallService from '../services/install.service';
 import DynamicIcon from './DynamicIcon';
+import presetsService from '../services/presets.service';
+import { MyPresetType } from '../types/MyPresetType';
+import { SubCategoryType } from '../types/SubCategoryType';
+import { UploadOutlined } from '@ant-design/icons';
+import { UploadFile } from 'antd/lib/upload/interface';
+import axios from 'axios';
 
 const { Link, Title } = Typography;
+const API_URL = process.env.REACT_APP_API_URL;
 
 interface PresetColProps {
     key: number;
-    presets: PresetType[];
+    preset: MyPresetType;
+    mypresets: MyPresetType[];
+    deleteClickHandler: any;
+    editclickHandler: any;
 }
+type Item = {
+    key: number;
+    name: string;
+};
 type formType = {
     name: string;
 };
 let addForm: FormInstance = null;
 
-const PresetsCol: React.FC<PresetColProps> = ({ key, presets }) => {
+const PresetsCol: React.FC<PresetColProps> = ({ key, preset, mypresets, deleteClickHandler, editclickHandler }) => {
+    const [file, setFile] = React.useState<UploadFile>(null);
     const [isShown, setIsShown] = useState<boolean>(false);
+    const [modalTitle, setModalTitle] = React.useState<string>('');
+    const [modalContent, setModalContent] = React.useState<SubCategoryType[]>([]);
+    const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
+    const [primaryColor, setPrimaryColor] = React.useState<string>('');
+    const [editingKey, setEditingKey] = React.useState<number>(null);
+    const [text, setText] = useState<string>();
+    const [isEditing, setIsEditing] = useState<boolean>(false);
+    const [presetName, setPresetName] = useState<string>(preset['name']);
+    const props = {
+        beforeUpload: (file) => {
+            const isPNG = file.type === 'image/png';
+            if (!isPNG) {
+                message.error(`${file.name} is not a png file`);
+            }
+            return isPNG || Upload.LIST_IGNORE;
+        },
+        onChange: (info) => {
+            console.log(info.fileList);
+            setFile(info.fileList[0]);
+        },
+    };
+    const showModal = (title: string, content: SubCategoryType[]) => {
+        setIsModalVisible(true);
+        setModalTitle(title);
+        setModalContent(content);
+    };
+    const [editForm] = Form.useForm();
+    const setModal = (content: any) => {
+        setIsModalVisible(false);
+        console.log('content', content);
+        for (let i = 0; i < content.length; i++) {
+            if (content[i].type == 'file' && file != undefined) {
+                content[i].value = file.name;
+                const fdata: FormData = new FormData();
+                fdata.append('logo', file.originFileObj, file.originFileObj.name);
+                fdata.append('logo_name', file.originFileObj.name);
+                axios
+                    .post(API_URL + '/save-logo', fdata)
+                    .then((response) => {
+                        console.log(response);
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+            }
+
+            console.log(content[i]);
+
+            presetsService.edit_subcategory_preset(content[i], content[i].id).then((response) => {
+                console.log('response', response);
+            });
+        }
+    };
+    const handleSaveEdit = (preset) => {
+        preset['name'] = presetName;
+        console.log('editing', preset['name']);
+        editclickHandler();
+
+        setIsEditing(false);
+    };
+    const handleDelete = (id, preset) => {
+        deleteClickHandler();
+    };
+    const toggleEdit = () => {
+        setIsEditing(true);
+    };
+    const cancelEdit = () => {
+        setIsEditing(false);
+        setPresetName(preset['name']);
+    };
     return (
         <Col key={key} span={11}>
             <Card
@@ -52,11 +155,36 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, presets }) => {
                         onMouseOver={() => setIsShown(true)}
                         onMouseLeave={() => setIsShown(false)}
                     >
-                        <span>One to one</span>
-                        {isShown && (
-                            <Button size="small" type="link" icon={<EditOutlined />}>
-                                {t('rename')}
-                            </Button>
+                        {!isEditing && (
+                            <Space>
+                                <span>{preset['name']}</span>
+
+                                {isShown && (
+                                    <Button size="small" type="link" icon={<EditOutlined />} onClick={toggleEdit}>
+                                        {t('rename')}
+                                    </Button>
+                                )}
+                            </Space>
+                        )}
+                        {isEditing && (
+                            <Space>
+                                <Input
+                                    value={presetName}
+                                    className="input"
+                                    onChange={(e) => {
+                                        setPresetName(e.target.value);
+                                    }}
+                                ></Input>
+
+                                <Popconfirm title={t('cancel_edit')} placement="leftTop" onConfirm={() => cancelEdit()}>
+                                    <Button size="middle">
+                                        <Trans i18nKey="cancel" />
+                                    </Button>
+                                </Popconfirm>
+                                <Button size="middle" type="primary" onClick={() => handleSaveEdit(preset)}>
+                                    <Trans i18nKey="save" />
+                                </Button>
+                            </Space>
                         )}
                     </div>
                 }
@@ -65,6 +193,7 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, presets }) => {
                         <Popconfirm
                             title={t('delete_preset_confirm')}
                             icon={<QuestionCircleOutlined className="red-icon" />}
+                            onConfirm={() => handleDelete(preset['id'], preset)}
                         >
                             <Link>
                                 <DeleteOutlined /> <Trans i18nKey="delete" />
@@ -73,7 +202,7 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, presets }) => {
                     </div>
                 }
             >
-                {presets.map((item, subIndex) => (
+                {preset.categories.map((item, subIndex) => (
                     <Tooltip
                         key={subIndex + '-' + item.name}
                         placement={LocaleService.direction == 'rtl' ? 'leftTop' : 'rightTop'}
@@ -85,7 +214,7 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, presets }) => {
                                     {item.subcategories.map((subItem) => (
                                         <li
                                             key={item.name + '_' + subItem.name}
-                                            className={subItem.status == true ? 'text-black' : 'text-grey'}
+                                            className={subItem.enabled == true ? 'text-black' : 'text-grey'}
                                         >
                                             {subItem.name}
                                         </li>
@@ -94,29 +223,110 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, presets }) => {
                             </>
                         }
                     >
-                        <Button type="link" icon={<DynamicIcon type={item.icon} className="PresetIcon" />} />
+                        <Button
+                            onClick={() => showModal(item.name, item.subcategories)}
+                            disabled={!item.enabled}
+                            type="link"
+                            icon={<DynamicIcon type={item.icon} className={'PresetIcon'} />}
+                        />
                     </Tooltip>
                 ))}
+                <Modal
+                    title={modalTitle}
+                    className="presets-modal"
+                    centered
+                    visible={isModalVisible}
+                    onOk={() => setIsModalVisible(false)}
+                    onCancel={() => setIsModalVisible(false)}
+                    footer={[
+                        <Button key="submit" type="primary" onClick={() => setModal(modalContent)}>
+                            <Trans i18nKey="confirm" />
+                        </Button>,
+                    ]}
+                >
+                    <div className="presets-body">
+                        {modalContent.map((item) => (
+                            <div key={modalTitle + '_' + item.name}>
+                                <Form.Item label={item.name} name={item.name}>
+                                    {item.type == 'bool' && (
+                                        <Switch
+                                            disabled={!item.enabled}
+                                            defaultChecked={item.value == true ? true : false}
+                                            onChange={(checked) => {
+                                                item.value = checked;
+                                            }}
+                                        />
+                                    )}
+
+                                    {item.type === 'string' && (
+                                        <Input
+                                            style={{ 'width': 'fit-content' }}
+                                            disabled={!item.enabled}
+                                            defaultValue={item.value}
+                                            placeholder={item.name}
+                                            onChange={(event) => {
+                                                item.value = event.target.value;
+                                            }}
+                                        />
+                                    )}
+
+                                    {item.type === 'color' && (
+                                        <ColorPicker
+                                            animation="slide-up"
+                                            defaultColor={item.value}
+                                            onClose={(color) => {
+                                                item.value = color.color;
+                                            }}
+                                            placement="bottomLeft"
+                                        >
+                                            <span className="rc-color-picker-trigger" />
+                                        </ColorPicker>
+                                    )}
+                                    {item.type === 'file' && (
+                                        <Upload {...props} multiple={false} name={item.name}>
+                                            <Button icon={<UploadOutlined />}>Upload png only</Button>
+                                            {item.value}
+                                        </Upload>
+                                    )}
+                                    {item.type === 'integer' && (
+                                        <InputNumber
+                                            min={1}
+                                            max={100}
+                                            disabled={!item.enabled}
+                                            defaultValue={item.value}
+                                            placeholder={item.name}
+                                            onChange={(val) => (item.value = val)}
+                                        />
+                                    )}
+                                </Form.Item>
+                            </div>
+                        ))}
+                    </div>
+                </Modal>
             </Card>
         </Col>
     );
 };
 
 const Presets = () => {
-    const [myPresets, setMyPresets] = useState<PresetType[][]>([]);
-
+    const [myPresets, setMyPresets] = useState<MyPresetType[]>([]);
+    const [myPresetsNames, setMyPresetsNames] = React.useState<Item[]>([]);
     const [errorsAdd, setErrorsAdd] = useState<string[]>([]);
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+    const [loading, setLoading] = React.useState<boolean>(false);
 
     useEffect(() => {
-        InstallService.collect_presets()
-            .then((response) => {
-                const arr: PresetType[][] = [];
-                for (let i = 0; i < 3; i++) {
-                    arr.push(response.data);
-                    console.log(arr);
+        presetsService
+            .collect_my_presets()
+            .then((response1) => {
+                console.log('presets', response1);
+                setMyPresetsNames(response1.data);
+                const arr: MyPresetType[] = [];
+                for (let i = 0; i < response1.data.length; i++) {
+                    arr.push(response1.data[i]);
                 }
                 setMyPresets(arr);
+                console.log('presets sett', arr);
             })
             .catch((error) => {
                 console.log(error);
@@ -128,6 +338,27 @@ const Presets = () => {
         const formValues: formType = values;
         setErrorsAdd([]);
         console.log(formValues);
+        presetsService
+            .add_preset(formValues)
+            .then((response) => {
+                console.log('response', response);
+                setLoading(true);
+                setIsModalVisible(false);
+                const newRowData: MyPresetType = response.data.preset;
+                Notifications.openNotificationWithIcon('success', t('add_preset_success'));
+                //delete data of form
+                addForm?.resetFields();
+                //add data to table
+                setLoading(false);
+
+                presetsService.collect_my_presets().then((response) => {
+                    console.log(response);
+                    setMyPresets(response.data);
+                });
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     };
     const failedAdd = () => {
         setErrorsAdd([]);
@@ -140,7 +371,35 @@ const Presets = () => {
         setErrorsAdd([]);
         setIsModalVisible(true);
     };
+    const deletePreset = (id) => {
+        presetsService
+            .delete_preset(id)
+            .then((response) => {
+                console.log(response);
+                setLoading(true);
 
+                const pre = myPresets.filter((p) => p.id != id);
+                setMyPresets(pre);
+                Notifications.openNotificationWithIcon('success', t('delete_preset_success'));
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
+    const editPreset = (preset) => {
+        console.log(preset);
+        presetsService
+            .edit_preset(preset, preset.id)
+            .then((response) => {
+                console.log(response);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+        const pre = myPresets.filter((p) => p.id == preset.id);
+        console.log('pre', pre);
+        setMyPresets(myPresets);
+    };
     return (
         <>
             <PageHeader
@@ -206,7 +465,7 @@ const Presets = () => {
                             },
                         ]}
                     >
-                        <Input placeholder={t('name.label')} />
+                        <Input placeholder={t('name.label')} className="input-add" />
                     </Form.Item>
                     <Form.Item className="modal-submit-btn button-container">
                         <Button type="text" className="cancel-btn prev" block onClick={cancelAdd}>
@@ -221,7 +480,13 @@ const Presets = () => {
 
             <Row gutter={[32, 32]} justify="center" className="presets-cards">
                 {myPresets.map((singlePresets, index) => (
-                    <PresetsCol key={index} presets={singlePresets} />
+                    <PresetsCol
+                        key={index}
+                        preset={singlePresets}
+                        mypresets={myPresets}
+                        deleteClickHandler={deletePreset.bind(this, singlePresets.id)}
+                        editclickHandler={editPreset.bind(this, singlePresets)}
+                    />
                 ))}
             </Row>
         </>

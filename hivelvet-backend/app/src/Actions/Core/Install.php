@@ -112,7 +112,7 @@ class Install extends BaseAction
                                 $presetSettings          = new PresetSetting();
                                 $presetSettings->group   = $preset['name'];
                                 $presetSettings->name    = $subcategory['name'];
-                                $presetSettings->enabled = $subcategory['status'];
+                                $presetSettings->enabled = $subcategory['enabled'];
 
                                 try {
                                     $presetSettings->save();

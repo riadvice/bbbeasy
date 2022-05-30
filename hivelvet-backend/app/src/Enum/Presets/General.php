@@ -34,4 +34,10 @@ class General extends Enum
     final public const LOGGED_IN_USERS_ONLY  = 'logged_in_users_only';
 
     public static string $icon = 'GlobalOutlined';
+    public static string $DURATION_TYPE = 'integer';
+    public static string $MAXIMUM_PARTICIPANTS_TYPE = 'integer';
+    public static string $ANYONE_CAN_START_TYPE = 'bool';
+    public static string $OPEN_FOR_EVERYONE_TYPE = 'bool';
+    public static string $ALL_JOIN_AS_MODERATOR_TYPE = 'bool';
+    public static string $LOGGED_IN_USERS_ONLY_TYPE = 'bool';
 }

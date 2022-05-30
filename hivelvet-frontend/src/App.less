@@ -697,6 +697,11 @@ body.rtl {
 }
 .presets-cards .ant-card-body button {
   margin: 6px;
+  &:disabled{
+    .PresetIcon{
+      background-color: #c6c6c6;
+    }
+  }
 }
 
 .success-install-icon {
@@ -906,7 +911,7 @@ body.rtl {
   color: white !important;
 }
 .text-black {
-  color: var(--hv-darken-gray) !important;
+  color: black !important;
 }
 .text-grey {
   color: grey !important;
@@ -943,4 +948,28 @@ body.rtl {
   from {
     width: 0;
   }
+}
+.btn-enabled{
+  background-color:yellow ;
+
+}
+.btn-disabled{
+  background-color: #c6c6c6;
+}
+.typography{
+//display: none;
+width:3rem;
+height: 3rem;
+}
+
+.presets-body{
+  .input{
+    width: fit-content;
+  }
+}
+/*.input{
+  width: fit-content;
+}*/
+.input-add{
+  width: 100%;
 }

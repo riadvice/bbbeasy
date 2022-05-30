@@ -26,11 +26,16 @@ use Enum\Enum;
 
 class Audio extends Enum
 {
-    final public const USERS_JOIN_MUTED                   = 'users_join_muted';
+     final public const USERS_JOIN_MUTED                   = 'users_join_muted';
     final public const MODERATORS_ALLOWED_TO_UNMUTE_USERS = 'moderators_allowed_to_unmute_users';
     final public const AUTO_JOIN                          = 'auto_join';
     final public const LISTEN_ONLY                        = 'listen_only_enabled';
     final public const SKIP_ECHO_TEST                     = 'skip_echo_test';
 
     public static string $icon = 'AudioOutlined';
+    public static string $USERS_JOIN_MUTED_TYPE           ='bool';
+    public static string $MODERATORS_ALLOWED_TO_UNMUTE_USERS_TYPE          ='bool';
+    public static string $AUTO_JOIN_TYPE             ='bool';
+    public static string $LISTEN_ONLY_ENABLED_TYPE           ='bool';
+    public static string $SKIP_ECHO_TEST_TYPE           ='bool';
 }

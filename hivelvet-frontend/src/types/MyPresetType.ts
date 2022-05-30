@@ -1,8 +1,4 @@
-<?php
-
-declare(strict_types=1);
-
-/*
+/**
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -20,15 +16,12 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Enum\Presets;
+import { PresetType } from './PresetType';
+import { SubCategoryType } from './SubCategoryType';
 
-use Enum\Enum;
-
-class Screenshare extends Enum
-{
-    final public const CONFIGURABLE = 'configurable';
-
-    public static string $icon = 'DesktopOutlined';
-    public static string $CONFIGURABLE_TYPE = 'bool';
-
-}
+export type MyPresetType = {
+    id: number;
+    name: string;
+    categories: PresetType[];
+    // subcategories: SubCategoryType[];
+};

@@ -204,5 +204,7 @@
     "required_email": "البريد الإلكتروني مطلوب",
     "required_role": "الرجاء اختيار دور",
     "required_status": "الرجاء اختيار حالة",
-    "no_changes": "لا توجد تغييرات أجريت"
+    "no_changes": "لا توجد تغييرات أجريت",
+    "add_preset_success": "تمت إضافة الاعدادات بنجاح",
+    "delete_preset_success": "تم حذف الاعدادات بنجاح"
 }

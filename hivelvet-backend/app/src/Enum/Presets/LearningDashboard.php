@@ -30,4 +30,8 @@ class LearningDashboard extends Enum
     final public const CLEANUP_DELAY = 'cleanup_delay';
 
     public static string $icon = 'FundViewOutlined';
+
+    public static string $CONFIGURABLE_TYPE = 'bool';
+    public static string $CLEANUP_DELAY_TYPE = 'integer';
+
 }

@@ -69,7 +69,7 @@ export const Step3Form = (props: Props) => {
                                 {item.subcategories.map((subItem) => (
                                     <li
                                         key={item.name + '_' + subItem.name}
-                                        className={subItem.status == true ? 'text-black' : 'text-grey'}
+                                        className={subItem.enabled == true ? 'text-black' : 'text-grey'}
                                     >
                                         {subItem.name}
                                     </li>
@@ -105,9 +105,9 @@ export const Step3Form = (props: Props) => {
                             <div key={modalTitle + '_' + item.name}>
                                 <Form.Item label={item.name}>
                                     <Switch
-                                        defaultChecked={item.status == true ? true : false}
+                                        defaultChecked={item.enabled == true ? true : false}
                                         onChange={(checked) => {
-                                            item.status = checked;
+                                            item.enabled = checked;
                                         }}
                                     />
                                 </Form.Item>

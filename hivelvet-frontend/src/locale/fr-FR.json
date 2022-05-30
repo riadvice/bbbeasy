@@ -204,5 +204,7 @@
     "required_email": "L'e-mail est obligatoire",
     "required_role": "Veuillez sélectionner un rôle",
     "required_status": "Veuillez sélectionner une status",
-    "no_changes": "Aucune modification n'a été effectuée"
+    "no_changes": "Aucune modification n'a été effectuée",
+    "add_preset_success": "Préaglage ajouté avec succés",
+    "delete_preset_success": "Préaglage supprimé avec succés"
 }

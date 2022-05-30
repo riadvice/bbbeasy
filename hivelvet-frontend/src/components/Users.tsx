@@ -171,11 +171,14 @@ const Users = () => {
     const handleAdd = (values) => {
         const formValues: formType = values;
         setErrorsAdd('');
+        console.log('form values', formValues);
         UsersService.add_user(formValues)
             .then((response) => {
+                console.log('user added ', response);
                 setLoading(true);
                 setIsModalVisible(false);
                 const newRowData: Item = response.data.user;
+                console.log('data', response.data);
                 Notifications.openNotificationWithIcon('success', t('add_user_success'));
                 //delete data of form
                 addForm?.resetFields();
@@ -265,11 +268,11 @@ const Users = () => {
         return record;
     };
     const toggleEdit = (record: Item) => {
-        setCancelVisibility(false);
+        // setCancelVisibility(false);
         setEditingKey(record.key);
-        let newRecord: object = { ...record };
-        newRecord = changeRoleCol(newRecord as Item);
-        editForm.setFieldsValue(newRecord);
+        //   let newRecord: object = { ...record };
+        //  newRecord = changeRoleCol(newRecord as Item);
+        //  editForm.setFieldsValue(newRecord);
     };
     const cancelEdit = () => {
         setCancelVisibility(false);
