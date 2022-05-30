@@ -29,15 +29,14 @@ export const apiRoutes = {
     LOGS_URL: API_URL + '/logs',
 
     COLLECT_PRESETS_URL: API_URL + '/collect-presets',
-    COLLECT_MY_PRESETS_URL: API_URL+    '/collect-my-presets',
+    COLLECT_MY_PRESETS_URL: API_URL + '/collect-my-presets',
     COLLECT_SETTINGS_URL: API_URL + '/collect-settings',
     INSTALL_URL: API_URL + '/install',
 
-
-    ADD_PRESET_URL:API_URL+'/add-presets',
-    EDIT_PRESETS_URL:API_URL+'/presets/',
-    EDIT_PRESETS_SUBCATEGORIES_URL:API_URL+'/presets_subcategories/',
-     DELETE_PRESET_URL:API_URL+'/presets/',
+    ADD_PRESET_URL: API_URL + '/add-presets',
+    EDIT_PRESETS_URL: API_URL + '/presets/',
+    EDIT_PRESETS_SUBCATEGORIES_URL: API_URL + '/presets_subcategories/',
+    DELETE_PRESET_URL: API_URL + '/presets/',
     LIST_ROLE_URL: API_URL + '/roles',
     ADD_ROLE_URL: API_URL + '/roles',
     EDIT_ROLE_URL: API_URL + '/roles/',
