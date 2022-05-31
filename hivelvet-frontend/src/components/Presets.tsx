@@ -86,14 +86,13 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, mypresets, deleteCl
     const [presetName, setPresetName] = useState<string>(preset['name']);
     const props = {
         beforeUpload: (file) => {
-            const isPNG = file.type === 'image/png' || file.type ==='image/jpeg' ||file.type==='image/jpg';
+            const isPNG = file.type === 'image/png' || file.type === 'image/jpeg' || file.type === 'image/jpg';
             if (!isPNG) {
                 message.error(`${file.name} is not a img file`);
             }
             return isPNG || Upload.LIST_IGNORE;
         },
         onChange: (info) => {
-            console.log(info.fileList);
             setFile(info.fileList[0]);
         },
     };
@@ -105,7 +104,6 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, mypresets, deleteCl
     const [editForm] = Form.useForm();
     const setModal = (content: any) => {
         setIsModalVisible(false);
-        console.log('content', content);
         for (let i = 0; i < content.length; i++) {
             if (content[i].type == 'file' && file != undefined) {
                 content[i].value = file.name;
@@ -122,8 +120,6 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, mypresets, deleteCl
                     });
             }
 
-            console.log(content[i]);
-
             presetsService.edit_subcategory_preset(content[i], content[i].id).then((response) => {
                 console.log('response', response);
             });
@@ -131,7 +127,6 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, mypresets, deleteCl
     };
     const handleSaveEdit = (preset) => {
         preset['name'] = presetName;
-        console.log('editing', preset['name']);
         editclickHandler();
 
         setIsEditing(false);
@@ -284,7 +279,7 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, mypresets, deleteCl
                                     )}
                                     {item.type === 'file' && (
                                         <Upload {...props} multiple={false} name={item.name}>
-                                            <Button icon={<UploadOutlined />}>Upload png only</Button>
+                                            <Button icon={<UploadOutlined />}>Upload jpg,jpeg,png only</Button>
                                             {item.value}
                                         </Upload>
                                     )}
@@ -326,7 +321,6 @@ const Presets = () => {
                     arr.push(response1.data[i]);
                 }
                 setMyPresets(arr);
-                console.log('presets sett', arr);
             })
             .catch((error) => {
                 console.log(error);
@@ -337,11 +331,9 @@ const Presets = () => {
     const handleAdd = (values) => {
         const formValues: formType = values;
         setErrorsAdd([]);
-        console.log(formValues);
         presetsService
             .add_preset(formValues)
             .then((response) => {
-                console.log('response', response);
                 setLoading(true);
                 setIsModalVisible(false);
                 const newRowData: MyPresetType = response.data.preset;
@@ -352,7 +344,6 @@ const Presets = () => {
                 setLoading(false);
 
                 presetsService.collect_my_presets().then((response) => {
-                    console.log(response);
                     setMyPresets(response.data);
                 });
             })
@@ -387,7 +378,6 @@ const Presets = () => {
             });
     };
     const editPreset = (preset) => {
-        console.log(preset);
         presetsService
             .edit_preset(preset, preset.id)
             .then((response) => {
@@ -397,7 +387,7 @@ const Presets = () => {
                 console.log(error);
             });
         const pre = myPresets.filter((p) => p.id == preset.id);
-        console.log('pre', pre);
+
         setMyPresets(myPresets);
     };
     return (

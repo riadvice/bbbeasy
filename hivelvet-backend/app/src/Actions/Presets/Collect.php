@@ -86,10 +86,5 @@ class Collect extends BaseAction
         $this->logger->debug('collecting presets', ['data' => json_encode($data)]);
         $this->renderJson($data);
     }
-    public function show($f3, $params): void{
-        $presetSetting=new PresetSetting();
-        $presets=$presetSetting->getAllPresets();
-        $this->logger->debug('collecting presets', ['presets' => json_encode($presets)]);
-        $this->renderJson($presets);
-    }
+
 }
