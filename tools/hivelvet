@@ -223,7 +223,7 @@ enable_installer() {
 # Enable backend web app
 #
 enable_web() {
-  echo "► Enabling backend installer app"
+  echo "► Enabling backend web app"
     if [ $(grep -c "config.extension = -install" "$BASEDIR/../hivelvet-backend/app/config/config-$ENVIRONMENT.ini") != 0 ]; then
       sed -i '/config.extension = -install/ c config.extension =' "$BASEDIR/../hivelvet-backend/app/config/config-$ENVIRONMENT.ini"
       printf "%s %s [✔ - DONE]\n"

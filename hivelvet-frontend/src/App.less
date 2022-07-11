@@ -103,13 +103,13 @@ body.rtl {
   z-index: 1;
   background: var(--hv-bg-layout) !important;
 }
-
 .search-input {
-  //width: 35%;
-  width: 70% !important;
   border-radius: 15px !important;
 }
-
+.search-input.global-search {
+  //width: 35%;
+  width: 70% !important;
+}
 .search-input,.search-input input, .search-input.ant-input-affix-wrapper:hover, .search-input.ant-input-affix-wrapper:focus {
   //background: #f8f8f8;
   background: white !important;
@@ -372,11 +372,11 @@ body.rtl {
   border-color: @primary-color;
 }
 
-.hivelvet-table .cell-edit-icon {
+.cell-edit-icon, .preset-card-title .ant-btn {
   color: var(--hv-medimum-gray) !important;
 }
 
-.hivelvet-table .cell-edit-icon:hover {
+.cell-edit-icon:hover, .preset-card-title .ant-btn:hover {
   color: @primary-color !important;
 }
 
@@ -679,6 +679,26 @@ body.rtl {
   line-height: inherit !important;
 }
 
+.help-icon {
+  font-size: 17px !important;
+}
+
+.presets-header .ant-space {
+  gap: 20px !important;
+}
+.presets-cards {
+  padding-top: 16px;
+}
+.presets-cards .ant-card {
+  border-radius: 10px !important;
+}
+.presets-cards .ant-card-head {
+  border-bottom: none !important;
+}
+.presets-cards .ant-card-body button {
+  margin: 6px;
+}
+
 .success-install-icon {
   font-size: 40px !important;
   padding: 20px;
@@ -806,6 +826,10 @@ body.rtl {
   font-weight: 300;
   padding: 0 12px !important;
   line-height: 1.7715;
+}
+.ant-tooltip-inner h5 {
+  padding: 0 12px !important;
+  font-size: 15px !important;
 }
 
 .presets-modal .ant-modal-content {

@@ -252,7 +252,7 @@ const Install = () => {
                                     </Button>
                                 )}
                                 {activeStep <= steps.length - 1 && (
-                                    <Button type="primary" htmlType="submit" block>
+                                    <Button type="primary" id="submit-btn" htmlType="submit" block>
                                         {steps[activeStep].button}
                                     </Button>
                                 )}

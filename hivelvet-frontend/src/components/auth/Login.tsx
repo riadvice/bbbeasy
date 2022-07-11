@@ -96,7 +96,7 @@ const Login = () => {
                     {message && !successful && (
                         <Alert
                             type="error"
-                            className="alert-msg"
+                            className="alert-error-msg"
                             message={<Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == message)} />}
                             showIcon
                         />
@@ -114,7 +114,7 @@ const Login = () => {
                     >
                         <AddUserForm isLogin={true} />
                         <Form.Item>
-                            <Button type="primary" htmlType="submit" block>
+                            <Button type="primary" id="submit-btn" htmlType="submit" block>
                                 <Trans i18nKey="login" />
                             </Button>
                         </Form.Item>

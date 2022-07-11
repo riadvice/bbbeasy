@@ -97,7 +97,7 @@ const Register = () => {
 
                         <Form
                             layout="vertical"
-                            name="register"
+                            name="register_form"
                             className="register-form"
                             initialValues={initialValues}
                             requiredMark={false}
@@ -159,7 +159,7 @@ const Register = () => {
                             </Form.Item>
 
                             <Form.Item>
-                                <Button type="primary" htmlType="submit" block>
+                                <Button type="primary" id="submit-btn" htmlType="submit" block>
                                     <Trans i18nKey="register" />
                                 </Button>
                             </Form.Item>

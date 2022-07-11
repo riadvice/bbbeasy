@@ -6,6 +6,7 @@
 .pnp.js
 
 # testing
+/.nyc_output/**
 /coverage
 /cypress/screenshots/**/*.png
 /cypress/videos/**/*.mp4
