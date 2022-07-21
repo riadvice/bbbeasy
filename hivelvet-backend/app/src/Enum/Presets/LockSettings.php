@@ -33,7 +33,6 @@ class LockSettings extends Enum
     final public const SHARED_NOTES = 'shared_notes';
     final public const LAYOUT       = 'layout';
 
-    public static string $icon = 'UnlockOutlined';
     public static string $WEBCAMS_TYPE = 'bool';
     public static string $MICROPHONES_TYPE = 'bool';
     public static string $PRIVATE_CHAT_TYPE = 'bool';

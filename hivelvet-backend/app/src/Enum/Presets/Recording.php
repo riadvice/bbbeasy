@@ -30,7 +30,6 @@ class Recording extends Enum
     final public const AUTO_START       = 'auto_start';
     final public const ALLOW_START_STOP = 'allow_start_stop';
 
-    public static string $icon = 'PlayCircleOutlined';
     public static string $CONFIGURABLE_TYPE = 'bool';
     public static string $AUTO_START_TYPE = 'bool';
     public static string $ALLOW_START_STOP_TYPE = 'bool';

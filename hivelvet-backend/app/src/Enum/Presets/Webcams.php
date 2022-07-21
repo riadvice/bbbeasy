@@ -32,7 +32,6 @@ class Webcams extends Enum
     final public const AUTO_SHARE                     = 'auto_share';
     final public const SKIP_PREVIEW                   = 'skip_preview';
 
-    public static string $icon = 'VideoCameraOutlined';
     public static string $VISIBLE_FOR_MODERATOR_ONLY_TYPE = 'bool';
     public static string $CONFIGURABLE_TYPE = 'bool';
     public static string $MODERATOR_ALLOWED_CAMERA_EJECT_TYPE = 'bool';

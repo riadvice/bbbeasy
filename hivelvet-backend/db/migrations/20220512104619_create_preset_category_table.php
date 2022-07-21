@@ -22,7 +22,7 @@ final class CreatePresetCategoryTable extends AbstractMigration
         $table
             ->addColumn('name', 'string', ['limit' => 64, 'null' => false])
             ->addColumn('enabled','boolean', ['default' => false, 'null' => false])
-            ->addColumn('icon',"string",["null"=>true])
+
             ->addColumn('created_on', 'datetime', ['default' => '0001-01-01 00:00:00', 'timezone' => true])
             ->addColumn('updated_on', 'datetime', ['default' => '0001-01-01 00:00:00', 'timezone' => true])
             ->addIndex('name', ['unique' => true, 'name' => 'idx_preset_categories_name'])

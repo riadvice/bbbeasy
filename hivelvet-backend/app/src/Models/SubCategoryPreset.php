@@ -23,7 +23,7 @@ class SubCategoryPreset  extends BaseModel
         $this->load(['sub_category_id = ? && preset_id = ?', $subcategory_id,$preset_id]);
         return $this;
 }
-    public function   PresetAndSubCategoryExists($preset_id,$subcategory_id){
+    public function   presetAndsubCategoryExists($preset_id,$subcategory_id){
       return  $this->load(['sub_category_id = ? && preset_id = ?', $subcategory_id,$preset_id]);
 
     }

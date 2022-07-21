@@ -28,7 +28,6 @@ class Presentation extends Enum
 {
     final public const PRE_UPLOAD = 'pre_upload';
 
-    public static string $icon = 'FundOutlined';
     public static string $PRE_UPLOAD_TYPE = 'bool';
 
 }

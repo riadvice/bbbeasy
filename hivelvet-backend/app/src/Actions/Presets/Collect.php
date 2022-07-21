@@ -63,10 +63,8 @@ class Collect extends BaseAction
 
                 $class         = new \ReflectionClass($category);
                 $modelInstance = $class->newInstance();
-                $categoryIcon  = $modelInstance::staticProperties()['icon'];
                 $categoryData  = [
                     'name'          => $categoryName,
-                    'icon'          => $categoryIcon,
                     'subcategories' => [],
                 ];
                  $subCategories = $modelInstance::values();

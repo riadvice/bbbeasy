@@ -28,7 +28,6 @@ class ZcaleRight extends Enum
 {
     final public const POOL_NAME = 'pool_name';
 
-    public static string $icon = 'ZcaleRight';
     public static string $POOL_NAME_TYPE = 'string';
 
 }

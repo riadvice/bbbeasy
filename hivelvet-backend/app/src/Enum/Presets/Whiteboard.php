@@ -30,7 +30,6 @@ class Whiteboard extends Enum
     final public const PRESENTER_TOOLS  = 'presenter_tools';
     final public const MULTI_USER_TOOLS = 'multi_user_tools';
 
-    public static string $icon = 'FundProjectionScreenOutlined';
     public static string $MULTI_USER_PEN_ONLY_TYPE = 'bool';
     public static string $PRESENTER_TOOLS_TYPE = 'bool';
     public static string $MULTI_USER_TOOLS_TYPE = 'bool';

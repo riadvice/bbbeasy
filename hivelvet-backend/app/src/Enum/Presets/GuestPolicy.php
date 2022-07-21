@@ -29,7 +29,7 @@ class GuestPolicy extends Enum
     final public const CONFIGURABLE = 'configurable';
     final public const POLICY       = 'policy';
 
-    public static string $icon = 'CoffeeOutlined';
+
     public static string $CONFIGURABLE_TYPE = 'bool';
     public static string $POLICY_TYPE = 'string';
 

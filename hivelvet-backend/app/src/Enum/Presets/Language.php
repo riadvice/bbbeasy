@@ -28,7 +28,7 @@ class Language extends Enum
 {
     final public const DEFAULT_LANGUAGE = 'default_language';
 
-    public static string $icon = 'TranslationOutlined';
+
     public static string $DEFAULT_LANGUAGE_TYPE = 'string';
 
 }

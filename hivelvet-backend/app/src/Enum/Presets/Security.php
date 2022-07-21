@@ -29,7 +29,6 @@ class Security extends Enum
     final public const PASSWORD_FOR_MODERATOR = 'password_for_moderator';
     final public const PASSWORD_FOR_ATTENDEE  = 'password_for_attendee';
 
-    public static string $icon = 'SafetyOutlined';
     public static string $PASSWORD_FOR_MODERATOR_TYPE = 'bool';
     public static string $PASSWORD_FOR_ATTENDEE_TYPE = 'bool';
 

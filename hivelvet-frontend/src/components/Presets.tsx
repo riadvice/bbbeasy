@@ -53,6 +53,8 @@ import { SubCategoryType } from '../types/SubCategoryType';
 import { UploadOutlined } from '@ant-design/icons';
 import { UploadFile } from 'antd/lib/upload/interface';
 import axios from 'axios';
+import { categoriesIcons } from '../types/CategoriesIcon';
+import { getIconName } from '../types/GetIconName';
 
 const { Link, Title } = Typography;
 const API_URL = process.env.REACT_APP_API_URL;
@@ -120,9 +122,7 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, mypresets, deleteCl
                     });
             }
 
-            presetsService.edit_subcategory_preset(content[i], content[i].id).then((response) => {
-                console.log('response', response);
-            });
+            presetsService.edit_subcategory_preset(content[i], content[i].id);
         }
     };
     const handleSaveEdit = (preset) => {
@@ -141,6 +141,7 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, mypresets, deleteCl
         setIsEditing(false);
         setPresetName(preset['name']);
     };
+
     return (
         <Col key={key} span={11}>
             <Card
@@ -222,7 +223,7 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, mypresets, deleteCl
                             onClick={() => showModal(item.name, item.subcategories)}
                             disabled={!item.enabled}
                             type="link"
-                            icon={<DynamicIcon type={item.icon} className={'PresetIcon'} />}
+                            icon={<DynamicIcon type={getIconName(item.name)} className={'PresetIcon'} />}
                         />
                     </Tooltip>
                 ))}
@@ -279,7 +280,9 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, mypresets, deleteCl
                                     )}
                                     {item.type === 'file' && (
                                         <Upload {...props} multiple={false} name={item.name}>
-                                            <Button icon={<UploadOutlined />}>Upload jpg,jpeg,png only</Button>
+                                            <Button disabled={!item.enabled} icon={<UploadOutlined />}>
+                                                Upload jpg,jpeg,png only
+                                            </Button>
                                             {item.value}
                                         </Upload>
                                     )}

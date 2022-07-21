@@ -33,7 +33,7 @@ class Branding extends Enum
     final public const USE_AVATARS  = 'use_avatars';
     final public const CUSTOM_CSS   = 'custom_css';
 
-    public static string $icon = 'BgColorsOutlined';
+
     public static string $TITLE_TYPE ="string";
     public static string $LOGO_TYPE ="file";
     public static string  $BANNER_TEXT_TYPE ="string";

@@ -30,7 +30,7 @@ class BreakoutRooms extends Enum
     final public const PRIVATE_CHAT = 'private_chat';
     final public const RECORDING    = 'recording';
 
-    public static string $icon = 'DeploymentUnitOutlined';
+
     public static string $CONFIGURABLE_TYPE = 'bool';
     public static string $PRIVATE_CHAT_TYPE = 'bool';
     public static string $RECORDING_TYPE = 'bool';

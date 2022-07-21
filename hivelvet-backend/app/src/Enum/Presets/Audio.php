@@ -32,7 +32,7 @@ class Audio extends Enum
     final public const LISTEN_ONLY                        = 'listen_only_enabled';
     final public const SKIP_ECHO_TEST                     = 'skip_echo_test';
 
-    public static string $icon = 'AudioOutlined';
+
     public static string $USERS_JOIN_MUTED_TYPE           ='bool';
     public static string $MODERATORS_ALLOWED_TO_UNMUTE_USERS_TYPE          ='bool';
     public static string $AUTO_JOIN_TYPE             ='bool';

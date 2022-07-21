@@ -33,7 +33,7 @@ class General extends Enum
     final public const ALL_JOIN_AS_MODERATOR = 'all_join_as_moderator';
     final public const LOGGED_IN_USERS_ONLY  = 'logged_in_users_only';
 
-    public static string $icon = 'GlobalOutlined';
+
     public static string $DURATION_TYPE = 'integer';
     public static string $MAXIMUM_PARTICIPANTS_TYPE = 'integer';
     public static string $ANYONE_CAN_START_TYPE = 'bool';

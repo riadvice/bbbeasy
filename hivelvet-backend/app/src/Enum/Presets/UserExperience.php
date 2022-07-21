@@ -29,7 +29,6 @@ class UserExperience extends Enum
     final public const KEYBOARD_SHORTCUTS = 'keyboard_shortcuts';
     final public const ASK_FOR_FEEDBACK   = 'ask_for_feedback';
 
-    public static string $icon = 'SmileOutlined';
     public static string $KEYBOARD_SHORTCUTS_TYPE = 'bool';
     public static string $ASK_FOR_FEEDBACK_TYPE = 'bool';
 

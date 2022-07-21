@@ -24,6 +24,7 @@ import { Trans } from 'react-i18next';
 import LocaleService from '../services/locale.service';
 import { PresetType } from '../types/PresetType';
 import { SubCategoryType } from '../types/SubCategoryType';
+import { getIconName } from '../types/GetIconName';
 
 const { Title, Paragraph } = Typography;
 const { Grid, Meta } = Card;
@@ -82,7 +83,10 @@ export const Step3Form = (props: Props) => {
                             className="presets-grid"
                             onClick={() => showModal(item.name, item.subcategories)}
                         >
-                            <Meta avatar={<DynamicIcon type={item.icon} className="PresetIcon" />} title={item.name} />
+                            <Meta
+                                avatar={<DynamicIcon type={getIconName(item.name)} className="PresetIcon" />}
+                                title={item.name}
+                            />
                         </Grid>
                     </Tooltip>
                 ))}

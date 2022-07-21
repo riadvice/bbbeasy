@@ -65,6 +65,6 @@ class PresetCategory extends BaseModel
     }
     public function collectAll(): array
     {
-        return $this->db->exec('SELECT id, name ,enabled, icon FROM preset_categories');
+        return $this->db->exec('SELECT id, name ,enabled FROM preset_categories');
     }
 }
