@@ -11,7 +11,7 @@
     "i18next": "^21.6.13",
     "moment": "^2.29.2",
     "perfect-scrollbar": "^1.5.5",
-    "pino": "^7.6.4",
+    "pino": "^8.3.0",
     "pino-pretty": "^7.6.1",
     "pino-transmit-http": "^1.0.1",
     "pm2": "^5.1.2",
