@@ -24,21 +24,22 @@ use Phinx\Migration\AbstractMigration;
 
 final class CreateLabelsTable extends AbstractMigration
 {
-    public function up():void 
+    public function up(): void
     {
-        $table = $this->table('labels'); 
+        $table = $this->table('labels');
         $table
-            ->addColumn('name', 'string' ,['limit' =>32, 'null' => false ])
-            ->addColumn('description', 'text' ,['null' => true ]) 
-            ->addColumn('color', 'string',['limit' => 7, 'default'=>'#fbbc0b' ])
+            ->addColumn('name', 'string', ['limit' => 32, 'null' => false])
+            ->addColumn('description', 'text', ['null' => true])
+            ->addColumn('color', 'string', ['limit' => 7, 'default' => '#fbbc0b'])
             ->addColumn('created_on', 'datetime', ['default' => '0001-01-01 00:00:00', 'timezone' => true])
             ->addColumn('updated_on', 'datetime', ['default' => '0001-01-01 00:00:00', 'timezone' => true])
             ->addIndex('name', ['unique' => true, 'name' => 'idx_labels_name'])
             ->save()
-    ;}
+        ;
+    }
+
     public function down(): void
     {
         $this->table('labels')->drop()->save();
     }
-    
 }

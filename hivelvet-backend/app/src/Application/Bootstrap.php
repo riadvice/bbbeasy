@@ -150,7 +150,7 @@ class Bootstrap extends Boot
         header('Access-Control-Allow-Origin: *');
         header('Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE');
         header('Access-Control-Allow-Headers: Content-Type, Origin, Authorization, X-Authorization, Accept, Accept-Language, Access-Control-Request-Method');
-        header("Access-Control-Allow-Credentials: true");
+        header('Access-Control-Allow-Credentials: true');
         // header("Allow: GET, POST, OPTIONS, PUT, DELETE");
     }
 }
