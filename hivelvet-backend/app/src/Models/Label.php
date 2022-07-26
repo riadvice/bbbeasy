@@ -33,14 +33,17 @@ use Models\Base as BaseModel;
  * @property DateTime $created_on
  * @property DateTime $updated_on
  */
+
+
 class Label extends BaseModel
 {
+
     protected $table = 'labels';
 
     public function __construct($db = null, $table = null, $fluid = null, $ttl = 0)
     {
         parent::__construct($db, $table, $fluid, $ttl);
-        $this->onset('name', fn($self, $value) => $self->f3->snakecase($value));
+        $this->onset('name', fn ($self, $value) => $self->f3->snakecase($value));
     }
 
     /**
@@ -57,9 +60,8 @@ class Label extends BaseModel
 
     /**
      *check if name is already in use .
-     *
-     * @param string $name
-     *                     retu
+     * @param string $name 
+     * retu
      */
     public function nameExists($name)
     {
@@ -68,24 +70,23 @@ class Label extends BaseModel
 
     public function getAllLabels()
     {
-        $data   = [];
+        $data = [];
         $labels = $this->find([], ['order' => 'id']);
         if ($labels) {
             foreach ($labels as $label) {
                 $data[] = $label->getLabelInfos();
             }
         }
-
         return $data;
     }
 
     public function getLabelInfos(): array
     {
         return [
-            'key'         => $this->id,
-            'name'        => $this->name,
-            'description' => $this->description,
-            'color'       => $this->color,
+            'key'           => $this->id,
+            'name'          => $this->name,
+            'description'   => $this->description,
+            'color'         => $this->color
         ];
     }
 }
