@@ -28,70 +28,61 @@ use Models\Label;
 use Respect\Validation\Validator;
 use Validation\DataChecker;
 use Actions\RequirePrivilegeTrait;
+
 /**
  * Class Edit.
  */
 class Edit extends BaseAction
-{use RequirePrivilegeTrait;
-     /**
+{
+    use RequirePrivilegeTrait;
+
+    /**
      * @param $f3
      * @param $params
      *
      * @throws \JsonException
      */
-
     public function save($f3, $params): void
     {
         $body = $this->getDecodedBody();
         $form = $body['data'];
         $id = $params['id'];
-        $label= $this->loadData($id);
-        if ($label->valid())
-        {
+        $label = $this->loadData($id);
+        if ($label->valid()) {
             $dataChecker = new DataChecker();
             $dataChecker->verify($form['name'], Validator::notEmpty()->setName('name'));
-            $dataChecker->verify($form['color'], Validator::hexRgbColor()->setName('color')); 
+            $dataChecker->verify($form['color'], Validator::hexRgbColor()->setName('color'));
 
-            if ($dataChecker->allValid())
-            {
+            if ($dataChecker->allValid()) {
                 $checklabel = new Label();
                 $label->name = $form['name'];
-                $label->description =$form['description'];
+                $label->description = $form['description'];
                 $label->color = $form['color'];
-                if ($checklabel->nameExists($label->name))
-                {
+                if ($checklabel->nameExists($label->name)) {
                     $this->logger->error('Labelcould not be updated', ['error' => 'Name already exist']);
                     $this->renderJson(['errors' => ['name' => 'Name already exist']], ResponseCode::HTTP_PRECONDITION_FAILED);
 
                     return;
                 }
-            }else
-                {
-                    $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
-
-                    return;
-                }  
-                
-        
-        try {
-            $label->save();
-            } 
-        catch (\Exception $e) 
-            {
-            $this->logger->error('Label could not be updated', ['error' => $e->getMessage()]);
-            $this->renderJson(['errors' => $e->getMessage()], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-
-            return;
+            } else {
+                $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
+                return;
             }
-
-        $role = $this->loadData($label->id);
-        $this->logger->info('Label successfully updated', ['Label' => $label->toArray()]);
-        $this->renderJson(['result' => 'success', 'label' => $label->getLabelInfos()]);
-    } 
-    else {
-        $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
+            try {
+                $label->save();
+            } catch (\Exception $e) {
+                $this->logger->error('Label could not be updated', ['error' => $e->getMessage()]);
+                $this->renderJson(['errors' => $e->getMessage()], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+                return;
+            }
+            $role = $this->loadData($label->id);
+            $this->logger->info('Label successfully updated', ['Label' => $label->toArray()]);
+            $this->renderJson(['result' => 'success', 'label' => $label->getLabelInfos()]);
+        } else {
+            $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
+        }
     }
-} 
+
     /**
      * @param int $id
      */
