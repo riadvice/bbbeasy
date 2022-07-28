@@ -233,9 +233,6 @@ class Session extends Prefab
             }
         }
 
-        // Validate fields
-        $this->set('form_errors', $errors);
-
         return $tokenIsValid;
     }
 }

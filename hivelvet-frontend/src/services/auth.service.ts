@@ -54,6 +54,11 @@ class AuthService {
         if (userStr) return JSON.parse(userStr);
         return null;
     }
+    getCurrentSession() {
+        const sessionStr: string = localStorage.getItem('session');
+        if (sessionStr) return JSON.parse(sessionStr);
+        return null;
+    }
 }
 
 export default new AuthService();

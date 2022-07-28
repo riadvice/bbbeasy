@@ -16,36 +16,14 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import axios from 'axios';
-import { apiRoutes } from '../routing/backend-config';
-import { authHeader } from '../lib/AuthHeader';
+import AuthService from '../services/auth.service';
 
-class UsersService {
-    requestOptions: object = { headers: authHeader() };
-
-    list_users() {
-        return axios.get(apiRoutes.LIST_USER_URL, this.requestOptions);
+export const authHeader = () => {
+    const currentSession = AuthService.getCurrentSession();
+    if (currentSession != null) {
+        // return PHPSESSID cookie in request headers
+        return { Cookie: currentSession.PHPSESSID };
+    } else {
+        return {};
     }
-
-    list_roles() {
-        return axios.get(apiRoutes.COLLECT_ROLES_URL);
-    }
-
-    add_user(data: object) {
-        return axios.post(apiRoutes.ADD_USER_URL, {
-            data,
-        }); //, this.requestOptions);
-    }
-
-    edit_user(data: object, id: number) {
-        return axios.put(apiRoutes.EDIT_USER_URL + id, {
-            data,
-        });
-    }
-
-    delete_user(id: number) {
-        return axios.delete(apiRoutes.DELETE_USER_URL + id);
-    }
-}
-
-export default new UsersService();
+};
