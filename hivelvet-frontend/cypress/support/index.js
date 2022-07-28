@@ -29,6 +29,13 @@ Cypress.on('window:before:unload', e => {
     }
 });
 
+const resizeObserverLoopErrRe = /^[^(ResizeObserver loop limit exceeded)]/
+Cypress.on('uncaught:exception', (err) => {
+    if (resizeObserverLoopErrRe.test(err.message)) {
+        return false
+    }
+});
+
 after(() => {
     cy.window().then(win => {
         const coverage = win.__coverage__;

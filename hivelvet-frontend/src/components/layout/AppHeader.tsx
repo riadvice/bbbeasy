@@ -94,7 +94,7 @@ const AppHeader = () => {
                 <Trans i18nKey="user_dropdown.profile" />
             </Menu.Item>
             <Menu.Item key="3" icon={<LogoutOutlined />}>
-                <a onClick={() => logout()}>
+                <a id="logout-btn" onClick={() => logout()}>
                     <Trans i18nKey="user_dropdown.logout" />
                 </a>
             </Menu.Item>

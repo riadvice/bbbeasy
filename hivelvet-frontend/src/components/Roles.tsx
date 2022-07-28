@@ -641,7 +641,7 @@ const Roles = () => {
                 className="site-page-header"
                 title={<Trans i18nKey="roles" />}
                 extra={[
-                    <Button key="1" type="primary" onClick={toggleAdd}>
+                    <Button key="1" type="primary" id="add_role-btn" onClick={toggleAdd}>
                         <Trans i18nKey="new_role" />
                     </Button>,
                 ]}
@@ -659,6 +659,7 @@ const Roles = () => {
             >
                 <Form
                     layout="vertical"
+                    name="roles_form"
                     ref={(form) => (addForm = form)}
                     initialValues={{ name: '' }}
                     hideRequiredMark
@@ -696,7 +697,7 @@ const Roles = () => {
                         <Button type="text" className="cancel-btn prev" block onClick={cancelAdd}>
                             <Trans i18nKey="cancel" />
                         </Button>
-                        <Button type="primary" htmlType="submit" block>
+                        <Button type="primary" id="submit-btn" htmlType="submit" block>
                             <Trans i18nKey="create" />
                         </Button>
                     </Form.Item>

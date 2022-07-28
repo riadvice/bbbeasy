@@ -16,7 +16,18 @@
  * @type {Cypress.PluginConfig}
  */
 // eslint-disable-next-line no-unused-vars
+
+const pg = require("pg");
+
 module.exports = (on, config) => {
+    on("task", {
+        database ({ dbConfig, sql, values }) {
+            const pool = new pg.Pool(dbConfig);
+            try {
+                return pool.query(sql, values)
+            } catch (e) { }
+        }
+    })
     require('@cypress/code-coverage/task')(on, config)
     return config
 }

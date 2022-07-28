@@ -105,7 +105,7 @@ const ChangePassword = () => {
 
                                 <Form
                                     layout="vertical"
-                                    name="change"
+                                    name="change_form"
                                     className="login-form"
                                     requiredMark={false}
                                     scrollToFirstError={true}
@@ -157,6 +157,7 @@ const ChangePassword = () => {
                                     <Form.Item>
                                         <Button
                                             type="primary"
+                                            id="submit-btn"
                                             htmlType="submit"
                                             className="login-form-button"
                                             size="large"
