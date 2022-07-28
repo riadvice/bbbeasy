@@ -641,7 +641,7 @@ const Roles = () => {
                 className="site-page-header"
                 title={<Trans i18nKey="roles" />}
                 extra={[
-                    <Button key="1" type="primary" id="add_role-btn" onClick={toggleAdd}>
+                    <Button key="1" type="primary" id="add-role-btn" onClick={toggleAdd}>
                         <Trans i18nKey="new_role" />
                     </Button>,
                 ]}

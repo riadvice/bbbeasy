@@ -1,8 +1,21 @@
 describe('Test add role form', () => {
     beforeEach(() => {
-        cy.login('mohamedamine.benfredj1@esprit.tn', '203JMT2988')
-        cy.visit('/settings/roles')
-        cy.get('button#add_role-btn').click()
+        cy.task('database', {
+            dbConfig: Cypress.env("hivelvet"),
+            sql: `SELECT * FROM public.users WHERE username='riadvice';`
+        }).then((result) => {
+            if (result.length == 0) {
+                cy.register('riadvice', 'test@riadvice.tn', 'pass', 'pass')
+            }
+            cy.task('database', {
+                dbConfig: Cypress.env("hivelvet"),
+                sql: `UPDATE public.users SET status='active' WHERE username='riadvice';`
+            }).then(() => {
+                cy.login('test@riadvice.tn', 'pass')
+                cy.visit('/settings/roles')
+                cy.get('button#add-role-btn').click()
+            })
+        })
     })
 
     it('should loads correctly and check input fields exist', () => {

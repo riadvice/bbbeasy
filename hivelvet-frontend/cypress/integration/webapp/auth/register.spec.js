@@ -28,8 +28,8 @@ describe('Test register form', () => {
     })
 
     it('should display errors when submitting form with invalid credentials', () => {
-        const pwd = 'password';
-        const confirmPwd = 'password';
+        const pwd = 'pass';
+        const confirmPwd = 'pass';
         cy.task('database', {
             dbConfig: Cypress.env("hivelvet"),
             sql: `SELECT username, email FROM public.users;`

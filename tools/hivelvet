@@ -61,7 +61,6 @@ usage() {
   echo "#    --version                        Display Hivelvet version"
   echo "#    --selfinstall                    Make hivelvet runnable from anywhere"
   echo "#    --enableinstaller                Enable Hivelvet installer app"
-  echo "#    --disableinstaller               Disable Hivelvet installer app"
   echo "#    --enableweb                      Enable Hivelvet Web app"
   echo "#"
   echo "# Development:"
@@ -218,19 +217,6 @@ enable_installer() {
       printf "%s %s [✔ - DONE]\n"
     fi
   echo "✔ Installer app enabled"
-}
-
-#
-# Disable backend installer app
-#
-disable_installer() {
-  echo "► Disabling backend installer app"
-    if [ $(grep -c "config.extension =" "$BASEDIR/../hivelvet-backend/app/config/config-$ENVIRONMENT.ini") != 0 ]; then
-      #c cmd to replace the matched line in one go
-      sed -i '/config.extension =/ c ; config.extension = -install' "$BASEDIR/../hivelvet-backend/app/config/config-$ENVIRONMENT.ini"
-      printf "%s %s [✔ - DONE]\n"
-    fi
-  echo "✔ Installer app disabled"
 }
 
 #
@@ -419,12 +405,6 @@ run() {
 
     if [ "$1" = "--enableinstaller" -o "$1" = "-enableinstaller" -o "$1" = "-ei" ]; then
       enable_installer
-      shift
-      continue
-    fi
-
-    if [ "$1" = "--disableinstaller" -o "$1" = "-disableinstaller" -o "$1" = "-di" ]; then
-      disable_installer
       shift
       continue
     fi

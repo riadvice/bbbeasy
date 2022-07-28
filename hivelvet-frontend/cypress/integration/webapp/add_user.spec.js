@@ -1,8 +1,21 @@
 describe('Test add user form', () => {
     beforeEach(() => {
-        cy.login('mohamedamine.benfredj1@esprit.tn', '203JMT2988')
-        cy.visit('/settings/users')
-        cy.get('button#add_user-btn').click()
+        cy.task('database', {
+            dbConfig: Cypress.env("hivelvet"),
+            sql: `SELECT * FROM public.users WHERE username='riadvice';`
+        }).then((result) => {
+            if (result.length == 0) {
+                cy.register('riadvice', 'test@riadvice.tn', 'pass', 'pass')
+            }
+            cy.task('database', {
+                dbConfig: Cypress.env("hivelvet"),
+                sql: `UPDATE public.users SET status='active' WHERE username='riadvice';`
+            }).then(() => {
+                cy.login('test@riadvice.tn', 'pass')
+                cy.visit('/settings/users')
+                cy.get('button#add-user-btn').click()
+            })
+        })
     })
 
     it('should loads correctly and check input fields exist', () => {
@@ -14,7 +27,7 @@ describe('Test add user form', () => {
     })
 
     it('should display errors when submitting form with invalid credentials', () => {
-        const pwd = 'password';
+        const pwd = 'pass';
         const role = 'lecturer';
         cy.task('database', {
             dbConfig: Cypress.env("hivelvet"),

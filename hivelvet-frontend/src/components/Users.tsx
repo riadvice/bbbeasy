@@ -553,7 +553,7 @@ const Users = () => {
                 className="site-page-header"
                 title={<Trans i18nKey="users" />}
                 extra={[
-                    <Button key="1" type="primary" id="add_user-btn" onClick={toggleAdd}>
+                    <Button key="1" type="primary" id="add-user-btn" onClick={toggleAdd}>
                         <Trans i18nKey="new_user" />
                     </Button>,
                 ]}

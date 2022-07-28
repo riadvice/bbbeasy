@@ -8,6 +8,17 @@
 // https://on.cypress.io/custom-commands
 // ***********************************************
 
+Cypress.Commands.add('register', (username, email, pwd, confirmPwd) => {
+    cy.visit('/register')
+    cy.get('input#register_form_username').type(username)
+    cy.get('input#register_form_email').type(email)
+    cy.get('input#register_form_password').type(pwd)
+    cy.get('input#register_form_confirmPassword').type(confirmPwd)
+    cy.get('input#register_form_agreement').check()
+    cy.get('button#submit-btn').click()
+    cy.wait(1000)
+})
+
 Cypress.Commands.add('login', (email, password) => {
     cy.visit('/login')
     cy.get('input#login_form_email').type(email)
@@ -21,17 +32,19 @@ Cypress.Commands.add('checkExistFormFields', (action) => {
         if(action == 'register' || action == 'install' || action == 'users') {
             cy.get('input#' + action + '_form_username').should('be.visible')
         }
-        if(action != 'change' && action != 'roles') {
-            cy.get('input#' + action + '_form_email').should('be.visible')
-        }
-        if(action != 'reset' && action != 'roles') {
-            cy.get('input#' + action + '_form_password').should('be.visible')
+        if(action != 'roles') {
+            if(action != 'change') {
+                cy.get('input#' + action + '_form_email').should('be.visible')
+            }
+            if(action != 'reset') {
+                cy.get('input#' + action + '_form_password').should('be.visible')
+            }
         }
         if(action == 'register' || action == 'change') {
             cy.get('input#' + action + '_form_confirmPassword').should('be.visible')
-        }
-        if(action == 'register') {
-            cy.get('input#' + action + '_form_agreement').should('not.be.checked')
+            if(action != 'change') {
+                cy.get('input#' + action + '_form_agreement').should('not.be.checked')
+            }
         }
         if(action == 'users') {
             cy.get('input#' + action + '_form_role').should('be.visible')
