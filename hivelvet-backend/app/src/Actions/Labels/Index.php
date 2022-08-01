@@ -23,27 +23,22 @@ declare(strict_types=1);
 namespace Actions\Labels;
 
 use Actions\Base as BaseAction;
-use Base;
 use Models\Label;
-use Actions\RequirePrivilegeTrait;
 
-/** 
- *Class Index
- */
-
-class Index extends BaseAction
-{
-    use RequirePrivilegeTrait;
-
-    /** 
-     * @param \Base $f3 
-     * @param array $params
-     */
-    public function show($f3, $params): void
-    {
-        $label = new Label();
-        $labels = $label->getAllLabels();
-        $this->logger->debug('collecting labels', ['labels' => json_encode($labels)]);
-        $this->renderJson($labels);
-    }
-}
+/**
+  *Class Index.
+  */
+ class Index extends BaseAction
+ {
+     /**
+      * @param \Base $f3
+      * @param array $params
+      */
+     public function show($f3, $params): void
+     {
+         $label  = new Label();
+         $labels = $label->getAllLabels();
+         $this->logger->debug('collecting labels', ['labels' => json_encode($labels)]);
+         $this->renderJson($labels);
+     }
+ }

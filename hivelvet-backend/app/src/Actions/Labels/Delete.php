@@ -32,12 +32,11 @@ use Models\Label;
  */
 class Delete extends DeleteAction
 {
-
     use RequirePrivilegeTrait;
 
     public function execute($f3, $params): void
     {
-        $label = new Label();
+        $label     = new Label();
         $labels_id = $params['id'];
         $label->load(['id = ?', $labels_id]);
 

@@ -23,11 +23,11 @@ declare(strict_types=1);
 namespace Actions\Labels;
 
 use Actions\Base as BaseAction;
+use Actions\RequirePrivilegeTrait;
 use Enum\ResponseCode;
 use Models\Label;
 use Respect\Validation\Validator;
 use Validation\DataChecker;
-use Actions\RequirePrivilegeTrait;
 
 class Add extends BaseAction
 {
@@ -52,21 +52,22 @@ class Add extends BaseAction
             if ($error) {
                 $this->logger->error('Label could not be added', ['error' => 'Name already exist']);
                 $this->renderJson(['errors' => ['name' => 'Name already exist']], ResponseCode::HTTP_PRECONDITION_FAILED);
-                return;
-            } else {
-                $label->name = $form['name'];
-                $label->description = $form['description'];
-                $label->color = $form['color'];
-                try {
-                    $label->save();
-                } catch (\Exception $e) {
-                    $this->logger->error('Label could not be added', ['error' => $e->getMessage()]);
-                    $this->renderJson(['errors' => $e->getMessage()], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
 
-                    return;
-                }
-                $this->renderJson(['result' => 'success', 'label' => $label->getLabelInfos()], ResponseCode::HTTP_CREATED);
+                return;
             }
+            $label->name        = $form['name'];
+            $label->description = $form['description'];
+            $label->color       = $form['color'];
+
+            try {
+                $label->save();
+            } catch (\Exception $e) {
+                $this->logger->error('Label could not be added', ['error' => $e->getMessage()]);
+                $this->renderJson(['errors' => $e->getMessage()], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+
+                return;
+            }
+            $this->renderJson(['result' => 'success', 'label' => $label->getLabelInfos()], ResponseCode::HTTP_CREATED);
         } else {
             $this->logger->error('Add label error', ['errors' => $dataChecker->getErrors()]);
             $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
