@@ -8,6 +8,19 @@
 // https://on.cypress.io/custom-commands
 // ***********************************************
 
+Cypress.Commands.add('install', (username, email, pwd) => {
+    cy.visit('/')
+    cy.get('input#install_form_username').type(username)
+    cy.get('input#install_form_email').type(email)
+    cy.get('input#install_form_password').type(pwd)
+    cy.get('button#submit-btn').click()
+    cy.wait(1000)
+    cy.get('button#submit-btn').click()
+    cy.wait(1000)
+    cy.get('button#submit-btn').click()
+    cy.wait(1000)
+})
+
 Cypress.Commands.add('register', (username, email, pwd, confirmPwd) => {
     cy.visit('/register')
     cy.get('input#register_form_username').type(username)

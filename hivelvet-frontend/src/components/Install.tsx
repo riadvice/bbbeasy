@@ -19,10 +19,11 @@
 import React, { useEffect } from 'react';
 import InstallService from '../services/install.service';
 
-import { Steps, Button, Row, Col, Form, Result } from 'antd';
+import { Steps, Button, Row, Col, Form, Result, Alert } from 'antd';
 import DynamicIcon from './DynamicIcon';
 import axios from 'axios';
 import { Trans, useTranslation, withTranslation } from 'react-i18next';
+import EN_US from '../locale/en-US.json';
 
 import { Step1Form } from './Step1Form';
 import { Step2Form } from './Step2Form';
@@ -86,6 +87,7 @@ const Install = () => {
 
     const [activeStep, setActiveStep] = React.useState<number>(0);
     const [successful, setSuccessful] = React.useState<boolean>(false);
+    const [message, setMessage] = React.useState<string>('');
 
     const [primaryColor, setPrimaryColor] = React.useState<string>('');
     const [secondaryColor, setSecondaryColor] = React.useState<string>('');
@@ -173,39 +175,42 @@ const Install = () => {
     ];
 
     const onFinish = () => {
-        if (activeStep < steps.length - 1) {
-            next();
-        } else {
-            const formData: formType = stepForm.getFieldsValue(true);
-            formData.branding_colors = {
-                primary_color: primaryColor,
-                secondary_color: secondaryColor,
-                accent_color: accentColor,
-                add_color: addColor,
-            };
-            formData.presetsConfig = presets;
-            InstallService.install(formData)
-                .then(() => {
-                    setSuccessful(true);
-                })
-                .catch((error) => {
-                    console.log(error.response.data);
-                });
-            if (file != undefined) {
-                const fdata: FormData = new FormData();
-                fdata.append('logo', file.originFileObj, file.originFileObj.name);
-                fdata.append('logo_name', file.originFileObj.name);
-                axios
-                    .post(API_URL + '/save-logo', fdata)
-                    .then((response) => {
-                        console.log(response);
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                    });
-            }
-        }
-    };
+        const formData: formType = stepForm.getFieldsValue(true);
+        InstallService.check_availability(formData)
+            .then((response) => {
+                setSuccessful(false);
+                setMessage(response.data.message);
+                if (!response.data.message) {
+                    if (activeStep < steps.length - 1) {
+                        next();
+                    } else {
+                        formData.branding_colors = {
+                            primary_color: primaryColor,
+                            secondary_color: secondaryColor,
+                            accent_color: accentColor,
+                            add_color: addColor,
+                        };
+                        formData.presetsConfig = presets;
+                        InstallService.install(formData)
+                            .then(() => {
+                                setSuccessful(true);
+                            });
+                        if (file != undefined) {
+                            const fdata: FormData = new FormData();
+                            fdata.append('logo', file.originFileObj, file.originFileObj.name);
+                            fdata.append('logo_name', file.originFileObj.name);
+                            axios.post(API_URL + '/save-logo', fdata)
+                                .then((response) => {
+                                    console.log(response);
+                                })
+                                .catch((error) => {
+                                    console.log(error);
+                                });
+                        }
+                    }
+                }
+            })
+    }
 
     return (
         <Row>
@@ -257,6 +262,14 @@ const Install = () => {
                                     </Button>
                                 )}
                             </Form.Item>
+                            {message && !successful && (
+                                <Alert
+                                    type="error"
+                                    className="alert-error-msg text-center"
+                                    message={<Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == message)} />}
+                                    showIcon
+                                />
+                            )}
                         </Form>
                     </Col>
                 </>

@@ -1,20 +1,25 @@
 describe('Test change password form', () => {
     beforeEach(() => {
+        const username = 'Lecturer';
+        const email = 'lecturer@riadvice.tn'
+        const pwd = 'password';
         cy.visit('/reset-password')
         cy.task('database', {
             dbConfig: Cypress.env("hivelvet"),
-            sql: `SELECT email FROM public.users;`
+            sql: `SELECT * FROM public.users WHERE username='Lecturer';`
         }).then((result) => {
-            if(result.length != 0) {
-                cy.get('input#reset_form_email').type(result.rows[0].email).should('have.value', result.rows[0].email)
-                cy.get('button#submit-btn').click()
-                cy.task('database', {
-                    dbConfig: Cypress.env("hivelvet"),
-                    sql: `SELECT token FROM public.reset_password_tokens WHERE expires_at > now();`
-                }).then((response) => {
-                    cy.visit('/change-password?token='.concat(response.rows[response.rows.length - 1].token))
-                })
+            if (result.rows.length == 0) {
+                cy.register(username, email, pwd, pwd)
             }
+            cy.get('input#reset_form_email').type(email).should('have.value', email)
+            cy.get('button#submit-btn').click()
+            cy.wait(1000)
+            cy.task('database', {
+                dbConfig: Cypress.env("hivelvet"),
+                sql: `SELECT token FROM public.reset_password_tokens WHERE expires_at > now();`
+            }).then((response) => {
+                cy.visit('/change-password?token='.concat(response.rows[response.rows.length - 1].token))
+            })
         })
     })
 
@@ -40,10 +45,9 @@ describe('Test change password form', () => {
     })
 
     it('should render to login page if form is valid', () => {
-        const pwd = 'pass'
-        const confirmPwd = 'pass'
+        const pwd = 'password'
         cy.get('input#change_form_password').type(pwd).should('have.value', pwd)
-        cy.get('input#change_form_confirmPassword').type(confirmPwd).should('have.value', confirmPwd)
+        cy.get('input#change_form_confirmPassword').type(pwd).should('have.value', pwd)
         cy.get('button#submit-btn').click()
     })
 })
