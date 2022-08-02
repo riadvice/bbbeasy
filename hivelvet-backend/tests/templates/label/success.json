@@ -1,0 +1,10 @@
+{
+  "result": "success",
+  "label": {
+    "key": 20,
+    "name": "label",
+    "description": "description",
+    "color": "#ffffff"
+  },
+  "status": 201
+}

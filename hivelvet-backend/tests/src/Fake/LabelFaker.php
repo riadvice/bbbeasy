@@ -20,18 +20,39 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Suite;
+namespace Fake;
 
-use Models\LabelTest;
-use Models\ResetPasswordTokenTest;
-use Models\UserTest;
-use Test\TestGroup;
+use Faker\Factory as Faker;
+use Models\Label;
 
-/**
- * @internal
- * @coversNothing
- */
-final class ModelsTest extends TestGroup
+class LabelFaker
 {
-    protected $classes = [UserTest::class, ResetPasswordTokenTest::class, LabelTest::class];
+    private static array $storage = [];
+
+    public static function create($storageName = null)
+    {
+        $faker              = Faker::create();
+        $label              = new Label();
+        $label->name        = $faker->name;
+        $label->color       = $faker->safeHexColor;
+        $label->description = $faker->text;
+
+        $label->save();
+
+        if (null !== $storageName) {
+            self::$storage[$storageName] = $label;
+        }
+
+        return $label;
+    }
+
+    /**
+     * @param $storageName
+     *
+     * @return Label
+     */
+    public static function get($storageName)
+    {
+        return self::$storage[$storageName];
+    }
 }
