@@ -41,8 +41,8 @@ class Add extends BaseAction
     {
         $body        = $this->getDecodedBody();
         $form        = $body['data'];
-        $dataChecker = new DataChecker();
 
+        $dataChecker = new DataChecker();
         $dataChecker->verify($form['name'], Validator::notEmpty()->setName('name'));
         $dataChecker->verify($form['color'], Validator::hexRgbColor()->setName('color'));
 
