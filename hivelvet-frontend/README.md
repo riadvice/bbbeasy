@@ -46,6 +46,14 @@ It analyzes source code to flag programming errors, bugs, stylistic errors, and 
 ### `yarn run format`
 
 Can format your code in a certain way so that it becomes understandable to everybody else.
+## Run the application in development mode 
+### `./build-installer-dev.sh`
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
+
+### `./run-installer-dev.sh`
+This command runs the website in development mode on the virtual machine.\
+Opens [http://hivelvet.test:3300](http://hivelvet.test:3300) in the browser window to view the application on your local machine.
 
 ## Learn More
 
