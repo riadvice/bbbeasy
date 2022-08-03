@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Models;
 
 use DateTime;
+use Enum\ResponseCode;
 use Enum\UserStatus;
 use Models\Base as BaseModel;
 
@@ -180,5 +181,26 @@ class User extends BaseModel
         );
 
         return $id ? $result[0] : $result;
+    }
+
+    /**
+     * Delete a user by setting its status to "deleted".
+     *
+     * @return Array[2](Array[], ResponsCode)
+     */
+    public function delete(): array
+    {
+        $this->status = UserStatus::DELETED;
+
+        try {
+            $this->save();
+            $this->logger->info('User successfully deleted', ['user' => $this->toArray()]);
+        } catch (\Exception $e) {
+            $this->logger->error('User could not be deleted', ['user' => $this->toArray(), 'error' => $e->getMessage()]);
+
+            throw $e;
+        }
+
+        return [['result' => 'success', 'user' => $this->getUserInfos($this->id)], ResponseCode::HTTP_OK];
     }
 }

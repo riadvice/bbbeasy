@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Models;
 
 use DateTime;
+use Enum\ResponseCode;
 use Enum\UserRole;
 use Models\Base as BaseModel;
 
@@ -230,5 +231,39 @@ class Role extends BaseModel
         }
 
         return false;
+    }
+
+    /**
+     * Delete a role if it's allowed and switch their users to the Lecturer role and removing its associated permissions.
+     *
+     * @return Array[2](Array[], ResponsCode)
+     */
+    public function delete(): array
+    {
+        $nbUsers = $this->getRoleUsers();
+
+        // delete users and permissions
+        $result = $this->deleteUsersAndPermissions();
+
+        if ($result) {
+            try {
+                $this->erase();
+                $this->logger->info('Role successfully deleted', ['role' => $this->toArray()]);
+            } catch (\Exception $e) {
+                $this->logger->error('Role could not be deleted', ['role' => $this->toArray(), 'error' => $e->getMessage()]);
+
+                throw $e;
+            }
+
+            if ($nbUsers > 0) {
+                $result = $this->getLecturerRole();
+
+                return [['lecturer' => $result], ResponseCode::HTTP_OK];
+            }
+
+            return [['result' => 'success'], ResponseCode::HTTP_OK];
+        }
+
+        return [[], ResponseCode::HTTP_FORBIDDEN];
     }
 }
