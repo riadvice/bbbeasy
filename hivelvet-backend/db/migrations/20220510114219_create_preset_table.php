@@ -22,9 +22,12 @@ final class CreatePresetTable extends AbstractMigration
         $table = $this->table('presets');
         $table
              ->addColumn('name', 'string', ['limit' => 64, 'null' => false])
-              ->addColumn('created_on', 'datetime', ['default' => '0001-01-01 00:00:00', 'timezone' => true])
+            ->addColumn('settings',"json",['null'=>false])
+            ->addColumn("user_id","integer", ['null' => false])
+            ->addColumn('created_on', 'datetime', ['default' => '0001-01-01 00:00:00', 'timezone' => true])
             ->addColumn('updated_on', 'datetime', ['default' => '0001-01-01 00:00:00', 'timezone' => true])
             ->addIndex('name', ['unique' => true, 'name' => 'idx_presets_name'])
+            ->addForeignKey(['user_id'], 'users', ['id'], ['constraint' => 'users_id'])
             ->save()
         ;
     }

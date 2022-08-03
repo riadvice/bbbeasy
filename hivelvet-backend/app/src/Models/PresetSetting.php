@@ -48,4 +48,10 @@ class PresetSetting extends BaseModel
 
         return $this;
     }
+    public function getByName(string $name): self
+    {
+        $this->load(['name = ?', $name]);
+
+        return $this;
+    }
 }

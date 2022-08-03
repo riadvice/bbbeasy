@@ -45,13 +45,15 @@ class Add extends BaseAction
     {
         $body = $this->getDecodedBody();
         $this->logger->info(' body', $body);
-
-       $form        = $body['data'];
-
+    $form=$body;
+      // $form        = $body['data'];
+       echo $body["name"];
         $preset = new Preset();
         $preset->name = $form["name"];
+       // $preset->settings=json_encode(array());
+   //     $preset->user_id=17;
         try {
-            $preset->save();
+         //   $preset->save();
             $presetData = [
                 'name'   => $preset->name,
                 'categories' => [],
@@ -64,9 +66,9 @@ class Add extends BaseAction
             return;
         }
 
-        $presetsett = new PresetSetting();
 
-
+        $preset_settings=array();
+        $settings=[];
         $data = [];
         $classes = get_declared_classes();
         //Returns all the declared classes
@@ -85,8 +87,9 @@ class Add extends BaseAction
          //load all classes
         $classMap = $classLoader->getClassMap();
       //Apply a filter to classes under the Enum\Presets
-      $categories = preg_filter('/^Enum\\\Presets\\\[A-Z a-z]*/', '$0', array_keys($classMap));
-        if ($categories) {
+    $categories = preg_filter('/^Enum\\\Presets\\\[A-Z a-z]*/', '$0', array_keys($classMap));
+   // var_dump($categories);
+       if ($categories) {
 
             foreach ($categories as $category1) {
                //get Catgory Name
@@ -101,116 +104,49 @@ class Add extends BaseAction
                     $categoryName = mb_substr($categoryName, 0, $secondMajOcc) . ' ' . mb_substr($categoryName, $secondMajOcc);
 
                 }
+               //var_dump($categoryName);
                 //get the reflexion classes of category class
                 $class         = new \ReflectionClass($category1);
                 $modelInstance = $class->newInstance();
+                $attributes = $class->getConstants();
+
                 //search preset settings by category
-                $presetsettings = $presetsett->getByGroup($categoryName);
-                while(!$presetsettings->dry()) {
-                   //get the category by its name
-                    $category = new PresetCategory();
-                     $category=$category->getByName($categoryName);
-                    //verify if category does not exists
-                  if(!$category->categoryExists($categoryName)){
-
-                         //fill the new preset category
-                        $category->name = $categoryName;
-                        $category->enabled = false;
-
-                        if ($presetsettings->enabled) {
-                            $category->enabled = true;
-                        }
-
-                        var_dump($category);
-
-                        try {
-                            $category->save();
-
-                        } catch (\Exception $e) {
-                            $message = 'category ' . $categoryName . '  could not be added';
-                            $this->logger->error('  could not be added', ['error' => $e->getMessage()]);
-                            $this->renderJson(['message' => $e->getMessage()], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-
-                        }
-                    }
-
-                  while (!$category->dry()) {
-                        if(!in_array($category->name,$presetData["categories"]) ){
-                            $categoryData  = [
-                                'name'          => $categoryName,
-
-                                'subcategories' => [],
-                            ];
-                            //add the new category to category data table
-                            $presetData["categories"][]=$categoryData;
-                        }
+                 $presetsett=new PresetSetting();
+                // $presetsettings = $presetsett->getByGroup($categoryName);
+                // var_dump($presetsettings);
+               // echo $categoryName;
+                foreach ($attributes as $attribute) {
+                    $attribute = ucfirst(str_replace('_', ' ', $attribute));
+                    //echo "name ".$attribute;
+                    $preset_settings = $presetsett->getByName($attribute);
 
 
-                        $subcategory = new SubCategory();
-                        //verify if the subcategory already exists in db
-                        if (!$subcategory->nameExists($presetsettings->name) || !$subcategory->categoryExists($category->id)) {
-                           //fill the new subcategory by its data
-                            $subcategory->category_id = $category->id;
-                            $subcategory->name = $presetsettings->name;
-                            $subCategory     =  strtoupper(str_replace(' ', '_', $subcategory->name)."_type");
-                            $subcategory->type=$class->getProperty($subCategory)->getValue();
-                            try {
-                                $subcategory->save();
-
-                            } catch (\Exception $e) {
-                                $message = 'sub category ' . $presetsettings->name . '  could not be added';
-                                $this->logger->error('  could not be added', ['error' => $e->getMessage()]);
-                                $this->renderJson(['message' => $e->getMessage()], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-
-
+                    if (!$preset_settings->dry()) {
+                        if ($preset_settings->enabled && $preset_settings->group == $categoryName) {
+                            if(!$settings[$categoryName]) {
+                                //$settings[$categoryName]=array();
+                              //  $settings->$categoryName
                             }
+                            $settings+=array($categoryName=>json_encode(array($preset_settings->name => "")));
+                           // $settings[$categoryName][]= json_encode(array($preset_settings->name => ""));
+
+
+
                         }
-
-                       if($subcategory->findByCategory($category->id)) {
-                           //if subcategory exists
-                           while(!$subcategory->dry()) {
-                               $subCategory     =  strtoupper(str_replace(' ', '_', $subcategory->name)."_type");
-
-
-                               $presetSubCategory = new SubCategoryPreset();
-                               //verify if preset sub category exists
-                               if(!$presetSubCategory->presetAndsubCategoryExists($preset->id,$subcategory->id)){
-                                   //if does not exists , fill the new preset subcategory
-                                   $presetSubCategory->data = json_encode(array("enabled" => $presetsettings->enabled));
-                                   $presetSubCategory->sub_category_id = $subcategory->id;
-                                   $presetSubCategory->preset_id = $preset->id;
-                                   try {
-                                       $presetSubCategory->save();
-                                       $subcategoryData=[
-                                           "name"=>$subcategory->name,
-                                           "data"=>json_decode($presetSubCategory->data)->enabled,
-                                       ];
-
-                                   } catch (\Exception $e) {
-                                       $message = 'preset sub category ' . $presetSubCategory->id . '  could not be added';
-                                       $this->logger->error('  could not be added', ['error' => $e->getMessage()]);
-                                       $this->renderJson(['message' => $e->getMessage()], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-
-                                   }
-                               }
-
-                               $subcategory->next();
-
-                           }
-                       }
-
-
-                        $category->next();
-
                     }
-
-                   $presetsettings->next();
 
                 }
-
+                var_dump(json_encode($settings));
 
             }
-        }
+
+       }
+
+        // var_dump(json_encode($preset_settings));
+       $preset->settings=json_encode($settings);
+
+       $preset->user_id=17;
+      $preset->save();
         $this->renderJson(['result' => 'success', 'preset' => $preset->getPresetInfos()], ResponseCode::HTTP_CREATED);
 
     }

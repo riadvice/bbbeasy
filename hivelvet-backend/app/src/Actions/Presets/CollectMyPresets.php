@@ -44,15 +44,15 @@ class CollectMyPresets extends BaseAction
       $preset  = new Preset();
         $presets = $preset->collectAll();
         $presetsData=[];
-        foreach($presets as $preset) {
-            $category = new PresetCategory();
-            $categories = $category->collectAll();
+        foreach($presets as $preset1) {
+          //  $category = new PresetCategory();
+         //   $categories = $category->collectAll();
             $presetData=[
-                "id"=>$preset["id"],
-                "name"=>$preset["name"],
-                "categories"=>[],
+                "id"=>$preset1["id"],
+                "name"=>$preset1["name"],
+                "categories"=>json_decode($preset1["settings"])
             ];
-            if ($categories) {
+           /* if ($categories) {
                 $categoriesData=[];
                 foreach ($categories as $category) {
 
@@ -89,8 +89,9 @@ class CollectMyPresets extends BaseAction
                     $categoriesData[] = $categoryData;
                 }
                 $presetData["categories"]=$categoriesData;
-                $presetsData[]=$presetData;
-            }
+
+            }*/
+            $presetsData[]=$presetData;
         }
 
 

@@ -31,7 +31,8 @@ use Models\Base as BaseModel;
  * @property int      $id
 
  * @property string   $name
-
+ * @property json     $settings
+   @property int      $user_id
  * @property DateTime $created_on
  * @property DateTime $updated_on
  */
@@ -40,7 +41,7 @@ class Preset extends BaseModel
     protected $table = 'presets';
     public function collectAll(): array
     {
-        return $this->db->exec('SELECT id,name FROM presets');
+        return $this->db->exec('SELECT id,name,settings,user_id FROM presets');
     }
     public function getPresetInfos(): array
     {
