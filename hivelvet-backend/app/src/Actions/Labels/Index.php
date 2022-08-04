@@ -26,19 +26,19 @@ use Actions\Base as BaseAction;
 use Models\Label;
 
 /**
-  *Class Index.
-  */
- class Index extends BaseAction
- {
-     /**
-      * @param \Base $f3
-      * @param array $params
-      */
-     public function show($f3, $params): void
-     {
-         $label  = new Label();
-         $labels = $label->getAllLabels();
-         $this->logger->debug('collecting labels', ['labels' => json_encode($labels)]);
-         $this->renderJson($labels);
-     }
- }
+ *Class Index.
+ */
+class Index extends BaseAction
+{
+    /**
+     * @param \Base $f3
+     * @param array $params
+     */
+    public function show($f3, $params): void
+    {
+        $label  = new Label();
+        $labels = $label->getAllLabels();
+        $this->logger->debug('collecting labels', ['labels' => json_encode($labels)]);
+        $this->renderJson($labels);
+    }
+}

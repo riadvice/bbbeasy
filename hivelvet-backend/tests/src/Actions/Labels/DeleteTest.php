@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Actions\Labels;
 
 use Fake\LabelFaker;
+use Faker\Factory as Faker;
 use ReflectionException;
 use Test\Scenario;
 
@@ -32,7 +33,6 @@ use Test\Scenario;
  */
 final class DeleteTest extends Scenario
 {
-    final public const NON_EXISTING_ID       = '0123456789';
     final protected const DELETE_LABEL_ROUTE = 'DELETE /labels/';
     protected $group                         = 'Actions Label Delete';
 
@@ -50,7 +50,7 @@ final class DeleteTest extends Scenario
         $f3->mock(self::DELETE_LABEL_ROUTE . $label->id);
         $test->expect($this->compareArrayToResponse(['result' => 'success']), 'Delete existing label with id "' . $label->id . '" successfully');
 
-        $test->expect(!($label->load(['id = ?', $label->id])), 'Label with id "' . $label->id . '"  deleted from DB');
+        $test->expect(!$label->load(['id = ?', $label->id]), 'Label with id "' . $label->id . '"  deleted from DB');
 
         return $test->results();
     }
@@ -64,10 +64,11 @@ final class DeleteTest extends Scenario
      */
     public function testNonExistingLabel($f3)
     {
-        $test = $this->newTest();
+        $test  = $this->newTest();
+        $faker = Faker::create();
 
-        $f3->mock(self::DELETE_LABEL_ROUTE . self::NON_EXISTING_ID);
-        $test->expect($this->compareTemplateToResponse('not_found_error.json'), 'Delete non existing label with id "' . self::NON_EXISTING_ID . '" show an error');
+        $f3->mock(self::DELETE_LABEL_ROUTE . $nonExistingId = $faker->numberBetween(1000));
+        $test->expect($this->compareTemplateToResponse('not_found_error.json'), 'Delete non existing label with id "' . $nonExistingId . '" show an error');
 
         return $test->results();
     }

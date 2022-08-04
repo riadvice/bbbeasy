@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Fake;
 
 use Faker\Factory as Faker;
+use JetBrains\PhpStorm\ArrayShape;
 use Models\Label;
 
 class LabelFaker
@@ -55,4 +56,21 @@ class LabelFaker
     {
         return self::$storage[$storageName];
     }
+
+    /**
+     * @return array[]
+     */
+    #[ArrayShape(['data' => 'array'])]
+ public static function generateJsondata(): array
+ {
+     $faker = Faker::create();
+
+     return [
+         'data' => [
+             'name'        => $faker->name,
+             'description' => $faker->sentence,
+             'color'       => $faker->safeHexColor,
+         ],
+     ];
+ }
 }
