@@ -410,6 +410,7 @@ const Roles = () => {
                                             size="small"
                                             onClick={saveName}
                                             type="primary"
+                                            id="save-name-btn"
                                             className="cell-input-save"
                                         />
                                     </>
@@ -423,6 +424,7 @@ const Roles = () => {
                                 <Button
                                     size="small"
                                     type="link"
+                                    id="edit-role-btn"
                                     icon={<EditOutlined className="cell-edit-icon" />}
                                     onClick={toggleEditName}
                                 />

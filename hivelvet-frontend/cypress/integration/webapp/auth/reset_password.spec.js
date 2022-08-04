@@ -16,10 +16,6 @@ describe('Test reset password form', () => {
     })
 
     it('should display errors when submitting form with invalid email', () => {
-        const fakeEmail = 'test@gmail.com'
-        cy.get('input').type(fakeEmail).should('have.value', fakeEmail)
-        cy.get('button.login-form-button').click()
-        cy.wait(1000)
-        cy.get('div.alert-msg').should('be.visible')
+        cy.checkSubmittedForm('reset')
     })
 })

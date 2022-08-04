@@ -16,14 +16,6 @@ describe('Test login form', () => {
     })
 
     it('should display errors when submitting form with invalid credentials', () => {
-        const fakeEmail = 'test@gmail.com'
-        const fakePwd = 'password'
-
-        cy.get('input#login_form_email').type(fakeEmail).should('have.value', fakeEmail)
-        cy.get('input#login_form_password').type(fakePwd).should('have.value', fakePwd)
-        cy.get('button#submit-btn').click()
-
-        cy.wait(1000)
-        cy.get('div.alert-error-msg').should('be.visible')
+        cy.checkSubmittedForm('login')
     })
 })

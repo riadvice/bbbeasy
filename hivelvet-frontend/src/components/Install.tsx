@@ -177,10 +177,10 @@ const Install = () => {
     const onFinish = () => {
         const formData: formType = stepForm.getFieldsValue(true);
         InstallService.check_availability(formData)
-            .then((response) => {
+            .then((result) => {
                 setSuccessful(false);
-                setMessage(response.data.message);
-                if (!response.data.message) {
+                setMessage(result.data.message);
+                if (!result.data.message) {
                     if (activeStep < steps.length - 1) {
                         next();
                     } else {

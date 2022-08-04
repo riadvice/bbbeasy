@@ -233,11 +233,7 @@ const Users = () => {
                         {...(dataIndex in errorsEdit &&
                             record.key == errorsEdit['key'] && {
                                 help: (
-                                    <Trans
-                                        i18nKey={Object.keys(EN_US).filter(
-                                            (elem) => EN_US[elem] == errorsEdit[dataIndex]
-                                        )}
-                                    />
+                                    t("invalid_" + errorsEdit[dataIndex].split(" ")[errorsEdit[dataIndex].split(" ").length - 1])
                                 ),
                                 validateStatus: 'error',
                             })}
@@ -508,7 +504,7 @@ const Users = () => {
                                 <Trans i18nKey="cancel" />
                             </Button>
                         </Popconfirm>
-                        <Button size="middle" type="primary" onClick={() => saveEdit(record, record.key)}>
+                        <Button size="middle" type="primary" id="submit-btn" onClick={() => saveEdit(record, record.key)}>
                             <Trans i18nKey="save" />
                         </Button>
                     </Space>
