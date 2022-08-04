@@ -50,18 +50,12 @@ final class AddTest extends Scenario
         $label = new Label();
 
         $test = $this->newTest();
+        $data = LabelFaker::generateJsondata();
 
-        $data = [
-            'data' => [
-                'name'        => 'label',
-                'description' => 'description',
-                'color'       => '#ffffff',
-            ],
-        ];
         $f3->mock(self::ADD_LABEL_ROUTE, null, null, $this->postJsonData($data));
         $test->expect($this->compareTemplateToResponse('label/success.json'), 'Add label successuly');
 
-        $test->expect($label->load(['name = ?', 'label']), 'Label Added to DB:' . $label->name);
+        $test->expect($label->load(['name = ?', $f3->snakeCase($data['data']['name'])]), 'Label Added to DB:' . $label->name);
 
         return $test->results();
     }
@@ -76,14 +70,8 @@ final class AddTest extends Scenario
     public function testInvalidColor($f3)
     {
         $test = $this->newTest();
+        $data = LabelFaker::generateJsondata(['color' => '#ffffXX']);
 
-        $data = [
-            'data' => [
-                'name'        => 'label',
-                'description' => 'description',
-                'color'       => '#ffffXX',
-            ],
-        ];
         $f3->mock(self::ADD_LABEL_ROUTE, null, null, $this->postJsonData($data));
         $test->expect($this->compareTemplateToResponse('label/invalid_color_error.json'), 'Invalid Color');
 
@@ -100,14 +88,8 @@ final class AddTest extends Scenario
     public function testEmptyName($f3)
     {
         $test = $this->newTest();
+        $data = LabelFaker::generateJsondata(['name' => '']);
 
-        $data = [
-            'data' => [
-                'name'        => '',
-                'description' => 'description',
-                'color'       => '#ffffff',
-            ],
-        ];
         $f3->mock(self::ADD_LABEL_ROUTE, null, null, $this->postJsonData($data));
         $test->expect($this->compareTemplateToResponse('label/empty_name_error.json'), 'Empty name');
 
@@ -125,13 +107,8 @@ final class AddTest extends Scenario
     {
         $test  = $this->newTest();
         $label = LabelFaker::create();
-        $data  = [
-            'data' => [
-                'name'        => $label->name,
-                'description' => 'description',
-                'color'       => '#ffffff',
-            ],
-        ];
+        $data  = LabelFaker::generateJsondata(['name' => $label->name]);
+
         $f3->mock(self::ADD_LABEL_ROUTE, null, null, $this->postJsonData($data));
         $test->expect($this->compareTemplateToResponse('label/exist_error.json'), 'Add label with an existing name "' . $label->name . '" show an error');
 

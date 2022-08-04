@@ -47,13 +47,7 @@ final class EditTest extends Scenario
     {
         $test  = $this->newTest();
         $faker = Faker::create();
-        $data  = [
-            'data' => [
-                'name'        => $faker->name,
-                'description' => $faker->sentence,
-                'color'       => $faker->safeHexColor,
-            ],
-        ];
+        $data  = LabelFaker::generateJsondata();
 
         $f3->mock(self::EDIT_LABEL_ROUTE . $nonExistingId = $faker->numberBetween(1000), null, null, $this->postJsonData($data));
         $test->expect($this->compareTemplateToResponse('not_found_error.json'), 'edit non existing label with id "' . $nonExistingId . '" show an error');
@@ -72,7 +66,7 @@ final class EditTest extends Scenario
     {
         $test  = $this->newTest();
         $label = LabelFaker::create();
-        $data  = LabelFaker::generateJsondata();
+        $data  = LabelFaker::generateJsondata(['name' => '']);
         $f3->mock(self::EDIT_LABEL_ROUTE . $label->id, null, null, $this->postJsonData($data));
         $test->expect($this->compareTemplateToResponse('label/empty_name_error.json'), 'Empty name');
 
@@ -90,13 +84,7 @@ final class EditTest extends Scenario
     {
         $test  = $this->newTest();
         $label = LabelFaker::create();
-        $data  = [
-            'data' => [
-                'name'        => $label->name,
-                'description' => 'description',
-                'color'       => '#ffffff',
-            ],
-        ];
+        $data  = LabelFaker::generateJsondata(['name' => $label->name]);
         $f3->mock(self::EDIT_LABEL_ROUTE . $label->id, null, null, $this->postJsonData($data));
         $test->expect($this->compareTemplateToResponse('label/exist_error.json'), 'edit label with an existing name "' . $label->name . '" show an error');
 
@@ -114,7 +102,7 @@ final class EditTest extends Scenario
     {
         $test  = $this->newTest();
         $label = LabelFaker::create();
-        $data  = LabelFaker::generateJsondata();
+        $data  = LabelFaker::generateJsondata(['color' => '#ffffXX']);
 
         $f3->mock(self::EDIT_LABEL_ROUTE . $label->id, null, null, $this->postJsonData($data));
         $test->expect($this->compareTemplateToResponse('label/invalid_color_error.json'), 'Invalid Color');
@@ -133,9 +121,9 @@ final class EditTest extends Scenario
 
         // Asserting that the changes took place at the model layer.
         $label->load(['id = ?', $label->id]);
-        $test->expect('test' === $label->name, 'Label with id "' . $label->id . '" "name" updated in the DB.');
-        $test->expect('testDescription' === $label->description, 'Label with id "' . $label->id . '" "description" updated in the DB.');
-        $test->expect('#ffffff' === $label->color, 'Label with id "' . $label->id . '" "color" updated in the DB.');
+        $test->expect($f3->snakeCase($data['data']['name']) === $label->name, 'Label with id "' . $label->id . '" "name" updated in the DB.');
+        $test->expect($data['data']['description'] === $label->description, 'Label with id "' . $label->id . '" "description" updated in the DB.');
+        $test->expect($data['data']['color'] === $label->color, 'Label with id "' . $label->id . '" "color" updated in the DB.');
 
         return $test->results();
     }
