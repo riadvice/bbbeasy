@@ -176,41 +176,40 @@ const Install = () => {
 
     const onFinish = () => {
         const formData: formType = stepForm.getFieldsValue(true);
-        InstallService.check_availability(formData)
-            .then((result) => {
-                setSuccessful(false);
-                setMessage(result.data.message);
-                if (!result.data.message) {
-                    if (activeStep < steps.length - 1) {
-                        next();
-                    } else {
-                        formData.branding_colors = {
-                            primary_color: primaryColor,
-                            secondary_color: secondaryColor,
-                            accent_color: accentColor,
-                            add_color: addColor,
-                        };
-                        formData.presetsConfig = presets;
-                        InstallService.install(formData)
-                            .then(() => {
-                                setSuccessful(true);
+        InstallService.check_availability(formData).then((result) => {
+            setSuccessful(false);
+            setMessage(result.data.message);
+            if (!result.data.message) {
+                if (activeStep < steps.length - 1) {
+                    next();
+                } else {
+                    formData.branding_colors = {
+                        primary_color: primaryColor,
+                        secondary_color: secondaryColor,
+                        accent_color: accentColor,
+                        add_color: addColor,
+                    };
+                    formData.presetsConfig = presets;
+                    InstallService.install(formData).then(() => {
+                        setSuccessful(true);
+                    });
+                    if (file != undefined) {
+                        const fdata: FormData = new FormData();
+                        fdata.append('logo', file.originFileObj, file.originFileObj.name);
+                        fdata.append('logo_name', file.originFileObj.name);
+                        axios
+                            .post(API_URL + '/save-logo', fdata)
+                            .then((response) => {
+                                console.log(response);
+                            })
+                            .catch((error) => {
+                                console.log(error);
                             });
-                        if (file != undefined) {
-                            const fdata: FormData = new FormData();
-                            fdata.append('logo', file.originFileObj, file.originFileObj.name);
-                            fdata.append('logo_name', file.originFileObj.name);
-                            axios.post(API_URL + '/save-logo', fdata)
-                                .then((response) => {
-                                    console.log(response);
-                                })
-                                .catch((error) => {
-                                    console.log(error);
-                                });
-                        }
                     }
                 }
-            })
-    }
+            }
+        });
+    };
 
     return (
         <Row>
@@ -266,7 +265,9 @@ const Install = () => {
                                 <Alert
                                     type="error"
                                     className="alert-error-msg text-center"
-                                    message={<Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == message)} />}
+                                    message={
+                                        <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == message)} />
+                                    }
                                     showIcon
                                 />
                             )}

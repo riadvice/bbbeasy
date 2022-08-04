@@ -100,7 +100,14 @@ const Reset = () => {
                             <Input placeholder={t('email.label')} />
                         </Form.Item>
                         <Form.Item>
-                            <Button type="primary" id="submit-btn" htmlType="submit" className="login-form-button" size="large" block>
+                            <Button
+                                type="primary"
+                                id="submit-btn"
+                                htmlType="submit"
+                                className="login-form-button"
+                                size="large"
+                                block
+                            >
                                 <Trans i18nKey="reset-password" />
                             </Button>
                         </Form.Item>

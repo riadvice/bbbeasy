@@ -51,7 +51,9 @@ class InstallService {
         });
     }
     check_availability(formData: formType) {
-        return axios.get(apiRoutes.COLLECT_USER_URL, { params: { username: formData.username, email: formData.email } });
+        return axios.get(apiRoutes.COLLECT_USER_URL, {
+            params: { username: formData.username, email: formData.email },
+        });
     }
 }
 
