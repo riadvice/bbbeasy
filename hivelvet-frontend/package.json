@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "antd": "^4.19.5",
-    "axios": "^0.26.1",
+    "axios": "^0.27.2",
     "craco-less": "^2.0.0",
     "dotenv-cra": "^3.0.2",
     "eslint-plugin-react-hooks": "^4.4.0",
