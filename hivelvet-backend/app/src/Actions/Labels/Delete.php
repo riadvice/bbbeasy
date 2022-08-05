@@ -20,18 +20,31 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Suite;
+namespace Actions\Labels;
 
-use Models\LabelTest;
-use Models\ResetPasswordTokenTest;
-use Models\UserTest;
-use Test\TestGroup;
+use Actions\Delete as DeleteAction;
+use Actions\RequirePrivilegeTrait;
+use Enum\ResponseCode;
+use Models\Label;
 
 /**
- * @internal
- * @coversNothing
+ * Class Delete.
  */
-final class ModelsTest extends TestGroup
+class Delete extends DeleteAction
 {
-    protected $classes = [UserTest::class, ResetPasswordTokenTest::class, LabelTest::class];
+    use RequirePrivilegeTrait;
+
+    public function execute($f3, $params): void
+    {
+        $label     = new Label();
+        $labels_id = $params['id'];
+        $label->load(['id = ?', $labels_id]);
+
+        if ($label->valid()) {
+            parent::execute($f3, $params);
+            $this->renderJson(['result' => 'success']);
+        } else {
+            $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
+        }
+    }
 }

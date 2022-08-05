@@ -20,18 +20,25 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Suite;
+namespace Actions\Labels;
 
-use Models\LabelTest;
-use Models\ResetPasswordTokenTest;
-use Models\UserTest;
-use Test\TestGroup;
+use Actions\Base as BaseAction;
+use Models\Label;
 
 /**
- * @internal
- * @coversNothing
+ *Class Index.
  */
-final class ModelsTest extends TestGroup
+class Index extends BaseAction
 {
-    protected $classes = [UserTest::class, ResetPasswordTokenTest::class, LabelTest::class];
+    /**
+     * @param \Base $f3
+     * @param array $params
+     */
+    public function show($f3, $params): void
+    {
+        $label  = new Label();
+        $labels = $label->getAllLabels();
+        $this->logger->debug('collecting labels', ['labels' => json_encode($labels)]);
+        $this->renderJson($labels);
+    }
 }

@@ -22,16 +22,18 @@ declare(strict_types=1);
 
 namespace Suite;
 
-use Models\LabelTest;
-use Models\ResetPasswordTokenTest;
-use Models\UserTest;
+use Actions\Labels\AddTest;
+use Actions\Labels\DeleteTest;
+use Actions\Labels\EditTest;
 use Test\TestGroup;
 
 /**
  * @internal
  * @coversNothing
  */
-final class ModelsTest extends TestGroup
+final class LabelsActionsTest extends TestGroup
 {
-    protected $classes = [UserTest::class, ResetPasswordTokenTest::class, LabelTest::class];
+    protected $classes = [AddTest::class, DeleteTest::class, EditTest::class];
+
+    protected $quiet = true;
 }
