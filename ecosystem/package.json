@@ -9,6 +9,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "dotenv": "^14.3.2"
+    "dotenv": "^16.0.1"
   }
 }
