@@ -64,17 +64,17 @@ class LabelFaker
      */
     #[ArrayShape(['data' => 'array'])]
  public static function generateJsondata($data = []): array
-{
-    $faker = Faker::create();
+ {
+     $faker = Faker::create();
 
-    $primaryData = [
-        'data' => [
-            'name'        => $faker->unique()->name,
-            'description' => $faker->sentence,
-            'color'       => $faker->safeHexColor,
-        ],
-    ];
+     $primaryData = [
+         'data' => [
+             'name'        => $faker->unique()->name,
+             'description' => $faker->sentence,
+             'color'       => $faker->safeHexColor,
+         ],
+     ];
 
-    return ['data' => array_merge($primaryData['data'], $data)];
-}
+     return ['data' => array_merge($primaryData['data'], $data)];
+ }
 }
