@@ -306,6 +306,16 @@ update_composer() {
   sudo chown -R "$USER:$USER" "/home/$USER/.composer/"
 }
 
+#
+# Dumps composer autoloader cache.
+#
+dump_composer() {
+  echo "► Dumping composer autloader cache"
+  cd "$(dirname "$BASEDIR")/hivelvet-backend/"
+  composer dump-autoload
+}
+
+
 # Install composer dependencies
 #
 install_dependencies() {
@@ -494,6 +504,12 @@ run() {
 
     if [ "$1" = "--zip" -o "$1" = "-zip" -o "$1" = "-z" ]; then
       zip_logs
+      shift
+      continue
+    fi
+
+    if [ "$1" = "--dump" -o "$1" = "-dump" -o "$1" = "-d" ]; then
+      dump_composer
       shift
       continue
     fi
