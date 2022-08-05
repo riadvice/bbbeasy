@@ -35,6 +35,7 @@ use SebastianBergmann\CodeCoverage\Report\Html\Facade;
 use SebastianBergmann\CodeCoverage\Report\Text;
 use Suite\AccountActionsTest;
 use Suite\CoreActionsTest;
+use Suite\LabelsActionsTest;
 use Suite\ModelsTest;
 use Suite\RolesActionsTest;
 use Suite\UsersActionsTest;
@@ -67,6 +68,7 @@ class Statera
             AccountActionsTest::class,
             UsersActionsTest::class,
             RolesActionsTest::class,
+            LabelsActionsTest::class,
             // Always leave CDN test as the last one
             // CdnDistributorTest::class
         ];

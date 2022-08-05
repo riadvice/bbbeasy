@@ -20,37 +20,31 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Core;
+namespace Actions\Labels;
 
-use Test\Scenario;
-use Utils\PrivilegeUtils;
+use Actions\Delete as DeleteAction;
+use Actions\RequirePrivilegeTrait;
+use Enum\ResponseCode;
+use Models\Label;
 
 /**
- * @internal
- * @coversNothing
+ * Class Delete.
  */
-final class ReflectionTest extends Scenario
+class Delete extends DeleteAction
 {
-    protected $group = 'Reflection Based Configuration';
+    use RequirePrivilegeTrait;
 
-    protected array $permissions = [
-        'labels'            => ['add', 'delete', 'edit'],
-        'logs'              => ['collect'],
-        'roles_permissions' => ['collect'],
-        'roles'             => ['add', 'collect', 'delete', 'edit', 'index'],
-        'users'             => ['add', 'delete', 'edit', 'index'],
-    ];
-
-    /**
-     * @param $f3 \Base
-     *
-     * @return array
-     */
-    public function testReflectionConfiguration($f3)
+    public function execute($f3, $params): void
     {
-        $test = $this->newTest();
-        $test->expect($this->permissions === PrivilegeUtils::listSystemPrivileges(), 'Permissions correctly configured in action classes');
+        $label     = new Label();
+        $labels_id = $params['id'];
+        $label->load(['id = ?', $labels_id]);
 
-        return $test->results();
+        if ($label->valid()) {
+            parent::execute($f3, $params);
+            $this->renderJson(['result' => 'success']);
+        } else {
+            $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
+        }
     }
 }

@@ -59,7 +59,8 @@ class Label extends BaseModel
      *check if name is already in use .
      *
      * @param string $name
-     *                     retu
+     *
+     * @return bool
      */
     public function nameExists($name)
     {

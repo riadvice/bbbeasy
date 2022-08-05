@@ -20,37 +20,25 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Core;
+namespace Actions\Labels;
 
-use Test\Scenario;
-use Utils\PrivilegeUtils;
+use Actions\Base as BaseAction;
+use Models\Label;
 
 /**
- * @internal
- * @coversNothing
+ *Class Index.
  */
-final class ReflectionTest extends Scenario
+class Index extends BaseAction
 {
-    protected $group = 'Reflection Based Configuration';
-
-    protected array $permissions = [
-        'labels'            => ['add', 'delete', 'edit'],
-        'logs'              => ['collect'],
-        'roles_permissions' => ['collect'],
-        'roles'             => ['add', 'collect', 'delete', 'edit', 'index'],
-        'users'             => ['add', 'delete', 'edit', 'index'],
-    ];
-
     /**
-     * @param $f3 \Base
-     *
-     * @return array
+     * @param \Base $f3
+     * @param array $params
      */
-    public function testReflectionConfiguration($f3)
+    public function show($f3, $params): void
     {
-        $test = $this->newTest();
-        $test->expect($this->permissions === PrivilegeUtils::listSystemPrivileges(), 'Permissions correctly configured in action classes');
-
-        return $test->results();
+        $label  = new Label();
+        $labels = $label->getAllLabels();
+        $this->logger->debug('collecting labels', ['labels' => json_encode($labels)]);
+        $this->renderJson($labels);
     }
 }

@@ -20,37 +20,20 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Core;
+namespace Suite;
 
-use Test\Scenario;
-use Utils\PrivilegeUtils;
+use Actions\Labels\AddTest;
+use Actions\Labels\DeleteTest;
+use Actions\Labels\EditTest;
+use Test\TestGroup;
 
 /**
  * @internal
  * @coversNothing
  */
-final class ReflectionTest extends Scenario
+final class LabelsActionsTest extends TestGroup
 {
-    protected $group = 'Reflection Based Configuration';
+    protected $classes = [AddTest::class, DeleteTest::class, EditTest::class];
 
-    protected array $permissions = [
-        'labels'            => ['add', 'delete', 'edit'],
-        'logs'              => ['collect'],
-        'roles_permissions' => ['collect'],
-        'roles'             => ['add', 'collect', 'delete', 'edit', 'index'],
-        'users'             => ['add', 'delete', 'edit', 'index'],
-    ];
-
-    /**
-     * @param $f3 \Base
-     *
-     * @return array
-     */
-    public function testReflectionConfiguration($f3)
-    {
-        $test = $this->newTest();
-        $test->expect($this->permissions === PrivilegeUtils::listSystemPrivileges(), 'Permissions correctly configured in action classes');
-
-        return $test->results();
-    }
+    protected $quiet = true;
 }
