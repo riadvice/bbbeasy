@@ -18,7 +18,7 @@ $ yarn start
 This command starts a local development server and opens up a browser window [http://localhost:3000](http://localhost:3000). Most changes are reflected live without having to restart the server.
 
 ```
-$ ./run-installer-dev.sh
+$ ./run-docs.sh
 ```
 This command runs the website in development mode on the virtual machine.\
 Opens [http://docs.hivelvet.test:3000](http://docs.hivelvet.test:3000) in the browser window to view the application on your local machine.
@@ -27,6 +27,10 @@ Opens [http://docs.hivelvet.test:3000](http://docs.hivelvet.test:3000) in the br
 
 ```
 $ yarn build
+```
+or
+```
+$ ./build-docs.sh
 ```
 
 This command generates static content into the `build` directory and can be served using any static contents hosting service.
