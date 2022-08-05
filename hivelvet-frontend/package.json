@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "antd": "^4.19.5",
+    "antd": "^4.22.3",
     "axios": "^0.27.2",
     "craco-less": "^2.0.0",
     "dotenv-cra": "^3.0.2",
