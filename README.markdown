@@ -29,6 +29,13 @@ The web-application is split in two parts:
 To make the backend work for the development go into `hivelve-backend/app/config` and
 copy `config-development.sample.ini` to `config-development.ini`
 
+To run the front-end application on development mode follow this commands :
+
+- Installation
+``
+$
+``
+
 ## Contributing
 
 ## Security
