@@ -34,10 +34,10 @@ class General extends Enum
      public const LOGGED_IN_USERS_ONLY  = 'logged_in_users_only';
 
 
-    public static string $DURATION_TYPE = 'integer';
-    public static string $MAXIMUM_PARTICIPANTS_TYPE = 'integer';
-    public static string $ANYONE_CAN_START_TYPE = 'bool';
-    public static string $OPEN_FOR_EVERYONE_TYPE = 'bool';
-    public static string $ALL_JOIN_AS_MODERATOR_TYPE = 'bool';
-    public static string $LOGGED_IN_USERS_ONLY_TYPE = 'bool';
+    public const DURATION_TYPE = 'integer';
+    public const MAXIMUM_PARTICIPANTS_TYPE = 'integer';
+    public const ANYONE_CAN_START_TYPE = 'bool';
+    public const OPEN_FOR_EVERYONE_TYPE = 'bool';
+    public const ALL_JOIN_AS_MODERATOR_TYPE = 'bool';
+    public const LOGGED_IN_USERS_ONLY_TYPE = 'bool';
 }

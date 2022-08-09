@@ -29,7 +29,7 @@ class UserExperience extends Enum
      public const KEYBOARD_SHORTCUTS = 'keyboard_shortcuts';
     public const ASK_FOR_FEEDBACK   = 'ask_for_feedback';
 
-    public static string $KEYBOARD_SHORTCUTS_TYPE = 'bool';
-    public static string $ASK_FOR_FEEDBACK_TYPE = 'bool';
+    public const KEYBOARD_SHORTCUTS_TYPE = 'bool';
+    public const ASK_FOR_FEEDBACK_TYPE = 'bool';
 
 }

@@ -29,6 +29,6 @@ class Language extends Enum
     public const DEFAULT_LANGUAGE = 'default_language';
 
 
-    public static string $DEFAULT_LANGUAGE_TYPE = 'string';
+    public const DEFAULT_LANGUAGE_TYPE = 'string';
 
 }

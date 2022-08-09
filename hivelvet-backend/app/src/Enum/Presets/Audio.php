@@ -32,9 +32,9 @@ class Audio extends Enum
   public const SKIP_ECHO_TEST                     = 'skip_echo_test';
 
 
-    public static string $USERS_JOIN_MUTED_TYPE           ='bool';
-    public static string $MODERATORS_ALLOWED_TO_UNMUTE_USERS_TYPE          ='bool';
-    public static string $AUTO_JOIN_TYPE             ='bool';
-    public static string $LISTEN_ONLY_ENABLED_TYPE           ='bool';
-    public static string $SKIP_ECHO_TEST_TYPE           ='bool';
+    public const USERS_JOIN_MUTED_TYPE           ='bool';
+    public const MODERATORS_ALLOWED_TO_UNMUTE_USERS_TYPE          ='bool';
+    public const AUTO_JOIN_TYPE             ='bool';
+    public const LISTEN_ONLY_ENABLED_TYPE           ='bool';
+    public const SKIP_ECHO_TEST_TYPE           ='bool';
 }

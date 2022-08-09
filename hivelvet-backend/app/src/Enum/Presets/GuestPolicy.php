@@ -30,7 +30,7 @@ class GuestPolicy extends Enum
      public const POLICY       = 'policy';
 
 
-    public static string $CONFIGURABLE_TYPE = 'bool';
-    public static string $POLICY_TYPE = 'string';
+    public const CONFIGURABLE_TYPE = 'bool';
+    public const POLICY_TYPE = 'string';
 
 }

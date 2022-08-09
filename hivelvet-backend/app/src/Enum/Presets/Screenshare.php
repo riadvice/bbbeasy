@@ -28,6 +28,6 @@ class Screenshare extends Enum
 {
  public const CONFIGURABLE = 'configurable';
 
-    public static string $CONFIGURABLE_TYPE = 'bool';
+    public const CONFIGURABLE_TYPE = 'bool';
 
 }

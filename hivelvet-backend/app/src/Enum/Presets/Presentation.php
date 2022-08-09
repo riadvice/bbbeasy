@@ -28,6 +28,6 @@ class Presentation extends Enum
 {
     public const PRE_UPLOAD = 'pre_upload';
 
-    public static string $PRE_UPLOAD_TYPE = 'bool';
+    public const PRE_UPLOAD_TYPE = 'bool';
 
 }

@@ -31,8 +31,8 @@ class BreakoutRooms extends Enum
     public const RECORDING    = 'recording';
 
 
-    public static string $CONFIGURABLE_TYPE = 'bool';
-    public static string $PRIVATE_CHAT_TYPE = 'bool';
-    public static string $RECORDING_TYPE = 'bool';
+    public const CONFIGURABLE_TYPE = 'bool';
+    public const PRIVATE_CHAT_TYPE = 'bool';
+    public const RECORDING_TYPE = 'bool';
 
 }

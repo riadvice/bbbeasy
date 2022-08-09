@@ -32,10 +32,10 @@ class Webcams extends Enum
     public const AUTO_SHARE                     = 'auto_share';
     public const SKIP_PREVIEW                   = 'skip_preview';
 
-    public static string $VISIBLE_FOR_MODERATOR_ONLY_TYPE = 'bool';
-    public static string $CONFIGURABLE_TYPE = 'bool';
-    public static string $MODERATOR_ALLOWED_CAMERA_EJECT_TYPE = 'bool';
-    public static string $AUTO_SHARE_TYPE = 'bool';
-    public static string $SKIP_PREVIEW_TYPE = 'bool';
+    public const VISIBLE_FOR_MODERATOR_ONLY_TYPE = 'bool';
+    public const CONFIGURABLE_TYPE = 'bool';
+    public const MODERATOR_ALLOWED_CAMERA_EJECT_TYPE = 'bool';
+    public const AUTO_SHARE_TYPE = 'bool';
+    public const SKIP_PREVIEW_TYPE = 'bool';
 
 }

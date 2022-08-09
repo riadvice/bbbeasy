@@ -30,7 +30,7 @@ class LearningDashboard extends Enum
     public const CLEANUP_DELAY = 'cleanup_delay';
 
 
-    public static string $CONFIGURABLE_TYPE = 'bool';
-    public static string $CLEANUP_DELAY_TYPE = 'integer';
+    public const CONFIGURABLE_TYPE = 'bool';
+    public const CLEANUP_DELAY_TYPE = 'integer';
 
 }

@@ -90,12 +90,15 @@ class CollectMyPresets extends BaseAction
 
 
 
+
+
                         if (isset(json_decode($enabledcategories->$categoryName)->$attribute)) {
 
-                            $subcategories[] = ["name" => $attribute, "enabled" => true, "type" => $class->getProperty(strtoupper(str_replace(" ", "_", $attribute)) . "_TYPE")->getValue(), "value" => json_decode($enabledcategories->$categoryName)->$attribute];
+                            $subcategories[] = ["name" => $attribute, "enabled" => true, "type" => $class->getConstant(strtoupper($attribute)."_TYPE"), "value" => json_decode($enabledcategories->$categoryName)->$attribute];
 
                         } else {
-                            $subcategories[] = ["name" => $attribute, "enabled" => false, "type" => $class->getProperty(strtoupper(str_replace(" ", "_", $attribute)) . "_TYPE")->getValue()];
+
+                            $subcategories[] = ["name" => $attribute, "enabled" => false, "type" =>$class->getConstant(strtoupper($attribute)."_TYPE") ];
 
                         }
 
