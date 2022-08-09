@@ -52,10 +52,12 @@ const Login = () => {
             .then((response) => {
                 if (response.data.username && response.data.email && response.data.role) {
                     const user_infos: UserType = {
+                        id: response.data.id,
                         username: response.data.username,
                         email: response.data.email,
                         role: response.data.role,
                     };
+
                     Notifications.openNotificationWithIcon(
                         'success',
                         <>

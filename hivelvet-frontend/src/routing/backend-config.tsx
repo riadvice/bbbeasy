@@ -29,7 +29,7 @@ export const apiRoutes = {
     LOGS_URL: API_URL + '/logs',
 
     COLLECT_PRESETS_URL: API_URL + '/collect-presets',
-    COLLECT_MY_PRESETS_URL: API_URL + '/collect-my-presets',
+    COLLECT_MY_PRESETS_URL: API_URL + '/collect-my-presets/',
     COLLECT_SETTINGS_URL: API_URL + '/collect-settings',
     INSTALL_URL: API_URL + '/install',
 

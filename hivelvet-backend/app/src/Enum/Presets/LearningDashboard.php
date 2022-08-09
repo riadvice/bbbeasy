@@ -22,12 +22,12 @@ declare(strict_types=1);
 
 namespace Enum\Presets;
 
-use Enum\Enum;
+use MabeEnum\Enum;;
 
 class LearningDashboard extends Enum
 {
-    final public const CONFIGURABLE  = 'configurable';
-    final public const CLEANUP_DELAY = 'cleanup_delay';
+     public const CONFIGURABLE  = 'configurable';
+    public const CLEANUP_DELAY = 'cleanup_delay';
 
 
     public static string $CONFIGURABLE_TYPE = 'bool';

@@ -41,56 +41,80 @@ class CollectMyPresets extends BaseAction
      */
     public function execute($f3, $params): void
     {
-      $preset  = new Preset();
-        $presets = $preset->collectAll();
-        $presetsData=[];
-        foreach($presets as $preset1) {
-          //  $category = new PresetCategory();
-         //   $categories = $category->collectAll();
-            $presetData=[
-                "id"=>$preset1["id"],
-                "name"=>$preset1["name"],
-                "categories"=>json_decode($preset1["settings"])
+        $user_id = $f3->get('PARAMS.user_id');
+
+        $data = [];
+        $classes = get_declared_classes();
+        $autoloaderClassName = '';
+        foreach ($classes as $className) {
+            if (str_starts_with($className, 'ComposerAutoloaderInit')) {
+                $autoloaderClassName = $className;
+
+                break;
+            }
+        }
+        $classLoader = $autoloaderClassName::getLoader();
+        $classMap = $classLoader->getClassMap();
+        $categories = preg_filter('/^Enum\\\Presets\\\[A-Z a-z]*/', '$0', array_keys($classMap));
+
+
+        $preset = new Preset();
+        $presets = $preset->collectAllByUserId($user_id);
+        $presetsData = [];
+
+        foreach ($presets as $preset1) {
+
+
+            $presetData = [
+                "id" => $preset1["id"],
+                "name" => $preset1["name"],
+                "user_id"=>$preset1["user_id"],
+                "categories" => json_decode($preset1["settings"])
             ];
-           /* if ($categories) {
-                $categoriesData=[];
-                foreach ($categories as $category) {
+            $enabledcategories = json_decode($preset1["settings"]);
+            $categoryData = [];
+            foreach ($categories as $category) {
+                $categoryName = explode('\\', $category)[2];
 
-                    $categoryData = [
-                        'name' => $category["name"],
-                        'icon' => $category['icon'],
-                        'enabled' => $category["enabled"],
-                        'subcategories' => [],
-                    ];
-
-
-                    $subcategory = new SubCategory();
-                  $subcategories = $subcategory->findByCategory($category["id"]);
-                    $subcategoriesData=[];
-                  while(!$subcategories->dry()){
-                      $presetSubCategory=new SubCategoryPreset();
-                      $presetsSubCategory=$presetSubCategory->findByPresetAndSubCategory($preset["id"],$subcategories->id);
-                      while(!$presetsSubCategory->dry()){
-                          $subCategoryData = [
-                              'name'   => $subcategories->name,
-                              'enabled' => json_decode($presetsSubCategory->data)->enabled,
-                              'type'=>$subcategory->type,
-                              'id'=>$presetSubCategory->id,
-                              'value'=>json_decode($presetsSubCategory->data)->value
-                          ];
-                          $subcategoriesData[]=$subCategoryData;
-                           $presetsSubCategory->next();
-                      }
-                      $subcategories->next();
-
-                  }
-                    $categoryData["subcategories"]=$subcategoriesData;
-
-                    $categoriesData[] = $categoryData;
+                preg_match_all('/[A-Z]/', $categoryName, $matches, PREG_OFFSET_CAPTURE);
+                $secondMajOcc = \array_key_exists(1, $matches[0]) ? $matches[0][1][1] : null;
+                if ($secondMajOcc && 'ZcaleRight' !== $categoryName) {
+                    $categoryName = mb_substr($categoryName, 0, $secondMajOcc) . ' ' . mb_substr($categoryName, $secondMajOcc);
                 }
-                $presetData["categories"]=$categoriesData;
 
-            }*/
+
+                $class = new \ReflectionClass($category);
+                $subcategories = [];
+                if (isset($enabledcategories->$categoryName)) {
+                foreach ($class->getConstants() as $attribute) {
+
+
+
+                        if (isset(json_decode($enabledcategories->$categoryName)->$attribute)) {
+
+                            $subcategories[] = ["name" => $attribute, "enabled" => true, "type" => $class->getProperty(strtoupper(str_replace(" ", "_", $attribute)) . "_TYPE")->getValue(), "value" => json_decode($enabledcategories->$categoryName)->$attribute];
+
+                        } else {
+                            $subcategories[] = ["name" => $attribute, "enabled" => false, "type" => $class->getProperty(strtoupper(str_replace(" ", "_", $attribute)) . "_TYPE")->getValue()];
+
+                        }
+
+
+
+                }
+                $categoryData[] = ["name" => $categoryName,
+                    "enabled" => true,
+                    "subcategories" => $subcategories];
+            }
+        else{
+                $categoryData[] = ["name" => $categoryName,
+                    "enabled" => false,
+                    "subcategories" => $subcategories];
+            }
+        }
+
+
+            $presetData["categories"]=$categoryData;
             $presetsData[]=$presetData;
         }
 
@@ -98,10 +122,5 @@ class CollectMyPresets extends BaseAction
         $this->logger->debug('collecting presets', ['data' => json_encode($presetsData)]);
         $this->renderJson($presetsData);
     }
-    public function show($f3, $params): void{
-        $presetSetting=new PresetSetting();
-        $presets=$presetSetting->getAllPresets();
-        $this->logger->debug('collecting presets', ['presets' => json_encode($presets)]);
-        $this->renderJson($presets);
-    }
+
 }

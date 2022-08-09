@@ -22,16 +22,16 @@ declare(strict_types=1);
 
 namespace Enum\Presets;
 
-use Enum\Enum;
+use MabeEnum\Enum;;
 
 class Branding extends Enum
 {
-    final public const TITLE        = 'title';
-    final public const LOGO         = 'logo';
-    final public const BANNER_TEXT  = 'banner_text';
-    final public const BANNER_COLOR = 'banner_color';
-    final public const USE_AVATARS  = 'use_avatars';
-    final public const CUSTOM_CSS   = 'custom_css';
+    public const TITLE        = 'title';
+  public const LOGO         = 'logo';
+     public const BANNER_TEXT  = 'banner_text';
+     public const BANNER_COLOR = 'banner_color';
+     public const USE_AVATARS  = 'use_avatars';
+     public const CUSTOM_CSS   = 'custom_css';
 
 
     public static string $TITLE_TYPE ="string";

@@ -18,6 +18,7 @@
 
 import React, { ReactPropTypes, useEffect, useState } from 'react';
 import Notifications from './Notifications';
+import { UserContext } from '../lib/UserContext';
 
 import {
     Button,
@@ -55,6 +56,8 @@ import { UploadFile } from 'antd/lib/upload/interface';
 import axios from 'axios';
 import { categoriesIcons } from '../types/CategoriesIcon';
 import { getIconName } from '../types/GetIconName';
+import authService from '../services/auth.service';
+import { UserType } from '../types/UserType';
 
 const { Link, Title } = Typography;
 const API_URL = process.env.REACT_APP_API_URL;
@@ -83,6 +86,9 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, mypresets, deleteCl
     const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
     const [primaryColor, setPrimaryColor] = React.useState<string>('');
     const [editingKey, setEditingKey] = React.useState<number>(null);
+    const [myPresets, setMyPresets] = useState<MyPresetType[]>([]);
+    const { isLogged, setIsLogged, currentUser, setCurrentUser } = React.useContext(UserContext);
+
     const [text, setText] = useState<string>();
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [presetName, setPresetName] = useState<string>(preset['name']);
@@ -98,13 +104,13 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, mypresets, deleteCl
             setFile(info.fileList[0]);
         },
     };
-    const showModal = (title: string, content: SubCategoryType[]) => {
+    const showModal = (title: string, content: SubCategoryType[], preset_id) => {
         setIsModalVisible(true);
         setModalTitle(title);
         setModalContent(content);
     };
     const [editForm] = Form.useForm();
-    const setModal = (content: any) => {
+    const setModal = (title, preset, content: any) => {
         setIsModalVisible(false);
         for (let i = 0; i < content.length; i++) {
             if (content[i].type == 'file' && file != undefined) {
@@ -122,8 +128,23 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, mypresets, deleteCl
                     });
             }
 
-            presetsService.edit_subcategory_preset(content[i], content[i].id);
+            presetsService.edit_subcategory_preset(title, content[i], preset.id);
+            presetsService
+                .collect_my_presets(currentUser.id)
+                .then((response) => {
+                    const arr: MyPresetType[] = [];
+                    for (let i = 0; i < response.data.length; i++) {
+                        arr.push(response.data[i]);
+                    }
+                    setMyPresets(arr);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
         }
+    };
+    const getName = (item) => {
+        return item.replaceAll('_', ' ').charAt(0).toUpperCase() + item.replaceAll('_', ' ').slice(1);
     };
     const handleSaveEdit = (preset) => {
         preset['name'] = presetName;
@@ -212,7 +233,8 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, mypresets, deleteCl
                                             key={item.name + '_' + subItem.name}
                                             className={subItem.enabled == true ? 'text-black' : 'text-grey'}
                                         >
-                                            {subItem.name}
+                                            {subItem.name.replaceAll('_', ' ').charAt(0).toUpperCase() +
+                                                subItem.name.replaceAll('_', ' ').slice(1)}
                                         </li>
                                     ))}
                                 </ul>
@@ -220,7 +242,7 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, mypresets, deleteCl
                         }
                     >
                         <Button
-                            onClick={() => showModal(item.name, item.subcategories)}
+                            onClick={() => showModal(item.name, item.subcategories, preset.id)}
                             disabled={!item.enabled}
                             type="link"
                             icon={<DynamicIcon type={getIconName(item.name)} className={'PresetIcon'} />}
@@ -235,7 +257,7 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, mypresets, deleteCl
                     onOk={() => setIsModalVisible(false)}
                     onCancel={() => setIsModalVisible(false)}
                     footer={[
-                        <Button key="submit" type="primary" onClick={() => setModal(modalContent)}>
+                        <Button key="submit" type="primary" onClick={() => setModal(modalTitle, preset, modalContent)}>
                             <Trans i18nKey="confirm" />
                         </Button>,
                     ]}
@@ -243,7 +265,7 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, mypresets, deleteCl
                     <div className="presets-body">
                         {modalContent.map((item) => (
                             <div key={modalTitle + '_' + item.name}>
-                                <Form.Item label={item.name} name={item.name}>
+                                <Form.Item label={getName(item.name)} name={item.name}>
                                     {item.type == 'bool' && (
                                         <Switch
                                             disabled={!item.enabled}
@@ -259,7 +281,7 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, mypresets, deleteCl
                                             style={{ 'width': 'fit-content' }}
                                             disabled={!item.enabled}
                                             defaultValue={item.value}
-                                            placeholder={item.name}
+                                            placeholder={getName(item.name)}
                                             onChange={(event) => {
                                                 item.value = event.target.value;
                                             }}
@@ -307,6 +329,8 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, mypresets, deleteCl
 };
 
 const Presets = () => {
+    const { currentUser } = React.useContext(UserContext);
+
     const [myPresets, setMyPresets] = useState<MyPresetType[]>([]);
     const [myPresetsNames, setMyPresetsNames] = React.useState<Item[]>([]);
     const [errorsAdd, setErrorsAdd] = useState<string[]>([]);
@@ -314,10 +338,10 @@ const Presets = () => {
     const [loading, setLoading] = React.useState<boolean>(false);
 
     useEffect(() => {
+        const user: UserType = authService.getCurrentUser();
         presetsService
-            .collect_my_presets()
+            .collect_my_presets(user.id)
             .then((response1) => {
-                console.log('presets', response1);
                 setMyPresetsNames(response1.data);
                 const arr: MyPresetType[] = [];
                 for (let i = 0; i < response1.data.length; i++) {
@@ -335,8 +359,9 @@ const Presets = () => {
         const formValues: formType = values;
         setErrorsAdd([]);
         presetsService
-            .add_preset(formValues)
+            .add_preset(formValues, 1)
             .then((response) => {
+                console.log(response);
                 setLoading(true);
                 setIsModalVisible(false);
                 const newRowData: MyPresetType = response.data.preset;
@@ -346,7 +371,7 @@ const Presets = () => {
                 //add data to table
                 setLoading(false);
 
-                presetsService.collect_my_presets().then((response) => {
+                presetsService.collect_my_presets(currentUser.id).then((response) => {
                     setMyPresets(response.data);
                 });
             })

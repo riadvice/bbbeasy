@@ -45,15 +45,12 @@ class Add extends BaseAction
     {
         $body = $this->getDecodedBody();
         $this->logger->info(' body', $body);
-    $form=$body;
-      // $form        = $body['data'];
-       echo $body["name"];
+          $form        = $body['data'];
+
         $preset = new Preset();
         $preset->name = $form["name"];
-       // $preset->settings=json_encode(array());
-   //     $preset->user_id=17;
+
         try {
-         //   $preset->save();
             $presetData = [
                 'name'   => $preset->name,
                 'categories' => [],
@@ -88,7 +85,6 @@ class Add extends BaseAction
         $classMap = $classLoader->getClassMap();
       //Apply a filter to classes under the Enum\Presets
     $categories = preg_filter('/^Enum\\\Presets\\\[A-Z a-z]*/', '$0', array_keys($classMap));
-   // var_dump($categories);
        if ($categories) {
 
             foreach ($categories as $category1) {
@@ -104,50 +100,55 @@ class Add extends BaseAction
                     $categoryName = mb_substr($categoryName, 0, $secondMajOcc) . ' ' . mb_substr($categoryName, $secondMajOcc);
 
                 }
-               //var_dump($categoryName);
                 //get the reflexion classes of category class
                 $class         = new \ReflectionClass($category1);
-                $modelInstance = $class->newInstance();
                 $attributes = $class->getConstants();
 
-                //search preset settings by category
                  $presetsett=new PresetSetting();
-                // $presetsettings = $presetsett->getByGroup($categoryName);
-                // var_dump($presetsettings);
-               // echo $categoryName;
+
                 foreach ($attributes as $attribute) {
                     $attribute = ucfirst(str_replace('_', ' ', $attribute));
-                    //echo "name ".$attribute;
                     $preset_settings = $presetsett->getByName($attribute);
 
-
                     if (!$preset_settings->dry()) {
-                        if ($preset_settings->enabled && $preset_settings->group == $categoryName) {
-                            if(!$settings[$categoryName]) {
-                                //$settings[$categoryName]=array();
-                              //  $settings->$categoryName
+                        if ($preset_settings->enabled ) {
+                             if(!$settings[$categoryName]) {
+
+                                $settings+=array($categoryName=>array(strtolower(str_replace(" ","_",$preset_settings->name)) => ""));
+
                             }
-                            $settings+=array($categoryName=>json_encode(array($preset_settings->name => "")));
-                           // $settings[$categoryName][]= json_encode(array($preset_settings->name => ""));
+                         else {
+                             $settings[$categoryName] += (array(strtolower(str_replace(" ","_",$preset_settings->name)) => ""));
+                         }
 
 
 
                         }
+                        $preset_settings->next();
                     }
-
                 }
-                var_dump(json_encode($settings));
+                $settings[$categoryName]=json_encode($settings[$categoryName]);
 
             }
 
        }
 
-        // var_dump(json_encode($preset_settings));
+
        $preset->settings=json_encode($settings);
 
-       $preset->user_id=17;
-      $preset->save();
-        $this->renderJson(['result' => 'success', 'preset' => $preset->getPresetInfos()], ResponseCode::HTTP_CREATED);
+       $preset->user_id=$body["user_id"];
+        try {
+            $preset->save();
+
+        } catch (\Exception $e) {
+            $message = 'Preset could not be added';
+            $this->logger->error('creating error : Preset could not be added', ['preset' => $preset->toArray(), 'error' => $e->getMessage()]);
+            $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+
+            return;
+        }
+
+        $this->renderJson(['result' => 'success', 'preset' => $preset->toArray() ], ResponseCode::HTTP_CREATED);
 
     }
 }

@@ -65,6 +65,7 @@ class Login extends BaseAction
                 // @todo: store locale in user prefs table
                 // $this->session->set('locale', $user->locale);
                 $userInfos = [
+                    'id'       =>$user->id,
                     'username' => $user->username,
                     'email'    => $user->email,
                     'role'     => $user->role->name,

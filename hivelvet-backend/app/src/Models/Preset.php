@@ -55,4 +55,7 @@ class Preset extends BaseModel
         $this->load(['id = ? ', $id]);
         return $this;
     }
+    public function collectAllByUserId($user_id):array{
+        return $this->db->exec('SELECT id,name,settings,user_id FROM presets where user_id=?',$user_id  );
+    }
 }

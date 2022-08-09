@@ -171,14 +171,13 @@ const Users = () => {
     const handleAdd = (values) => {
         const formValues: formType = values;
         setErrorsAdd('');
-        console.log('form values', formValues);
+
         UsersService.add_user(formValues)
             .then((response) => {
-                console.log('user added ', response);
                 setLoading(true);
                 setIsModalVisible(false);
                 const newRowData: Item = response.data.user;
-                console.log('data', response.data);
+
                 Notifications.openNotificationWithIcon('success', t('add_user_success'));
                 //delete data of form
                 addForm?.resetFields();
