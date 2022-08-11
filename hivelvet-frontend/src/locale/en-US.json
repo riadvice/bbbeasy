@@ -183,6 +183,12 @@
     "role_col": "Role",
     "status_col": "State",
     "new_user": "New User",
+    "new_label": "New Label", 
+    "labels_cols": {
+        "name": "Name",
+        "description": "Description",
+        "color": "Color"
+    },
     "role": {
         "label": "Role",
         "required": "Please select a role",
@@ -199,6 +205,7 @@
     "delete_user_confirm": "Are you sure to delete this user ?",
     "delete_user_success": "User successfully deleted",
 
+    "delete_label_confirm": "Are you sure to delete this label ?",
     "active": "Active",
     "inactive": "Inactive",
     "pending": "Pending",

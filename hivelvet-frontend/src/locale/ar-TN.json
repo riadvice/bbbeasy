@@ -181,6 +181,12 @@
     "role_col": "الدور",
     "status_col": "الحالة",
     "new_user": "مستخدم جديد",
+    "new_label": "علامة جديدة", 
+    "labels_cols": {
+        "name": "الإسم",
+        "description": "الوصف",
+        "color": "اللون"
+    },
     "role": {
         "label": "الدور",
         "required": "الرجاء اختيار دور",
@@ -196,6 +202,7 @@
     "edit_user_success": "تم تحديث المستخدم بنجاح",
     "delete_user_confirm": "هل أنت متأكد من حذف هذا المستخدم ؟",
     "delete_user_success": "تم حذف المستخدم بنجاح",
+    "delete_label_confirm": "هل أنت متأكد من حذف هذا العلامة ؟",  
     "active": "مفعل",
     "inactive": "غير مفعل",
     "pending": "في انتظار",
