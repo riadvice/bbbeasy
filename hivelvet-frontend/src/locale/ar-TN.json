@@ -64,6 +64,7 @@
     "and": "و",
     "privacy-policy": "سياسة الخصوصية",
     "user_not_exists": "المستخدم غير موجود بهذا البريد الإلكتروني",
+    "used_change_password": "لا يمكن أن تكون كلمة المرور الجديدة هي نفسها كلمة المرور القديمة",
     "success_change_password": "تم تغيير كلمة المرور بنجاح",
     "error_change_password": "لا يمكن تغيير كلمة المرور",
     "error-registration": "لا يمكن إضافة المستخدم",

@@ -64,6 +64,7 @@
     "and": "and",
     "privacy-policy": "Privacy Policy",
     "user_not_exists": "User does not exist with this email",
+    "used_change_password": "New password cannot be the same as your old password",
     "success_change_password": "Password changed successfully",
     "error_change_password": "password could not be changed",
     "error-registration": "user could not be added",

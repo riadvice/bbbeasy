@@ -501,14 +501,14 @@ const Users = () => {
                             onConfirm={() => cancelEdit()}
                             onCancel={() => setCancelVisibility(false)}
                         >
-                            <Button size="middle">
+                            <Button size="middle" className="cell-input-cancel">
                                 <Trans i18nKey="cancel" />
                             </Button>
                         </Popconfirm>
                         <Button
                             size="middle"
                             type="primary"
-                            id="submit-btn"
+                            className="cell-input-save"
                             onClick={() => saveEdit(record, record.key)}
                         >
                             <Trans i18nKey="save" />

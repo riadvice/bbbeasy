@@ -176,6 +176,13 @@ const Install = () => {
 
     const onFinish = () => {
         const formData: formType = stepForm.getFieldsValue(true);
+        formData.branding_colors = {
+            primary_color: primaryColor,
+            secondary_color: secondaryColor,
+            accent_color: accentColor,
+            add_color: addColor,
+        };
+        formData.presetsConfig = presets;
         InstallService.check_availability(formData).then((result) => {
             setSuccessful(false);
             setMessage(result.data.message);
@@ -183,13 +190,6 @@ const Install = () => {
                 if (activeStep < steps.length - 1) {
                     next();
                 } else {
-                    formData.branding_colors = {
-                        primary_color: primaryColor,
-                        secondary_color: secondaryColor,
-                        accent_color: accentColor,
-                        add_color: addColor,
-                    };
-                    formData.presetsConfig = presets;
                     InstallService.install(formData).then(() => {
                         setSuccessful(true);
                     });

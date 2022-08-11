@@ -54,14 +54,15 @@ const ChangePassword = () => {
     }, []);
     const handleSubmit = (formValue: formType) => {
         const { password } = formValue;
-        AuthService.change_password(params.get('token'), password)
-            .then(() => {
-                setSuccessful(true);
-            })
-            .catch((error) => {
-                setSuccessful(false);
-                setMessage(error.response.data.message);
-            });
+        AuthService.change_password(params.get('token'), password).then((result) => {
+                if (result.data.message == 'New password cannot be the same as your old password') {
+                    setSuccessful(false);
+                    setMessage(result.data.message);
+                } else if (result.data.result == 'success') setSuccessful(true);
+        }).catch((error) => {
+            setSuccessful(false);
+            setMessage(error.response.data.message);
+        });
     };
 
     return (

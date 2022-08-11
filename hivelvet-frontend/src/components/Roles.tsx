@@ -410,7 +410,6 @@ const Roles = () => {
                                             size="small"
                                             onClick={saveName}
                                             type="primary"
-                                            id="save-name-btn"
                                             className="cell-input-save"
                                         />
                                     </>

@@ -37,28 +37,31 @@ class ChangePassword extends BaseAction
     {
         $form = $this->getDecodedBody();
 
-        $password   = $form['password'];
+        $new_password = $form['password'];
         $resetToken = new ResetPasswordToken();
 
         if ($resetToken->getByToken($form['token'])) {
             if (!$resetToken->dry()) {
                 $user               = new User();
                 $user               = $user->getById($resetToken->user_id);
-                $user->password     = $password;
+                $old_password_hash  = $user->password;
+                $user->password     = $new_password;
                 $resetToken->status = ResetTokenStatus::CONSUMED;
-
-                try {
-                    $resetToken->save();
-                    $user->save();
-                } catch (\Exception $e) {
-                    $message = 'password could not be changed';
-                    $this->logger->error('reset password error : password could not be changed', ['error' => $e->getMessage()]);
-                    $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-
-                    return;
+                if (password_verify($new_password , $old_password_hash)) {
+                    $this->renderJson(['message' => 'New password cannot be the same as your old password']);
                 }
-
-                $this->renderJson(['result' => 'success']);
+                else {
+                    try {
+                        $resetToken->save();
+                        $user->save();
+                    } catch (\Exception $e) {
+                        $message = 'password could not be changed';
+                        $this->logger->error('reset password error : password could not be changed', ['error' => $e->getMessage()]);
+                        $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+                        return;
+                    }
+                    $this->renderJson(['result' => 'success']);
+                }
             }
         } else {
             $this->logger->error('reset password error : password could not be changed');

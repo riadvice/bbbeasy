@@ -64,6 +64,7 @@
     "and": "et",
     "privacy-policy": "Politique de confidentialité",
     "user_not_exists": "L'utilisateur n'existe pas avec cette adresse e-mail",
+    "used_change_password": "Le nouveau mot de passe ne peut pas être le même que votre ancien mot de passe",
     "success_change_password": "Mot de passe changé avec succès",
     "error_change_password": "Le mot de passe n'a pas pu être modifié",
     "error-registration": "Impossible d'ajouter l'utilisateur",
