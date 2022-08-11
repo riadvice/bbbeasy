@@ -9,7 +9,7 @@ import { FormInstance } from 'antd/lib/form';
 import _ from 'lodash';
 import Highlighter from 'react-highlight-words/dist/main';
 import Notifications from './Notifications';
-
+import AddLabelForm from './AddLabelForm';
 const { Option} = Select;
 const { Link } = Typography;
 
@@ -35,7 +35,7 @@ interface EditableCellProps {
 }
 
 const EditableContext = React.createContext<FormInstance | null>(null);
-const addForm: FormInstance = null;
+let addForm: FormInstance = null;
 
 const Labels = () => {
     const [data, setData] = React.useState<Item[]>([]);
@@ -43,7 +43,9 @@ const Labels = () => {
     const [pagination, setPagination] = React.useState<PaginationType>({ current: 1, pageSize: 5 });
     const [searchText, setSearchText] = React.useState<string>('');
     const [searchedColumn, setSearchedColumn] = React.useState<string>('');
-    
+    const [errorsAdd, setErrorsAdd] = React.useState<string[]>([]);
+    const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
+
     const getLabels = () => {
         setLoading(true);
         LabelsService.list_labels()
@@ -63,7 +65,59 @@ const Labels = () => {
         //Runs only on the first render
         getLabels();
     }, []); 
-    
+    // add
+    const initialAddValues: formType = {
+        name: '',
+        description: '',
+        color: '#fbbc0b',
+    };
+    const handleAdd = (values) => {
+        const formValues: formType = values;
+        setErrorsAdd([]);
+        setLoading(true);
+        LabelsService.add_Label(formValues)
+            .then((response) => {
+                Notifications.openNotificationWithIcon('success', t('add_label_success'));
+                setIsModalVisible(false);
+                const newRowData: Item = response.data.label;
+
+                //delete data of form
+                addForm?.resetFields();
+                //add data to table
+                setData((data) => [...data, newRowData]);
+            })
+            .catch((error) => {
+                const responseData = error.response.data;
+                if (responseData.errors) {
+                    setErrorsAdd(responseData.errors);
+                }
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    };
+    const cancelAdd = () => {
+        setIsModalVisible(false);
+    };
+    const toggleAdd = () => {
+        addForm?.resetFields();
+        setErrorsAdd([]);
+        setIsModalVisible(true);
+    };
+    //delete
+    const handleDelete = (key: number) => {
+        setLoading(true);
+        LabelsService.delete_label(key)
+            .then((response) => {
+                Notifications.openNotificationWithIcon('success', t('delete_label_success'));
+                setData((labels) => labels.filter((label) => label.key !== key));
+            })
+            .catch((error) => {
+                console.error(error);
+            }).finally(() => {
+                setLoading(false);
+            });
+    };
     // search
     const handleReset = (clearFilters) => {
         clearFilters();
@@ -128,6 +182,39 @@ const Labels = () => {
             return text;
         },
     });
+    //edit 
+    const [editForm] = Form.useForm();
+    const EditableRow: React.FC = ({ ...props }) => {
+        return (
+            <Form size="middle" form={editForm} component={false} validateTrigger="onSubmit">
+                <EditableContext.Provider value={editForm}>
+                    <tr {...props} />
+                </EditableContext.Provider>
+            </Form>
+        );
+    }
+
+    const EditableCell: React.FC<EditableCellProps> = ({
+        editing,
+        children,
+        dataIndex,
+        record,
+        inputType,
+        ...restProps
+    }) => {
+
+        return (
+            <td {...restProps}>
+                {(dataIndex == 'name' &&
+                    <Badge
+                      count={record.name}
+                      style={{
+                        backgroundColor: record.color,
+                      }}
+                    />) || children}
+            </td>
+        );
+    };
     const columns = [
         {
             title: t('labels_cols.name'),
@@ -165,6 +252,7 @@ const Labels = () => {
                     <Popconfirm
                         title={t('delete_label_confirm')}
                         icon={<QuestionCircleOutlined className="red-icon" />}
+                        onConfirm={() => handleDelete(record.key)}
                     >
                         <Link>
                             <DeleteOutlined /> <Trans i18nKey="delete" />
@@ -176,29 +264,8 @@ const Labels = () => {
         },
     ];
 
-    const EditableRow: React.FC = ({ ...props }) => <tr {...props} />;
+    const failedAdd = () => { setErrorsAdd([]); }
 
-    const EditableCell: React.FC<EditableCellProps> = ({
-        editing,
-        children,
-        dataIndex,
-        record,
-        inputType,
-        ...restProps
-    }) => {
-
-        return (
-            <td {...restProps}>
-                {(dataIndex == 'name' &&
-                    <Badge
-                      count={record.name}
-                      style={{
-                        backgroundColor: record.color,
-                      }}
-                    />) || children}
-            </td>
-        );
-    };
 
     const mergedColumns = columns.map((col: any) => {
         if (!col.editable) {
@@ -222,11 +289,40 @@ const Labels = () => {
             className='site-page-header'
             title={<Trans i18nKey="labels" />}
             extra={[
-                <Button key="1" type="primary">
+                <Button key="1" type="primary" onClick={toggleAdd}>
                     <Trans i18nKey="new_label" />
                 </Button>,
             ]}
             />
+            <Modal
+                title={<Trans i18nKey="new_label" />}
+                className="add-modal"
+                centered
+                visible={isModalVisible}
+                onOk={handleAdd}
+                onCancel={cancelAdd}
+                footer={null}
+            >
+                <Form
+                    layout="vertical"
+                    ref={(form) => (addForm = form)}
+                    initialValues={initialAddValues}
+                    hideRequiredMark
+                    onFinish={handleAdd}
+                    onFinishFailed={failedAdd}
+                    validateTrigger="onSubmit"
+                >
+                    <AddLabelForm errors={errorsAdd}/>
+                    <Form.Item className="modal-submit-btn button-container">
+                        <Button type="text" className="cancel-btn prev" block onClick={cancelAdd}>
+                            <Trans i18nKey="cancel" />
+                        </Button>
+                        <Button type="primary" htmlType="submit" disabled={loading} block>
+                            <Trans i18nKey="create" />
+                        </Button>
+                    </Form.Item>
+                    </Form>
+            </Modal>
             <Table
                 className="hivelvet-table"
                 components={{ 

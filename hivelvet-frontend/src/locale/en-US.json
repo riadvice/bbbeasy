@@ -157,6 +157,13 @@
         "label": "Name",
         "required": "Name is required"
     },
+    "color": {
+        "label": "color"
+    },
+    "description": {
+        "label": "description",
+        "required": "description is required"
+    },
     "required_name": "Name is required",
     "exist_name": "Name already exist",
     "permissions": {
@@ -206,6 +213,8 @@
     "delete_user_success": "User successfully deleted",
 
     "delete_label_confirm": "Are you sure to delete this label ?",
+    "delete_label_success": "label successfully deleted",
+    "add_label_success":"Label successfully added",
     "active": "Active",
     "inactive": "Inactive",
     "pending": "Pending",

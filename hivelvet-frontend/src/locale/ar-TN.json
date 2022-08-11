@@ -156,6 +156,13 @@
         "label": "الإسم",
         "required": "الاسم مطلوب"
     },
+    "color": {
+        "label": "اللون"
+    },
+    "description": {
+        "label": "الوصف",
+        "required": "الوصف مطلوب"
+    },
     "required_name": "الاسم مطلوب",
     "exist_name": "الاسم موجود مسبقاً",
     "permissions": {
@@ -202,7 +209,9 @@
     "edit_user_success": "تم تحديث المستخدم بنجاح",
     "delete_user_confirm": "هل أنت متأكد من حذف هذا المستخدم ؟",
     "delete_user_success": "تم حذف المستخدم بنجاح",
-    "delete_label_confirm": "هل أنت متأكد من حذف هذا العلامة ؟",  
+    "delete_label_confirm": "هل أنت متأكد من حذف هذا العلامة ؟", 
+    "delete_label_success": "تم حذف العلامة بنجاح", 
+    "add_label_success":"تمت اضافة العلامة بنجاح",
     "active": "مفعل",
     "inactive": "غير مفعل",
     "pending": "في انتظار",
