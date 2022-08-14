@@ -8,14 +8,11 @@ describe('Test add user process', () => {
         }).then((result) => {
             if (result.rows.length == 0) {
                 cy.register(username, email, password, password);
-            };
-            cy.task('database', {
-                sql: `UPDATE public.users SET status='active' WHERE username='Professor';`
-            }).then(() => {
-                cy.login(email, password);
-                cy.visit('/settings/users');
-                cy.get('button#add-user-btn').click();
-            });
+                cy.task('database', { sql: `UPDATE public.users SET status='active' WHERE username='Professor';` });
+            }
+            cy.login(email, password);
+            cy.visit('/settings/users');
+            cy.get('button#add-user-btn').click();
         });
     });
     it('should load correctly and check form elements exist', () => {
@@ -59,10 +56,10 @@ describe('Test add user process', () => {
         cy.get('div.ant-select-item-option-content').each(($role) => {
             if ($role.text() == rolename) {
                 cy.wrap($role).click();
-            };
+            }
         });
         cy.get('button#submit-btn').click();
         cy.wait(1000);
         cy.get('div.alert-msg').should('be.visible').and('have.length', 1);
-    });    
+    });
 });

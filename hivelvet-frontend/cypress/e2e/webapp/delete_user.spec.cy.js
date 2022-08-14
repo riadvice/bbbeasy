@@ -1,30 +1,27 @@
 describe('Test delete user process', () => {
-    const username = 'Professor';
-    const email = 'professor@riadvice.tn';
-    const password = 'professor';
-    const rolename = 'lecturer';
     before(() => {
+        const username = 'Professor';
+        const email = 'professor@riadvice.tn';
+        const password = 'professor';
         cy.task('database', {
             sql: `SELECT * FROM public.users WHERE username='Professor';`
         }).then((result) => {
             if (result.rows.length == 0) {
                 cy.register(username, email, password, password);
-            };
-            cy.task('database', {
-                sql: `UPDATE public.users SET status='active' WHERE username='Professor';`
-            }).then(() => {
-                cy.login(email, password);
-                cy.visit('/settings/users');
-            });
+                cy.task('database', { sql: `UPDATE public.users SET status='active' WHERE username='Professor';` });
+            }
+            cy.login(email, password);
+            cy.visit('/settings/users');
         });
     });
     it('should delete new added user', () => {
+        const username = 'Lecturer';
+        const email = 'lecturer@riadvice.tn';
+        const password = 'lecturer';
+        const rolename = 'lecturer';
         cy.task('database', {
             sql: `SELECT * FROM public.users WHERE username='Lecturer';`
         }).then((response) => {
-            const username = 'Lecturer';
-            const email = 'lecturer@riadvice.tn';
-            const password = 'lecturer';
             if (response.rows.length == 0) {
                 cy.get('button#add-user-btn').click();
                 cy.get('input#users_form_username').type(username).should('have.value', username);
@@ -34,7 +31,7 @@ describe('Test delete user process', () => {
                 cy.get('div.ant-select-item-option-content').each(($role) => {
                     if ($role.text() == rolename) {
                         cy.wrap($role).click();
-                    };
+                    }
                 });
                 cy.get('button#submit-btn').click();
                 cy.wait(1000);
@@ -42,7 +39,7 @@ describe('Test delete user process', () => {
                 cy.contains(email).parents('tr').find('a.ant-typography:last').click();
                 cy.get('div.ant-popover-buttons').children('button:last').click();
                 cy.wait(1000);
-            };
+            }
             cy.contains(email).parents('tr').find('span.ant-tag-error').should('be.visible').and('have.length', 1);
         });
     });

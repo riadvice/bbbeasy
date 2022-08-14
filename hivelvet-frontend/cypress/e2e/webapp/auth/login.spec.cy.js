@@ -9,12 +9,9 @@ describe('Test login process', () => {
         }).then((result) => {
             if (result.rows.length == 0) {
                 cy.register(username, email, password, password);
-            };
-            cy.task('database', {
-                sql: `UPDATE public.users SET status='active' WHERE username='Professor';`
-            }).then(() => {
-                cy.visit('/login');
-            });
+                cy.task('database', { sql: `UPDATE public.users SET status='active' WHERE username='Professor';` });
+            }
+            cy.visit('/login');
         });
     });
     it('should load correctly login wizard page', () => {
@@ -46,7 +43,7 @@ describe('Test login process', () => {
     });
     it('should display errors when submitting form with invalid credentials', () => {
         const email = 'test@riadvice.tn';
-        const password = 'test';
+        const password = 'password';
         cy.get('input#login_form_email').type(email).should('have.value', email);
         cy.get('input#login_form_password').type(password).should('have.value', password);
         cy.get('button#submit-btn').click();

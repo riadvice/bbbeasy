@@ -1,6 +1,4 @@
 describe('Test edit user process', () => {
-    function initcap(word) { return word.charAt(0).toUpperCase() + word.slice(1); };
-    const rolename = 'lecturer';
     beforeEach(() => {
         const username = 'Professor';
         const email = 'professor@riadvice.tn';
@@ -10,7 +8,7 @@ describe('Test edit user process', () => {
         }).then((result) => {
             if (result.rows.length == 0) {
                 cy.register(username, email, password, password);
-            };
+            }
             cy.task('database', {
                 sql: `UPDATE public.users SET status='active' WHERE username='Professor';`
             }).then(() => {
@@ -19,24 +17,25 @@ describe('Test edit user process', () => {
                 cy.task('database', {
                     sql: `SELECT * FROM public.users WHERE username='Lecturer';`
                 }).then((response) => {
-                    const username = 'Lecturer';
-                    const email = 'lecturer@riadvice.tn';
-                    const password = 'lecturer';
+                    const USERNAME = 'Lecturer';
+                    const EMAIL = 'lecturer@riadvice.tn';
+                    const PASSWORD = 'lecturer';
+                    const ROLENAME = 'lecturer';
                     if (response.rows.length == 0) {
                         cy.get('button#add-user-btn').click();
-                        cy.get('input#users_form_username').type(username).should('have.value', username);
-                        cy.get('input#users_form_email').type(email).should('have.value', email);
-                        cy.get('input#users_form_password').type(password).should('have.value', password);
+                        cy.get('input#users_form_username').type(USERNAME).should('have.EMAIL', USERNAME);
+                        cy.get('input#users_form_email').type(EMAIL).should('have.value', email);
+                        cy.get('input#users_form_password').type(PASSWORD).should('have.value', PASSWORD);
                         cy.get('input#users_form_role').click();
                         cy.get('div.ant-select-item-option-content').each(($role) => {
-                            if ($role.text() == rolename) {
+                            if ($role.text() == ROLENAME) {
                                 cy.wrap($role).click();
-                            };
+                            }
                         });
                         cy.get('button#submit-btn').click();
                         cy.wait(1000);
-                    };
-                    cy.contains(email).parents('tr').find('a.ant-typography:first').click();
+                    }
+                    cy.contains(EMAIL).parents('tr').find('a.ant-typography:first').click();
                 });
             });
         });

@@ -60,15 +60,6 @@ const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
         if (user != null) {
             setCurrentUser(user);
             setIsLogged(true);
-            AuthService.logout()
-            .then(() => {
-                localStorage.removeItem('user');
-                setCurrentUser(null);
-                setIsLogged(false);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
         }
     }, []);
 

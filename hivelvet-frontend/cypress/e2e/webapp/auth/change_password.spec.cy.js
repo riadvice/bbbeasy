@@ -1,5 +1,4 @@
 describe('Test change password process if token valid', () => {
-    const password = 'password';
     beforeEach(() => {
         const username = 'Professor';
         const email = 'professor@riadvice.tn';
@@ -9,7 +8,7 @@ describe('Test change password process if token valid', () => {
         }).then((result) => {
             if (result.rows.length == 0) {
                 cy.register(username, email, password, password);
-            };
+            }
             cy.visit('/reset-password');
             cy.get('input#reset_form_email').type(email).should('have.value', email);
             cy.get('button#submit-btn').click();
@@ -48,6 +47,7 @@ describe('Test change password process if token valid', () => {
         cy.get('div.ant-form-item-has-error').should('be.visible').and('have.length', 2);
     });
     it('should check for passwords matching', () => {
+        const password = 'password';
         const confirmPassword = 'confirmPassword';
         cy.get('input#change_form_password').type(password).should('have.value', password);
         cy.get('input#change_form_confirmPassword').type(confirmPassword).should('have.value', confirmPassword);
@@ -55,6 +55,7 @@ describe('Test change password process if token valid', () => {
         cy.get('div.ant-form-item-has-error').should('be.visible').and('have.length', 1);
     });
     it('should render to login page if form valid', () => {
+        const password = 'password';
         cy.get('input#change_form_password').type(password).should('have.value', password);
         cy.get('input#change_form_confirmPassword').type(password).should('have.value', password);
         cy.get('button#submit-btn').click();
@@ -79,7 +80,7 @@ describe('Test change password process if token expired', () => {
         }).then((result) => {
             if (result.rows.length == 0) {
                 cy.register(username, email, password, password);
-            };
+            }
             cy.visit('/reset-password');
             cy.get('input#reset_form_email').type(email).should('have.value', email);
             cy.get('button#submit-btn').click();

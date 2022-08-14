@@ -1,21 +1,18 @@
 describe('Test add role process', () => {
-    const username = 'Professor';
-    const email = 'professor@riadvice.tn';
-    const password = 'professor';
     beforeEach(() => {
+        const username = 'Professor';
+        const email = 'professor@riadvice.tn';
+        const password = 'professor';
         cy.task('database', {
             sql: `SELECT * FROM public.users WHERE username='Professor';`
         }).then((result) => {
             if (result.rows.length == 0) {
                 cy.register(username, email, password, password);
-            };
-            cy.task('database', {
-                sql: `UPDATE public.users SET status='active' WHERE username='Professor';`
-            }).then(() => {
-                cy.login(email, password);
-                cy.visit('/settings/roles');
-                cy.get('button#add-role-btn').click();
-            });
+                cy.task('database', { sql: `UPDATE public.users SET status='active' WHERE username='Professor';` });
+            }
+            cy.login(email, password);
+            cy.visit('/settings/roles');
+            cy.get('button#add-role-btn').click();
         });
     });
     it('should load correctly and check form elements exist', () => {
@@ -38,7 +35,7 @@ describe('Test add role process', () => {
         }).then((result) => {
             if (result.rows.length != 0) {
                 cy.get('input#roles_form_name').type(result.rows[0].name).should('have.value', result.rows[0].name);
-            };
+            }
             cy.get('button#submit-btn').click();
             cy.wait(1000);
             cy.get('div.ant-form-item-has-error').should('be.visible').and('have.length', 1);

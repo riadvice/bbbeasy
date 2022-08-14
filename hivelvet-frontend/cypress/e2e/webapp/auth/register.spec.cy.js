@@ -62,19 +62,16 @@ describe('Test register process', () => {
         }).then((result) => {
             if (result.rows.length == 0) {
                 cy.register(username, email, password, password);
-            };
-            cy.task('database', {
-                sql: `UPDATE public.users SET status='active' WHERE username='Professor';`
-            }).then(() => {
-                cy.get('input#register_form_username').type(username).should('have.value', username);
-                cy.get('input#register_form_email').type(email).should('have.value', email);
-                cy.get('input#register_form_password').type(password).should('have.value', password);
-                cy.get('input#register_form_confirmPassword').type(password).should('have.value', password);
-                cy.get('input#register_form_agreement').click().should('be.checked');
-                cy.get('button#submit-btn').click();
-                cy.wait(1000);
-                cy.get('div.alert-msg').should('be.visible').and('have.length', 1);
-            });
+                cy.task('database', { sql: `UPDATE public.users SET status='active' WHERE username='Professor';` });
+            }
+            cy.get('input#register_form_username').type(username).should('have.value', username);
+            cy.get('input#register_form_email').type(email).should('have.value', email);
+            cy.get('input#register_form_password').type(password).should('have.value', password);
+            cy.get('input#register_form_confirmPassword').type(password).should('have.value', password);
+            cy.get('input#register_form_agreement').click().should('be.checked');
+            cy.get('button#submit-btn').click();
+            cy.wait(1000);
+            cy.get('div.alert-msg').should('be.visible').and('have.length', 1);
         });
     });
 });

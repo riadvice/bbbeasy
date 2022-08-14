@@ -12,16 +12,13 @@ describe('Test render of home page', () => {
         }).then((result) => {
             if (result.rows.length == 0) {
                 cy.register(username, email, password, password);
-            };
-            cy.task('database', {
-                sql: `UPDATE public.users SET status='active' WHERE username='Professor';`
-            }).then(() => {
-                cy.login(email, password);
-                cy.get('button.profil-btn').click();
-                cy.get('a#logout-btn').click();
-                cy.wait(1000);
-                cy.location('pathname').should('eq', '/login');
-            });
+                cy.task('database', { sql: `UPDATE public.users SET status='active' WHERE username='Professor';` });
+            }
+            cy.login(email, password);
+            cy.get('button.profil-btn').click();
+            cy.get('a#logout-btn').click();
+            cy.wait(1000);
+            cy.location('pathname').should('eq', '/login');
         });
     });
 });
