@@ -48,5 +48,5 @@ export const apiRoutes = {
     LIST_LABEL_URL: API_URL + '/labels',
     ADD_LABEL_URL: API_URL + '/labels',
     EDIT_LABEL_URL: API_URL + '/labels/',
-    DELETE_LABEL_URL: API_URL + '/labels/',    
+    DELETE_LABEL_URL: API_URL + '/labels/',
 };

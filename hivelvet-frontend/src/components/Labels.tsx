@@ -1,3 +1,20 @@
+/**
+ * Hivelvet open source platform - https://riadvice.tn/
+ *
+ * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
+ *
+ * This program is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free Software
+ * Foundation; either version 3.0 of the License, or (at your option) any later
+ * version.
+ *
+ * Hivelvet is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License along
+ * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
+ */
 import React, { useEffect } from 'react';
 import EN_US from '../locale/en-US.json';
 import LabelsService from '../services/labels.service';
@@ -11,6 +28,7 @@ import _ from 'lodash';
 import Highlighter from 'react-highlight-words/dist/main';
 import Notifications from './Notifications';
 import AddLabelForm from './AddLabelForm';
+
 const { Link } = Typography;
 
 type Item = {
@@ -112,7 +130,7 @@ const Labels = () => {
     const handleDelete = (key: number) => {
         setLoading(true);
         LabelsService.delete_label(key)
-            .then((response) => {
+            .then(() => {
                 Notifications.openNotificationWithIcon('success', t('delete_label_success'));
                 setData((labels) => labels.filter((label) => label.key !== key));
             })
@@ -198,14 +216,7 @@ const Labels = () => {
         );
     };
 
-    const EditableCell: React.FC<EditableCellProps> = ({
-        editing,
-        children,
-        dataIndex,
-        record,
-        inputType,
-        ...restProps
-    }) => {
+    const EditableCell: React.FC<EditableCellProps> = ({ editing, children, dataIndex, record, ...restProps }) => {
         const EditableCol = (
             <Space size="middle">
                 <Form.Item
@@ -360,6 +371,8 @@ const Labels = () => {
         },
         {
             title: t('actions_col'),
+            dataIndex: 'actions',
+            editable: false,
             render: (text, record) => {
                 const handleCancelVisibilityChange = () => {
                     compareEdit(record, editForm.getFieldsValue(true)) ? cancelEdit() : setCancelVisibility(true);
@@ -416,7 +429,7 @@ const Labels = () => {
         setErrorsAdd([]);
     };
 
-    const mergedColumns = columns.map((col: any) => {
+    const mergedColumns = columns.map((col) => {
         if (!col.editable) {
             return col;
         }

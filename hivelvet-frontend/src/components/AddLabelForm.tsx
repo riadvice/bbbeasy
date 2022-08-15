@@ -19,15 +19,12 @@
 import React from 'react';
 import { Form, Input } from 'antd';
 import { Trans, withTranslation } from 'react-i18next';
-import { t } from 'i18next'; 
+import { t } from 'i18next';
 import EN_US from '../locale/en-US.json';
-
-
-
 
 type Props = {
     isLogin?: boolean;
-    errors?: string[]; 
+    errors?: string[];
 };
 
 export const AddLabelForm = (props: Props) => {
@@ -39,9 +36,7 @@ export const AddLabelForm = (props: Props) => {
                     name="name"
                     {...('name' in props.errors && {
                         help: (
-                            <Trans
-                                i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == props.errors['name'])}
-                            />
+                            <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == props.errors['name'])} />
                         ),
                         validateStatus: 'error',
                     })}
@@ -54,7 +49,6 @@ export const AddLabelForm = (props: Props) => {
                             min: 4,
                             message: <Trans i18nKey="name.size" />,
                         },
-                        
                     ]}
                 >
                     <Input placeholder={t('name.label')} />
@@ -81,13 +75,10 @@ export const AddLabelForm = (props: Props) => {
                         message: <Trans i18nKey="color.size" />,
                     },
                 ]}
-                
             >
-            
                 <Input placeholder={t('color.label')} />
             </Form.Item>
         </>
     );
 };
-
 export default withTranslation()(AddLabelForm);
