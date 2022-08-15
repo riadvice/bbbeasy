@@ -91,5 +91,6 @@
     "simple-progress-webpack-plugin": "^2.0.0",
     "source-map-explorer": "^2.5.2",
     "ts-loader": "^9.2.6"
-  }
+  },
+  "packageManager": "yarn@3.2.2"
 }
