@@ -1,16 +1,16 @@
 import React, { useEffect } from 'react';
+import EN_US from '../locale/en-US.json';
 import LabelsService from '../services/labels.service';
 import { PaginationType } from '../types/PaginationType';
 import { Trans, withTranslation } from 'react-i18next';
 import { t } from 'i18next';
-import { Alert, Badge, Button, Form, Input, Modal, PageHeader, Popconfirm, Select, Space, Table, Tag, Typography } from 'antd';
+import { Badge, Button, Form, Input, Modal, PageHeader, Popconfirm, Space, Table, Typography } from 'antd';
 import { DeleteOutlined, EditOutlined, QuestionCircleOutlined, SearchOutlined } from '@ant-design/icons';
 import { FormInstance } from 'antd/lib/form';
 import _ from 'lodash';
 import Highlighter from 'react-highlight-words/dist/main';
 import Notifications from './Notifications';
 import AddLabelForm from './AddLabelForm';
-const { Option} = Select;
 const { Link } = Typography;
 
 type Item = {
@@ -40,6 +40,9 @@ let addForm: FormInstance = null;
 const Labels = () => {
     const [data, setData] = React.useState<Item[]>([]);
     const [loading, setLoading] = React.useState<boolean>(false);
+    const [editingKey, setEditingKey] = React.useState<number>(null);
+    const [errorsEdit, setErrorsEdit] = React.useState({});
+    const [cancelVisibility, setCancelVisibility] = React.useState<boolean>(false);
     const [pagination, setPagination] = React.useState<PaginationType>({ current: 1, pageSize: 5 });
     const [searchText, setSearchText] = React.useState<string>('');
     const [searchedColumn, setSearchedColumn] = React.useState<string>('');
@@ -56,7 +59,8 @@ const Labels = () => {
             })
             .catch((error) => {
                 console.error(error);
-            }).finally(() => {
+            })
+            .finally(() => {
                 setLoading(false);
             });
     };
@@ -64,7 +68,7 @@ const Labels = () => {
     useEffect(() => {
         //Runs only on the first render
         getLabels();
-    }, []); 
+    }, []);
     // add
     const initialAddValues: formType = {
         name: '',
@@ -114,7 +118,8 @@ const Labels = () => {
             })
             .catch((error) => {
                 console.error(error);
-            }).finally(() => {
+            })
+            .finally(() => {
                 setLoading(false);
             });
     };
@@ -126,8 +131,7 @@ const Labels = () => {
     const handleSearch = (selectedKeys: string[], confirm, dataIndex: string, closed = false) => {
         if (closed) {
             confirm({ closeDropdown: false });
-        }
-        else {
+        } else {
             confirm();
         }
 
@@ -173,7 +177,7 @@ const Labels = () => {
             return record[dataIndex] ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()) : '';
         },
         render: (text) => {
-            if (dataIndex == 'name' ) {
+            if (dataIndex == 'name') {
                 text = text[0].toUpperCase() + text.slice(1);
             }
             if (searchedColumn === dataIndex) {
@@ -182,7 +186,7 @@ const Labels = () => {
             return text;
         },
     });
-    //edit 
+    //edit
     const [editForm] = Form.useForm();
     const EditableRow: React.FC = ({ ...props }) => {
         return (
@@ -192,7 +196,7 @@ const Labels = () => {
                 </EditableContext.Provider>
             </Form>
         );
-    }
+    };
 
     const EditableCell: React.FC<EditableCellProps> = ({
         editing,
@@ -202,19 +206,133 @@ const Labels = () => {
         inputType,
         ...restProps
     }) => {
-
-        return (
-            <td {...restProps}>
-                {(dataIndex == 'name' &&
-                    <Badge
-                      count={record.name}
-                      style={{
-                        backgroundColor: record.color,
-                      }}
-                    />) || children}
-            </td>
+        const EditableCol = (
+            <Space size="middle">
+                <Form.Item
+                    name={dataIndex}
+                    className="input-editable editable-row"
+                    {...(dataIndex in errorsEdit &&
+                        record.key == errorsEdit['key'] && {
+                            help: (
+                                <Trans
+                                    i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errorsEdit[dataIndex])}
+                                />
+                            ),
+                            validateStatus: 'error',
+                        })}
+                    rules={[
+                        {
+                            required: true,
+                            message: t('required_' + dataIndex),
+                        },
+                    ]}
+                >
+                    <Input
+                        onFocus={() => {
+                            setCancelVisibility(false);
+                        }}
+                    />
+                </Form.Item>
+                {dataIndex == 'description' && (
+                    <Form.Item
+                        name="color"
+                        className="input-editable editable-row"
+                        {...('color' in errorsEdit &&
+                            record.key == errorsEdit['key'] && {
+                                help: (
+                                    <Trans
+                                        i18nKey={Object.keys(EN_US).filter(
+                                            (elem) => EN_US[elem] == errorsEdit['color']
+                                        )}
+                                    />
+                                ),
+                                validateStatus: 'error',
+                            })}
+                        rules={[
+                            {
+                                required: true,
+                                message: t('required_color'),
+                            },
+                        ]}
+                    >
+                        <Input
+                            onFocus={() => {
+                                setCancelVisibility(false);
+                            }}
+                        />
+                    </Form.Item>
+                )}
+            </Space>
         );
+        const RegularCol =
+            dataIndex == 'name' ? (
+                <Badge
+                    count={record.name}
+                    style={{
+                        backgroundColor: record.color,
+                    }}
+                />
+            ) : (
+                children
+            );
+        return <td {...restProps}>{editing ? EditableCol : RegularCol}</td>;
     };
+
+    const isEditing = (record: Item) => record.key == editingKey;
+    const toggleEdit = (record: Item) => {
+        setCancelVisibility(false);
+        setEditingKey(record.key);
+        setErrorsEdit({});
+        const recordClone = { ...record };
+        editForm.setFieldsValue(recordClone);
+    };
+
+    const cancelEdit = () => {
+        setCancelVisibility(false);
+        setEditingKey(null);
+    };
+
+    const compareEdit = (oldRecord: Item, newRecord: object): boolean => _.isEqual(oldRecord, newRecord);
+
+    const saveEdit = async (record: Item, key: number) => {
+        try {
+            const formValues: object = await editForm.validateFields();
+            if (!compareEdit(record, editForm.getFieldsValue(true))) {
+                setLoading(true);
+                setErrorsEdit({});
+                LabelsService.edit_label(formValues, key)
+                    .then((response) => {
+                        const newRow: Item = response.data.label;
+                        const index = data.findIndex((item) => key === item.key);
+                        if (index !== -1 && newRow) {
+                            setData((data) => {
+                                data[index] = newRow;
+                                return [...data];
+                            });
+                            cancelEdit();
+                        }
+                        Notifications.openNotificationWithIcon('success', t('edit_label_success'));
+                    })
+                    .catch((error) => {
+                        const responseData = error.response.data;
+                        if (responseData.errors) {
+                            const err = responseData.errors;
+                            err['key'] = key;
+                            setErrorsEdit(err);
+                        }
+                    })
+                    .finally(() => {
+                        setLoading(false);
+                    });
+            } else {
+                Notifications.openNotificationWithIcon('info', t('no_changes'));
+                cancelEdit();
+            }
+        } catch (errInfo) {
+            console.error('Save failed:', errInfo);
+        }
+    };
+
     const columns = [
         {
             title: t('labels_cols.name'),
@@ -226,8 +344,7 @@ const Labels = () => {
             sorter: {
                 compare: (a, b) => a.name.localeCompare(b.name),
                 multiple: 2,
-            }, 
-           
+            },
         },
         {
             title: t('labels_cols.description'),
@@ -244,28 +361,60 @@ const Labels = () => {
         {
             title: t('actions_col'),
             render: (text, record) => {
-                return (
+                const handleCancelVisibilityChange = () => {
+                    compareEdit(record, editForm.getFieldsValue(true)) ? cancelEdit() : setCancelVisibility(true);
+                };
+
+                const EditActions = (
+                    <Space size="middle">
+                        <Popconfirm
+                            title={t('cancel_edit')}
+                            placement="leftTop"
+                            visible={cancelVisibility}
+                            onConfirm={() => cancelEdit()}
+                            onCancel={() => setCancelVisibility(false)}
+                            onVisibleChange={handleCancelVisibilityChange}
+                        >
+                            <Button size="middle">
+                                <Trans i18nKey="cancel" />
+                            </Button>
+                        </Popconfirm>
+                        <Button
+                            disabled={loading}
+                            size="middle"
+                            type="primary"
+                            onClick={() => saveEdit(record, record.key)}
+                        >
+                            <Trans i18nKey="save" />
+                        </Button>
+                    </Space>
+                );
+                const Actions = (
                     <Space size="middle" className="table-actions">
-                    <Link>
-                        <EditOutlined /> <Trans i18nKey="edit" />
-                    </Link>
-                    <Popconfirm
-                        title={t('delete_label_confirm')}
-                        icon={<QuestionCircleOutlined className="red-icon" />}
-                        onConfirm={() => handleDelete(record.key)}
-                    >
-                        <Link>
-                            <DeleteOutlined /> <Trans i18nKey="delete" />
+                        <Link disabled={editingKey !== null} onClick={() => toggleEdit(record)}>
+                            <EditOutlined /> <Trans i18nKey="edit" />
                         </Link>
-                    </Popconfirm>
-                </Space>
-                )
+                        <Popconfirm
+                            title={t('delete_label_confirm')}
+                            icon={<QuestionCircleOutlined className="red-icon" />}
+                            onConfirm={() => handleDelete(record.key)}
+                        >
+                            <Link>
+                                <DeleteOutlined /> <Trans i18nKey="delete" />
+                            </Link>
+                        </Popconfirm>
+                    </Space>
+                );
+
+                const editable = isEditing(record);
+                return editable ? EditActions : Actions;
             },
         },
     ];
 
-    const failedAdd = () => { setErrorsAdd([]); }
-
+    const failedAdd = () => {
+        setErrorsAdd([]);
+    };
 
     const mergedColumns = columns.map((col: any) => {
         if (!col.editable) {
@@ -278,21 +427,21 @@ const Labels = () => {
                 inputType: 'text',
                 dataIndex: col.dataIndex,
                 title: col.title,
-                editing: false,
+                editing: isEditing(record),
             }),
         };
     });
 
     return (
-        <> 
-            <PageHeader 
-            className='site-page-header'
-            title={<Trans i18nKey="labels" />}
-            extra={[
-                <Button key="1" type="primary" onClick={toggleAdd}>
-                    <Trans i18nKey="new_label" />
-                </Button>,
-            ]}
+        <>
+            <PageHeader
+                className="site-page-header"
+                title={<Trans i18nKey="labels" />}
+                extra={[
+                    <Button key="1" type="primary" onClick={toggleAdd}>
+                        <Trans i18nKey="new_label" />
+                    </Button>,
+                ]}
             />
             <Modal
                 title={<Trans i18nKey="new_label" />}
@@ -312,7 +461,7 @@ const Labels = () => {
                     onFinishFailed={failedAdd}
                     validateTrigger="onSubmit"
                 >
-                    <AddLabelForm errors={errorsAdd}/>
+                    <AddLabelForm errors={errorsAdd} />
                     <Form.Item className="modal-submit-btn button-container">
                         <Button type="text" className="cancel-btn prev" block onClick={cancelAdd}>
                             <Trans i18nKey="cancel" />
@@ -321,15 +470,15 @@ const Labels = () => {
                             <Trans i18nKey="create" />
                         </Button>
                     </Form.Item>
-                    </Form>
+                </Form>
             </Modal>
             <Table
                 className="hivelvet-table"
-                components={{ 
+                components={{
                     body: {
                         row: EditableRow,
                         cell: EditableCell,
-                    }
+                    },
                 }}
                 columns={mergedColumns}
                 dataSource={data}
