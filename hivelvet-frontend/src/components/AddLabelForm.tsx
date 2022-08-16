@@ -21,22 +21,29 @@ import { Form, Input } from 'antd';
 import { Trans, withTranslation } from 'react-i18next';
 import { t } from 'i18next';
 import EN_US from '../locale/en-US.json';
+import InputColor from './layout/InputColor';
 
 type Props = {
-    isLogin?: boolean;
-    errors?: string[];
+    isLogin?: boolean,
+    errors?: string[],
+    defaultColor: string,
 };
 
 export const AddLabelForm = (props: Props) => {
+    const {
+        errors,
+        defaultColor,
+    } = props;
+
     return (
         <>
             {!props.isLogin && (
                 <Form.Item
                     label={<Trans i18nKey="name.label" />}
                     name="name"
-                    {...('name' in props.errors && {
+                    {...('name' in errors && {
                         help: (
-                            <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == props.errors['name'])} />
+                            <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errors['name'])} />
                         ),
                         validateStatus: 'error',
                     })}
@@ -69,14 +76,8 @@ export const AddLabelForm = (props: Props) => {
             <Form.Item
                 label={<Trans i18nKey="color.label" />}
                 name="color"
-                rules={[
-                    {
-                        max: 7,
-                        message: <Trans i18nKey="color.size" />,
-                    },
-                ]}
             >
-                <Input placeholder={t('color.label')} />
+                <InputColor defaultColor={defaultColor} />
             </Form.Item>
         </>
     );

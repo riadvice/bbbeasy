@@ -28,6 +28,7 @@ import _ from 'lodash';
 import Highlighter from 'react-highlight-words/dist/main';
 import Notifications from './Notifications';
 import AddLabelForm from './AddLabelForm';
+import InputColor from './layout/InputColor';
 
 const { Link } = Typography;
 
@@ -266,7 +267,8 @@ const Labels = () => {
                             },
                         ]}
                     >
-                        <Input
+                        <InputColor
+                            defaultColor={record.color}
                             onFocus={() => {
                                 setCancelVisibility(false);
                             }}
@@ -474,7 +476,7 @@ const Labels = () => {
                     onFinishFailed={failedAdd}
                     validateTrigger="onSubmit"
                 >
-                    <AddLabelForm errors={errorsAdd} />
+                    <AddLabelForm defaultColor='#fbbc0b' errors={errorsAdd} />
                     <Form.Item className="modal-submit-btn button-container">
                         <Button type="text" className="cancel-btn prev" block onClick={cancelAdd}>
                             <Trans i18nKey="cancel" />
