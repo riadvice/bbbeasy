@@ -52,8 +52,9 @@ class Add extends BaseAction
         $dataChecker->verify($form['email'], Validator::email()->setName('email'));
         $dataChecker->verify($form['password'], Validator::length(8)->setName('password'));
         $dataChecker->verify($form['role'], Validator::notEmpty()->setName('role'));
-        $message = 'User could not be added';
 
+        $error_message = 'User could not be added';
+        
         if ($dataChecker->allValid()) {
             $user  = new User();
             if (!preg_match('/^[0-9A-Za-z !"#$%&\'()*+,-.\/:;<=>?@[\]^_`{|}&~]+$/', $form['password'])) {
@@ -63,7 +64,7 @@ class Add extends BaseAction
                 $next = $this->isPasswordCommon($form['username'], $form['email'], $form['password']);
                 $error = $user->usernameOrEmailExists($form['username'], $form['email']);
                 if ($error && $next) {
-                    $this->logger->error($message, ['error' => $error]);
+                    $this->logger->error($error_message, ['error' => $error]);
                     $this->renderJson(['message' => $error], ResponseCode::HTTP_PRECONDITION_FAILED);
                 } else if ($next) {
                     $role = new Role();
@@ -79,9 +80,8 @@ class Add extends BaseAction
                         try {
                             $user->save();
                         } catch (\Exception $e) {
-                            $message = $message;
-                            $this->logger->error($message, ['user' => $user->toArray(), 'error' => $e->getMessage()]);
-                            $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+                            $this->logger->error($error_message, ['user' => $user->toArray(), 'error' => $e->getMessage()]);
+                            $this->renderJson(['message' => $error_message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
 
                             return;
                         }

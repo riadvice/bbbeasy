@@ -45,6 +45,8 @@ class ChangePassword extends BaseAction
 
         $dataChecker->verify($password, Validator::length(8)->setName('password'));
 
+        $error_message = 'Reset password error : Password could not be changed';
+
         if ($resetToken->getByToken($form['token'])) {
             if (!$resetToken->dry()) {
                 if ($dataChecker->allValid()) {
@@ -52,7 +54,6 @@ class ChangePassword extends BaseAction
                     $user               = $user->getById($resetToken->user_id);
                     $user->password     = $password;
                     $resetToken->status = ResetTokenStatus::CONSUMED;
-                    $message = 'Reset password error : Password could not be changed';
 
                     if (!preg_match('/^[0-9A-Za-z !"#$%&\'()*+,-.\/:;<=>?@[\]^_`{|}&~]+$/', $password)) {
                         $this->logger->error($message, ['error' => 'Only use letters, numbers, and common punctuation characters']);
