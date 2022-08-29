@@ -56,12 +56,12 @@ class ChangePassword extends BaseAction
                     $resetToken->status = ResetTokenStatus::CONSUMED;
 
                     if (!preg_match('/^[0-9A-Za-z !"#$%&\'()*+,-.\/:;<=>?@[\]^_`{|}&~]+$/', $password)) {
-                        $this->logger->error($message, ['error' => 'Only use letters, numbers, and common punctuation characters']);
+                        $this->logger->error($error_message, ['error' => 'Only use letters, numbers, and common punctuation characters']);
                         $this->renderJson(['message' => 'Only use letters, numbers, and common punctuation characters'], ResponseCode::HTTP_BAD_REQUEST);
                     } else {
                         $next = $this->isPasswordCommon($user->username, $user->email, $form['password']);
                         if ($user->verifyPassword($password) && $next) {
-                            $this->logger->error($message, ['error' => 'New password cannot be the same as your old password']);
+                            $this->logger->error($error_message, ['error' => 'New password cannot be the same as your old password']);
                             $this->renderJson(['message' => 'New password cannot be the same as your old password'] );
                         } else if ($next) {
                             try {
@@ -69,7 +69,7 @@ class ChangePassword extends BaseAction
                                 $user->save();
                             } catch (\Exception $e) {
                                 $message = 'Password could not be changed';
-                                $this->logger->error($message, ['error' => $e->getMessage()]);
+                                $this->logger->error($error_message, ['error' => $e->getMessage()]);
                                 $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
 
                                 return;
@@ -79,11 +79,11 @@ class ChangePassword extends BaseAction
                         }
                     }
                 } else {
-                    $this->logger->error($message, ['errors' => $dataChecker->getErrors()]);
+                    $this->logger->error($error_message, ['errors' => $dataChecker->getErrors()]);
                     $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
                 }
             } else {
-                $this->logger->error($message);
+                $this->logger->error($error_message);
             }
         }
     }
