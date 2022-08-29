@@ -20,6 +20,7 @@ import React from 'react';
 import { Form, Input } from 'antd';
 import { Trans, withTranslation } from 'react-i18next';
 import { t } from 'i18next';
+import { PasswordInput } from 'antd-password-input-strength';
 
 type Props = {
     isLogin?: boolean;
@@ -67,7 +68,7 @@ export const AddUserForm = (props: Props) => {
                 name="password"
                 rules={[
                     {
-                        min: 4,
+                        min: 8,
                         message: <Trans i18nKey="password.size" />,
                     },
                     {
@@ -76,7 +77,7 @@ export const AddUserForm = (props: Props) => {
                     },
                 ]}
             >
-                <Input.Password placeholder="**********" />
+                <PasswordInput placeholder="**********" />
             </Form.Item>
         </>
     );

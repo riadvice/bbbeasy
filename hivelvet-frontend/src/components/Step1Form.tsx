@@ -17,13 +17,19 @@
  */
 
 import React from 'react';
-import { Typography } from 'antd';
+import { Alert, Typography } from 'antd';
 import AddUserForm from './AddUserForm';
 import { Trans } from 'react-i18next';
+import EN_US from '../locale/en-US.json';
 
 const { Title, Paragraph } = Typography;
 
-export const Step1Form = () => {
+type Props = {
+    message: string;
+    successful: boolean;
+};
+
+export const Step1Form = (props: Props) => {
     return (
         <div>
             <Paragraph className="form-header text-center">
@@ -31,6 +37,16 @@ export const Step1Form = () => {
                     <Trans i18nKey="create-administrator-account" />
                 </Title>
             </Paragraph>
+
+            {props.message && !props.successful && (
+                <Alert
+                    type="error"
+                    className="alert-error-msg text-center"
+                    message={<Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == props.message)} />}
+                    showIcon
+                />        
+            )}
+
             <AddUserForm />
         </div>
     );

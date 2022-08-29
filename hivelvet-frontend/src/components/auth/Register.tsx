@@ -112,7 +112,7 @@ const Register = () => {
                                 dependencies={['password']}
                                 rules={[
                                     {
-                                        min: 4,
+                                        min: 8,
                                         message: <Trans i18nKey="confirm-password.size" />,
                                     },
                                     {

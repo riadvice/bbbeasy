@@ -310,6 +310,32 @@ body.rtl {
   background: var(--hv-lighten-gray);
   min-height: auto;
 }
+
+/**
+ * You should not change .ant-card-body as it used by hivelvet bash script.
+ */
+
+// .ant-card-body {
+//   display: flex;
+//   flex-wrap: wrap;
+// }
+
+/**
+ * When the installer app is enabled, it must appear as written below:
+ *
+ * .ant-card-body {
+ *   display: flex;
+ *   flex-wrap: wrap;
+ * }
+ *
+ * When the web app is enabled, it must appear as written below:
+ *
+ * // .ant-card-body {
+ * //   display: flex;
+ * //   flex-wrap: wrap;
+ * // }
+ */
+
 .bordered-card .ant-card .ant-card-head .ant-card-head-title, .bordered-card  .ant-card .ant-card-body label {
   font-size: 13px;
 }
@@ -785,10 +811,30 @@ body.rtl {
   margin-right: 10px;
 }
 
+/**
+ * You should not change .ant-card-body as it used by hivelvet bash script.
+ */
+
 .presets-grid {
   width: 25%;
   box-shadow: none;
 }
+
+/**
+ * When the installer app is enabled, it must appear as written below:
+ *
+ * .presets-grid {
+ *   width: 215px;
+ *   box-shadow: none;
+ * }
+ *
+ * When the web app is enabled, it must appear as written below:
+ *
+ * .presets-grid {
+ *   width: 25%;
+ *   box-shadow: none;
+ * }
+ */
 
 .presets-grid .ant-card-meta {
   align-items: center;

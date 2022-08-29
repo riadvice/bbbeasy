@@ -230,17 +230,10 @@ const Users = () => {
                     <Form.Item
                         name={dataIndex}
                         className="input-editable editable-row"
-                        {...(dataIndex in errorsEdit &&
-                            record.key == errorsEdit['key'] && {
-                                help: (
-                                    <Trans
-                                        i18nKey={Object.keys(EN_US).filter(
-                                            (elem) => EN_US[elem] == errorsEdit[dataIndex]
-                                        )}
-                                    />
-                                ),
-                                validateStatus: 'error',
-                            })}
+                        {...(dataIndex in errorsEdit && record.key == errorsEdit['key'] && {
+                            help: t('invalid_' + errorsEdit[dataIndex].split(' ')[errorsEdit[dataIndex].split(' ').length - 1]),
+                            validateStatus: 'error',
+                        })}
                         rules={[
                             {
                                 required: true,
@@ -504,11 +497,16 @@ const Users = () => {
                             onConfirm={() => cancelEdit()}
                             onCancel={() => setCancelVisibility(false)}
                         >
-                            <Button size="middle">
+                            <Button size="middle" className="cell-input-cancel">
                                 <Trans i18nKey="cancel" />
                             </Button>
                         </Popconfirm>
-                        <Button size="middle" type="primary" onClick={() => saveEdit(record, record.key)}>
+                        <Button
+                            size="middle"
+                            type="primary"
+                            className="cell-input-save"
+                            onClick={() => saveEdit(record, record.key)}
+                        >
                             <Trans i18nKey="save" />
                         </Button>
                     </Space>
@@ -553,7 +551,7 @@ const Users = () => {
                 className="site-page-header"
                 title={<Trans i18nKey="users" />}
                 extra={[
-                    <Button key="1" type="primary" onClick={toggleAdd}>
+                    <Button key="1" type="primary" id="add-user-btn" onClick={toggleAdd}>
                         <Trans i18nKey="new_user" />
                     </Button>,
                 ]}
@@ -570,6 +568,7 @@ const Users = () => {
             >
                 <Form
                     layout="vertical"
+                    name="users_form"
                     ref={(form) => (addForm = form)}
                     initialValues={initialAddValues}
                     hideRequiredMark
@@ -602,7 +601,7 @@ const Users = () => {
                         <Button type="text" className="cancel-btn prev" block onClick={cancelAdd}>
                             <Trans i18nKey="cancel" />
                         </Button>
-                        <Button type="primary" htmlType="submit" block>
+                        <Button type="primary" id="submit-btn" htmlType="submit" block>
                             <Trans i18nKey="create" />
                         </Button>
                     </Form.Item>

@@ -66,13 +66,16 @@ class Edit extends BaseAction
                     if (1 === \count($users)) {
                         $usernameExist = $users[0]['username'] === $form['username'];
                         $emailExist    = $users[0]['email'] === $form['email'];
+                        $username_message = 'Username already exists';
+                        $email_message = 'Email already exists';
+                        $error_message = 'User could not be updated';
                         $message       = ($usernameExist && $emailExist) ?
-                            ['username' => 'username already exist', 'email' => 'email already exist'] :
-                            ($usernameExist ? ['username' => 'username already exist'] : ['email' => 'email already exist']);
+                            ['username' => $username_message, 'email' => $email_message] :
+                            ($usernameExist ? ['username' => $username_message] : ['email' => $email_message]);
                     } else {
-                        $message = ['username' => 'username already exist', 'email' => 'email already exist'];
+                        $message = ['username' => $username_message, 'email' => $email_message];
                     }
-                    $this->logger->error('User could not be updated', ['error' => $message]);
+                    $this->logger->error($error_message, ['error' => $message]);
                     $this->renderJson(['errors' => $message], ResponseCode::HTTP_PRECONDITION_FAILED);
                 } else {
                     $role = new Role();
@@ -86,8 +89,8 @@ class Edit extends BaseAction
                         try {
                             $user->save();
                         } catch (\Exception $e) {
-                            $message = 'user could not be updated';
-                            $this->logger->error('User could not be updated', ['user' => $user->toArray(), 'error' => $e->getMessage()]);
+                            $message = $error_message;
+                            $this->logger->error($error_message, ['user' => $user->toArray(), 'error' => $e->getMessage()]);
                             $this->renderJson(['errors' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
 
                             return;

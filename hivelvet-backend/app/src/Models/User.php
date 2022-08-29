@@ -42,6 +42,7 @@ use Models\Base as BaseModel;
  * @property DateTime $created_on
  * @property DateTime $updated_on
  * @property DateTime $last_login
+ * @property int      $password_attempts 
  */
 class User extends BaseModel
 {
@@ -113,10 +114,10 @@ class User extends BaseModel
                 $usernameExist = $users[0]['username'] === $username;
                 $emailExist    = $users[0]['email'] === $email;
 
-                return ($usernameExist && $emailExist) ? 'username and email already exist' : ($usernameExist ? 'username already exist' : 'email already exist');
+                return ($usernameExist && $emailExist) ? 'Username and Email already exist' : ($usernameExist ? 'Username already exists' : 'Email already exists');
             }
 
-            return 'username and email already exist';
+            return 'Username and Email already exist';
         }
 
         return null;

@@ -216,6 +216,39 @@ enable_installer() {
       sed -i '/config.extension =/ c config.extension = -install' "$BASEDIR/../hivelvet-backend/app/config/config-$ENVIRONMENT.ini"
       printf "%s %s [✔ - DONE]\n"
     fi
+    #c cmd to update .ant-card-body and .presets-grid css classes
+    for i in $(sed -n '/^\/\/ .ant-card-body {/=' "$BASEDIR/../hivelvet-frontend/src/App.less"); do
+      for j in $(sed -n '/^\/\/   display: flex;/=' "$BASEDIR/../hivelvet-frontend/src/App.less"); do
+        for k in $(sed -n '/^\/\/   flex-wrap: wrap;/=' "$BASEDIR/../hivelvet-frontend/src/App.less"); do
+          for l in $(sed -n '/^\/\/ }/=' "$BASEDIR/../hivelvet-frontend/src/App.less"); do
+            if [ $j == `expr $i + 1` ] && [ $k == `expr $j + 1` ] && [ $l == `expr $k + 1` ]; then
+              sed -i "${i}d" "$BASEDIR/../hivelvet-frontend/src/App.less"
+              sed -i "${i}i .ant-card-body {" "$BASEDIR/../hivelvet-frontend/src/App.less"
+              sed -i "${j}d" "$BASEDIR/../hivelvet-frontend/src/App.less"
+              sed -i "${j}i \  display: flex;" "$BASEDIR/../hivelvet-frontend/src/App.less"
+              sed -i "${k}d" "$BASEDIR/../hivelvet-frontend/src/App.less"
+              sed -i "${k}i \  flex-wrap: wrap;" "$BASEDIR/../hivelvet-frontend/src/App.less"
+              sed -i "${l}d" "$BASEDIR/../hivelvet-frontend/src/App.less"
+              sed -i "${l}i }" "$BASEDIR/../hivelvet-frontend/src/App.less"
+              unset i j k l
+              for i in $(sed -n '/^.presets-grid {/=' "$BASEDIR/../hivelvet-frontend/src/App.less"); do
+                for j in $(sed -n '/^  width: 25%;/=' "$BASEDIR/../hivelvet-frontend/src/App.less"); do
+                  for k in $(sed -n '/^  box-shadow: none;/=' "$BASEDIR/../hivelvet-frontend/src/App.less"); do
+                    for l in $(sed -n '/^}/=' "$BASEDIR/../hivelvet-frontend/src/App.less"); do
+                      if [ $j == `expr $i + 1` ] && [ $k == `expr $j + 1` ] && [ $l == `expr $k + 1` ]; then
+                        sed -i "${j}d" "$BASEDIR/../hivelvet-frontend/src/App.less"
+                        sed -i "${j}i \  width: 215px;" "$BASEDIR/../hivelvet-frontend/src/App.less"
+                        exit
+                      fi
+                    done
+                  done
+                done
+              done
+            fi
+          done
+        done
+      done
+    done
   echo "✔ Installer app enabled"
 }
 
@@ -228,6 +261,39 @@ enable_web() {
       sed -i '/config.extension = -install/ c config.extension =' "$BASEDIR/../hivelvet-backend/app/config/config-$ENVIRONMENT.ini"
       printf "%s %s [✔ - DONE]\n"
     fi
+    #c cmd to update .ant-card-body and .presets-grid css classes
+    for i in $(sed -n '/^.ant-card-body {/=' "$BASEDIR/../hivelvet-frontend/src/App.less"); do
+      for j in $(sed -n '/^  display: flex;/=' "$BASEDIR/../hivelvet-frontend/src/App.less"); do
+        for k in $(sed -n '/^  flex-wrap: wrap;/=' "$BASEDIR/../hivelvet-frontend/src/App.less"); do
+          for l in $(sed -n '/^}/=' "$BASEDIR/../hivelvet-frontend/src/App.less"); do
+            if [ $j == `expr $i + 1` ] && [ $k == `expr $j + 1` ] && [ $l == `expr $k + 1` ]; then
+              sed -i "${i}d" "$BASEDIR/../hivelvet-frontend/src/App.less"
+              sed -i "${i}i /\/\ .ant-card-body {" "$BASEDIR/../hivelvet-frontend/src/App.less"
+              sed -i "${j}d" "$BASEDIR/../hivelvet-frontend/src/App.less"
+              sed -i "${j}i /\/\   display: flex;" "$BASEDIR/../hivelvet-frontend/src/App.less"
+              sed -i "${k}d" "$BASEDIR/../hivelvet-frontend/src/App.less"
+              sed -i "${k}i /\/\   flex-wrap: wrap;" "$BASEDIR/../hivelvet-frontend/src/App.less"
+              sed -i "${l}d" "$BASEDIR/../hivelvet-frontend/src/App.less"
+              sed -i "${l}i /\/\ }" "$BASEDIR/../hivelvet-frontend/src/App.less"
+              unset i j k l
+              for i in $(sed -n '/^.presets-grid {/=' "$BASEDIR/../hivelvet-frontend/src/App.less"); do
+                for j in $(sed -n '/^  width: 215px;/=' "$BASEDIR/../hivelvet-frontend/src/App.less"); do
+                  for k in $(sed -n '/^  box-shadow: none;/=' "$BASEDIR/../hivelvet-frontend/src/App.less"); do
+                    for l in $(sed -n '/^}/=' "$BASEDIR/../hivelvet-frontend/src/App.less"); do
+                      if [ $j == `expr $i + 1` ] && [ $k == `expr $j + 1` ] && [ $l == `expr $k + 1` ]; then
+                        sed -i "${j}d" "$BASEDIR/../hivelvet-frontend/src/App.less"
+                        sed -i "${j}i \  width: 25%;" "$BASEDIR/../hivelvet-frontend/src/App.less"
+                        exit
+                      fi
+                    done
+                  done
+                done
+              done
+            fi
+          done
+        done
+      done
+    done
   echo "✔ Web app enabled"
 }
 
