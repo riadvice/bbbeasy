@@ -19,11 +19,10 @@
 import React, { useEffect } from 'react';
 import InstallService from '../services/install.service';
 
-import { Steps, Button, Row, Col, Form, Result, Alert } from 'antd';
+import { Steps, Button, Row, Col, Form, Result } from 'antd';
 import DynamicIcon from './DynamicIcon';
 import axios from 'axios';
 import { Trans, useTranslation, withTranslation } from 'react-i18next';
-import EN_US from '../locale/en-US.json';
 
 import { Step1Form } from './Step1Form';
 import { Step2Form } from './Step2Form';
@@ -139,7 +138,7 @@ const Install = () => {
     const steps: stepType[] = [
         {
             title: t('administrator_account'),
-            content: <Step1Form />,
+            content: <Step1Form message={message} successful={successful} />,
             button: t('create'),
             span: 8,
             offset: 4,
@@ -261,16 +260,6 @@ const Install = () => {
                                     </Button>
                                 )}
                             </Form.Item>
-                            {message && !successful && (
-                                <Alert
-                                    type="error"
-                                    className="alert-error-msg text-center"
-                                    message={
-                                        <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == message)} />
-                                    }
-                                    showIcon
-                                />
-                            )}
                         </Form>
                     </Col>
                 </>

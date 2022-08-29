@@ -1,4 +1,4 @@
 {
-  "message":"username and email already exist",
-  "status":412
+  "message": "Username and Email already exist",
+  "status": 412
 }

@@ -74,4 +74,21 @@ describe('Test register process', () => {
             cy.get('div.alert-msg').should('be.visible').and('have.length', 1);
         });
     });
+    it('should render to success register page when submitting form with valid credentials', () => {
+        const username = 'Test';
+        const email = 'test@riadvice.tn';
+        const password = 'password';
+        cy.get('input#register_form_username').type(username).should('have.value', username);
+        cy.get('input#register_form_email').type(email).should('have.value', email);
+        cy.get('input#register_form_password').type(password).should('have.value', password);
+        cy.get('input#register_form_confirmPassword').type(password).should('have.value', password);
+        cy.get('input#register_form_agreement').click().should('be.checked');
+        cy.get('button#submit-btn').click();
+        cy.wait(1000);
+        cy.get('div.ant-result-icon').should('be.visible').and('have.length', 1);
+        cy.get('div.ant-result-title').should('be.visible').and('have.length', 1);
+        cy.get('div.ant-result-subtitle').should('be.visible').and('have.length', 1);
+        cy.get('div.ant-result-extra').should('be.visible').and('have.length', 1);
+        cy.task('database', { sql: `DELETE FROM public.users WHERE username='Test';` });
+    });
 });

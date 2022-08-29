@@ -230,14 +230,10 @@ const Users = () => {
                     <Form.Item
                         name={dataIndex}
                         className="input-editable editable-row"
-                        {...(dataIndex in errorsEdit &&
-                            record.key == errorsEdit['key'] && {
-                                help: t(
-                                    'invalid_' +
-                                        errorsEdit[dataIndex].split(' ')[errorsEdit[dataIndex].split(' ').length - 1]
-                                ),
-                                validateStatus: 'error',
-                            })}
+                        {...(dataIndex in errorsEdit && record.key == errorsEdit['key'] && {
+                            help: t('invalid_' + errorsEdit[dataIndex].split(' ')[errorsEdit[dataIndex].split(' ').length - 1]),
+                            validateStatus: 'error',
+                        })}
                         rules={[
                             {
                                 required: true,

@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "antd": "^4.19.5",
+    "antd-password-input-strength": "2.0.1",
     "axios": "^0.26.1",
     "craco-less": "^2.0.0",
     "dotenv-cra": "^3.0.2",
@@ -32,14 +33,14 @@
     "websocket": "^1.0.34"
   },
   "scripts": {
-    "start-dev": "./hivelvet.sh -ew && PORT=3300 NODE_ENV=development INSTALLER_FEATURE=false craco start",
-    "start-dev-installer": "./hivelvet.sh -ei && PORT=3300 NODE_ENV=development INSTALLER_FEATURE=true craco start",
-    "build": "./hivelvet.sh -ew && INSTALLER_FEATURE=false craco build",
-    "build-installer": "./hivelvet.sh -ei && INSTALLER_FEATURE=true craco build && ./hivelvet.sh -ew",
+    "start-dev": "./hivelvet -ew && PORT=3300 NODE_ENV=development INSTALLER_FEATURE=false craco start",
+    "start-dev-installer": "./hivelvet -ei && PORT=3300 NODE_ENV=development INSTALLER_FEATURE=true craco start",
+    "build": "./hivelvet -ew && INSTALLER_FEATURE=false craco build",
+    "build-installer": "./hivelvet -ei && INSTALLER_FEATURE=true craco build && ./hivelvet -ew",
     "nyc": "nyc instrument --compact=false src instrumented --lines 0",
     "nyc-summary": "nyc report --reporter=text-summary --lines 0",
-    "cypress-dev": "./hivelvet.sh -ew && cypress run --config '{\"excludeSpecPattern\":[\"**/installer/*/*.js\",\"**/installer/*.js\"]}' && npm run nyc-summary",
-    "cypress-dev-installer": "./hivelvet.sh -ei && cypress run --config '{\"excludeSpecPattern\":[\"**/webapp/*/*.js\",\"**/webapp/*.js\"]}' && ./hivelvet.sh -ew && npm run nyc-summary",
+    "cypress-dev": "./hivelvet -ew && cypress run --config '{\"excludeSpecPattern\":[\"**/installer/*/*.js\",\"**/installer/*.js\",\"**/webapp/*/*.js\",\"**/webapp/*.js\"]}' && npm run nyc-summary",
+    "cypress-dev-installer": "./hivelvet -ei && cypress run --config '{\"excludeSpecPattern\":[\"**/webapp/*/*.js\",\"**/webapp/*.js\"]}' && ./hivelvet -ew && npm run nyc-summary",
     "analyze": "craco analyze",
     "test": "craco test",
     "eject": "craco eject",

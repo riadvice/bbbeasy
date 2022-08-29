@@ -31,6 +31,7 @@ class CreateUsersTables extends AbstractMigration
             ->addColumn('username', 'string', ['limit' => 32, 'null' => false])
             ->addColumn('role_id', 'integer', ['null' => true])
             ->addColumn('password', 'string', ['limit' => 256, 'null' => false])
+            ->addColumn('password_attempts', 'integer', ['null' => false])
             ->addColumn('status', 'string', ['limit' => 32, 'default' => 'inactive', 'null' => false])
             ->addColumn('last_login', 'datetime', ['default' => '0001-01-01 00:00:00', 'timezone' => true])
             ->addColumn('created_on', 'datetime', ['default' => '0001-01-01 00:00:00', 'timezone' => true])

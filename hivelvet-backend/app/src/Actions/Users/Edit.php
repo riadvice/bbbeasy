@@ -67,10 +67,10 @@ class Edit extends BaseAction
                         $usernameExist = $users[0]['username'] === $form['username'];
                         $emailExist    = $users[0]['email'] === $form['email'];
                         $message       = ($usernameExist && $emailExist) ?
-                            ['username' => 'username already exist', 'email' => 'email already exist'] :
-                            ($usernameExist ? ['username' => 'username already exist'] : ['email' => 'email already exist']);
+                            ['username' => 'Username already exists', 'email' => 'Email already exists'] :
+                            ($usernameExist ? ['username' => 'Username already exists'] : ['email' => 'Email already exists']);
                     } else {
-                        $message = ['username' => 'username already exist', 'email' => 'email already exist'];
+                        $message = ['username' => 'Username already exists', 'email' => 'Email already exists'];
                     }
                     $this->logger->error('User could not be updated', ['error' => $message]);
                     $this->renderJson(['errors' => $message], ResponseCode::HTTP_PRECONDITION_FAILED);
@@ -86,7 +86,7 @@ class Edit extends BaseAction
                         try {
                             $user->save();
                         } catch (\Exception $e) {
-                            $message = 'user could not be updated';
+                            $message = 'User could not be updated';
                             $this->logger->error('User could not be updated', ['user' => $user->toArray(), 'error' => $e->getMessage()]);
                             $this->renderJson(['errors' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
 

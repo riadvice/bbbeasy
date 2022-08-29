@@ -26,6 +26,8 @@ use Actions\Base as BaseAction;
 use Enum\ResetTokenStatus;
 use Enum\ResponseCode;
 use Models\ResetPasswordToken;
+use Respect\Validation\Validator;
+use Validation\DataChecker;
 use Models\User;
 
 /**
@@ -36,35 +38,60 @@ class ChangePassword extends BaseAction
     public function execute($f3): void
     {
         $form = $this->getDecodedBody();
-
-        $new_password = $form['password'];
         $resetToken = new ResetPasswordToken();
+        $dataChecker = new DataChecker();
+
+        $dataChecker->verify($form['password'], Validator::length(8)->setName('password'));
 
         if ($resetToken->getByToken($form['token'])) {
             if (!$resetToken->dry()) {
-                $user               = new User();
-                $user               = $user->getById($resetToken->user_id);
-                $old_password_hash  = $user->password;
-                $user->password     = $new_password;
-                $resetToken->status = ResetTokenStatus::CONSUMED;
-                if (password_verify($new_password , $old_password_hash)) {
-                    $this->renderJson(['message' => 'New password cannot be the same as your old password']);
-                }
-                else {
-                    try {
-                        $resetToken->save();
-                        $user->save();
-                    } catch (\Exception $e) {
-                        $message = 'password could not be changed';
-                        $this->logger->error('reset password error : password could not be changed', ['error' => $e->getMessage()]);
-                        $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-                        return;
+                if ($dataChecker->allValid()) {
+                    $user               = new User();
+                    $user               = $user->getById($resetToken->user_id);
+                    $resetToken->status = ResetTokenStatus::CONSUMED;
+
+                    if (!preg_match('/^[0-9A-Za-z !"#$%&\'()*+,-.\/:;<=>?@[\]^_`{|}&~]+$/', $form['password'])) {
+                        $this->logger->error('Reset password error : Password could not be changed', ['error' => 'Only use letters, numbers, and common punctuation characters']);
+                        $this->renderJson(['message' => 'Only use letters, numbers, and common punctuation characters'], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
+                    } else {
+                        $next = $this->isPasswordCommon($user->username, $user->email, $form['password']);
+                        if ($user->verifyPassword($form['password']) && $next) {
+                            $this->logger->error('Reset password error : Password could not be changed', ['error' => 'New password cannot be the same as your old password']);
+                            $this->renderJson(['message' => 'New password cannot be the same as your old password'] );
+                        } else if (true) {
+                            try {
+                                $user->password = $form['password'];
+                                $resetToken->save();
+                                $user->save();
+                            } catch (\Exception $e) {
+                                $message = 'Password could not be changed';
+                                $this->logger->error('Reset password error : Password could not be changed', ['error' => $e->getMessage()]);
+                                $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+                                return;
+                            }
+                            $this->renderJson(['result' => 'success']);
+                        }
                     }
-                    $this->renderJson(['result' => 'success']);
+                } else {
+                    $this->logger->error('Reset password error : Password could not be changed', ['errors' => $dataChecker->getErrors()]);
+                    $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
                 }
+            } else {
+                $this->logger->error('Reset password error : Password could not be changed');
             }
-        } else {
-            $this->logger->error('reset password error : password could not be changed');
         }
     }
+
+    private function isPasswordCommon($username, $email, $password) {
+        $dictionary = file_GET_contents("http://api.hivelvet.test/dictionary/en-US.json");
+        $words = json_decode($dictionary);
+        foreach ($words as $word) {
+            if (strcmp($password, $username) == 0 || strcmp($password, $email) == 0 || strcmp($password, $word) == 0) {
+                $this->logger->error('Initial application setup : Administrator could not be added', ['error' => 'Avoid choosing a common password']);
+                $this->renderJson(['message' => 'Avoid choosing a common password']);
+                return false;
+            }
+        }
+        return true;
+    }  
 }

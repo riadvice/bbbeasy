@@ -35,8 +35,13 @@ module.exports = {
         ]
     },
     babel: {
-        presets: [],
-        plugins: ["istanbul"]
+        presets: [
+            "@babel/preset-react"
+        ],
+        plugins: [
+            "transform-class-properties",
+            "istanbul"
+        ]
     },
     plugins: [
         {

@@ -54,7 +54,7 @@ class Install extends BaseAction
 
         $dataChecker->verify($form['username'], Validator::length(4)->setName('username'));
         $dataChecker->verify($form['email'], Validator::email()->setName('email'));
-        $dataChecker->verify($form['password'], Validator::length(4)->setName('password'));
+        $dataChecker->verify($form['password'], Validator::length(8)->setName('password'));
 
         $dataChecker->verify($form['company_name'], Validator::notEmpty()->setName('company_name'));
         $dataChecker->verify($form['company_url'], Validator::url()->setName('company_url'));

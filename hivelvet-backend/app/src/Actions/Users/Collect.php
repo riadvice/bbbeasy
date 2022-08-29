@@ -23,24 +23,42 @@ declare(strict_types=1);
 namespace Actions\Users;
 
 use Actions\Base as BaseAction;
-use Actions\RequirePrivilegeTrait;
-use Enum\ResponseCode;
 use Models\User;
 
 /**
  * Class Collect.
  */
 class Collect extends BaseAction
-{
-    use RequirePrivilegeTrait;
-    
-    public function execute(): void
+{    
+    public function execute($f3): void
     {
+        $form = $this->getDecodedBody()['data'];
         $user = new User();
-        $error = $user->usernameOrEmailExists($_GET['username'], $_GET['email']);
-        if ($error) {
-            $this->logger->error('User collected', ['error' => $error]);
-            $this->renderJson(['message' => $error]);
+        
+        if (!preg_match('/^[0-9A-Za-z !"#$%&\'()*+,-.\/:;<=>?@[\]^_`{|}&~]+$/', $form['password'])) {
+            $this->logger->error('Initial application setup : Administrator could not be added', ['error' => 'Only use letters, numbers, and common punctuation characters']);
+            $this->renderJson(['message' => 'Only use letters, numbers, and common punctuation characters']);
+        } else {
+            $next = $this->isPasswordCommon($form['username'], $form['email'], $form['password']);
+            $error = $user->usernameOrEmailExists($form['username'], $form['email']);
+            if ($error && $next) {
+                $this->logger->error('Initial application setup : Administrator could not be added', ['error' => $error]);
+                $this->renderJson(['message' => $error]);
+            }
         }
     }
+
+    private function isPasswordCommon($username, $email, $password) {
+        $dictionary = file_GET_contents("http://api.hivelvet.test/dictionary/en-US.json");
+        $words = json_decode($dictionary);
+        foreach ($words as $word) {
+            if (strcmp($password, $username) == 0 || strcmp($password, $email) == 0 || strcmp($password, $word) == 0) {
+                $this->logger->error('Initial application setup : Administrator could not be added', ['error' => 'Avoid choosing a common password']);
+                $this->renderJson(['message' => 'Avoid choosing a common password']);
+                return false;
+            }
+        }
+        return true;
+    }
+
 }

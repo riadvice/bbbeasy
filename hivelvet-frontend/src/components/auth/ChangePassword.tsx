@@ -20,7 +20,7 @@ import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import AuthService from '../../services/auth.service';
 
-import { Form, Input, Button, Alert, Col, Row, Typography, Card, Result } from 'antd';
+import { Form, Button, Alert, Col, Row, Typography, Card, Result } from 'antd';
 import { CheckOutlined } from '@ant-design/icons';
 
 import { Trans, withTranslation } from 'react-i18next';
@@ -28,6 +28,7 @@ import EN_US from '../../locale/en-US.json';
 import { t } from 'i18next';
 
 import { URLSearchParams as _URLSearchParams } from 'url';
+import { PasswordInput } from 'antd-password-input-strength';
 
 const { Title, Paragraph } = Typography;
 
@@ -118,7 +119,7 @@ const ChangePassword = () => {
                                         name="password"
                                         rules={[
                                             {
-                                                min: 4,
+                                                min: 8,
                                                 message: <Trans i18nKey="password.size" />,
                                             },
                                             {
@@ -127,7 +128,7 @@ const ChangePassword = () => {
                                             },
                                         ]}
                                     >
-                                        <Input.Password placeholder="**********" />
+                                        <PasswordInput placeholder="**********" />
                                     </Form.Item>
                                     <Form.Item
                                         label={<Trans i18nKey="confirm-password.label" />}
@@ -135,12 +136,12 @@ const ChangePassword = () => {
                                         dependencies={['password']}
                                         rules={[
                                             {
-                                                min: 4,
-                                                message: <Trans i18nKey="password.size" />,
+                                                min: 8,
+                                                message: <Trans i18nKey="confirm-password.size" />,
                                             },
                                             {
                                                 required: true,
-                                                message: <Trans i18nKey="password.required" />,
+                                                message: <Trans i18nKey="confirm-password.required" />,
                                             },
                                             ({ getFieldValue }) => ({
                                                 validator(_, value) {
@@ -152,7 +153,7 @@ const ChangePassword = () => {
                                             }),
                                         ]}
                                     >
-                                        <Input.Password placeholder="**********" />
+                                        <PasswordInput placeholder="**********" />
                                     </Form.Item>
 
                                     <Form.Item>

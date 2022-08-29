@@ -16,6 +16,7 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
+import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import AuthService from '../services/auth.service';
 import { Location } from 'history';

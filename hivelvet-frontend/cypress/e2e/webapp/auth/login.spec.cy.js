@@ -50,4 +50,24 @@ describe('Test login process', () => {
         cy.wait(1000);
         cy.get('div.alert-error-msg').should('be.visible').and('have.length', 1);
     });
+    it('should render to home page when submitting form with existing credentials', () => {
+        const username = 'Test';
+        const email = 'test@riadvice.tn';
+        const password = 'password';
+        cy.task('database', {
+            sql: `SELECT * FROM public.users WHERE username='Test';`
+        }).then((result) => {
+            if (result.rows.length == 0) {
+                cy.register(username, email, password, password);
+                cy.task('database', { sql: `UPDATE public.users SET status='active' WHERE username='Test';` });
+            }
+            cy.visit('/login');
+            cy.get('input#login_form_email').type(email).should('have.value', email);
+            cy.get('input#login_form_password').type(password).should('have.value', password);
+            cy.get('button#submit-btn').click();
+            cy.wait(1000);
+            cy.get('div.ant-notification').should('be.visible').and('have.length', 1);
+            cy.task('database', { sql: `DELETE FROM public.users WHERE username='Test';` });
+        });
+    });
 });

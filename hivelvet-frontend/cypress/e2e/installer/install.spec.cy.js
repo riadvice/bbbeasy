@@ -85,7 +85,7 @@ describe('Test install process', () => {
             cy.get('input#install_form_policy_url').should('be.visible').and('have.length', 1);
             cy.get('div.ant-upload').should('be.visible').and('have.length', 1);
             cy.get('span.rc-color-picker-trigger').should('be.visible').and('have.length', 4);
-            cy.get('button.prev').should('be.visible').and('have.length', 1);
+            cy.get('button.cancel-btn').should('be.visible').and('have.length', 1);
             cy.get('button#submit-btn').should('be.visible').and('have.length', 1);
         });
     });
@@ -139,8 +139,43 @@ describe('Test install process', () => {
             cy.get('h4.ant-typography').should('be.visible').and('have.length', 1);
             cy.get('div.ant-alert').should('be.visible').and('have.length', 1);
             cy.get('div.ant-card-grid').should('be.visible').and('have.length', 17);
-            cy.get('button.prev').should('be.visible');
+            cy.get('button.cancel-btn').should('be.visible');
             cy.get('button#submit-btn').should('be.visible');
         });
+    });
+    it('should revert from step 3 to step 1', () => {
+        const username = 'Test';
+        const email = 'test@riadvice.tn';
+        const password = 'password';
+        cy.get('input#install_form_username').type(username).should('have.value', username);
+        cy.get('input#install_form_email').type(email).should('have.value', email);
+        cy.get('input#install_form_password').type(password).should('have.value', password);
+        cy.get('button#submit-btn').click();
+        cy.wait(1000);
+        cy.get('button#submit-btn').click();
+        cy.wait(1000);
+        cy.get('button.cancel-btn').click();
+        cy.wait(1000);
+        cy.get('button.cancel-btn').click();
+    });
+    it('should display success install page when submitting form with valid credentials', () => {
+        const username = 'Test';
+        const email = 'test@riadvice.tn';
+        const password = 'password';
+        cy.get('input#install_form_username').type(username).should('have.value', username);
+        cy.get('input#install_form_email').type(email).should('have.value', email);
+        cy.get('input#install_form_password').type(password).should('have.value', password);
+        cy.get('button#submit-btn').click();
+        cy.wait(1000);
+        cy.get('input[type=file]').selectFile({ contents: 'cypress/fixtures/example.json', fileName: 'file.png' }, { force: true })
+        cy.wait(1000);
+        cy.get('div.ant-upload-list-item').should('be.visible').and('have.length', 1);
+        cy.get('button#submit-btn').click();
+        cy.wait(1000);
+        cy.get('button#submit-btn').click();
+        cy.wait(1000);
+        cy.get('div.ant-result-icon').should('be.visible').and('have.length', 1);
+        cy.get('div.ant-result-title').should('be.visible').and('have.length', 1);
+        cy.task('database', { sql: `DELETE FROM public.users WHERE username='Test';` });
     });
 });

@@ -50,39 +50,45 @@ class Add extends BaseAction
 
         $dataChecker->verify($form['username'], Validator::length(4)->setName('username'));
         $dataChecker->verify($form['email'], Validator::email()->setName('email'));
-        $dataChecker->verify($form['password'], Validator::length(4)->setName('password'));
+        $dataChecker->verify($form['password'], Validator::length(8)->setName('password'));
         $dataChecker->verify($form['role'], Validator::notEmpty()->setName('role'));
 
         if ($dataChecker->allValid()) {
             $user  = new User();
-            $error = $user->usernameOrEmailExists($form['username'], $form['email']);
-            if ($error) {
-                $this->logger->error('User could not be added', ['error' => $error]);
-                $this->renderJson(['message' => $error], ResponseCode::HTTP_PRECONDITION_FAILED);
+            if (!preg_match('/^[0-9A-Za-z !"#$%&\'()*+,-.\/:;<=>?@[\]^_`{|}&~]+$/', $form['password'])) {
+                $this->logger->error('Add user error', ['error' => 'Only use letters, numbers, and common punctuation characters']);
+                $this->renderJson(['message' => 'Only use letters, numbers, and common punctuation characters'], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
             } else {
-                $role = new Role();
-                $role->load(['id = ?', [$form['role']]]);
-                if ($role->valid()) {
-                    $user->email    = $form['email'];
-                    $user->username = $form['username'];
-                    $user->password = $form['password'];
-                    $user->status   = UserStatus::PENDING;
-                    $user->role_id  = $role->id;
-
-                    try {
-                        $user->save();
-                    } catch (\Exception $e) {
-                        $message = 'user could not be added';
-                        $this->logger->error('User could not be added', ['user' => $user->toArray(), 'error' => $e->getMessage()]);
-                        $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-
-                        return;
+                $next = $this->isPasswordCommon($form['username'], $form['email'], $form['password']);
+                $error = $user->usernameOrEmailExists($form['username'], $form['email']);
+                if ($error && $next) {
+                    $this->logger->error('User could not be added', ['error' => $error]);
+                    $this->renderJson(['message' => $error], ResponseCode::HTTP_PRECONDITION_FAILED);
+                } else if ($next) {
+                    $role = new Role();
+                    $role->load(['id = ?', [$form['role']]]);
+                    if ($role->valid()) {
+                        $user->email    = $form['email'];
+                        $user->username = $form['username'];
+                        $user->password = $form['password'];
+                        $user->status   = UserStatus::PENDING;
+                        $user->role_id  = $role->id;
+                        $user->password_attempts = 3;
+                        try {
+                            $user->save();
+                        } catch (\Exception $e) {
+                            $message = 'User could not be added';
+                            $this->logger->error('User could not be added', ['user' => $user->toArray(), 'error' => $e->getMessage()]);
+                            $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+    
+                            return;
+                        }
+    
+                        $this->logger->info('User successfully added', ['user' => $user->toArray()]);
+                        $this->renderJson(['result' => 'success', 'user' => $user->getUserInfos($user->id)], ResponseCode::HTTP_CREATED);
+                    } else {
+                        $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
                     }
-
-                    $this->logger->info('User successfully added', ['user' => $user->toArray()]);
-                    $this->renderJson(['result' => 'success', 'user' => $user->getUserInfos($user->id)], ResponseCode::HTTP_CREATED);
-                } else {
-                    $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
                 }
             }
         } else {
@@ -90,4 +96,17 @@ class Add extends BaseAction
             $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
         }
     }
+
+    private function isPasswordCommon($username, $email, $password) {
+        $dictionary = file_GET_contents("http://api.hivelvet.test/dictionary/en-US.json");
+        $words = json_decode($dictionary);
+        foreach ($words as $word) {
+            if (strcmp($password, $username) == 0 || strcmp($password, $email) == 0 || strcmp($password, $word) == 0) {
+                $this->logger->error('Initial application setup : Administrator could not be added', ['error' => 'Avoid choosing a common password']);
+                $this->renderJson(['message' => 'Avoid choosing a common password']);
+                return false;
+            }
+        }
+        return true;
+    }  
 }

@@ -61,8 +61,8 @@ class Edit extends BaseAction
                     $role->name = $form['name'];
 
                     if ($checkRole->nameExists($role->name, $role->id)) {
-                        $this->logger->error('Role could not be updated', ['error' => 'Name already exist']);
-                        $this->renderJson(['errors' => ['name' => 'Name already exist']], ResponseCode::HTTP_PRECONDITION_FAILED);
+                        $this->logger->error('Role could not be updated', ['error' => 'Name already exists']);
+                        $this->renderJson(['errors' => ['name' => 'Name already exists']], ResponseCode::HTTP_PRECONDITION_FAILED);
 
                         return;
                     }

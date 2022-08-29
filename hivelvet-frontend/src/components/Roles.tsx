@@ -41,6 +41,7 @@ import { t } from 'i18next';
 import EN_US from '../locale/en-US.json';
 
 import { AxiosResponse } from 'axios';
+import _ from 'lodash';
 
 const { Paragraph, Link } = Typography;
 
@@ -293,16 +294,16 @@ const Roles = () => {
                                     placement="leftTop"
                                     onConfirm={() => cancelEdit(record.key)}
                                 >
-                                    <Button size="middle">
+                                    <Button size="middle" className="cell-input-cancel">
                                         <Trans i18nKey="cancel" />
                                     </Button>
                                 </Popconfirm>
                             ) : (
-                                <Button size="middle" onClick={() => cancelEdit(record.key)}>
+                                <Button size="middle" className="cell-input-cancel" onClick={() => cancelEdit(record.key)}>
                                     <Trans i18nKey="cancel" />
                                 </Button>
                             )}
-                            <Button size="middle" type="primary" htmlType="submit">
+                            <Button size="middle" type="primary" className="cell-input-save" htmlType="submit">
                                 <Trans i18nKey="save" />
                             </Button>
                         </Space>
@@ -349,21 +350,26 @@ const Roles = () => {
         const saveName = async () => {
             setErrorsEdit({});
             try {
-                const values = (await editForm.validateFields()) as Item;
-                const key = record.key;
-                RolesService.edit_role(values, key)
-                    .then((response) => {
-                        toggleEditName();
-                        editRow(response, key);
-                    })
-                    .catch((error) => {
-                        const responseData = error.response.data;
-                        if (responseData.errors) {
-                            const err = responseData.errors;
-                            err['key'] = key;
-                            setErrorsEdit(err);
-                        }
+                if (!_.isEqual(transformText(record.name), editForm.getFieldsValue(true).name)) {
+                    const values = (await editForm.validateFields()) as Item;
+                    const key = record.key;
+                    RolesService.edit_role(values, key)
+                        .then((response) => {
+                            toggleEditName();
+                            editRow(response, key);
+                        })
+                        .catch((error) => {
+                            const responseData = error.response.data;
+                            if (responseData.errors) {
+                                const err = responseData.errors;
+                                err['key'] = key;
+                                setErrorsEdit(err);
+                            }
                     });
+                } else {
+                    Notifications.openNotificationWithIcon('info', t('no_changes'));
+                    cancelName();
+                }
             } catch (errInfo) {
                 console.log('Save failed:', errInfo);
             }
@@ -378,15 +384,15 @@ const Roles = () => {
                             className="input-editable"
                             {...(dataIndex in errorsEdit &&
                                 record.key == errorsEdit['key'] && {
-                                    help: (
-                                        <Trans
-                                            i18nKey={Object.keys(EN_US).filter(
-                                                (elem) => EN_US[elem] == errorsEdit[dataIndex]
-                                            )}
-                                        />
-                                    ),
-                                    validateStatus: 'error',
-                                })}
+                                help: (
+                                    <Trans
+                                        i18nKey={Object.keys(EN_US).filter(
+                                            (elem) => EN_US[elem] == errorsEdit[dataIndex]
+                                        )}
+                                    />
+                                ),
+                                validateStatus: 'error',
+                            })}
                             rules={[
                                 {
                                     required: true,
@@ -423,7 +429,6 @@ const Roles = () => {
                                 <Button
                                     size="small"
                                     type="link"
-                                    id="edit-role-btn"
                                     icon={<EditOutlined className="cell-edit-icon" />}
                                     onClick={toggleEditName}
                                 />
@@ -698,7 +703,7 @@ const Roles = () => {
                         <Button type="text" className="cancel-btn prev" block onClick={cancelAdd}>
                             <Trans i18nKey="cancel" />
                         </Button>
-                        <Button type="primary" id="submit-btn" htmlType="submit" block>
+                        <Button type="primary" htmlType="submit" block>
                             <Trans i18nKey="create" />
                         </Button>
                     </Form.Item>

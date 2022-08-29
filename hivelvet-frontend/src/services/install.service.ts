@@ -18,25 +18,6 @@
 
 import axios from 'axios';
 import { apiRoutes } from '../routing/backend-config';
-import { PresetType } from '../types/PresetType';
-
-type formType = {
-    username: string;
-    email: string;
-    password: string;
-    company_name: string;
-    company_url: string;
-    platform_name: string;
-    term_url: string;
-    policy_url: string;
-    branding_colors: {
-        primary_color: string;
-        secondary_color: string;
-        accent_color: string;
-        add_color: string;
-    };
-    presetsConfig: PresetType[];
-};
 
 class InstallService {
     collect_presets() {
@@ -50,9 +31,9 @@ class InstallService {
             data,
         });
     }
-    check_availability(formData: formType) {
-        return axios.get(apiRoutes.COLLECT_USER_URL, {
-            params: { username: formData.username, email: formData.email },
+    check_availability(data: object) {
+        return axios.post(apiRoutes.COLLECT_ADMINISTRATOR_URL, {
+            data,
         });
     }
 }

@@ -1,6 +1,8 @@
 <?php
 
-/**
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -18,18 +20,21 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-use Application\Bootstrap;
-use Core\Statera;
+use Phinx\Migration\AbstractMigration;
 
-// load composer autoload
-require_once '../vendor/autoload.php';
+final class AlterUsersTable extends AbstractMigration
+{
+    public function up(): void
+    {
+        $table = $this->table('users');
+        $table
+        ->addColumn('password_attempts', 'integer', ['null' => true])
+        ->save()
+        ;
+    }
 
-// Change to application directory to execute the code
-chdir(realpath(dirname(__DIR__,2) . DIRECTORY_SEPARATOR . 'app'));
-
-$GLOBALS['test_cli'] = PHP_SAPI === 'cli';
-
-Statera::startCoverage('Application Bootstrapping');
-$app = new Bootstrap();
-Statera::stopCoverage();
-$app->start();
+    public function down(): void
+    {
+        $this->table('users')->drop()->save();
+    }
+}

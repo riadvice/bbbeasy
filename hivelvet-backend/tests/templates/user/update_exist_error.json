@@ -1,4 +1,4 @@
 {
-  "errors": {"username": "username already exist","email": "email already exist"},
-  "status":412
+  "errors": { "username": "Username already exists", "email": "Email already exists" },
+  "status": 412
 }
