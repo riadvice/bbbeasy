@@ -703,7 +703,7 @@ const Roles = () => {
                         <Button type="text" className="cancel-btn prev" block onClick={cancelAdd}>
                             <Trans i18nKey="cancel" />
                         </Button>
-                        <Button type="primary" htmlType="submit" block>
+                        <Button type="primary" className="cell-input-save" htmlType="submit" block>
                             <Trans i18nKey="create" />
                         </Button>
                     </Form.Item>

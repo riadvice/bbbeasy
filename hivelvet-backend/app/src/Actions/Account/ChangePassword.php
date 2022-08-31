@@ -52,19 +52,19 @@ class ChangePassword extends BaseAction
                 if ($dataChecker->allValid()) {
                     $user               = new User();
                     $user               = $user->getById($resetToken->user_id);
-                    $user->password     = $password;
                     $resetToken->status = ResetTokenStatus::CONSUMED;
 
                     if (!preg_match('/^[0-9A-Za-z !"#$%&\'()*+,-.\/:;<=>?@[\]^_`{|}&~]+$/', $password)) {
                         $this->logger->error($error_message, ['error' => 'Only use letters, numbers, and common punctuation characters']);
                         $this->renderJson(['message' => 'Only use letters, numbers, and common punctuation characters'], ResponseCode::HTTP_BAD_REQUEST);
                     } else {
-                        $next = $this->isPasswordCommon($user->username, $user->email, $form['password']);
+                        $next = $this->isPasswordCommon($user->username, $user->email, $password);
                         if ($user->verifyPassword($password) && $next) {
                             $this->logger->error($error_message, ['error' => 'New password cannot be the same as your old password']);
                             $this->renderJson(['message' => 'New password cannot be the same as your old password'] );
                         } else if ($next) {
                             try {
+                                $user->password = $password;
                                 $resetToken->save();
                                 $user->save();
                             } catch (\Exception $e) {
