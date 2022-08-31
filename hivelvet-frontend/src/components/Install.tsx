@@ -182,16 +182,20 @@ const Install = () => {
             add_color: addColor,
         };
         formData.presetsConfig = presets;
-        InstallService.check_availability(formData).then((result) => {
+        InstallService.collect_admin(formData).then((result) => {
             setSuccessful(false);
             setMessage(result.data.message);
             if (!result.data.message) {
                 if (activeStep < steps.length - 1) {
                     next();
                 } else {
-                    InstallService.install(formData).then(() => {
-                        setSuccessful(true);
-                    });
+                    InstallService.install(formData)
+                        .then(() => {
+                            setSuccessful(true);
+                        })
+                        .catch((error) => {
+                            console.log(error.response.data);
+                        });
                     if (file != undefined) {
                         const fdata: FormData = new FormData();
                         fdata.append('logo', file.originFileObj, file.originFileObj.name);

@@ -51,9 +51,9 @@ class Register extends BaseAction
             $user  = new User();
             if (!preg_match('/^[0-9A-Za-z !"#$%&\'()*+,-.\/:;<=>?@[\]^_`{|}&~]+$/', $form['password'])) {
                 $this->logger->error('Registration error', ['error' => 'Only use letters, numbers, and common punctuation characters']);
-                $this->renderJson(['message' => 'Only use letters, numbers, and common punctuation characters'], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
+                $this->renderJson(['message' => 'Only use letters, numbers, and common punctuation characters'], ResponseCode::HTTP_BAD_REQUEST);
             } else {
-                // $next = $this->isPasswordCommon($form['username'], $form['email'], $form['password']);
+                $next = $this->isPasswordCommon($form['username'], $form['email'], $form['password']);
                 $error = $user->usernameOrEmailExists($form['username'], $form['email']);
                 if ($error && $next) {
                     $this->logger->error('Registration error : User could not be added', ['error' => $error]);
@@ -62,9 +62,10 @@ class Register extends BaseAction
                     $user->email    = $form['email'];
                     $user->username = $form['username'];
                     $user->password = $form['password'];
-                    $user->status   = UserStatus::PENDING;
                     $user->role_id  = 2;
+                    $user->status   = UserStatus::PENDING;
                     $user->password_attempts = 3;
+
                     try {
                         $user->save();
                     } catch (\Exception $e) {
@@ -90,7 +91,7 @@ class Register extends BaseAction
         foreach ($words as $word) {
             if (strcmp($password, $username) == 0 || strcmp($password, $email) == 0 || strcmp($password, $word) == 0) {
                 $this->logger->error('Initial application setup : Administrator could not be added', ['error' => 'Avoid choosing a common password']);
-                $this->renderJson(['message' => 'Avoid choosing a common password']);
+                $this->renderJson(['message' => 'Avoid choosing a common password'], ResponseCode::HTTP_BAD_REQUEST);
                 return false;
             }
         }

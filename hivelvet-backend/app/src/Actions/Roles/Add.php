@@ -49,24 +49,26 @@ class Add extends BaseAction
         $dataChecker = new DataChecker();
 
         $dataChecker->verify($form['name'], Validator::notEmpty()->setName('name'));
+        
+        $error_message = 'Role could not be added';
 
         if ($dataChecker->allValid()) {
             $checkRole  = new Role();
             $role       = new Role();
             $role->name = $form['name'];
             if ($checkRole->nameExists($role->name)) {
-                $this->logger->error('Role could not be added', ['error' => 'Name already exists']);
+                $this->logger->error($error_message, ['error' => 'Name already exists']);
                 $this->renderJson(['errors' => ['name' => 'Name already exists']], ResponseCode::HTTP_PRECONDITION_FAILED);
             } else {
                 try {
                     $result = $role->saveRoleAndPermissions($form['permissions']);
                     if (!$result) {
-                        $this->renderJson(['errors' => 'Role could not be added'], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+                        $this->renderJson(['errors' => $error_message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
 
                         return;
                     }
                 } catch (\Exception $e) {
-                    $this->logger->error('Role could not be added', ['error' => $e->getMessage()]);
+                    $this->logger->error($error_message, ['error' => $e->getMessage()]);
                     $this->renderJson(['errors' => $e->getMessage()], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
 
                     return;

@@ -1,4 +1,8 @@
-/**
+<?php
+
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -16,26 +20,20 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import axios from 'axios';
-import { apiRoutes } from '../routing/backend-config';
+namespace Suite;
 
-class InstallService {
-    collect_presets() {
-        return axios.get(apiRoutes.COLLECT_PRESETS_URL);
-    }
-    collect_settings() {
-        return axios.get(apiRoutes.COLLECT_SETTINGS_URL);
-    }
-    install(data: object) {
-        return axios.post(apiRoutes.INSTALL_URL, {
-            data,
-        });
-    }
-    collect_admin(data: object) {
-        return axios.post(apiRoutes.COLLECT_ADMIN_URL, {
-            data,
-        });
-    }
+use Actions\Labels\AddTest;
+use Actions\Labels\DeleteTest;
+use Actions\Labels\EditTest;
+use Test\TestGroup;
+
+/**
+ * @internal
+ * @coversNothing
+ */
+final class LabelsActionsTest extends TestGroup
+{
+    protected $classes = [AddTest::class, DeleteTest::class, EditTest::class];
+
+    protected $quiet = true;
 }
-
-export default new InstallService();

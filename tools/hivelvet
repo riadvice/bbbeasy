@@ -212,6 +212,7 @@ fix_styles() {
 enable_installer() {
   echo "► Enabling backend installer app"
     if [ $(grep -c "config.extension =" "$BASEDIR/../hivelvet-backend/app/config/config-$ENVIRONMENT.ini") != 0 ]; then
+      #c cmd to replace the matched line in one go
       sed -i '/config.extension =/ c config.extension = -install' "$BASEDIR/../hivelvet-backend/app/config/config-$ENVIRONMENT.ini"
       printf "%s %s [✔ - DONE]\n"
     fi

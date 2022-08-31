@@ -41,6 +41,7 @@ use Models\Base as BaseModel;
  * @property string   $resetToken
  * @property DateTime $created_on
  * @property DateTime $updated_on
+ * @property DateTime $last_login
  * @property int      $password_attempts 
  */
 class User extends BaseModel

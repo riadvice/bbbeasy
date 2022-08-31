@@ -365,7 +365,7 @@ const Roles = () => {
                                 err['key'] = key;
                                 setErrorsEdit(err);
                             }
-                    });
+                        });
                 } else {
                     Notifications.openNotificationWithIcon('info', t('no_changes'));
                     cancelName();
@@ -384,15 +384,15 @@ const Roles = () => {
                             className="input-editable"
                             {...(dataIndex in errorsEdit &&
                                 record.key == errorsEdit['key'] && {
-                                help: (
-                                    <Trans
-                                        i18nKey={Object.keys(EN_US).filter(
-                                            (elem) => EN_US[elem] == errorsEdit[dataIndex]
-                                        )}
-                                    />
-                                ),
-                                validateStatus: 'error',
-                            })}
+                                    help: (
+                                        <Trans
+                                            i18nKey={Object.keys(EN_US).filter(
+                                                (elem) => EN_US[elem] == errorsEdit[dataIndex]
+                                            )}
+                                        />
+                                    ),
+                                    validateStatus: 'error',
+                                })}
                             rules={[
                                 {
                                     required: true,
@@ -703,7 +703,7 @@ const Roles = () => {
                         <Button type="text" className="cancel-btn prev" block onClick={cancelAdd}>
                             <Trans i18nKey="cancel" />
                         </Button>
-                        <Button type="primary" htmlType="submit" block>
+                        <Button type="primary" className="cell-input-save" htmlType="submit" block>
                             <Trans i18nKey="create" />
                         </Button>
                     </Form.Item>

@@ -1,3 +1,5 @@
+<?php
+
 /**
  * Hivelvet open source platform - https://riadvice.tn/
  *
@@ -16,26 +18,18 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import axios from 'axios';
-import { apiRoutes } from '../routing/backend-config';
+use Application\Bootstrap;
+use Core\Statera;
 
-class InstallService {
-    collect_presets() {
-        return axios.get(apiRoutes.COLLECT_PRESETS_URL);
-    }
-    collect_settings() {
-        return axios.get(apiRoutes.COLLECT_SETTINGS_URL);
-    }
-    install(data: object) {
-        return axios.post(apiRoutes.INSTALL_URL, {
-            data,
-        });
-    }
-    collect_admin(data: object) {
-        return axios.post(apiRoutes.COLLECT_ADMIN_URL, {
-            data,
-        });
-    }
-}
+// load composer autoload
+require_once '../vendor/autoload.php';
 
-export default new InstallService();
+// Change to application directory to execute the code
+chdir(realpath(dirname(__DIR__,2) . DIRECTORY_SEPARATOR . 'app'));
+
+$GLOBALS['test_cli'] = PHP_SAPI === 'cli';
+
+Statera::startCoverage('Application Bootstrapping');
+$app = new Bootstrap();
+Statera::stopCoverage();
+$app->start();

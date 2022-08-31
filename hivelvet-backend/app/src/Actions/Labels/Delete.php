@@ -1,4 +1,8 @@
-/**
+<?php
+
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -16,26 +20,31 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import axios from 'axios';
-import { apiRoutes } from '../routing/backend-config';
+namespace Actions\Labels;
 
-class InstallService {
-    collect_presets() {
-        return axios.get(apiRoutes.COLLECT_PRESETS_URL);
-    }
-    collect_settings() {
-        return axios.get(apiRoutes.COLLECT_SETTINGS_URL);
-    }
-    install(data: object) {
-        return axios.post(apiRoutes.INSTALL_URL, {
-            data,
-        });
-    }
-    collect_admin(data: object) {
-        return axios.post(apiRoutes.COLLECT_ADMIN_URL, {
-            data,
-        });
+use Actions\Delete as DeleteAction;
+use Actions\RequirePrivilegeTrait;
+use Enum\ResponseCode;
+use Models\Label;
+
+/**
+ * Class Delete.
+ */
+class Delete extends DeleteAction
+{
+    use RequirePrivilegeTrait;
+
+    public function execute($f3, $params): void
+    {
+        $label     = new Label();
+        $labels_id = $params['id'];
+        $label->load(['id = ?', $labels_id]);
+
+        if ($label->valid()) {
+            parent::execute($f3, $params);
+            $this->renderJson(['result' => 'success']);
+        } else {
+            $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
+        }
     }
 }
-
-export default new InstallService();

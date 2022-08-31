@@ -54,7 +54,7 @@ class GetResetPasswordToken extends BaseAction
                 $this->logger->info('Valid token used for password reset', ['token' => $token, 'status' => $resetToken->status, 'expires_at' => $resetToken->expires_at]);
                 $dataIsValid = true;
                 $this->renderJson(['token' => $token]);
-            } elseif (!$resetToken->dry() && !$resetToken->isUsable() && ResetTokenStatus::NEW === $resetToken->status) {
+            } else if (!$resetToken->dry() && !$resetToken->isUsable() && ResetTokenStatus::NEW === $resetToken->status) {
                 $this->logger->warning('Marking not used in time password reset token as expired.', ['token' => $token, 'status' => $resetToken->status, 'expires_at' => $resetToken->expires_at]);
                 $resetToken->status = ResetTokenStatus::EXPIRED;
                 $resetToken->save();

@@ -31,11 +31,11 @@ Cypress.Commands.add('login', (email, password) => {
 
 Cypress.Commands.add('findInPage', (index, key, action, color) => {
     let successful = false;
-    cy.get('tbody.ant-table-tbody').children().should('have.length', index < 5 ? index : 5).each(($tr) => {
+    cy.get('tbody.ant-table-tbody').children().should('be.visible').and('have.length', index < 5 ? index : 5).each(($tr) => {
         if ($tr.children().eq(0).text() == capitalize(key ? key : '') && action == 'mouseover' && !color) {
             cy.contains(capitalize(key)).trigger(action).children(':last').click();
             successful = true;
-        } else if ($tr.children().eq(0).text() == capitalize(key ? key : '') && action == 'first' && !color) {
+        } else if ($tr.children().eq(0).text() == capitalize(key ? key : '') && (action == 'first' || action == 'last') && !color) {
             cy.contains(capitalize(key)).parent().children(':last').children().children(':' + action).children().click();
             successful = true;
         } else if ($tr.children().eq(1).text() == key && action && !color) {
@@ -57,7 +57,7 @@ Cypress.Commands.add('findInPage', (index, key, action, color) => {
 Cypress.Commands.add('addRole', (rolename) => {
     cy.get('button#add-role-btn').click();
     cy.get('input#roles_form_name').type(rolename).should('have.value', rolename);
-    cy.get('button#submit-btn').click();
+    cy.get('button.cell-input-save').click();
     cy.wait(1000);
 });
 
@@ -93,5 +93,5 @@ Cypress.Commands.add('setUserStatus', (email, action, color, status) => {
     cy.task('database', { sql: `SELECT * FROM public.users;` }).then((response) => {
         cy.findInPage(response.rows.length, email, null, color);
     });
-    cy.get('div.ant-notification-notice-success').should('have.length', 1);
+    cy.get('div.ant-notification-notice-success').should('be.visible').and('have.length', 1);
 });

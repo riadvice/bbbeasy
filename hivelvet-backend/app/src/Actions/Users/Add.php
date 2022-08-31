@@ -53,16 +53,18 @@ class Add extends BaseAction
         $dataChecker->verify($form['password'], Validator::length(8)->setName('password'));
         $dataChecker->verify($form['role'], Validator::notEmpty()->setName('role'));
 
+        $error_message = 'User could not be added';
+        
         if ($dataChecker->allValid()) {
             $user  = new User();
             if (!preg_match('/^[0-9A-Za-z !"#$%&\'()*+,-.\/:;<=>?@[\]^_`{|}&~]+$/', $form['password'])) {
                 $this->logger->error('Add user error', ['error' => 'Only use letters, numbers, and common punctuation characters']);
-                $this->renderJson(['message' => 'Only use letters, numbers, and common punctuation characters'], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
+                $this->renderJson(['message' => 'Only use letters, numbers, and common punctuation characters'], ResponseCode::HTTP_BAD_REQUEST);
             } else {
                 $next = $this->isPasswordCommon($form['username'], $form['email'], $form['password']);
                 $error = $user->usernameOrEmailExists($form['username'], $form['email']);
                 if ($error && $next) {
-                    $this->logger->error('User could not be added', ['error' => $error]);
+                    $this->logger->error($error_message, ['error' => $error]);
                     $this->renderJson(['message' => $error], ResponseCode::HTTP_PRECONDITION_FAILED);
                 } else if ($next) {
                     $role = new Role();
@@ -73,17 +75,17 @@ class Add extends BaseAction
                         $user->password = $form['password'];
                         $user->status   = UserStatus::PENDING;
                         $user->role_id  = $role->id;
+
                         $user->password_attempts = 3;
                         try {
                             $user->save();
                         } catch (\Exception $e) {
-                            $message = 'User could not be added';
-                            $this->logger->error('User could not be added', ['user' => $user->toArray(), 'error' => $e->getMessage()]);
-                            $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-    
+                            $this->logger->error($error_message, ['user' => $user->toArray(), 'error' => $e->getMessage()]);
+                            $this->renderJson(['message' => $error_message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+
                             return;
                         }
-    
+
                         $this->logger->info('User successfully added', ['user' => $user->toArray()]);
                         $this->renderJson(['result' => 'success', 'user' => $user->getUserInfos($user->id)], ResponseCode::HTTP_CREATED);
                     } else {
@@ -103,7 +105,7 @@ class Add extends BaseAction
         foreach ($words as $word) {
             if (strcmp($password, $username) == 0 || strcmp($password, $email) == 0 || strcmp($password, $word) == 0) {
                 $this->logger->error('Initial application setup : Administrator could not be added', ['error' => 'Avoid choosing a common password']);
-                $this->renderJson(['message' => 'Avoid choosing a common password']);
+                $this->renderJson(['message' => 'Avoid choosing a common password'], ResponseCode::HTTP_BAD_REQUEST);
                 return false;
             }
         }

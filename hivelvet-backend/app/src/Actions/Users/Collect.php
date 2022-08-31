@@ -24,6 +24,7 @@ namespace Actions\Users;
 
 use Actions\Base as BaseAction;
 use Models\User;
+use Enum\ResponseCode;
 
 /**
  * Class Collect.
@@ -34,15 +35,16 @@ class Collect extends BaseAction
     {
         $form = $this->getDecodedBody()['data'];
         $user = new User();
+        $message = 'Initial application setup : Administrator could not be added';
         
         if (!preg_match('/^[0-9A-Za-z !"#$%&\'()*+,-.\/:;<=>?@[\]^_`{|}&~]+$/', $form['password'])) {
-            $this->logger->error('Initial application setup : Administrator could not be added', ['error' => 'Only use letters, numbers, and common punctuation characters']);
-            $this->renderJson(['message' => 'Only use letters, numbers, and common punctuation characters']);
+            $this->logger->error($message, ['error' => 'Only use letters, numbers, and common punctuation characters']);
+            $this->renderJson(['message' => 'Only use letters, numbers, and common punctuation characters'], ResponseCode::HTTP_BAD_REQUEST);
         } else {
             $next = $this->isPasswordCommon($form['username'], $form['email'], $form['password']);
             $error = $user->usernameOrEmailExists($form['username'], $form['email']);
             if ($error && $next) {
-                $this->logger->error('Initial application setup : Administrator could not be added', ['error' => $error]);
+                $this->logger->error($message, ['error' => $error]);
                 $this->renderJson(['message' => $error]);
             }
         }
@@ -53,12 +55,11 @@ class Collect extends BaseAction
         $words = json_decode($dictionary);
         foreach ($words as $word) {
             if (strcmp($password, $username) == 0 || strcmp($password, $email) == 0 || strcmp($password, $word) == 0) {
-                $this->logger->error('Initial application setup : Administrator could not be added', ['error' => 'Avoid choosing a common password']);
-                $this->renderJson(['message' => 'Avoid choosing a common password']);
+                $this->logger->error($message, ['error' => 'Avoid choosing a common password']);
+                $this->renderJson(['message' => 'Avoid choosing a common password'], ResponseCode::HTTP_BAD_REQUEST);
                 return false;
             }
         }
         return true;
     }
-
 }

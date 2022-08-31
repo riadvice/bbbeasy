@@ -50,6 +50,10 @@ class Edit extends BaseAction
         $id   = $params['id'];
         $user = $this->loadData($id);
 
+        $username_message = 'Username already exists';
+        $email_message = 'Email already exists';
+        $error_message = 'User could not be updated';
+
         if ($user->valid()) {
             $dataChecker = new DataChecker();
 
@@ -67,12 +71,12 @@ class Edit extends BaseAction
                         $usernameExist = $users[0]['username'] === $form['username'];
                         $emailExist    = $users[0]['email'] === $form['email'];
                         $message       = ($usernameExist && $emailExist) ?
-                            ['username' => 'Username already exists', 'email' => 'Email already exists'] :
-                            ($usernameExist ? ['username' => 'Username already exists'] : ['email' => 'Email already exists']);
+                            ['username' => $username_message, 'email' => $email_message] :
+                            ($usernameExist ? ['username' => $username_message] : ['email' => $email_message]);
                     } else {
-                        $message = ['username' => 'Username already exists', 'email' => 'Email already exists'];
+                        $message = ['username' => $username_message, 'email' => $email_message];
                     }
-                    $this->logger->error('User could not be updated', ['error' => $message]);
+                    $this->logger->error($error_message, ['error' => $message]);
                     $this->renderJson(['errors' => $message], ResponseCode::HTTP_PRECONDITION_FAILED);
                 } else {
                     $role = new Role();
@@ -86,9 +90,8 @@ class Edit extends BaseAction
                         try {
                             $user->save();
                         } catch (\Exception $e) {
-                            $message = 'User could not be updated';
-                            $this->logger->error('User could not be updated', ['user' => $user->toArray(), 'error' => $e->getMessage()]);
-                            $this->renderJson(['errors' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+                            $this->logger->error($error_message, ['user' => $user->toArray(), 'error' => $e->getMessage()]);
+                            $this->renderJson(['errors' => $error_message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
 
                             return;
                         }
