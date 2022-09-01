@@ -24,8 +24,6 @@ namespace Actions\Labels;
 
 use Actions\Delete as DeleteAction;
 use Actions\RequirePrivilegeTrait;
-use Enum\ResponseCode;
-use Models\Label;
 
 /**
  * Class Delete.
@@ -33,18 +31,4 @@ use Models\Label;
 class Delete extends DeleteAction
 {
     use RequirePrivilegeTrait;
-
-    public function execute($f3, $params): void
-    {
-        $label     = new Label();
-        $labels_id = $params['id'];
-        $label->load(['id = ?', $labels_id]);
-
-        if ($label->valid()) {
-            parent::execute($f3, $params);
-            $this->renderJson(['result' => 'success']);
-        } else {
-            $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
-        }
-    }
 }
