@@ -8,7 +8,7 @@ timezone=$(echo "$1")
 
 #== Provision script ==
 
-info "Provision-script user: `whoami`"
+info "Provision-script user: $(whoami)"
 
 export DEBIAN_FRONTEND=noninteractive
 
@@ -47,6 +47,7 @@ rm nodesource_setup.sh
 sudo apt-get -y install nodejs
 curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
 echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+sudo yarn set version berry
 sudo apt remove cmdtest
 sudo apt update && sudo apt install yarn
 # sudo npm install -g pm2@5 npm@8.3.0 yarn tar@6 svgo@2 uuid@8.3.2
@@ -65,7 +66,6 @@ sudo ln -s /app/vagrant/dev/php-fpm/www.conf /etc/php/8.1/fpm/pool.d/www.conf
 sudo rm /etc/php/8.1/mods-available/xdebug.ini
 sudo ln -s /app/vagrant/dev/php-fpm/xdebug.ini /etc/php/8.1/mods-available/xdebug.ini
 echo "Done!"
-
 
 info "Configure NGINX"
 sudo sed -i 's/user www-data/user vagrant/g' /etc/nginx/nginx.conf
