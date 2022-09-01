@@ -64,11 +64,11 @@ class Scenario
      *
      * @throws \JsonException
      */
-    public function compareTemplateToResponse($path): bool
+    public function compareTemplateToResponse($path, $values): bool
     {
         $f3 = Base::instance();
 
-        return empty(array_diff($this->loadResult($path), json_decode($f3->get('RESPONSE'), true, 512, JSON_THROW_ON_ERROR)));
+        return empty(array_diff(json_decode($f3->get('RESPONSE'), true, 512, JSON_THROW_ON_ERROR), $this->loadResult($path)));
     }
 
     /**
