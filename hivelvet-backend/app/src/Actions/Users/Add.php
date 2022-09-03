@@ -50,44 +50,58 @@ class Add extends BaseAction
 
         $dataChecker->verify($form['username'], Validator::length(4)->setName('username'));
         $dataChecker->verify($form['email'], Validator::email()->setName('email'));
-        $dataChecker->verify($form['password'], Validator::length(4)->setName('password'));
+        $dataChecker->verify($form['password'], Validator::length(8)->setName('password'));
         $dataChecker->verify($form['role'], Validator::notEmpty()->setName('role'));
 
+        $pattern = '/^[0-9A-Za-z !"#$%&\'()*+,-.\/:;<=>?@[\]^_`{|}~]+$/';
+        $error_message = 'User could not be added';
         if ($dataChecker->allValid()) {
             $user  = new User();
-            $error = $user->usernameOrEmailExists($form['username'], $form['email']);
-            if ($error) {
-                $this->logger->error('User could not be added', ['error' => $error]);
-                $this->renderJson(['message' => $error], ResponseCode::HTTP_PRECONDITION_FAILED);
+            if (!preg_match($pattern, $form['password'])) {
+                $this->logger->error($error_message, ['error' => 'Only use letters, numbers, and common punctuation characters']);
+                $this->renderJson(['message' => 'Only use letters, numbers, and common punctuation characters'], ResponseCode::HTTP_BAD_REQUEST);
             } else {
-                $role = new Role();
-                $role->load(['id = ?', [$form['role']]]);
-                if ($role->valid()) {
-                    $user->email    = $form['email'];
-                    $user->username = $form['username'];
-                    $user->password = $form['password'];
-                    $user->status   = UserStatus::PENDING;
-                    $user->role_id  = $role->id;
-
-                    try {
-                        $user->save();
-                    } catch (\Exception $e) {
-                        $message = 'user could not be added';
-                        $this->logger->error('User could not be added', ['user' => $user->toArray(), 'error' => $e->getMessage()]);
-                        $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-
-                        return;
-                    }
-
-                    $this->logger->info('User successfully added', ['user' => $user->toArray()]);
-                    $this->renderJson(['result' => 'success', 'user' => $user->getUserInfos($user->id)], ResponseCode::HTTP_CREATED);
-                } else {
-                    $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
-                }
+                $this->addUser($form, $user, $error_message);
             }
         } else {
-            $this->logger->error('Add user error', ['errors' => $dataChecker->getErrors()]);
+            $this->logger->error($error_message, ['errors' => $dataChecker->getErrors()]);
             $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
+        }
+    }
+
+    private function addUser($form, $user, $error_message): void
+    {
+        $next = $this->isPasswordCommon($form['username'], $form['email'], $form['password'], $error_message);
+        $users = $this->getUsersByUsernameOrEmail($form['username'], $form['email']);
+        $error = $user->usernameOrEmailExists($form['username'], $form['email'], $users);
+        if ($error && $next) {
+            $this->logger->error($error_message, ['error' => $error]);
+            $this->renderJson(['message' => $error], ResponseCode::HTTP_PRECONDITION_FAILED);
+        } elseif ($next) {
+            $role = new Role();
+            $role->load(['id = ?', [$form['role']]]);
+            if ($role->valid()) {
+                $user->email    = $form['email'];
+                $user->username = $form['username'];
+                $user->password = $form['password'];
+                $user->status   = UserStatus::PENDING;
+                $user->role_id  = $role->id;
+
+                $user->password_attempts = 3;
+                try {
+                    $user->save();
+                } catch (\Exception $e) {
+                    $this->logger->error($error_message, ['user' => $user->toArray(), 'error' => $e->getMessage()]);
+                    $this->renderJson(['message' => $error_message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+
+                    return;
+                }
+
+                $this->logger->info('User successfully added', ['user' => $user->toArray()]);
+                $this->renderJson(['result' => 'success', 'user' => $user->getUserInfos($user->id)], ResponseCode::HTTP_CREATED);
+            } else {
+                $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
+            }
         }
     }
 }

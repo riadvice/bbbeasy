@@ -26,6 +26,8 @@ use Actions\Base as BaseAction;
 use Enum\ResetTokenStatus;
 use Enum\ResponseCode;
 use Models\ResetPasswordToken;
+use Validation\DataChecker;
+use Respect\Validation\Validator;
 use Models\User;
 
 /**
@@ -36,32 +38,58 @@ class ChangePassword extends BaseAction
     public function execute($f3): void
     {
         $form = $this->getDecodedBody();
-
+        
         $password   = $form['password'];
         $resetToken = new ResetPasswordToken();
+        
+        $dataChecker = new DataChecker();
+        $dataChecker->verify($password, Validator::length(8)->setName('password'));
 
+        $pattern = '/^[0-9A-Za-z !"#$%&\'()*+,-.\/:;<=>?@[\]^_`{|}~]+$/';
+        $error_message = 'Password could not be changed';
         if ($resetToken->getByToken($form['token'])) {
             if (!$resetToken->dry()) {
-                $user               = new User();
-                $user               = $user->getById($resetToken->user_id);
-                $user->password     = $password;
-                $resetToken->status = ResetTokenStatus::CONSUMED;
+                if ($dataChecker->allValid()) {
+                    $user               = new User();
+                    $user               = $user->getById($resetToken->user_id);
+                    $resetToken->status = ResetTokenStatus::CONSUMED;
 
-                try {
-                    $resetToken->save();
-                    $user->save();
-                } catch (\Exception $e) {
-                    $message = 'password could not be changed';
-                    $this->logger->error('reset password error : password could not be changed', ['error' => $e->getMessage()]);
-                    $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-
-                    return;
+                    if (!preg_match($pattern, $password)) {
+                        $this->logger->error($error_message, ['error' => 'Only use letters, numbers, and common punctuation characters']);
+                        $this->renderJson(['message' => 'Only use letters, numbers, and common punctuation characters'], ResponseCode::HTTP_BAD_REQUEST);
+                    } else {
+                        $this->changePassword($user, $password, $resetToken, $error_message);
+                    }
+                } else {
+                    $this->logger->error($error_message, ['errors' => $dataChecker->getErrors()]);
+                    $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
                 }
-
-                $this->renderJson(['result' => 'success']);
+            } else {
+                $this->logger->error($error_message);
             }
-        } else {
-            $this->logger->error('reset password error : password could not be changed');
+        }
+    }
+
+    private function changePassword($user, $password, $resetToken, $error_message): void
+    {
+        $next = $this->isPasswordCommon($user->username, $user->email, $password, $error_message);
+        if ($user->verifyPassword($password) && $next) {
+            $this->logger->error($error_message, ['error' => 'New password cannot be the same as your old password']);
+            $this->renderJson(['message' => 'New password cannot be the same as your old password'] );
+        } elseif ($next) {
+            try {
+                $user->password = $password;
+                $resetToken->save();
+                $user->save();
+            } catch (\Exception $e) {
+                $message = 'Password could not be changed';
+                $this->logger->error($error_message, ['error' => $e->getMessage()]);
+                $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+
+                return;
+            }
+
+            $this->renderJson(['result' => 'success']);
         }
     }
 }
