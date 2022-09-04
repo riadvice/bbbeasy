@@ -28,6 +28,7 @@ use Enum\ResponseCode;
 use Models\ResetPasswordToken;
 use Validation\DataChecker;
 use Respect\Validation\Validator;
+use Enum\UserStatus;
 use Models\User;
 
 /**
@@ -47,6 +48,7 @@ class ChangePassword extends BaseAction
 
         $pattern = '/^[0-9A-Za-z !"#$%&\'()*+,-.\/:;<=>?@[\]^_`{|}~]+$/';
         $error_message = 'Password could not be changed';
+        $response_code = ResponseCode::HTTP_BAD_REQUEST;
         if ($resetToken->getByToken($form['token'])) {
             if (!$resetToken->dry()) {
                 if ($dataChecker->allValid()) {
@@ -56,9 +58,9 @@ class ChangePassword extends BaseAction
 
                     if (!preg_match($pattern, $password)) {
                         $this->logger->error($error_message, ['error' => 'Only use letters, numbers, and common punctuation characters']);
-                        $this->renderJson(['message' => 'Only use letters, numbers, and common punctuation characters'], ResponseCode::HTTP_BAD_REQUEST);
+                        $this->renderJson(['message' => 'Only use letters, numbers, and common punctuation characters'], $response_code);
                     } else {
-                        $this->changePassword($user, $password, $resetToken, $error_message);
+                        $this->changePassword($user, $password, $resetToken, $error_message, $response_code);
                     }
                 } else {
                     $this->logger->error($error_message, ['errors' => $dataChecker->getErrors()]);
@@ -70,15 +72,16 @@ class ChangePassword extends BaseAction
         }
     }
 
-    private function changePassword($user, $password, $resetToken, $error_message): void
+    private function changePassword($user, $password, $resetToken, $error_message, $response_code): void
     {
-        $next = $this->isPasswordCommon($user->username, $user->email, $password, $error_message);
+        $next = $this->isPasswordCommon($user->username, $user->email, $password, $error_message, $response_code);
         if ($user->verifyPassword($password) && $next) {
             $this->logger->error($error_message, ['error' => 'New password cannot be the same as your old password']);
             $this->renderJson(['message' => 'New password cannot be the same as your old password'] );
         } elseif ($next) {
             try {
                 $user->password = $password;
+                $user->status = UserStatus::ACTIVE;
                 $resetToken->save();
                 $user->save();
             } catch (\Exception $e) {

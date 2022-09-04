@@ -24,7 +24,6 @@ namespace Actions\Users;
 
 use Actions\Base as BaseAction;
 use Models\User;
-use Enum\ResponseCode;
 
 /**
  * Class Collect.
@@ -40,7 +39,7 @@ class Collect extends BaseAction
         $error_message = 'Administrator could not be added';
         if (!preg_match($pattern, $form['password'])) {
             $this->logger->error($error_message, ['error' => 'Only use letters, numbers, and common punctuation characters']);
-            $this->renderJson(['message' => 'Only use letters, numbers, and common punctuation characters'], ResponseCode::HTTP_BAD_REQUEST);
+            $this->renderJson(['message' => 'Only use letters, numbers, and common punctuation characters']);
         } else {
             $next = $this->isPasswordCommon($form['username'], $form['email'], $form['password'], $error_message);
             $users = $this->getUsersByUsernameOrEmail($form['username'], $form['email']);

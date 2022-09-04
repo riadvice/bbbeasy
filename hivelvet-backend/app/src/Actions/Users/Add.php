@@ -55,13 +55,14 @@ class Add extends BaseAction
 
         $pattern = '/^[0-9A-Za-z !"#$%&\'()*+,-.\/:;<=>?@[\]^_`{|}~]+$/';
         $error_message = 'User could not be added';
+        $response_code = ResponseCode::HTTP_BAD_REQUEST;
         if ($dataChecker->allValid()) {
             $user  = new User();
             if (!preg_match($pattern, $form['password'])) {
                 $this->logger->error($error_message, ['error' => 'Only use letters, numbers, and common punctuation characters']);
-                $this->renderJson(['message' => 'Only use letters, numbers, and common punctuation characters'], ResponseCode::HTTP_BAD_REQUEST);
+                $this->renderJson(['message' => 'Only use letters, numbers, and common punctuation characters'], $response_code);
             } else {
-                $this->addUser($form, $user, $error_message);
+                $this->addUser($form, $user, $error_message, $response_code);
             }
         } else {
             $this->logger->error($error_message, ['errors' => $dataChecker->getErrors()]);
@@ -69,9 +70,9 @@ class Add extends BaseAction
         }
     }
 
-    private function addUser($form, $user, $error_message): void
+    private function addUser($form, $user, $error_message, $response_code): void
     {
-        $next = $this->isPasswordCommon($form['username'], $form['email'], $form['password'], $error_message);
+        $next = $this->isPasswordCommon($form['username'], $form['email'], $form['password'], $error_message, $response_code);
         $users = $this->getUsersByUsernameOrEmail($form['username'], $form['email']);
         $error = $user->usernameOrEmailExists($form['username'], $form['email'], $users);
         if ($error && $next) {

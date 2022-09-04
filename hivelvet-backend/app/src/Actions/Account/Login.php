@@ -86,7 +86,7 @@ class Login extends BaseAction
                     $user->password_attempts -= 1;
                     $user->save();
                     $this->logger->error($error_message, ['email' => $email]);
-                    $this->renderJson(['message' => 'Wrong password. Attempts left : ' . $user->password_attempts], ResponseCode::HTTP_BAD_REQUEST);
+                    $this->renderJson(['message' => "Wrong password. Attempts left : $user->password_attempts"], ResponseCode::HTTP_BAD_REQUEST);
             } elseif ($user->valid() && $user->password_attempts == 0 || $user->password_attempts == 1) {
                 $user->password_attempts = 0;
                 $user->status = UserStatus::INACTIVE;

@@ -49,13 +49,14 @@ class Register extends BaseAction
 
         $pattern = '/^[0-9A-Za-z !"#$%&\'()*+,-.\/:;<=>?@[\]^_`{|}~]+$/';
         $error_message = 'User could not be added';
+        $response_code = ResponseCode::HTTP_BAD_REQUEST;
         if ($dataChecker->allValid()) {
             $user  = new User();
             if (!preg_match($pattern, $form['password'])) {
                 $this->logger->error($error_message, ['error' => 'Only use letters, numbers, and common punctuation characters']);
-                $this->renderJson(['message' => 'Only use letters, numbers, and common punctuation characters'], ResponseCode::HTTP_BAD_REQUEST);
+                $this->renderJson(['message' => 'Only use letters, numbers, and common punctuation characters'], $response_code);
             } else {
-                $next = $this->isPasswordCommon($form['username'], $form['email'], $form['password'], $error_message);
+                $next = $this->isPasswordCommon($form['username'], $form['email'], $form['password'], $error_message, $response_code);
                 $users = $this->getUsersByUsernameOrEmail($form['username'], $form['email']);
                 $error = $user->usernameOrEmailExists($form['username'], $form['email'], $users);
                 if ($error && $next) {

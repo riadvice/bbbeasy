@@ -279,14 +279,13 @@ abstract class Base extends \Prefab
 
     protected function isPasswordCommon(string $username, string $email, string $password, string $error_message): bool
     {
-        $url = 'http://api.hivelvet.test/dictionary/en-US.json';
-        $dictionary = file_GET_contents($url);
+        $dictionary = file_GET_contents("http://$_SERVER[HTTP_HOST]/dictionary/en-US.json");
         $words = json_decode($dictionary);
         foreach ($words as $word) {
             if (strcmp($password, $username) == 0 || strcmp($password, $email) == 0 || strcmp($password, $word) == 0) {
                 $error = 'Avoid choosing a common password';
                 $this->logger->error($error_message, ['error' => $error]);
-                $this->renderJson(['message' => $error], ResponseCode::HTTP_BAD_REQUEST);
+                $this->renderJson(['message' => $error]);
                 return false;
             }
         }
@@ -295,8 +294,9 @@ abstract class Base extends \Prefab
 
     protected function getUsersByUsernameOrEmail(string $username, string $email): array
     {
-        $conn = pg_pconnect("host=localhost dbname=hivelvet user=hivelvet password=hivelvet");
-        $result = pg_query_params($conn, "SELECT username, email FROM public.users WHERE lower(username) = lower($1) OR lower(email) = lower($2)", array($username, $email));
+        $hivelvet_password = 'hivelvet';
+        $conn = pg_pconnect("host=localhost dbname=hivelvet user=hivelvet password=$hivelvet_password");
+        $result = pg_query_params($conn, 'SELECT username, email FROM public.users WHERE lower(username) = lower($1) OR lower(email) = lower($2)', array($username, $email));
         return pg_fetch_all($result);
     }
 }
