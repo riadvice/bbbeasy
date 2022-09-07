@@ -1,3 +1,19 @@
+// installer app initiation
+
+describe('Initiate testing installer app', () => {
+    it('should set initiation state', () => {
+        const testname = 'test';
+        const username = 'administrator';
+        const email = 'administrator@riadvice.tn';
+        const password = 'hivelvet-administrator';
+        cy.removeUser(testname);
+        cy.removeUser(username);
+        cy.addAdmin(username, email, password);
+    });
+});
+
+// install.spec.cy.js
+
 describe('Test install process', () => {
     beforeEach(() => {
         cy.visit('/');
@@ -39,29 +55,11 @@ describe('Test install process', () => {
         const username = 'administrator';
         const email = 'administrator@riadvice.tn';
         const password = 'hivelvet-administrator';
-        cy.task('database', {
-            sql: `SELECT * FROM public.users WHERE username='administrator';`
-        }).then((result) => {
-            if (result.rows.length == 0) {
-                cy.visit('/');
-                cy.get('input#install_form_username').type(username);
-                cy.get('input#install_form_email').type(email);
-                cy.get('input#install_form_password').type(password);
-                cy.get('button#submit-btn').click();
-                cy.wait(1000);
-                cy.get('button#submit-btn').click();
-                cy.wait(1000);
-                cy.get('button#submit-btn').click();
-                cy.wait(1000);
-                cy.reload();
-            }
-            cy.get('input#install_form_username').type(username).should('have.value', username);
-            cy.get('input#install_form_email').type(email).should('have.value', email);
-            cy.get('input#install_form_password').type(password).should('have.value', password);
-            cy.get('button#submit-btn').click();
-            cy.wait(1000);
-            cy.get('div.ant-alert-message').should('be.visible').and('have.length', 1);
-        });
+        cy.get('input#install_form_username').type(username).should('have.value', username);
+        cy.get('input#install_form_email').type(email).should('have.value', email);
+        cy.get('input#install_form_password').type(password).should('have.value', password);
+        cy.get('button#submit-btn').click().wait(500);
+        cy.get('div.ant-alert-message').should('be.visible').and('have.length', 1);
     });
     it('should load correctly and check step 2 form elements exist', () => {
         const username = 'test';
@@ -124,8 +122,9 @@ describe('Test install process', () => {
         cy.get('input#install_form_username').type(username).should('have.value', username);
         cy.get('input#install_form_email').type(email).should('have.value', email);
         cy.get('input#install_form_password').type(password).should('have.value', password);
+        cy.get('button#submit-btn').click().wait(500);
         cy.get('button#submit-btn').click();
-        cy.wait(1000);
+        cy.get('button.prev').click();
         cy.get('button#submit-btn').click();
         cy.get('input#install_form_company_name').should('not.exist');
         cy.get('input#install_form_company_url').should('not.exist');
@@ -142,40 +141,29 @@ describe('Test install process', () => {
             cy.get('button#submit-btn').should('be.visible');
         });
     });
-    it('should revert from step 3 to step 1', () => {
+    it('should display success install page when submitting form with valid credentials (english version)', () => {
         const username = 'test';
         const email = 'test@riadvice.tn';
         const password = 'hivelvet-test';
-        cy.get('input#install_form_username').type(username).should('have.value', username);
-        cy.get('input#install_form_email').type(email).should('have.value', email);
-        cy.get('input#install_form_password').type(password).should('have.value', password);
-        cy.get('button#submit-btn').click();
-        cy.wait(1000);
-        cy.get('button#submit-btn').click();
-        cy.wait(1000);
-        cy.get('button.prev').click();
-        cy.wait(1000);
-        cy.get('button.prev').click();
+        const hex = 'ffffff';
+        const action = 'first';
+       cy.install(username, email, password, hex, action);
     });
-    it('should display success install page when submitting form with valid credentials', () => {
+    it('should display success install page when submitting form with valid credentials (arabic version)', () => {
         const username = 'test';
         const email = 'test@riadvice.tn';
         const password = 'hivelvet-test';
-        cy.get('input#install_form_username').type(username).should('have.value', username);
-        cy.get('input#install_form_email').type(email).should('have.value', email);
-        cy.get('input#install_form_password').type(password).should('have.value', password);
-        cy.get('button#submit-btn').click();
-        cy.wait(1000);
-        cy.get('input[type=file]').selectFile({ contents: 'cypress/fixtures/example.json', fileName: 'file.png' }, { force: true })
-        cy.wait(1000);
-        cy.get('div.ant-upload-list-item').should('be.visible').and('have.length', 1);
-        cy.get('button#submit-btn').click();
-        cy.wait(1000);
-        cy.get('button#submit-btn').click();
-        cy.wait(1000);
-        cy.get('div.ant-result-icon').should('be.visible').and('have.length', 1);
-        cy.get('div.ant-result-title').should('be.visible').and('have.length', 1);
-        cy.task('database', { sql: `DELETE FROM public.reset_password_tokens WHERE user_id=(SELECT id from public.users WHERE username='test');` });
-        cy.task('database', { sql: `DELETE FROM public.users WHERE username='test';` });
+        const hex = 'ffffff';
+        const action = 'last';
+       cy.install(username, email, password, hex, action);
+    });
+});
+
+// installer app completion
+
+describe('Finish testing installer app', () => {
+    it('should set completion state', () => {
+        const username = 'administrator';
+        cy.removeUser(username);
     });
 });

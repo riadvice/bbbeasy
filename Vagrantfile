@@ -9,6 +9,7 @@ end
 domains = {
   frontend: "hivelvet.test",
   backend: "api.hivelvet.test",
+  docs: "docs.hivelvet.test",
 }
 
 config = {
@@ -73,4 +74,5 @@ Vagrant.configure("2") do |config|
   # post-install message (vagrant console)
   config.vm.post_up_message = "Hivelvet Frontend URL: http://#{domains[:frontend]}"
   config.vm.post_up_message = "Hivelvet Backend API URL: http://#{domains[:backend]}"
+  config.vm.post_up_message = "Hivelvet Docs API URL: http://#{domains[:docs]}"
 end

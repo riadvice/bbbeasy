@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Models;
 
 use DateTime;
+use Enum\ResponseCode;
 use Enum\UserStatus;
 use Models\Base as BaseModel;
 
@@ -105,18 +106,23 @@ class User extends BaseModel
      *
      * @return string
      */
-    public function usernameOrEmailExists($username, $email)
+    public function usernameOrEmailExists($username, $email, $users)
     {
-        $users = $this->find(['username = ? or email = ?', $username, $email]);
         if ($users) {
-            $users = $users->castAll();
             if (1 === \count($users)) {
-                $usernameExist = $users[0]['username'] === $username;
-                $emailExist    = $users[0]['email'] === $email;
+                $usernameExist = strtolower($users[0]['username']) === strtolower($username);
+                $emailExist    = strtolower($users[0]['email']) === strtolower($email);
 
-                return ($usernameExist && $emailExist) ? 'Username and Email already exist' : ($usernameExist ? 'Username already exists' : 'Email already exists');
+                if ($usernameExist && $emailExist) {
+                    $error_message = 'Username and Email already exist';
+                } elseif ($usernameExist) {
+                    $error_message = 'Username already exists';
+                } else {
+                    $error_message = 'Email already exists';
+                }
+
+                return $error_message;
             }
-
             return 'Username and Email already exist';
         }
 
@@ -181,5 +187,26 @@ class User extends BaseModel
         );
 
         return $id ? $result[0] : $result;
+    }
+
+    /**
+     * Delete a user by setting its status to "deleted".
+     *
+     * @return Array[2](Array[], ResponsCode)
+     */
+    public function delete(): array
+    {
+        $this->status = UserStatus::DELETED;
+
+        try {
+            $this->save();
+            $this->logger->info('User successfully deleted', ['user' => $this->toArray()]);
+        } catch (\Exception $e) {
+            $this->logger->error('User could not be deleted', ['user' => $this->toArray(), 'error' => $e->getMessage()]);
+
+            throw $e;
+        }
+
+        return [['result' => 'success', 'user' => $this->getUserInfos($this->id)], ResponseCode::HTTP_OK];
     }
 }

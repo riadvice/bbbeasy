@@ -47,31 +47,33 @@ class Register extends BaseAction
         // otherwise in the login it should look for available terms of they were not previously available and ask to accept them
         $dataChecker->verify($form['agreement'], Validator::trueVal()->setName('agreement'));
 
+        $pattern = '/^[0-9A-Za-z !"#$%&\'()*+,-.\/:;<=>?@[\]^_`{|}~]+$/';
+        $error_message = 'User could not be added';
+        $response_code = ResponseCode::HTTP_BAD_REQUEST;
         if ($dataChecker->allValid()) {
             $user  = new User();
-            if (!preg_match('/^[0-9A-Za-z !"#$%&\'()*+,-.\/:;<=>?@[\]^_`{|}&~]+$/', $form['password'])) {
-                $this->logger->error('Registration error', ['error' => 'Only use letters, numbers, and common punctuation characters']);
-                $this->renderJson(['message' => 'Only use letters, numbers, and common punctuation characters'], ResponseCode::HTTP_BAD_REQUEST);
+            if (!preg_match($pattern, $form['password'])) {
+                $this->logger->error($error_message, ['error' => 'Only use letters, numbers, and common punctuation characters']);
+                $this->renderJson(['message' => 'Only use letters, numbers, and common punctuation characters'], $response_code);
             } else {
-                $next = $this->isPasswordCommon($form['username'], $form['email'], $form['password']);
-                $error = $user->usernameOrEmailExists($form['username'], $form['email']);
+                $next = $this->isPasswordCommon($form['username'], $form['email'], $form['password'], $error_message, $response_code);
+                $users = $this->getUsersByUsernameOrEmail($form['username'], $form['email']);
+                $error = $user->usernameOrEmailExists($form['username'], $form['email'], $users);
                 if ($error && $next) {
-                    $this->logger->error('Registration error : User could not be added', ['error' => $error]);
+                    $this->logger->error($error_message, ['error' => $error]);
                     $this->renderJson(['message' => $error], ResponseCode::HTTP_PRECONDITION_FAILED);
-                } else if ($next) {
+                } elseif ($next) {
                     $user->email    = $form['email'];
                     $user->username = $form['username'];
                     $user->password = $form['password'];
                     $user->role_id  = 2;
                     $user->status   = UserStatus::PENDING;
-                    $user->password_attempts = 3;
 
                     try {
                         $user->save();
                     } catch (\Exception $e) {
-                        $message = 'User could not be added';
-                        $this->logger->error('Registration error : User could not be added', ['user' => $user->toArray(), 'error' => $e->getMessage()]);
-                        $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+                        $this->logger->error($error_message, ['user' => $user->toArray(), 'error' => $e->getMessage()]);
+                        $this->renderJson(['message' => $error_message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
 
                         return;
                     }
@@ -80,21 +82,8 @@ class Register extends BaseAction
                 }
             }
         } else {
-            $this->logger->error('Registration error', ['errors' => $dataChecker->getErrors()]);
+            $this->logger->error($error_message, ['errors' => $dataChecker->getErrors()]);
             $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
         }
-    }
-
-    private function isPasswordCommon($username, $email, $password) {
-        $dictionary = file_GET_contents("http://api.hivelvet.test/dictionary/en-US.json");
-        $words = json_decode($dictionary);
-        foreach ($words as $word) {
-            if (strcmp($password, $username) == 0 || strcmp($password, $email) == 0 || strcmp($password, $word) == 0) {
-                $this->logger->error('Initial application setup : Administrator could not be added', ['error' => 'Avoid choosing a common password']);
-                $this->renderJson(['message' => 'Avoid choosing a common password'], ResponseCode::HTTP_BAD_REQUEST);
-                return false;
-            }
-        }
-        return true;
     }
 }

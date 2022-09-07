@@ -55,12 +55,14 @@ const ChangePassword = () => {
     }, []);
     const handleSubmit = (formValue: formType) => {
         const { password } = formValue;
-        AuthService.change_password(params.get('token'), password).then((result) => {
+        AuthService.change_password(params.get('token'), password)
+            .then((result) => {
                 if (result.data.message == 'New password cannot be the same as your old password') {
                     setSuccessful(false);
                     setMessage(result.data.message);
                 } else if (result.data.result == 'success') setSuccessful(true);
-        }).catch((error) => {
+            })
+            .catch((error) => {
             setSuccessful(false);
             setMessage(error.response.data.message);
         });
@@ -107,7 +109,7 @@ const ChangePassword = () => {
 
                                 <Form
                                     layout="vertical"
-                                    name="change_form"
+                                    name="change"
                                     className="login-form"
                                     requiredMark={false}
                                     scrollToFirstError={true}
@@ -159,7 +161,6 @@ const ChangePassword = () => {
                                     <Form.Item>
                                         <Button
                                             type="primary"
-                                            id="submit-btn"
                                             htmlType="submit"
                                             className="login-form-button"
                                             size="large"

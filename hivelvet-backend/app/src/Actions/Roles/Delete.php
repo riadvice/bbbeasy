@@ -24,8 +24,6 @@ namespace Actions\Roles;
 
 use Actions\Delete as DeleteAction;
 use Actions\RequirePrivilegeTrait;
-use Enum\ResponseCode;
-use Models\Role;
 
 /**
  * Class Delete.
@@ -33,31 +31,5 @@ use Models\Role;
 class Delete extends DeleteAction
 {
     use RequirePrivilegeTrait;
-
-    public function execute($f3, $params): void
-    {
-        $role    = new Role();
-        $role_id = $params['id'];
-        $role->load(['id = ?', $role_id]);
-        if ($role->valid()) {
-            $nbUsers = $role->getRoleUsers();
-
-            // delete users and permissions
-            $result = $role->deleteUsersAndPermissions();
-
-            if ($result) {
-                // delete role after deleting assigned users and permissions
-                parent::execute($f3, $params);
-                // if role have users assigned return lecturer role to get switched users
-                if ($nbUsers > 0) {
-                    $result = $role->getLecturerRole();
-                    $this->renderJson(['lecturer' => $result]);
-                } else {
-                    $this->renderJson(['result' => 'success']);
-                }
-            }
-        } else {
-            $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
-        }
-    }
+    protected $deleteMethodName = 'delete';
 }

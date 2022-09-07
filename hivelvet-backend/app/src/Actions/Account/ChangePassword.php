@@ -28,6 +28,7 @@ use Enum\ResponseCode;
 use Models\ResetPasswordToken;
 use Validation\DataChecker;
 use Respect\Validation\Validator;
+use Enum\UserStatus;
 use Models\User;
 
 /**
@@ -38,15 +39,16 @@ class ChangePassword extends BaseAction
     public function execute($f3): void
     {
         $form = $this->getDecodedBody();
-
+        
         $password   = $form['password'];
         $resetToken = new ResetPasswordToken();
+        
         $dataChecker = new DataChecker();
-
         $dataChecker->verify($password, Validator::length(8)->setName('password'));
 
-        $error_message = 'Reset password error : Password could not be changed';
-
+        $pattern = '/^[0-9A-Za-z !"#$%&\'()*+,-.\/:;<=>?@[\]^_`{|}~]+$/';
+        $error_message = 'Password could not be changed';
+        $response_code = ResponseCode::HTTP_BAD_REQUEST;
         if ($resetToken->getByToken($form['token'])) {
             if (!$resetToken->dry()) {
                 if ($dataChecker->allValid()) {
@@ -54,29 +56,11 @@ class ChangePassword extends BaseAction
                     $user               = $user->getById($resetToken->user_id);
                     $resetToken->status = ResetTokenStatus::CONSUMED;
 
-                    if (!preg_match('/^[0-9A-Za-z !"#$%&\'()*+,-.\/:;<=>?@[\]^_`{|}&~]+$/', $password)) {
+                    if (!preg_match($pattern, $password)) {
                         $this->logger->error($error_message, ['error' => 'Only use letters, numbers, and common punctuation characters']);
-                        $this->renderJson(['message' => 'Only use letters, numbers, and common punctuation characters'], ResponseCode::HTTP_BAD_REQUEST);
+                        $this->renderJson(['message' => 'Only use letters, numbers, and common punctuation characters'], $response_code);
                     } else {
-                        $next = $this->isPasswordCommon($user->username, $user->email, $password);
-                        if ($user->verifyPassword($password) && $next) {
-                            $this->logger->error($error_message, ['error' => 'New password cannot be the same as your old password']);
-                            $this->renderJson(['message' => 'New password cannot be the same as your old password'] );
-                        } else if ($next) {
-                            try {
-                                $user->password = $password;
-                                $resetToken->save();
-                                $user->save();
-                            } catch (\Exception $e) {
-                                $message = 'Password could not be changed';
-                                $this->logger->error($error_message, ['error' => $e->getMessage()]);
-                                $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-
-                                return;
-                            }
-
-                            $this->renderJson(['result' => 'success']);
-                        }
+                        $this->changePassword($user, $password, $resetToken, $error_message, $response_code);
                     }
                 } else {
                     $this->logger->error($error_message, ['errors' => $dataChecker->getErrors()]);
@@ -88,16 +72,27 @@ class ChangePassword extends BaseAction
         }
     }
 
-    private function isPasswordCommon($username, $email, $password) {
-        $dictionary = file_GET_contents("http://api.hivelvet.test/dictionary/en-US.json");
-        $words = json_decode($dictionary);
-        foreach ($words as $word) {
-            if (strcmp($password, $username) == 0 || strcmp($password, $email) == 0 || strcmp($password, $word) == 0) {
-                $this->logger->error('Initial application setup : Administrator could not be added', ['error' => 'Avoid choosing a common password']);
-                $this->renderJson(['message' => 'Avoid choosing a common password'], ResponseCode::HTTP_BAD_REQUEST);
-                return false;
+    private function changePassword($user, $password, $resetToken, $error_message, $response_code): void
+    {
+        $next = $this->isPasswordCommon($user->username, $user->email, $password, $error_message, $response_code);
+        if ($user->verifyPassword($password) && $next) {
+            $this->logger->error($error_message, ['error' => 'New password cannot be the same as your old password']);
+            $this->renderJson(['message' => 'New password cannot be the same as your old password'] );
+        } elseif ($next) {
+            try {
+                $user->password = $password;
+                $user->status = UserStatus::ACTIVE;
+                $resetToken->save();
+                $user->save();
+            } catch (\Exception $e) {
+                $message = 'Password could not be changed';
+                $this->logger->error($error_message, ['error' => $e->getMessage()]);
+                $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+
+                return;
             }
+
+            $this->renderJson(['result' => 'success']);
         }
-        return true;
-    }  
+    }
 }

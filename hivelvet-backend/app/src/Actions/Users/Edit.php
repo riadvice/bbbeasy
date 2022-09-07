@@ -50,10 +50,9 @@ class Edit extends BaseAction
         $id   = $params['id'];
         $user = $this->loadData($id);
 
-        $username_message = 'Username already exists';
-        $email_message = 'Email already exists';
+        $username_error_message = 'Username already exists';
+        $email_error_message = 'Email already exists';
         $error_message = 'User could not be updated';
-
         if ($user->valid()) {
             $dataChecker = new DataChecker();
 
@@ -70,11 +69,15 @@ class Edit extends BaseAction
                     if (1 === \count($users)) {
                         $usernameExist = $users[0]['username'] === $form['username'];
                         $emailExist    = $users[0]['email'] === $form['email'];
-                        $message       = ($usernameExist && $emailExist) ?
-                            ['username' => $username_message, 'email' => $email_message] :
-                            ($usernameExist ? ['username' => $username_message] : ['email' => $email_message]);
+                        if ($usernameExist && $emailExist) {
+                            $message = ['username' => $username_error_message, 'email' => $email_error_message];
+                        } elseif ($usernameExist) {
+                            $message = ['username' => $username_error_message];
+                        } else {
+                            $message = ['email' => $email_error_message];
+                        }
                     } else {
-                        $message = ['username' => $username_message, 'email' => $email_message];
+                        $message = ['username' => $username_error_message, 'email' => $email_error_message];
                     }
                     $this->logger->error($error_message, ['error' => $message]);
                     $this->renderJson(['errors' => $message], ResponseCode::HTTP_PRECONDITION_FAILED);
@@ -103,7 +106,7 @@ class Edit extends BaseAction
                     }
                 }
             } else {
-                $this->logger->error('Update user error', ['errors' => $dataChecker->getErrors()]);
+                $this->logger->error($error_message, ['errors' => $dataChecker->getErrors()]);
                 $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
             }
         } else {

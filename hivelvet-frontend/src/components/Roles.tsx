@@ -21,8 +21,7 @@ import RolesService from '../services/roles.service';
 import Notifications from './Notifications';
 import { PaginationType } from '../types/PaginationType';
 
-import { PageHeader, Button, Row, Col, Typography, Table, Space, Modal, Popconfirm, Card } from 'antd';
-import { Form, Input, Checkbox } from 'antd';
+import { PageHeader, Button, Row, Col, Typography, Table, Space, Modal, Popconfirm, Card, Checkbox, Input } from 'antd';
 import {
     DeleteOutlined,
     SearchOutlined,
@@ -35,7 +34,7 @@ import {
     CheckOutlined,
 } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words/dist/main';
-import { FormInstance } from 'antd/lib/form';
+import Form, { FormInstance } from 'antd/lib/form';
 import { Trans, withTranslation } from 'react-i18next';
 import { t } from 'i18next';
 import EN_US from '../locale/en-US.json';
@@ -125,7 +124,7 @@ const Roles = () => {
                     return (
                         <Card bordered={false} key={group} title={newGroup} type="inner">
                             <Form.Item name={group}>
-                                <Checkbox.Group disabled={key == 1 && true}>
+                                <Checkbox.Group disabled={key == 1}>
                                     <Row gutter={[32, 16]}>
                                         {allPrivileges[group].map((action) => (
                                             <Col key={action}>
@@ -350,29 +349,31 @@ const Roles = () => {
         const saveName = async () => {
             setErrorsEdit({});
             try {
-                if (!_.isEqual(transformText(record.name), editForm.getFieldsValue(true).name)) {
-                    const values = (await editForm.validateFields()) as Item;
-                    const key = record.key;
-                    RolesService.edit_role(values, key)
-                        .then((response) => {
-                            toggleEditName();
-                            editRow(response, key);
-                        })
-                        .catch((error) => {
-                            const responseData = error.response.data;
-                            if (responseData.errors) {
-                                const err = responseData.errors;
-                                err['key'] = key;
-                                setErrorsEdit(err);
-                            }
-                        });
-                } else {
-                    Notifications.openNotificationWithIcon('info', t('no_changes'));
-                    cancelName();
-                }
+                const values = (await editForm.validateFields()) as Item;
+                const key = record.key;
+                RolesService.edit_role(values, key)
+                    .then((response) => {
+                        toggleEditName();
+                        editRow(response, key);
+                    })
+                    .catch((error) => {
+                        const responseData = error.response.data;
+                        if (responseData.errors) {
+                            const err = responseData.errors;
+                            err['key'] = key;
+                            setErrorsEdit(err);
+                        }
+                    });
             } catch (errInfo) {
                 console.log('Save failed:', errInfo);
             }
+        };
+        const keepName = () => {
+            Notifications.openNotificationWithIcon('info', t('no_changes'));
+            cancelName();
+        };
+        const compareName = () => {
+            return !_.isEqual(transformText(record.name), editForm.getFieldsValue(true).name) ? saveName() : keepName();
         };
 
         return (
@@ -402,7 +403,7 @@ const Roles = () => {
                         >
                             <Input
                                 ref={inputRef}
-                                onPressEnter={saveName}
+                                onPressEnter={compareName}
                                 suffix={
                                     <>
                                         <Button
@@ -414,7 +415,7 @@ const Roles = () => {
                                         <Button
                                             icon={<CheckOutlined />}
                                             size="small"
-                                            onClick={saveName}
+                                            onClick={compareName}
                                             type="primary"
                                             className="cell-input-save"
                                         />

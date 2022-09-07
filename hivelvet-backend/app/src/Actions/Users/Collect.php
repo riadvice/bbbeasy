@@ -24,7 +24,6 @@ namespace Actions\Users;
 
 use Actions\Base as BaseAction;
 use Models\User;
-use Enum\ResponseCode;
 
 /**
  * Class Collect.
@@ -35,31 +34,20 @@ class Collect extends BaseAction
     {
         $form = $this->getDecodedBody()['data'];
         $user = new User();
-        $message = 'Initial application setup : Administrator could not be added';
-        
-        if (!preg_match('/^[0-9A-Za-z !"#$%&\'()*+,-.\/:;<=>?@[\]^_`{|}&~]+$/', $form['password'])) {
-            $this->logger->error($message, ['error' => 'Only use letters, numbers, and common punctuation characters']);
-            $this->renderJson(['message' => 'Only use letters, numbers, and common punctuation characters'], ResponseCode::HTTP_BAD_REQUEST);
+
+        $pattern = '/^[0-9A-Za-z !"#$%&\'()*+,-.\/:;<=>?@[\]^_`{|}~]+$/';
+        $error_message = 'Administrator could not be added';
+        if (!preg_match($pattern, $form['password'])) {
+            $this->logger->error($error_message, ['error' => 'Only use letters, numbers, and common punctuation characters']);
+            $this->renderJson(['message' => 'Only use letters, numbers, and common punctuation characters']);
         } else {
-            $next = $this->isPasswordCommon($form['username'], $form['email'], $form['password']);
-            $error = $user->usernameOrEmailExists($form['username'], $form['email']);
+            $next = $this->isPasswordCommon($form['username'], $form['email'], $form['password'], $error_message, null);
+            $users = $this->getUsersByUsernameOrEmail($form['username'], $form['email']);
+            $error = $user->usernameOrEmailExists($form['username'], $form['email'], $users);
             if ($error && $next) {
-                $this->logger->error($message, ['error' => $error]);
+                $this->logger->error($error_message, ['error' => $error]);
                 $this->renderJson(['message' => $error]);
             }
         }
-    }
-
-    private function isPasswordCommon($username, $email, $password) {
-        $dictionary = file_GET_contents("http://api.hivelvet.test/dictionary/en-US.json");
-        $words = json_decode($dictionary);
-        foreach ($words as $word) {
-            if (strcmp($password, $username) == 0 || strcmp($password, $email) == 0 || strcmp($password, $word) == 0) {
-                $this->logger->error($message, ['error' => 'Avoid choosing a common password']);
-                $this->renderJson(['message' => 'Avoid choosing a common password'], ResponseCode::HTTP_BAD_REQUEST);
-                return false;
-            }
-        }
-        return true;
     }
 }

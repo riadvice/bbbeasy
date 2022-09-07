@@ -1,19 +1,11 @@
 import { defineConfig } from "cypress";
+import * as dotenv from 'dotenv';
 
-const { Pool } = require('pg')
-
+const { Pool } = require('pg');
+dotenv.config();
 export default defineConfig({
     e2e: {
         baseUrl: "http://hivelvet.test:3300",
-        env: {
-            PostgreSQL: {
-                user: "hivelvet",
-                host: "localhost",
-                database: "hivelvet",
-                password: "hivelvet",
-                port: 5432
-            }
-        },
         setupNodeEvents(on, config) {
             require("@cypress/code-coverage/task")(on, config);
             on("file:preprocessor", require("@cypress/code-coverage/use-babelrc"));
@@ -27,6 +19,7 @@ export default defineConfig({
                 });
                 try { return pool.query(sql, values) } catch (e) { }
             }});
+            config.env = process.env;
             return config;
         }
     }

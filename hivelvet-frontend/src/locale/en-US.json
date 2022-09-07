@@ -40,9 +40,9 @@
         "size": "Username must have at least 4 characters"
     },
     "confirm-password": {
-        "label": "Confirm Password",
-        "required": "Confirm Password is required ",
-        "size": "Confirm Password must have at least 8 characters"
+        "label": "Confirm password",
+        "required": "Confirm password is required ",
+        "size": "Confirm password must have at least 8 characters"
     },
     "read-agreement": "I have read the agreement",
     "register": "Register now",
