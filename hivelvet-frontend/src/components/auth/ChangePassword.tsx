@@ -24,8 +24,8 @@ import { Form, Button, Alert, Col, Row, Typography, Card, Result } from 'antd';
 import { CheckOutlined } from '@ant-design/icons';
 
 import { Trans, withTranslation } from 'react-i18next';
+import ConfirmPassword from '../ConfirmPassword';
 import EN_US from '../../locale/en-US.json';
-import { t } from 'i18next';
 
 import { URLSearchParams as _URLSearchParams } from 'url';
 import { PasswordInput } from 'antd-password-input-strength';
@@ -132,31 +132,7 @@ const ChangePassword = () => {
                                     >
                                         <PasswordInput placeholder="**********" />
                                     </Form.Item>
-                                    <Form.Item
-                                        label={<Trans i18nKey="confirm-password.label" />}
-                                        name="confirmPassword"
-                                        dependencies={['password']}
-                                        rules={[
-                                            {
-                                                min: 8,
-                                                message: <Trans i18nKey="confirm-password.size" />,
-                                            },
-                                            {
-                                                required: true,
-                                                message: <Trans i18nKey="confirm-password.required" />,
-                                            },
-                                            ({ getFieldValue }) => ({
-                                                validator(_, value) {
-                                                    if (!value || getFieldValue('password') === value) {
-                                                        return Promise.resolve();
-                                                    }
-                                                    return Promise.reject(new Error(t('paswords-not-match')));
-                                                },
-                                            }),
-                                        ]}
-                                    >
-                                        <PasswordInput placeholder="**********" />
-                                    </Form.Item>
+                                    <ConfirmPassword />
 
                                     <Form.Item>
                                         <Button
