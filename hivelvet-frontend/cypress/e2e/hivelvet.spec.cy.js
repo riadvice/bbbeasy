@@ -1,3 +1,195 @@
+// cypress checkpoint
+
+describe('Wait 30 seconds until enabling installer app (manually)', () => {
+    it('should finish cypress checkpoint', () => {
+        cy.wait(30000);
+    });
+});
+
+// installer app initiation
+
+const secret = 'password';
+const short_secret = 'pwd';
+const test_secret = 'hivelvet-test';
+const wrong_secret = 'hivelvet-wrong';
+const confirm_secret = 'confirm-password';
+const student_secret = 'hivelvet-student';
+const teacher_secret = 'hivelvet-teacher';
+const lecturer_secret = 'hivelvet-lecturer';
+const professor_secret = 'hivelvet-professor';
+const admin_secret = 'hivelvet-administrator';
+
+describe('Initiate testing installer app', () => {
+    it('should set initiation state', () => {
+        const testname = 'test';
+        const username = 'administrator';
+        const email = 'administrator@riadvice.tn';
+        cy.removeUser(testname);
+        cy.removeUser(username);
+        cy.addAdmin(username, email, admin_secret);
+    });
+});
+
+// install.spec.cy.js
+
+describe('Test install process', () => {
+    beforeEach(() => {
+        cy.visit('/');
+    });
+    it('should load correctly install wizard page', () => {
+        cy.get('header').should('be.visible');
+        cy.get('main').should('be.visible');
+        cy.get('footer').should('be.visible');
+        cy.get('div.ant-steps-item').should('be.visible').and('have.length', 3);
+    });
+    it('should load correctly and check step 1 form elements exist', () => {
+        cy.get('form#install_form').should('be.visible').within(() => {
+            cy.get('h4.ant-typography').should('be.visible').and('have.length', 1);
+            cy.get('label').should('be.visible').and('have.length', 3);
+            cy.get('input#install_form_username').should('be.visible').and('have.length', 1);
+            cy.get('input#install_form_email').should('be.visible').and('have.length', 1);
+            cy.get('input#install_form_password').should('be.visible').and('have.length', 1);
+            cy.get('button#submit-btn').should('be.visible').and('have.length', 1);
+        });
+    });
+    it('should display errors when submitting empty step 1 form', () => {
+        cy.get('input#install_form_username').should('have.value', '');
+        cy.get('input#install_form_email').should('have.value', '');
+        cy.get('input#install_form_password').should('have.value', '');
+        cy.get('button#submit-btn').click();
+        cy.get('div.ant-form-item-has-error').should('be.visible').and('have.length', 3);
+    });
+    it('should validate step 1 form inputs inputs', () => {
+        const username = 'usr';
+        const email = 'email';
+        cy.get('input#install_form_username').type(username).should('have.value', username);
+        cy.get('input#install_form_email').type(email).should('have.value', email);
+        cy.get('input#install_form_password').type(short_secret).should('have.value', short_secret);
+        cy.get('button#submit-btn').click();
+        cy.get('div.ant-form-item-has-error').should('be.visible').and('have.length', 3);
+    });
+    it('should display errors when submitting step 1 form with existing credentials', () => {
+        const username = 'administrator';
+        const email = 'administrator@riadvice.tn';
+        cy.get('input#install_form_username').type(username).should('have.value', username);
+        cy.get('input#install_form_email').type(email).should('have.value', email);
+        cy.get('input#install_form_password').type(admin_secret).should('have.value', admin_secret);
+        cy.get('button#submit-btn').click().wait(500);
+        cy.get('div.ant-alert-message').should('be.visible').and('have.length', 1);
+    });
+    it('should load correctly and check step 2 form elements exist', () => {
+        const username = 'test';
+        const email = 'test@riadvice.tn';
+        const step_2_test_secret = 'hivelvet-test';
+        cy.get('input#install_form_username').type(username).should('have.value', username);
+        cy.get('input#install_form_email').type(email).should('have.value', email);
+        cy.get('input#install_form_password').type(step_2_test_secret).should('have.value', step_2_test_secret);
+        cy.get('button#submit-btn').click();
+        cy.get('input#install_form_username').should('not.exist');
+        cy.get('input#install_form_email').should('not.exist');
+        cy.get('input#install_form_password').should('not.exist');
+        cy.get('form#install_form').should('be.visible').within(() => {
+            cy.get('h4.ant-typography').should('be.visible').and('have.length', 2);
+            cy.get('label').should('be.visible').and('have.length', 9);
+            cy.get('input#install_form_company_name').should('be.visible').and('have.length', 1);
+            cy.get('input#install_form_company_url').should('be.visible').and('have.length', 1);
+            cy.get('input#install_form_platform_name').should('be.visible').and('have.length', 1);
+            cy.get('input#install_form_term_url').should('be.visible').and('have.length', 1);
+            cy.get('input#install_form_policy_url').should('be.visible').and('have.length', 1);
+            cy.get('div.ant-upload').should('be.visible').and('have.length', 1);
+            cy.get('span.rc-color-picker-trigger').should('be.visible').and('have.length', 4);
+            cy.get('button.prev').should('be.visible').and('have.length', 1);
+            cy.get('button#submit-btn').should('be.visible').and('have.length', 1);
+        });
+    });
+    it('should display errors when submitting empty step 2 form', () => {
+        const username = 'test';
+        const email = 'test@riadvice.tn';
+        const test_secret_not_empty = 'hivelvet-test';
+        cy.get('input#install_form_username').type(username).should('have.value', username);
+        cy.get('input#install_form_email').type(email).should('have.value', email);
+        cy.get('input#install_form_password').type(test_secret_not_empty).should('have.value', test_secret_not_empty);
+        cy.get('button#submit-btn').click();
+        cy.get('input#install_form_company_name').clear().should('have.value', '');
+        cy.get('input#install_form_company_url').clear().should('have.value', '');
+        cy.get('input#install_form_platform_name').clear().should('have.value', '');
+        cy.get('button#submit-btn').click();
+        cy.get('div.ant-form-item-has-error').should('be.visible').and('have.length', 3);
+    });
+    it('should validate step 2 form inputs', () => {
+        const username = 'test';
+        const email = 'test@riadvice.tn';
+        const test_secret_valid = 'hivelvet-test';
+        const url = 'url';
+        cy.get('input#install_form_username').type(username).should('have.value', username);
+        cy.get('input#install_form_email').type(email).should('have.value', email);
+        cy.get('input#install_form_password').type(test_secret_valid).should('have.value', test_secret_valid);
+        cy.get('button#submit-btn').click();
+        cy.get('input#install_form_company_url').clear().type(url).should('have.value', url);
+        cy.get('input#install_form_term_url').clear().type(url).should('have.value', url);
+        cy.get('input#install_form_policy_url').clear().type(url).should('have.value', url);
+        cy.get('button#submit-btn').click();
+        cy.get('div.ant-form-item-has-error').should('be.visible').and('have.length', 3);
+    });
+    it('should load correctly and check step 3 form elements exist', () => {
+        const username = 'test';
+        const email = 'test@riadvice.tn';
+        const step_3_test_secret = 'hivelvet-test';
+        cy.get('input#install_form_username').type(username).should('have.value', username);
+        cy.get('input#install_form_email').type(email).should('have.value', email);
+        cy.get('input#install_form_password').type(step_3_test_secret).should('have.value', step_3_test_secret);
+        cy.get('button#submit-btn').click().wait(500);
+        cy.get('button#submit-btn').click();
+        cy.get('button.prev').click();
+        cy.get('button#submit-btn').click();
+        cy.get('input#install_form_company_name').should('not.exist');
+        cy.get('input#install_form_company_url').should('not.exist');
+        cy.get('input#install_form_platform_name').should('not.exist');
+        cy.get('input#install_form_term_url').should('not.exist');
+        cy.get('input#install_form_policy_url').should('not.exist');
+        cy.get('div.ant-upload').should('not.exist');
+        cy.get('span.rc-color-picker-trigger').should('not.exist');
+        cy.get('form#install_form').should('be.visible').within(() => {
+            cy.get('h4.ant-typography').should('be.visible').and('have.length', 1);
+            cy.get('div.ant-alert').should('be.visible').and('have.length', 1);
+            cy.get('div.ant-card-grid').should('be.visible').and('have.length', 17);
+            cy.get('button.prev').should('be.visible');
+            cy.get('button#submit-btn').should('be.visible');
+        });
+    });
+    it('should display success install page when submitting form with valid credentials (english version)', () => {
+        const username = 'test';
+        const email = 'test@riadvice.tn';
+        const hex = 'ffffff';
+        const english_version_action = 'first';
+       cy.install(username, email, test_secret, hex, english_version_action);
+    });
+    it('should display success install page when submitting form with valid credentials (arabic version)', () => {
+        const username = 'test';
+        const email = 'test@riadvice.tn';
+        const hex = 'ffffff';
+        const arabic_version_action = 'last';
+       cy.install(username, email, test_secret, hex, arabic_version_action);
+    });
+});
+
+// installer app completion
+
+describe('Finish testing installer app', () => {
+    it('should set completion state', () => {
+        const username = 'administrator';
+        cy.removeUser(username);
+    });
+});
+
+// cypress checkpoint
+
+describe('Wait 30 seconds until enabling installer app (manually)', () => {
+    it('should finish cypress checkpoint', () => {
+        cy.wait(30000);
+    });
+});
+
 // web app initiation
 
 describe('Initiate testing web app', () => {
@@ -7,13 +199,12 @@ describe('Initiate testing web app', () => {
         const lectname = 'lecturer';
         const username = 'professor';
         const email = 'professor@riadvice.tn';
-        const password = 'hivelvet-professor';
         cy.removeRole();
         cy.removeUser(testname);
         cy.removeUser(stuname);
         cy.removeUser(lectname);
         cy.removeUser(username);
-        cy.register(username, email, password, password);
+        cy.register(username, email, professor_secret);
     });
 });
 
@@ -45,40 +236,35 @@ describe('Test change password process if token valid', () => {
         cy.get('div.ant-form-item-has-error').should('be.visible').and('have.length', 2);
     });
     it('should validate form inputs', () => {
-        const password = 'pwd';
-        cy.get('input#change_password').type(password).should('have.value', password);
-        cy.get('input#change_confirmPassword').type(password).should('have.value', password);
+        cy.get('input#change_password').type(short_secret).should('have.value', short_secret);
+        cy.get('input#change_confirmPassword').type(short_secret).should('have.value', short_secret);
         cy.get('button.login-form-button').click();
         cy.get('div.ant-form-item-has-error').should('be.visible').and('have.length', 2);
     });
     it('should check for passwords matching', () => {
-        const password = 'password';
-        const confirmPassword = 'confirmPassword';
-        cy.get('input#change_password').type(password).should('have.value', password);
-        cy.get('input#change_confirmPassword').type(confirmPassword).should('have.value', confirmPassword);
+        cy.get('input#change_password').type(secret).should('have.value', secret);
+        cy.get('input#change_confirmPassword').type(confirm_secret).should('have.value', confirm_secret);
         cy.get('button.login-form-button').click();
         cy.get('div.ant-form-item-has-error').should('be.visible').and('have.length', 1);
     });
     it('should render to login page if form valid', () => {
-        const password = 'hivelvet-teacher';
-        cy.changePassword(password);
+        cy.changePassword(teacher_secret);
     });
     it('should fix login problems by reverting to previous password', () => {
-        const password = 'hivelvet-professor';
-        cy.get('input#change_password').type(password).should('have.value', password);
-        cy.get('input#change_confirmPassword').type(password).should('have.value', password);
+        cy.get('input#change_password').type(professor_secret).should('have.value', professor_secret);
+        cy.get('input#change_confirmPassword').type(professor_secret).should('have.value', professor_secret);
         cy.get('button.login-form-button').click();
     });
     it('should display errors when submitting old password', () => {
-        const password = 'hivelvet-professor';
-        cy.get('input#change_password').type(password).should('have.value', password);
-        cy.get('input#change_confirmPassword').type(password).should('have.value', password);
+        const professor_old_secret = 'hivelvet-professor';
+        cy.get('input#change_password').type(professor_old_secret).should('have.value', professor_old_secret);
+        cy.get('input#change_confirmPassword').type(professor_old_secret).should('have.value', professor_old_secret);
         cy.get('button.login-form-button').click().wait(500);
         cy.get('div.alert-msg').should('be.visible').and('have.length', 1); 
     });
 });
 
-describe('Test change password process if token expired (wait 10 seconds until token expires)', () => {
+describe('Test change password process if token expired', () => {
     beforeEach(() => {
         const username = 'professor';
         const email = 'professor@riadvice.tn';
@@ -123,54 +309,50 @@ describe('Test login process', () => {
     });
     it('should validate form inputs', () => {
         const email = 'email';
-        const password = 'pwd';
         cy.get('input#login_form_email').type(email).should('have.value', email);
-        cy.get('input#login_form_password').type(password).should('have.value', password);
+        cy.get('input#login_form_password').type(short_secret).should('have.value', short_secret);
         cy.get('button#submit-btn').click();
         cy.get('div.ant-form-item-has-error').should('be.visible').and('have.length', 2);
     });
     it('should display errors when submitting form with invalid credentials', () => {
         const email = 'test@riadvice.tn';
-        const password = 'password';
         cy.get('input#login_form_email').type(email).should('have.value', email);
-        cy.get('input#login_form_password').type(password).should('have.value', password);
+        cy.get('input#login_form_password').type(secret).should('have.value', secret);
         cy.get('button#submit-btn').click().wait(500);
         cy.get('div.alert-error-msg').should('be.visible').and('have.length', 1);
     });
     it('should display errors when submitting form with invalid password', () => {
         const email = 'professor@riadvice.tn';
-        const password = 'password';
+        const secret_invalid = 'password';
         cy.get('input#login_form_email').type(email).should('have.value', email);
-        cy.get('input#login_form_password').type(password).should('have.value', password);
+        cy.get('input#login_form_password').type(secret_invalid).should('have.value', secret_invalid);
         cy.get('button#submit-btn').click().wait(500);
         cy.get('div.alert-error-msg').should('be.visible').and('have.length', 1);
     });
     it('should render to home page when submitting form with existing credentials', () => {
         const username = 'test';
         const email = 'test@riadvice.tn';
-        const password = 'hivelvet-test';
-        cy.register(username, email, password);
+        cy.register(username, email, test_secret);
         cy.visit('/login');
         cy.get('input#login_form_email').type(email).should('have.value', email);
-        cy.get('input#login_form_password').type(password).should('have.value', password);
+        cy.get('input#login_form_password').type(test_secret).should('have.value', test_secret);
         cy.get('button#submit-btn').click().wait(500);
         cy.get('div.ant-notification').should('be.visible').and('have.length', 1);
     });
     it('should sent password reset email when account blocked after 3 wrong password attempts', () => {
         const username = 'test';
         const email = 'test@riadvice.tn';
-        const password = 'HIVELVET-TEST';
         cy.get('button.lang-btn').click();
         cy.get('span.ant-radio:last').click();
         cy.get('input#login_form_email').type(email).should('have.value', email);
-        cy.get('input#login_form_password').type(password).should('have.value', password);
+        cy.get('input#login_form_password').type(wrong_secret).should('have.value', wrong_secret);
         cy.get('button#submit-btn').click().wait(500);
         cy.get('button#submit-btn').click().wait(500);
         cy.get('button#submit-btn').click().wait(500);
         cy.get('div.ant-alert-message').children().children().click();
         cy.get('div.ant-notification-notice-success').should('be.visible').and('have.length', 1);
         cy.requestEmail(username, email, false);
-        cy.changePassword(password);
+        cy.changePassword(wrong_secret);
     });
 });
 
@@ -209,11 +391,10 @@ describe('Test register process', () => {
     it('should validate form inputs', () => {
         const username = 'usr';
         const email = 'email';
-        const password = 'pwd';
         cy.get('input#register_form_username').type(username).should('have.value', username);
         cy.get('input#register_form_email').type(email).should('have.value', email);
-        cy.get('input#register_form_password').type(password).should('have.value', password);
-        cy.get('input#register_form_confirmPassword').type(password).should('have.value', password);
+        cy.get('input#register_form_password').type(short_secret).should('have.value', short_secret);
+        cy.get('input#register_form_confirmPassword').type(short_secret).should('have.value', short_secret);
         cy.get('input#register_form_agreement').should('not.be.checked');
         cy.get('button#submit-btn').click();
         cy.get('div.ant-form-item-has-error').should('be.visible').and('have.length', 5);
@@ -221,13 +402,11 @@ describe('Test register process', () => {
     it('should check for passwords matching', () => {
         const username = 'test';
         const email = 'test@riadvice.tn';
-        const password = 'password';
-        const confirmPassword = 'confirmPassword';
         cy.removeUser(username);
         cy.get('input#register_form_username').type(username).should('have.value', username);
         cy.get('input#register_form_email').type(email).should('have.value', email);
-        cy.get('input#register_form_password').type(password).should('have.value', password);
-        cy.get('input#register_form_confirmPassword').type(confirmPassword).should('have.value', confirmPassword);
+        cy.get('input#register_form_password').type(secret).should('have.value', secret);
+        cy.get('input#register_form_confirmPassword').type(confirm_secret).should('have.value', confirm_secret);
         cy.get('input#register_form_agreement').click().should('be.checked');
         cy.get('button#submit-btn').click();
         cy.get('div.ant-form-item-has-error').should('be.visible').and('have.length', 1);
@@ -235,11 +414,10 @@ describe('Test register process', () => {
     it('should display errors when submitting form with existing credentials', () => {
         const username = 'professor';
         const email = 'professor@riadvice.tn';
-        const password = 'hivelvet-professor';
         cy.get('input#register_form_username').clear().type(username).should('have.value', username);
         cy.get('input#register_form_email').clear().type(email).should('have.value', email);
-        cy.get('input#register_form_password').clear().type(password).should('have.value', password);
-        cy.get('input#register_form_confirmPassword').clear().type(password).should('have.value', password);
+        cy.get('input#register_form_password').clear().type(professor_secret).should('have.value', professor_secret);
+        cy.get('input#register_form_confirmPassword').clear().type(professor_secret).should('have.value', professor_secret);
         cy.get('input#register_form_agreement').check().should('be.checked');
         cy.get('button#submit-btn').click().wait(500);
         cy.get('div.alert-msg').should('be.visible').and('have.length', 1);
@@ -247,11 +425,10 @@ describe('Test register process', () => {
     it('should render to success register page when submitting form with valid credentials', () => {
         const username = 'test';
         const email = 'test@riadvice.tn';
-        const password = 'hivelvet-test';
         cy.get('input#register_form_username').type(username).should('have.value', username);
         cy.get('input#register_form_email').type(email).should('have.value', email);
-        cy.get('input#register_form_password').type(password).should('have.value', password);
-        cy.get('input#register_form_confirmPassword').type(password).should('have.value', password);
+        cy.get('input#register_form_password').type(test_secret).should('have.value', test_secret);
+        cy.get('input#register_form_confirmPassword').type(test_secret).should('have.value', test_secret);
         cy.get('input#register_form_agreement').click().should('be.checked');
         cy.get('button#submit-btn').click().wait(500);
         cy.get('div.ant-result-icon').should('be.visible').and('have.length', 1);
@@ -301,8 +478,8 @@ describe('Test reset password process', () => {
     it('should display success notification when submitting form with existing email', () => {
         const username = 'test';
         const email = 'test@riadvice.tn';
-        const password = 'hivelvet-test';
-        cy.register(username, email, password);        
+        const test_secret_valid = "hivelvet-test";
+        cy.register(username, email, test_secret_valid);        
         cy.visit('/reset-password');
         cy.get('input#reset_email').type(email).should('have.value', email);
         cy.get('button.login-form-button').click().wait(500);
@@ -315,8 +492,7 @@ describe('Test reset password process', () => {
 describe('Test home page render if user logged in', () => {
     beforeEach(() => {
         const email = 'professor@riadvice.tn';
-        const password = 'hivelvet-professor';
-        cy.login(email, password);
+        cy.login(email, professor_secret);
     });
     it('should render to home page', () => {
         cy.get('div.ant-notification-notice-success').should('be.visible').and('have.length', 1);
@@ -378,8 +554,8 @@ describe('Test not found page render', () => {
 describe('Test roles component', () => {
     beforeEach(() => {
         const email = 'professor@riadvice.tn';
-        const password = 'hivelvet-professor';
-        cy.login(email, password);
+        const professor_secret_roles = 'hivelvet-professor';
+        cy.login(email, professor_secret_roles);
         cy.visit('/settings/roles');
     });
     it('should display roles paginated list', () => {
@@ -512,11 +688,10 @@ describe('Test roles component', () => {
     it('should delete assigned role', () => {
         const stuname = 'student';
         const email = 'student@riadvice.tn';
-        const password = 'hivelvet-student';
         const action = 'last';
         cy.addRole(stuname);
         cy.visit('/settings/users');
-        cy.addUser(stuname, email, password);
+        cy.addUser(stuname, email, student_secret);
         cy.task('database', { sql: `UPDATE public.users SET role_id = (SELECT id FROM public.roles WHERE name = '` + stuname + `') WHERE username = '` + stuname + `';` });
         cy.visit('/settings/roles');
         cy.task('database', { sql: `SELECT * FROM public.roles;` }).then((response) => {
@@ -533,8 +708,8 @@ describe('Test roles component', () => {
 describe('Test users component', () => {
     beforeEach(() => {
         const email = 'professor@riadvice.tn';
-        const password = 'hivelvet-professor';
-        cy.login(email, password);
+        const professor_secret_users = 'hivelvet-professor';
+        cy.login(email, professor_secret_users);
         cy.visit('/settings/users');
     });
     it('should display users paginated list', () => {
@@ -565,9 +740,8 @@ describe('Test users component', () => {
     it('should add new user', () => {
         const username = 'lecturer';
         const email = 'lecturer@riadvice.tn';
-        const password = 'hivelvet-lecturer';
         const color = '-warning';
-        cy.addUser(username, email, password);
+        cy.addUser(username, email, lecturer_secret);
         cy.task('database', { sql: `SELECT * FROM public.users;` }).then((result) => {
             cy.locate(result.rows.length, email, null, color);
         });
@@ -576,8 +750,7 @@ describe('Test users component', () => {
     it('should display errors when submitting add user form with existing credentials', () => {
         const username = 'professor';
         const email = 'professor@riadvice.tn';
-        const password = 'hivelvet-professor';
-        cy.addUser(username, email, password);
+        cy.addUser(username, email, professor_secret);
         cy.get('div.alert-msg').should('be.visible').and('have.length', 1);
     });
     it('should display errors when submitting empty edit form', () => {

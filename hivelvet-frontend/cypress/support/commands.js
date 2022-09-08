@@ -53,8 +53,8 @@ Cypress.Commands.add('requestEmail', (username, email, wait) => {
     cy.get('input#reset_email').type(email).should('have.value', email);
     cy.get('button.login-form-button').click().wait(500);
     if (wait) {
-        cy.task('database', { sql: `UPDATE public.reset_password_tokens SET expires_at = NOW() + INTERVAL '10 seconds' WHERE token = (SELECT token FROM public.reset_password_tokens WHERE user_id = (SELECT id from public.users WHERE username = '` + username + `') ORDER BY created_on DESC LIMIT 1);` });
-        cy.wait(10000);
+        cy.task('database', { sql: `UPDATE public.reset_password_tokens SET expires_at = NOW() + INTERVAL '5 seconds' WHERE token = (SELECT token FROM public.reset_password_tokens WHERE user_id = (SELECT id from public.users WHERE username = '` + username + `') ORDER BY created_on DESC LIMIT 1);` });
+        cy.wait(5000);
     }
     cy.task('database', {
         sql: `SELECT token FROM public.reset_password_tokens WHERE user_id = (SELECT id from public.users WHERE username = '` + username + `') ORDER BY created_on DESC LIMIT 1;`
