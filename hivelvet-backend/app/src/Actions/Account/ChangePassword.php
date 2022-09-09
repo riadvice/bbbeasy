@@ -27,6 +27,9 @@ use Enum\ResetTokenStatus;
 use Enum\ResponseCode;
 use Enum\UserStatus;
 use Models\ResetPasswordToken;
+use Validation\DataChecker;
+use Respect\Validation\Validator;
+use Enum\UserStatus;
 use Models\User;
 use Respect\Validation\Validator;
 use Utils\SecurityUtils;
@@ -40,9 +43,13 @@ class ChangePassword extends BaseAction
     public function execute($f3): void
     {
         $form = $this->getDecodedBody();
-
+        
         $password   = $form['password'];
         $resetToken = new ResetPasswordToken();
+        
+        $dataChecker = new DataChecker();
+        $dataChecker->verify($password, Validator::length(8)->setName('password'));
+
 
         $dataChecker = new DataChecker();
         $dataChecker->verify($password, Validator::length(8)->setName('password'));
