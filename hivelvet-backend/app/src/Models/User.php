@@ -43,6 +43,7 @@ use Models\Base as BaseModel;
  * @property DateTime $created_on
  * @property DateTime $updated_on
  * @property DateTime $last_login
+ * @property int      $password_attempts
  */
 class User extends BaseModel
 {
@@ -102,22 +103,29 @@ class User extends BaseModel
      *
      * @param string $username
      * @param string $email
+     * @param mixed  $users
      *
      * @return string
      */
-    public function usernameOrEmailExists($username, $email)
+    public function usernameOrEmailExists($username, $email, $users)
     {
-        $users = $this->find(['username = ? or email = ?', $username, $email]);
         if ($users) {
-            $users = $users->castAll();
             if (1 === \count($users)) {
-                $usernameExist = $users[0]['username'] === $username;
-                $emailExist    = $users[0]['email'] === $email;
+                $usernameExist = mb_strtolower($users[0]['username']) === mb_strtolower($username);
+                $emailExist    = mb_strtolower($users[0]['email']) === mb_strtolower($email);
 
-                return ($usernameExist && $emailExist) ? 'username and email already exist' : ($usernameExist ? 'username already exist' : 'email already exist');
+                if ($usernameExist && $emailExist) {
+                    $error_message = 'Username and Email already exist';
+                } elseif ($usernameExist) {
+                    $error_message = 'Username already exists';
+                } else {
+                    $error_message = 'Email already exists';
+                }
+
+                return $error_message;
             }
 
-            return 'username and email already exist';
+            return 'Username and Email already exist';
         }
 
         return null;

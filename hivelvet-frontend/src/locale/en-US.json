@@ -29,7 +29,7 @@
     "password": {
         "label": "Password",
         "required": "Password is required",
-        "size": "Password must have at least 4 characters",
+        "size": "Password must have at least 8 characters",
         "invalid": "Invalid password"
     },
     "join-us": "Join us",
@@ -40,9 +40,9 @@
         "size": "Username must have at least 4 characters"
     },
     "confirm-password": {
-        "label": "Confirm Password",
-        "required": "Confirm Password is required ",
-        "size": "Confirm Password must have at least 4 characters"
+        "label": "Confirm password",
+        "required": "Confirm password is required ",
+        "size": "Confirm password must have at least 8 characters"
     },
     "read-agreement": "I have read the agreement",
     "register": "Register now",
@@ -54,9 +54,9 @@
     "error-title": "Error",
     "info-title": "Info",
     "success-registration": "Congratulations ! Your account has been successfully created",
-    "username-email-already-exist": "username and email already exist",
-    "username-already-exist": "username already exist",
-    "email-already-exist": "email already exist",
+    "username-email-already-exist": "Username and Email already exist",
+    "username-already-exist": "Username already exists",
+    "email-already-exist": "Email already exists",
     "welcome": "Welcome back",
     "accept-agreement": "Should accept agreement",
     "agree": "I agree to the",
@@ -64,9 +64,16 @@
     "and": "and",
     "privacy-policy": "Privacy Policy",
     "user_not_exists": "User does not exist with this email",
+    "wrong_password": "Wrong password. Attempts left :",
+    "attempts_exceeded": "Your account has been locked because you have reached the maximum number of invalid sign-in attempts. You can contact the administrator or",
+    "click_here": "click here",
+    "email_instructions": "to receive an email containing instructions on how to unlock your account",
+    "invalid_password": "Only use letters, numbers, and common punctuation characters",
+    "common_password": "Avoid choosing a common password",
+    "already_used_password": "New password cannot be the same as your old password",
     "success_change_password": "Password changed successfully",
-    "error_change_password": "password could not be changed",
-    "error-registration": "user could not be added",
+    "error_change_password": "Password could not be changed",
+    "error-registration": "User could not be added",
     "sent-link-successfully": "Please check your email to reset your password",
     "token": {
         "expired": "Token was expired",
@@ -139,9 +146,13 @@
     "log-into-account": "Log into Your Account",
     "completed_registration": "Registration completed successfully",
     "success_upload": "file uploaded successfully",
-    "wrong_file": "wrong file",
+    "wrong_file": "Wrong file",
     "invalid_password_reset_token": "Invalid password reset token",
+    "account_pending": "Your account is not active. Please contact your administrator",
+    "account_deleted": "Your account has been disabled for violating our terms",
     "invalid_authentication_data": "Invalid Authentication data",
+    "invalid_username": "Username must have at least 4 characters",
+    "invalid_email": "Invalid Email",
     "user_account_created": "User account created",
     "signed_as": "Signed in as ",
     "user_dropdown": {
@@ -158,7 +169,7 @@
         "required": "Name is required"
     },
     "required_name": "Name is required",
-    "exist_name": "Name already exist",
+    "exist_name": "Name already exists",
     "permissions": {
         "label": "Permissions"
     },

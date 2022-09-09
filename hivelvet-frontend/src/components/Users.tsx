@@ -200,6 +200,14 @@ const Users = () => {
     };
 
     // edit
+    const validateUsername = (dataIndex) =>
+        (dataIndex == 'username' && {
+            min: 4,
+            message: t('invalid_username'),
+        }) ||
+        (dataIndex == 'role' && {
+            validator: (_, value) => (value ? Promise.resolve() : Promise.reject(new Error())),
+        });
     const [editForm] = Form.useForm();
     const EditableRow: React.FC = ({ ...props }) => {
         return (
@@ -245,6 +253,17 @@ const Users = () => {
                             {
                                 required: true,
                                 message: t('required_' + dataIndex),
+                            },
+                            { ...validateUsername(dataIndex) },
+                            {
+                                ...((dataIndex == 'email' && {
+                                    type: 'email',
+                                    message: t('invalid_email'),
+                                }) ||
+                                    (dataIndex == 'role' && {
+                                        validator: (_, value) =>
+                                            value ? Promise.resolve() : Promise.reject(new Error()),
+                                    })),
                             },
                         ]}
                     >
@@ -504,11 +523,16 @@ const Users = () => {
                             onConfirm={() => cancelEdit()}
                             onCancel={() => setCancelVisibility(false)}
                         >
-                            <Button size="middle">
+                            <Button size="middle" className="cell-input-cancel">
                                 <Trans i18nKey="cancel" />
                             </Button>
                         </Popconfirm>
-                        <Button size="middle" type="primary" onClick={() => saveEdit(record, record.key)}>
+                        <Button
+                            size="middle"
+                            type="primary"
+                            className="cell-input-save"
+                            onClick={() => saveEdit(record, record.key)}
+                        >
                             <Trans i18nKey="save" />
                         </Button>
                     </Space>
@@ -553,7 +577,7 @@ const Users = () => {
                 className="site-page-header"
                 title={<Trans i18nKey="users" />}
                 extra={[
-                    <Button key="1" type="primary" onClick={toggleAdd}>
+                    <Button key="1" type="primary" id="add-user-btn" onClick={toggleAdd}>
                         <Trans i18nKey="new_user" />
                     </Button>,
                 ]}
@@ -570,6 +594,7 @@ const Users = () => {
             >
                 <Form
                     layout="vertical"
+                    name="users_form"
                     ref={(form) => (addForm = form)}
                     initialValues={initialAddValues}
                     hideRequiredMark
@@ -602,7 +627,7 @@ const Users = () => {
                         <Button type="text" className="cancel-btn prev" block onClick={cancelAdd}>
                             <Trans i18nKey="cancel" />
                         </Button>
-                        <Button type="primary" htmlType="submit" block>
+                        <Button type="primary" id="submit-btn" htmlType="submit" block>
                             <Trans i18nKey="create" />
                         </Button>
                     </Form.Item>

@@ -28,6 +28,7 @@ use Test\TestGroup;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 final class AccountActionsTest extends TestGroup

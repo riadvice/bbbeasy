@@ -30,6 +30,7 @@ use Test\Scenario;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 final class AddTest extends Scenario
@@ -40,15 +41,15 @@ final class AddTest extends Scenario
     /**
      * @param $f3
      *
-     * @throws ReflectionException
-     *
      * @return array
+     *
+     * @throws ReflectionException
      */
     public function testEmptyData($f3)
     {
         $test = $this->newTest();
 
-        $data = ['data' => ['username' => '', 'email' => '', 'password' => '',  'role' => '']];
+        $data = ['data' => ['username' => '', 'email' => '', 'password' => '', 'role' => '']];
         $f3->mock(self::ADD_USER_ROUTE, null, null, $this->postJsonData($data));
         $test->expect($this->compareTemplateToResponse('user/empty_error.json'), 'Add user with an empty data shown an error');
 
@@ -58,16 +59,16 @@ final class AddTest extends Scenario
     /**
      * @param $f3
      *
-     * @throws ReflectionException
-     *
      * @return array
+     *
+     * @throws ReflectionException
      */
     public function testExistingUser($f3)
     {
         $test = $this->newTest();
 
         $user = UserFaker::create(UserRole::LECTURER);
-        $data = ['data' => ['username' => $user->username, 'email' => $user->email, 'password' => UserRole::LECTURER,  'role' => UserRole::LECTURER_ID]];
+        $data = ['data' => ['username' => $user->username, 'email' => $user->email, 'password' => UserRole::LECTURER, 'role' => UserRole::LECTURER_ID]];
         $f3->mock(self::ADD_USER_ROUTE, null, null, $this->postJsonData($data));
         $test->expect($this->compareTemplateToResponse('user/exist_error.json'), 'Add user with existing username "' . $user->username . '" and existing email "' . $user->email . '" shown an error');
 
@@ -77,9 +78,9 @@ final class AddTest extends Scenario
     /**
      * @param $f3
      *
-     * @throws ReflectionException
-     *
      * @return array
+     *
+     * @throws ReflectionException
      */
     public function testExistingUsername($f3)
     {
@@ -87,7 +88,7 @@ final class AddTest extends Scenario
 
         $faker = Faker::create();
         $user  = UserFaker::create(UserRole::LECTURER);
-        $data  = ['data' => ['username' => $user->username, 'email' => $faker->email, 'password' => $faker->password,  'role' => UserRole::LECTURER_ID]];
+        $data  = ['data' => ['username' => $user->username, 'email' => $faker->email, 'password' => $faker->password, 'role' => UserRole::LECTURER_ID]];
         $f3->mock(self::ADD_USER_ROUTE, null, null, $this->postJsonData($data));
         $test->expect($this->compareTemplateToResponse('user/exist_username_error.json'), 'Add user with an existing username "' . $user->username . '" shown an error');
 
@@ -97,9 +98,9 @@ final class AddTest extends Scenario
     /**
      * @param $f3
      *
-     * @throws ReflectionException
-     *
      * @return array
+     *
+     * @throws ReflectionException
      */
     public function testExistingEmail($f3)
     {
@@ -107,7 +108,7 @@ final class AddTest extends Scenario
 
         $faker = Faker::create();
         $user  = UserFaker::create(UserRole::LECTURER);
-        $data  = ['data' => ['username' => $faker->userName, 'email' => $user->email, 'password' => $faker->password,  'role' => UserRole::LECTURER_ID]];
+        $data  = ['data' => ['username' => $faker->userName, 'email' => $user->email, 'password' => $faker->password, 'role' => UserRole::LECTURER_ID]];
         $f3->mock(self::ADD_USER_ROUTE, null, null, $this->postJsonData($data));
         $test->expect($this->compareTemplateToResponse('user/exist_email_error.json'), 'Add user with an existing email "' . $user->email . '" shown an error');
 
@@ -117,9 +118,9 @@ final class AddTest extends Scenario
     /**
      * @param $f3
      *
-     * @throws ReflectionException
-     *
      * @return array
+     *
+     * @throws ReflectionException
      */
     public function testNonExistingRole($f3)
     {

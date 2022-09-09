@@ -32,6 +32,7 @@ use Test\Scenario;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 final class LoginTest extends Scenario
@@ -42,9 +43,9 @@ final class LoginTest extends Scenario
     /**
      * @param $f3
      *
-     * @throws \JsonException
-     *
      * @return array
+     *
+     * @throws \JsonException
      */
     public function testAuthenticateInvalidUser($f3)
     {
@@ -73,9 +74,9 @@ final class LoginTest extends Scenario
     /**
      * @param $f3
      *
-     * @throws ReflectionException
-     *
      * @return array
+     *
+     * @throws ReflectionException
      */
     public function testAuthenticateExistingUser($f3)
     {
@@ -100,9 +101,9 @@ final class LoginTest extends Scenario
     /**
      * @param $f3
      *
-     * @throws \JsonException
-     *
      * @return array
+     *
+     * @throws \JsonException
      */
     public function testAuthenticateExistingInactiveUser($f3)
     {

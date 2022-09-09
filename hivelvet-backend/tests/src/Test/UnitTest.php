@@ -26,6 +26,7 @@ use Utils\CliUtils;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 final class UnitTest extends \Test
