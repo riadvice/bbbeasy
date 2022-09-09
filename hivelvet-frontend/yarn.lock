@@ -7263,6 +7263,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dotenv@npm:^16.0.2":
+  version: 16.0.2
+  resolution: "dotenv@npm:16.0.2"
+  checksum: ca8f9ca2d67929c7771069f4c31b4e46b9932621009e658e5afd655dde2d69b77642bf36dbc9e72bc170523dfd908a9ee41c26f034c1fdc605ace3b1b4b10faf
+  languageName: node
+  linkType: hard
+
 "duplexer@npm:^0.1.2":
   version: 0.1.2
   resolution: "duplexer@npm:0.1.2"
@@ -9496,6 +9503,7 @@ __metadata:
     babel-plugin-istanbul: ^6.1.1
     craco-less: ^2.0.0
     cypress: ^10.7.0
+    dotenv: ^16.0.2
     dotenv-cra: ^3.0.2
     eslint: ^8.23.0
     eslint-config-prettier: ^8.5.0
