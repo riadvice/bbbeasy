@@ -44,7 +44,7 @@ export const Step1Form = (props: Props) => {
                     className="alert-error-msg text-center"
                     message={<Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == props.message)} />}
                     showIcon
-                />        
+                />
             )}
 
             <AddUserForm />

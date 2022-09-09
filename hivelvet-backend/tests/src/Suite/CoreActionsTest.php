@@ -27,6 +27,7 @@ use Test\TestGroup;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 final class CoreActionsTest extends TestGroup

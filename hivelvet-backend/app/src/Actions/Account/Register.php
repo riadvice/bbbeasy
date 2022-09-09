@@ -27,6 +27,7 @@ use Enum\ResponseCode;
 use Enum\UserStatus;
 use Models\User;
 use Respect\Validation\Validator;
+use Utils\SecurityUtils;
 use Validation\DataChecker;
 
 /**
@@ -47,16 +48,16 @@ class Register extends BaseAction
         // otherwise in the login it should look for available terms of they were not previously available and ask to accept them
         $dataChecker->verify($form['agreement'], Validator::trueVal()->setName('agreement'));
 
-        $pattern = '/^[0-9A-Za-z !"#$%&\'()*+,-.\/:;<=>?@[\]^_`{|}~]+$/';
+        /** @todo : move to locales */
         $error_message = 'User could not be added';
         $response_code = ResponseCode::HTTP_BAD_REQUEST;
         if ($dataChecker->allValid()) {
-            $user  = new User();
-            if (!preg_match($pattern, $form['password'])) {
+            $user = new User();
+            if (!SecurityUtils::isGdprCompliant($form['password'])) {
                 $this->logger->error($error_message, ['error' => 'Only use letters, numbers, and common punctuation characters']);
                 $this->renderJson(['message' => 'Only use letters, numbers, and common punctuation characters'], $response_code);
             } else {
-                $next = $this->isPasswordCommon($form['username'], $form['email'], $form['password'], $error_message, $response_code);
+                $next  = SecurityUtils::credentialsAreCommon($form['username'], $form['email'], $form['password'], $error_message, $response_code);
                 $users = $this->getUsersByUsernameOrEmail($form['username'], $form['email']);
                 $error = $user->usernameOrEmailExists($form['username'], $form['email'], $users);
                 if ($error && $next) {

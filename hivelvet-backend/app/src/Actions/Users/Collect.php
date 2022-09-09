@@ -24,27 +24,34 @@ namespace Actions\Users;
 
 use Actions\Base as BaseAction;
 use Models\User;
+use Utils\SecurityUtils;
 
 /**
  * Class Collect.
  */
 class Collect extends BaseAction
-{    
+{
     public function execute($f3): void
     {
         $form = $this->getDecodedBody()['data'];
         $user = new User();
 
-        $pattern = '/^[0-9A-Za-z !"#$%&\'()*+,-.\/:;<=>?@[\]^_`{|}~]+$/';
         $error_message = 'Administrator could not be added';
-        if (!preg_match($pattern, $form['password'])) {
+
+        if (!SecurityUtils::isGdprCompliant($form['password'])) {
             $this->logger->error($error_message, ['error' => 'Only use letters, numbers, and common punctuation characters']);
             $this->renderJson(['message' => 'Only use letters, numbers, and common punctuation characters']);
         } else {
-            $next = $this->isPasswordCommon($form['username'], $form['email'], $form['password'], $error_message, null);
+            $error = 'Avoid choosing a common password';
+            if (SecurityUtils::credentialsAreCommon($form['username'], $form['email'], $form['password'], $error_message, null)) {
+                //  @fixme:  better routes testing
+                '/users/collect-admin' === "{$_SERVER['REQUEST_URI']}" ? $this->renderJson(['message' => $error]) : $this->renderJson(['message' => $error], $response_code);
+
+                return;
+            }
             $users = $this->getUsersByUsernameOrEmail($form['username'], $form['email']);
             $error = $user->usernameOrEmailExists($form['username'], $form['email'], $users);
-            if ($error && $next) {
+            if ($error) {
                 $this->logger->error($error_message, ['error' => $error]);
                 $this->renderJson(['message' => $error]);
             }

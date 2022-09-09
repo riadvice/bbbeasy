@@ -43,7 +43,7 @@ use Models\Base as BaseModel;
  * @property DateTime $created_on
  * @property DateTime $updated_on
  * @property DateTime $last_login
- * @property int      $password_attempts 
+ * @property int      $password_attempts
  */
 class User extends BaseModel
 {
@@ -103,6 +103,7 @@ class User extends BaseModel
      *
      * @param string $username
      * @param string $email
+     * @param mixed  $users
      *
      * @return string
      */
@@ -110,8 +111,8 @@ class User extends BaseModel
     {
         if ($users) {
             if (1 === \count($users)) {
-                $usernameExist = strtolower($users[0]['username']) === strtolower($username);
-                $emailExist    = strtolower($users[0]['email']) === strtolower($email);
+                $usernameExist = mb_strtolower($users[0]['username']) === mb_strtolower($username);
+                $emailExist    = mb_strtolower($users[0]['email']) === mb_strtolower($email);
 
                 if ($usernameExist && $emailExist) {
                     $error_message = 'Username and Email already exist';
@@ -123,6 +124,7 @@ class User extends BaseModel
 
                 return $error_message;
             }
+
             return 'Username and Email already exist';
         }
 

@@ -29,6 +29,7 @@ use Enum\UserStatus;
 use Models\Role;
 use Models\User;
 use Respect\Validation\Validator;
+use Utils\SecurityUtils;
 use Validation\DataChecker;
 
 /**
@@ -53,12 +54,12 @@ class Add extends BaseAction
         $dataChecker->verify($form['password'], Validator::length(8)->setName('password'));
         $dataChecker->verify($form['role'], Validator::notEmpty()->setName('role'));
 
-        $pattern = '/^[0-9A-Za-z !"#$%&\'()*+,-.\/:;<=>?@[\]^_`{|}~]+$/';
+        /** @todo : move to locales */
         $error_message = 'User could not be added';
         $response_code = ResponseCode::HTTP_BAD_REQUEST;
         if ($dataChecker->allValid()) {
-            $user  = new User();
-            if (!preg_match($pattern, $form['password'])) {
+            $user = new User();
+            if (!SecurityUtils::isGdprCompliant($form['password'])) {
                 $this->logger->error($error_message, ['error' => 'Only use letters, numbers, and common punctuation characters']);
                 $this->renderJson(['message' => 'Only use letters, numbers, and common punctuation characters'], $response_code);
             } else {
@@ -72,7 +73,7 @@ class Add extends BaseAction
 
     private function addUser($form, $user, $error_message, $response_code): void
     {
-        $next = $this->isPasswordCommon($form['username'], $form['email'], $form['password'], $error_message, $response_code);
+        $next  = SecurityUtils::credentialsAreCommon($form['username'], $form['email'], $form['password'], $error_message, $response_code);
         $users = $this->getUsersByUsernameOrEmail($form['username'], $form['email']);
         $error = $user->usernameOrEmailExists($form['username'], $form['email'], $users);
         if ($error && $next) {
@@ -89,6 +90,7 @@ class Add extends BaseAction
                 $user->role_id  = $role->id;
 
                 $user->password_attempts = 3;
+
                 try {
                     $user->save();
                 } catch (\Exception $e) {

@@ -298,7 +298,11 @@ const Roles = () => {
                                     </Button>
                                 </Popconfirm>
                             ) : (
-                                <Button size="middle" className="cell-input-cancel" onClick={() => cancelEdit(record.key)}>
+                                <Button
+                                    size="middle"
+                                    className="cell-input-cancel"
+                                    onClick={() => cancelEdit(record.key)}
+                                >
                                     <Trans i18nKey="cancel" />
                                 </Button>
                             )}

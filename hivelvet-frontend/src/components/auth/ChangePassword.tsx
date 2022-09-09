@@ -63,9 +63,9 @@ const ChangePassword = () => {
                 } else if (result.data.result == 'success') setSuccessful(true);
             })
             .catch((error) => {
-            setSuccessful(false);
-            setMessage(error.response.data.message);
-        });
+                setSuccessful(false);
+                setMessage(error.response.data.message);
+            });
     };
 
     return (

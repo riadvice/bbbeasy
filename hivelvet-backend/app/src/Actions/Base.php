@@ -264,6 +264,17 @@ abstract class Base extends \Prefab
         return $credentials;
     }
 
+    protected function getUsersByUsernameOrEmail(string $username, string $email): array
+    {
+        $dbname = 'hivelvet';
+        $user   = 'hivelvet';
+        $secret = 'hivelvet';
+        $conn   = pg_pconnect("host=localhost dbname={$dbname} user={$user} password={$secret}");
+        $result = pg_query_params($conn, 'SELECT username, email FROM public.users WHERE lower(username) = lower($1) OR lower(email) = lower($2)', [$username, $email]);
+
+        return pg_fetch_all($result);
+    }
+
     private function parseXMLView(string $view = null): string
     {
         $xmlResponse = new SimpleXMLElement(Template::instance()->render($this->view . '.xml'));
@@ -275,28 +286,5 @@ abstract class Base extends \Prefab
         $xmlDocument->loadXML($xmlResponse->asXML());
 
         return $xmlDocument->saveXML();
-    }
-
-    protected function isPasswordCommon(string $username, string $email, string $password, string $error_message, int | null $response_code): bool
-    {
-        $dictionary = file_GET_contents('/app/hivelvet-backend/public/dictionary/en-US.json');
-        $words = json_decode($dictionary);
-        foreach ($words as $word) {
-            if (strcmp($password, $username) == 0 || strcmp($password, $email) == 0 || strcmp($password, $word) == 0) {
-                $error = 'Avoid choosing a common password';
-                $this->logger->error($error_message, ['error' => $error]);
-                "$_SERVER[REQUEST_URI]" == '/users/collect-admin' ? $this->renderJson(['message' => $error]) : $this->renderJson(['message' => $error], $response_code);
-                return false;
-            }
-        }
-        return true;
-    }
-
-    protected function getUsersByUsernameOrEmail(string $username, string $email): array
-    {
-        $dbname = 'hivelvet'; $user = 'hivelvet'; $secret = 'hivelvet';
-        $conn = pg_pconnect("host=localhost dbname=$dbname user=$user password=$secret");
-        $result = pg_query_params($conn, 'SELECT username, email FROM public.users WHERE lower(username) = lower($1) OR lower(email) = lower($2)', array($username, $email));
-        return pg_fetch_all($result);
     }
 }
