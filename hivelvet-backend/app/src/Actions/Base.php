@@ -279,8 +279,7 @@ abstract class Base extends \Prefab
 
     protected function isPasswordCommon(string $username, string $email, string $password, string $error_message, int | null $response_code): bool
     {
-        $URI = "http://api.hivelvet.test/dictionary/en-US.json";
-        $dictionary = file_GET_contents($URI);
+        $dictionary = file_GET_contents('/app/hivelvet-backend/public/dictionary/en-US.json');
         $words = json_decode($dictionary);
         foreach ($words as $word) {
             if (strcmp($password, $username) == 0 || strcmp($password, $email) == 0 || strcmp($password, $word) == 0) {
