@@ -200,18 +200,14 @@ const Users = () => {
     };
 
     // edit
-    const validateUsername = (dataIndex) => dataIndex == 'username' && (
-        {
+    const validateUsername = (dataIndex) =>
+        (dataIndex == 'username' && {
             min: 4,
             message: t('invalid_username'),
-        }) || dataIndex == 'role' && (
-        {
-            validator: (_, value) =>
-                value
-                    ? Promise.resolve()
-                    : Promise.reject(new Error()),
-        }
-    );
+        }) ||
+        (dataIndex == 'role' && {
+            validator: (_, value) => (value ? Promise.resolve() : Promise.reject(new Error())),
+        });
     const [editForm] = Form.useForm();
     const EditableRow: React.FC = ({ ...props }) => {
         return (
@@ -258,19 +254,17 @@ const Users = () => {
                                 required: true,
                                 message: t('required_' + dataIndex),
                             },
-                            {...(validateUsername(dataIndex))},
-                            {...(dataIndex == 'email' && (
-                                {
+                            { ...validateUsername(dataIndex) },
+                            {
+                                ...((dataIndex == 'email' && {
                                     type: 'email',
                                     message: t('invalid_email'),
-                                }) || dataIndex == 'role' && (
-                                {
-                                    validator: (_, value) =>
-                                        value
-                                            ? Promise.resolve()
-                                            : Promise.reject(new Error()),
-                                }
-                            ))},
+                                }) ||
+                                    (dataIndex == 'role' && {
+                                        validator: (_, value) =>
+                                            value ? Promise.resolve() : Promise.reject(new Error()),
+                                    })),
+                            },
                         ]}
                     >
                         {inputNode}
@@ -533,7 +527,12 @@ const Users = () => {
                                 <Trans i18nKey="cancel" />
                             </Button>
                         </Popconfirm>
-                        <Button size="middle" type="primary" className="cell-input-save" onClick={() => saveEdit(record, record.key)}>
+                        <Button
+                            size="middle"
+                            type="primary"
+                            className="cell-input-save"
+                            onClick={() => saveEdit(record, record.key)}
+                        >
                             <Trans i18nKey="save" />
                         </Button>
                     </Space>

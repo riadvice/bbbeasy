@@ -37,9 +37,9 @@ class Time
      * @param DateTime|int|string $unixTime (optional) the unix time (null = now)
      * @param null|string         $dbms     (optional) the database software the timestamp is for
      *
-     * @throws Exception
-     *
      * @return bool|string date in format of database driver
+     *
+     * @throws Exception
      *
      * @todo add a switch for the f3 database driver and set the timestamp
      */

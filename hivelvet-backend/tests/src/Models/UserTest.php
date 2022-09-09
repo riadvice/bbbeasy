@@ -31,6 +31,7 @@ use Test\Scenario;
  * Class UserTest.
  *
  * @internal
+ *
  * @coversNothing
  */
 final class UserTest extends Scenario

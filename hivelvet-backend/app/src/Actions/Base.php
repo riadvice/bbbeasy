@@ -264,6 +264,17 @@ abstract class Base extends \Prefab
         return $credentials;
     }
 
+    protected function getUsersByUsernameOrEmail(string $username, string $email): array
+    {
+        $dbname = 'hivelvet';
+        $user   = 'hivelvet';
+        $secret = 'hivelvet';
+        $conn   = pg_pconnect("host=localhost dbname={$dbname} user={$user} password={$secret}");
+        $result = pg_query_params($conn, 'SELECT username, email FROM public.users WHERE lower(username) = lower($1) OR lower(email) = lower($2)', [$username, $email]);
+
+        return pg_fetch_all($result);
+    }
+
     private function parseXMLView(string $view = null): string
     {
         $xmlResponse = new SimpleXMLElement(Template::instance()->render($this->view . '.xml'));

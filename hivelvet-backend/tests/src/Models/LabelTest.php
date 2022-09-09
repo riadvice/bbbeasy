@@ -32,6 +32,7 @@ use Test\Scenario;
  * Class LabelTest.
  *
  * @internal
+ *
  * @coversNothing
  */
 final class LabelTest extends Scenario

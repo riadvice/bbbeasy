@@ -83,14 +83,13 @@ const Login = () => {
     };
 
     const handleReset = () => {
-        AuthService.reset_password(email)
-            .then((response) => {
-                const responseMessage = response.data.message;
-                Notifications.openNotificationWithIcon(
-                    'success',
-                    <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == responseMessage)} />
-                );
-            });
+        AuthService.reset_password(email).then((response) => {
+            const responseMessage = response.data.message;
+            Notifications.openNotificationWithIcon(
+                'success',
+                <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == responseMessage)} />
+            );
+        });
     };
 
     if (successful) {
@@ -107,30 +106,38 @@ const Login = () => {
                         </Title>
                     </Paragraph>
 
-                    {message && !successful && (
-                        (message.startsWith('Wrong password') && (
+                    {message &&
+                        !successful &&
+                        ((message.startsWith('Wrong password') && (
                             <Alert
+                                type="error"
+                                className="alert-error-msg"
+                                message={t('wrong_password') + message.substring(31)}
+                                showIcon
+                            />
+                        )) ||
+                            (message.startsWith('Your account has been locked') && (
+                                <Alert
                                     type="error"
                                     className="alert-error-msg"
-                                    message= {t('wrong_password') + message.substring(31)}
+                                    message={
+                                        <div>
+                                            {t('attempts_exceeded')} <a onClick={handleReset}>{t('click_here')}</a>{' '}
+                                            {t('email_instructions')}
+                                        </div>
+                                    }
                                     showIcon
-                            />
-                        )) || (message.startsWith('Your account has been locked') && (
-                            <Alert
-                                type="error"
-                                className="alert-error-msg"
-                                message= {<div>{t('attempts_exceeded')} <a onClick={handleReset}>{t('click_here')}</a> {t('email_instructions')}</div>}
-                                showIcon
-                            />
-                        )) || (
-                            <Alert
-                                type="error"
-                                className="alert-error-msg"
-                                message={<Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == message)} />}
-                                showIcon
-                            /> 
-                        )
-                    )}
+                                />
+                            )) || (
+                                <Alert
+                                    type="error"
+                                    className="alert-error-msg"
+                                    message={
+                                        <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == message)} />
+                                    }
+                                    showIcon
+                                />
+                            ))}
 
                     <Form
                         layout="vertical"

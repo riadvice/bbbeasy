@@ -51,8 +51,8 @@ class Edit extends BaseAction
         $user = $this->loadData($id);
 
         $username_error_message = 'Username already exists';
-        $email_error_message = 'Email already exists';
-        $error_message = 'User could not be updated';
+        $email_error_message    = 'Email already exists';
+        $error_message          = 'User could not be updated';
         if ($user->valid()) {
             $dataChecker = new DataChecker();
 

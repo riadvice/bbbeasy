@@ -29,6 +29,7 @@ use Test\Scenario;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 final class DeleteTest extends Scenario
@@ -39,9 +40,9 @@ final class DeleteTest extends Scenario
     /**
      * @param $f3
      *
-     * @throws ReflectionException
-     *
      * @return array
+     *
+     * @throws ReflectionException
      */
     public function testNonExistingRole($f3)
     {
@@ -56,9 +57,9 @@ final class DeleteTest extends Scenario
     /**
      * @param $f3
      *
-     * @throws ReflectionException
-     *
      * @return array
+     *
+     * @throws ReflectionException
      */
     public function testValidRole($f3)
     {
