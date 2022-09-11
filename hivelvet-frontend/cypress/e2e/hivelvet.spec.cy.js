@@ -9,13 +9,13 @@ const lecturer_secret = 'hivelvet-Lecturer-2022';
 const professor_secret = 'hivelvet-Professor-2022';
 const admin_secret = 'hivelvet-Administrator-2022';
 
-// // cypress checkpoint
+// cypress checkpoint
 
-// describe('Wait 30 seconds until enabling installer app (manually)', () => {
-//     it('should finish cypress checkpoint', () => {
-//         cy.wait(30000);
-//     });
-// });
+describe('Wait 30 seconds until enabling installer app (manually)', () => {
+    it('should finish cypress checkpoint', () => {
+        cy.wait(30000);
+    });
+});
 
 // installer app initiation
 
