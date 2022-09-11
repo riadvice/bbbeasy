@@ -158,8 +158,8 @@ Cypress.Commands.add('updateStatus', (email, action, color, status) => {
 });
 
 Cypress.Commands.add('removeRole', () => {
-    cy.task('database', { sql: `DELETE FROM public.roles_permissions WHERE role_id = (SELECT id from public.roles WHERE name = 'tutor' OR name = 'teacher' OR name = 'student');` });
-    cy.task('database', { sql: `DELETE FROM public.roles WHERE name = 'tutor' OR name = 'teacher' OR name = 'student';` });
+    cy.task('database', { sql: `DELETE FROM public.roles_permissions WHERE role_id = (SELECT id from public.roles WHERE LOWER(name) = 'tutor' OR LOWER(name) = 'teacher' OR LOWER(name) = 'student');` });
+    cy.task('database', { sql: `DELETE FROM public.roles WHERE LOWER(name) = 'tutor' OR LOWER(name) = 'teacher' OR LOWER(name) = 'student';` });
     cy.reload();
 });
 

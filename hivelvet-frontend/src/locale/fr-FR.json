@@ -68,7 +68,7 @@
     "attempts_exceeded": "Votre compte a été verrouillé car vous avez atteint le nombre maximum de tentatives de connexion non valides. Vous pouvez contacter l'administrateur ou",
     "click_here": "cliquer ici",
     "email_instructions": "pour recevoir un e-mail contenant des instructions sur la façon de déverrouiller votre compte",
-    "invalid_password": "N'utilisez que des lettres, des chiffres et des signes de ponctuation courants",
+    "invalid_password": "Le mot de passe doit contenir au moins un chiffre, une lettre majuscule, une lettre minuscule et un caractère spécial",
     "common_password": "Évitez de choisir un mot de passe courant",
     "already_used_password": "Le nouveau mot de passe ne peut pas être le même que votre ancien mot de passe",
     "success_change_password": "Mot de passe changé avec succès",

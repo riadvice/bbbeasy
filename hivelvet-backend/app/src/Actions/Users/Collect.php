@@ -37,24 +37,20 @@ class Collect extends BaseAction
         $user = new User();
 
         $error_message = 'Administrator could not be added';
-
-        if (!SecurityUtils::isGdprCompliant($form['password'])) {
-            $this->logger->error($error_message, ['error' => 'Only use letters, numbers, and common punctuation characters']);
-            $this->renderJson(['message' => 'Only use letters, numbers, and common punctuation characters']);
-        } else {
-            $error = 'Avoid choosing a common password';
-            if (SecurityUtils::credentialsAreCommon($form['username'], $form['email'], $form['password'], $error_message, null)) {
-                //  @fixme:  better routes testing
-                '/users/collect-admin' === "{$_SERVER['REQUEST_URI']}" ? $this->renderJson(['message' => $error]) : $this->renderJson(['message' => $error], $response_code);
-
-                return;
-            }
-            $users = $this->getUsersByUsernameOrEmail($form['username'], $form['email']);
-            $error = $user->usernameOrEmailExists($form['username'], $form['email'], $users);
-            if ($error) {
-                $this->logger->error($error_message, ['error' => $error]);
-                $this->renderJson(['message' => $error]);
-            }
+        $compliant = SecurityUtils::isGdprCompliant($form['password']);
+        $common = SecurityUtils::credentialsAreCommon($form['username'], $form['email'], $form['password']);
+        $users = $this->getUsersByUsernameOrEmail($form['username'], $form['email']);
+        $found = $user->usernameOrEmailExists($form['username'], $form['email'], $users);
+        
+        if (!$compliant) {
+            $this->logger->error($error_message, ['error' => $compliant]);
+            $this->renderJson(['message' => $compliant]);
+        } elseif ($common) {
+            $this->logger->error($error_message, ['error' => $common]);
+            $this->renderJson(['message' => $common]);
+        } elseif ($found) {
+            $this->logger->error($error_message, ['error' => $found]);
+            $this->renderJson(['message' => $found]);
         }
     }
 }

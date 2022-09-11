@@ -68,7 +68,7 @@
     "attempts_exceeded": "Your account has been locked because you have reached the maximum number of invalid sign-in attempts. You can contact the administrator or",
     "click_here": "click here",
     "email_instructions": "to receive an email containing instructions on how to unlock your account",
-    "invalid_password": "Only use letters, numbers, and common punctuation characters",
+    "invalid_password": "Password must contain at least one number, one uppercase letter, one lowercase letter, and one special character",
     "common_password": "Avoid choosing a common password",
     "already_used_password": "New password cannot be the same as your old password",
     "success_change_password": "Password changed successfully",

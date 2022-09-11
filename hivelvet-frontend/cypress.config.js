@@ -1,9 +1,7 @@
-import { defineConfig } from "cypress";
-import * as dotenv from 'dotenv';
-
+const { defineConfig } = require('cypress');
 const { Pool } = require('pg');
-dotenv.config();
-export default defineConfig({
+require('dotenv').config();
+module.exports = defineConfig({
     e2e: {
         baseUrl: "http://hivelvet.test:3300",
         setupNodeEvents(on, config) {
