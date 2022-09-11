@@ -50,24 +50,9 @@ class Register extends BaseAction
 
         /** @todo : move to locales */
         $error_message = 'User could not be added';
-        $response_code = ResponseCode::HTTP_BAD_REQUEST;
         if ($dataChecker->allValid()) {
             $user = new User();
-            $compliant = SecurityUtils::isGdprCompliant($form['password']);
-            $common = SecurityUtils::credentialsAreCommon($form['username'], $form['email'], $form['password']);
-            $users = $this->getUsersByUsernameOrEmail($form['username'], $form['email']);
-            $found = $user->usernameOrEmailExists($form['username'], $form['email'], $users);
-
-            if (!$compliant) {
-                $this->logger->error($error_message, ['error' => $compliant]);
-                $this->renderJson(['message' => $compliant], $response_code);
-            } elseif ($common) {
-                $this->logger->error($error_message, ['error' => $common]);
-                $this->renderJson(['message' => $common], $response_code);
-            } elseif ($found) {
-                $this->logger->error($error_message, ['error' => $found]);
-                $this->renderJson(['message' => $found], ResponseCode::HTTP_PRECONDITION_FAILED);
-            } else {
+            if ($this->credentialsAreValid($form, $user, $error_message)) {
                 $user->email    = $form['email'];
                 $user->username = $form['username'];
                 $user->password = $form['password'];
