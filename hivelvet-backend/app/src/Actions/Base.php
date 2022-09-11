@@ -267,10 +267,11 @@ abstract class Base extends \Prefab
 
     protected function getUsersByUsernameOrEmail(string $username, string $email): array
     {
+        $hostname = 'localhost';
         $dbname = 'hivelvet';
         $user   = 'hivelvet';
         $secret = 'hivelvet';
-        $conn   = pg_pconnect("host=localhost dbname={$dbname} user={$user} password={$secret}");
+        $conn   = pg_pconnect("host={$hostname} dbname={$dbname} user={$user} password={$secret}");
         $result = pg_query_params($conn, 'SELECT username, email FROM public.users WHERE lower(username) = lower($1) OR lower(email) = lower($2)', [$username, $email]);
 
         return pg_fetch_all($result);
