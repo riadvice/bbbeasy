@@ -27,10 +27,10 @@ use Enum\ResetTokenStatus;
 use Enum\ResponseCode;
 use Enum\UserStatus;
 use Models\ResetPasswordToken;
-use Validation\DataChecker;
-use Respect\Validation\Validator;
 use Models\User;
+use Respect\Validation\Validator;
 use Utils\SecurityUtils;
+use Validation\DataChecker;
 
 /**
  * Class ChangePassword.
@@ -40,10 +40,10 @@ class ChangePassword extends BaseAction
     public function execute($f3): void
     {
         $form = $this->getDecodedBody();
-        
+
         $password   = $form['password'];
         $resetToken = new ResetPasswordToken();
-        
+
         $dataChecker = new DataChecker();
         $dataChecker->verify($password, Validator::length(8)->setName('password'));
 
@@ -56,8 +56,8 @@ class ChangePassword extends BaseAction
                     $user               = new User();
                     $user               = $user->getById($resetToken->user_id);
                     $resetToken->status = ResetTokenStatus::CONSUMED;
-                    $compliant = SecurityUtils::isGdprCompliant($password);
-                    $common = SecurityUtils::credentialsAreCommon($user->username, $user->email, $password);
+                    $compliant          = SecurityUtils::isGdprCompliant($password);
+                    $common             = SecurityUtils::credentialsAreCommon($user->username, $user->email, $password);
 
                     if (!$compliant) {
                         $this->logger->error($error_message, ['error' => $compliant]);
@@ -101,6 +101,7 @@ class ChangePassword extends BaseAction
         } catch (\Exception $e) {
             $this->logger->error($error_message, ['error' => $e->getMessage()]);
             $this->renderJson(['message' => $error_message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+
             return;
         }
         $this->logger->info('Password successfully changed');

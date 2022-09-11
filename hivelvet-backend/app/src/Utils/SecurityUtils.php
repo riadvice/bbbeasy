@@ -26,19 +26,20 @@ class SecurityUtils
 {
     public static string $GDPR_PATTERN = '/^(?=(.*[a-z]){1,})(?=(.*[A-Z]){1,})(?=(.*[\d]){1,})(?=(.*[!@#$%^&*()\-__+.]){1,}).{8,}$/';
 
-    public static function credentialsAreCommon(string $username, string $email, string $password): string | null
+    public static function credentialsAreCommon(string $username, string $email, string $password): string|null
     {
         // @fixme: to be cached, reload to cache if update time changed
         foreach (json_decode(\Base::instance()->read('security/dictionary/en-US.json')) as $word) {
-            $checkVars = array($username, $email, $word);
-            if (in_array($password, $checkVars)) {
+            $checkVars = [$username, $email, $word];
+            if (\in_array($password, $checkVars, true)) {
                 return 'Avoid choosing a common password';
             }
         }
+
         return null;
     }
 
-    public static function isGdprCompliant(string $password): string | bool
+    public static function isGdprCompliant(string $password): string|bool
     {
         return !preg_match(self::$GDPR_PATTERN, $password) ? 'Password must contain at least one number, one uppercase letter, one lowercase letter, and one special character' : true;
     }

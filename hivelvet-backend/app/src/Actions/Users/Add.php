@@ -29,7 +29,6 @@ use Enum\UserStatus;
 use Models\Role;
 use Models\User;
 use Respect\Validation\Validator;
-use Utils\SecurityUtils;
 use Validation\DataChecker;
 
 /**

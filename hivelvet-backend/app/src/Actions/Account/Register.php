@@ -27,7 +27,6 @@ use Enum\ResponseCode;
 use Enum\UserStatus;
 use Models\User;
 use Respect\Validation\Validator;
-use Utils\SecurityUtils;
 use Validation\DataChecker;
 
 /**
@@ -64,6 +63,7 @@ class Register extends BaseAction
                 } catch (\Exception $e) {
                     $this->logger->error($error_message, ['user' => $user->toArray(), 'error' => $e->getMessage()]);
                     $this->renderJson(['message' => $error_message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+
                     return;
                 }
                 $this->logger->info('User successfully registered', ['user' => $user->toArray()]);
