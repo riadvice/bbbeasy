@@ -168,6 +168,13 @@
         "label": "Name",
         "required": "Name is required"
     },
+    "color": {
+        "label": "Color"
+    },
+    "description": {
+        "label": "Description",
+        "required": "Description is required"
+    },
     "required_name": "Name is required",
     "exist_name": "Name already exists",
     "permissions": {
@@ -194,6 +201,12 @@
     "role_col": "Role",
     "status_col": "State",
     "new_user": "New User",
+    "new_label": "New Label",
+    "labels_cols": {
+        "name": "Name",
+        "description": "Description",
+        "color": "Color"
+    },
     "role": {
         "label": "Role",
         "required": "Please select a role",
@@ -210,11 +223,17 @@
     "delete_user_confirm": "Are you sure to delete this user ?",
     "delete_user_success": "User successfully deleted",
 
+    "delete_label_confirm": "Are you sure to delete this label ?",
+    "delete_label_success": "Label successfully deleted",
+    "add_label_success": "Label successfully added",
+    "edit_label_success": "Label successfully updated",
     "active": "Active",
     "inactive": "Inactive",
     "pending": "Pending",
     "deleted": "Deleted",
     "required_username": "Username is required",
+    "required_description": "Description is required",
+    "required_color": "Color is required",
     "required_email": "Email is required",
     "required_role": "Please select a role",
     "required_status": "Please select a state",

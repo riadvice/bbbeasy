@@ -167,6 +167,13 @@
         "label": "Nom",
         "required": "Le nom est obligatoire"
     },
+    "color": {
+        "label": "Couleur"
+    },
+    "description": {
+        "label": "Description",
+        "required": "Description est obligatoire"
+    },
     "required_name": "Le nom est obligatoire",
     "exist_name": "Ce nom existe déjà",
     "permissions": {
@@ -192,6 +199,12 @@
     "role_col": "Rôle",
     "status_col": "Status",
     "new_user": "Nouvel utilisateur",
+    "new_label": "Nouvel libellé",
+    "labels_cols": {
+        "name": "Nom",
+        "description": "Description",
+        "color": "Couleur"
+    },
     "role": {
         "label": "Rôle",
         "required": "Veuillez sélectionner un rôle",
@@ -207,11 +220,17 @@
     "edit_user_success": "Utilisateur mis à jour avec succès",
     "delete_user_confirm": "Êtes-vous sûr de vouloir supprimer cet utilisateur ?",
     "delete_user_success": "Utilisateur supprimé avec succès",
+    "delete_label_confirm": "Êtes-vous sûr de vouloir supprimer cet libellé ?",
+    "delete_label_success": "Libellé supprimé avec succès",
+    "add_label_success": "Libellé ajouté avec succès",
+    "edit_label_success": "Libellé mis à jour avec succès",
     "active": "Actif",
     "inactive": "Inactif",
     "pending": "En attente",
     "deleted": "Supprimé",
     "required_username": "Le nom d'utilisateur est obligatoire",
+    "required_description": "Description est obligatoire",
+    "required_color": "Couleur est obligatoire",
     "required_email": "L'e-mail est obligatoire",
     "required_role": "Veuillez sélectionner un rôle",
     "required_status": "Veuillez sélectionner une status",

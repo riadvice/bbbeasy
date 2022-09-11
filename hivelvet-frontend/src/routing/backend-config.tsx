@@ -45,4 +45,9 @@ export const apiRoutes = {
     COLLECT_ADMIN_URL: API_URL + '/users/collect-admin',
 
     COLLECT_PRIVILEGES_URL: API_URL + '/roles_permissions/collect',
+
+    LIST_LABEL_URL: API_URL + '/labels',
+    ADD_LABEL_URL: API_URL + '/labels',
+    EDIT_LABEL_URL: API_URL + '/labels/',
+    DELETE_LABEL_URL: API_URL + '/labels/',
 };
