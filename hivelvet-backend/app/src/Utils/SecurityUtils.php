@@ -24,23 +24,23 @@ namespace Utils;
 
 class SecurityUtils
 {
-    public static string $PASSWORD_PATTERN = '/^(?=(.*[a-z]){1,})(?=(.*[A-Z]){1,})(?=(.*[\d]){1,})(?=(.*[!@#$%^&*()\-__+.]){1,}).{8,}$/';
+    public static string $GDPR_PATTERN = '/^(?=(.*[a-z]){1,})(?=(.*[A-Z]){1,})(?=(.*[\d]){1,})(?=(.*[!@#$%^&*()\-__+.]){1,}).{8,}$/';
 
-    public static function credentialsAreCommon(string $username, string $email, string $password, string $error_message, int|null $response_code): bool
+    public static function credentialsAreCommon(string $username, string $email, string $password): string|null
     {
         // @fixme: to be cached, reload to cache if update time changed
         foreach (json_decode(\Base::instance()->read('security/dictionary/en-US.json')) as $word) {
-            if (\count(array_unique([$password, $username, $email, $word])) < 4) {
-                // @todo : move to controller =>  $this->logger->error($error_message, ['error' => $error]);
-                return true;
+            $checkVars = [$username, $email, $word];
+            if (\in_array($password, $checkVars, true)) {
+                return 'Avoid choosing a common password';
             }
         }
 
-        return false;
+        return null;
     }
 
-    public static function isGdprCompliant(string $password): bool
+    public static function isGdprCompliant(string $password): string|bool
     {
-        return 1 === preg_match(self::$PASSWORD_PATTERN, $password);
+        return !preg_match(self::$GDPR_PATTERN, $password) ? 'Password must contain at least one number, one uppercase letter, one lowercase letter, and one special character' : true;
     }
 }

@@ -29,7 +29,6 @@ use Enum\UserStatus;
 use Models\Role;
 use Models\User;
 use Respect\Validation\Validator;
-use Utils\SecurityUtils;
 use Validation\DataChecker;
 
 /**
@@ -56,14 +55,10 @@ class Add extends BaseAction
 
         /** @todo : move to locales */
         $error_message = 'User could not be added';
-        $response_code = ResponseCode::HTTP_BAD_REQUEST;
         if ($dataChecker->allValid()) {
             $user = new User();
-            if (!SecurityUtils::isGdprCompliant($form['password'])) {
-                $this->logger->error($error_message, ['error' => 'Only use letters, numbers, and common punctuation characters']);
-                $this->renderJson(['message' => 'Only use letters, numbers, and common punctuation characters'], $response_code);
-            } else {
-                $this->addUser($form, $user, $error_message, $response_code);
+            if ($this->credentialsAreValid($form, $user, $error_message)) {
+                $this->addUser($form, $user, $error_message);
             }
         } else {
             $this->logger->error($error_message, ['errors' => $dataChecker->getErrors()]);
@@ -71,40 +66,32 @@ class Add extends BaseAction
         }
     }
 
-    private function addUser($form, $user, $error_message, $response_code): void
+    private function addUser($form, $user, $error_message): void
     {
-        $next  = SecurityUtils::credentialsAreCommon($form['username'], $form['email'], $form['password'], $error_message, $response_code);
-        $users = $this->getUsersByUsernameOrEmail($form['username'], $form['email']);
-        $error = $user->usernameOrEmailExists($form['username'], $form['email'], $users);
-        if ($error && $next) {
-            $this->logger->error($error_message, ['error' => $error]);
-            $this->renderJson(['message' => $error], ResponseCode::HTTP_PRECONDITION_FAILED);
-        } elseif ($next) {
-            $role = new Role();
-            $role->load(['id = ?', [$form['role']]]);
-            if ($role->valid()) {
-                $user->email    = $form['email'];
-                $user->username = $form['username'];
-                $user->password = $form['password'];
-                $user->status   = UserStatus::PENDING;
-                $user->role_id  = $role->id;
+        $role = new Role();
+        $role->load(['id = ?', [$form['role']]]);
+        if ($role->valid()) {
+            $user->email    = $form['email'];
+            $user->username = $form['username'];
+            $user->password = $form['password'];
+            $user->status   = UserStatus::PENDING;
+            $user->role_id  = $role->id;
 
-                $user->password_attempts = 3;
+            $user->password_attempts = 3;
 
-                try {
-                    $user->save();
-                } catch (\Exception $e) {
-                    $this->logger->error($error_message, ['user' => $user->toArray(), 'error' => $e->getMessage()]);
-                    $this->renderJson(['message' => $error_message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+            try {
+                $user->save();
+            } catch (\Exception $e) {
+                $this->logger->error($error_message, ['user' => $user->toArray(), 'error' => $e->getMessage()]);
+                $this->renderJson(['message' => $error_message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
 
-                    return;
-                }
-
-                $this->logger->info('User successfully added', ['user' => $user->toArray()]);
-                $this->renderJson(['result' => 'success', 'user' => $user->getUserInfos($user->id)], ResponseCode::HTTP_CREATED);
-            } else {
-                $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
+                return;
             }
+
+            $this->logger->info('User successfully added', ['user' => $user->toArray()]);
+            $this->renderJson(['result' => 'success', 'user' => $user->getUserInfos($user->id)], ResponseCode::HTTP_CREATED);
+        } else {
+            $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
         }
     }
 }

@@ -34,6 +34,7 @@ use Models\User;
 use SimpleXMLElement;
 use Template;
 use Utils\Environment;
+use Utils\SecurityUtils;
 
 /**
  * Base Controller Class.
@@ -266,13 +267,40 @@ abstract class Base extends \Prefab
 
     protected function getUsersByUsernameOrEmail(string $username, string $email): array
     {
-        $dbname = 'hivelvet';
-        $user   = 'hivelvet';
-        $secret = 'hivelvet';
-        $conn   = pg_pconnect("host=localhost dbname={$dbname} user={$user} password={$secret}");
-        $result = pg_query_params($conn, 'SELECT username, email FROM public.users WHERE lower(username) = lower($1) OR lower(email) = lower($2)', [$username, $email]);
+        $hostname = 'localhost';
+        $dbname   = 'hivelvet';
+        $user     = 'hivelvet';
+        $secret   = 'hivelvet';
+        $conn     = pg_pconnect("host={$hostname} dbname={$dbname} user={$user} password={$secret}");
+        $result   = pg_query_params($conn, 'SELECT username, email FROM public.users WHERE lower(username) = lower($1) OR lower(email) = lower($2)', [$username, $email]);
 
         return pg_fetch_all($result);
+    }
+
+    protected function credentialsAreValid(array $form, User $user, string $error_message): bool
+    {
+        $credentials_valid = true;
+        $response_code     = ResponseCode::HTTP_BAD_REQUEST;
+        $compliant         = SecurityUtils::isGdprCompliant($form['password']);
+        $common            = SecurityUtils::credentialsAreCommon($form['username'], $form['email'], $form['password']);
+        $users             = $this->getUsersByUsernameOrEmail($form['username'], $form['email']);
+        $found             = $user->usernameOrEmailExists($form['username'], $form['email'], $users);
+
+        if (true !== $compliant) {
+            $this->logger->error($error_message, ['error' => $compliant]);
+            $this->renderJson(['message' => $compliant], $response_code);
+            $credentials_valid = false;
+        } elseif ($common) {
+            $this->logger->error($error_message, ['error' => $common]);
+            $this->renderJson(['message' => $common], $response_code);
+            $credentials_valid = false;
+        } elseif ($found) {
+            $this->logger->error($error_message, ['error' => $found]);
+            $this->renderJson(['message' => $found], ResponseCode::HTTP_PRECONDITION_FAILED);
+            $credentials_valid = false;
+        }
+
+        return $credentials_valid;
     }
 
     private function parseXMLView(string $view = null): string
@@ -286,28 +314,5 @@ abstract class Base extends \Prefab
         $xmlDocument->loadXML($xmlResponse->asXML());
 
         return $xmlDocument->saveXML();
-    }
-
-    protected function isPasswordCommon(string $username, string $email, string $password, string $error_message, int | null $response_code): bool
-    {
-        $dictionary = file_GET_contents('/app/hivelvet-backend/public/dictionary/en-US.json');
-        $words = json_decode($dictionary);
-        foreach ($words as $word) {
-            if (strcmp($password, $username) == 0 || strcmp($password, $email) == 0 || strcmp($password, $word) == 0) {
-                $error = 'Avoid choosing a common password';
-                $this->logger->error($error_message, ['error' => $error]);
-                "$_SERVER[REQUEST_URI]" == '/users/collect-admin' ? $this->renderJson(['message' => $error]) : $this->renderJson(['message' => $error], $response_code);
-                return false;
-            }
-        }
-        return true;
-    }
-
-    protected function getUsersByUsernameOrEmail(string $username, string $email): array
-    {
-        $dbname = 'hivelvet'; $user = 'hivelvet'; $secret = 'hivelvet';
-        $conn = pg_pconnect("host=localhost dbname=$dbname user=$user password=$secret");
-        $result = pg_query_params($conn, 'SELECT username, email FROM public.users WHERE lower(username) = lower($1) OR lower(email) = lower($2)', array($username, $email));
-        return pg_fetch_all($result);
     }
 }

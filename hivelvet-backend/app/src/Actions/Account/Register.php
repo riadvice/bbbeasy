@@ -27,7 +27,6 @@ use Enum\ResponseCode;
 use Enum\UserStatus;
 use Models\User;
 use Respect\Validation\Validator;
-use Utils\SecurityUtils;
 use Validation\DataChecker;
 
 /**
@@ -50,37 +49,25 @@ class Register extends BaseAction
 
         /** @todo : move to locales */
         $error_message = 'User could not be added';
-        $response_code = ResponseCode::HTTP_BAD_REQUEST;
         if ($dataChecker->allValid()) {
             $user = new User();
-            if (!SecurityUtils::isGdprCompliant($form['password'])) {
-                $this->logger->error($error_message, ['error' => 'Only use letters, numbers, and common punctuation characters']);
-                $this->renderJson(['message' => 'Only use letters, numbers, and common punctuation characters'], $response_code);
-            } else {
-                $next  = SecurityUtils::credentialsAreCommon($form['username'], $form['email'], $form['password'], $error_message, $response_code);
-                $users = $this->getUsersByUsernameOrEmail($form['username'], $form['email']);
-                $error = $user->usernameOrEmailExists($form['username'], $form['email'], $users);
-                if ($error && $next) {
-                    $this->logger->error($error_message, ['error' => $error]);
-                    $this->renderJson(['message' => $error], ResponseCode::HTTP_PRECONDITION_FAILED);
-                } elseif ($next) {
-                    $user->email    = $form['email'];
-                    $user->username = $form['username'];
-                    $user->password = $form['password'];
-                    $user->role_id  = 2;
-                    $user->status   = UserStatus::PENDING;
+            if ($this->credentialsAreValid($form, $user, $error_message)) {
+                $user->email    = $form['email'];
+                $user->username = $form['username'];
+                $user->password = $form['password'];
+                $user->role_id  = 2;
+                $user->status   = UserStatus::PENDING;
 
-                    try {
-                        $user->save();
-                    } catch (\Exception $e) {
-                        $this->logger->error($error_message, ['user' => $user->toArray(), 'error' => $e->getMessage()]);
-                        $this->renderJson(['message' => $error_message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+                try {
+                    $user->save();
+                } catch (\Exception $e) {
+                    $this->logger->error($error_message, ['user' => $user->toArray(), 'error' => $e->getMessage()]);
+                    $this->renderJson(['message' => $error_message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
 
-                        return;
-                    }
-                    $this->logger->info('User successfully registered', ['user' => $user->toArray()]);
-                    $this->renderJson(['result' => 'success', ResponseCode::HTTP_CREATED]);
+                    return;
                 }
+                $this->logger->info('User successfully registered', ['user' => $user->toArray()]);
+                $this->renderJson(['result' => 'success', ResponseCode::HTTP_CREATED]);
             }
         } else {
             $this->logger->error($error_message, ['errors' => $dataChecker->getErrors()]);

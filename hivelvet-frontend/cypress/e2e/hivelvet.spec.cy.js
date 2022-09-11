@@ -1,3 +1,14 @@
+const short_secret = 'pwd';
+const secret = 'hivelvet-password-2022';
+const test_secret = 'hivelvet-Test-2022';
+const wrong_secret = 'hivelvet-Wrong-2022';
+const confirm_secret = 'hivelvet-Confirm-2022';
+const student_secret = 'hivelvet-Student-2022';
+const teacher_secret = 'hivelvet-Teacher-2022';
+const lecturer_secret = 'hivelvet-Lecturer-2022';
+const professor_secret = 'hivelvet-Professor-2022';
+const admin_secret = 'hivelvet-Administrator-2022';
+
 // cypress checkpoint
 
 describe('Wait 30 seconds until enabling installer app (manually)', () => {
@@ -7,17 +18,6 @@ describe('Wait 30 seconds until enabling installer app (manually)', () => {
 });
 
 // installer app initiation
-
-const secret = 'password';
-const short_secret = 'pwd';
-const test_secret = 'hivelvet-test';
-const wrong_secret = 'hivelvet-wrong';
-const confirm_secret = 'confirm-password';
-const student_secret = 'hivelvet-student';
-const teacher_secret = 'hivelvet-teacher';
-const lecturer_secret = 'hivelvet-lecturer';
-const professor_secret = 'hivelvet-professor';
-const admin_secret = 'hivelvet-administrator';
 
 describe('Initiate testing installer app', () => {
     it('should set initiation state', () => {
@@ -80,7 +80,7 @@ describe('Test install process', () => {
     it('should load correctly and check step 2 form elements exist', () => {
         const username = 'test';
         const email = 'test@riadvice.tn';
-        const step_2_test_secret = 'hivelvet-test';
+        const step_2_test_secret = 'hivelvet-Test-2022';
         cy.get('input#install_form_username').type(username).should('have.value', username);
         cy.get('input#install_form_email').type(email).should('have.value', email);
         cy.get('input#install_form_password').type(step_2_test_secret).should('have.value', step_2_test_secret);
@@ -105,7 +105,7 @@ describe('Test install process', () => {
     it('should display errors when submitting empty step 2 form', () => {
         const username = 'test';
         const email = 'test@riadvice.tn';
-        const test_secret_not_empty = 'hivelvet-test';
+        const test_secret_not_empty = 'hivelvet-Test-2022';
         cy.get('input#install_form_username').type(username).should('have.value', username);
         cy.get('input#install_form_email').type(email).should('have.value', email);
         cy.get('input#install_form_password').type(test_secret_not_empty).should('have.value', test_secret_not_empty);
@@ -119,7 +119,7 @@ describe('Test install process', () => {
     it('should validate step 2 form inputs', () => {
         const username = 'test';
         const email = 'test@riadvice.tn';
-        const test_secret_valid = 'hivelvet-test';
+        const test_secret_valid = 'hivelvet-Test-2022';
         const url = 'url';
         cy.get('input#install_form_username').type(username).should('have.value', username);
         cy.get('input#install_form_email').type(email).should('have.value', email);
@@ -134,7 +134,7 @@ describe('Test install process', () => {
     it('should load correctly and check step 3 form elements exist', () => {
         const username = 'test';
         const email = 'test@riadvice.tn';
-        const step_3_test_secret = 'hivelvet-test';
+        const step_3_test_secret = 'hivelvet-Test-2022';
         cy.get('input#install_form_username').type(username).should('have.value', username);
         cy.get('input#install_form_email').type(email).should('have.value', email);
         cy.get('input#install_form_password').type(step_3_test_secret).should('have.value', step_3_test_secret);
@@ -184,7 +184,7 @@ describe('Finish testing installer app', () => {
 
 // cypress checkpoint
 
-describe('Wait 30 seconds until enabling installer app (manually)', () => {
+describe('Wait 30 seconds until enabling web app (manually)', () => {
     it('should finish cypress checkpoint', () => {
         cy.wait(30000);
     });
@@ -199,11 +199,11 @@ describe('Initiate testing web app', () => {
         const lectname = 'lecturer';
         const username = 'professor';
         const email = 'professor@riadvice.tn';
-        cy.removeRole();
         cy.removeUser(testname);
         cy.removeUser(stuname);
         cy.removeUser(lectname);
         cy.removeUser(username);
+        cy.removeRole();
         cy.register(username, email, professor_secret);
     });
 });
@@ -256,7 +256,7 @@ describe('Test change password process if token valid', () => {
         cy.get('button.login-form-button').click();
     });
     it('should display errors when submitting old password', () => {
-        const professor_old_secret = 'hivelvet-professor';
+        const professor_old_secret = 'hivelvet-Professor-2022';
         cy.get('input#change_password').type(professor_old_secret).should('have.value', professor_old_secret);
         cy.get('input#change_confirmPassword').type(professor_old_secret).should('have.value', professor_old_secret);
         cy.get('button.login-form-button').click().wait(500);
@@ -478,7 +478,7 @@ describe('Test reset password process', () => {
     it('should display success notification when submitting form with existing email', () => {
         const username = 'test';
         const email = 'test@riadvice.tn';
-        const test_secret_valid = "hivelvet-test";
+        const test_secret_valid = "hivelvet-Test-2022";
         cy.register(username, email, test_secret_valid);        
         cy.visit('/reset-password');
         cy.get('input#reset_email').type(email).should('have.value', email);
@@ -554,7 +554,7 @@ describe('Test not found page render', () => {
 describe('Test roles component', () => {
     beforeEach(() => {
         const email = 'professor@riadvice.tn';
-        const professor_secret_roles = 'hivelvet-professor';
+        const professor_secret_roles = 'hivelvet-Professor-2022';
         cy.login(email, professor_secret_roles);
         cy.visit('/settings/roles');
     });
@@ -708,7 +708,7 @@ describe('Test roles component', () => {
 describe('Test users component', () => {
     beforeEach(() => {
         const email = 'professor@riadvice.tn';
-        const professor_secret_users = 'hivelvet-professor';
+        const professor_secret_users = 'hivelvet-Professor-2022';
         cy.login(email, professor_secret_users);
         cy.visit('/settings/users');
     });
@@ -876,10 +876,10 @@ describe('Finish testing web app', () => {
         const stuname = 'student';
         const lectname = 'lecturer';
         const username = 'professor';
-        cy.removeRole();
         cy.removeUser(testname);
         cy.removeUser(stuname);
         cy.removeUser(lectname);
         cy.removeUser(username);
+        cy.removeRole();
     });
 });
