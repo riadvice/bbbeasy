@@ -72,7 +72,5 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", path: "./vagrant/provision/always-as-root.sh", run: "always"
 
   # post-install message (vagrant console)
-  config.vm.post_up_message = "Hivelvet Frontend URL: http://#{domains[:frontend]}"
-  config.vm.post_up_message = "Hivelvet Backend API URL: http://#{domains[:backend]}"
-  config.vm.post_up_message = "Hivelvet Docs API URL: http://#{domains[:docs]}"
+  config.vm.post_up_message = "Hivelvet Frontend URL: http://#{domains[:frontend]}:3300\nHivelvet Backend API URL: http://#{domains[:backend]}\nHivelvet Docs API URL: http://#{domains[:docs]}"
 end
