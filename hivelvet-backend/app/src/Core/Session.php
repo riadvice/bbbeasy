@@ -55,6 +55,7 @@ class Session extends Prefab
     {
         $this->f3 = Base::instance();
         $this->initLogger();
+        $this->initSession('localhost', 'hivelvet', 'hivelvet', 'hivelvet');
         if ('CACHE' === $table) {
             $this->internalSession = new F3Session(function(F3Session $session, $id) {
                 // Suspect session
@@ -80,6 +81,18 @@ class Session extends Prefab
                 return true;
             }, $key);
         }
+    }
+
+    private function connectToDatabase($hostname, $dbname, $user, $secret)
+    {
+        return pg_pconnect("host={$hostname} dbname={$dbname} user={$user} password={$secret}");
+    }
+
+    protected function initSession($hostname, $dbname, $user, $secret)
+    {
+        $conn     = pg_pconnect("host={$hostname} dbname={$dbname} user={$user} password={$secret}");
+        pg_query_params($conn, "ALTER TABLE public.users_sessions ALTER COLUMN expires SET DEFAULT CURRENT_TIMESTAMP + '14 days'::interval", []);
+        session_id(substr(md5('hivelvet'), 0, 26));
     }
 
     public function cleanupOldSessions(): void

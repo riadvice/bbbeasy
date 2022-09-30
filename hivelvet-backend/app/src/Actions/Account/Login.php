@@ -80,8 +80,14 @@ class Login extends BaseAction
                 'email'    => $user->email,
                 'role'     => $user->role->name,
             ];
+
+            $sessionInfos = [
+                'PHPSESSID'  => session_id(),
+                'expires' => $this->getSessionExpirationTime(session_id())
+            ];
+
             $this->logger->info('User successfully logged in', ['email' => $email]);
-            $this->renderJson($userInfos);
+            $this->renderJson([$userInfos, $sessionInfos]);
         } elseif ($user->valid() && UserStatus::ACTIVE === $user->status && !$user->verifyPassword($form['password']) && $user->password_attempts > 1) {
             --$user->password_attempts;
             $user->save();

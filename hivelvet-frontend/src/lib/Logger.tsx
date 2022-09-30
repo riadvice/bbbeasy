@@ -41,7 +41,7 @@ const send = async (_level, logEvent) => {
         /*
         const session_infos = {
             PHPSESSID: '...',
-            expired: '...',
+            expires: '...',
         };
         localStorage.setItem('session', JSON.stringify(session_infos));
          */

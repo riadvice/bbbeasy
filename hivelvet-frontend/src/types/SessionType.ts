@@ -1,8 +1,4 @@
-<?php
-
-declare(strict_types=1);
-
-/*
+/**
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -20,25 +16,7 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-use Phinx\Migration\AbstractMigration;
-
-class CreateSessionsTables extends AbstractMigration
-{
-    public function up(): void
-    {
-        $table = $this->table('users_sessions');
-        $table->addColumn('session_id', 'string', ['limit' => 256, 'null' => false])
-            ->addColumn('data', 'text', ['null' => true])
-            ->addColumn('ip', 'string', ['limit' => 56, 'null' => true])
-            ->addColumn('agent', 'string', ['limit' => 512, 'null' => true])
-            ->addColumn('stamp', 'integer', ['null' => true])
-            ->addColumn('expires', 'datetime', ['timezone' => true, 'null' => false])
-            ->save()
-        ;
-    }
-
-    public function down(): void
-    {
-        $this->table('users_sessions')->drop()->save();
-    }
-}
+ export type SessionType = {
+    PHPSESSID: string;
+    expires: string;
+};

@@ -33,6 +33,7 @@ import AuthService from './services/auth.service';
 import LocaleService from './services/locale.service';
 import { withTranslation } from 'react-i18next';
 import { UserType } from './types/UserType';
+import { SessionType } from './types/SessionType';
 import { UserContext } from './lib/UserContext';
 
 const { Content } = Layout;
@@ -45,19 +46,22 @@ interface IProps {
 
 const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
     const [currentUser, setCurrentUser] = React.useState<UserType>(null);
+    const [currentSession, setCurrentSession] = React.useState<SessionType>(null);
     const [isLogged, setIsLogged] = React.useState<boolean>(false);
 
     const providerValue = useMemo(
-        () => ({ isLogged, setIsLogged, currentUser, setCurrentUser }),
-        [isLogged, setIsLogged, currentUser, setCurrentUser]
+        () => ({ isLogged, setIsLogged, currentUser, setCurrentUser, currentSession, setCurrentSession }),
+        [isLogged, setIsLogged, currentUser, setCurrentUser, currentSession, setCurrentSession]
     );
 
     //loading page and user already logged => set current user
     useEffect(() => {
         Logger.info(logs);
         const user: UserType = AuthService.getCurrentUser();
+        const session: SessionType = AuthService.getCurrentSession();
         if (user != null) {
             setCurrentUser(user);
+            setCurrentSession(session);
             setIsLogged(true);
         }
     }, []);

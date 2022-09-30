@@ -28,6 +28,7 @@ import { Trans, withTranslation } from 'react-i18next';
 import EN_US from '../../locale/en-US.json';
 import AddUserForm from '../AddUserForm';
 import { UserType } from '../../types/UserType';
+import { SessionType } from '../../types/SessionType';
 import { UserContext } from '../../lib/UserContext';
 import { t } from 'i18next';
 
@@ -39,7 +40,7 @@ type formType = {
 };
 
 const Login = () => {
-    const { setIsLogged, setCurrentUser } = React.useContext(UserContext);
+    const { setIsLogged, setCurrentUser, setCurrentSession } = React.useContext(UserContext);
     const [successful, setSuccessful] = React.useState<boolean>(false);
     const [message, setMessage] = React.useState<string>('');
     const [email, setEmail] = React.useState<string>('');
@@ -53,11 +54,15 @@ const Login = () => {
         setEmail(email);
         AuthService.login(email, password)
             .then((response) => {
-                if (response.data.username && response.data.email && response.data.role) {
+                if (response.data[0].username && response.data[0].email && response.data[0].role && response.data[1].PHPSESSID && response.data[1].expires) {
                     const user_infos: UserType = {
-                        username: response.data.username,
-                        email: response.data.email,
-                        role: response.data.role,
+                        username: response.data[0].username,
+                        email: response.data[0].email,
+                        role: response.data[0].role,
+                    };
+                    const session_infos: SessionType = {
+                        PHPSESSID: response.data[1].PHPSESSID,
+                        expires: response.data[1].expires,
                     };
                     Notifications.openNotificationWithIcon(
                         'success',
@@ -68,7 +73,9 @@ const Login = () => {
                         2.5
                     );
                     localStorage.setItem('user', JSON.stringify(user_infos));
+                    localStorage.setItem('session', JSON.stringify(session_infos));
                     setCurrentUser(user_infos);
+                    setCurrentSession(session_infos);
                     setIsLogged(true);
                     setSuccessful(true);
                 }

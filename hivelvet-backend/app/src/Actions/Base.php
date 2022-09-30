@@ -265,14 +265,27 @@ abstract class Base extends \Prefab
         return $credentials;
     }
 
+    private function connectToDatabase($hostname, $dbname, $user, $secret)
+    {
+        return pg_pconnect("host={$hostname} dbname={$dbname} user={$user} password={$secret}");
+    }
+
+    protected function getSessionExpirationTime(string $PHPSESSID)
+    {
+        $conn     = $this->connectToDatabase('localhost', 'hivelvet', 'hivelvet', 'hivelvet');
+        $result   = pg_query_params($conn, "SELECT expires FROM public.users_sessions WHERE session_id = $1", [$PHPSESSID]);
+        $expires  = pg_fetch_row($result)[0];
+        if (!$expires) {
+            return date('c', time() + ini_get("session.cookie_lifetime"));
+        } else {
+            return $expires;
+        }
+    }
+
     protected function getUsersByUsernameOrEmail(string $username, string $email): array
     {
-        $hostname = 'localhost';
-        $dbname   = 'hivelvet';
-        $user     = 'hivelvet';
-        $secret   = 'hivelvet';
-        $conn     = pg_pconnect("host={$hostname} dbname={$dbname} user={$user} password={$secret}");
-        $result   = pg_query_params($conn, 'SELECT username, email FROM public.users WHERE lower(username) = lower($1) OR lower(email) = lower($2)', [$username, $email]);
+        $conn     = $this->connectToDatabase('localhost', 'hivelvet', 'hivelvet', 'hivelvet');
+        $result   = pg_query_params($conn, "SELECT username, email FROM public.users WHERE lower(username) = lower($1) OR lower(email) = lower($2)", [$username, $email]);
 
         return pg_fetch_all($result);
     }
