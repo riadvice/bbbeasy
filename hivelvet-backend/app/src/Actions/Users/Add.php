@@ -50,44 +50,48 @@ class Add extends BaseAction
 
         $dataChecker->verify($form['username'], Validator::length(4)->setName('username'));
         $dataChecker->verify($form['email'], Validator::email()->setName('email'));
-        $dataChecker->verify($form['password'], Validator::length(4)->setName('password'));
+        $dataChecker->verify($form['password'], Validator::length(8)->setName('password'));
         $dataChecker->verify($form['role'], Validator::notEmpty()->setName('role'));
 
+        /** @todo : move to locales */
+        $error_message = 'User could not be added';
         if ($dataChecker->allValid()) {
-            $user  = new User();
-            $error = $user->usernameOrEmailExists($form['username'], $form['email']);
-            if ($error) {
-                $this->logger->error('User could not be added', ['error' => $error]);
-                $this->renderJson(['message' => $error], ResponseCode::HTTP_PRECONDITION_FAILED);
-            } else {
-                $role = new Role();
-                $role->load(['id = ?', [$form['role']]]);
-                if ($role->valid()) {
-                    $user->email    = $form['email'];
-                    $user->username = $form['username'];
-                    $user->password = $form['password'];
-                    $user->status   = UserStatus::PENDING;
-                    $user->role_id  = $role->id;
-
-                    try {
-                        $user->save();
-                    } catch (\Exception $e) {
-                        $message = 'user could not be added';
-                        $this->logger->error('User could not be added', ['user' => $user->toArray(), 'error' => $e->getMessage()]);
-                        $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-
-                        return;
-                    }
-
-                    $this->logger->info('User successfully added', ['user' => $user->toArray()]);
-                    $this->renderJson(['result' => 'success', 'user' => $user->getUserInfos($user->id)], ResponseCode::HTTP_CREATED);
-                } else {
-                    $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
-                }
+            $user = new User();
+            if ($this->credentialsAreValid($form, $user, $error_message)) {
+                $this->addUser($form, $user, $error_message);
             }
         } else {
-            $this->logger->error('Add user error', ['errors' => $dataChecker->getErrors()]);
+            $this->logger->error($error_message, ['errors' => $dataChecker->getErrors()]);
             $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
+        }
+    }
+
+    private function addUser($form, $user, $error_message): void
+    {
+        $role = new Role();
+        $role->load(['id = ?', [$form['role']]]);
+        if ($role->valid()) {
+            $user->email    = $form['email'];
+            $user->username = $form['username'];
+            $user->password = $form['password'];
+            $user->status   = UserStatus::PENDING;
+            $user->role_id  = $role->id;
+
+            $user->password_attempts = 3;
+
+            try {
+                $user->save();
+            } catch (\Exception $e) {
+                $this->logger->error($error_message, ['user' => $user->toArray(), 'error' => $e->getMessage()]);
+                $this->renderJson(['message' => $error_message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+
+                return;
+            }
+
+            $this->logger->info('User successfully added', ['user' => $user->toArray()]);
+            $this->renderJson(['result' => 'success', 'user' => $user->getUserInfos($user->id)], ResponseCode::HTTP_CREATED);
+        } else {
+            $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
         }
     }
 }

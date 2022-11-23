@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Models;
 
 use DateTime;
+use Enum\ResponseCode;
 use Enum\UserStatus;
 use Models\Base as BaseModel;
 
@@ -42,6 +43,7 @@ use Models\Base as BaseModel;
  * @property DateTime $created_on
  * @property DateTime $updated_on
  * @property DateTime $last_login
+ * @property int      $password_attempts
  */
 class User extends BaseModel
 {
@@ -101,22 +103,29 @@ class User extends BaseModel
      *
      * @param string $username
      * @param string $email
+     * @param mixed  $users
      *
      * @return string
      */
-    public function usernameOrEmailExists($username, $email)
+    public function usernameOrEmailExists($username, $email, $users)
     {
-        $users = $this->find(['username = ? or email = ?', $username, $email]);
         if ($users) {
-            $users = $users->castAll();
             if (1 === \count($users)) {
-                $usernameExist = $users[0]['username'] === $username;
-                $emailExist    = $users[0]['email'] === $email;
+                $usernameExist = mb_strtolower($users[0]['username']) === mb_strtolower($username);
+                $emailExist    = mb_strtolower($users[0]['email']) === mb_strtolower($email);
 
-                return ($usernameExist && $emailExist) ? 'username and email already exist' : ($usernameExist ? 'username already exist' : 'email already exist');
+                if ($usernameExist && $emailExist) {
+                    $error_message = 'Username and Email already exist';
+                } elseif ($usernameExist) {
+                    $error_message = 'Username already exists';
+                } else {
+                    $error_message = 'Email already exists';
+                }
+
+                return $error_message;
             }
 
-            return 'username and email already exist';
+            return 'Username and Email already exist';
         }
 
         return null;
@@ -180,5 +189,26 @@ class User extends BaseModel
         );
 
         return $id ? $result[0] : $result;
+    }
+
+    /**
+     * Delete a user by setting its status to "deleted".
+     *
+     * @return Array[2](Array[], ResponsCode)
+     */
+    public function delete(): array
+    {
+        $this->status = UserStatus::DELETED;
+
+        try {
+            $this->save();
+            $this->logger->info('User successfully deleted', ['user' => $this->toArray()]);
+        } catch (\Exception $e) {
+            $this->logger->error('User could not be deleted', ['user' => $this->toArray(), 'error' => $e->getMessage()]);
+
+            throw $e;
+        }
+
+        return [['result' => 'success', 'user' => $this->getUserInfos($this->id)], ResponseCode::HTTP_OK];
     }
 }

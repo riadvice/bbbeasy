@@ -72,7 +72,7 @@ class Collect extends BaseAction
                     $subCategory     = ucfirst(str_replace('_', ' ', $subCategory));
                     $subCategoryData = [
                         'name'   => $subCategory,
-                        'status' => false,
+                        'enabled' => false,
                     ];
                     $categoryData['subcategories'][] = $subCategoryData;
                 }

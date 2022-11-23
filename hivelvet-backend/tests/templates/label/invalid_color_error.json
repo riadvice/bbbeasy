@@ -1,0 +1,6 @@
+{
+  "errors": {
+    "color": "- All of the required rules must pass for color"
+  },
+  "status": 422
+}

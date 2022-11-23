@@ -18,10 +18,13 @@
 
 import axios from 'axios';
 import { apiRoutes } from '../routing/backend-config';
+import { authHeader } from '../lib/AuthHeader';
 
-class RolesService {
+class UsersService {
+    requestOptions: object = { headers: authHeader() };
+
     list_users() {
-        return axios.get(apiRoutes.LIST_USER_URL);
+        return axios.get(apiRoutes.LIST_USER_URL, this.requestOptions);
     }
 
     list_roles() {
@@ -31,7 +34,7 @@ class RolesService {
     add_user(data: object) {
         return axios.post(apiRoutes.ADD_USER_URL, {
             data,
-        });
+        }); //, this.requestOptions);
     }
 
     edit_user(data: object, id: number) {
@@ -45,4 +48,4 @@ class RolesService {
     }
 }
 
-export default new RolesService();
+export default new UsersService();

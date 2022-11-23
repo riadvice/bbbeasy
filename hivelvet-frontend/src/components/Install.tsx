@@ -86,6 +86,7 @@ const Install = () => {
 
     const [activeStep, setActiveStep] = React.useState<number>(0);
     const [successful, setSuccessful] = React.useState<boolean>(false);
+    const [message, setMessage] = React.useState<string>('');
 
     const [primaryColor, setPrimaryColor] = React.useState<string>('');
     const [secondaryColor, setSecondaryColor] = React.useState<string>('');
@@ -137,7 +138,7 @@ const Install = () => {
     const steps: stepType[] = [
         {
             title: t('administrator_account'),
-            content: <Step1Form />,
+            content: <Step1Form message={message} successful={successful} />,
             button: t('create'),
             span: 8,
             offset: 4,
@@ -173,38 +174,44 @@ const Install = () => {
     ];
 
     const onFinish = () => {
-        if (activeStep < steps.length - 1) {
-            next();
-        } else {
-            const formData: formType = stepForm.getFieldsValue(true);
-            formData.branding_colors = {
-                primary_color: primaryColor,
-                secondary_color: secondaryColor,
-                accent_color: accentColor,
-                add_color: addColor,
-            };
-            formData.presetsConfig = presets;
-            InstallService.install(formData)
-                .then(() => {
-                    setSuccessful(true);
-                })
-                .catch((error) => {
-                    console.log(error.response.data);
-                });
-            if (file != undefined) {
-                const fdata: FormData = new FormData();
-                fdata.append('logo', file.originFileObj, file.originFileObj.name);
-                fdata.append('logo_name', file.originFileObj.name);
-                axios
-                    .post(API_URL + '/save-logo', fdata)
-                    .then((response) => {
-                        console.log(response);
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                    });
+        const formData: formType = stepForm.getFieldsValue(true);
+        formData.branding_colors = {
+            primary_color: primaryColor,
+            secondary_color: secondaryColor,
+            accent_color: accentColor,
+            add_color: addColor,
+        };
+        formData.presetsConfig = presets;
+        InstallService.collect_admin(formData).then((result) => {
+            setSuccessful(false);
+            setMessage(result.data.message);
+            if (!result.data.message) {
+                if (activeStep < steps.length - 1) {
+                    next();
+                } else {
+                    InstallService.install(formData)
+                        .then(() => {
+                            setSuccessful(true);
+                        })
+                        .catch((error) => {
+                            console.log(error.response.data);
+                        });
+                    if (file != undefined) {
+                        const fdata: FormData = new FormData();
+                        fdata.append('logo', file.originFileObj, file.originFileObj.name);
+                        fdata.append('logo_name', file.originFileObj.name);
+                        axios
+                            .post(API_URL + '/save-logo', fdata)
+                            .then((response) => {
+                                console.log(response);
+                            })
+                            .catch((error) => {
+                                console.log(error);
+                            });
+                    }
+                }
             }
-        }
+        });
     };
 
     return (

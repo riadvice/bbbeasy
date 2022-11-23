@@ -26,6 +26,7 @@ use Test\Scenario;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 final class ConfigurationTest extends Scenario

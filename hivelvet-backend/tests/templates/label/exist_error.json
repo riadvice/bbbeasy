@@ -1,0 +1,6 @@
+{
+  "errors": {
+    "name": "Name already exist"
+  },
+  "status": 412
+}

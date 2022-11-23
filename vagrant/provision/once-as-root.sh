@@ -8,7 +8,7 @@ timezone=$(echo "$1")
 
 #== Provision script ==
 
-info "Provision-script user: `whoami`"
+info "Provision-script user: $(whoami)"
 
 export DEBIAN_FRONTEND=noninteractive
 
@@ -47,6 +47,7 @@ rm nodesource_setup.sh
 sudo apt-get -y install nodejs
 curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
 echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+sudo yarn set version berry
 sudo apt remove cmdtest
 sudo apt update && sudo apt install yarn
 # sudo npm install -g pm2@5 npm@8.3.0 yarn tar@6 svgo@2 uuid@8.3.2
@@ -56,7 +57,7 @@ info "Install PHP 8.1 with its dependencies"
 sudo apt-get install -y php8.1-curl php8.1-cli php8.1-intl php8.1-redis php8.1-gd php8.1-fpm php8.1-pgsql php8.1-mbstring php8.1-xml php8.1-bcmath php-xdebug
 
 info "Installing PostgreSQL"
-sudo percona-release setup ppg-14.1
+sudo percona-release setup ppg-14.5
 sudo apt-get install -y percona-postgresql-14 percona-postgresql-14-pgaudit percona-pg-stat-monitor14
 
 info "Configure PHP-FPM"
@@ -65,7 +66,6 @@ sudo ln -s /app/vagrant/dev/php-fpm/www.conf /etc/php/8.1/fpm/pool.d/www.conf
 sudo rm /etc/php/8.1/mods-available/xdebug.ini
 sudo ln -s /app/vagrant/dev/php-fpm/xdebug.ini /etc/php/8.1/mods-available/xdebug.ini
 echo "Done!"
-
 
 info "Configure NGINX"
 sudo sed -i 's/user www-data/user vagrant/g' /etc/nginx/nginx.conf

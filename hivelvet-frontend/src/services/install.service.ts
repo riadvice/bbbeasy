@@ -31,6 +31,11 @@ class InstallService {
             data,
         });
     }
+    collect_admin(data: object) {
+        return axios.post(apiRoutes.COLLECT_ADMIN_URL, {
+            data,
+        });
+    }
 }
 
 export default new InstallService();

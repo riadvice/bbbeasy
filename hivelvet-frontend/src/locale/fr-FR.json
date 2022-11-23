@@ -29,7 +29,7 @@
     "password": {
         "label": "Mot de passe",
         "required": "Le mot de passe est obligatoire",
-        "size": "Le mot de passe doit contenir au moins 4 caractères",
+        "size": "Le mot de passe doit contenir au moins 8 caractères",
         "invalid": "Mot de passe incorrect"
     },
     "join-us": "Rejoignez-nous",
@@ -42,7 +42,7 @@
     "confirm-password": {
         "label": "Confirmer le mot de passe",
         "required": "La confirmation du mot de passe est obligatoire ",
-        "size": "La confirmation du mot de passe doit contenir au moins 4 caractères"
+        "size": "La confirmation du mot de passe doit contenir au moins 8 caractères"
     },
     "read-agreement": "J'ai lu l'accord",
     "register": "S'inscrire maintenant",
@@ -54,9 +54,9 @@
     "error-title": "Erreur",
     "info-title": "Info",
     "success-registration": "Félicitations ! Votre compte a été créé avec succès",
-    "username-email-already-exist": "ce nom d'utilisateur et Cette adresse e-mail existent déjà",
-    "username-already-exist": "ce nom d’utilisateur existe déjà",
-    "email-already-exist": "cette adresse e-mail existe déjà",
+    "username-email-already-exist": "Ce nom d'utilisateur et cette adresse e-mail existent déjà",
+    "username-already-exist": "Ce nom d’utilisateur existe déjà",
+    "email-already-exist": "Cette adresse e-mail existe déjà",
     "welcome": "Bienvenue à nouveau",
     "accept-agreement": "Accepter l'accord",
     "agree": "J'accepte les",
@@ -64,6 +64,13 @@
     "and": "et",
     "privacy-policy": "Politique de confidentialité",
     "user_not_exists": "L'utilisateur n'existe pas avec cette adresse e-mail",
+    "wrong_password": "Mot de passe incorrect. Tentatives restantes :",
+    "attempts_exceeded": "Votre compte a été verrouillé car vous avez atteint le nombre maximum de tentatives de connexion non valides. Vous pouvez contacter l'administrateur ou",
+    "click_here": "cliquer ici",
+    "email_instructions": "pour recevoir un e-mail contenant des instructions sur la façon de déverrouiller votre compte",
+    "invalid_password": "Le mot de passe doit contenir au moins un chiffre, une lettre majuscule, une lettre minuscule et un caractère spécial",
+    "common_password": "Évitez de choisir un mot de passe courant",
+    "already_used_password": "Le nouveau mot de passe ne peut pas être le même que votre ancien mot de passe",
     "success_change_password": "Mot de passe changé avec succès",
     "error_change_password": "Le mot de passe n'a pas pu être modifié",
     "error-registration": "Impossible d'ajouter l'utilisateur",
@@ -141,7 +148,11 @@
     "success_upload": "Fichier chargé avec succès",
     "wrong_file": "Fichier incorrect",
     "invalid_password_reset_token": "Jeton de réinitialisation de mot de passe invalide",
+    "account_pending": "Votre compte n'est pas encore activé. Veuillez contacter votre administrateur",
+    "account_deleted": "Votre compte a été désactivé pour violation de nos conditions d'utilisation",
     "invalid_authentication_data": "Données d'authentification invalides",
+    "invalid_username": "Le nom d'utilisateur doit contenir au moins 4 caractères",
+    "invalid_email": "E-mail invalide",
     "user_account_created": "Compte d'utilisateur créé",
     "signed_as": "Connecté en tant que ",
     "user_dropdown": {
@@ -155,6 +166,13 @@
     "name": {
         "label": "Nom",
         "required": "Le nom est obligatoire"
+    },
+    "color": {
+        "label": "Couleur"
+    },
+    "description": {
+        "label": "Description",
+        "required": "Description est obligatoire"
     },
     "required_name": "Le nom est obligatoire",
     "exist_name": "Ce nom existe déjà",
@@ -181,6 +199,12 @@
     "role_col": "Rôle",
     "status_col": "Status",
     "new_user": "Nouvel utilisateur",
+    "new_label": "Nouvel libellé",
+    "labels_cols": {
+        "name": "Nom",
+        "description": "Description",
+        "color": "Couleur"
+    },
     "role": {
         "label": "Rôle",
         "required": "Veuillez sélectionner un rôle",
@@ -196,11 +220,17 @@
     "edit_user_success": "Utilisateur mis à jour avec succès",
     "delete_user_confirm": "Êtes-vous sûr de vouloir supprimer cet utilisateur ?",
     "delete_user_success": "Utilisateur supprimé avec succès",
+    "delete_label_confirm": "Êtes-vous sûr de vouloir supprimer cet libellé ?",
+    "delete_label_success": "Libellé supprimé avec succès",
+    "add_label_success": "Libellé ajouté avec succès",
+    "edit_label_success": "Libellé mis à jour avec succès",
     "active": "Actif",
     "inactive": "Inactif",
     "pending": "En attente",
     "deleted": "Supprimé",
     "required_username": "Le nom d'utilisateur est obligatoire",
+    "required_description": "Description est obligatoire",
+    "required_color": "Couleur est obligatoire",
     "required_email": "L'e-mail est obligatoire",
     "required_role": "Veuillez sélectionner un rôle",
     "required_status": "Veuillez sélectionner une status",

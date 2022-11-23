@@ -29,6 +29,7 @@ import ChangePassword from '../components/auth/ChangePassword';
 import Home from '../components/Home';
 import Roles from '../components/Roles';
 import Users from '../components/Users';
+import Labels from '../components/Labels';
 import Presets from '../components/Presets';
 
 export const webRoutes: IRoute[] = [
@@ -84,6 +85,11 @@ export const webRoutes: IRoute[] = [
     {
         path: '/presets',
         element: <Presets />,
+        private: true,
+    },
+    {
+        path: '/labels',
+        element: <Labels />,
         private: true,
     },
 ];

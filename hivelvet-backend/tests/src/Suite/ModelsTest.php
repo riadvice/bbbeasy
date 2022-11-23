@@ -22,15 +22,17 @@ declare(strict_types=1);
 
 namespace Suite;
 
+use Models\LabelTest;
 use Models\ResetPasswordTokenTest;
 use Models\UserTest;
 use Test\TestGroup;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 final class ModelsTest extends TestGroup
 {
-    protected $classes = [UserTest::class, ResetPasswordTokenTest::class];
+    protected $classes = [UserTest::class, ResetPasswordTokenTest::class, LabelTest::class];
 }

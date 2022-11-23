@@ -25,8 +25,12 @@ namespace Actions\Account;
 use Actions\Base as BaseAction;
 use Enum\ResetTokenStatus;
 use Enum\ResponseCode;
+use Enum\UserStatus;
 use Models\ResetPasswordToken;
 use Models\User;
+use Respect\Validation\Validator;
+use Utils\SecurityUtils;
+use Validation\DataChecker;
 
 /**
  * Class ChangePassword.
@@ -40,28 +44,67 @@ class ChangePassword extends BaseAction
         $password   = $form['password'];
         $resetToken = new ResetPasswordToken();
 
+        $dataChecker = new DataChecker();
+        $dataChecker->verify($password, Validator::length(8)->setName('password'));
+
+        /** @todo : move to locales */
+        $error_message = 'Password could not be changed';
+        $response_code = ResponseCode::HTTP_BAD_REQUEST;
         if ($resetToken->getByToken($form['token'])) {
             if (!$resetToken->dry()) {
-                $user               = new User();
-                $user               = $user->getById($resetToken->user_id);
-                $user->password     = $password;
-                $resetToken->status = ResetTokenStatus::CONSUMED;
+                if ($dataChecker->allValid()) {
+                    $user               = new User();
+                    $user               = $user->getById($resetToken->user_id);
+                    $resetToken->status = ResetTokenStatus::CONSUMED;
+                    $compliant          = SecurityUtils::isGdprCompliant($password);
+                    $common             = SecurityUtils::credentialsAreCommon($user->username, $user->email, $password);
 
-                try {
-                    $resetToken->save();
-                    $user->save();
-                } catch (\Exception $e) {
-                    $message = 'password could not be changed';
-                    $this->logger->error('reset password error : password could not be changed', ['error' => $e->getMessage()]);
-                    $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-
-                    return;
+                    if (!$compliant) {
+                        $this->logger->error($error_message, ['error' => $compliant]);
+                        $this->renderJson(['message' => $compliant], $response_code);
+                    } elseif ($common) {
+                        $this->logger->error($error_message, ['error' => $common]);
+                        $this->renderJson(['message' => $common], $response_code);
+                    } elseif ($user->verifyPassword($password)) {
+                        $message = 'New password cannot be the same as your old password';
+                        $this->logger->error($error_message, ['error' => $message]);
+                        $this->renderJson(['message' => $message], $response_code);
+                    } else {
+                        $this->changePassword($user, $password, $resetToken, $error_message);
+                    }
+                } else {
+                    $this->logger->error($error_message, ['errors' => $dataChecker->getErrors()]);
+                    $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
                 }
-
-                $this->renderJson(['result' => 'success']);
+            } else {
+                $this->logger->error($error_message);
             }
-        } else {
-            $this->logger->error('reset password error : password could not be changed');
         }
+    }
+
+    /**
+     * @param $user
+     * @param $password
+     * @param $resetToken
+     * @param $error_message
+     * @param $response_code
+     *
+     * @throws \JsonException
+     */
+    private function changePassword($user, $password, $resetToken, $error_message): void
+    {
+        try {
+            $user->password = $password;
+            $user->status   = UserStatus::ACTIVE;
+            $resetToken->save();
+            $user->save();
+        } catch (\Exception $e) {
+            $this->logger->error($error_message, ['error' => $e->getMessage()]);
+            $this->renderJson(['message' => $error_message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+
+            return;
+        }
+        $this->logger->info('Password successfully changed');
+        $this->renderJson(['result' => 'success', ResponseCode::HTTP_CREATED]);
     }
 }

@@ -22,3 +22,6 @@
 .env.production.local
 
 *.log
+
+.pnp.*
+.yarn/*

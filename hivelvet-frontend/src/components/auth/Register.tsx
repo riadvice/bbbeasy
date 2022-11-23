@@ -20,8 +20,9 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import AuthService from '../../services/auth.service';
 import AddUserForm from '../AddUserForm';
+import ConfirmPassword from '../ConfirmPassword';
 
-import { Form, Input, Button, Checkbox, Alert, Col, Row, Typography, Card, Result } from 'antd';
+import { Form, Button, Checkbox, Alert, Col, Row, Typography, Card, Result } from 'antd';
 import { Trans, withTranslation } from 'react-i18next';
 import EN_US from '../../locale/en-US.json';
 import { t } from 'i18next';
@@ -106,31 +107,7 @@ const Register = () => {
                             onFinish={handleRegistration}
                         >
                             <AddUserForm />
-                            <Form.Item
-                                label={<Trans i18nKey="confirm-password.label" />}
-                                name="confirmPassword"
-                                dependencies={['password']}
-                                rules={[
-                                    {
-                                        min: 4,
-                                        message: <Trans i18nKey="confirm-password.size" />,
-                                    },
-                                    {
-                                        required: true,
-                                        message: <Trans i18nKey="confirm-password.required" />,
-                                    },
-                                    ({ getFieldValue }) => ({
-                                        validator(_, value) {
-                                            if (!value || getFieldValue('password') === value) {
-                                                return Promise.resolve();
-                                            }
-                                            return Promise.reject(new Error(t('paswords-not-match')));
-                                        },
-                                    }),
-                                ]}
-                            >
-                                <Input.Password placeholder="**********" />
-                            </Form.Item>
+                            <ConfirmPassword />
                             <Form.Item
                                 className="form-agree"
                                 name="agreement"

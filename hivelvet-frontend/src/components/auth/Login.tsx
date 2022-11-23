@@ -29,6 +29,7 @@ import EN_US from '../../locale/en-US.json';
 import AddUserForm from '../AddUserForm';
 import { UserType } from '../../types/UserType';
 import { UserContext } from '../../lib/UserContext';
+import { t } from 'i18next';
 
 const { Text, Title, Paragraph } = Typography;
 
@@ -41,6 +42,7 @@ const Login = () => {
     const { setIsLogged, setCurrentUser } = React.useContext(UserContext);
     const [successful, setSuccessful] = React.useState<boolean>(false);
     const [message, setMessage] = React.useState<string>('');
+    const [email, setEmail] = React.useState<string>('');
     const initialValues: formType = {
         email: '',
         password: '',
@@ -48,6 +50,7 @@ const Login = () => {
 
     const handleLogin = (formValue: formType) => {
         const { email, password } = formValue;
+        setEmail(email);
         AuthService.login(email, password)
             .then((response) => {
                 if (response.data.username && response.data.email && response.data.role) {
@@ -81,6 +84,16 @@ const Login = () => {
             });
     };
 
+    const handleReset = () => {
+        AuthService.reset_password(email).then((response) => {
+            const responseMessage = response.data.message;
+            Notifications.openNotificationWithIcon(
+                'success',
+                <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == responseMessage)} />
+            );
+        });
+    };
+
     if (successful) {
         return <Navigate to="/home" />;
     }
@@ -95,14 +108,38 @@ const Login = () => {
                         </Title>
                     </Paragraph>
 
-                    {message && !successful && (
-                        <Alert
-                            type="error"
-                            className="alert-error-msg"
-                            message={<Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == message)} />}
-                            showIcon
-                        />
-                    )}
+                    {message &&
+                        !successful &&
+                        ((message.startsWith('Wrong password') && (
+                            <Alert
+                                type="error"
+                                className="alert-error-msg"
+                                message={t('wrong_password') + message.substring(31)}
+                                showIcon
+                            />
+                        )) ||
+                            (message.startsWith('Your account has been locked') && (
+                                <Alert
+                                    type="error"
+                                    className="alert-error-msg"
+                                    message={
+                                        <div>
+                                            {t('attempts_exceeded')} <a onClick={handleReset}>{t('click_here')}</a>{' '}
+                                            {t('email_instructions')}
+                                        </div>
+                                    }
+                                    showIcon
+                                />
+                            )) || (
+                                <Alert
+                                    type="error"
+                                    className="alert-error-msg"
+                                    message={
+                                        <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == message)} />
+                                    }
+                                    showIcon
+                                />
+                            ))}
 
                     <Form
                         layout="vertical"

@@ -31,6 +31,7 @@ use Test\Scenario;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 final class EditTest extends Scenario
@@ -41,16 +42,16 @@ final class EditTest extends Scenario
     /**
      * @param $f3
      *
-     * @throws ReflectionException
-     *
      * @return array
+     *
+     * @throws ReflectionException
      */
     public function testEmptyData($f3)
     {
         $test = $this->newTest();
 
         $user = UserFaker::create(UserRole::LECTURER);
-        $data = ['data' => ['username' => '', 'email' => '', 'password' => '',  'role' => '']];
+        $data = ['data' => ['username' => '', 'email' => '', 'password' => '', 'role' => '']];
         $f3->mock(self::EDIT_USER_ROUTE . $user->id, null, null, $this->postJsonData($data));
         $test->expect($this->compareTemplateToResponse('user/empty_error.json'), 'Update existing user with id "' . $user->id . '" using an empty data shown an error');
 
@@ -60,10 +61,10 @@ final class EditTest extends Scenario
     /**
      * @param $f3
      *
+     * @return array
+     *
      * @throws ReflectionException
      * @throws \JsonException
-     *
-     * @return array
      */
     public function testExistingUser($f3)
     {
@@ -81,9 +82,9 @@ final class EditTest extends Scenario
     /**
      * @param $f3
      *
-     * @throws ReflectionException
-     *
      * @return array
+     *
+     * @throws ReflectionException
      */
     public function testExistingUsername($f3)
     {
@@ -101,9 +102,9 @@ final class EditTest extends Scenario
     /**
      * @param $f3
      *
-     * @throws ReflectionException
-     *
      * @return array
+     *
+     * @throws ReflectionException
      */
     public function testExistingEmail($f3)
     {
@@ -121,9 +122,9 @@ final class EditTest extends Scenario
     /**
      * @param $f3
      *
-     * @throws ReflectionException
-     *
      * @return array
+     *
+     * @throws ReflectionException
      */
     public function testNonExistingRole($f3)
     {
@@ -141,9 +142,9 @@ final class EditTest extends Scenario
     /**
      * @param $f3
      *
-     * @throws ReflectionException
-     *
      * @return array
+     *
+     * @throws ReflectionException
      */
     public function testNonExistingUser($f3)
     {
@@ -160,9 +161,9 @@ final class EditTest extends Scenario
     /**
      * @param $f3
      *
-     * @throws ReflectionException
-     *
      * @return array
+     *
+     * @throws ReflectionException
      */
     public function testValidUser($f3)
     {

@@ -35,6 +35,7 @@ use SebastianBergmann\CodeCoverage\Report\Html\Facade;
 use SebastianBergmann\CodeCoverage\Report\Text;
 use Suite\AccountActionsTest;
 use Suite\CoreActionsTest;
+use Suite\LabelsActionsTest;
 use Suite\ModelsTest;
 use Suite\RolesActionsTest;
 use Suite\UsersActionsTest;
@@ -67,6 +68,7 @@ class Statera
             AccountActionsTest::class,
             UsersActionsTest::class,
             RolesActionsTest::class,
+            LabelsActionsTest::class,
             // Always leave CDN test as the last one
             // CdnDistributorTest::class
         ];
@@ -97,9 +99,9 @@ class Statera
             if (!\in_array('all', $tests, true) && !\in_array(preg_replace('/[a-z]{1,}\\\|actionstest|test/', '', mb_strtolower($class), -1), $tests, true)) {
                 continue;
             }
-            $object                                              = new $class();
+            $object = new $class();
             CliUtils::instance()->writeSuiteResult($suiteResults = $object->run($f3), Strings::after($class, '\\'));
-            $results                                             = array_merge($results, $suiteResults);
+            $results = array_merge($results, $suiteResults);
         }
 
         $testContainsFailures = false;

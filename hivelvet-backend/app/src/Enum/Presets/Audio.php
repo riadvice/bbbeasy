@@ -21,7 +21,7 @@ declare(strict_types=1);
  */
 
 namespace Enum\Presets;
-use MabeEnum\Enum;;
+use Enum\Enum;;
 
 class Audio extends Enum
 {

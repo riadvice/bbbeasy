@@ -20,14 +20,15 @@ import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import AuthService from '../../services/auth.service';
 
-import { Form, Input, Button, Alert, Col, Row, Typography, Card, Result } from 'antd';
+import { Form, Button, Alert, Col, Row, Typography, Card, Result } from 'antd';
 import { CheckOutlined } from '@ant-design/icons';
 
 import { Trans, withTranslation } from 'react-i18next';
+import ConfirmPassword from '../ConfirmPassword';
 import EN_US from '../../locale/en-US.json';
-import { t } from 'i18next';
 
 import { URLSearchParams as _URLSearchParams } from 'url';
+import { PasswordInput } from 'antd-password-input-strength';
 
 const { Title, Paragraph } = Typography;
 
@@ -55,8 +56,11 @@ const ChangePassword = () => {
     const handleSubmit = (formValue: formType) => {
         const { password } = formValue;
         AuthService.change_password(params.get('token'), password)
-            .then(() => {
-                setSuccessful(true);
+            .then((result) => {
+                if (result.data.message == 'New password cannot be the same as your old password') {
+                    setSuccessful(false);
+                    setMessage(result.data.message);
+                } else if (result.data.result == 'success') setSuccessful(true);
             })
             .catch((error) => {
                 setSuccessful(false);
@@ -117,7 +121,7 @@ const ChangePassword = () => {
                                         name="password"
                                         rules={[
                                             {
-                                                min: 4,
+                                                min: 8,
                                                 message: <Trans i18nKey="password.size" />,
                                             },
                                             {
@@ -126,33 +130,9 @@ const ChangePassword = () => {
                                             },
                                         ]}
                                     >
-                                        <Input.Password placeholder="**********" />
+                                        <PasswordInput placeholder="**********" />
                                     </Form.Item>
-                                    <Form.Item
-                                        label={<Trans i18nKey="confirm-password.label" />}
-                                        name="confirmPassword"
-                                        dependencies={['password']}
-                                        rules={[
-                                            {
-                                                min: 4,
-                                                message: <Trans i18nKey="password.size" />,
-                                            },
-                                            {
-                                                required: true,
-                                                message: <Trans i18nKey="password.required" />,
-                                            },
-                                            ({ getFieldValue }) => ({
-                                                validator(_, value) {
-                                                    if (!value || getFieldValue('password') === value) {
-                                                        return Promise.resolve();
-                                                    }
-                                                    return Promise.reject(new Error(t('paswords-not-match')));
-                                                },
-                                            }),
-                                        ]}
-                                    >
-                                        <Input.Password placeholder="**********" />
-                                    </Form.Item>
+                                    <ConfirmPassword />
 
                                     <Form.Item>
                                         <Button
