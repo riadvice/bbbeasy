@@ -42,11 +42,9 @@ class SubCategory extends BaseModel
     public function getPresetSubCategoryInfos(): array
     {
         return [
-            'key'         => $this->id,
-            'name'        => $this->name,
-            'category_id'    =>$this->category_id,
-
-
+            'key'           => $this->id,
+            'name'          => $this->name,
+            'category_id'   => $this->category_id,
         ];
     }
     /**
@@ -58,17 +56,21 @@ class SubCategory extends BaseModel
 
         return $this;
     }
+
     public function nameExists($name)
     {
         return $this->load(['name = ?', $name]);
     }
+
     public function categoryExists($category_id)
     {
         return $this->load(['category_id = ?', $category_id]);
     }
+
     public function findByCategory($category_id)
     {
       $this->load(['category_id = ?', $category_id]);
+
       return $this;
     }
 }

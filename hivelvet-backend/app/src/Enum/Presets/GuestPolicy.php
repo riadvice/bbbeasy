@@ -22,15 +22,13 @@ declare(strict_types=1);
 
 namespace Enum\Presets;
 
-use Enum\Enum;;
+use MabeEnum\Enum;
 
 class GuestPolicy extends Enum
 {
     public const CONFIGURABLE = 'configurable';
-     public const POLICY       = 'policy';
+    public const POLICY       = 'policy';
 
-
-    public const CONFIGURABLE_TYPE = 'bool';
-    public const POLICY_TYPE = 'string';
-
+    public const CONFIGURABLE_TYPE  = 'bool';
+    public const POLICY_TYPE        = 'string';
 }

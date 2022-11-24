@@ -339,8 +339,7 @@ const Presets = () => {
 
     useEffect(() => {
         const user: UserType = authService.getCurrentUser();
-        presetsService
-            .collect_my_presets(user.id)
+        presetsService.collect_my_presets(user.id)
             .then((response1) => {
                 setMyPresetsNames(response1.data);
                 const arr: MyPresetType[] = [];
@@ -390,9 +389,24 @@ const Presets = () => {
         setErrorsAdd([]);
         setIsModalVisible(true);
     };
+
+    //edit
+    const editPreset = (preset) => {
+        presetsService.edit_preset(preset, preset.id)
+            .then((response) => {
+                console.log(response);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+        const pre = myPresets.filter((p) => p.id == preset.id);
+
+        setMyPresets(myPresets);
+    };
+
+    //delete
     const deletePreset = (id) => {
-        presetsService
-            .delete_preset(id)
+        presetsService.delete_preset(id)
             .then((response) => {
                 console.log(response);
                 setLoading(true);
@@ -405,19 +419,7 @@ const Presets = () => {
                 console.log(error);
             });
     };
-    const editPreset = (preset) => {
-        presetsService
-            .edit_preset(preset, preset.id)
-            .then((response) => {
-                console.log(response);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-        const pre = myPresets.filter((p) => p.id == preset.id);
 
-        setMyPresets(myPresets);
-    };
     return (
         <>
             <PageHeader

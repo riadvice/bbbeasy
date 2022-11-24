@@ -22,12 +22,11 @@ declare(strict_types=1);
 
 namespace Enum\Presets;
 
-use Enum\Enum;;
+use MabeEnum\Enum;
 
 class Screenshare extends Enum
 {
- public const CONFIGURABLE = 'configurable';
+    public const CONFIGURABLE = 'configurable';
 
     public const CONFIGURABLE_TYPE = 'bool';
-
 }

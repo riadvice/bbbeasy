@@ -22,17 +22,15 @@ declare(strict_types=1);
 
 namespace Enum\Presets;
 
-use Enum\Enum;;
+use MabeEnum\Enum;
 
 class BreakoutRooms extends Enum
 {
-     public const CONFIGURABLE = 'configurable';
+    public const CONFIGURABLE = 'configurable';
     public const PRIVATE_CHAT = 'private_chat';
     public const RECORDING    = 'recording';
 
-
-    public const CONFIGURABLE_TYPE = 'bool';
-    public const PRIVATE_CHAT_TYPE = 'bool';
-    public const RECORDING_TYPE = 'bool';
-
+    public const CONFIGURABLE_TYPE  = 'bool';
+    public const PRIVATE_CHAT_TYPE  = 'bool';
+    public const RECORDING_TYPE     = 'bool';
 }

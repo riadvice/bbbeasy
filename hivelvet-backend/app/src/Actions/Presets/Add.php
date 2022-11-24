@@ -26,10 +26,7 @@ use Actions\Base as BaseAction;
 use Base;
 use Enum\ResponseCode;
 use Models\Preset;
-use Models\PresetCategory;
 use Models\PresetSetting;
-use Models\SubCategory;
-use Models\SubCategoryPreset;
 
 /**
  * Class Add.

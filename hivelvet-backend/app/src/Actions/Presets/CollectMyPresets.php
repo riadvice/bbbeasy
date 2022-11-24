@@ -28,7 +28,7 @@ use Models\Preset;
 use Models\PresetCategory;
 use Models\PresetSetting;
 use Models\SubCategory;
-use Models\SubCategoryPreset;
+use Models\PresetSubCategory;
 
 /**
  * Class Collect.

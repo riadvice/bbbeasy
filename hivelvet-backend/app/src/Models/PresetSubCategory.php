@@ -1,10 +1,12 @@
 <?php
 
 namespace Models;
+
+use DateTime;
 use Models\Base as BaseModel;
 
 /**
- * Class SubCategoryPreset.
+ * Class PresetSubCategory.
  *
  * @property int      $id
  *
@@ -14,21 +16,26 @@ use Models\Base as BaseModel;
  * @property DateTime $created_on
  * @property DateTime $updated_on
  */
-class SubCategoryPreset  extends BaseModel
+class PresetSubCategory extends BaseModel
 {
     protected $table = 'preset_subcategories';
 
-
-    public function  findByPresetAndSubCategory($preset_id,$subcategory_id){
+    public function findByPresetAndSubCategory($preset_id,$subcategory_id)
+    {
         $this->load(['sub_category_id = ? && preset_id = ?', $subcategory_id,$preset_id]);
-        return $this;
-}
-    public function   presetAndsubCategoryExists($preset_id,$subcategory_id){
-      return  $this->load(['sub_category_id = ? && preset_id = ?', $subcategory_id,$preset_id]);
 
+        return $this;
     }
-    public function  findByID($id){
+
+    public function presetAndsubCategoryExists($preset_id,$subcategory_id)
+    {
+      return  $this->load(['sub_category_id = ? && preset_id = ?', $subcategory_id,$preset_id]);
+    }
+
+    public function findById($id)
+    {
         $this->load(['id = ? ', $id]);
+
         return $this;
     }
 }

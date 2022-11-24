@@ -22,12 +22,11 @@ declare(strict_types=1);
 
 namespace Enum\Presets;
 
-use Enum\Enum;;
+use MabeEnum\Enum;
 
 class Presentation extends Enum
 {
     public const PRE_UPLOAD = 'pre_upload';
 
     public const PRE_UPLOAD_TYPE = 'bool';
-
 }

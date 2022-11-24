@@ -38,16 +38,19 @@ use Models\Base as BaseModel;
 class PresetSetting extends BaseModel
 {
     protected $table = 'preset_settings';
+
     public function getAllPresets(): array
     {
-        return $this->db->exec("SELECT id,  group,name, enabled FROM preset_settings");
+        return $this->db->exec("SELECT id, group, name, enabled FROM preset_settings");
     }
+
     public function getByGroup(string $group): self
     {
         $this->load(['group = ?', $group]);
 
         return $this;
     }
+
     public function getByName(string $name): self
     {
         $this->load(['name = ?', $name]);

@@ -22,12 +22,11 @@ declare(strict_types=1);
 
 namespace Enum\Presets;
 
-use Enum\Enum;;
+use MabeEnum\Enum;
 
 class ZcaleRight extends Enum
 {
-     public const POOL_NAME = 'pool_name';
+    public const POOL_NAME = 'pool_name';
 
     public const POOL_NAME_TYPE = 'string';
-
 }

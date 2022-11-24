@@ -22,16 +22,15 @@ declare(strict_types=1);
 
 namespace Enum\Presets;
 
-use Enum\Enum;;
+use MabeEnum\Enum;
 
 class Recording extends Enum
 {
-     public const CONFIGURABLE     = 'configurable';
+    public const CONFIGURABLE     = 'configurable';
     public const AUTO_START       = 'auto_start';
     public const ALLOW_START_STOP = 'allow_start_stop';
 
-    public const CONFIGURABLE_TYPE = 'bool';
-    public const AUTO_START_TYPE = 'bool';
-    public const ALLOW_START_STOP_TYPE = 'bool';
-
+    public const CONFIGURABLE_TYPE      = 'bool';
+    public const AUTO_START_TYPE        = 'bool';
+    public const ALLOW_START_STOP_TYPE  = 'bool';
 }

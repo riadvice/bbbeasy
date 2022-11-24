@@ -22,22 +22,21 @@ declare(strict_types=1);
 
 namespace Enum\Presets;
 
-use Enum\Enum;;
+use MabeEnum\Enum;
 
 class General extends Enum
 {
     public const DURATION              = 'duration';
-     public const MAXIMUM_PARTICIPANTS  = 'maximum_participants';
-   public const ANYONE_CAN_START      = 'anyone_can_start';
-     public const OPEN_FOR_EVERYONE     = 'open_for_everyone';
-     public const ALL_JOIN_AS_MODERATOR = 'all_join_as_moderator';
-     public const LOGGED_IN_USERS_ONLY  = 'logged_in_users_only';
+    public const MAXIMUM_PARTICIPANTS  = 'maximum_participants';
+    public const ANYONE_CAN_START      = 'anyone_can_start';
+    public const OPEN_FOR_EVERYONE     = 'open_for_everyone';
+    public const ALL_JOIN_AS_MODERATOR = 'all_join_as_moderator';
+    public const LOGGED_IN_USERS_ONLY  = 'logged_in_users_only';
 
-
-    public const DURATION_TYPE = 'integer';
-    public const MAXIMUM_PARTICIPANTS_TYPE = 'integer';
-    public const ANYONE_CAN_START_TYPE = 'bool';
-    public const OPEN_FOR_EVERYONE_TYPE = 'bool';
+    public const DURATION_TYPE              = 'integer';
+    public const MAXIMUM_PARTICIPANTS_TYPE  = 'integer';
+    public const ANYONE_CAN_START_TYPE      = 'bool';
+    public const OPEN_FOR_EVERYONE_TYPE     = 'bool';
     public const ALL_JOIN_AS_MODERATOR_TYPE = 'bool';
-    public const LOGGED_IN_USERS_ONLY_TYPE = 'bool';
+    public const LOGGED_IN_USERS_ONLY_TYPE  = 'bool';
 }

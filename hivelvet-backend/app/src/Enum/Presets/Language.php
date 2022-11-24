@@ -22,13 +22,11 @@ declare(strict_types=1);
 
 namespace Enum\Presets;
 
-use Enum\Enum;;
+use MabeEnum\Enum;
 
 class Language extends Enum
 {
     public const DEFAULT_LANGUAGE = 'default_language';
 
-
     public const DEFAULT_LANGUAGE_TYPE = 'string';
-
 }

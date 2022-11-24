@@ -6,7 +6,7 @@ use Actions\Base as BaseAction;
 use Actions\RequirePrivilegeTrait;
 use Enum\ResponseCode;
 use Models\Preset;
-use Models\SubCategoryPreset;
+use Models\PresetSubCategory;
 
 class Edit extends BaseAction
 {
@@ -24,7 +24,7 @@ class Edit extends BaseAction
         $id = $params['id'];
         //var_dump($id);
         $preset = new Preset();
-        $presets = $preset->findByID($id);
+        $presets = $preset->findById($id);
        //  var_dump($form["name"]);
         //echo "name preset".$preset->name;
          if(!$presets->dry()){
@@ -85,7 +85,7 @@ class Edit extends BaseAction
 
         $id   = $params['id'];
         $preset    = new Preset();
-        $preset=$preset->findByID($id);
+        $preset=$preset->findById($id);
         if(!$preset->dry()){
           $preset->name=$form["name"];
             try {

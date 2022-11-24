@@ -29,33 +29,49 @@ use Models\Base as BaseModel;
  * Class Preset.
  *
  * @property int      $id
-
  * @property string   $name
  * @property json     $settings
-   @property int      $user_id
+ * @property int      $user_id
  * @property DateTime $created_on
  * @property DateTime $updated_on
  */
 class Preset extends BaseModel
 {
     protected $table = 'presets';
+
+    protected $fieldConf = [
+        'user_id' => [
+            'belongs-to-one' => User::class,
+        ],
+    ];
+
     public function collectAll(): array
     {
-        return $this->db->exec('SELECT id,name,settings,user_id FROM presets');
+        return $this->db->exec('SELECT id, name, settings, user_id FROM presets');
     }
+
+    public function collectAllByUserId($user_id): array
+    {
+        return $this->db->exec('SELECT id, name, settings, user_id FROM presets where user_id = ?', $user_id);
+    }
+
     public function getPresetInfos(): array
     {
         return [
-            'key'         => $this->id,
-            'name'        => $this->name,
-
+            'key'   => $this->id,
+            'name'  => $this->name,
         ];
     }
-    public function  findByID($id){
+
+    public function  findById($id)
+    {
         $this->load(['id = ? ', $id]);
+
         return $this;
     }
-    public function collectAllByUserId($user_id):array{
-        return $this->db->exec('SELECT id,name,settings,user_id FROM presets where user_id=?',$user_id  );
+
+    public function nameExists($name, $id)
+    {
+        return $this->load(['name = ? and user_id = ?', $name, $id]);
     }
 }

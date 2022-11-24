@@ -22,16 +22,15 @@ declare(strict_types=1);
 
 namespace Enum\Presets;
 
-use Enum\Enum;;
+use MabeEnum\Enum;
 
 class Whiteboard extends Enum
 {
-   public const MULTI_USER_PEN   = 'multi_user_pen_only';
+    public const MULTI_USER_PEN   = 'multi_user_pen_only';
     public const PRESENTER_TOOLS  = 'presenter_tools';
     public const MULTI_USER_TOOLS = 'multi_user_tools';
 
-    public const MULTI_USER_PEN_ONLY_TYPE = 'bool';
-    public const PRESENTER_TOOLS_TYPE = 'bool';
-    public const MULTI_USER_TOOLS_TYPE = 'bool';
-
+    public const MULTI_USER_PEN_ONLY_TYPE   = 'bool';
+    public const PRESENTER_TOOLS_TYPE       = 'bool';
+    public const MULTI_USER_TOOLS_TYPE      = 'bool';
 }

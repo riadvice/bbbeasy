@@ -28,31 +28,32 @@ export const apiRoutes = {
 
     LOGS_URL: API_URL + '/logs',
 
+    COLLECT_ADMIN_URL: API_URL + '/users/collect-admin',
     COLLECT_PRESETS_URL: API_URL + '/collect-presets',
-    COLLECT_MY_PRESETS_URL: API_URL + '/collect-my-presets/',
     COLLECT_SETTINGS_URL: API_URL + '/collect-settings',
     INSTALL_URL: API_URL + '/install',
 
-    ADD_PRESET_URL: API_URL + '/add-presets',
-    EDIT_PRESETS_URL: API_URL + '/presets/',
-    EDIT_PRESETS_SUBCATEGORIES_URL: API_URL + '/presets_subcategories/',
-    DELETE_PRESET_URL: API_URL + '/presets/',
     LIST_ROLE_URL: API_URL + '/roles',
     ADD_ROLE_URL: API_URL + '/roles',
     EDIT_ROLE_URL: API_URL + '/roles/',
     DELETE_ROLE_URL: API_URL + '/roles/',
     COLLECT_ROLES_URL: API_URL + '/roles/collect',
 
+    COLLECT_PRIVILEGES_URL: API_URL + '/roles_permissions/collect',
+
     LIST_USER_URL: API_URL + '/users',
     ADD_USER_URL: API_URL + '/users',
     EDIT_USER_URL: API_URL + '/users/',
     DELETE_USER_URL: API_URL + '/users/',
-    COLLECT_ADMIN_URL: API_URL + '/users/collect-admin',
-
-    COLLECT_PRIVILEGES_URL: API_URL + '/roles_permissions/collect',
 
     LIST_LABEL_URL: API_URL + '/labels',
     ADD_LABEL_URL: API_URL + '/labels',
     EDIT_LABEL_URL: API_URL + '/labels/',
     DELETE_LABEL_URL: API_URL + '/labels/',
+
+    ADD_PRESET_URL: API_URL + '/presets',
+    EDIT_PRESETS_URL: API_URL + '/presets/',
+    EDIT_PRESETS_SUBCATEGORIES_URL: API_URL + '/presets/subcategories/',
+    DELETE_PRESET_URL: API_URL + '/presets/',
+    COLLECT_MY_PRESETS_URL: API_URL + '/collect-my-presets/',
 };

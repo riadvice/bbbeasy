@@ -22,22 +22,21 @@ declare(strict_types=1);
 
 namespace Enum\Presets;
 
-use Enum\Enum;;
+use MabeEnum\Enum;
 
 class LockSettings extends Enum
 {
-     public const WEBCAMS      = 'webcams';
-   public const MICROPHONES  = 'microphones';
+    public const WEBCAMS      = 'webcams';
+    public const MICROPHONES  = 'microphones';
     public const PRIVATE_CHAT = 'private_chat';
     public const PUBLIC_CHAT  = 'public_chat';
-   public const SHARED_NOTES = 'shared_notes';
-     public const LAYOUT       = 'layout';
+    public const SHARED_NOTES = 'shared_notes';
+    public const LAYOUT       = 'layout';
 
-    public const WEBCAMS_TYPE = 'bool';
-    public const MICROPHONES_TYPE = 'bool';
-    public const PRIVATE_CHAT_TYPE = 'bool';
-    public const PUBLIC_CHAT_TYPE = 'bool';
-    public const SHARED_NOTES_TYPE = 'bool';
-    public const LAYOUT_TYPE = 'bool';
-
+    public const WEBCAMS_TYPE       = 'bool';
+    public const MICROPHONES_TYPE   = 'bool';
+    public const PRIVATE_CHAT_TYPE  = 'bool';
+    public const PUBLIC_CHAT_TYPE   = 'bool';
+    public const SHARED_NOTES_TYPE  = 'bool';
+    public const LAYOUT_TYPE        = 'bool';
 }

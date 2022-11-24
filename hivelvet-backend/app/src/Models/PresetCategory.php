@@ -29,10 +29,9 @@ use Models\Base as BaseModel;
  * Class Preset.
  *
  * @property int      $id
-
  * @property string   $name
  * @property bool     $enabled
- * @property int     $preset_id
+ * @property int      $preset_id
  * @property DateTime $created_on
  * @property DateTime $updated_on
  */
@@ -40,16 +39,21 @@ class PresetCategory extends BaseModel
 {
     protected $table = 'preset_categories';
 
+    public function collectAll(): array
+    {
+        return $this->db->exec('SELECT id, name, enabled FROM preset_categories');
+    }
+
     public function getPresetCategoryInfos(): array
     {
         return [
-            'key'         => $this->id,
-            'name'        => $this->name,
-            'enabled'      =>$this->enabled,
-            'preset_id'    =>$this->preset_id,
-
+            'key'       => $this->id,
+            'name'      => $this->name,
+            'enabled'   => $this->enabled,
+            'preset_id' => $this->preset_id,
         ];
     }
+
     public function categoryExists($name)
     {
         return $this->load(['name = ?', $name]);
@@ -62,9 +66,5 @@ class PresetCategory extends BaseModel
         $this->load(['name = ?', $name]);
 
         return $this;
-    }
-    public function collectAll(): array
-    {
-        return $this->db->exec('SELECT id, name ,enabled FROM preset_categories');
     }
 }

@@ -22,20 +22,19 @@ declare(strict_types=1);
 
 namespace Enum\Presets;
 
-use Enum\Enum;;
+use MabeEnum\Enum;
 
 class Webcams extends Enum
 {
-     public const CONFIGURABLE                   = 'configurable';
-   public const VISIBLE_FOR_MODERATOR_ONLY     = 'visible_for_moderator_only';
+    public const CONFIGURABLE                   = 'configurable';
+    public const VISIBLE_FOR_MODERATOR_ONLY     = 'visible_for_moderator_only';
     public const MODERATOR_ALLOWED_CAMERA_EJECT = 'moderator_allowed_camera_eject';
     public const AUTO_SHARE                     = 'auto_share';
     public const SKIP_PREVIEW                   = 'skip_preview';
 
-    public const VISIBLE_FOR_MODERATOR_ONLY_TYPE = 'bool';
-    public const CONFIGURABLE_TYPE = 'bool';
-    public const MODERATOR_ALLOWED_CAMERA_EJECT_TYPE = 'bool';
-    public const AUTO_SHARE_TYPE = 'bool';
-    public const SKIP_PREVIEW_TYPE = 'bool';
-
+    public const VISIBLE_FOR_MODERATOR_ONLY_TYPE        = 'bool';
+    public const CONFIGURABLE_TYPE                      = 'bool';
+    public const MODERATOR_ALLOWED_CAMERA_EJECT_TYPE    = 'bool';
+    public const AUTO_SHARE_TYPE                        = 'bool';
+    public const SKIP_PREVIEW_TYPE                      = 'bool';
 }
