@@ -59,8 +59,8 @@ class Edit extends BaseAction
                 $label->description = $form['description'];
                 $label->color       = $form['color'];
                 if ($checklabel->nameExists($label->name)) {
-                    $this->logger->error('Labelcould not be updated', ['error' => 'Name already exist']);
-                    $this->renderJson(['errors' => ['name' => 'Name already exist']], ResponseCode::HTTP_PRECONDITION_FAILED);
+                    $this->logger->error('Label could not be updated', ['error' => 'Name already exist']);
+                    $this->renderJson(['errors' => ['name' => 'Label Name already exists']], ResponseCode::HTTP_PRECONDITION_FAILED);
 
                     return;
                 }
