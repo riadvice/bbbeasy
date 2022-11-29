@@ -223,6 +223,7 @@
     "delete_user_confirm": "Êtes-vous sûr de vouloir supprimer cet utilisateur ?",
     "delete_user_success": "Utilisateur supprimé avec succès",
 
+    "label-name-already-exist": "Le nom du libellé existe déjà",
     "delete_label_confirm": "Êtes-vous sûr de vouloir supprimer cet libellé ?",
     "delete_label_success": "Libellé supprimée avec succès",
     "add_label_success": "Libellé ajoutée avec succès",

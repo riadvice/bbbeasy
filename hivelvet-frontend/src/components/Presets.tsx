@@ -57,8 +57,9 @@ import { t } from 'i18next';
 import EN_US from '../locale/en-US.json';
 import LocaleService from '../services/locale.service';
 import DynamicIcon from './DynamicIcon';
+
 import PresetsService from '../services/presets.service';
-import InstallService from "../services/install.service";
+import InstallService from '../services/install.service';
 import { MyPresetType } from '../types/MyPresetType';
 import { SubCategoryType } from '../types/SubCategoryType';
 import { UploadFile } from 'antd/lib/upload/interface';

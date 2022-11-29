@@ -223,6 +223,7 @@
     "delete_user_confirm": "هل أنت متأكد من حذف هذا المستخدم ؟",
     "delete_user_success": "تم حذف المستخدم بنجاح",
 
+    "label-name-already-exist": "اسم التصنيف موجود بالفعل",
     "delete_label_confirm": "هل أنت متأكد من حذف هذا العلامة ؟",
     "delete_label_success": "تم حذف العلامة بنجاح",
     "add_label_success": "تمت اضافة العلامة بنجاح",

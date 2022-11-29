@@ -24,16 +24,13 @@ import EN_US from '../locale/en-US.json';
 import InputColor from './layout/InputColor';
 
 type Props = {
-    isLogin?: boolean,
-    errors?: string[],
-    defaultColor: string,
+    isLogin?: boolean;
+    errors?: string[];
+    defaultColor: string;
 };
 
 export const AddLabelForm = (props: Props) => {
-    const {
-        errors,
-        defaultColor,
-    } = props;
+    const { errors, defaultColor } = props;
 
     return (
         <>
@@ -42,9 +39,7 @@ export const AddLabelForm = (props: Props) => {
                     label={<Trans i18nKey="name.label" />}
                     name="name"
                     {...('name' in errors && {
-                        help: (
-                            <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errors['name'])} />
-                        ),
+                        help: <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errors['name'])} />,
                         validateStatus: 'error',
                     })}
                     rules={[
@@ -73,10 +68,7 @@ export const AddLabelForm = (props: Props) => {
             >
                 <Input placeholder={t('description.label')} />
             </Form.Item>
-            <Form.Item
-                label={<Trans i18nKey="color.label" />}
-                name="color"
-            >
+            <Form.Item label={<Trans i18nKey="color.label" />} name="color">
                 <InputColor defaultColor={defaultColor} />
             </Form.Item>
         </>

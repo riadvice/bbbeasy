@@ -476,7 +476,7 @@ const Labels = () => {
                     onFinishFailed={failedAdd}
                     validateTrigger="onSubmit"
                 >
-                    <AddLabelForm defaultColor='#fbbc0b' errors={errorsAdd} />
+                    <AddLabelForm defaultColor="#fbbc0b" errors={errorsAdd} />
                     <Form.Item className="modal-submit-btn button-container">
                         <Button type="text" className="cancel-btn prev" block onClick={cancelAdd}>
                             <Trans i18nKey="cancel" />

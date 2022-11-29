@@ -223,6 +223,7 @@
     "delete_user_confirm": "Are you sure to delete this user ?",
     "delete_user_success": "User successfully deleted",
 
+    "label-name-already-exist": "Label Name already exists",
     "delete_label_confirm": "Are you sure to delete this label ?",
     "delete_label_success": "Label successfully deleted",
     "add_label_success": "Label successfully added",
