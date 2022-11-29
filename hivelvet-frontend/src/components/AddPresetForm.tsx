@@ -9,18 +9,16 @@ type Props = {
     failedAdd:any;
     addForm:any;
     errors?: string[];
-   
     cancelAdd:any;
 };
 
 export const AddPresetForm = (props: Props) => {
-    const { errors,handleAdd,failedAdd,addForm ,cancelAdd} = props;
-
+   const{ errors,handleAdd,failedAdd,addForm,cancelAdd } = props;
     return (
         <>
         <Form
                     layout="vertical"
-                    ref={(form) => (  form)}
+                    ref={(form) => ( form)}
                     initialValues={{ name: '' }}
                     hideRequiredMark
                     onFinish={handleAdd}

@@ -40,7 +40,7 @@ interface PresetColProps {
 type formType = {
     name: string;
 };
-let addForm: FormInstance = null;
+const addForm: FormInstance = null;
 
 const PresetsCol: React.FC<PresetColProps> = ({ key, presets }) => {
     const [isShown, setIsShown] = useState<boolean>(false);
@@ -180,7 +180,7 @@ const Presets = () => {
                 onCancel={cancelAdd}
                 footer={null}
             >
-                <AddPresetForm handleAdd={handleAdd} failedAdd={failedAdd} addForm={addForm} cancelAdd={cancelAdd}/>
+                <AddPresetForm errors={errorsAdd} handleAdd={handleAdd} failedAdd={failedAdd} addForm={addForm} cancelAdd={cancelAdd}/>
             </Modal>
 
             <Row gutter={[32, 32]} justify="center" className="presets-cards">
