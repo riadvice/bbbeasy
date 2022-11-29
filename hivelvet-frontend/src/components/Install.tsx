@@ -21,7 +21,6 @@ import InstallService from '../services/install.service';
 
 import { Steps, Button, Row, Col, Form, Result } from 'antd';
 import DynamicIcon from './DynamicIcon';
-import axios from 'axios';
 import { Trans, useTranslation, withTranslation } from 'react-i18next';
 
 import { Step1Form } from './Step1Form';
@@ -32,7 +31,6 @@ import { UploadFile } from 'antd/lib/upload/interface';
 import { SettingsType } from '../types/SettingsType';
 import { PresetType } from '../types/PresetType';
 
-const API_URL = process.env.REACT_APP_API_URL;
 const { Step } = Steps;
 
 type stepType = {
@@ -175,43 +173,51 @@ const Install = () => {
 
     const onFinish = () => {
         const formData: formType = stepForm.getFieldsValue(true);
-        formData.branding_colors = {
-            primary_color: primaryColor,
-            secondary_color: secondaryColor,
-            accent_color: accentColor,
-            add_color: addColor,
-        };
-        formData.presetsConfig = presets;
-        InstallService.collect_admin(formData).then((result) => {
-            setSuccessful(false);
-            setMessage(result.data.message);
-            if (!result.data.message) {
-                if (activeStep < steps.length - 1) {
-                    next();
-                } else {
-                    InstallService.install(formData)
-                        .then(() => {
-                            setSuccessful(true);
+        if(activeStep == 0) {
+            InstallService.collect_users(formData)
+                .then((result) => {
+                    if(result.data.message) {
+                        setSuccessful(false);
+                        setMessage(result.data.message);
+                    }
+                    else {
+                        next();
+                    }
+                });
+        } else {
+            if (activeStep < steps.length - 1) {
+                next();
+            } else {
+                formData.branding_colors = {
+                    primary_color: primaryColor,
+                    secondary_color: secondaryColor,
+                    accent_color: accentColor,
+                    add_color: addColor,
+                };
+                formData.presetsConfig = presets;
+
+                InstallService.install(formData)
+                    .then(() => {
+                        setSuccessful(true);
+                    })
+                    .catch((error) => {
+                        console.log(error.response.data);
+                    });
+                if (file != undefined) {
+                    const fdata: FormData = new FormData();
+                    fdata.append('logo', file.originFileObj, file.originFileObj.name);
+                    fdata.append('logo_name', file.originFileObj.name);
+
+                    InstallService.save_file(fdata)
+                        .then((response) => {
+                            console.log(response);
                         })
                         .catch((error) => {
-                            console.log(error.response.data);
+                            console.log(error);
                         });
-                    if (file != undefined) {
-                        const fdata: FormData = new FormData();
-                        fdata.append('logo', file.originFileObj, file.originFileObj.name);
-                        fdata.append('logo_name', file.originFileObj.name);
-                        axios
-                            .post(API_URL + '/save-logo', fdata)
-                            .then((response) => {
-                                console.log(response);
-                            })
-                            .catch((error) => {
-                                console.log(error);
-                            });
-                    }
                 }
             }
-        });
+        }
     };
 
     return (

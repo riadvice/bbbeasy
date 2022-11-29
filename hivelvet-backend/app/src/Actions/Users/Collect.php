@@ -36,20 +36,25 @@ class Collect extends BaseAction
         $form = $this->getDecodedBody()['data'];
         $user = new User();
 
-        $error_message = 'Administrator could not be added';
-        $compliant     = SecurityUtils::isGdprCompliant($form['password']);
-        $common        = SecurityUtils::credentialsAreCommon($form['username'], $form['email'], $form['password']);
-        $users         = $this->getUsersByUsernameOrEmail($form['username'], $form['email']);
-        $found         = $user->usernameOrEmailExists($form['username'], $form['email'], $users);
+        $username   = $form['username'];
+        $email      = $form['email'];
+        $password   = $form['password'];
+
+        $users      = $user->getUsersByUsernameOrEmail($username, $email);
+
+        $compliant     = SecurityUtils::isGdprCompliant($password);
+        $common        = SecurityUtils::credentialsAreCommon($username, $email, $password);
+        $found         = $user->userExists($username, $email, $users);
+        $errorMessage = 'Administrator could not be added';
 
         if (!$compliant) {
-            $this->logger->error($error_message, ['error' => $compliant]);
+            $this->logger->error($errorMessage, ['error' => $compliant]);
             $this->renderJson(['message' => $compliant]);
         } elseif ($common) {
-            $this->logger->error($error_message, ['error' => $common]);
+            $this->logger->error($errorMessage, ['error' => $common]);
             $this->renderJson(['message' => $common]);
         } elseif ($found) {
-            $this->logger->error($error_message, ['error' => $found]);
+            $this->logger->error($errorMessage, ['error' => $found]);
             $this->renderJson(['message' => $found]);
         }
     }

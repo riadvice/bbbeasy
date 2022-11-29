@@ -18,5 +18,7 @@
 
 export type SubCategoryType = {
     name: string;
-    status: boolean;
+    enabled: boolean;
+    value: any;
+    type: string;
 };

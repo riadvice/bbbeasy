@@ -22,12 +22,13 @@ declare(strict_types=1);
 
 namespace Enum\Presets;
 
-use Enum\Enum;
+use MabeEnum\Enum;
 
 class UserExperience extends Enum
 {
-    final public const KEYBOARD_SHORTCUTS = 'keyboard_shortcuts';
-    final public const ASK_FOR_FEEDBACK   = 'ask_for_feedback';
+    public const KEYBOARD_SHORTCUTS = 'keyboard_shortcuts';
+    public const ASK_FOR_FEEDBACK   = 'ask_for_feedback';
 
-    public static string $icon = 'SmileOutlined';
+    public const KEYBOARD_SHORTCUTS_TYPE    = 'bool';
+    public const ASK_FOR_FEEDBACK_TYPE      = 'bool';
 }

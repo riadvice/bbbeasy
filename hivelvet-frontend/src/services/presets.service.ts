@@ -1,8 +1,4 @@
-<?php
-
-declare(strict_types=1);
-
-/*
+/**
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -20,41 +16,37 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Models;
+import axios from 'axios';
+import { apiRoutes } from '../routing/backend-config';
 
-use DateTime;
-use Models\Base as BaseModel;
-
-/**
- * Class PresetSetting.
- *
- * @property int      $id
- * @property string   $group
- * @property string   $name
- * @property bool     $enabled
- * @property DateTime $created_on
- * @property DateTime $updated_on
- */
-class PresetSetting extends BaseModel
-{
-    protected $table = 'preset_settings';
-
-    public function getAllPresets(): array
-    {
-        return $this->db->exec("SELECT id, group, name, enabled FROM preset_settings");
+class PresetsService {
+    collect_my_presets(user_id) {
+        return axios.get(apiRoutes.COLLECT_MY_PRESETS_URL + user_id);
     }
 
-    public function getByGroup(string $group): self
-    {
-        $this->load(['group = ?', $group]);
-
-        return $this;
+    add_preset(data, user_id) {
+        return axios.post(apiRoutes.ADD_PRESET_URL, {
+            data,
+            user_id,
+        });
     }
 
-    public function getByName(string $name): self
-    {
-        $this->load(['name = ?', $name]);
+    edit_preset(data: object, id: number) {
+        return axios.put(apiRoutes.EDIT_PRESETS_URL + id, {
+            data,
+        });
+    }
 
-        return $this;
+    edit_subcategory_preset(title, data: object, id: number) {
+        return axios.put(apiRoutes.EDIT_PRESETS_SUBCATEGORIES_URL + id, {
+            data,
+            title,
+        });
+    }
+
+    delete_preset(id: number) {
+        return axios.delete(apiRoutes.DELETE_PRESET_URL + id);
     }
 }
+
+export default new PresetsService();

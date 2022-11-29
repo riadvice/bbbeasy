@@ -20,6 +20,6 @@ import { SubCategoryType } from './SubCategoryType';
 
 export type PresetType = {
     name: string;
-    icon: string;
+    enabled: boolean;
     subcategories: SubCategoryType[];
 };

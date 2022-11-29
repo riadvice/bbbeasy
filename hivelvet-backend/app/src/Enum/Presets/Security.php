@@ -22,12 +22,13 @@ declare(strict_types=1);
 
 namespace Enum\Presets;
 
-use Enum\Enum;
+use MabeEnum\Enum;
 
 class Security extends Enum
 {
-    final public const PASSWORD_FOR_MODERATOR = 'password_for_moderator';
-    final public const PASSWORD_FOR_ATTENDEE  = 'password_for_attendee';
+    public const PASSWORD_FOR_MODERATOR = 'password_for_moderator';
+    public const PASSWORD_FOR_ATTENDEE  = 'password_for_attendee';
 
-    public static string $icon = 'SafetyOutlined';
+    public const PASS_FOR_MODERATOR_TYPE    = 'bool';
+    public const PASS_FOR_ATTENDEE_TYPE     = 'bool';
 }

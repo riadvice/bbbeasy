@@ -30,6 +30,8 @@ use Models\Base as BaseModel;
  *
  * @property int      $id
  * @property string   $name
+ * @property text     $description
+ * @property string   $color
  * @property DateTime $created_on
  * @property DateTime $updated_on
  */
@@ -64,7 +66,7 @@ class Label extends BaseModel
      */
     public function nameExists($name)
     {
-        return $this->load(['name = ?', $this->f3->snakecase($name)]);
+        return $this->load(['lower(name) = ?', mb_strtolower($this->f3->snakecase($name))]);
     }
 
     public function getAllLabels()

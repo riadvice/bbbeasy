@@ -24,6 +24,7 @@ namespace Actions\Presets;
 
 use Actions\Base as BaseAction;
 use Base;
+use Models\Preset;
 
 /**
  * Class Collect.
@@ -36,46 +37,30 @@ class Collect extends BaseAction
      */
     public function execute($f3, $params): void
     {
-        $data                = [];
-        $classes             = get_declared_classes();
-        $autoloaderClassName = '';
-        foreach ($classes as $className) {
-            if (str_starts_with($className, 'ComposerAutoloaderInit')) {
-                $autoloaderClassName = $className;
-
-                break;
-            }
-        }
-        $classLoader = $autoloaderClassName::getLoader();
-        $classMap    = $classLoader->getClassMap();
-
-        $categories = preg_filter('/^Enum\\\Presets\\\[A-Z a-z]*/', '$0', array_keys($classMap));
+        $data   = [];
+        $preset = new Preset();
+        $categories = $preset->getPresetCategories();
 
         if ($categories) {
             foreach ($categories as $category) {
-                $categoryName = explode('\\', $category)[2];
-                preg_match_all('/[A-Z]/', $categoryName, $matches, PREG_OFFSET_CAPTURE);
-                $secondMajOcc = \array_key_exists(1, $matches[0]) ? $matches[0][1][1] : null;
-                if ($secondMajOcc && 'ZcaleRight' !== $categoryName) {
-                    $categoryName = mb_substr($categoryName, 0, $secondMajOcc) . ' ' . mb_substr($categoryName, $secondMajOcc);
-                }
+                $categoryName = $preset->getCategoryName($category);
 
                 $class         = new \ReflectionClass($category);
-                $modelInstance = $class->newInstance();
-                $categoryIcon  = $modelInstance::staticProperties()['icon'];
                 $categoryData  = [
                     'name'          => $categoryName,
-                    'icon'          => $categoryIcon,
                     'subcategories' => [],
                 ];
-                $subCategories = $modelInstance::values();
-                foreach ($subCategories as $subCategory) {
-                    $subCategory     = ucfirst(str_replace('_', ' ', $subCategory));
-                    $subCategoryData = [
-                        'name'   => $subCategory,
-                        'status' => false,
-                    ];
-                    $categoryData['subcategories'][] = $subCategoryData;
+                $attributes = $class->getReflectionConstants();
+                foreach ($attributes as $attribute) {
+                    $attributeName = $attribute->name;
+                    if (!str_ends_with($attributeName, '_TYPE')) {
+                        $subCategory = $class->getConstant($attributeName);
+                        $subCategoryData = [
+                            'name'   => $subCategory,
+                            'enabled' => false,
+                        ];
+                        $categoryData['subcategories'][] = $subCategoryData;
+                    }
                 }
 
                 $data[] = $categoryData;

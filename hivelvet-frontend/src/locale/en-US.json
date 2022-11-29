@@ -223,6 +223,7 @@
     "delete_user_confirm": "Are you sure to delete this user ?",
     "delete_user_success": "User successfully deleted",
 
+    "label-name-already-exist": "Label Name already exists",
     "delete_label_confirm": "Are you sure to delete this label ?",
     "delete_label_success": "Label successfully deleted",
     "add_label_success": "Label successfully added",
@@ -238,11 +239,12 @@
     "required_role": "Please select a role",
     "required_status": "Please select a state",
     "no_changes": "No changes made",
-    "already_deleted": "User already deleted",
 
     "new_preset": "New Preset",
     "search_preset": "Search all my presets",
     "rename": "Rename",
     "delete_preset_confirm": "Are you sure to delete this preset ?",
-    "label-name-already-exist": "Label Name already exists"
+    "add_preset_success": "Preset Successfully added",
+    "edit_preset_success": "Preset Successfully updated",
+    "delete_preset_success": "Preset successfully deleted"
 }

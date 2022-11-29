@@ -20,41 +20,26 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Models;
+use Phinx\Migration\AbstractMigration;
 
-use DateTime;
-use Models\Base as BaseModel;
-
-/**
- * Class PresetSetting.
- *
- * @property int      $id
- * @property string   $group
- * @property string   $name
- * @property bool     $enabled
- * @property DateTime $created_on
- * @property DateTime $updated_on
- */
-class PresetSetting extends BaseModel
+class CreatePresetTable extends AbstractMigration
 {
-    protected $table = 'preset_settings';
-
-    public function getAllPresets(): array
+    public function up(): void
     {
-        return $this->db->exec("SELECT id, group, name, enabled FROM preset_settings");
+        $table = $this->table('presets');
+        $table->addColumn('name', 'string', ['limit' => 64, 'null' => false])
+            ->addColumn('settings', 'json', ['null'=>false])
+            ->addColumn('user_id', 'integer', ['null' => false])
+            ->addColumn('created_on', 'datetime', ['default' => '0001-01-01 00:00:00', 'timezone' => true])
+            ->addColumn('updated_on', 'datetime', ['default' => '0001-01-01 00:00:00', 'timezone' => true])
+            ->addIndex('name', ['unique' => true, 'name' => 'idx_presets_name'])
+            ->addForeignKey(['user_id'], 'users', ['id'], ['constraint' => 'users_id'])
+            ->save()
+        ;
     }
 
-    public function getByGroup(string $group): self
+    public function down(): void
     {
-        $this->load(['group = ?', $group]);
-
-        return $this;
-    }
-
-    public function getByName(string $name): self
-    {
-        $this->load(['name = ?', $name]);
-
-        return $this;
+        $this->table('presets')->drop()->save();
     }
 }

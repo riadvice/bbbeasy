@@ -95,7 +95,7 @@ class User extends BaseModel
      */
     public function emailExists($email)
     {
-        return $this->load(['email = ?', $email]);
+        return $this->load(['lower(email) = ?', mb_strtolower($email)]);
     }
 
     /**
@@ -103,11 +103,29 @@ class User extends BaseModel
      *
      * @param string $username
      * @param string $email
+     *
+     * @return array
+     */
+    public function getUsersByUsernameOrEmail($username, $email)
+    {
+        $data  = [];
+        $users = $this->find(['lower(username) = lower(?) or lower(email) = lower(?)', $username, $email]);
+        if ($users) {
+            $data = $users->castAll(['username', 'email']);
+        }
+        return $data;
+    }
+
+    /**
+     * Check if user infos already in use.
+     *
+     * @param string $username
+     * @param string $email
      * @param mixed  $users
      *
      * @return string
      */
-    public function usernameOrEmailExists($username, $email, $users)
+    public function userExists($username, $email, $users)
     {
         if ($users) {
             if (1 === \count($users)) {
@@ -115,14 +133,14 @@ class User extends BaseModel
                 $emailExist    = mb_strtolower($users[0]['email']) === mb_strtolower($email);
 
                 if ($usernameExist && $emailExist) {
-                    $error_message = 'Username and Email already exist';
+                    $errorMessage = 'Username and Email already exist';
                 } elseif ($usernameExist) {
-                    $error_message = 'Username already exists';
+                    $errorMessage = 'Username already exists';
                 } else {
-                    $error_message = 'Email already exists';
+                    $errorMessage = 'Email already exists';
                 }
 
-                return $error_message;
+                return $errorMessage;
             }
 
             return 'Username and Email already exist';

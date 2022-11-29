@@ -20,17 +20,23 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Enum\Presets;
+use Phinx\Migration\AbstractMigration;
 
-use MabeEnum\Enum;
-
-class Recording extends Enum
+final class RemoveNameIndexInPreset extends AbstractMigration
 {
-    public const CONFIGURABLE     = 'configurable';
-    public const AUTO_START       = 'auto_start';
-    public const ALLOW_START_STOP = 'allow_start_stop';
+    public function up(): void
+    {
+        $table = $this->table('presets');
+        $table->removeIndexByName('idx_presets_name')
+            ->save()
+        ;
+    }
 
-    public const CONFIGURABLE_TYPE      = 'bool';
-    public const AUTO_START_TYPE        = 'bool';
-    public const ALLOW_START_STOP_TYPE  = 'bool';
+    public function down(): void
+    {
+        $this->table('presets')
+            ->addIndex('name', ['unique' => true, 'name' => 'idx_presets_name'])
+            ->save()
+        ;
+    }
 }
