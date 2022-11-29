@@ -48,19 +48,19 @@ class Register extends BaseAction
         $dataChecker->verify($form['agreement'], Validator::trueVal()->setName('agreement'));
 
         /** @todo : move to locales */
-        $error_message = 'User could not be added';
-        $success_message = 'User successfully registered';
+        $errorMessage = 'User could not be added';
+        $successMessage = 'User successfully registered';
         if ($dataChecker->allValid()) {
             $user = new User();
-            if ($this->credentialsAreValid($form, $user, $error_message)) {
+            if ($this->credentialsAreValid($form, $user, $errorMessage)) {
                 $addUserClass = new Add();
-                $result = $addUserClass->addUser($form, $user, 2, $success_message, $error_message);
+                $result = $addUserClass->addUser($form, $user, 2, $successMessage, $errorMessage);
                 if ($result) {
                     $this->renderJson(['result' => 'success', ResponseCode::HTTP_CREATED]);
                 }
             }
         } else {
-            $this->logger->error($error_message, ['errors' => $dataChecker->getErrors()]);
+            $this->logger->error($errorMessage, ['errors' => $dataChecker->getErrors()]);
             $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
         }
     }

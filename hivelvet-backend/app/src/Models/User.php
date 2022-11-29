@@ -133,14 +133,14 @@ class User extends BaseModel
                 $emailExist    = mb_strtolower($users[0]['email']) === mb_strtolower($email);
 
                 if ($usernameExist && $emailExist) {
-                    $error_message = 'Username and Email already exist';
+                    $errorMessage = 'Username and Email already exist';
                 } elseif ($usernameExist) {
-                    $error_message = 'Username already exists';
+                    $errorMessage = 'Username already exists';
                 } else {
-                    $error_message = 'Email already exists';
+                    $errorMessage = 'Email already exists';
                 }
 
-                return $error_message;
+                return $errorMessage;
             }
 
             return 'Username and Email already exist';

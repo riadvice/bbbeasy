@@ -41,6 +41,8 @@ class ChangePassword extends BaseAction
     {
         $form = $this->getDecodedBody();
 
+        $username   = $form['username'];
+        $email      = $form['email'];
         $password   = $form['password'];
         $resetToken = new ResetPasswordToken();
 
@@ -48,8 +50,8 @@ class ChangePassword extends BaseAction
         $dataChecker->verify($password, Validator::length(8)->setName('password'));
 
         /** @todo : move to locales */
-        $error_message = 'Password could not be changed';
-        $response_code = ResponseCode::HTTP_BAD_REQUEST;
+        $errorMessage = 'Password could not be changed';
+        $responseCode = ResponseCode::HTTP_BAD_REQUEST;
         if ($resetToken->getByToken($form['token'])) {
             if (!$resetToken->dry()) {
                 if ($dataChecker->allValid()) {
@@ -57,27 +59,27 @@ class ChangePassword extends BaseAction
                     $user               = $user->getById($resetToken->user_id);
                     $resetToken->status = ResetTokenStatus::CONSUMED;
                     $compliant          = SecurityUtils::isGdprCompliant($password);
-                    $common             = SecurityUtils::credentialsAreCommon($user->username, $user->email, $password);
+                    $common             = SecurityUtils::credentialsAreCommon($username, $email, $password);
 
                     if (!$compliant) {
-                        $this->logger->error($error_message, ['error' => $compliant]);
-                        $this->renderJson(['message' => $compliant], $response_code);
+                        $this->logger->error($errorMessage, ['error' => $compliant]);
+                        $this->renderJson(['message' => $compliant], $responseCode);
                     } elseif ($common) {
-                        $this->logger->error($error_message, ['error' => $common]);
-                        $this->renderJson(['message' => $common], $response_code);
+                        $this->logger->error($errorMessage, ['error' => $common]);
+                        $this->renderJson(['message' => $common], $responseCode);
                     } elseif ($user->verifyPassword($password)) {
                         $message = 'New password cannot be the same as your old password';
-                        $this->logger->error($error_message, ['error' => $message]);
-                        $this->renderJson(['message' => $message], $response_code);
+                        $this->logger->error($errorMessage, ['error' => $message]);
+                        $this->renderJson(['message' => $message], $responseCode);
                     } else {
-                        $this->changePassword($user, $password, $resetToken, $error_message);
+                        $this->changePassword($user, $password, $resetToken, $errorMessage);
                     }
                 } else {
-                    $this->logger->error($error_message, ['errors' => $dataChecker->getErrors()]);
+                    $this->logger->error($errorMessage, ['errors' => $dataChecker->getErrors()]);
                     $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
                 }
             } else {
-                $this->logger->error($error_message);
+                $this->logger->error($errorMessage);
             }
         }
     }
@@ -86,12 +88,12 @@ class ChangePassword extends BaseAction
      * @param $user
      * @param $password
      * @param $resetToken
-     * @param $error_message
-     * @param $response_code
+     * @param $errorMessage
+     * @param $responseCode
      *
      * @throws \JsonException
      */
-    private function changePassword($user, $password, $resetToken, $error_message): void
+    private function changePassword($user, $password, $resetToken, $errorMessage): void
     {
         try {
             $user->password = $password;
@@ -99,8 +101,8 @@ class ChangePassword extends BaseAction
             $resetToken->save();
             $user->save();
         } catch (\Exception $e) {
-            $this->logger->error($error_message, ['error' => $e->getMessage()]);
-            $this->renderJson(['message' => $error_message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+            $this->logger->error($errorMessage, ['error' => $e->getMessage()]);
+            $this->renderJson(['message' => $errorMessage], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
 
             return;
         }

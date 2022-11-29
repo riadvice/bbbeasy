@@ -44,16 +44,16 @@ class Login extends BaseAction
         $dataChecker->verify($form['password'], Validator::length(8)->setName('password'));
 
         $userInfos     = [];
-        $error_message = 'Could not authenticate user with email';
+        $errorMessage = 'Could not authenticate user with email';
         if ($dataChecker->allValid()) {
-            $this->login($form, $email, $userInfos, $dataChecker, $error_message);
+            $this->login($form, $email, $userInfos, $dataChecker, $errorMessage);
         } else {
-            $this->logger->error($error_message, ['errors' => $dataChecker->getErrors()]);
+            $this->logger->error($errorMessage, ['errors' => $dataChecker->getErrors()]);
             $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
         }
     }
 
-    private function login($form, $email, $userInfos, $dataChecker, $error_message): void
+    private function login($form, $email, $userInfos, $dataChecker, $errorMessage): void
     {
         $user = new User();
         $user = $user->getByEmail($email);
@@ -84,25 +84,25 @@ class Login extends BaseAction
         } elseif ($user->valid() && UserStatus::ACTIVE === $user->status && !$user->verifyPassword($form['password']) && $user->password_attempts > 1) {
             --$user->password_attempts;
             $user->save();
-            $this->logger->error($error_message, ['email' => $email]);
+            $this->logger->error($errorMessage, ['email' => $email]);
             $this->renderJson(['message' => "Wrong password. Attempts left : {$user->password_attempts}"], ResponseCode::HTTP_BAD_REQUEST);
         } elseif ($user->valid() && 0 === $user->password_attempts || 1 === $user->password_attempts) {
             $user->password_attempts = 0;
             $user->status            = UserStatus::INACTIVE;
             $user->save();
-            $this->logger->error($error_message, ['email' => $email]);
+            $this->logger->error($errorMessage, ['email' => $email]);
             $this->renderJson(['message' => 'Your account has been locked because you have reached the maximum number of invalid sign-in attempts. You can contact the administrator or click here to receive an email containing instructions on how to unlock your account'], ResponseCode::HTTP_BAD_REQUEST);
         } elseif ($user->valid() && UserStatus::PENDING === $user->status) {
-            $this->logger->error($error_message, ['email' => $email]);
+            $this->logger->error($errorMessage, ['email' => $email]);
             $this->renderJson(['message' => 'Your account is not active. Please contact your administrator'], ResponseCode::HTTP_BAD_REQUEST);
         } elseif ($user->valid() && UserStatus::DELETED === $user->status) {
-            $this->logger->error($error_message, ['email' => $email]);
+            $this->logger->error($errorMessage, ['email' => $email]);
             $this->renderJson(['message' => 'Your account has been disabled for violating our terms'], ResponseCode::HTTP_BAD_REQUEST);
         } elseif (!$user->valid()) {
-            $this->logger->error($error_message, ['email' => $email]);
+            $this->logger->error($errorMessage, ['email' => $email]);
             $this->renderJson(['message' => 'User does not exist with this email'], ResponseCode::HTTP_BAD_REQUEST);
         } elseif (empty($userInfos) || \count($dataChecker->getErrors()) > 0) {
-            $this->logger->error($error_message, ['email' => $email]);
+            $this->logger->error($errorMessage, ['email' => $email]);
             $this->renderJson(['message' => 'Invalid Authentication data'], ResponseCode::HTTP_BAD_REQUEST);
         }
     }

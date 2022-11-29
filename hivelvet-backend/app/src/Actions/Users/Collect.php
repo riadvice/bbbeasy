@@ -45,16 +45,16 @@ class Collect extends BaseAction
         $compliant     = SecurityUtils::isGdprCompliant($password);
         $common        = SecurityUtils::credentialsAreCommon($username, $email, $password);
         $found         = $user->userExists($username, $email, $users);
-        $error_message = 'Administrator could not be added';
+        $errorMessage = 'Administrator could not be added';
 
         if (!$compliant) {
-            $this->logger->error($error_message, ['error' => $compliant]);
+            $this->logger->error($errorMessage, ['error' => $compliant]);
             $this->renderJson(['message' => $compliant]);
         } elseif ($common) {
-            $this->logger->error($error_message, ['error' => $common]);
+            $this->logger->error($errorMessage, ['error' => $common]);
             $this->renderJson(['message' => $common]);
         } elseif ($found) {
-            $this->logger->error($error_message, ['error' => $found]);
+            $this->logger->error($errorMessage, ['error' => $found]);
             $this->renderJson(['message' => $found]);
         }
     }

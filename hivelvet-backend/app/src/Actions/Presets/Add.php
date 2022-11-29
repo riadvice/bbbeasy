@@ -50,19 +50,21 @@ class Add extends BaseAction
         $dataChecker->verify($form['name'], Validator::notEmpty()->setName('name'));
         $dataChecker->verify($userId, Validator::notEmpty()->setName('user_id'));
 
-        $error_message = 'Preset could not be added';
-        $success_message = 'Preset successfully added';
+        $errorMessage = 'Preset could not be added';
+        $successMessage = 'Preset successfully added';
         if ($dataChecker->allValid()) {
             $checkPreset = new Preset();
             $preset = new Preset();
             $preset->name = $form['name'];
             if ($checkPreset->nameExists($preset->name, $userId)) {
-                $this->logger->error($error_message, ['error' => 'Name already exists']);
-                $this->renderJson(['errors' => ['name' => 'Name already exists']], ResponseCode::HTTP_PRECONDITION_FAILED);
+                $this->logger->error($errorMessage, ['error' => 'Name already exists']);
+                $this->renderJson(['errors' => ['name' => 'Name already exists']],
+                    ResponseCode::HTTP_PRECONDITION_FAILED);
             } else {
-                $result = $this->addDefaultPreset($preset, $userId, $success_message, $error_message);
-                if($result) {
-                    $this->renderJson(['result' => 'success', 'preset' => $preset->getMyPresetInfos($preset)], ResponseCode::HTTP_CREATED);
+                $result = $this->addDefaultPreset($preset, $userId, $successMessage, $errorMessage);
+                if ($result) {
+                    $this->renderJson(['result' => 'success', 'preset' => $preset->getMyPresetInfos($preset)],
+                        ResponseCode::HTTP_CREATED);
                 }
             }
         } else {
@@ -70,47 +72,53 @@ class Add extends BaseAction
         }
     }
 
-    public function addDefaultPreset($preset, $userId, $success_message, $error_message) : bool
+    public function addDefaultPreset($preset, $userId, $successMessage, $errorMessage) : bool
     {
         try {
-            $presetSettings = array();
-            $settings = [];
-            $categories = $preset->getPresetCategories();
-            if ($categories) {
-                foreach ($categories as $category) {
-                    //get category name
-                    $categoryName = $preset->getCategoryName($category);
-
-                    //get the reflexion classes of category class
-                    $class      = new \ReflectionClass($category);
-                    $attributes = $class->getConstants();
-                    $presetSett = new PresetSetting();
-
-                    foreach ($attributes as $attribute) {
-                        $presetSettings = $presetSett->getByName($attribute);
-                        if (!$presetSettings->dry()) {
-                            if ($presetSettings->enabled) {
-                                if(!$settings[$categoryName]) {
-                                    $settings += array($categoryName => array($presetSettings->name => ""));
-                                }
-                                else {
-                                    $settings[$categoryName] += (array($presetSettings->name => ""));
-                                }
-                            }
-                        }
-                    }
-                    $settings[$categoryName] = json_encode($settings[$categoryName]);
-                }
-            }
+            $settings = $this->getPresetSettings();
             $preset->settings = json_encode($settings);
             $preset->user_id = $userId;
             $preset->save();
         } catch (\Exception $e) {
-            $this->logger->error($error_message, ['error' => $e->getMessage()]);
+            $this->logger->error($errorMessage, ['error' => $e->getMessage()]);
             $this->renderJson(['errors' => $e->getMessage()], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
             return false;
         }
-        $this->logger->info($success_message, ['default preset' => $preset->toArray()]);
+        $this->logger->info($successMessage, ['default preset' => $preset->toArray()]);
         return true;
     }
+
+    public function getPresetSettings() : array
+    {
+        $preset = new Preset();
+        $categories = $preset->getPresetCategories();
+        $presetSettings = array();
+        $settings = [];
+        if ($categories) {
+            foreach ($categories as $category) {
+                //get category name
+                $categoryName = $preset->getCategoryName($category);
+
+                //get the reflexion classes of category class
+                $class      = new \ReflectionClass($category);
+                $attributes = $class->getConstants();
+                $presetSett = new PresetSetting();
+
+                foreach ($attributes as $attribute) {
+                    $presetSettings = $presetSett->getByName($attribute);
+                    if (!$presetSettings->dry() && $presetSettings->enabled) {
+                        if (!$settings[$categoryName]) {
+                            $settings += array($categoryName => array($presetSettings->name => ""));
+                        } else {
+                            $settings[$categoryName] += (array($presetSettings->name => ""));
+                        }
+                    }
+                }
+                $settings[$categoryName] = json_encode($settings[$categoryName]);
+            }
+        }
+
+        return $settings;
+    }
+
 }

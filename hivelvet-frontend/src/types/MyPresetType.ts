@@ -17,7 +17,6 @@
  */
 
 import { PresetType } from './PresetType';
-import { SubCategoryType } from './SubCategoryType';
 
 export type MyPresetType = {
     id: number;

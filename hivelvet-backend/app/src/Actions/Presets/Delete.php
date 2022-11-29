@@ -39,8 +39,8 @@ class Delete extends DeleteAction
     public function execute($f3, $params): void
     {
         $preset   = new Preset();
-        $preset_id = $params['id'];
-        $preset->load(['id = ?', $preset_id]);
+        $presetId = $params['id'];
+        $preset->load(['id = ?', $presetId]);
         if ($preset->valid()) {
 
 
@@ -48,13 +48,14 @@ class Delete extends DeleteAction
                 $preset->erase();
             } catch (\Exception $e) {
                 $message = 'preset  could not be deleted';
-                $this->logger->error('preset could not be deleted', ['preset' => $preset->toArray(), 'error' => $e->getMessage()]);
+                $this->logger->error('preset could not be deleted',
+                    ['preset' => $preset->toArray(), 'error' => $e->getMessage()]);
                 $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
 
                 return;
             }
-            $this->logger->info('preset successfully deleted', ['preset' => $preset_id]);
-            $this->renderJson(['result' => 'preset successfully deleted' ]);
+            $this->logger->info('preset successfully deleted', ['preset' => $presetId]);
+            $this->renderJson(['result' => 'preset successfully deleted']);
         } else {
             $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
         }

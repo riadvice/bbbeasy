@@ -7,6 +7,7 @@ use Base;
 use Actions\RequirePrivilegeTrait;
 use Enum\ResponseCode;
 use Models\Preset;
+use Models\PresetSetting;
 use Respect\Validation\Validator;
 use Validation\DataChecker;
 
@@ -35,8 +36,7 @@ class Edit extends BaseAction
                 foreach ($form as $editedSubCategory) {
                     $subCategoryName = $editedSubCategory["name"];
                     $subCategoryValue = $editedSubCategory["value"];
-                    $subCategoryType = $editedSubCategory["type"];
-
+                    
                     $subCategories->$subCategoryName = $subCategoryValue;
                 }
 
@@ -62,7 +62,7 @@ class Edit extends BaseAction
         $dataChecker->verify($form['name'], Validator::notEmpty()->setName('name'));
         $dataChecker->verify($id, Validator::notEmpty()->setName('id'));
 
-        $error_message = 'Preset could not be updated';
+        $errorMessage = 'Preset could not be updated';
 
         $preset = new Preset();
         $preset = $preset->findById($id);
@@ -71,13 +71,14 @@ class Edit extends BaseAction
                 $checkPreset = new Preset();
                 $preset->name = $form['name'];
                 if ($checkPreset->nameExists($preset->name, $preset->user_id, $preset->id)) {
-                    $this->logger->error($error_message, ['error' => 'Name already exists']);
-                    $this->renderJson(['errors' => ['name' => 'Name already exists']], ResponseCode::HTTP_PRECONDITION_FAILED);
+                    $this->logger->error($errorMessage, ['error' => 'Name already exists']);
+                    $this->renderJson(['errors' => ['name' => 'Name already exists']],
+                        ResponseCode::HTTP_PRECONDITION_FAILED);
                 } else {
                     try {
                         $preset->save();
                     } catch (\Exception $e) {
-                        $this->logger->error($error_message, ['error' => $e->getMessage()]);
+                        $this->logger->error($errorMessage, ['error' => $e->getMessage()]);
                         $this->renderJson(['errors' => $e->getMessage()], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
 
                         return;
@@ -90,4 +91,5 @@ class Edit extends BaseAction
             }
         }
     }
+
 }

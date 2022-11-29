@@ -38,6 +38,7 @@ import {
     InputNumber,
     Space,
     Empty,
+    Spin,
 } from 'antd';
 import {
     CheckOutlined,
@@ -45,7 +46,8 @@ import {
     DeleteOutlined,
     EditOutlined,
     QuestionCircleOutlined,
-    SearchOutlined
+    SearchOutlined,
+    UploadOutlined,
 } from '@ant-design/icons';
 import { FormInstance } from 'antd/lib/form';
 import ColorPicker from 'rc-color-picker/lib/ColorPicker';
@@ -59,7 +61,6 @@ import PresetsService from '../services/presets.service';
 import InstallService from "../services/install.service";
 import { MyPresetType } from '../types/MyPresetType';
 import { SubCategoryType } from '../types/SubCategoryType';
-import { UploadOutlined } from '@ant-design/icons';
 import { UploadFile } from 'antd/lib/upload/interface';
 import { getIconName } from '../types/GetIconName';
 import authService from '../services/auth.service';
@@ -148,8 +149,7 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editClickHandler, d
         setIsModalVisible(false);
         if(file != undefined) {
             const formData: FormData = new FormData();
-
-            subCategories.filter((subCategory) => {
+            const sub = subCategories.filter((subCategory) => {
                 if(subCategory.type == 'file') {
                     subCategory.value = file.name;
                 }
@@ -256,8 +256,7 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editClickHandler, d
                 {preset.categories.map((item, subIndex) => {
                     return <Tooltip
                         key={subIndex + '-' + item.name}
-                        //placement={LocaleService.direction == 'rtl' ? 'leftTop' : 'rightTop'}
-                        placement={LocaleService.direction == 'rtl' ? item.enabled ? 'leftTop' : 'left' : item.enabled ? 'rightTop' : 'right'}
+                        placement={LocaleService.direction == 'rtl' ? item.enabled == true ? 'leftTop' : 'left' : item.enabled ? 'rightTop' : 'right'}
                         overlayClassName={item.enabled ? "install-tooltip" : "title-tooltip"}
                         title={item.enabled == true ?
                             <>
@@ -292,11 +291,6 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editClickHandler, d
                     onOk={() => setIsModalVisible(false)}
                     onCancel={() => setIsModalVisible(false)}
                     footer={null}
-                    /*footer={[
-                        <Button key="submit" type="primary" onClick={() => saveEditPresetCategory(modalTitle, preset, modalContent)}>
-                            <Trans i18nKey="confirm" />
-                        </Button>,
-                    ]}*/
                 >
                     <div className="presets-body">
                         <Form>
@@ -379,17 +373,15 @@ const Presets = () => {
     const [myPresets, setMyPresets] = useState<MyPresetType[]>([]);
     const [errorsAdd, setErrorsAdd] = useState<string[]>([]);
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
     useEffect(() => {
         const user: UserType = authService.getCurrentUser();
         setCurrentUser(user);
         PresetsService.collect_my_presets(user.id)
             .then((response) => {
-                const arr: MyPresetType[] = [];
-                for (let i = 0; i < response.data.length; i++) {
-                    arr.push(response.data[i]);
-                }
-                setMyPresets(arr);
+                setMyPresets(response.data);
+                setIsLoading(false);
             })
             .catch((error) => {
                 console.log(error);
@@ -533,20 +525,22 @@ const Presets = () => {
             </Modal>
 
             <Row gutter={[32, 32]} justify="center" className="presets-cards">
-                {myPresets.length == 0 ?
+                {isLoading ? <Spin size="large" />
+                    : myPresets.length == 0 ?
                         <Empty
                             imageStyle={{
                                 height: 200,
                             }}
                         />
-                    : myPresets.map((singlePresets) => (
-                    <PresetsCol
-                        key={singlePresets.id}
-                        preset={singlePresets}
-                        editClickHandler={editPreset}
-                        deleteClickHandler={deletePreset.bind(this, singlePresets.id)}
-                    />
-                ))}
+                        : myPresets.map((singlePresets) => (
+                            <PresetsCol
+                                key={singlePresets.id}
+                                preset={singlePresets}
+                                editClickHandler={editPreset}
+                                deleteClickHandler={deletePreset.bind(this, singlePresets.id)}
+                            />
+                        ))
+                }
             </Row>
         </>
     );

@@ -265,10 +265,10 @@ abstract class Base extends \Prefab
         return $credentials;
     }
 
-    protected function credentialsAreValid(array $form, User $user, string $error_message): bool
+    protected function credentialsAreValid(array $form, User $user, string $errorMessage): bool
     {
         $credentials_valid = true;
-        $response_code     = ResponseCode::HTTP_BAD_REQUEST;
+        $responseCode     = ResponseCode::HTTP_BAD_REQUEST;
 
         $username   = $form['username'];
         $email      = $form['email'];
@@ -281,15 +281,15 @@ abstract class Base extends \Prefab
         $found         = $user->userExists($username, $email, $users);
 
         if (!$compliant) {
-            $this->logger->error($error_message, ['error' => $compliant]);
-            $this->renderJson(['message' => $compliant], $response_code);
+            $this->logger->error($errorMessage, ['error' => $compliant]);
+            $this->renderJson(['message' => $compliant], $responseCode);
             $credentials_valid = false;
         } elseif ($common) {
-            $this->logger->error($error_message, ['error' => $common]);
-            $this->renderJson(['message' => $common], $response_code);
+            $this->logger->error($errorMessage, ['error' => $common]);
+            $this->renderJson(['message' => $common], $responseCode);
             $credentials_valid = false;
         } elseif ($found) {
-            $this->logger->error($error_message, ['error' => $found]);
+            $this->logger->error($errorMessage, ['error' => $found]);
             $this->renderJson(['message' => $found], ResponseCode::HTTP_PRECONDITION_FAILED);
             $credentials_valid = false;
         }

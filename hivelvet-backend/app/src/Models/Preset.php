@@ -44,9 +44,10 @@ class Preset extends BaseModel
         return $this->db->exec('SELECT id, name, settings, user_id FROM presets');
     }
 
-    public function collectAllByUserId($user_id): array
+    public function collectAllByUserId($userId): array
     {
-        return $this->db->exec('SELECT id, name, settings FROM presets where user_id = ? ORDER BY created_on DESC', $user_id);
+        return $this->db->exec('SELECT id, name, settings FROM presets where user_id = ? ORDER BY created_on DESC',
+            $userId);
     }
 
     public function getPresetInfos(): array
@@ -69,7 +70,8 @@ class Preset extends BaseModel
         return $this->load(['lower(name) = ? and user_id = ? and id != ?', mb_strtolower($name), $userId, $id]);
     }
 
-    public function getPresetCategories() {
+    public function getPresetCategories() : array
+    {
         //returns all the declared classes
         $classes             = get_declared_classes();
         $autoloaderClassName = '';
@@ -87,7 +89,8 @@ class Preset extends BaseModel
         return preg_filter('/^Enum\\\Presets\\\[A-Z a-z]*/', '$0', array_keys($classMap));
     }
 
-    public function getCategoryName($category) {
+    public function getCategoryName($category) : string
+    {
         $categoryName = explode('\\', $category)[2];
 
         preg_match_all('/[A-Z]/', $categoryName, $matches, PREG_OFFSET_CAPTURE);
@@ -99,17 +102,24 @@ class Preset extends BaseModel
         return $categoryName;
     }
 
-    public function getMyPresetInfos($myPreset) {
-        $categoriesData = [];
+    public function getMyPresetInfos($myPreset) : array
+    {
         $presetData = [
             "id"   => $myPreset["id"],
             "name" => $myPreset["name"],
         ];
-
-        $categories = $this->getPresetCategories();
         $enabledCategories = json_decode($myPreset["settings"]);
+        $categoriesData = $this->getMyPresetCategories($enabledCategories);
+        $presetData["categories"] = $categoriesData;
 
-        if($categories) {
+        return $presetData;
+    }
+
+    public function getMyPresetCategories($enabledCategories) : array
+    {
+        $categoriesData = [];
+        $categories = $this->getPresetCategories();
+        if ($categories) {
             foreach ($categories as $category) {
                 $categoryName = $this->getCategoryName($category);
 
@@ -119,9 +129,12 @@ class Preset extends BaseModel
                 //the enabled categ with enabled subcategories
                 if (json_decode($enabledCategories->$categoryName)) {
                     foreach ($class->getReflectionConstants() as $constant) {
-                        if (!str_ends_with($constant->name,'_TYPE')) {
+                        if (!str_ends_with($constant->name, '_TYPE')) {
                             $subCategory = $constant->name;
                             $subCategoryName = $class->getConstant(strtoupper($subCategory));
+                            if(str_contains($subCategory, 'PASSWORD')) {
+                                $subCategory = str_ireplace('PASSWORD','PASS', $subCategory);
+                            }
                             $subCategoryType = $class->getConstant(strtoupper($subCategory)."_TYPE");
                             $subCategoryValue = json_decode($enabledCategories->$categoryName)->$subCategoryName;
                             if (isset($subCategoryValue)) {
@@ -138,9 +151,7 @@ class Preset extends BaseModel
                         "enabled" => true,
                         "subcategories" => $subcategories,
                     ];
-                }
-                //disabled categ
-                else {
+                } else { //disabled categ
                     $categoriesData[] = [
                         "name" => $categoryName,
                         "enabled" => false,
@@ -149,8 +160,7 @@ class Preset extends BaseModel
                 }
             }
         }
-        $presetData["categories"] = $categoriesData;
 
-        return $presetData;
+        return $categoriesData;
     }
 }

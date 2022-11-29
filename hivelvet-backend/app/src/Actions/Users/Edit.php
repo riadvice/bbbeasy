@@ -52,7 +52,7 @@ class Edit extends BaseAction
 
         $username_error_message = 'Username already exists';
         $email_error_message    = 'Email already exists';
-        $error_message          = 'User could not be updated';
+        $errorMessage          = 'User could not be updated';
         if ($user->valid()) {
             $dataChecker = new DataChecker();
 
@@ -79,7 +79,7 @@ class Edit extends BaseAction
                     } else {
                         $message = ['username' => $username_error_message, 'email' => $email_error_message];
                     }
-                    $this->logger->error($error_message, ['error' => $message]);
+                    $this->logger->error($errorMessage, ['error' => $message]);
                     $this->renderJson(['errors' => $message], ResponseCode::HTTP_PRECONDITION_FAILED);
                 } else {
                     $role = new Role();
@@ -93,8 +93,8 @@ class Edit extends BaseAction
                         try {
                             $user->save();
                         } catch (\Exception $e) {
-                            $this->logger->error($error_message, ['user' => $user->toArray(), 'error' => $e->getMessage()]);
-                            $this->renderJson(['errors' => $error_message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+                            $this->logger->error($errorMessage, ['user' => $user->toArray(), 'error' => $e->getMessage()]);
+                            $this->renderJson(['errors' => $errorMessage], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
 
                             return;
                         }
@@ -106,7 +106,7 @@ class Edit extends BaseAction
                     }
                 }
             } else {
-                $this->logger->error($error_message, ['errors' => $dataChecker->getErrors()]);
+                $this->logger->error($errorMessage, ['errors' => $dataChecker->getErrors()]);
                 $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
             }
         } else {

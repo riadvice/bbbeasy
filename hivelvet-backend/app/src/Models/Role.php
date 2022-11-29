@@ -164,8 +164,8 @@ class Role extends BaseModel
 
     public function switchAllRoleUsers()
     {
-        $role_id = $this->id;
-        if (1 !== $role_id && 2 !== $role_id) {
+        $roleId = $this->id;
+        if (1 !== $roleId && 2 !== $roleId) {
             $users = $this->getRoleUsers();
             if ($users > 0) {
                 /** @var User $user */
@@ -191,12 +191,12 @@ class Role extends BaseModel
 
     public function deleteAllRolePermissions()
     {
-        $role_id = $this->id;
-        if (1 !== $role_id) {
+        $roleId = $this->id;
+        if (1 !== $roleId) {
             $permissions = $this->getRolePermissions();
             if ('array' === \gettype($permissions)) {
                 $rolePermission = new RolePermission();
-                $deleteResult   = $rolePermission->erase(['role_id = ?', $role_id]);
+                $deleteResult   = $rolePermission->erase(['role_id = ?', $roleId]);
                 if ($deleteResult) {
                     $this->logger->info('All Role permissions successfully deleted');
 

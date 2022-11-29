@@ -51,5 +51,4 @@ class CollectMyPresets extends BaseAction
         $this->logger->debug('collecting presets', ['data' => json_encode($presetsData)]);
         $this->renderJson($presetsData);
     }
-
 }

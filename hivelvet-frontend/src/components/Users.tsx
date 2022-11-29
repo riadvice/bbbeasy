@@ -286,11 +286,11 @@ const Users = () => {
         return record;
     };
     const toggleEdit = (record: Item) => {
-        // setCancelVisibility(false);
+        setCancelVisibility(false);
         setEditingKey(record.key);
-        //   let newRecord: object = { ...record };
-        //  newRecord = changeRoleCol(newRecord as Item);
-        //  editForm.setFieldsValue(newRecord);
+        let newRecord: object = { ...record };
+        newRecord = changeRoleCol(newRecord as Item);
+        editForm.setFieldsValue(newRecord);
     };
     const cancelEdit = () => {
         setCancelVisibility(false);

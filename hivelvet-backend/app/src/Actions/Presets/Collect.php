@@ -53,7 +53,7 @@ class Collect extends BaseAction
                 $attributes = $class->getReflectionConstants();
                 foreach ($attributes as $attribute) {
                     $attributeName = $attribute->name;
-                    if(!str_ends_with($attributeName,'_TYPE')) {
+                    if (!str_ends_with($attributeName, '_TYPE')) {
                         $subCategory = $class->getConstant($attributeName);
                         $subCategoryData = [
                             'name'   => $subCategory,
