@@ -3,10 +3,12 @@
 namespace Actions\Presets;
 
 use Actions\Base as BaseAction;
+use Base;
 use Actions\RequirePrivilegeTrait;
 use Enum\ResponseCode;
 use Models\Preset;
-use Models\PresetSubCategory;
+use Respect\Validation\Validator;
+use Validation\DataChecker;
 
 class Edit extends BaseAction
 {
@@ -18,61 +20,33 @@ class Edit extends BaseAction
      */
     public function save($f3, $params): void
     {
-      $body = $this->getDecodedBody();
-        $form = $body['data'];
-     //var_dump($body);
+        $body = $this->getDecodedBody();
         $id = $params['id'];
-        //var_dump($id);
+        $form = $body['data'];
+        $categoryName = $body['title'];
+
         $preset = new Preset();
-        $presets = $preset->findById($id);
-       //  var_dump($form["name"]);
-        //echo "name preset".$preset->name;
-         if(!$presets->dry()){
-       //var_dump(json_decode($presets["settings"]) );
-          $categories=json_decode($presets["settings"]);
-          $title=$body["title"];
-         var_dump($categories->$title);
-         $name=$form["name"];
-         //var_dump($name);
-           // echo ($body["title"]);
-           if(isset($categories->$title)){
-             echo $body["title"]." exists";
-            //json_decode($categories->$title)->$name=$form["value"];
-            $attr=json_decode($categories->$title);
-            $attr->$name=$form["value"];
-            $categories->$title=json_encode($attr);
-            $presets["settings"]=json_encode($categories);
-            var_dump($presets["settings"]);
-            //var_dump($presets["settings"]);
+        $oldPreset = $preset->findById($id);
+        if (!$oldPreset->dry()) {
+            $categories = json_decode($oldPreset["settings"]);
+            $subCategories = [];
+            if (isset($categories->$categoryName)) {
+                $subCategories = json_decode($categories->$categoryName);
+                foreach ($form as $editedSubCategory) {
+                    $subCategoryName = $editedSubCategory["name"];
+                    $subCategoryValue = $editedSubCategory["value"];
+                    $subCategoryType = $editedSubCategory["type"];
 
-           }
-           else {
-               echo $body["title"]."not exists";
-           }
-          //  $data=$presetsubcategory->data;
-         //   $data=json_decode($data,true);
-         // $data["value"]=$form["value"];
-        //   $presetsubcategory->data=json_encode($data);
-         //   try {
-            //    $presetsubcategory->save();
-         //   } catch (\Exception $e) {
-               // $this->logger->error('subcategory could not be updated', ['error' => $e->getMessage()]);
-               // $this->renderJson(['errors' => $e->getMessage()], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+                    $subCategories->$subCategoryName = $subCategoryValue;
+                }
 
-              //  return;
-          // }
-
-          //  $this->logger->info('preset successfully updated', ['preset' => $presetsubcategory->toArray()]);
-             var_dump($presets["settings"]);
-             $presets->save();
-           $this->renderJson(['result' => 'success', 'preset' => $presets["settings"]]);
-
+                $categories->$categoryName = json_encode($subCategories);
+                $oldPreset["settings"] = json_encode($categories);
+            }
+            $oldPreset->save();
+            $this->renderJson(['result' => 'success', 'preset' => $preset->getMyPresetInfos($oldPreset)]);
+        }
     }
-
-    }
-
-
-
 
     /**
      * @param Base $f3
@@ -80,28 +54,40 @@ class Edit extends BaseAction
      */
     public function rename($f3, $params): void
     {
-        $body = $this->getDecodedBody();
-       $form = $body['data'];
+        $body        = $this->getDecodedBody();
+        $form        = $body['data'];
+        $id          = $params['id'];
+        $dataChecker = new DataChecker();
 
-        $id   = $params['id'];
-        $preset    = new Preset();
-        $preset=$preset->findById($id);
-        if(!$preset->dry()){
-          $preset->name=$form["name"];
-            try {
-                $preset->save();
-            } catch (\Exception $e) {
-                $this->logger->error('preset could not be updated', ['error' => $e->getMessage()]);
-                $this->renderJson(['errors' => $e->getMessage()], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+        $dataChecker->verify($form['name'], Validator::notEmpty()->setName('name'));
+        $dataChecker->verify($id, Validator::notEmpty()->setName('id'));
 
-                return;
+        $error_message = 'Preset could not be updated';
+
+        $preset = new Preset();
+        $preset = $preset->findById($id);
+        if (!$preset->dry()) {
+            if ($dataChecker->allValid()) {
+                $checkPreset = new Preset();
+                $preset->name = $form['name'];
+                if ($checkPreset->nameExists($preset->name, $preset->user_id, $preset->id)) {
+                    $this->logger->error($error_message, ['error' => 'Name already exists']);
+                    $this->renderJson(['errors' => ['name' => 'Name already exists']], ResponseCode::HTTP_PRECONDITION_FAILED);
+                } else {
+                    try {
+                        $preset->save();
+                    } catch (\Exception $e) {
+                        $this->logger->error($error_message, ['error' => $e->getMessage()]);
+                        $this->renderJson(['errors' => $e->getMessage()], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+
+                        return;
+                    }
+                    $this->logger->info('preset successfully updated', ['preset' => $preset->toArray()]);
+                    $this->renderJson(['result' => 'success', 'preset' => $preset->getMyPresetInfos($preset)]);
+                }
+            } else {
+                $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
             }
-
-            $this->logger->info('preset successfully updated', ['preset' => $preset->toArray()]);
-            $this->renderJson(['result' => 'success', 'preset' => $preset->toArray()]);
-
         }
-
     }
-
 }

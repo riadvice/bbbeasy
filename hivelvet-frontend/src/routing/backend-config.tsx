@@ -28,9 +28,10 @@ export const apiRoutes = {
 
     LOGS_URL: API_URL + '/logs',
 
-    COLLECT_ADMIN_URL: API_URL + '/users/collect-admin',
+    COLLECT_USERS_URL: API_URL + '/collect-users',
     COLLECT_PRESETS_URL: API_URL + '/collect-presets',
     COLLECT_SETTINGS_URL: API_URL + '/collect-settings',
+    SAVE_FILE_URL: API_URL + '/save-logo',
     INSTALL_URL: API_URL + '/install',
 
     LIST_ROLE_URL: API_URL + '/roles',

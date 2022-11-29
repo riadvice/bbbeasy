@@ -238,12 +238,12 @@
     "required_role": "Please select a role",
     "required_status": "Please select a state",
     "no_changes": "No changes made",
-    "already_deleted": "User already deleted",
 
     "new_preset": "New Preset",
     "search_preset": "Search all my presets",
     "rename": "Rename",
     "delete_preset_confirm": "Are you sure to delete this preset ?",
-    "add_preset_success": "Preset Successfully Added",
+    "add_preset_success": "Preset Successfully added",
+    "edit_preset_success": "Preset Successfully updated",
     "delete_preset_success": "Preset successfully deleted"
 }

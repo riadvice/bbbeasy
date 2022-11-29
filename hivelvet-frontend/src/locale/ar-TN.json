@@ -159,6 +159,7 @@
         "profile": "الملف الشخصي",
         "logout": "تسجيل الخروج"
     },
+
     "name_col": "الإسم",
     "users_col": "عدد المستخدمين",
     "actions_col": "الإجراءات",
@@ -194,6 +195,7 @@
     "delete_role_success": "تم حذف الدور بنجاح",
     "confirm_yes": "نعم",
     "confirm_no": "لا",
+
     "username_col": "إسم المستخدم",
     "email_col": "البريد الإلكتروني",
     "role_col": "الدور",
@@ -220,6 +222,7 @@
     "edit_user_success": "تم تحديث المستخدم بنجاح",
     "delete_user_confirm": "هل أنت متأكد من حذف هذا المستخدم ؟",
     "delete_user_success": "تم حذف المستخدم بنجاح",
+
     "delete_label_confirm": "هل أنت متأكد من حذف هذا العلامة ؟",
     "delete_label_success": "تم حذف العلامة بنجاح",
     "add_label_success": "تمت اضافة العلامة بنجاح",
@@ -235,6 +238,12 @@
     "required_role": "الرجاء اختيار دور",
     "required_status": "الرجاء اختيار حالة",
     "no_changes": "لا توجد تغييرات أجريت",
+
+    "new_preset": "إعداد مسبق جديد",
+    "search_preset": "البحث في إعداداتي المسبقة",
+    "rename": "إعادة التسمية",
+    "delete_preset_confirm": "هل أنت متأكد من حذف هذا الإعداد المسبق ؟",
     "add_preset_success": "تمت إضافة الاعدادات بنجاح",
+    "edit_preset_success": "تم تحديث الاعدادات بنجاح",
     "delete_preset_success": "تم حذف الاعدادات بنجاح"
 }

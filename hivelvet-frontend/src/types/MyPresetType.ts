@@ -23,5 +23,4 @@ export type MyPresetType = {
     id: number;
     name: string;
     categories: PresetType[];
-    // subcategories: SubCategoryType[];
 };

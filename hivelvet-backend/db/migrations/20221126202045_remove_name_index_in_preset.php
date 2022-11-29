@@ -22,22 +22,21 @@ declare(strict_types=1);
 
 use Phinx\Migration\AbstractMigration;
 
-class CreatePresetSubCategoryTable extends AbstractMigration
+final class RemoveNameIndexInPreset extends AbstractMigration
 {
     public function up(): void
     {
-        $table = $this->table('preset_subcategories');
-        $table->addColumn("data","json", ['null'=>false])
-            ->addColumn('category_id', 'integer', ['null' => false])
-            ->addColumn('created_on', 'datetime', ['default' => '0001-01-01 00:00:00', 'timezone' => true])
-            ->addColumn('updated_on', 'datetime', ['default' => '0001-01-01 00:00:00', 'timezone' => true])
-            ->addForeignKey(['category_id'], 'preset_categories', ['id'], ['constraint' => 'preset_category_id'])
+        $table = $this->table('presets');
+        $table->removeIndexByName('idx_presets_name')
             ->save()
         ;
     }
 
     public function down(): void
     {
-        $this->table('preset_subcategories')->drop()->save();
+        $this->table('presets')
+            ->addIndex('name', ['unique' => true, 'name' => 'idx_presets_name'])
+            ->save()
+        ;
     }
 }
