@@ -26,6 +26,7 @@ use Actions\Base as BaseAction;
 use Actions\RequirePrivilegeTrait;
 use Enum\ResponseCode;
 use Enum\UserStatus;
+use Models\Preset;
 use Models\Role;
 use Models\User;
 use Respect\Validation\Validator;
@@ -97,6 +98,13 @@ class Add extends BaseAction
 
         $this->logger->info($success_message, ['user' => $user->toArray()]);
 
+        $preset = new Preset();
+        $preset->name = 'default';
+
+        $preset_error_message = 'Default preset could not be added';
+        $preset_success_message = 'Default preset successfully added';
+        $addPresetClass = new \Actions\Presets\Add();
+        $addPresetClass->addDefaultPreset($preset, $user->id, $preset_success_message, $preset_error_message);
         return true;
     }
 }
