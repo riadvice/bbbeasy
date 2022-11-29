@@ -58,13 +58,11 @@ class Add extends BaseAction
             $preset->name = $form['name'];
             if ($checkPreset->nameExists($preset->name, $userId)) {
                 $this->logger->error($errorMessage, ['error' => 'Name already exists']);
-                $this->renderJson(['errors' => ['name' => 'Name already exists']],
-                    ResponseCode::HTTP_PRECONDITION_FAILED);
+                $this->renderJson(['errors' => ['name' => 'Name already exists']], ResponseCode::HTTP_PRECONDITION_FAILED);
             } else {
                 $result = $this->addDefaultPreset($preset, $userId, $successMessage, $errorMessage);
                 if ($result) {
-                    $this->renderJson(['result' => 'success', 'preset' => $preset->getMyPresetInfos($preset)],
-                        ResponseCode::HTTP_CREATED);
+                    $this->renderJson(['result' => 'success', 'preset' => $preset->getMyPresetInfos($preset)], ResponseCode::HTTP_CREATED);
                 }
             }
         } else {
@@ -120,5 +118,4 @@ class Add extends BaseAction
 
         return $settings;
     }
-
 }

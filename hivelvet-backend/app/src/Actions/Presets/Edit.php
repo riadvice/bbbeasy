@@ -72,8 +72,7 @@ class Edit extends BaseAction
                 $preset->name = $form['name'];
                 if ($checkPreset->nameExists($preset->name, $preset->user_id, $preset->id)) {
                     $this->logger->error($errorMessage, ['error' => 'Name already exists']);
-                    $this->renderJson(['errors' => ['name' => 'Name already exists']],
-                        ResponseCode::HTTP_PRECONDITION_FAILED);
+                    $this->renderJson(['errors' => ['name' => 'Name already exists']], ResponseCode::HTTP_PRECONDITION_FAILED);
                 } else {
                     try {
                         $preset->save();
@@ -91,5 +90,4 @@ class Edit extends BaseAction
             }
         }
     }
-
 }

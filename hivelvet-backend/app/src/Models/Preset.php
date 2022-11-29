@@ -46,8 +46,7 @@ class Preset extends BaseModel
 
     public function collectAllByUserId($userId): array
     {
-        return $this->db->exec('SELECT id, name, settings FROM presets where user_id = ? ORDER BY created_on DESC',
-            $userId);
+        return $this->db->exec('SELECT id, name, settings FROM presets where user_id = ? ORDER BY created_on DESC', $userId);
     }
 
     public function getPresetInfos(): array
@@ -132,8 +131,8 @@ class Preset extends BaseModel
                         if (!str_ends_with($constant->name, '_TYPE')) {
                             $subCategory = $constant->name;
                             $subCategoryName = $class->getConstant(strtoupper($subCategory));
-                            if(str_contains($subCategory, 'PASSWORD')) {
-                                $subCategory = str_ireplace('PASSWORD','PASS', $subCategory);
+                            if (str_contains($subCategory, 'PASSWORD')) {
+                                $subCategory = str_ireplace('PASSWORD', 'PASS', $subCategory);
                             }
                             $subCategoryType = $class->getConstant(strtoupper($subCategory)."_TYPE");
                             $subCategoryValue = json_decode($enabledCategories->$categoryName)->$subCategoryName;
