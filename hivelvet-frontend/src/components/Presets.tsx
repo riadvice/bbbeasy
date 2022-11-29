@@ -29,6 +29,7 @@ import LocaleService from '../services/locale.service';
 import { PresetType } from '../types/PresetType';
 import InstallService from '../services/install.service';
 import DynamicIcon from './DynamicIcon';
+import { AddPresetForm } from './AddPresetForm';
 
 const { Link, Title } = Typography;
 
@@ -39,7 +40,7 @@ interface PresetColProps {
 type formType = {
     name: string;
 };
-let addForm: FormInstance = null;
+const addForm: FormInstance = null;
 
 const PresetsCol: React.FC<PresetColProps> = ({ key, presets }) => {
     const [isShown, setIsShown] = useState<boolean>(false);
@@ -179,44 +180,7 @@ const Presets = () => {
                 onCancel={cancelAdd}
                 footer={null}
             >
-                <Form
-                    layout="vertical"
-                    ref={(form) => (addForm = form)}
-                    initialValues={{ name: '' }}
-                    hideRequiredMark
-                    onFinish={handleAdd}
-                    onFinishFailed={failedAdd}
-                    validateTrigger="onSubmit"
-                >
-                    <Form.Item
-                        label={<Trans i18nKey="name.label" />}
-                        name="name"
-                        {...('name' in errorsAdd && {
-                            help: (
-                                <Trans
-                                    i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errorsAdd['name'])}
-                                />
-                            ),
-                            validateStatus: 'error',
-                        })}
-                        rules={[
-                            {
-                                required: true,
-                                message: <Trans i18nKey="name.required" />,
-                            },
-                        ]}
-                    >
-                        <Input placeholder={t('name.label')} />
-                    </Form.Item>
-                    <Form.Item className="modal-submit-btn button-container">
-                        <Button type="text" className="cancel-btn prev" block onClick={cancelAdd}>
-                            <Trans i18nKey="cancel" />
-                        </Button>
-                        <Button type="primary" htmlType="submit" block>
-                            <Trans i18nKey="create" />
-                        </Button>
-                    </Form.Item>
-                </Form>
+                <AddPresetForm errors={errorsAdd} handleAdd={handleAdd} failedAdd={failedAdd} addForm={addForm} cancelAdd={cancelAdd}/>
             </Modal>
 
             <Row gutter={[32, 32]} justify="center" className="presets-cards">

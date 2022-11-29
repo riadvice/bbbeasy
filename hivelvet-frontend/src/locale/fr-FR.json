@@ -234,5 +234,12 @@
     "required_email": "L'e-mail est obligatoire",
     "required_role": "Veuillez sélectionner un rôle",
     "required_status": "Veuillez sélectionner une status",
-    "no_changes": "Aucune modification n'a été effectuée"
+    "no_changes": "Aucune modification n'a été effectuée",
+    "already_deleted": "Utilisateur déjà supprimé",
+
+    "new_preset": "Nouveau préréglage",
+    "search_preset": "Rechercher tous mes préréglages",
+    "rename": "Renommer",
+    "delete_preset_confirm": "Êtes-vous sûr de vouloir supprimer ce préréglage?",
+    "label-name-already-exist": "Le nom du libellé existe déjà"
 }

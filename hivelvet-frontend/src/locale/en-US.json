@@ -243,5 +243,6 @@
     "new_preset": "New Preset",
     "search_preset": "Search all my presets",
     "rename": "Rename",
-    "delete_preset_confirm": "Are you sure to delete this preset ?"
+    "delete_preset_confirm": "Are you sure to delete this preset ?",
+    "label-name-already-exist": "Label Name already exists"
 }
