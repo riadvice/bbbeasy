@@ -24,10 +24,8 @@ namespace Actions\Account;
 
 use Actions\Base as BaseAction;
 use Enum\ResponseCode;
-use Enum\UserRole;
 use Enum\UserStatus;
 use Helpers\Time;
-use Models\Role;
 use Models\User;
 use Respect\Validation\Validator;
 use Validation\DataChecker;

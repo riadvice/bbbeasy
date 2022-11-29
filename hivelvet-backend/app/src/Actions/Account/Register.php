@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Actions\Account;
 
 use Actions\Base as BaseAction;
+use Actions\Users\Add;
 use Enum\ResponseCode;
-use Enum\UserStatus;
 use Models\User;
 use Respect\Validation\Validator;
 use Validation\DataChecker;
@@ -49,25 +49,15 @@ class Register extends BaseAction
 
         /** @todo : move to locales */
         $error_message = 'User could not be added';
+        $success_message = 'User successfully registered';
         if ($dataChecker->allValid()) {
             $user = new User();
             if ($this->credentialsAreValid($form, $user, $error_message)) {
-                $user->email    = $form['email'];
-                $user->username = $form['username'];
-                $user->password = $form['password'];
-                $user->role_id  = 2;
-                $user->status   = UserStatus::PENDING;
-
-                try {
-                    $user->save();
-                } catch (\Exception $e) {
-                    $this->logger->error($error_message, ['user' => $user->toArray(), 'error' => $e->getMessage()]);
-                    $this->renderJson(['message' => $error_message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-
-                    return;
+                $addUserClass = new Add();
+                $result = $addUserClass->addUser($form, $user, 2, $success_message, $error_message);
+                if ($result) {
+                    $this->renderJson(['result' => 'success', ResponseCode::HTTP_CREATED]);
                 }
-                $this->logger->info('User successfully registered', ['user' => $user->toArray()]);
-                $this->renderJson(['result' => 'success', ResponseCode::HTTP_CREATED]);
             }
         } else {
             $this->logger->error($error_message, ['errors' => $dataChecker->getErrors()]);

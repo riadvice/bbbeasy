@@ -265,28 +265,22 @@ abstract class Base extends \Prefab
         return $credentials;
     }
 
-    protected function getUsersByUsernameOrEmail(string $username, string $email): array
-    {
-        $hostname = 'localhost';
-        $dbname   = 'hivelvet';
-        $user     = 'hivelvet';
-        $secret   = 'hivelvet';
-        $conn     = pg_pconnect("host={$hostname} dbname={$dbname} user={$user} password={$secret}");
-        $result   = pg_query_params($conn, 'SELECT username, email FROM public.users WHERE lower(username) = lower($1) OR lower(email) = lower($2)', [$username, $email]);
-
-        return pg_fetch_all($result);
-    }
-
     protected function credentialsAreValid(array $form, User $user, string $error_message): bool
     {
         $credentials_valid = true;
         $response_code     = ResponseCode::HTTP_BAD_REQUEST;
-        $compliant         = SecurityUtils::isGdprCompliant($form['password']);
-        $common            = SecurityUtils::credentialsAreCommon($form['username'], $form['email'], $form['password']);
-        $users             = $this->getUsersByUsernameOrEmail($form['username'], $form['email']);
-        $found             = $user->usernameOrEmailExists($form['username'], $form['email'], $users);
 
-        if (true !== $compliant) {
+        $username   = $form['username'];
+        $email      = $form['email'];
+        $password   = $form['password'];
+
+        $users      = $user->getUsersByUsernameOrEmail($username, $email);
+
+        $compliant     = SecurityUtils::isGdprCompliant($password);
+        $common        = SecurityUtils::credentialsAreCommon($username, $email, $password);
+        $found         = $user->userExists($username, $email, $users);
+
+        if (!$compliant) {
             $this->logger->error($error_message, ['error' => $compliant]);
             $this->renderJson(['message' => $compliant], $response_code);
             $credentials_valid = false;

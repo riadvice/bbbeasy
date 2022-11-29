@@ -67,14 +67,16 @@ export const Step3Form = (props: Props) => {
                         overlayClassName="install-tooltip"
                         title={
                             <ul>
-                                {item.subcategories.map((subItem) => (
-                                    <li
+                                {item.subcategories.map((subItem) => {
+                                    const subcategory = subItem.name.replaceAll("_", " ");
+
+                                    return <li
                                         key={item.name + '_' + subItem.name}
-                                        className={subItem.enabled == true ? 'text-black' : 'text-grey'}
+                                        className={subItem.enabled == true ? 'text-capitalize text-black' : 'text-capitalize text-grey'}
                                     >
-                                        {subItem.name}
+                                        {subcategory}
                                     </li>
-                                ))}
+                                })}
                             </ul>
                         }
                     >
@@ -105,9 +107,11 @@ export const Step3Form = (props: Props) => {
                     ]}
                 >
                     <div className="presets-body">
-                        {modalContent.map((item) => (
-                            <div key={modalTitle + '_' + item.name}>
-                                <Form.Item label={item.name}>
+                        {modalContent.map((item) => {
+                            const subcategory = item.name.replaceAll("_", " ");
+
+                            return <div key={modalTitle + '_' + item.name}>
+                                <Form.Item className="text-capitalize" label={subcategory} valuePropName={item.name}>
                                     <Switch
                                         defaultChecked={item.enabled == true ? true : false}
                                         onChange={(checked) => {
@@ -115,8 +119,8 @@ export const Step3Form = (props: Props) => {
                                         }}
                                     />
                                 </Form.Item>
-                            </div>
-                        ))}
+                            </div>;
+                        })}
                     </div>
                 </Modal>
             </Card>
