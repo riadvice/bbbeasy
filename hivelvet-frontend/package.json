@@ -19,7 +19,7 @@
     "moment": "^2.29.4",
     "perfect-scrollbar": "^1.5.5",
     "pg": "^8.8.0",
-    "pino": "^8.4.2",
+    "pino": "^8.7.0",
     "pino-pretty": "^9.1.0",
     "pino-transmit-http": "^1.0.1",
     "pm2": "^5.2.0",
