@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
-    "antd": "^4.22.8",
+    "antd": "^5.0.3",
     "antd-password-input-strength": "^2.0.1",
     "axios": "^0.27.2",
     "babel-loader": "^8.2.5",
