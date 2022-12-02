@@ -50,8 +50,8 @@ class Add extends BaseAction
             $label = new Label();
             $error = $label->nameExists($form['name']);
             if ($error) {
-                $this->logger->error('Label could not be added', ['error' => 'Name already exist']);
-                $this->renderJson(['errors' => ['name' => 'Name already exist']], ResponseCode::HTTP_PRECONDITION_FAILED);
+                $this->logger->error('Label could not be added', ['error' => 'Name already exists']);
+                $this->renderJson(['errors' => ['name' => 'Label Name already exists']], ResponseCode::HTTP_PRECONDITION_FAILED);
 
                 return;
             }

@@ -28,6 +28,7 @@ use Test\Scenario;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 final class AddTest extends Scenario
@@ -38,9 +39,9 @@ final class AddTest extends Scenario
     /**
      * @param $f3
      *
-     * @throws ReflectionException
-     *
      * @return array
+     *
+     * @throws ReflectionException
      */
     public function testEmptyName($f3)
     {
@@ -56,9 +57,9 @@ final class AddTest extends Scenario
     /**
      * @param $f3
      *
-     * @throws ReflectionException
-     *
      * @return array
+     *
+     * @throws ReflectionException
      */
     public function testExistingName($f3)
     {

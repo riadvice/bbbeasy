@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Models;
 
 use DateTime;
+use Enum\ResponseCode;
 use Enum\UserRole;
 use Models\Base as BaseModel;
 
@@ -57,7 +58,7 @@ class Role extends BaseModel
 
     public function nameExists($name, $id = null)
     {
-        return $this->load(['name = ? and id != ?', $name, $id]);
+        return $this->load(['lower(name) = ? and id != ?', mb_strtolower($this->f3->snakecase($name)), $id]);
     }
 
     public function getAllRoles()
@@ -163,8 +164,8 @@ class Role extends BaseModel
 
     public function switchAllRoleUsers()
     {
-        $role_id = $this->id;
-        if (1 !== $role_id && 2 !== $role_id) {
+        $roleId = $this->id;
+        if (1 !== $roleId && 2 !== $roleId) {
             $users = $this->getRoleUsers();
             if ($users > 0) {
                 /** @var User $user */
@@ -190,12 +191,12 @@ class Role extends BaseModel
 
     public function deleteAllRolePermissions()
     {
-        $role_id = $this->id;
-        if (1 !== $role_id) {
+        $roleId = $this->id;
+        if (1 !== $roleId) {
             $permissions = $this->getRolePermissions();
             if ('array' === \gettype($permissions)) {
                 $rolePermission = new RolePermission();
-                $deleteResult   = $rolePermission->erase(['role_id = ?', $role_id]);
+                $deleteResult   = $rolePermission->erase(['role_id = ?', $roleId]);
                 if ($deleteResult) {
                     $this->logger->info('All Role permissions successfully deleted');
 
@@ -230,5 +231,39 @@ class Role extends BaseModel
         }
 
         return false;
+    }
+
+    /**
+     * Delete a role if it's allowed and switch their users to the Lecturer role and removing its associated permissions.
+     *
+     * @return Array[2](Array[], ResponsCode)
+     */
+    public function delete(): array
+    {
+        $nbUsers = $this->getRoleUsers();
+
+        // delete users and permissions
+        $result = $this->deleteUsersAndPermissions();
+
+        if ($result) {
+            try {
+                $this->erase();
+                $this->logger->info('Role successfully deleted', ['role' => $this->toArray()]);
+            } catch (\Exception $e) {
+                $this->logger->error('Role could not be deleted', ['role' => $this->toArray(), 'error' => $e->getMessage()]);
+
+                throw $e;
+            }
+
+            if ($nbUsers > 0) {
+                $result = $this->getLecturerRole();
+
+                return [['lecturer' => $result], ResponseCode::HTTP_OK];
+            }
+
+            return [['result' => 'success'], ResponseCode::HTTP_OK];
+        }
+
+        return [[], ResponseCode::HTTP_FORBIDDEN];
     }
 }

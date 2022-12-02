@@ -38,9 +38,9 @@ class UserFaker
      * @param string $status
      * @param null   $storageName
      *
-     * @throws ReflectionException
-     *
      * @return User
+     *
+     * @throws ReflectionException
      */
     public static function create($role = null, $status = UserStatus::ACTIVE, $storageName = null)
     {
@@ -76,9 +76,9 @@ class UserFaker
      * @param string $status
      * @param null   $storageName
      *
-     * @throws ReflectionException
-     *
      * @return User
+     *
+     * @throws ReflectionException
      */
     public static function createAndLogin($role, $status = UserStatus::ACTIVE, $storageName = null)
     {

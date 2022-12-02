@@ -57,7 +57,7 @@ class ResetPasswordToken extends BaseModel
      */
     public function userExists($userID): bool
     {
-        return $this->load(['user_id= ?', $userID]);
+        return $this->load(['user_id = ?', $userID]);
     }
 
     /**

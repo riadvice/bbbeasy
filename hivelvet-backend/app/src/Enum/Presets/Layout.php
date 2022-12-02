@@ -22,15 +22,19 @@ declare(strict_types=1);
 
 namespace Enum\Presets;
 
-use Enum\Enum;
+use MabeEnum\Enum;
 
 class Layout extends Enum
 {
-    final public const PRESENTATION   = 'presentation';
-    final public const PARTICIPANTS   = 'participants';
-    final public const CHAT           = 'chat';
-    final public const NAVIGATION_BAR = 'navigation_bar';
-    final public const ACTIONS_BAR    = 'actions_bar';
+    public const PRESENTATION   = 'presentation';
+    public const PARTICIPANTS   = 'participants';
+    public const CHAT           = 'chat';
+    public const NAVIGATION_BAR = 'navigation_bar';
+    public const ACTIONS_BAR    = 'actions_bar';
 
-    public static string $icon = 'LayoutOutlined';
+    public const PRESENTATION_TYPE      = 'bool';
+    public const PARTICIPANTS_TYPE      = 'bool';
+    public const CHAT_TYPE              = 'bool';
+    public const NAVIGATION_BAR_TYPE    = 'bool';
+    public const ACTIONS_BAR_TYPE       = 'bool';
 }

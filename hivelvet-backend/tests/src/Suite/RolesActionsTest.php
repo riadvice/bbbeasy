@@ -29,6 +29,7 @@ use Test\TestGroup;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 final class RolesActionsTest extends TestGroup

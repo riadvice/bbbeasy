@@ -30,6 +30,7 @@ use Test\Scenario;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 final class EditTest extends Scenario
@@ -40,9 +41,9 @@ final class EditTest extends Scenario
     /**
      * @param $f3
      *
-     * @throws ReflectionException
-     *
      * @return array
+     *
+     * @throws ReflectionException
      */
     public function testEmptyName($f3)
     {
@@ -59,9 +60,9 @@ final class EditTest extends Scenario
     /**
      * @param $f3
      *
-     * @throws ReflectionException
-     *
      * @return array
+     *
+     * @throws ReflectionException
      */
     public function testExistingName($f3)
     {
@@ -79,9 +80,9 @@ final class EditTest extends Scenario
     /**
      * @param $f3
      *
-     * @throws ReflectionException
-     *
      * @return array
+     *
+     * @throws ReflectionException
      */
     public function testNonExistingRole($f3)
     {
@@ -98,9 +99,9 @@ final class EditTest extends Scenario
     /**
      * @param $f3
      *
-     * @throws ReflectionException
-     *
      * @return array
+     *
+     * @throws ReflectionException
      */
     public function testValidRole($f3)
     {

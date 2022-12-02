@@ -171,11 +171,13 @@ const Users = () => {
     const handleAdd = (values) => {
         const formValues: formType = values;
         setErrorsAdd('');
+
         UsersService.add_user(formValues)
             .then((response) => {
                 setLoading(true);
                 setIsModalVisible(false);
                 const newRowData: Item = response.data.user;
+
                 Notifications.openNotificationWithIcon('success', t('add_user_success'));
                 //delete data of form
                 addForm?.resetFields();
@@ -200,6 +202,14 @@ const Users = () => {
     };
 
     // edit
+    const validateUsername = (dataIndex) =>
+        (dataIndex == 'username' && {
+            min: 4,
+            message: t('invalid_username'),
+        }) ||
+        (dataIndex == 'role' && {
+            validator: (_, value) => (value ? Promise.resolve() : Promise.reject(new Error())),
+        });
     const [editForm] = Form.useForm();
     const EditableRow: React.FC = ({ ...props }) => {
         return (
@@ -245,6 +255,17 @@ const Users = () => {
                             {
                                 required: true,
                                 message: t('required_' + dataIndex),
+                            },
+                            { ...validateUsername(dataIndex) },
+                            {
+                                ...((dataIndex == 'email' && {
+                                    type: 'email',
+                                    message: t('invalid_email'),
+                                }) ||
+                                    (dataIndex == 'role' && {
+                                        validator: (_, value) =>
+                                            value ? Promise.resolve() : Promise.reject(new Error()),
+                                    })),
                             },
                         ]}
                     >
@@ -327,32 +348,28 @@ const Users = () => {
     };
 
     // delete
-    const handleDelete = (key: number, status: string) => {
-        if (status == 'deleted') {
-            Notifications.openNotificationWithIcon('info', t('already_deleted'));
-        } else {
-            UsersService.delete_user(key)
-                .then((response) => {
-                    setLoading(true);
-                    const newData = [...data];
-                    // update item
-                    const newRowData: Item = response.data.user;
-                    const index = newData.findIndex((item) => key === item.key);
-                    if (index > -1 && newRowData != undefined) {
-                        const item = newData[index];
-                        newData.splice(index, 1, {
-                            ...item,
-                            ...newRowData,
-                        });
-                        setLoading(false);
-                        setData(newData);
-                    }
-                    Notifications.openNotificationWithIcon('success', t('delete_user_success'));
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
-        }
+    const handleDelete = (key: number) => {
+        UsersService.delete_user(key)
+            .then((response) => {
+                setLoading(true);
+                const newData = [...data];
+                // update item
+                const newRowData: Item = response.data.user;
+                const index = newData.findIndex((item) => key === item.key);
+                if (index > -1 && newRowData != undefined) {
+                    const item = newData[index];
+                    newData.splice(index, 1, {
+                        ...item,
+                        ...newRowData,
+                    });
+                    setLoading(false);
+                    setData(newData);
+                }
+                Notifications.openNotificationWithIcon('success', t('delete_user_success'));
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     };
 
     // search
@@ -494,6 +511,8 @@ const Users = () => {
                     compareEdit(oldData, newData) ? cancelEdit() : setCancelVisibility(true);
                 };
                 const editable = isEditing(record);
+                const deletedRow = record.status == 'deleted';
+
                 return editable ? (
                     <Space size="middle">
                         <Popconfirm
@@ -504,11 +523,16 @@ const Users = () => {
                             onConfirm={() => cancelEdit()}
                             onCancel={() => setCancelVisibility(false)}
                         >
-                            <Button size="middle">
+                            <Button size="middle" className="cell-input-cancel">
                                 <Trans i18nKey="cancel" />
                             </Button>
                         </Popconfirm>
-                        <Button size="middle" type="primary" onClick={() => saveEdit(record, record.key)}>
+                        <Button
+                            size="middle"
+                            type="primary"
+                            className="cell-input-save"
+                            onClick={() => saveEdit(record, record.key)}
+                        >
                             <Trans i18nKey="save" />
                         </Button>
                     </Space>
@@ -517,15 +541,17 @@ const Users = () => {
                         <Link disabled={editingKey !== null} onClick={() => toggleEdit(record)}>
                             <EditOutlined /> <Trans i18nKey="edit" />
                         </Link>
-                        <Popconfirm
-                            title={t('delete_user_confirm')}
-                            icon={<QuestionCircleOutlined className="red-icon" />}
-                            onConfirm={() => handleDelete(record.key, record.status)}
-                        >
-                            <Link>
-                                <DeleteOutlined /> <Trans i18nKey="delete" />
-                            </Link>
-                        </Popconfirm>
+                        {!deletedRow && (
+                            <Popconfirm
+                                title={t('delete_user_confirm')}
+                                icon={<QuestionCircleOutlined className="red-icon" />}
+                                onConfirm={() => handleDelete(record.key)}
+                            >
+                                <Link>
+                                    <DeleteOutlined /> <Trans i18nKey="delete" />
+                                </Link>
+                            </Popconfirm>
+                        )}
                     </Space>
                 );
             },
@@ -553,7 +579,7 @@ const Users = () => {
                 className="site-page-header"
                 title={<Trans i18nKey="users" />}
                 extra={[
-                    <Button key="1" type="primary" onClick={toggleAdd}>
+                    <Button key="1" type="primary" id="add-user-btn" onClick={toggleAdd}>
                         <Trans i18nKey="new_user" />
                     </Button>,
                 ]}
@@ -570,6 +596,7 @@ const Users = () => {
             >
                 <Form
                     layout="vertical"
+                    name="users_form"
                     ref={(form) => (addForm = form)}
                     initialValues={initialAddValues}
                     hideRequiredMark
@@ -602,7 +629,7 @@ const Users = () => {
                         <Button type="text" className="cancel-btn prev" block onClick={cancelAdd}>
                             <Trans i18nKey="cancel" />
                         </Button>
-                        <Button type="primary" htmlType="submit" block>
+                        <Button type="primary" id="submit-btn" htmlType="submit" block>
                             <Trans i18nKey="create" />
                         </Button>
                     </Form.Item>

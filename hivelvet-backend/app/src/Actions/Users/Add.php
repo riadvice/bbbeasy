@@ -26,6 +26,7 @@ use Actions\Base as BaseAction;
 use Actions\RequirePrivilegeTrait;
 use Enum\ResponseCode;
 use Enum\UserStatus;
+use Models\Preset;
 use Models\Role;
 use Models\User;
 use Respect\Validation\Validator;
@@ -50,44 +51,59 @@ class Add extends BaseAction
 
         $dataChecker->verify($form['username'], Validator::length(4)->setName('username'));
         $dataChecker->verify($form['email'], Validator::email()->setName('email'));
-        $dataChecker->verify($form['password'], Validator::length(4)->setName('password'));
+        $dataChecker->verify($form['password'], Validator::length(8)->setName('password'));
         $dataChecker->verify($form['role'], Validator::notEmpty()->setName('role'));
 
+        /** @todo : move to locales */
+        $errorMessage = 'User could not be added';
+        $successMessage = 'User successfully added';
         if ($dataChecker->allValid()) {
-            $user  = new User();
-            $error = $user->usernameOrEmailExists($form['username'], $form['email']);
-            if ($error) {
-                $this->logger->error('User could not be added', ['error' => $error]);
-                $this->renderJson(['message' => $error], ResponseCode::HTTP_PRECONDITION_FAILED);
-            } else {
+            $user = new User();
+            if ($this->credentialsAreValid($form, $user, $errorMessage)) {
                 $role = new Role();
                 $role->load(['id = ?', [$form['role']]]);
                 if ($role->valid()) {
-                    $user->email    = $form['email'];
-                    $user->username = $form['username'];
-                    $user->password = $form['password'];
-                    $user->status   = UserStatus::PENDING;
-                    $user->role_id  = $role->id;
-
-                    try {
-                        $user->save();
-                    } catch (\Exception $e) {
-                        $message = 'user could not be added';
-                        $this->logger->error('User could not be added', ['user' => $user->toArray(), 'error' => $e->getMessage()]);
-                        $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-
-                        return;
+                    $result = $this->addUser($form, $user, $role->id, $successMessage, $errorMessage);
+                    if ($result) {
+                        $this->renderJson(['result' => 'success', 'user' => $user->getUserInfos($user->id)], ResponseCode::HTTP_CREATED);
                     }
-
-                    $this->logger->info('User successfully added', ['user' => $user->toArray()]);
-                    $this->renderJson(['result' => 'success', 'user' => $user->getUserInfos($user->id)], ResponseCode::HTTP_CREATED);
                 } else {
                     $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
                 }
             }
         } else {
-            $this->logger->error('Add user error', ['errors' => $dataChecker->getErrors()]);
+            $this->logger->error($errorMessage, ['errors' => $dataChecker->getErrors()]);
             $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
         }
+    }
+
+    public function addUser($form, $user, $roleId, $successMessage, $errorMessage): bool
+    {
+        try {
+            $user->email    = $form['email'];
+            $user->username = $form['username'];
+            $user->password = $form['password'];
+            $user->role_id  = $roleId;
+            $user->status   = UserStatus::PENDING;
+            $user->password_attempts = 3;
+
+            $user->save();
+        } catch (\Exception $e) {
+            $this->logger->error($errorMessage, ['user' => $user->toArray(), 'error' => $e->getMessage()]);
+            $this->renderJson(['message' => $errorMessage], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+
+            return false;
+        }
+
+        $this->logger->info($successMessage, ['user' => $user->toArray()]);
+
+        $preset = new Preset();
+        $preset->name = 'default';
+
+        $presetErrorMessage = 'Default preset could not be added';
+        $presetSuccessMessage = 'Default preset successfully added';
+        $addPresetClass = new \Actions\Presets\Add();
+        $addPresetClass->addDefaultPreset($preset, $user->id, $presetErrorMessage, $presetSuccessMessage);
+        return true;
     }
 }

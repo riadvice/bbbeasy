@@ -20,7 +20,6 @@ import React, { useEffect, useMemo } from 'react';
 import { IRoute } from './routing/IRoute';
 import Router from './routing/Router';
 
-import './App.less';
 import { Layout, ConfigProvider, BackTop, Button } from 'antd';
 import { CaretUpOutlined } from '@ant-design/icons';
 

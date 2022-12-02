@@ -29,7 +29,7 @@
     "password": {
         "label": "كلمة المرور",
         "required": "كلمة المرور مطلوبة",
-        "size": "يجب أن تتكون كلمة المرور من 4 أحرف على الأقل",
+        "size": "يجب أن تتكون كلمة المرور من 8 أحرف على الأقل",
         "invalid": "كلمة المرور غير صحيحة"
     },
     "join-us": "إنضم إلينا",
@@ -42,7 +42,7 @@
     "confirm-password": {
         "label": "تأكيد كلمة المرور",
         "required": "تأكيد كلمة المرور مطلوبة ",
-        "size": "يجب أن تتكون كلمة المرور من 4 أحرف على الأقل"
+        "size": "يجب أن تتكون كلمة المرور من 8 أحرف على الأقل"
     },
     "read-agreement": "لقد قرأت الاتفاق",
     "register": "سجل الآن",
@@ -64,6 +64,13 @@
     "and": "و",
     "privacy-policy": "سياسة الخصوصية",
     "user_not_exists": "المستخدم غير موجود بهذا البريد الإلكتروني",
+    "wrong_password": ": كلمة مرور خاطئة. المحاولات المتبقية",
+    "attempts_exceeded": "تم قفل حسابك لأنك وصلت إلى الحد الأقصى لعدد محاولات تسجيل الدخول غير الصالحة. يمكنك الاتصال بالمسؤول أو",
+    "click_here": "انقر هنا",
+    "email_instructions": "لتلقي بريد إلكتروني يحتوي على إرشادات حول كيفية فتح حسابك",
+    "invalid_password": "يجب أن تحتوي كلمة المرور على الأقل على رقم، حرف كبير، حرف صغير وحرف خاص",
+    "common_password": "تجنب اختيار كلمة مرور شائعة",
+    "already_used_password": "لا يمكن أن تكون كلمة المرور الجديدة هي نفسها كلمة المرور القديمة",
     "success_change_password": "تم تغيير كلمة المرور بنجاح",
     "error_change_password": "لا يمكن تغيير كلمة المرور",
     "error-registration": "لا يمكن إضافة المستخدم",
@@ -141,13 +148,18 @@
     "success_upload": "تم تحميل الملف بنجاح",
     "wrong_file": "ملف خاطئ",
     "invalid_password_reset_token": "رمز إعادة تعيين كلمة المرور غير صالح",
+    "account_pending": "حسابك غير فعال. الرجاء الاتصال بالمسؤول",
+    "account_deleted": "تم تعطيل حسابك لانتهاك شروطنا",
     "invalid_authentication_data": "بيانات غير صالحة",
+    "invalid_username": "يجب أن يتكون اسم المستخدم من 4 أحرف على الأقل",
+    "invalid_email": "بريد إلكتروني غير صحيح",
     "user_account_created": "تم إنشاء حساب المستخدم",
     "signed_as": "تم تسجيل الدخول باعتبارك ",
     "user_dropdown": {
         "profile": "الملف الشخصي",
         "logout": "تسجيل الخروج"
     },
+
     "name_col": "الإسم",
     "users_col": "عدد المستخدمين",
     "actions_col": "الإجراءات",
@@ -155,6 +167,13 @@
     "name": {
         "label": "الإسم",
         "required": "الاسم مطلوب"
+    },
+    "color": {
+        "label": "اللون"
+    },
+    "description": {
+        "label": "الوصف",
+        "required": "الوصف مطلوب"
     },
     "required_name": "الاسم مطلوب",
     "exist_name": "الاسم موجود مسبقاً",
@@ -176,11 +195,18 @@
     "delete_role_success": "تم حذف الدور بنجاح",
     "confirm_yes": "نعم",
     "confirm_no": "لا",
+
     "username_col": "إسم المستخدم",
     "email_col": "البريد الإلكتروني",
     "role_col": "الدور",
     "status_col": "الحالة",
     "new_user": "مستخدم جديد",
+    "new_label": "علامة جديدة",
+    "labels_cols": {
+        "name": "الإسم",
+        "description": "الوصف",
+        "color": "اللون"
+    },
     "role": {
         "label": "الدور",
         "required": "الرجاء اختيار دور",
@@ -196,13 +222,29 @@
     "edit_user_success": "تم تحديث المستخدم بنجاح",
     "delete_user_confirm": "هل أنت متأكد من حذف هذا المستخدم ؟",
     "delete_user_success": "تم حذف المستخدم بنجاح",
+
+    "label-name-already-exist": "اسم التصنيف موجود بالفعل",
+    "delete_label_confirm": "هل أنت متأكد من حذف هذا العلامة ؟",
+    "delete_label_success": "تم حذف العلامة بنجاح",
+    "add_label_success": "تمت اضافة العلامة بنجاح",
+    "edit_label_success": "تم تحديث العلامة بنجاح",
     "active": "مفعل",
     "inactive": "غير مفعل",
     "pending": "في انتظار",
     "deleted": "محذوف",
     "required_username": "اسم المستخدم مطلوب",
+    "required_description": "الوصف مطلوب",
+    "required_color": "اللون مطلوب",
     "required_email": "البريد الإلكتروني مطلوب",
     "required_role": "الرجاء اختيار دور",
     "required_status": "الرجاء اختيار حالة",
-    "no_changes": "لا توجد تغييرات أجريت"
+    "no_changes": "لا توجد تغييرات أجريت",
+
+    "new_preset": "إعداد مسبق جديد",
+    "search_preset": "البحث في إعداداتي المسبقة",
+    "rename": "إعادة التسمية",
+    "delete_preset_confirm": "هل أنت متأكد من حذف هذا الإعداد المسبق ؟",
+    "add_preset_success": "تمت إضافة الاعدادات بنجاح",
+    "edit_preset_success": "تم تحديث الاعدادات بنجاح",
+    "delete_preset_success": "تم حذف الاعدادات بنجاح"
 }

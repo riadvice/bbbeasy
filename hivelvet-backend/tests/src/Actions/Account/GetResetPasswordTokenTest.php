@@ -27,6 +27,7 @@ use Test\Scenario;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 final class GetResetPasswordTokenTest extends Scenario

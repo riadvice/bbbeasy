@@ -30,6 +30,7 @@ use Test\Scenario;
  * Class UserTest.
  *
  * @internal
+ *
  * @coversNothing
  */
 final class ResetPasswordTokenTest extends Scenario
@@ -39,9 +40,9 @@ final class ResetPasswordTokenTest extends Scenario
     /**
      * @param $f3
      *
-     * @throws \ReflectionException
-     *
      * @return array
+     *
+     * @throws \ReflectionException
      */
     public function testTokenCreation($f3)
     {

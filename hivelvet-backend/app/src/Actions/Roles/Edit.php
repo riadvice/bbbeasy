@@ -48,8 +48,8 @@ class Edit extends BaseAction
         $body = $this->getDecodedBody();
         $form = $body['data'];
 
-        $role_id = $params['id'];
-        $role    = $this->loadData($role_id);
+        $roleId = $params['id'];
+        $role    = $this->loadData($roleId);
 
         if ($role->valid()) {
             if (isset($form['name'])) {
@@ -61,8 +61,8 @@ class Edit extends BaseAction
                     $role->name = $form['name'];
 
                     if ($checkRole->nameExists($role->name, $role->id)) {
-                        $this->logger->error('Role could not be updated', ['error' => 'Name already exist']);
-                        $this->renderJson(['errors' => ['name' => 'Name already exist']], ResponseCode::HTTP_PRECONDITION_FAILED);
+                        $this->logger->error('Role could not be updated', ['error' => 'Name already exists']);
+                        $this->renderJson(['errors' => ['name' => 'Name already exists']], ResponseCode::HTTP_PRECONDITION_FAILED);
 
                         return;
                     }
@@ -86,7 +86,7 @@ class Edit extends BaseAction
                             // delete role permissions
                             foreach ($deletedActions as $deletedAction) {
                                 $rolePermission = new RolePermission();
-                                $rolePermission->load(['role_id = ? and group = ? and name = ?', $role_id, $group, $deletedAction]);
+                                $rolePermission->load(['role_id = ? and group = ? and name = ?', $roleId, $group, $deletedAction]);
                                 $deleteResult = $rolePermission->erase();
                                 if ($deleteResult) {
                                     $this->logger->info('Role permission successfully deleted');
@@ -102,7 +102,7 @@ class Edit extends BaseAction
                                 $rolePermission          = new RolePermission();
                                 $rolePermission->group   = $group;
                                 $rolePermission->name    = $addedAction;
-                                $rolePermission->role_id = $role_id;
+                                $rolePermission->role_id = $roleId;
 
                                 try {
                                     $rolePermission->save();
@@ -124,7 +124,7 @@ class Edit extends BaseAction
                                 $rolePermission          = new RolePermission();
                                 $rolePermission->group   = $group;
                                 $rolePermission->name    = $newAction;
-                                $rolePermission->role_id = $role_id;
+                                $rolePermission->role_id = $roleId;
 
                                 try {
                                     $rolePermission->save();
@@ -150,7 +150,7 @@ class Edit extends BaseAction
                 return;
             }
 
-            $role = $this->loadData($role_id);
+            $role = $this->loadData($roleId);
             $this->logger->info('Role successfully updated', ['role' => $role->toArray()]);
             $this->renderJson(['result' => 'success', 'role' => $role->getRoleInfos()]);
         } else {

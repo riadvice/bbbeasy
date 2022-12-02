@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Actions\Account;
 
 use Actions\Base as BaseAction;
+use Actions\Users\Add;
 use Enum\ResponseCode;
-use Enum\UserStatus;
 use Models\User;
 use Respect\Validation\Validator;
 use Validation\DataChecker;
@@ -41,39 +41,26 @@ class Register extends BaseAction
 
         $dataChecker->verify($form['username'], Validator::length(4)->setName('username'));
         $dataChecker->verify($form['email'], Validator::email()->setName('email'));
-        $dataChecker->verify($form['password'], Validator::length(4)->setName('password'));
-        $dataChecker->verify($form['confirmPassword'], Validator::length(4)->equals($form['password'])->setName('confirmPassword'));
+        $dataChecker->verify($form['password'], Validator::length(8)->setName('password'));
+        $dataChecker->verify($form['confirmPassword'], Validator::length(8)->equals($form['password'])->setName('confirmPassword'));
         // @fixme: the agreement must be accepted only if there are terms for the website
         // otherwise in the login it should look for available terms of they were not previously available and ask to accept them
         $dataChecker->verify($form['agreement'], Validator::trueVal()->setName('agreement'));
 
+        /** @todo : move to locales */
+        $errorMessage = 'User could not be added';
+        $successMessage = 'User successfully registered';
         if ($dataChecker->allValid()) {
-            $user  = new User();
-            $error = $user->usernameOrEmailExists($form['username'], $form['email']);
-            if ($error) {
-                $this->logger->error('Registration error : user could not be added', ['error' => $error]);
-                $this->renderJson(['message' => $error], ResponseCode::HTTP_PRECONDITION_FAILED);
-            } else {
-                $user->email    = $form['email'];
-                $user->username = $form['username'];
-                $user->password = $form['password'];
-                $user->role_id  = 2;
-                $user->status   = UserStatus::PENDING;
-
-                try {
-                    $user->save();
-                } catch (\Exception $e) {
-                    $message = 'user could not be added';
-                    $this->logger->error('Registration error : user could not be added', ['user' => $user->toArray(), 'error' => $e->getMessage()]);
-                    $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-
-                    return;
+            $user = new User();
+            if ($this->credentialsAreValid($form, $user, $errorMessage)) {
+                $addUserClass = new Add();
+                $result = $addUserClass->addUser($form, $user, 2, $successMessage, $errorMessage);
+                if ($result) {
+                    $this->renderJson(['result' => 'success', ResponseCode::HTTP_CREATED]);
                 }
-                $this->logger->info('user successfully registered', ['user' => $user->toArray()]);
-                $this->renderJson(['result' => 'success', ResponseCode::HTTP_CREATED]);
             }
         } else {
-            $this->logger->error('Registration error', ['errors' => $dataChecker->getErrors()]);
+            $this->logger->error($errorMessage, ['errors' => $dataChecker->getErrors()]);
             $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
         }
     }

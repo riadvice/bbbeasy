@@ -22,11 +22,11 @@ declare(strict_types=1);
 
 namespace Enum\Presets;
 
-use Enum\Enum;
+use MabeEnum\Enum;
 
 class Screenshare extends Enum
 {
-    final public const CONFIGURABLE = 'configurable';
+    public const CONFIGURABLE = 'configurable';
 
-    public static string $icon = 'DesktopOutlined';
+    public const CONFIGURABLE_TYPE = 'bool';
 }

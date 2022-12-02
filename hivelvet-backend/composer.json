@@ -23,7 +23,7 @@
     "ext-mbstring": "*",
     "ext-bcmath": "*",
     "ext-fileinfo": "*",
-    "bcosca/fatfree-core": "3.8.0",
+    "bcosca/fatfree-core": "dev-master#d13f606 as 3.8.0",
     "ikkez/f3-cortex": "dev-master#6472d59 as 1.7.4",
     "ikkez/f3-mailer": "^1.2",
     "respect/validation": "^2.2",
@@ -36,7 +36,8 @@
     "linfo/linfo": "^4.0",
     "carbon-cli/carbon-cli": "^1.2",
     "roave/better-reflection": "^5.0",
-    "haydenpierce/class-finder": "^0.4.3"
+    "haydenpierce/class-finder": "^0.4.3",
+    "marc-mabe/php-enum-phpstan": "^2.0"
   },
   "require-dev": {
     "roave/security-advisories": "dev-latest",
@@ -49,7 +50,8 @@
     "gabrielelana/byte-units": "^0.5",
     "phpmetrics/phpmetrics": "^2.7",
     "devster/ubench": "^2.1",
-    "rector/rector": "^0.12.16"
+    "rector/rector": "^0.12.16",
+    "marc-mabe/php-enum": "^4.7"
   },
   "config": {
     "optimize-autoloader": true,

@@ -34,6 +34,7 @@ use Models\User;
 use SimpleXMLElement;
 use Template;
 use Utils\Environment;
+use Utils\SecurityUtils;
 
 /**
  * Base Controller Class.
@@ -262,6 +263,38 @@ abstract class Base extends \Prefab
         }
 
         return $credentials;
+    }
+
+    protected function credentialsAreValid(array $form, User $user, string $errorMessage): bool
+    {
+        $credentials_valid = true;
+        $responseCode     = ResponseCode::HTTP_BAD_REQUEST;
+
+        $username   = $form['username'];
+        $email      = $form['email'];
+        $password   = $form['password'];
+
+        $users      = $user->getUsersByUsernameOrEmail($username, $email);
+
+        $compliant     = SecurityUtils::isGdprCompliant($password);
+        $common        = SecurityUtils::credentialsAreCommon($username, $email, $password);
+        $found         = $user->userExists($username, $email, $users);
+
+        if (!$compliant) {
+            $this->logger->error($errorMessage, ['error' => $compliant]);
+            $this->renderJson(['message' => $compliant], $responseCode);
+            $credentials_valid = false;
+        } elseif ($common) {
+            $this->logger->error($errorMessage, ['error' => $common]);
+            $this->renderJson(['message' => $common], $responseCode);
+            $credentials_valid = false;
+        } elseif ($found) {
+            $this->logger->error($errorMessage, ['error' => $found]);
+            $this->renderJson(['message' => $found], ResponseCode::HTTP_PRECONDITION_FAILED);
+            $credentials_valid = false;
+        }
+
+        return $credentials_valid;
     }
 
     private function parseXMLView(string $view = null): string

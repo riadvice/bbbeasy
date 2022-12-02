@@ -54,7 +54,7 @@ class Install extends BaseAction
 
         $dataChecker->verify($form['username'], Validator::length(4)->setName('username'));
         $dataChecker->verify($form['email'], Validator::email()->setName('email'));
-        $dataChecker->verify($form['password'], Validator::length(4)->setName('password'));
+        $dataChecker->verify($form['password'], Validator::length(8)->setName('password'));
 
         $dataChecker->verify($form['company_name'], Validator::notEmpty()->setName('company_name'));
         $dataChecker->verify($form['company_url'], Validator::url()->setName('company_url'));
@@ -99,6 +99,7 @@ class Install extends BaseAction
                 $defaultSettings->accent_color     = $colors['accent_color'];
                 $defaultSettings->additional_color = $colors['add_color'];
 
+                // @fixme: should not have embedded try/catch here
                 try {
                     $defaultSettings->save();
                     $this->logger->info('Initial application setup : Update settings', ['settings' => $defaultSettings->toArray()]);
@@ -112,8 +113,9 @@ class Install extends BaseAction
                                 $presetSettings          = new PresetSetting();
                                 $presetSettings->group   = $preset['name'];
                                 $presetSettings->name    = $subcategory['name'];
-                                $presetSettings->enabled = $subcategory['status'];
+                                $presetSettings->enabled = $subcategory['enabled'];
 
+                                // @fixme: should not have embedded try/catch here
                                 try {
                                     $presetSettings->save();
                                     $this->logger->info('Initial application setup : Add preset settings', ['preset' => $presetSettings->toArray()]);
@@ -140,6 +142,7 @@ class Install extends BaseAction
                             // assign admin created to role admin
                             $user->role_id = $roleAdmin->id;
 
+                            // @fixme: should not have embedded try/catch here
                             try {
                                 $user->save();
                                 $this->logger->info('Initial application setup : Assign role to administrator user', ['user' => $user->toArray()]);

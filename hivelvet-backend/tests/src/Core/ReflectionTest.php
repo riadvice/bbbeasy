@@ -27,6 +27,7 @@ use Utils\PrivilegeUtils;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 final class ReflectionTest extends Scenario

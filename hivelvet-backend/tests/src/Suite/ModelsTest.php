@@ -29,6 +29,7 @@ use Test\TestGroup;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 final class ModelsTest extends TestGroup
