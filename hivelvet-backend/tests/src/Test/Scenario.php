@@ -61,6 +61,7 @@ class Scenario
 
     /**
      * @param $path
+     * @param mixed $values
      *
      * @throws \JsonException
      */

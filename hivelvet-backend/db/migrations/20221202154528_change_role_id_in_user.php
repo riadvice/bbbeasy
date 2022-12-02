@@ -20,38 +20,23 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Actions\Presets;
+use Phinx\Migration\AbstractMigration;
 
-use Actions\Base as BaseAction;
-use Actions\RequirePrivilegeTrait;
-use Base;
-use Models\Preset;
-
-/**
- * Class CollectMyPresets.
- */
-class CollectMyPresets extends BaseAction
+final class ChangeRoleIdInUser extends AbstractMigration
 {
-    use RequirePrivilegeTrait;
-
-    /**
-     * @param Base  $f3
-     * @param array $params
-     */
-    public function execute($f3, $params): void
+    public function up(): void
     {
-        $userId = $f3->get('PARAMS.user_id');
+        $table = $this->table('users');
+        $table->changeColumn('role_id', 'integer', ['null' => false])
+            ->save()
+        ;
+    }
 
-        $preset      = new Preset();
-        $presets     = $preset->collectAllByUserId($userId);
-        $presetsData = [];
-
-        foreach ($presets as $myPreset) {
-            $presetData    = $preset->getMyPresetInfos($myPreset);
-            $presetsData[] = $presetData;
-        }
-
-        $this->logger->debug('collecting presets', ['data' => json_encode($presetsData)]);
-        $this->renderJson($presetsData);
+    public function down(): void
+    {
+        $this->table('users')
+            ->changeColumn('role_id', 'integer', ['null' => true])
+            ->save()
+        ;
     }
 }

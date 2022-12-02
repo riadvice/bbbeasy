@@ -268,17 +268,17 @@ abstract class Base extends \Prefab
     protected function credentialsAreValid(array $form, User $user, string $errorMessage): bool
     {
         $credentials_valid = true;
-        $responseCode     = ResponseCode::HTTP_BAD_REQUEST;
+        $responseCode      = ResponseCode::HTTP_BAD_REQUEST;
 
-        $username   = $form['username'];
-        $email      = $form['email'];
-        $password   = $form['password'];
+        $username = $form['username'];
+        $email    = $form['email'];
+        $password = $form['password'];
 
-        $users      = $user->getUsersByUsernameOrEmail($username, $email);
+        $users = $user->getUsersByUsernameOrEmail($username, $email);
 
-        $compliant     = SecurityUtils::isGdprCompliant($password);
-        $common        = SecurityUtils::credentialsAreCommon($username, $email, $password);
-        $found         = $user->userExists($username, $email, $users);
+        $compliant = SecurityUtils::isGdprCompliant($password);
+        $common    = SecurityUtils::credentialsAreCommon($username, $email, $password);
+        $found     = $user->userExists($username, $email, $users);
 
         if (!$compliant) {
             $this->logger->error($errorMessage, ['error' => $compliant]);

@@ -49,7 +49,7 @@ class Edit extends BaseAction
         $form = $body['data'];
 
         $roleId = $params['id'];
-        $role    = $this->loadData($roleId);
+        $role   = $this->loadData($roleId);
 
         if ($role->valid()) {
             if (isset($form['name'])) {

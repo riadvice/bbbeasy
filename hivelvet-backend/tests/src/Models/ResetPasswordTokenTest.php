@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Models;
 
 use Enum\UserRole;
+use Fake\ResetPasswordTokenFaker;
 use Fake\UserFaker;
 use Test\Scenario;
 
@@ -46,13 +47,35 @@ final class ResetPasswordTokenTest extends Scenario
      */
     public function testTokenCreation($f3)
     {
-        $user = UserFaker::create(UserRole::ADMINISTRATOR);
-
         $test                = $this->newTest();
+        $user                = UserFaker::create(UserRole::ADMINISTRATOR);
         $resetToken          = new ResetPasswordToken();
         $resetToken->user_id = $user->id;
         $resetToken->insert();
-        $test->expect($resetToken->isUsable(), 'Newly inserted password reset token is usable');
+
+        $test->expect($resetToken->isUsable(), 'Newly inserted password reset token is usable with user id = ' . $resetToken->user_id);
+        $test->expect($resetToken->userExists($resetToken->user_id), 'userExists(' . $resetToken->user_id . ') exists');
+
+        return $test->results();
+    }
+
+    /**
+     * @param $f3
+     *
+     * @return array
+     *
+     * @throws \ReflectionException
+     */
+    public function testUserExists($f3)
+    {
+        $user = UserFaker::create(UserRole::ADMINISTRATOR);
+
+        $test       = $this->newTest();
+        $resetToken = ResetPasswordTokenFaker::create($user);
+
+        $test->expect($resetToken->isUsable(), 'Newly inserted password reset token is usable with token = ' . $resetToken->token);
+        $test->expect($resetToken->getByToken($resetToken->token)->token === $resetToken->token, 'getByToken(' . $resetToken->token . ') found password reset token');
+        $test->expect($resetToken->getByToken('404')->token === $resetToken->token, 'getByToken("404") did not find password reset token');
 
         return $test->results();
     }

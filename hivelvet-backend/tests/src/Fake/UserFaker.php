@@ -51,8 +51,16 @@ class UserFaker
         $user->username = $faker->userName;
         // pick a random role if not provided
         if (null === $role) {
-            $role = array_rand(UserRole::values());
+            $roles = UserRole::values();
+            foreach ($roles as $key => $value) {
+                if ('string' !== \gettype($value)) {
+                    unset($roles[$key]);
+                }
+            }
+            $roleKey = array_rand($roles);
+            $role    = $roles[$roleKey];
         }
+
         $user->role_id  = UserRole::LECTURER_ID;
         $user->password = $role;
         if (UserRole::ADMINISTRATOR === $role) {

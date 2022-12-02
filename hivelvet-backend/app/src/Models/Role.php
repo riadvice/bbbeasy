@@ -56,12 +56,12 @@ class Role extends BaseModel
         $this->onset('name', fn($self, $value) => $self->f3->snakecase($value));
     }
 
-    public function nameExists($name, $id = null)
+    public function nameExists($name, $id = null): bool
     {
         return $this->load(['lower(name) = ? and id != ?', mb_strtolower($this->f3->snakecase($name)), $id]);
     }
 
-    public function getAllRoles()
+    public function getAllRoles(): array
     {
         $data  = [];
         $roles = $this->find([], ['order' => 'id']);
@@ -89,10 +89,7 @@ class Role extends BaseModel
         ];
     }
 
-    /**
-     * @return array
-     */
-    public function getLecturerRole()
+    public function getLecturerRole(): array
     {
         $data = [];
         $this->load(['id = ?', [UserRole::LECTURER_ID]]);
@@ -103,12 +100,23 @@ class Role extends BaseModel
         return $data;
     }
 
-    public function getRoleUsers()
+    public function getAdministratorRole(): array
+    {
+        $data = [];
+        $this->load(['id = ?', [UserRole::ADMINISTRATOR_ID]]);
+        if ($this->valid()) {
+            $data = $this->getRoleInfos();
+        }
+
+        return $data;
+    }
+
+    public function getRoleUsers(): int
     {
         return $this->users ? \count($this->users) : 0;
     }
 
-    public function getRolePermissions()
+    public function getRolePermissions(): array|object
     {
         $rolePermissions = $this->permissions;
 
@@ -126,7 +134,7 @@ class Role extends BaseModel
         return $permissionsRole;
     }
 
-    public function saveRoleAndPermissions($permissions)
+    public function saveRoleAndPermissions($permissions): bool
     {
         $this->logger->info('Starting save role and permissions transaction.');
         $this->db->begin();
@@ -162,15 +170,16 @@ class Role extends BaseModel
         return true;
     }
 
-    public function switchAllRoleUsers()
+    public function switchAllRoleUsers(): bool
     {
         $roleId = $this->id;
-        if (1 !== $roleId && 2 !== $roleId) {
+        if (UserRole::ADMINISTRATOR_ID !== $roleId && UserRole::LECTURER_ID !== $roleId) {
             $users = $this->getRoleUsers();
+
             if ($users > 0) {
                 /** @var User $user */
                 foreach ($this->users as $user) {
-                    $user->role_id = 2;
+                    $user->role_id = UserRole::LECTURER_ID;
 
                     try {
                         $user->save();
@@ -189,7 +198,7 @@ class Role extends BaseModel
         return false;
     }
 
-    public function deleteAllRolePermissions()
+    public function deleteAllRolePermissions(): bool
     {
         $roleId = $this->id;
         if (1 !== $roleId) {
@@ -212,7 +221,7 @@ class Role extends BaseModel
         return false;
     }
 
-    public function deleteUsersAndPermissions()
+    public function deleteUsersAndPermissions(): bool
     {
         $this->logger->info('Starting delete users and permissions transaction.');
         $this->db->begin();

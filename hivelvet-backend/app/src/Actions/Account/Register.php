@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Actions\Account;
 
 use Actions\Base as BaseAction;
-use Actions\Users\Add;
 use Enum\ResponseCode;
+use Enum\UserRole;
 use Models\User;
 use Respect\Validation\Validator;
 use Validation\DataChecker;
@@ -48,15 +48,16 @@ class Register extends BaseAction
         $dataChecker->verify($form['agreement'], Validator::trueVal()->setName('agreement'));
 
         /** @todo : move to locales */
-        $errorMessage = 'User could not be added';
+        $errorMessage   = 'User could not be added';
         $successMessage = 'User successfully registered';
         if ($dataChecker->allValid()) {
             $user = new User();
             if ($this->credentialsAreValid($form, $user, $errorMessage)) {
-                $addUserClass = new Add();
-                $result = $addUserClass->addUser($form, $user, 2, $successMessage, $errorMessage);
+                $result = $user->saveUserWithDefaultPreset($form['username'], $form['email'], $form['password'], UserRole::LECTURER_ID, $successMessage, $errorMessage);
                 if ($result) {
                     $this->renderJson(['result' => 'success', ResponseCode::HTTP_CREATED]);
+                } else {
+                    $this->renderJson(['message' => $errorMessage], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
                 }
             }
         } else {
