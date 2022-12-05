@@ -119,7 +119,7 @@ abstract class Base extends Cortex
      */
     public function lastInsertId(): int
     {
-        $id = $this->db->exec("SELECT MAX(id) as seq FROM `{$this->table}`");
+        $id = $this->db->exec("SELECT MAX(id) as seq FROM {$this->table}");
 
         return $id[0]['seq'];
     }

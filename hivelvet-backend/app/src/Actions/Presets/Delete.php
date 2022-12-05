@@ -25,9 +25,7 @@ namespace Actions\Presets;
 use Actions\Delete as DeleteAction;
 use Actions\RequirePrivilegeTrait;
 use Enum\ResponseCode;
-use Enum\UserStatus;
 use Models\Preset;
-use Models\User;
 
 /**
  * Class Delete.
@@ -42,14 +40,14 @@ class Delete extends DeleteAction
         $presetId = $params['id'];
         $preset->load(['id = ?', $presetId]);
         if ($preset->valid()) {
-
-
             try {
                 $preset->erase();
             } catch (\Exception $e) {
                 $message = 'preset  could not be deleted';
-                $this->logger->error('preset could not be deleted',
-                    ['preset' => $preset->toArray(), 'error' => $e->getMessage()]);
+                $this->logger->error(
+                    'preset could not be deleted',
+                    ['preset' => $preset->toArray(), 'error' => $e->getMessage()]
+                );
                 $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
 
                 return;

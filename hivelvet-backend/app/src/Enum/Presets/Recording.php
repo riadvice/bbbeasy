@@ -30,7 +30,7 @@ class Recording extends Enum
     public const AUTO_START       = 'auto_start';
     public const ALLOW_START_STOP = 'allow_start_stop';
 
-    public const CONFIGURABLE_TYPE      = 'bool';
-    public const AUTO_START_TYPE        = 'bool';
-    public const ALLOW_START_STOP_TYPE  = 'bool';
+    public const CONFIGURABLE_TYPE     = 'bool';
+    public const AUTO_START_TYPE       = 'bool';
+    public const ALLOW_START_STOP_TYPE = 'bool';
 }

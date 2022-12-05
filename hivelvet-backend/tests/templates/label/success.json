@@ -4,7 +4,7 @@
     "key": 20,
     "name": "label",
     "description": "description",
-    "color": "#ffffff"
+    "color": "{{ @data.color }}"
   },
   "status": 201
 }

@@ -32,9 +32,9 @@ class Layout extends Enum
     public const NAVIGATION_BAR = 'navigation_bar';
     public const ACTIONS_BAR    = 'actions_bar';
 
-    public const PRESENTATION_TYPE      = 'bool';
-    public const PARTICIPANTS_TYPE      = 'bool';
-    public const CHAT_TYPE              = 'bool';
-    public const NAVIGATION_BAR_TYPE    = 'bool';
-    public const ACTIONS_BAR_TYPE       = 'bool';
+    public const PRESENTATION_TYPE   = 'bool';
+    public const PARTICIPANTS_TYPE   = 'bool';
+    public const CHAT_TYPE           = 'bool';
+    public const NAVIGATION_BAR_TYPE = 'bool';
+    public const ACTIONS_BAR_TYPE    = 'bool';
 }

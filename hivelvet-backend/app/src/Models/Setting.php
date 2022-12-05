@@ -45,4 +45,19 @@ use Models\Base as BaseModel;
 class Setting extends BaseModel
 {
     protected $table = 'settings';
+
+    public function saveSettings(string $name, string $website, string $plaform, string $terms, string $policy, ?array $colors): void
+    {
+        $this->company_name    = $name;
+        $this->company_website = $website;
+        $this->platform_name   = $plaform;
+        $this->terms_use       = $terms;
+        $this->privacy_policy  = $policy;
+        if ($colors) {
+            $this->primary_color    = $colors['primary_color'];
+            $this->secondary_color  = $colors['secondary_color'];
+            $this->accent_color     = $colors['accent_color'];
+            $this->additional_color = $colors['add_color'];
+        }
+    }
 }

@@ -67,7 +67,7 @@ final class DeleteTest extends Scenario
 
         $user = UserFaker::create(UserRole::LECTURER);
         $f3->mock(self::DELETE_USER_ROUTE . $user->id);
-        $test->expect($this->compareArrayToResponse(['result' => 'success', 'user' => $user->getUserInfos($user->id)]), 'Delete existing user with id "' . $user->id . '" successfully');
+        $test->expect($this->compareArrayToResponse(['result' => 'success', 'user' => $user->getUserInfos()]), 'Delete existing user with id "' . $user->id . '" successfully');
 
         return $test->results();
     }

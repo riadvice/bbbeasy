@@ -39,9 +39,49 @@ class PresetSetting extends BaseModel
 {
     protected $table = 'preset_settings';
 
+    public function getDefaultPresetSettings($enabled = false): array
+    {
+        $data       = [];
+        $preset     = new Preset();
+        $categories = $preset->getPresetCategories();
+        if ($categories) {
+            foreach ($categories as $category) {
+                $categoryName = $preset->getCategoryName($category);
+
+                $class        = new \ReflectionClass($category);
+                $categoryData = [
+                    'name'          => $categoryName,
+                    'subcategories' => [],
+                ];
+                $attributes = $class->getReflectionConstants();
+                foreach ($attributes as $attribute) {
+                    $attributeName = $attribute->name;
+                    if (!str_ends_with($attributeName, '_TYPE')) {
+                        $subCategory     = $class->getConstant($attributeName);
+                        $subCategoryData = [
+                            'name'    => $subCategory,
+                            'enabled' => $enabled,
+                        ];
+                        $categoryData['subcategories'][] = $subCategoryData;
+                    }
+                }
+
+                $data[] = $categoryData;
+            }
+        }
+
+        return $data;
+    }
+
     public function getAllPresets(): array
     {
-        return $this->db->exec("SELECT id, group, name, enabled FROM preset_settings");
+        $data           = [];
+        $presetSettings = $this->find();
+        if ($presetSettings) {
+            $data = $presetSettings->castAll(['id', 'group', 'name', 'enabled']);
+        }
+
+        return $data;
     }
 
     public function getByGroup(string $group): self
@@ -56,5 +96,31 @@ class PresetSetting extends BaseModel
         $this->load(['name = ?', $name]);
 
         return $this;
+    }
+
+    public function savePresetSettings(array $presets): bool|string
+    {
+        foreach ($presets as $preset) {
+            $subcategories = $preset['subcategories'];
+            foreach ($subcategories as $subcategory) {
+                $presetSettings          = new self();
+                $presetSettings->group   = $preset['name'];
+                $presetSettings->name    = $subcategory['name'];
+                $presetSettings->enabled = $subcategory['enabled'];
+
+                // @fixme: should not have embedded try/catch here
+                try {
+                    $presetSettings->save();
+                } catch (\Exception $e) {
+                    $message = $e->getMessage();
+                    $this->logger->error('Initial application setup : Preset settings could not be added', ['error' => $message]);
+
+                    return $message;
+                }
+                $this->logger->info('Initial application setup : Add preset settings', ['preset' => $presetSettings->toArray()]);
+            }
+        }
+
+        return true;
     }
 }

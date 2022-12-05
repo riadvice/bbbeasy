@@ -52,7 +52,7 @@ class Edit extends BaseAction
 
         $username_error_message = 'Username already exists';
         $email_error_message    = 'Email already exists';
-        $errorMessage          = 'User could not be updated';
+        $errorMessage           = 'User could not be updated';
         if ($user->valid()) {
             $dataChecker = new DataChecker();
 
@@ -100,7 +100,7 @@ class Edit extends BaseAction
                         }
 
                         $this->logger->info('User successfully updated', ['user' => $user->toArray()]);
-                        $this->renderJson(['result' => 'success', 'user' => $user->getUserInfos($user->id)]);
+                        $this->renderJson(['result' => 'success', 'user' => $user->getUserInfos()]);
                     } else {
                         $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
                     }

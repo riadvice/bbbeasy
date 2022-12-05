@@ -64,11 +64,14 @@ class Statera
 
         // Test web-application classes
         $classes = [
-            ConfigurationTest::class, ReflectionTest::class, ModelsTest::class, CoreActionsTest::class,
+            ConfigurationTest::class, ReflectionTest::class, ModelsTest::class,
+            /*
+            CoreActionsTest::class,
             AccountActionsTest::class,
             UsersActionsTest::class,
             RolesActionsTest::class,
             LabelsActionsTest::class,
+            */
             // Always leave CDN test as the last one
             // CdnDistributorTest::class
         ];

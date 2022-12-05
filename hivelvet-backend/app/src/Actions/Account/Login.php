@@ -43,7 +43,7 @@ class Login extends BaseAction
         $dataChecker->verify($email = $form['email'], Validator::email()->setName('email'));
         $dataChecker->verify($form['password'], Validator::length(8)->setName('password'));
 
-        $userInfos     = [];
+        $userInfos    = [];
         $errorMessage = 'Could not authenticate user with email';
         if ($dataChecker->allValid()) {
             $this->login($form, $email, $userInfos, $dataChecker, $errorMessage);

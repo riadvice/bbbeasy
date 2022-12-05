@@ -22,33 +22,33 @@ declare(strict_types=1);
 
 namespace Fake;
 
-use Enum\ResetTokenStatus;
-use Models\ResetPasswordToken;
+use Faker\Factory as Faker;
+use Models\Preset;
 use models\User;
 
-class PasswordResetTokenFaker
+class PresetFaker
 {
     private static array $storage = [];
 
-    public static function create(User $user, string $status = ResetTokenStatus::NEW, $storageName = null)
+    public static function create(User $user, $storageName = null)
     {
-        // To make testing easier, the user is password is the same as its role
-        $token          = new ResetPasswordToken();
-        $token->status  = $status;
-        $token->user_id = $user->id;
+        $faker           = Faker::create();
+        $preset          = new Preset();
+        $preset->name    = $faker->name;
+        $preset->user_id = $user->id;
+        $result          = $preset->addDefaultSettings('Default preset successfully added', 'Default preset could not be added');
 
-        $token->save();
-        if (null !== $storageName) {
-            self::$storage[$storageName] = $user;
+        if (null !== $storageName && true === $result) {
+            self::$storage[$storageName] = $preset;
         }
 
-        return $token;
+        return $preset;
     }
 
     /**
      * @param $storageName
      *
-     * @return User
+     * @return Preset
      */
     public static function get($storageName)
     {

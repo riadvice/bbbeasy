@@ -45,6 +45,10 @@ export const Step3Form = (props: Props) => {
         setModalContent(content);
     };
 
+    const getSubCategoryName = (name: string) => {
+        return name.charAt(0).toUpperCase() + name.replaceAll('_', ' ').slice(1);
+    }
+
     return (
         <>
             <Paragraph className="final-form-header">
@@ -68,11 +72,11 @@ export const Step3Form = (props: Props) => {
                         title={
                             <ul>
                                 {item.subcategories.map((subItem) => {
-                                    const subcategory = subItem.name.replaceAll("_", " ");
+                                    const subcategory = getSubCategoryName(subItem.name);
 
                                     return <li
                                         key={item.name + '_' + subItem.name}
-                                        className={subItem.enabled == true ? 'text-capitalize text-black' : 'text-capitalize text-grey'}
+                                        className={subItem.enabled == true ? 'text-black' : 'text-grey'}
                                     >
                                         {subcategory}
                                     </li>
@@ -108,10 +112,10 @@ export const Step3Form = (props: Props) => {
                 >
                     <div className="presets-body">
                         {modalContent.map((item) => {
-                            const subcategory = item.name.replaceAll("_", " ");
+                            const subcategory = getSubCategoryName(item.name);
 
                             return <div key={modalTitle + '_' + item.name}>
-                                <Form.Item className="text-capitalize" label={subcategory} valuePropName={item.name}>
+                                <Form.Item label={subcategory} valuePropName={item.name}>
                                     <Switch
                                         defaultChecked={item.enabled == true ? true : false}
                                         onChange={(checked) => {

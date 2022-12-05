@@ -36,15 +36,15 @@ class Collect extends BaseAction
         $form = $this->getDecodedBody()['data'];
         $user = new User();
 
-        $username   = $form['username'];
-        $email      = $form['email'];
-        $password   = $form['password'];
+        $username = $form['username'];
+        $email    = $form['email'];
+        $password = $form['password'];
 
-        $users      = $user->getUsersByUsernameOrEmail($username, $email);
+        $users = $user->getUsersByUsernameOrEmail($username, $email);
 
-        $compliant     = SecurityUtils::isGdprCompliant($password);
-        $common        = SecurityUtils::credentialsAreCommon($username, $email, $password);
-        $found         = $user->userExists($username, $email, $users);
+        $compliant    = SecurityUtils::isGdprCompliant($password);
+        $common       = SecurityUtils::credentialsAreCommon($username, $email, $password);
+        $found        = $user->userExists($username, $email, $users);
         $errorMessage = 'Administrator could not be added';
 
         if (!$compliant) {
