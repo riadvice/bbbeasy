@@ -1004,8 +1004,8 @@
     webpack-merge "^4.2.2"
 
 "@crowdin/cli@3":
-  version "3.8.0"
-  resolved "https://registry.yarnpkg.com/@crowdin/cli/-/cli-3.8.0.tgz#636b9aea680dd21ece9209f9b5e920637542aba2"
+  version "3.9.1"
+  resolved "https://registry.yarnpkg.com/@crowdin/cli/-/cli-3.9.1.tgz#f09f3616798ec7474c2c7d162a40bf875e0c9e74"
   dependencies:
     njre "^0.2.0"
     shelljs "^0.8.4"
