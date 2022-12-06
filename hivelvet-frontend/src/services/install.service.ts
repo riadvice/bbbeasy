@@ -20,20 +20,6 @@ import axios from 'axios';
 import { apiRoutes } from '../routing/backend-config';
 
 class InstallService {
-    collect_users(data: object) {
-        return axios.post(apiRoutes.COLLECT_USERS_URL, {
-            data,
-        });
-    }
-
-    collect_settings() {
-        return axios.get(apiRoutes.COLLECT_SETTINGS_URL);
-    }
-
-    collect_presets() {
-        return axios.get(apiRoutes.COLLECT_PRESETS_URL);
-    }
-
     save_file(data: object) {
         return axios.post(apiRoutes.SAVE_FILE_URL, {
             data,

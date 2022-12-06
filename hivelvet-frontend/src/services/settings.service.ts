@@ -1,8 +1,4 @@
-<?php
-
-declare(strict_types=1);
-
-/*
+/**
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -20,19 +16,19 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-use Phinx\Migration\AbstractMigration;
+import axios from 'axios';
+import { apiRoutes } from '../routing/backend-config';
 
-final class RemoveNameIndexInPreset extends AbstractMigration
-{
-    public function up(): void
-    {
-        $table = $this->table('presets');
-        $table->removeIndexByName('idx_presets_name')
-            ->save()
-        ;
+class SettingsService {
+    collect_settings() {
+        return axios.get(apiRoutes.COLLECT_SETTINGS_URL);
     }
 
-    public function down(): void
-    {
+    edit_settings(data: object) {
+        return axios.put(apiRoutes.EDIT_SETTINGS_URL, {
+            data,
+        });
     }
 }
+
+export default new SettingsService();

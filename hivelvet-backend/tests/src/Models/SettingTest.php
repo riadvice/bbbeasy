@@ -43,6 +43,21 @@ final class SettingTest extends Scenario
      *
      * @return array
      */
+    public function testGetAllSettings($f3)
+    {
+        $test    = $this->newTest();
+        $setting = new Setting(Registry::get('db'));
+
+        $test->expect(10 === \count($setting->getAllSettings()), 'getAllSettings() returned all settings');
+
+        return $test->results();
+    }
+
+    /**
+     * @param Base $f3
+     *
+     * @return array
+     */
     public function testSaveSettings($f3)
     {
         $test    = $this->newTest();

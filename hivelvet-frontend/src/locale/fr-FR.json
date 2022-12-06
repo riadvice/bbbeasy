@@ -246,5 +246,7 @@
     "delete_preset_confirm": "Êtes-vous sûr de vouloir supprimer ce préréglage ?",
     "add_preset_success": "Préaglage ajouté avec succés",
     "edit_preset_success": "Préaglage mis à jour avec succès",
-    "delete_preset_success": "Préaglage supprimé avec succès"
+    "delete_preset_success": "Préaglage supprimé avec succès",
+
+    "edit_settings_success": "Paramètres de compagnie et de branding mis à jour avec succès"
 }

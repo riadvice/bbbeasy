@@ -30,7 +30,8 @@ export const apiRoutes = {
 
     COLLECT_USERS_URL: API_URL + '/collect-users',
     COLLECT_PRESETS_URL: API_URL + '/collect-presets',
-    COLLECT_SETTINGS_URL: API_URL + '/collect-settings',
+    COLLECT_SETTINGS_URL: API_URL + '/settings/collect',
+    EDIT_SETTINGS_URL: API_URL + '/settings',
     SAVE_FILE_URL: API_URL + '/save-logo',
     INSTALL_URL: API_URL + '/install',
 

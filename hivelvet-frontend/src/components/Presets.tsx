@@ -119,7 +119,7 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editClickHandler, d
     const [editForm] = Form.useForm();
     const toggleEdit = () => {
         setIsEditing(true);
-        editForm.setFieldsValue({ name : preset['name'] });
+        editForm.setFieldsValue({ name: preset['name'] });
     };
     const cancelEdit = () => {
         setErrorsEdit({});
@@ -143,15 +143,15 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editClickHandler, d
         } catch (errInfo) {
             console.log('Save failed:', errInfo);
         }
-    }
+    };
 
     //edit category
     const saveEditPresetCategory = (title: string, preset: MyPresetType, subCategories: SubCategoryType[]) => {
         setIsModalVisible(false);
-        if(file != undefined) {
+        if (file != undefined) {
             const formData: FormData = new FormData();
             const sub = subCategories.filter((subCategory) => {
-                if(subCategory.type == 'file') {
+                if (subCategory.type == 'file') {
                     subCategory.value = file.name;
                 }
             });
@@ -166,10 +166,9 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editClickHandler, d
                     console.log(error);
                 });
         }
-        PresetsService.edit_subcategory_preset(title, subCategories, preset.id)
-            .then((response) => {
-                editClickHandler(response.data.preset, preset);
-            });
+        PresetsService.edit_subcategory_preset(title, subCategories, preset.id).then((response) => {
+            editClickHandler(response.data.preset, preset);
+        });
     };
 
     return (
@@ -182,61 +181,73 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editClickHandler, d
                         onMouseLeave={() => setIsShown(false)}
                     >
                         <Space>
-                        {!isEditing ? (
-                            <>
-                                <span>{preset['name']}</span>
-                                {isShown && (
-                                    <Button className="edit-btn" size="small" type="link" icon={<EditOutlined />} onClick={toggleEdit}>
-                                        {t('rename')}
-                                    </Button>
-                                )}
-                            </>
-                        ) : (
-                            <Form form={editForm}>
-                                <Form.Item
-                                    name="name"
-                                    className="input-editable"
-                                    {...('name' in errorsEdit && {
-                                        help: (
-                                            <Trans
-                                                i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errorsEdit['name'])}
-                                            />
-                                        ),
-                                        validateStatus: 'error',
-                                    })}
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message: <Trans i18nKey="name.required" />,
-                                        },
-                                    ]}
-                                >
-                                    <Input
-                                        className="input"
-                                        onPressEnter={handleSaveEdit}
-                                        suffix={
-                                            <>
-                                                <Popconfirm title={t('cancel_edit')} placement="leftTop" onConfirm={() => cancelEdit()}>
-                                                    <Button
-                                                        icon={<CloseOutlined />}
-                                                        size="small"
-                                                        //onClick={cancelEdit}
-                                                        className="cell-input-cancel"
-                                                    />
-                                                </Popconfirm>
-                                                <Button
-                                                    icon={<CheckOutlined />}
-                                                    size="small"
-                                                    onClick={handleSaveEdit}
-                                                    type="primary"
-                                                    className="cell-input-save"
+                            {!isEditing ? (
+                                <>
+                                    <span>{preset['name']}</span>
+                                    {isShown && (
+                                        <Button
+                                            className="edit-btn"
+                                            size="small"
+                                            type="link"
+                                            icon={<EditOutlined />}
+                                            onClick={toggleEdit}
+                                        >
+                                            {t('rename')}
+                                        </Button>
+                                    )}
+                                </>
+                            ) : (
+                                <Form form={editForm}>
+                                    <Form.Item
+                                        name="name"
+                                        className="input-editable"
+                                        {...('name' in errorsEdit && {
+                                            help: (
+                                                <Trans
+                                                    i18nKey={Object.keys(EN_US).filter(
+                                                        (elem) => EN_US[elem] == errorsEdit['name']
+                                                    )}
                                                 />
-                                            </>
-                                        }
-                                    />
-                                </Form.Item>
-                            </Form>
-                        )}
+                                            ),
+                                            validateStatus: 'error',
+                                        })}
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message: <Trans i18nKey="name.required" />,
+                                            },
+                                        ]}
+                                    >
+                                        <Input
+                                            className="input"
+                                            onPressEnter={handleSaveEdit}
+                                            suffix={
+                                                <>
+                                                    <Popconfirm
+                                                        title={t('cancel_edit')}
+                                                        placement="leftTop"
+                                                        onConfirm={() => cancelEdit()}
+                                                    >
+                                                        <Button
+                                                            icon={<CloseOutlined />}
+                                                            size="small"
+                                                            //onClick={cancelEdit}
+                                                            className="cell-input-cancel"
+                                                        />
+                                                    </Popconfirm>
+                                                    <Button
+                                                        icon={<CheckOutlined />}
+                                                        size="small"
+                                                        onClick={handleSaveEdit}
+                                                        type="primary"
+                                                        className="cell-input-save"
+                                                    />
+                                                </>
+                                            }
+                                        />
+                                    </Form.Item>
+                                </Form>
+                            )}
                         </Space>
                     </div>
                 }
@@ -255,34 +266,48 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editClickHandler, d
                 }
             >
                 {preset.categories.map((item, subIndex) => {
-                    return <Tooltip
-                        key={subIndex + '-' + item.name}
-                        placement={LocaleService.direction == 'rtl' ? item.enabled == true ? 'leftTop' : 'left' : item.enabled ? 'rightTop' : 'right'}
-                        overlayClassName={item.enabled ? "install-tooltip" : "title-tooltip"}
-                        title={item.enabled == true ?
-                            <>
-                                <Title level={5}>{item.name}</Title>
-                                <ul>
-                                    {item.subcategories.map((subItem) => (
-                                        <li
-                                            key={item.name + '_' + subItem.name}
-                                            className={subItem.value == "" ? 'text-grey' : 'text-black'}
-                                        >
-                                            {subItem.name.replaceAll('_', ' ').charAt(0).toUpperCase() +
-                                                subItem.name.replaceAll('_', ' ').slice(1)}
-                                        </li>
-                                    ))}
-                                </ul>
-                            </> : <Title level={5}>{item.name}</Title>
-                        }
-                    >
-                        <Button
-                            onClick={() => showModal(item.name, item.subcategories)}
-                            disabled={!item.enabled}
-                            type="link"
-                            icon={<DynamicIcon type={getIconName(item.name)} className={'PresetIcon'} />}
-                        />
-                    </Tooltip>
+                    return (
+                        <Tooltip
+                            key={subIndex + '-' + item.name}
+                            placement={
+                                LocaleService.direction == 'rtl'
+                                    ? item.enabled == true
+                                        ? 'leftTop'
+                                        : 'left'
+                                    : item.enabled
+                                    ? 'rightTop'
+                                    : 'right'
+                            }
+                            overlayClassName={item.enabled ? 'install-tooltip' : 'title-tooltip'}
+                            title={
+                                item.enabled == true ? (
+                                    <>
+                                        <Title level={5}>{item.name}</Title>
+                                        <ul>
+                                            {item.subcategories.map((subItem) => (
+                                                <li
+                                                    key={item.name + '_' + subItem.name}
+                                                    className={subItem.value == '' ? 'text-grey' : 'text-black'}
+                                                >
+                                                    {subItem.name.replaceAll('_', ' ').charAt(0).toUpperCase() +
+                                                        subItem.name.replaceAll('_', ' ').slice(1)}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </>
+                                ) : (
+                                    <Title level={5}>{item.name}</Title>
+                                )
+                            }
+                        >
+                            <Button
+                                onClick={() => showModal(item.name, item.subcategories)}
+                                disabled={!item.enabled}
+                                type="link"
+                                icon={<DynamicIcon type={getIconName(item.name)} className={'PresetIcon'} />}
+                            />
+                        </Tooltip>
+                    );
                 })}
                 <Modal
                     title={modalTitle}
@@ -297,7 +322,10 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editClickHandler, d
                         <Form>
                             {modalContent.map((item) => (
                                 <div key={modalTitle + '_' + item.name}>
-                                    <Form.Item label={getName(item.name)} name={item.name} /*switch valuePropName={item.name}*/>
+                                    <Form.Item
+                                        label={getName(item.name)}
+                                        name={item.name} /*switch valuePropName={item.name}*/
+                                    >
                                         {item.type == 'bool' && (
                                             <Switch
                                                 defaultChecked={item.value == true ? true : false}
@@ -334,9 +362,7 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editClickHandler, d
 
                                         {item.type === 'file' && (
                                             <Upload {...props} multiple={false} name={item.name}>
-                                                <Button icon={<UploadOutlined />}>
-                                                    Upload jpg, jpeg, png only
-                                                </Button>
+                                                <Button icon={<UploadOutlined />}>Upload jpg, jpeg, png only</Button>
                                                 {item.value}
                                             </Upload>
                                         )}
@@ -354,10 +380,20 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editClickHandler, d
                                 </div>
                             ))}
                             <Form.Item className="modal-submit-btn button-container">
-                                <Button type="text" className="cancel-btn prev" block onClick={() => setIsModalVisible(false)}>
+                                <Button
+                                    type="text"
+                                    className="cancel-btn prev"
+                                    block
+                                    onClick={() => setIsModalVisible(false)}
+                                >
                                     <Trans i18nKey="cancel" />
                                 </Button>
-                                <Button type="primary" htmlType="submit" block onClick={() => saveEditPresetCategory(modalTitle, preset, modalContent)}>
+                                <Button
+                                    type="primary"
+                                    htmlType="submit"
+                                    block
+                                    onClick={() => saveEditPresetCategory(modalTitle, preset, modalContent)}
+                                >
                                     <Trans i18nKey="save" />
                                 </Button>
                             </Form.Item>
@@ -433,7 +469,7 @@ const Presets = () => {
             setMyPresets(newPresets);
             Notifications.openNotificationWithIcon('success', t('edit_preset_success'));
         }
-    }
+    };
 
     //delete
     const deletePreset = (id) => {
@@ -512,7 +548,7 @@ const Presets = () => {
                             },
                         ]}
                     >
-                        <Input placeholder={t('name.label')} className="input-add" />
+                        <Input placeholder={t('name.label')} />
                     </Form.Item>
                     <Form.Item className="modal-submit-btn button-container">
                         <Button type="text" className="cancel-btn prev" block onClick={cancelAdd}>
@@ -526,22 +562,24 @@ const Presets = () => {
             </Modal>
 
             <Row gutter={[32, 32]} justify="center" className="presets-cards">
-                {isLoading ? <Spin size="large" />
-                    : myPresets.length == 0 ?
-                        <Empty
-                            imageStyle={{
-                                height: 200,
-                            }}
+                {isLoading ? (
+                    <Spin size="large" />
+                ) : myPresets.length == 0 ? (
+                    <Empty
+                        imageStyle={{
+                            height: 200,
+                        }}
+                    />
+                ) : (
+                    myPresets.map((singlePresets) => (
+                        <PresetsCol
+                            key={singlePresets.id}
+                            preset={singlePresets}
+                            editClickHandler={editPreset}
+                            deleteClickHandler={deletePreset.bind(this, singlePresets.id)}
                         />
-                        : myPresets.map((singlePresets) => (
-                            <PresetsCol
-                                key={singlePresets.id}
-                                preset={singlePresets}
-                                editClickHandler={editPreset}
-                                deleteClickHandler={deletePreset.bind(this, singlePresets.id)}
-                            />
-                        ))
-                }
+                    ))
+                )}
             </Row>
         </>
     );

@@ -31,6 +31,7 @@ import Roles from '../components/Roles';
 import Users from '../components/Users';
 import Labels from '../components/Labels';
 import Presets from '../components/Presets';
+import Branding from '../components/Branding';
 
 export const webRoutes: IRoute[] = [
     {
@@ -67,19 +68,15 @@ export const webRoutes: IRoute[] = [
         private: false,
         restricted: true,
     },
+
     {
         path: '/home',
         element: <Home />,
         private: true,
     },
     {
-        path: '/settings/roles',
-        element: <Roles />,
-        private: true,
-    },
-    {
-        path: '/settings/users',
-        element: <Users />,
+        path: '/labels',
+        element: <Labels />,
         private: true,
     },
     {
@@ -88,8 +85,18 @@ export const webRoutes: IRoute[] = [
         private: true,
     },
     {
-        path: '/labels',
-        element: <Labels />,
+        path: '/settings/branding',
+        element: <Branding />,
+        private: true,
+    },
+    {
+        path: '/settings/users',
+        element: <Users />,
+        private: true,
+    },
+    {
+        path: '/settings/roles',
+        element: <Roles />,
         private: true,
     },
 ];

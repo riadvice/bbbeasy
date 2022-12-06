@@ -246,5 +246,7 @@
     "delete_preset_confirm": "هل أنت متأكد من حذف هذا الإعداد المسبق ؟",
     "add_preset_success": "تمت إضافة الاعدادات بنجاح",
     "edit_preset_success": "تم تحديث الاعدادات بنجاح",
-    "delete_preset_success": "تم حذف الاعدادات بنجاح"
+    "delete_preset_success": "تم حذف الاعدادات بنجاح",
+
+    "edit_settings_success": "تم تحديث إعدادات الشركة و العلامات التجارية بنجاح"
 }

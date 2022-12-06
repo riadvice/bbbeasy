@@ -84,7 +84,7 @@ const AppSider = () => {
                 {
                     name: t('company.label') + ' & ' + t('branding'),
                     icon: 'BgColorsOutlined',
-                    path: '/settings/company',
+                    path: '/settings/branding',
                 },
                 {
                     name: t('users'),
