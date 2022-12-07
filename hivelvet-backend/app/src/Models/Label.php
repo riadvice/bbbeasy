@@ -52,11 +52,23 @@ class Label extends BaseModel
      */
     public function getById(int $id): self
     {
+
         $this->load(['id = ?', $id]);
 
         return $this;
     }
+    /**
+     * Get label record by color.
+     *
+     * @return $this
+     */
+    public function getByColor( $color): self
+    {
 
+        $this->load(['color = ?', $color]);
+
+        return $this;
+    }
     /**
      *check if name is already in use .
      *
