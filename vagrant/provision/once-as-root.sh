@@ -57,8 +57,8 @@ info "Install PHP 8.1 with its dependencies"
 sudo apt-get install -y php8.1-curl php8.1-cli php8.1-intl php8.1-redis php8.1-gd php8.1-fpm php8.1-pgsql php8.1-mbstring php8.1-xml php8.1-bcmath php-xdebug
 
 info "Installing PostgreSQL"
-sudo percona-release setup ppg-14.5
-sudo apt-get install -y percona-postgresql-14 percona-postgresql-14-pgaudit percona-pg-stat-monitor14
+sudo percona-release setup ppg-15.0
+sudo apt-get install -y percona-postgresql-15 percona-postgresql-15-pgaudit percona-pg-stat-monitor15
 
 info "Configure PHP-FPM"
 sudo rm /etc/php/8.1/fpm/pool.d/www.conf
@@ -80,10 +80,10 @@ info "Install composer"
 sudo curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
 
 info "set the default to listen to all addresses"
-sudo sed -i "/port*/a listen_addresses = '*'" /etc/postgresql/14/main/postgresql.conf
+sudo sed -i "/port*/a listen_addresses = '*'" /etc/postgresql/15/main/postgresql.conf
 
 info "allow any authentication mechanism from any client"
-sudo sed -i "$ a host all all all trust" /etc/postgresql/14/main/pg_hba.conf
+sudo sed -i "$ a host all all all trust" /etc/postgresql/15/main/pg_hba.conf
 
 info "Initializing dev databases and users for PostgreSQL"
 sudo -u postgres psql -c "CREATE USER hivelvet WITH PASSWORD 'hivelvet'"

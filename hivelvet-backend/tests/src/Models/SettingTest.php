@@ -20,38 +20,49 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Core;
+namespace Models;
 
+use Base;
+use Faker\Factory as Faker;
+use Registry;
 use Test\Scenario;
-use Utils\PrivilegeUtils;
 
 /**
+ * Class SettingTest.
+ *
  * @internal
  *
  * @coversNothing
  */
-final class ReflectionTest extends Scenario
+final class SettingTest extends Scenario
 {
-    protected $group = 'Reflection Based Configuration';
-
-    protected array $permissions = [
-        'labels'            => ['add', 'delete', 'edit'],
-        'logs'              => ['collect'],
-        'presets'           => ['add', 'collect_my_presets', 'delete', 'edit'],
-        'roles_permissions' => ['collect'],
-        'roles'             => ['add', 'collect', 'delete', 'edit', 'index'],
-        'users'             => ['add', 'delete', 'edit', 'index'],
-    ];
+    protected $group = 'Setting Model';
 
     /**
-     * @param $f3 \Base
+     * @param Base $f3
      *
      * @return array
      */
-    public function testReflectionConfiguration($f3)
+    public function testSaveSettings($f3)
     {
-        $test = $this->newTest();
-        $test->expect($this->permissions === PrivilegeUtils::listSystemPrivileges(), 'Permissions correctly configured in action classes');
+        $test    = $this->newTest();
+        $faker   = Faker::create();
+        $setting = new Setting(Registry::get('db'));
+
+        /** @var Setting $settings */
+        $settings = $setting->find([], ['limit' => 1])->current();
+
+        $settings->saveSettings(
+            $settings->company_name,
+            $settings->company_website,
+            $settings->platform_name,
+            $faker->name,
+            'policy updated',
+            ['primary_color' => '#006644']
+        );
+        $settings->save();
+
+        $test->expect('policy updated' === $settings->privacy_policy, 'saveSettings() updated setting with given params');
 
         return $test->results();
     }

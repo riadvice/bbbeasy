@@ -81,52 +81,31 @@ class Install extends BaseAction
                 $user->save();
                 $this->logger->info('Initial application setup : Add administrator', ['user' => $user->toArray()]);
 
-                $setting         = new Setting();
-                $defaultSettings = $setting->find([], ['limit' => 1])->current();
+                $setting = new Setting();
 
-                $defaultSettings->company_name    = $form['company_name'];
-                $defaultSettings->company_website = $form['company_url'];
-                $defaultSettings->platform_name   = $form['platform_name'];
-                if ('' !== $form['term_url']) {
-                    $defaultSettings->terms_use = $form['term_url'];
-                }
-                if ('' !== $form['policy_url']) {
-                    $defaultSettings->privacy_policy = $form['policy_url'];
-                }
-                $colors                            = $form['branding_colors'];
-                $defaultSettings->primary_color    = $colors['primary_color'];
-                $defaultSettings->secondary_color  = $colors['secondary_color'];
-                $defaultSettings->accent_color     = $colors['accent_color'];
-                $defaultSettings->additional_color = $colors['add_color'];
+                /** @var Setting $settings */
+                $settings = $setting->find([], ['limit' => 1])->current();
+                $settings->saveSettings(
+                    $form['company_name'],
+                    $form['company_url'],
+                    $form['platform_name'],
+                    $form['term_url'],
+                    $form['policy_url'],
+                    $form['branding_colors']
+                );
 
                 // @fixme: should not have embedded try/catch here
                 try {
-                    $defaultSettings->save();
-                    $this->logger->info('Initial application setup : Update settings', ['settings' => $defaultSettings->toArray()]);
+                    $settings->save();
+                    $this->logger->info('Initial application setup : Update settings', ['settings' => $settings->toArray()]);
 
                     // add configured presets
                     $presets = $form['presetsConfig'];
                     if ($presets) {
-                        foreach ($presets as $preset) {
-                            $subcategories = $preset['subcategories'];
-                            foreach ($subcategories as $subcategory) {
-                                $presetSettings          = new PresetSetting();
-                                $presetSettings->group   = $preset['name'];
-                                $presetSettings->name    = $subcategory['name'];
-                                $presetSettings->enabled = $subcategory['enabled'];
-
-                                // @fixme: should not have embedded try/catch here
-                                try {
-                                    $presetSettings->save();
-                                    $this->logger->info('Initial application setup : Add preset settings', ['preset' => $presetSettings->toArray()]);
-                                } catch (\Exception $e) {
-                                    $message = $e->getMessage();
-                                    $this->logger->error('Initial application setup : Preset settings could not be added', ['error' => $message]);
-                                    $this->renderJson(['errors' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-
-                                    return;
-                                }
-                            }
+                        $presetSettings = new PresetSetting();
+                        $result         = $presetSettings->savePresetSettings($presets);
+                        if ('string' === \gettype($result)) {
+                            $this->renderJson(['errors' => $result], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
                         }
                     }
 

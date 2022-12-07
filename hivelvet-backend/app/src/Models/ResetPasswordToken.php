@@ -52,12 +52,10 @@ class ResetPasswordToken extends BaseModel
 
     /**
      * Check if the user has a reset token password.
-     *
-     * @param int $userID
      */
-    public function userExists($userID): bool
+    public function userExists(int $userId): bool
     {
-        return $this->load(['user_id = ?', $userID]);
+        return $this->load(['user_id = ?', $userId]);
     }
 
     /**

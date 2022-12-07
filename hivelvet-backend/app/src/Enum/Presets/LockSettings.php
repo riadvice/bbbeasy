@@ -33,10 +33,10 @@ class LockSettings extends Enum
     public const SHARED_NOTES = 'shared_notes';
     public const LAYOUT       = 'layout';
 
-    public const WEBCAMS_TYPE       = 'bool';
-    public const MICROPHONES_TYPE   = 'bool';
-    public const PRIVATE_CHAT_TYPE  = 'bool';
-    public const PUBLIC_CHAT_TYPE   = 'bool';
-    public const SHARED_NOTES_TYPE  = 'bool';
-    public const LAYOUT_TYPE        = 'bool';
+    public const WEBCAMS_TYPE      = 'bool';
+    public const MICROPHONES_TYPE  = 'bool';
+    public const PRIVATE_CHAT_TYPE = 'bool';
+    public const PUBLIC_CHAT_TYPE  = 'bool';
+    public const SHARED_NOTES_TYPE = 'bool';
+    public const LAYOUT_TYPE       = 'bool';
 }

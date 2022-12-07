@@ -88,44 +88,32 @@ class User extends BaseModel
 
     /**
      * Check if email already in use.
-     *
-     * @param string $email
-     *
-     * @return bool
      */
-    public function emailExists($email)
+    public function emailExists(string $email): bool
     {
         return $this->load(['lower(email) = ?', mb_strtolower($email)]);
     }
 
     /**
      * Check if email or username already in use.
-     *
-     * @param string $username
-     * @param string $email
-     *
-     * @return array
      */
-    public function getUsersByUsernameOrEmail($username, $email)
+    public function getUsersByUsernameOrEmail(string $username, string $email): array
     {
         $data  = [];
         $users = $this->find(['lower(username) = lower(?) or lower(email) = lower(?)', $username, $email]);
         if ($users) {
             $data = $users->castAll(['username', 'email']);
         }
+
         return $data;
     }
 
     /**
      * Check if user infos already in use.
      *
-     * @param string $username
-     * @param string $email
-     * @param mixed  $users
-     *
-     * @return string
+     * @param mixed $users
      */
-    public function userExists($username, $email, $users)
+    public function userExists(string $username, string $email, array $users): ?string
     {
         if ($users) {
             if (1 === \count($users)) {
@@ -150,26 +138,27 @@ class User extends BaseModel
     }
 
     // @todo: will be used to detect if the course is full or not yet
-    /**
-     * @param $ids
-     *
-     * @return int
-     */
-    public function countActiveUsers($ids)
+
+    public function countActiveUsers(array $ids = null): int
     {
+        $subQuery = '';
+
+        if (null !== $ids) {
+            if (1 === \count($ids)) {
+                $subQuery = 'AND (us.id =' . $ids[0] . ')';
+            } else {
+                $subQuery = 'AND (us.id IN (' . implode(',', $ids) . '))';
+            }
+        }
+
         $result = $this->db->exec(
             'SELECT COUNT(us.id) AS total
              FROM users AS us
-             WHERE (us.status = ?) AND (us.id IN ("' . implode('","', $ids) . '"))',
+             WHERE (us.status = ?) ' . $subQuery,
             [UserStatus::ACTIVE]
         );
 
         return (int) $result[0]['total'];
-    }
-
-    public function getCountFields(): mixed
-    {
-        return $this->countFields;
     }
 
     /**
@@ -180,33 +169,59 @@ class User extends BaseModel
         return password_verify(trim($password), $this->password);
     }
 
-    public function getAllUsers()
+    public function getAllUsers(): array
     {
         $data  = [];
         $users = $this->find([], ['order' => 'id']);
         if ($users) {
-            $data = $this->getUserInfos();
+            foreach ($users as $user) {
+                $data[] = $user->getUserInfos();
+            }
         }
 
         return $data;
     }
 
-    public function getUserInfos(int $id = null): array
+    public function getUserInfos(): array
     {
-        if ($id) {
-            $subQuery = 'WHERE u.id = :user_id';
-            $params   = [':user_id' => $id];
-        }
-        $result = $this->db->exec(
-            'SELECT
-                u.id AS key, u.username, u.email, u.status, r.name AS role
-            FROM
-                users u
-            LEFT JOIN roles r ON u.role_id = r.id ' . $subQuery,
-            $params
-        );
+        return [
+            'key'      => $this->id,
+            'username' => $this->username,
+            'email'    => $this->email,
+            'status'   => $this->status,
+            'role'     => $this->role_id->name,
+            // 'role'     => $this->role->name,
+        ];
+    }
 
-        return $id ? $result[0] : $result;
+    public function saveUserWithDefaultPreset($username, $email, $password, $roleId, $successMessage, $errorMessage): bool|string
+    {
+        try {
+            $this->username          = $username;
+            $this->email             = $email;
+            $this->password          = $password;
+            $this->role_id           = $roleId;
+            $this->status            = UserStatus::PENDING;
+            $this->password_attempts = 3;
+
+            $this->save();
+        } catch (\Exception $e) {
+            $this->logger->error($errorMessage, ['user' => $this->toArray(), 'error' => $e->getMessage()]);
+
+            return false;
+        }
+
+        $this->logger->info($successMessage, ['user' => $this->toArray()]);
+
+        $preset          = new Preset();
+        $preset->name    = 'default';
+        $preset->user_id = $this->id;
+
+        $presetErrorMessage   = 'Default preset could not be added';
+        $presetSuccessMessage = 'Default preset successfully added';
+        $result               = $preset->addDefaultSettings($presetSuccessMessage, $presetErrorMessage);
+
+        return $result ? true : $result;
     }
 
     /**
@@ -227,6 +242,6 @@ class User extends BaseModel
             throw $e;
         }
 
-        return [['result' => 'success', 'user' => $this->getUserInfos($this->id)], ResponseCode::HTTP_OK];
+        return [['result' => 'success', 'user' => $this->getUserInfos()], ResponseCode::HTTP_OK];
     }
 }

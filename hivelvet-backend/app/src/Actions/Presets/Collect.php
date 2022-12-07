@@ -24,7 +24,7 @@ namespace Actions\Presets;
 
 use Actions\Base as BaseAction;
 use Base;
-use Models\Preset;
+use Models\PresetSetting;
 
 /**
  * Class Collect.
@@ -37,36 +37,8 @@ class Collect extends BaseAction
      */
     public function execute($f3, $params): void
     {
-        $data   = [];
-        $preset = new Preset();
-        $categories = $preset->getPresetCategories();
-
-        if ($categories) {
-            foreach ($categories as $category) {
-                $categoryName = $preset->getCategoryName($category);
-
-                $class         = new \ReflectionClass($category);
-                $categoryData  = [
-                    'name'          => $categoryName,
-                    'subcategories' => [],
-                ];
-                $attributes = $class->getReflectionConstants();
-                foreach ($attributes as $attribute) {
-                    $attributeName = $attribute->name;
-                    if (!str_ends_with($attributeName, '_TYPE')) {
-                        $subCategory = $class->getConstant($attributeName);
-                        $subCategoryData = [
-                            'name'   => $subCategory,
-                            'enabled' => false,
-                        ];
-                        $categoryData['subcategories'][] = $subCategoryData;
-                    }
-                }
-
-                $data[] = $categoryData;
-            }
-        }
-
+        $presetSetting = new PresetSetting();
+        $data          = $presetSetting->getDefaultPresetSettings();
         $this->logger->debug('collecting presets', ['data' => json_encode($data)]);
         $this->renderJson($data);
     }

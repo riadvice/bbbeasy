@@ -20,38 +20,40 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Actions\Presets;
+namespace Fake;
 
-use Actions\Base as BaseAction;
-use Actions\RequirePrivilegeTrait;
-use Base;
-use Models\Preset;
+use Faker\Factory as Faker;
+use Models\Label;
+use Models\PresetSetting;
 
-/**
- * Class CollectMyPresets.
- */
-class CollectMyPresets extends BaseAction
+class PresetSettingFaker
 {
-    use RequirePrivilegeTrait;
+    private static array $storage = [];
 
-    /**
-     * @param Base  $f3
-     * @param array $params
-     */
-    public function execute($f3, $params): void
+    public static function create($storageName = null)
     {
-        $userId = $f3->get('PARAMS.user_id');
+        $faker                  = Faker::create();
+        $presetSetting          = new PresetSetting();
+        $presetSetting->group   = $faker->name;
+        $presetSetting->name    = $faker->name;
+        $presetSetting->enabled = (bool) random_int(0, 1);
 
-        $preset      = new Preset();
-        $presets     = $preset->collectAllByUserId($userId);
-        $presetsData = [];
+        $presetSetting->save();
 
-        foreach ($presets as $myPreset) {
-            $presetData    = $preset->getMyPresetInfos($myPreset);
-            $presetsData[] = $presetData;
+        if (null !== $storageName) {
+            self::$storage[$storageName] = $presetSetting;
         }
 
-        $this->logger->debug('collecting presets', ['data' => json_encode($presetsData)]);
-        $this->renderJson($presetsData);
+        return $presetSetting;
+    }
+
+    /**
+     * @param $storageName
+     *
+     * @return Label
+     */
+    public static function get($storageName)
+    {
+        return self::$storage[$storageName];
     }
 }

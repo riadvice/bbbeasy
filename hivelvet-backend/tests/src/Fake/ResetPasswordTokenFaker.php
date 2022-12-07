@@ -20,38 +20,38 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Actions\Presets;
+namespace Fake;
 
-use Actions\Base as BaseAction;
-use Actions\RequirePrivilegeTrait;
-use Base;
-use Models\Preset;
+use Enum\ResetTokenStatus;
+use Models\ResetPasswordToken;
+use models\User;
 
-/**
- * Class CollectMyPresets.
- */
-class CollectMyPresets extends BaseAction
+class ResetPasswordTokenFaker
 {
-    use RequirePrivilegeTrait;
+    private static array $storage = [];
 
-    /**
-     * @param Base  $f3
-     * @param array $params
-     */
-    public function execute($f3, $params): void
+    public static function create(User $user, string $status = ResetTokenStatus::NEW, $storageName = null)
     {
-        $userId = $f3->get('PARAMS.user_id');
+        // To make testing easier, the user is password is the same as its role
+        $token          = new ResetPasswordToken();
+        $token->status  = $status;
+        $token->user_id = $user->id;
 
-        $preset      = new Preset();
-        $presets     = $preset->collectAllByUserId($userId);
-        $presetsData = [];
-
-        foreach ($presets as $myPreset) {
-            $presetData    = $preset->getMyPresetInfos($myPreset);
-            $presetsData[] = $presetData;
+        $token->save();
+        if (null !== $storageName) {
+            self::$storage[$storageName] = $user;
         }
 
-        $this->logger->debug('collecting presets', ['data' => json_encode($presetsData)]);
-        $this->renderJson($presetsData);
+        return $token;
+    }
+
+    /**
+     * @param $storageName
+     *
+     * @return User
+     */
+    public static function get($storageName)
+    {
+        return self::$storage[$storageName];
     }
 }

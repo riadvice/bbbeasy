@@ -33,10 +33,10 @@ class Branding extends Enum
     public const USE_AVATARS  = 'use_avatars';
     public const CUSTOM_CSS   = 'custom_css';
 
-    public const TITLE_TYPE         = 'string';
-    public const LOGO_TYPE          = 'file';
+    public const TITLE_TYPE        = 'string';
+    public const LOGO_TYPE         = 'file';
     public const BANNER_TEXT_TYPE  = 'string';
-    public const BANNER_COLOR_TYPE  = 'color';
-    public const USE_AVATARS_TYPE   = 'bool';
-    public const CUSTOM_CSS_TYPE    = 'bool';
+    public const BANNER_COLOR_TYPE = 'color';
+    public const USE_AVATARS_TYPE  = 'bool';
+    public const CUSTOM_CSS_TYPE   = 'bool';
 }

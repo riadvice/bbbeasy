@@ -173,7 +173,7 @@ final class EditTest extends Scenario
         $userLecturer = UserFaker::create(UserRole::LECTURER);
         $data         = ['data' => ['username' => $faker->userName, 'email' => $faker->email, 'role' => UserRole::LECTURER_ID, 'status' => UserStatus::INACTIVE]];
         $f3->mock(self::EDIT_USER_ROUTE . $userLecturer->id, null, null, $this->postJsonData($data));
-        $test->expect($this->compareArrayToResponse(['result' => 'success', 'user' => $userLecturer->getUserInfos($userLecturer->id)]), 'Update existing user with id "' . $userLecturer->id . '" using new email "' . $userLecturer->email . '" and new username "' . $userLecturer->username . '" successfully');
+        $test->expect($this->compareArrayToResponse(['result' => 'success', 'user' => $userLecturer->getUserInfos()]), 'Update existing user with id "' . $userLecturer->id . '" using new email "' . $userLecturer->email . '" and new username "' . $userLecturer->username . '" successfully');
 
         return $test->results();
     }

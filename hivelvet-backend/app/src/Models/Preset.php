@@ -24,6 +24,7 @@ namespace Models;
 
 use DateTime;
 use Models\Base as BaseModel;
+use ReflectionClass;
 
 /**
  * Class Preset.
@@ -39,25 +40,24 @@ class Preset extends BaseModel
 {
     protected $table = 'presets';
 
-    public function collectAll(): array
+    public function __construct($db = null, $table = null, $fluid = null, $ttl = 0)
     {
-        return $this->db->exec('SELECT id, name, settings, user_id FROM presets');
+        parent::__construct($db, $table, $fluid, $ttl);
+        $this->onset('name', fn($self, $value) => $self->f3->snakecase($value));
     }
 
     public function collectAllByUserId($userId): array
     {
-        return $this->db->exec('SELECT id, name, settings FROM presets where user_id = ? ORDER BY created_on DESC', $userId);
+        $data    = [];
+        $presets = $this->find(['user_id = ?', $userId], ['order' => 'created_on desc']);
+        if ($presets) {
+            $data = $presets->castAll(['id', 'name', 'settings']);
+        }
+
+        return $data;
     }
 
-    public function getPresetInfos(): array
-    {
-        return [
-            'key'   => $this->id,
-            'name'  => $this->name,
-        ];
-    }
-
-    public function  findById($id)
+    public function findById($id)
     {
         $this->load(['id = ? ', $id]);
 
@@ -69,9 +69,9 @@ class Preset extends BaseModel
         return $this->load(['lower(name) = ? and user_id = ? and id != ?', mb_strtolower($name), $userId, $id]);
     }
 
-    public function getPresetCategories() : array
+    public function getPresetCategories(): array
     {
-        //returns all the declared classes
+        // returns all the declared classes
         $classes             = get_declared_classes();
         $autoloaderClassName = '';
         foreach ($classes as $className) {
@@ -84,11 +84,11 @@ class Preset extends BaseModel
         $classLoader = $autoloaderClassName::getLoader();
         $classMap    = $classLoader->getClassMap();
 
-        //filter classes under the Enum\Presets
+        // filter classes under the Enum\Presets
         return preg_filter('/^Enum\\\Presets\\\[A-Z a-z]*/', '$0', array_keys($classMap));
     }
 
-    public function getCategoryName($category) : string
+    public function getCategoryName($category): string
     {
         $categoryName = explode('\\', $category)[2];
 
@@ -101,65 +101,118 @@ class Preset extends BaseModel
         return $categoryName;
     }
 
-    public function getMyPresetInfos($myPreset) : array
+    public function getMyPresetInfos($myPreset): array
     {
         $presetData = [
-            "id"   => $myPreset["id"],
-            "name" => $myPreset["name"],
+            'id'   => $myPreset['id'],
+            'name' => $myPreset['name'],
         ];
-        $enabledCategories = json_decode($myPreset["settings"]);
-        $categoriesData = $this->getMyPresetCategories($enabledCategories);
-        $presetData["categories"] = $categoriesData;
+        $enabledCategories        = json_decode($myPreset['settings']);
+        $categoriesData           = $this->getMyPresetCategories($enabledCategories);
+        $presetData['categories'] = $categoriesData;
 
         return $presetData;
     }
 
-    public function getMyPresetCategories($enabledCategories) : array
+    public function getMyPresetCategories($enabledCategories): array
     {
         $categoriesData = [];
-        $categories = $this->getPresetCategories();
+        $categories     = $this->getPresetCategories();
         if ($categories) {
             foreach ($categories as $category) {
                 $categoryName = $this->getCategoryName($category);
 
-                $class = new \ReflectionClass($category);
+                $class         = new \ReflectionClass($category);
                 $subcategories = [];
 
-                //the enabled categ with enabled subcategories
-                if (json_decode($enabledCategories->$categoryName)) {
+                // the enabled categ with enabled subcategories
+                if (json_decode($enabledCategories->{$categoryName})) {
                     foreach ($class->getReflectionConstants() as $constant) {
                         if (!str_ends_with($constant->name, '_TYPE')) {
-                            $subCategory = $constant->name;
-                            $subCategoryName = $class->getConstant(strtoupper($subCategory));
+                            $subCategory     = $constant->name;
+                            $subCategoryName = $class->getConstant(mb_strtoupper($subCategory));
                             if (str_contains($subCategory, 'PASSWORD')) {
                                 $subCategory = str_ireplace('PASSWORD', 'PASS', $subCategory);
                             }
-                            $subCategoryType = $class->getConstant(strtoupper($subCategory)."_TYPE");
-                            $subCategoryValue = json_decode($enabledCategories->$categoryName)->$subCategoryName;
+                            $subCategoryType  = $class->getConstant(mb_strtoupper($subCategory) . '_TYPE');
+                            $subCategoryValue = json_decode($enabledCategories->{$categoryName})->{$subCategoryName};
                             if (isset($subCategoryValue)) {
                                 $subcategories[] = [
-                                    "name" => $subCategoryName,
-                                    "type" => $subCategoryType,
-                                    "value" => $subCategoryValue,
+                                    'name'  => $subCategoryName,
+                                    'type'  => $subCategoryType,
+                                    'value' => $subCategoryValue,
                                 ];
                             }
                         }
                     }
                     $categoriesData[] = [
-                        "name" => $categoryName,
-                        "enabled" => true,
-                        "subcategories" => $subcategories,
+                        'name'          => $categoryName,
+                        'enabled'       => true,
+                        'subcategories' => $subcategories,
                     ];
-                } else { //disabled categ
+                } else { // disabled categ
                     $categoriesData[] = [
-                        "name" => $categoryName,
-                        "enabled" => false,
-                        "subcategories" => $subcategories,
+                        'name'          => $categoryName,
+                        'enabled'       => false,
+                        'subcategories' => $subcategories,
                     ];
                 }
             }
         }
 
         return $categoriesData;
+    }
+
+    public function addDefaultSettings($successMessage, $errorMessage): bool|string
+    {
+        try {
+            $settings       = $this->getPresetSettings();
+            $this->settings = json_encode($settings);
+            $this->save();
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage(), ['error' => $e->getMessage()]);
+
+            return $errorMessage;
+        }
+
+        $this->logger->info($successMessage, ['default preset' => $this->toArray()]);
+
+        return true;
+    }
+
+    /**
+     * @throws \ReflectionException
+     */
+    public function getPresetSettings(): array
+    {
+        $preset         = new self();
+        $categories     = $preset->getPresetCategories();
+        $presetSettings = [];
+        $settings       = [];
+        if ($categories) {
+            foreach ($categories as $category) {
+                // get category name
+                $categoryName = $preset->getCategoryName($category);
+
+                // get the reflexion classes of category class
+                $class      = new ReflectionClass($category);
+                $attributes = $class->getConstants();
+                $presetSett = new PresetSetting();
+
+                foreach ($attributes as $attribute) {
+                    $presetSettings = $presetSett->getByName($attribute);
+                    if (!$presetSettings->dry() && $presetSettings->enabled) {
+                        if (!$settings[$categoryName]) {
+                            $settings += [$categoryName => [$presetSettings->name => '']];
+                        } else {
+                            $settings[$categoryName] += [$presetSettings->name => ''];
+                        }
+                    }
+                }
+                $settings[$categoryName] = json_encode($settings[$categoryName]);
+            }
+        }
+
+        return $settings;
     }
 }
