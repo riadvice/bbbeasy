@@ -26,8 +26,7 @@ import { useTranslation, withTranslation } from 'react-i18next';
 
 import PerfectScrollbar from 'perfect-scrollbar';
 import { Location } from 'history';
-import { add } from 'cypress/types/lodash';
-import Home from 'components/Home';
+
 import { getRandomString } from 'types/getRandomString';
 import { PresetType } from 'types/PresetType';
 import { LabelType } from 'types/LabelType';
@@ -76,7 +75,7 @@ const AppSider = () => {
             <Menu.Item
                 key="1"
                 onClick={() => {
-                    console.log('add'), setIsModalVisible(true);
+                    setIsModalVisible(true);
                 }}
             >
                 <span>{t('room')}</span>

@@ -19,10 +19,6 @@
 import React, { useEffect } from 'react';
 import RoomsService from '../services/rooms.service';
 
-import { PaginationType } from '../types/PaginationType';
-
-import { Typography } from 'antd';
-
 import { FormInstance } from 'antd/lib/form';
 import { withTranslation } from 'react-i18next';
 
@@ -40,16 +36,12 @@ const addForm: FormInstance = null;
 
 const Rooms = () => {
     const [data, setData] = React.useState<RoomType[]>([]);
-    const [loading, setLoading] = React.useState<boolean>(false);
-    const [errorsAdd, setErrorsAdd] = React.useState<string[]>([]);
-    const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
 
     const getRooms = () => {
         RoomsService.list_rooms()
             .then((response) => {
                 console.log(response.data);
                 setData(response.data);
-                console.log(data.length);
             })
             .catch((error) => {
                 console.error(error);
