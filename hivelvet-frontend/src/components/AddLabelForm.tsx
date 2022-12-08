@@ -48,24 +48,15 @@ export const AddLabelForm = (props: Props) => {
                             message: <Trans i18nKey="name.required" />,
                         },
                         {
-                            min: 4,
-                            message: <Trans i18nKey="name.size" />,
+                            min: 1,
+                            message: <Trans i18nKey="label_name.size" />,
                         },
                     ]}
                 >
                     <Input placeholder={t('name.label')} />
                 </Form.Item>
             )}
-            <Form.Item
-                label={<Trans i18nKey="description.label" />}
-                name="description"
-                rules={[
-                    {
-                        required: true,
-                        message: <Trans i18nKey="description.required" />,
-                    },
-                ]}
-            >
+            <Form.Item label={<Trans i18nKey="description.label" />} name="description">
                 <Input placeholder={t('description.label')} />
             </Form.Item>
             <Form.Item label={<Trans i18nKey="color.label" />} name="color">
