@@ -30,6 +30,7 @@ import { Step3Form } from './Step3Form';
 import { UploadFile } from 'antd/lib/upload/interface';
 import { SettingsType } from '../types/SettingsType';
 import { PresetType } from '../types/PresetType';
+import axios from 'axios';
 
 const { Step } = Steps;
 
@@ -173,17 +174,16 @@ const Install = () => {
 
     const onFinish = () => {
         const formData: formType = stepForm.getFieldsValue(true);
-        if(activeStep == 0) {
-            InstallService.collect_users(formData)
-                .then((result) => {
-                    if(result.data.message) {
-                        setSuccessful(false);
-                        setMessage(result.data.message);
-                    }
-                    else {
-                        next();
-                    }
-                });
+
+        if (activeStep == 0) {
+            InstallService.collect_users(formData).then((result) => {
+                if (result.data.message) {
+                    setSuccessful(false);
+                    setMessage(result.data.message);
+                } else {
+                    next();
+                }
+            });
         } else {
             if (activeStep < steps.length - 1) {
                 next();
@@ -204,16 +204,18 @@ const Install = () => {
                         console.log(error.response.data);
                     });
                 if (file != undefined) {
+                    console.log(file);
                     const fdata: FormData = new FormData();
                     fdata.append('logo', file.originFileObj, file.originFileObj.name);
                     fdata.append('logo_name', file.originFileObj.name);
 
-                    InstallService.save_file(fdata)
+                    axios
+                        .post('http://api.hivelvet.test/save-logo', fdata)
                         .then((response) => {
                             console.log(response);
                         })
-                        .catch((error) => {
-                            console.log(error);
+                        .catch((err) => {
+                            console.log(err);
                         });
                 }
             }

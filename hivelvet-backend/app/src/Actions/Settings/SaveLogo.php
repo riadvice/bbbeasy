@@ -46,6 +46,7 @@ class SaveLogo extends BaseAction
          * if ($f3->get('system.installed') === false) {
          */
         $form        = $f3->get('POST');
+
         $dataChecker = new DataChecker();
         // if files not empty
         $dataChecker->verify($form['logo_name'], Validator::notEmpty()->setName('logo_name'));
@@ -53,6 +54,7 @@ class SaveLogo extends BaseAction
         if ($dataChecker->allValid()) {
             // verify format file
             $format       = $f3->get('FILES')['logo']['type'];
+
             $validFormats = ['image/jpg', 'image/jpeg', 'image/png'];
             if (\in_array($format, $validFormats, true)) {
                 // correct

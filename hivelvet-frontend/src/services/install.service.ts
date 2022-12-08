@@ -34,9 +34,9 @@ class InstallService {
         return axios.get(apiRoutes.COLLECT_PRESETS_URL);
     }
 
-    save_file(data: object) {
+    save_file(data) {
         return axios.post(apiRoutes.SAVE_FILE_URL, {
-            data,
+            data
         });
     }
 
