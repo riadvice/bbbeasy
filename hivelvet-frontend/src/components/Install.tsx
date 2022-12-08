@@ -31,6 +31,7 @@ import { UploadFile } from 'antd/lib/upload/interface';
 import { SettingsType } from '../types/SettingsType';
 import { PresetType } from '../types/PresetType';
 import axios from 'axios';
+import { apiRoutes } from 'routing/backend-config';
 
 const { Step } = Steps;
 
@@ -210,7 +211,7 @@ const Install = () => {
                     fdata.append('logo_name', file.originFileObj.name);
 
                     axios
-                        .post('http://api.hivelvet.test/save-logo', fdata)
+                        .post(apiRoutes.SAVE_FILE_URL, fdata)
                         .then((response) => {
                             console.log(response);
                         })
