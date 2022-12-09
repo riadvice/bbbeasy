@@ -175,7 +175,9 @@ const Install = () => {
 
     const onFinish = () => {
         const formData: formType = stepForm.getFieldsValue(true);
+ 
 
+ 
         if (activeStep == 0) {
             InstallService.collect_users(formData).then((result) => {
                 if (result.data.message) {

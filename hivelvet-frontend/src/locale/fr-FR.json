@@ -246,5 +246,14 @@
     "delete_preset_confirm": "Êtes-vous sûr de vouloir supprimer ce préréglage ?",
     "add_preset_success": "Préaglage ajouté avec succés",
     "edit_preset_success": "Préaglage mis à jour avec succès",
-    "delete_preset_success": "Préaglage supprimé avec succès"
+    "delete_preset_success": "Préaglage supprimé avec succès",
+    "new_room": "Nouvelle Salle",
+    "shortlink": {
+        "label": "Lien",
+        "required": "Le lien est obligatoire"
+    },
+    "labels_required": "Les labels sont obligatoires",
+    "room-name-already-exist": "Le nom du salle existe déjà",
+    "room-link-already-exist": "Le lien du salle existe déjà",
+    "add_room_success": "Salle ajoutée avec succés"
 }

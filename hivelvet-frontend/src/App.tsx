@@ -34,7 +34,7 @@ import LocaleService from './services/locale.service';
 import { withTranslation } from 'react-i18next';
 import { UserType } from './types/UserType';
 import { UserContext } from './lib/UserContext';
-
+import { hot } from 'react-hot-loader';
 const { Content } = Layout;
 
 interface IProps {
@@ -83,4 +83,4 @@ const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
     );
 };
 
-export default withTranslation()(App);
+export default withTranslation()(hot(module)(App));
