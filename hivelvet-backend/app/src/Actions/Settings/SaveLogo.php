@@ -48,9 +48,10 @@ class SaveLogo extends BaseAction
         $form        = $f3->get('POST');
         $dataChecker = new DataChecker();
         $dataChecker->verify($form['logo_name'], Validator::notEmpty()->setName('logo_name'));
+        $errorMessage = 'File could not be saved';
 
         if (!$dataChecker->allValid()) {
-            $this->logger->error('Logo could not be saved', ['errors' => $dataChecker->getErrors()]);
+            $this->logger->error($errorMessage, ['errors' => $dataChecker->getErrors()]);
             $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
         } else {
             $format       = $f3->get('FILES')['logo']['type'];
@@ -70,14 +71,14 @@ class SaveLogo extends BaseAction
                         $this->logger->info('Initial application setup : Update settings logo', ['setting' => $settings->toArray()]);
                     } catch (\Exception $e) {
                         $message = $e->getMessage();
-                        $this->logger->info('Initial application setup : Logo could not be updated', ['error' => $message]);
+                        $this->logger->error($errorMessage, ['error' => $message]);
                         $this->renderJson(['errors' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
 
                         return;
                     }
                 }
             } else {
-                $this->logger->error('Initial application setup : Logo could not be updated', ['error' => 'invalid file format : ' . $format]);
+                $this->logger->error($errorMessage, ['error' => 'invalid file format : ' . $format]);
                 $this->renderJson(['message' => 'invalid file format'], ResponseCode::HTTP_PRECONDITION_FAILED);
             }
         }

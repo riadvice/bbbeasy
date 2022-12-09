@@ -51,6 +51,8 @@ class Edit extends BaseAction
         $roleId = $params['id'];
         $role   = $this->loadData($roleId);
 
+        $errorMessage = 'Role could not be updated';
+
         if ($role->valid()) {
             if (isset($form['name'])) {
                 $dataChecker = new DataChecker();
@@ -67,6 +69,7 @@ class Edit extends BaseAction
                         return;
                     }
                 } else {
+                    $this->logger->error($errorMessage, ['errors' => $dataChecker->getErrors()]);
                     $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
 
                     return;
@@ -144,7 +147,7 @@ class Edit extends BaseAction
             try {
                 $role->save();
             } catch (\Exception $e) {
-                $this->logger->error('Role could not be updated', ['error' => $e->getMessage()]);
+                $this->logger->error($errorMessage, ['error' => $e->getMessage()]);
                 $this->renderJson(['errors' => $e->getMessage()], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
 
                 return;

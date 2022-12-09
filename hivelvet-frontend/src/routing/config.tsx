@@ -27,11 +27,12 @@ import Reset from '../components/auth/ResetPassword';
 import ChangePassword from '../components/auth/ChangePassword';
 
 import Home from '../components/Home';
-import Roles from '../components/Roles';
+import Rooms from '../components/Rooms';
+import Labels from '../components/Labels';
+import Presets from '../components/Presets';
+import Branding from '../components/Branding';
 import Users from '../components/Users';
-import Labels from 'components/Labels';
-import Presets from 'components/Presets';
-import Rooms from 'components/Rooms';
+import Roles from '../components/Roles';
 
 export const webRoutes: IRoute[] = [
     {
@@ -68,24 +69,10 @@ export const webRoutes: IRoute[] = [
         private: false,
         restricted: true,
     },
+
     {
         path: '/home',
         element: <Home />,
-        private: true,
-    },
-    {
-        path: '/settings/roles',
-        element: <Roles />,
-        private: true,
-    },
-    {
-        path: '/settings/users',
-        element: <Users />,
-        private: true,
-    },
-    {
-        path: '/presets',
-        element: <Presets />,
         private: true,
     },
     {
@@ -96,6 +83,26 @@ export const webRoutes: IRoute[] = [
     {
         path: '/labels',
         element: <Labels />,
+        private: true,
+    },
+    {
+        path: '/presets',
+        element: <Presets />,
+        private: true,
+    },
+    {
+        path: '/settings/branding',
+        element: <Branding />,
+        private: true,
+    },
+    {
+        path: '/settings/users',
+        element: <Users />,
+        private: true,
+    },
+    {
+        path: '/settings/roles',
+        element: <Roles />,
         private: true,
     },
 ];

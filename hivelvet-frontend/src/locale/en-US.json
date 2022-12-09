@@ -171,9 +171,6 @@
         "label": "Name",
         "required": "Name is required"
     },
-    "room_name": {
-        "size": "Room Name must have at least 4 characters"
-    },
     "color": {
         "label": "Color"
     },
@@ -229,6 +226,9 @@
     "delete_user_confirm": "Are you sure to delete this user ?",
     "delete_user_success": "User successfully deleted",
 
+    "label_name": {
+        "size": "Label Name must be at least one character"
+    },
     "label-name-already-exist": "Label name already exists",
     "label-color-already-exist": "Label color already exists",
     "delete_label_confirm": "Are you sure to delete this label ?",
@@ -256,6 +256,9 @@
     "delete_preset_success": "Preset successfully deleted",
 
     "new_room": "New Room",
+    "room_name": {
+        "size": "Room Name must have at least 4 characters"
+    },
     "shortlink": {
         "label": "Short Link",
         "required": "The Short Link is required"
@@ -265,7 +268,5 @@
     "room-link-already-exist": "Room link already exists",
     "add_room_success": "Room Added Successfully",
 
-    "label_name": {
-        "size": "Label Name must be at least 1 character"
-    }
+    "edit_settings_success": "Company & Branding settings successfully updated"
 }

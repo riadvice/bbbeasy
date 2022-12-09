@@ -336,7 +336,6 @@ const Labels = () => {
     const saveEdit = async (record: Item, key: number) => {
         try {
             const formValues: object = await editForm.validateFields();
-
             if (!compareEdit(record, editForm.getFieldsValue(true))) {
                 setLoading(true);
                 setErrorsEdit({});

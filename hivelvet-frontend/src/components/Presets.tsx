@@ -417,7 +417,6 @@ const Presets = () => {
         setCurrentUser(user);
         PresetsService.collect_my_presets(user.id)
             .then((response) => {
-                console.log(response);
                 setMyPresets(response.data);
                 setIsLoading(false);
             })
@@ -432,7 +431,6 @@ const Presets = () => {
         setErrorsAdd([]);
         PresetsService.add_preset(formValues, currentUser.id)
             .then((response) => {
-                console.log(response);
                 setIsModalVisible(false);
                 const newPreset: MyPresetType = response.data.preset;
                 Notifications.openNotificationWithIcon('success', t('add_preset_success'));
@@ -440,7 +438,6 @@ const Presets = () => {
                 setMyPresets([...myPresets, newPreset]);
             })
             .catch((error) => {
-                console.log(error);
                 const responseData = error.response.data;
                 if (responseData.errors) {
                     setErrorsAdd(responseData.errors);
@@ -551,7 +548,7 @@ const Presets = () => {
                             },
                         ]}
                     >
-                        <Input placeholder={t('name.label')} className="input-add" />
+                        <Input placeholder={t('name.label')} />
                     </Form.Item>
                     <Form.Item className="modal-submit-btn button-container">
                         <Button type="text" className="cancel-btn prev" block onClick={cancelAdd}>

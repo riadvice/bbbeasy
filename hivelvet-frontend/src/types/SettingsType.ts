@@ -20,6 +20,11 @@ export type SettingsType = {
     company_name: string;
     company_website: string;
     platform_name: string;
+
+    terms_use: string;
+    privacy_policy: string;
+    logo: string;
+
     primary_color: string;
     secondary_color: string;
     accent_color: string;

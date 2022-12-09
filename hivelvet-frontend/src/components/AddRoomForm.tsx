@@ -190,7 +190,7 @@ export const AddRoomForm = (props: Props) => {
         <>
             <Modal
                 title={<Trans i18nKey="new_room" />}
-                className="add-modal"
+                className="add-modal large-modal"
                 centered
                 visible={props.isModalShow}
                 onOk={handleAdd}

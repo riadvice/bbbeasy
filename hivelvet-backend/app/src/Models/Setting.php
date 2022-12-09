@@ -60,4 +60,31 @@ class Setting extends BaseModel
             $this->additional_color = $colors['add_color'];
         }
     }
+
+    public function getAllSettings(): array
+    {
+        $result = [];
+
+        /** @var Setting $defaultSettings */
+        $defaultSettings = $this->find([], ['limit' => 1])->current();
+
+        if ($defaultSettings->valid()) {
+            $result = [
+                'company_name'    => $this->company_name,
+                'company_website' => $this->company_website,
+                'platform_name'   => $this->platform_name,
+
+                'terms_use'      => $this->terms_use,
+                'privacy_policy' => $this->privacy_policy,
+                'logo'           => $this->logo,
+
+                'primary_color'    => $this->primary_color,
+                'secondary_color'  => $this->secondary_color,
+                'accent_color'     => $this->accent_color,
+                'additional_color' => $this->additional_color,
+            ];
+        }
+
+        return $result;
+    }
 }

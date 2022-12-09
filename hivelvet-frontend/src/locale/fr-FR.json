@@ -4,7 +4,10 @@
     "conditions": "Conditions générales",
     "room": "Salle",
     "label": "Label",
-    "preset": "Préréglage",
+    "preset": {
+        "label": "Préréglage",
+        "required": "Préréglage est obligatoire"
+    },
     "new": "Nouveau",
     "get started": "Commencer",
     "sign-up": "S'inscrire",
@@ -223,6 +226,9 @@
     "delete_user_confirm": "Êtes-vous sûr de vouloir supprimer cet utilisateur ?",
     "delete_user_success": "Utilisateur supprimé avec succès",
 
+    "label_name": {
+        "size": "Le nom du libellé doit comporter au moins un caractère"
+    },
     "label-name-already-exist": "Le nom du libellé existe déjà",
     "label-color-already-exist": "Le couleur du libellé existe déjà",
     "delete_label_confirm": "Êtes-vous sûr de vouloir supprimer cet libellé ?",
@@ -248,7 +254,11 @@
     "add_preset_success": "Préaglage ajouté avec succés",
     "edit_preset_success": "Préaglage mis à jour avec succès",
     "delete_preset_success": "Préaglage supprimé avec succès",
+
     "new_room": "Nouvelle Salle",
+    "room_name": {
+        "size": "Le nom de la salle doit comporter au moins 4 caractères"
+    },
     "shortlink": {
         "label": "Lien",
         "required": "Le lien est obligatoire"
@@ -256,5 +266,7 @@
     "labels_required": "Les labels sont obligatoires",
     "room-name-already-exist": "Le nom du salle existe déjà",
     "room-link-already-exist": "Le lien du salle existe déjà",
-    "add_room_success": "Salle ajoutée avec succés"
+    "add_room_success": "Salle ajoutée avec succés",
+
+    "edit_settings_success": "Paramètres de compagnie et de branding mis à jour avec succès"
 }

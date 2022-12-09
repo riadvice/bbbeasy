@@ -23,6 +23,12 @@ import { authHeader } from '../lib/AuthHeader';
 class UsersService {
     requestOptions: object = { headers: authHeader() };
 
+    collect_users(data: object) {
+        return axios.post(apiRoutes.COLLECT_USERS_URL, {
+            data,
+        });
+    }
+
     list_users() {
         return axios.get(apiRoutes.LIST_USER_URL, this.requestOptions);
     }

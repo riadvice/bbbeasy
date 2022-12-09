@@ -49,6 +49,10 @@ class Collect extends BaseAction
                 'company_website' => $defaultSettings->company_website,
                 'platform_name'   => $defaultSettings->platform_name,
 
+                'terms_use'      => $defaultSettings->terms_use,
+                'privacy_policy' => $defaultSettings->privacy_policy,
+                'logo'           => $defaultSettings->logo,
+
                 'primary_color'    => $defaultSettings->primary_color,
                 'secondary_color'  => $defaultSettings->secondary_color,
                 'accent_color'     => $defaultSettings->accent_color,

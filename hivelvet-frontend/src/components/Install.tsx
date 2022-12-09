@@ -17,7 +17,11 @@
  */
 
 import React, { useEffect } from 'react';
+
 import InstallService from '../services/install.service';
+import SettingsService from '../services/settings.service';
+import PresetsService from '../services/presets.service';
+import UsersService from '../services/users.service';
 
 import { Steps, Button, Row, Col, Form, Result } from 'antd';
 import DynamicIcon from './DynamicIcon';
@@ -97,7 +101,7 @@ const Install = () => {
 
     useEffect(() => {
         localStorage.removeItem('user');
-        InstallService.collect_settings()
+        SettingsService.collect_settings()
             .then((response) => {
                 const settings: SettingsType = response.data;
                 if (settings) {
@@ -105,6 +109,8 @@ const Install = () => {
                         company_name: settings.company_name,
                         company_url: settings.company_website,
                         platform_name: settings.platform_name,
+                        term_url: settings.terms_use,
+                        policy_url: settings.privacy_policy,
                     });
                     setPrimaryColor(settings.primary_color);
                     setSecondaryColor(settings.secondary_color);
@@ -115,7 +121,7 @@ const Install = () => {
             .catch((error) => {
                 console.log(error);
             });
-        InstallService.collect_presets()
+        PresetsService.collect_presets()
             .then((response) => {
                 setPresets(response.data);
             })
@@ -174,16 +180,14 @@ const Install = () => {
     const onFinish = () => {
         const formData: formType = stepForm.getFieldsValue(true);
         if (activeStep == 0) {
-            InstallService.collect_users(formData)
-                .then(() => {
+            UsersService.collect_users(formData).then((result) => {
+                if (result.data.message) {
+                    setSuccessful(false);
+                    setMessage(result.data.message);
+                } else {
                     next();
-                })
-                .catch((error) => {
-                    if (error.response.data.message) {
-                        setSuccessful(false);
-                        setMessage(error.response.data.message);
-                    }
-                });
+                }
+            });
         } else {
             if (activeStep < steps.length - 1) {
                 next();
