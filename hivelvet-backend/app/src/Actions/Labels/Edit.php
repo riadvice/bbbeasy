@@ -46,8 +46,11 @@ class Edit extends BaseAction
     {
         $body  = $this->getDecodedBody();
         $form  = $body['data'];
+
         $id    = $params['id'];
         $label = $this->loadData($id);
+        $name_error_message = 'Name already exists';
+        $color_error_message    = 'Color already exists';
         if ($label->valid()) {
             $dataChecker = new DataChecker();
             $dataChecker->verify($form['name'], Validator::notEmpty()->setName('name'));
@@ -58,12 +61,28 @@ class Edit extends BaseAction
                 $label->name        = $form['name'];
                 $label->description = $form['description'];
                 $label->color       = $form['color'];
-                if ($checklabel->nameExists($label->name)) {
-                    $this->logger->error('Label could not be updated', ['error' => 'Name already exist']);
-                    $this->renderJson(['errors' => ['name' => 'Label Name already exists']], ResponseCode::HTTP_PRECONDITION_FAILED);
+                $labels    = $checklabel->find(['(name = ? and id != ?) or (color = ? and id != ?)', $form['name'], $id, $form['color'], $id]);
+                if($labels){
+                    $labels = $labels->castAll();
 
+                        $nameExist = $labels[0]['name'] === $form['name'];
+                        $colorExist    = $labels[0]['color'] === $form['color'];
+                        if ($nameExist && $colorExist) {
+
+                            $message = ['name' => $name_error_message, 'color' => $color_error_message];
+                        } elseif ($nameExist) {
+
+                            $message = ['name' => $name_error_message];
+                        } else {
+
+                            $message = ['color' => $color_error_message];
+                        }
+                    $this->logger->error($errorMessage, ['error' => $message]);
+                    $this->renderJson(['errors' => $message], ResponseCode::HTTP_PRECONDITION_FAILED);
                     return;
-                }
+                    }
+
+
             } else {
                 $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
 

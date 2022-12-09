@@ -48,13 +48,25 @@ class Add extends BaseAction
 
         if ($dataChecker->allValid()) {
             $label = new Label();
-            $error = $label->nameExists($form['name']);
-            if ($error) {
-                $this->logger->error('Label could not be added', ['error' => 'Name already exists']);
-                $this->renderJson(['errors' => ['name' => 'Label Name already exists']], ResponseCode::HTTP_PRECONDITION_FAILED);
+            $error_name = $label->nameExists($form['name']);
+            $error_color=$label->colorExists($form["color"]);
+           if ($error_name && $error_color) {
+                $this->logger->error('Label could not be added', ['error' => 'Name and color already exists']);
+                $this->renderJson(['errors' => ['name' => 'Label Name already exists','color' => 'Label color already exists']], ResponseCode::HTTP_PRECONDITION_FAILED);
 
                 return;
             }
+            if($error_name){
+                $this->logger->error('Label could not be added', ['error' => 'Label name already exists']);
+                $this->renderJson(['errors' => ['name' => 'Label name already exists']], ResponseCode::HTTP_PRECONDITION_FAILED);
+                return;
+            }
+            if($error_color){
+                $this->logger->error('Label could not be added', ['error' => 'Label color already exists']);
+                $this->renderJson(['errors' => ['color' => 'Label color already exists']], ResponseCode::HTTP_PRECONDITION_FAILED);
+                  return;
+            }
+
             $label->name        = $form['name'];
             $label->description = $form['description'];
             $label->color       = $form['color'];

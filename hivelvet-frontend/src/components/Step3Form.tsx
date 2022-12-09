@@ -47,7 +47,7 @@ export const Step3Form = (props: Props) => {
 
     const getSubCategoryName = (name: string) => {
         return name.charAt(0).toUpperCase() + name.replaceAll('_', ' ').slice(1);
-    }
+    };
 
     return (
         <>
@@ -74,12 +74,14 @@ export const Step3Form = (props: Props) => {
                                 {item.subcategories.map((subItem) => {
                                     const subcategory = getSubCategoryName(subItem.name);
 
-                                    return <li
-                                        key={item.name + '_' + subItem.name}
-                                        className={subItem.enabled == true ? 'text-black' : 'text-grey'}
-                                    >
-                                        {subcategory}
-                                    </li>
+                                    return (
+                                        <li
+                                            key={item.name + '_' + subItem.name}
+                                            className={subItem.enabled == true ? 'text-black' : 'text-grey'}
+                                        >
+                                            {subcategory}
+                                        </li>
+                                    );
                                 })}
                             </ul>
                         }
@@ -114,16 +116,18 @@ export const Step3Form = (props: Props) => {
                         {modalContent.map((item) => {
                             const subcategory = getSubCategoryName(item.name);
 
-                            return <div key={modalTitle + '_' + item.name}>
-                                <Form.Item label={subcategory} valuePropName={item.name}>
-                                    <Switch
-                                        defaultChecked={item.enabled == true ? true : false}
-                                        onChange={(checked) => {
-                                            item.enabled = checked;
-                                        }}
-                                    />
-                                </Form.Item>
-                            </div>;
+                            return (
+                                <div key={modalTitle + '_' + item.name}>
+                                    <Form.Item label={subcategory} valuePropName={item.name}>
+                                        <Switch
+                                            defaultChecked={item.enabled == true ? true : false}
+                                            onChange={(checked) => {
+                                                item.enabled = checked;
+                                            }}
+                                        />
+                                    </Form.Item>
+                                </div>
+                            );
                         })}
                     </div>
                 </Modal>

@@ -246,5 +246,8 @@
     "delete_preset_confirm": "Are you sure to delete this preset ?",
     "add_preset_success": "Preset Successfully added",
     "edit_preset_success": "Preset Successfully updated",
-    "delete_preset_success": "Preset successfully deleted"
+    "delete_preset_success": "Preset successfully deleted",
+    "label_name": {
+        "size": "Label Name must be at least 1 character"
+    }
 }
