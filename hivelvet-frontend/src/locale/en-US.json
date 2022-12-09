@@ -4,7 +4,10 @@
     "conditions": "Conditions",
     "room": "Room",
     "label": "Label",
-    "preset": "Preset",
+    "preset": {
+        "label": "Preset",
+        "required": "Preset is required"
+    },
     "new": "New",
     "get started": "Get started",
     "sign-up": "Sign up",
@@ -223,7 +226,11 @@
     "delete_user_confirm": "Are you sure to delete this user ?",
     "delete_user_success": "User successfully deleted",
 
-    "label-name-already-exist": "Label Name already exists",
+    "label_name": {
+        "size": "Label Name must be at least one character"
+    },
+    "label-name-already-exist": "Label name already exists",
+    "label-color-already-exist": "Label color already exists",
     "delete_label_confirm": "Are you sure to delete this label ?",
     "delete_label_success": "Label successfully deleted",
     "add_label_success": "Label successfully added",
@@ -247,6 +254,19 @@
     "add_preset_success": "Preset Successfully added",
     "edit_preset_success": "Preset Successfully updated",
     "delete_preset_success": "Preset successfully deleted",
+
+    "new_room": "New Room",
+    "room_name": {
+        "size": "Room Name must have at least 4 characters"
+    },
+    "shortlink": {
+        "label": "Short Link",
+        "required": "The Short Link is required"
+    },
+    "labels_required": "labels are required",
+    "room-name-already-exist": "Room Name already exists",
+    "room-link-already-exist": "Room link already exists",
+    "add_room_success": "Room Added Successfully",
 
     "edit_settings_success": "Company & Branding settings successfully updated"
 }

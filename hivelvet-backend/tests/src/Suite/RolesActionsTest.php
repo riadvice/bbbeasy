@@ -23,8 +23,10 @@ declare(strict_types=1);
 namespace Suite;
 
 use Actions\Roles\AddTest;
+use Actions\Roles\CollectTest;
 use Actions\Roles\DeleteTest;
 use Actions\Roles\EditTest;
+use Actions\Roles\IndexTest;
 use Test\TestGroup;
 
 /**
@@ -34,7 +36,7 @@ use Test\TestGroup;
  */
 final class RolesActionsTest extends TestGroup
 {
-    protected $classes = [AddTest::class, EditTest::class, DeleteTest::class];
+    protected $classes = [AddTest::class, EditTest::class, DeleteTest::class, CollectTest::class, IndexTest::class];
 
     protected $quiet = true;
 }

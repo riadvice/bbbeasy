@@ -23,8 +23,10 @@ declare(strict_types=1);
 namespace Actions\Users;
 
 use Actions\Base as BaseAction;
+use Enum\ResponseCode;
 use Models\User;
-use Utils\SecurityUtils;
+use Respect\Validation\Validator;
+use Validation\DataChecker;
 
 /**
  * Class Collect.
@@ -33,29 +35,21 @@ class Collect extends BaseAction
 {
     public function execute($f3): void
     {
-        $form = $this->getDecodedBody()['data'];
-        $user = new User();
+        $body        = $this->getDecodedBody();
+        $form        = $body['data'];
+        $dataChecker = new DataChecker();
 
-        $username = $form['username'];
-        $email    = $form['email'];
-        $password = $form['password'];
+        $dataChecker->verify($form['username'], Validator::length(4)->setName('username'));
+        $dataChecker->verify($form['email'], Validator::email()->setName('email'));
+        $dataChecker->verify($form['password'], Validator::length(8)->setName('password'));
 
-        $users = $user->getUsersByUsernameOrEmail($username, $email);
-
-        $compliant    = SecurityUtils::isGdprCompliant($password);
-        $common       = SecurityUtils::credentialsAreCommon($username, $email, $password);
-        $found        = $user->userExists($username, $email, $users);
-        $errorMessage = 'Administrator could not be added';
-
-        if (!$compliant) {
-            $this->logger->error($errorMessage, ['error' => $compliant]);
-            $this->renderJson(['message' => $compliant]);
-        } elseif ($common) {
-            $this->logger->error($errorMessage, ['error' => $common]);
-            $this->renderJson(['message' => $common]);
-        } elseif ($found) {
-            $this->logger->error($errorMessage, ['error' => $found]);
-            $this->renderJson(['message' => $found]);
+        if (!$dataChecker->allValid()) {
+            $this->logger->error('Initial application setup : Add administrator', ['errors' => $dataChecker->getErrors()]);
+            $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
+        } else {
+            $user         = new User();
+            $errorMessage = 'Administrator could not be added';
+            $this->credentialsAreValid($form, $user, $errorMessage);
         }
     }
 }

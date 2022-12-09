@@ -34,15 +34,14 @@ class UserFaker
     private static array $storage = [];
 
     /**
-     * @param null   $role
-     * @param string $status
-     * @param null   $storageName
+     * @param null $role
+     * @param null $storageName
      *
      * @return User
      *
      * @throws ReflectionException
      */
-    public static function create($role = null, $status = UserStatus::ACTIVE, $storageName = null)
+    public static function create($role = null, string $status = UserStatus::ACTIVE, $storageName = null)
     {
         // To make testing easier, the user is password is the same as its role
         $faker          = Faker::create();

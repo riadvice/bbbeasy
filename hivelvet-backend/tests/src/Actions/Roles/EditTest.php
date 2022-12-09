@@ -109,9 +109,44 @@ final class EditTest extends Scenario
 
         $faker = Faker::create();
         $role  = RoleFaker::create();
-        $data  = ['data' => ['name' => $faker->name]];
+        $data  = ['data' => [
+            'name'        => $faker->name,
+            'permissions' => [
+                'labels' => ['add', 'delete', 'edit'],
+            ],
+        ]];
         $f3->mock(self::EDIT_ROLE_ROUTE . $role->id, null, null, $this->postJsonData($data));
-        $test->expect($this->compareArrayToResponse(['result' => 'success', 'role' => $role->getRoleInfos()]), 'Update existing role with id "' . $role->id . '" using new name "' . $role->name . '" successfully');
+        $test->expect($this->compareArrayToResponse(['result' => 'success', 'role' => $role->getRoleInfos()]), 'Update existing role with id "' . $role->id . '" using new name "' . $role->name . '" and new permissions successfully');
+
+        $f3->mock(self::EDIT_ROLE_ROUTE . $role->id, null, null, $this->postJsonData($data));
+        $test->expect($this->compareArrayToResponse(['result' => 'success', 'role' => $role->getRoleInfos()]), 'Update existing role with id "' . $role->id . '" using new name "' . $role->name . '" and new permissions successfully');
+
+        return $test->results();
+    }
+
+    /**
+     * @param $f3
+     *
+     * @return array
+     *
+     * @throws ReflectionException
+     */
+    public function testValidRoleAndNewPermissions($f3)
+    {
+        $test = $this->newTest();
+
+        $faker = Faker::create();
+        $role  = RoleFaker::create(['users' => ['index', 'edit', 'delete']]);
+        $data  = ['data' => [
+            'name'        => $faker->name,
+            'permissions' => [
+                'labels' => ['edit', 'add'],
+                'users'  => ['index', 'add', 'edit'],
+            ],
+        ]];
+
+        $f3->mock(self::EDIT_ROLE_ROUTE . $role->id, null, null, $this->postJsonData($data));
+        $test->expect($this->compareArrayToResponse(['result' => 'success', 'role' => $role->getRoleInfos()]), 'Update existing role with id "' . $role->id . '" using new name "' . $role->name . '" and updated permissions successfully');
 
         return $test->results();
     }

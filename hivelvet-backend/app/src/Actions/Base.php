@@ -268,7 +268,7 @@ abstract class Base extends \Prefab
     protected function credentialsAreValid(array $form, User $user, string $errorMessage): bool
     {
         $credentials_valid = true;
-        $responseCode      = ResponseCode::HTTP_BAD_REQUEST;
+        $responseCode      = ResponseCode::HTTP_PRECONDITION_FAILED;
 
         $username = $form['username'];
         $email    = $form['email'];
@@ -290,7 +290,7 @@ abstract class Base extends \Prefab
             $credentials_valid = false;
         } elseif ($found) {
             $this->logger->error($errorMessage, ['error' => $found]);
-            $this->renderJson(['message' => $found], ResponseCode::HTTP_PRECONDITION_FAILED);
+            $this->renderJson(['message' => $found], $responseCode);
             $credentials_valid = false;
         }
 

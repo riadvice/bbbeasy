@@ -4,7 +4,10 @@
     "conditions": "الشروط",
     "room": "القاعة",
     "label": "العلامة",
-    "preset": "الإعدادات المسبقة",
+    "preset": {
+        "label": "الإعدادات المسبقة",
+        "required": "الإعدادات المسبقة مطلوبة"
+    },
     "new": "جديد",
     "get started": "بدء التشغيل",
     "sign-up": "التسجيل",
@@ -223,7 +226,11 @@
     "delete_user_confirm": "هل أنت متأكد من حذف هذا المستخدم ؟",
     "delete_user_success": "تم حذف المستخدم بنجاح",
 
+    "label_name": {
+        "size": "يجب أن يتكون اسم التصنيف من حرف واحد على الأقل"
+    },
     "label-name-already-exist": "اسم التصنيف موجود بالفعل",
+    "label-color-already-exist": "لون التصنيف موجود بالفعل",
     "delete_label_confirm": "هل أنت متأكد من حذف هذا العلامة ؟",
     "delete_label_success": "تم حذف العلامة بنجاح",
     "add_label_success": "تمت اضافة العلامة بنجاح",
@@ -247,6 +254,19 @@
     "add_preset_success": "تمت إضافة الاعدادات بنجاح",
     "edit_preset_success": "تم تحديث الاعدادات بنجاح",
     "delete_preset_success": "تم حذف الاعدادات بنجاح",
+
+    "new_room": "غرفة جديدة",
+    "room_name": {
+        "size": "يجب أن تتكون اسم القاعة من 4 أحرف على الأقل"
+    },
+    "shortlink": {
+        "label": "الرابط",
+        "required": "الرابط مطلوب"
+    },
+    "labels_required": "العلامات مطلوبة",
+    "room-name-already-exist": "اسم القاعة موجود بالفعل",
+    "room-link-already-exist": "رابط القاعة موجود بالفعل",
+    "add_room_success": "تمت إضافة القاعة بنجاح",
 
     "edit_settings_success": "تم تحديث إعدادات الشركة و العلامات التجارية بنجاح"
 }

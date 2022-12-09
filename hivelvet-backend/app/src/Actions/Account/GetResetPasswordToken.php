@@ -25,7 +25,9 @@ namespace Actions\Account;
 use Actions\Base as BaseAction;
 use Enum\ResetTokenStatus;
 use Enum\ResponseCode;
+use Enum\UserStatus;
 use Models\ResetPasswordToken;
+use Models\User;
 use Respect\Validation\Validator;
 use Validation\DataChecker;
 
@@ -47,13 +49,21 @@ class GetResetPasswordToken extends BaseAction
         $dataChecker->verify($token, Validator::length(16)->setName('token'));
 
         if ($dataChecker->allValid()) {
+            $user       = new User();
             $resetToken = new ResetPasswordToken();
             $resetToken = $resetToken->getByToken($token);
-            // @todo: validate against user too!
             if (!$resetToken->dry() && $resetToken->isUsable()) {
-                $this->logger->info('Valid token used for password reset', ['token' => $token, 'status' => $resetToken->status, 'expires_at' => $resetToken->expires_at]);
-                $dataIsValid = true;
-                $this->renderJson(['token' => $token]);
+                $resetTokenUser = $user->getById($resetToken->user_id);
+                if (!$resetTokenUser->dry() && UserStatus::ACTIVE === $resetTokenUser->status) {
+                    $this->logger->info('Valid token used for password reset', ['token' => $token, 'status' => $resetToken->status, 'expires_at' => $resetToken->expires_at]);
+                    $dataIsValid = true;
+                    $this->renderJson(['token' => $token]);
+                } else {
+                    $this->logger->error('Cannot validate password reset token with non active user', ['token' => $token, 'user' => $user->toArray()]);
+                    $this->renderJson(['message' => 'User is not active'], ResponseCode::HTTP_BAD_REQUEST);
+
+                    return;
+                }
             } elseif (!$resetToken->dry() && !$resetToken->isUsable() && ResetTokenStatus::NEW === $resetToken->status) {
                 $this->logger->warning('Marking not used in time password reset token as expired.', ['token' => $token, 'status' => $resetToken->status, 'expires_at' => $resetToken->expires_at]);
                 $resetToken->status = ResetTokenStatus::EXPIRED;

@@ -220,41 +220,16 @@ const Labels = () => {
     const EditableCell: React.FC<EditableCellProps> = ({ editing, children, dataIndex, record, ...restProps }) => {
         const EditableCol = (
             <Space size="middle">
-                <Form.Item
-                    name={dataIndex}
-                    className="input-editable editable-row"
-                    {...(dataIndex in errorsEdit &&
-                        record.key == errorsEdit['key'] && {
-                            help: (
-                                <Trans
-                                    i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errorsEdit[dataIndex])}
-                                />
-                            ),
-                            validateStatus: 'error',
-                        })}
-                    rules={[
-                        {
-                            required: true,
-                            message: t('required_' + dataIndex),
-                        },
-                    ]}
-                >
-                    <Input
-                        onFocus={() => {
-                            setCancelVisibility(false);
-                        }}
-                    />
-                </Form.Item>
-                {dataIndex == 'description' && (
+                {dataIndex != 'description' ? (
                     <Form.Item
-                        name="color"
+                        name={dataIndex}
                         className="input-editable editable-row"
-                        {...('color' in errorsEdit &&
+                        {...(dataIndex in errorsEdit &&
                             record.key == errorsEdit['key'] && {
                                 help: (
                                     <Trans
                                         i18nKey={Object.keys(EN_US).filter(
-                                            (elem) => EN_US[elem] == errorsEdit['color']
+                                            (elem) => EN_US[elem] == errorsEdit[dataIndex]
                                         )}
                                     />
                                 ),
@@ -263,17 +238,68 @@ const Labels = () => {
                         rules={[
                             {
                                 required: true,
-                                message: t('required_color'),
+                                message: t('required_' + dataIndex),
                             },
                         ]}
                     >
-                        <InputColor
-                            defaultColor={record.color}
+                        <Input
                             onFocus={() => {
                                 setCancelVisibility(false);
                             }}
                         />
                     </Form.Item>
+                ) : (
+                    <>
+                        <Form.Item
+                            name="description"
+                            className="input-editable editable-row"
+                            {...('description' in errorsEdit &&
+                                record.key == errorsEdit['key'] && {
+                                    help: (
+                                        <Trans
+                                            i18nKey={Object.keys(EN_US).filter(
+                                                (elem) => EN_US[elem] == errorsEdit['description']
+                                            )}
+                                        />
+                                    ),
+                                    validateStatus: 'error',
+                                })}
+                        >
+                            <Input
+                                onFocus={() => {
+                                    setCancelVisibility(false);
+                                }}
+                            />
+                        </Form.Item>
+                        <Form.Item
+                            name="color"
+                            className="input-editable editable-row"
+                            {...('color' in errorsEdit &&
+                                record.key == errorsEdit['key'] && {
+                                    help: (
+                                        <Trans
+                                            i18nKey={Object.keys(EN_US).filter(
+                                                (elem) => EN_US[elem] == errorsEdit['color']
+                                            )}
+                                        />
+                                    ),
+                                    validateStatus: 'error',
+                                })}
+                            rules={[
+                                {
+                                    required: true,
+                                    message: t('required_color'),
+                                },
+                            ]}
+                        >
+                            <InputColor
+                                defaultColor={record.color}
+                                onFocus={() => {
+                                    setCancelVisibility(false);
+                                }}
+                            />
+                        </Form.Item>
+                    </>
                 )}
             </Space>
         );

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Suite;
 
 use Actions\Core\GetLocaleTest;
+use Actions\Core\InstallTest;
 use Test\TestGroup;
 
 /**
@@ -32,7 +33,7 @@ use Test\TestGroup;
  */
 final class CoreActionsTest extends TestGroup
 {
-    protected $classes = [GetLocaleTest::class];
+    protected $classes = [GetLocaleTest::class, InstallTest::class];
 
     protected $quiet = true;
 }

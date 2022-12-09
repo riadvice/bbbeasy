@@ -47,12 +47,13 @@ class SaveLogo extends BaseAction
          */
         $form        = $f3->get('POST');
         $dataChecker = new DataChecker();
-        // if files not empty
         $dataChecker->verify($form['logo_name'], Validator::notEmpty()->setName('logo_name'));
-        $errorMessage = 'File could not be updated';
+        $errorMessage = 'File could not be saved';
 
-        if ($dataChecker->allValid()) {
-            // verify format file
+        if (!$dataChecker->allValid()) {
+            $this->logger->error($errorMessage, ['errors' => $dataChecker->getErrors()]);
+            $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
+        } else {
             $format       = $f3->get('FILES')['logo']['type'];
             $validFormats = ['image/jpg', 'image/jpeg', 'image/png'];
             if (\in_array($format, $validFormats, true)) {
@@ -61,26 +62,25 @@ class SaveLogo extends BaseAction
                 $setting = new Setting();
 
                 /** @var Setting $settings */
-                $settings       = $setting->find([], ['limit' => 1])->current();
-                $settings->logo = $form['logo_name'];
+                $settings = $setting->find([], ['limit' => 1])->current();
+                if (!$settings->dry()) {
+                    $settings->logo = $form['logo_name'];
 
-                try {
-                    $settings->save();
-                    $this->logger->info('Initial application setup : Update settings logo', ['setting' => $settings->toArray()]);
-                } catch (\Exception $e) {
-                    $message = $e->getMessage();
-                    $this->logger->error($errorMessage, ['error' => $message]);
-                    $this->renderJson(['errors' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+                    try {
+                        $settings->save();
+                        $this->logger->info('Initial application setup : Update settings logo', ['setting' => $settings->toArray()]);
+                    } catch (\Exception $e) {
+                        $message = $e->getMessage();
+                        $this->logger->error($errorMessage, ['error' => $message]);
+                        $this->renderJson(['errors' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
 
-                    return;
+                        return;
+                    }
                 }
             } else {
                 $this->logger->error($errorMessage, ['error' => 'invalid file format : ' . $format]);
-                $this->renderJson(['errors' => 'invalid file format'], ResponseCode::HTTP_PRECONDITION_FAILED);
+                $this->renderJson(['message' => 'invalid file format'], ResponseCode::HTTP_PRECONDITION_FAILED);
             }
-        } else {
-            $this->logger->error($errorMessage, ['errors' => $dataChecker->getErrors()]);
-            $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
         }
     }
 }

@@ -27,11 +27,12 @@ import Reset from '../components/auth/ResetPassword';
 import ChangePassword from '../components/auth/ChangePassword';
 
 import Home from '../components/Home';
-import Roles from '../components/Roles';
-import Users from '../components/Users';
+import Rooms from '../components/Rooms';
 import Labels from '../components/Labels';
 import Presets from '../components/Presets';
 import Branding from '../components/Branding';
+import Users from '../components/Users';
+import Roles from '../components/Roles';
 
 export const webRoutes: IRoute[] = [
     {
@@ -72,6 +73,11 @@ export const webRoutes: IRoute[] = [
     {
         path: '/home',
         element: <Home />,
+        private: true,
+    },
+    {
+        path: '/rooms',
+        element: <Rooms />,
         private: true,
     },
     {

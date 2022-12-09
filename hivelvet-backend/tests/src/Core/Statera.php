@@ -37,7 +37,10 @@ use Suite\AccountActionsTest;
 use Suite\CoreActionsTest;
 use Suite\LabelsActionsTest;
 use Suite\ModelsTest;
+use Suite\PresetsActionsTest;
 use Suite\RolesActionsTest;
+use Suite\RolesPermissionsActionsTest;
+use Suite\SettingsActionsTest;
 use Suite\UsersActionsTest;
 use Utils\CliUtils;
 
@@ -65,13 +68,14 @@ class Statera
         // Test web-application classes
         $classes = [
             ConfigurationTest::class, ReflectionTest::class, ModelsTest::class,
-            /*
             CoreActionsTest::class,
             AccountActionsTest::class,
-            UsersActionsTest::class,
             RolesActionsTest::class,
+            RolesPermissionsActionsTest::class,
+            UsersActionsTest::class,
             LabelsActionsTest::class,
-            */
+            SettingsActionsTest::class,
+            PresetsActionsTest::class,
             // Always leave CDN test as the last one
             // CdnDistributorTest::class
         ];

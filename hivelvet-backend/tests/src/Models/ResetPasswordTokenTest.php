@@ -39,13 +39,11 @@ final class ResetPasswordTokenTest extends Scenario
     protected $group = 'Reset Password Token Model';
 
     /**
-     * @param $f3
-     *
      * @return array
      *
      * @throws \ReflectionException
      */
-    public function testTokenCreation($f3)
+    public function testTokenCreation()
     {
         $test                = $this->newTest();
         $user                = UserFaker::create(UserRole::ADMINISTRATOR);
@@ -60,13 +58,11 @@ final class ResetPasswordTokenTest extends Scenario
     }
 
     /**
-     * @param $f3
-     *
      * @return array
      *
      * @throws \ReflectionException
      */
-    public function testUserExists($f3)
+    public function testUserExists()
     {
         $user = UserFaker::create(UserRole::ADMINISTRATOR);
 
