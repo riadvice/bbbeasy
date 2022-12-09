@@ -67,8 +67,12 @@ class Label extends BaseModel
 
         $this->load(['color = ?', $color]);
 
+
         return $this;
     }
+
+
+
     /**
      *check if name is already in use .
      *
@@ -79,6 +83,17 @@ class Label extends BaseModel
     public function nameExists($name)
     {
         return $this->load(['lower(name) = ?', mb_strtolower($this->f3->snakecase($name))]);
+    }
+    /**
+     *check if color is already in use .
+     *
+     * @param string $color
+     *
+     * @return bool
+     */
+    public function colorExists($color)
+    {
+        return $this->load(['lower(color) = ?', mb_strtolower($this->f3->snakecase($color))]);
     }
 
     public function getAllLabels()

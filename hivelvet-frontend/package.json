@@ -83,8 +83,8 @@
     "@types/pino": "^7.0.5",
     "@types/react": "^17.0.20",
     "@types/react-dom": "^17.0.9",
-    "@typescript-eslint/eslint-plugin": "^5.36.1",
-    "@typescript-eslint/parser": "^5.45.0",
+    "@typescript-eslint/eslint-plugin": "^5.46.0",
+    "@typescript-eslint/parser": "^5.46.0",
     "babel-plugin-import": "^1.13.5",
     "babel-plugin-istanbul": "^6.1.1",
     "cypress": "^10.8.0",
@@ -101,7 +101,7 @@
     "react-styleguidist": "^13.0.0",
     "simple-progress-webpack-plugin": "^2.0.0",
     "source-map-explorer": "^2.5.2",
-    "ts-loader": "^9.4.1"
+    "ts-loader": "^9.4.2"
   },
   "packageManager": "yarn@3.2.3"
 }

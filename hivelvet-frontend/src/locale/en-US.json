@@ -253,6 +253,7 @@
     "add_preset_success": "Preset Successfully added",
     "edit_preset_success": "Preset Successfully updated",
     "delete_preset_success": "Preset successfully deleted",
+
     "new_room": "New Room",
     "shortlink": {
         "label": "Short Link",
@@ -261,5 +262,9 @@
     "labels_required": "labels are required",
     "room-name-already-exist": "Room Name already exists",
     "room-link-already-exist": "Room link already exists",
-    "add_room_success": "Room Added Successfully"
+    "add_room_success": "Room Added Successfully",
+
+    "label_name": {
+        "size": "Label Name must be at least 1 character"
+    }
 }
