@@ -89,14 +89,14 @@ final class RegisterTest extends Scenario
      */
     public function testRegistrationValidUser($f3)
     {
-        $test         = $this->newTest();
-        $faker        = Faker::create();
-        $raw_password = $faker->password(8);
-        $data         = [
+        $test        = $this->newTest();
+        $faker       = Faker::create();
+        $rawPassword = $faker->password(8);
+        $data        = [
             'username'        => $faker->userName,
             'email'           => $faker->email,
-            'password'        => $raw_password,
-            'confirmPassword' => $raw_password,
+            'password'        => $rawPassword,
+            'confirmPassword' => $rawPassword,
             'agreement'       => true,
         ];
         $f3->mock(self::REGISTER_ROUTE, null, null, $this->postJsonData(['data' => $data]));

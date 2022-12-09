@@ -47,11 +47,11 @@ class Edit extends BaseAction
         $body = $this->getDecodedBody();
         $form = $body['data'];
 
-        $id                  = $params['id'];
-        $label               = $this->loadData($id);
-        $errorMessage        = 'Label could not be updated';
-        $name_error_message  = 'Label name already exists';
-        $color_error_message = 'Label color already exists';
+        $id                = $params['id'];
+        $label             = $this->loadData($id);
+        $errorMessage      = 'Label could not be updated';
+        $nameErrorMessage  = 'Label name already exists';
+        $colorErrorMessage = 'Label color already exists';
         if ($label->valid()) {
             $dataChecker = new DataChecker();
             $dataChecker->verify($form['name'], Validator::notEmpty()->setName('name'));
@@ -67,11 +67,11 @@ class Edit extends BaseAction
                 $colorExist = $checkLabel->colorExists($form['color'], $id);
                 if ($nameExist || $colorExist) {
                     if ($nameExist && $colorExist) {
-                        $message = ['name' => $name_error_message, 'color' => $color_error_message];
+                        $message = ['name' => $nameErrorMessage, 'color' => $colorErrorMessage];
                     } elseif ($nameExist) {
-                        $message = ['name' => $name_error_message];
+                        $message = ['name' => $nameErrorMessage];
                     } else {
-                        $message = ['color' => $color_error_message];
+                        $message = ['color' => $colorErrorMessage];
                     }
                     $this->logger->error($errorMessage, ['errors' => $message]);
                     $this->renderJson(['errors' => $message], ResponseCode::HTTP_PRECONDITION_FAILED);

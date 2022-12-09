@@ -42,9 +42,9 @@ class Add extends BaseAction
         $body = $this->getDecodedBody();
         $form = $body['data'];
 
-        $errorMessage        = 'Label could not be added';
-        $name_error_message  = 'Label name already exists';
-        $color_error_message = 'Label color already exists';
+        $errorMessage      = 'Label could not be added';
+        $nameErrorMessage  = 'Label name already exists';
+        $colorErrorMessage = 'Label color already exists';
 
         $dataChecker = new DataChecker();
         $dataChecker->verify($form['name'], Validator::notEmpty()->setName('name'));
@@ -56,11 +56,11 @@ class Add extends BaseAction
             $colorExist = $label->colorExists($form['color']);
             if ($nameExist || $colorExist) {
                 if ($nameExist && $colorExist) {
-                    $message = ['name' => $name_error_message, 'color' => $color_error_message];
+                    $message = ['name' => $nameErrorMessage, 'color' => $colorErrorMessage];
                 } elseif ($nameExist) {
-                    $message = ['name' => $name_error_message];
+                    $message = ['name' => $nameErrorMessage];
                 } else {
-                    $message = ['color' => $color_error_message];
+                    $message = ['color' => $colorErrorMessage];
                 }
 
                 $this->logger->error($errorMessage, ['errors' => $message]);

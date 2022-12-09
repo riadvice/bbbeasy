@@ -24,7 +24,6 @@ namespace Actions\Roles;
 
 use Fake\RoleFaker;
 use Faker\Factory as Faker;
-use Models\Role;
 use ReflectionException;
 use Test\Scenario;
 
@@ -86,11 +85,9 @@ final class AddTest extends Scenario
     {
         $test = $this->newTest();
 
-        $role  = new Role();
         $faker = Faker::create();
         $data  = ['data' => ['name' => $faker->name]];
         $f3->mock(self::ADD_ROLE_ROUTE, null, null, $this->postJsonData($data));
-
         $test->expect($this->compareArrayToResponse(['result' => 'success']), 'Add role with valid name pass');
 
         return $test->results();

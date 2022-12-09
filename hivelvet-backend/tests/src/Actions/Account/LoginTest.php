@@ -82,16 +82,16 @@ final class LoginTest extends Scenario
     {
         $test           = $this->newTest();
         $faker          = Faker::create();
-        $raw_password   = $faker->password(8);
+        $rawPassword    = $faker->password(8);
         $user           = new User();
         $user->email    = $faker->email;
         $user->username = $faker->userName;
-        $user->password = $raw_password;
+        $user->password = $rawPassword;
         $user->status   = UserStatus::PENDING;
         $user->role_id  = UserRole::LECTURER_ID;
         $user->save();
 
-        $data = ['email' => $user->email, 'password' => $raw_password];
+        $data = ['email' => $user->email, 'password' => $rawPassword];
         $f3->mock(self::LOGIN_ROUTE, null, null, $this->postJsonData($data));
         $test->expect($this->compareTemplateToResponse('account/authentication_not_active_error.json'), 'Login with correct credentials and "' . $user->status . '" status show an error');
 
