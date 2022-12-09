@@ -26,9 +26,9 @@ const child_process = require('child_process');
 const FastRefreshCracoPlugin = require('craco-fast-refresh');
 const reactHotReloadPlugin = require('craco-plugin-react-hot-reload');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
-
+const cp = require('child_process');
 function git(command) {
-    return child_process.execSync(`git ${command}`, { encoding: 'utf8' }).trim();
+    return cp.execSync(`git ${command}`, { encoding: 'utf8' }, { shell: false }).trim();
 }
 module.exports = {
     webpack: {
