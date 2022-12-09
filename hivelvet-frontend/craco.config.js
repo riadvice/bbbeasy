@@ -17,26 +17,87 @@
  */
 
 /* craco.config.js */
-const CracoLessPlugin = require('craco-less');
-const SimpleProgressWebpackPlugin = require('simple-progress-webpack-plugin')
-const webpack = require('webpack')
-const path = require('path');
 
+const path = require('path');
+const webpack = require('webpack');
+const WebpackBar = require('webpackbar');
+const CracoLessPlugin = require('craco-less');
+const child_process = require('child_process');
+const FastRefreshCracoPlugin = require('craco-fast-refresh');
+const reactHotReloadPlugin = require('craco-plugin-react-hot-reload');
+const CircularDependencyPlugin = require('circular-dependency-plugin');
+
+function git(command) {
+    return child_process.execSync(`git ${command}`, { encoding: 'utf8' }).trim();
+}
 module.exports = {
     webpack: {
         output: {
             clean: true,
         },
         plugins: [
-            new SimpleProgressWebpackPlugin(),
+            new WebpackBar({ profile: true }),
             new webpack.DefinePlugin({
                 'INSTALLER_FEATURE': JSON.parse(process.env.INSTALLER_FEATURE),
             }),
-        ]
+            new CircularDependencyPlugin({
+                exclude: /node_modules/,
+                include: /src/,
+                failOnError: true,
+                allowAsyncCycles: false,
+                cwd: process.cwd(),
+            }),
+            new webpack.EnvironmentPlugin({
+                GIT_VERSION: git('describe --always'),
+                GIT_AUTHOR_DATE: git('log -1 --format=%aI'),
+            }),
+        ],
+        configure: (webpackConfig, { env, paths }) => {
+            // paths.appPath='public'
+            paths.appBuild = 'dist';
+            webpackConfig.output = {
+                ...webpackConfig.output,
+                // ...{
+                //   filename: whenDev(() => 'static/js/bundle.js', 'static/js/[name].js'),
+                //   chunkFilename: 'static/js/[name].js'
+                // },
+                path: path.resolve(__dirname, 'dist'), // modify the output file directory
+                publicPath: '/',
+            };
+            return webpackConfig;
+        },
     },
     babel: {
-        presets: [],
-        plugins: ["istanbul"]
+        presets: [
+            [
+                '@babel/preset-env',
+                {
+                    modules: false, // do not convert the module file of ES6, so as to use tree shaping, sideeffects, etc
+                    useBuiltIns: 'entry', // all gaskets not supported by browserlist environment are imported
+                    // https://babeljs.io/docs/en/babel-preset-env#usebuiltins
+                    // https://github.com/zloirock/core-js/blob/master/docs/2019-03-19-core-js-3-babel-and-a-look-into-the-future.md
+                    corejs: {
+                        version: '3', // using core-js@3
+                        proposals: true,
+                    },
+                },
+            ],
+        ],
+        plugins: [
+            'istanbul',
+            //Configure Babel plugin import
+            ['import', { libraryName: 'antd', libraryDirectory: 'es', style: true }, 'antd'],
+            //Configure parser
+            ['@babel/plugin-proposal-decorators', { 'legacy': true }],
+            ['@babel/plugin-proposal-class-properties', { 'loose': true }],
+            ['@babel/plugin-proposal-private-methods', { 'loose': true }],
+            ['@babel/plugin-proposal-private-property-in-object', { 'loose': true }],
+            ['babel-plugin-styled-components', { 'displayName': true }],
+        ],
+        loaderOptions: (babelLoaderOptions, { env, paths }) => {
+            return babelLoaderOptions;
+        },
+        plugin: [reactHotReloadPlugin, FastRefreshCracoPlugin],
     },
     plugins: [
         {
@@ -54,4 +115,9 @@ module.exports = {
             },
         },
     ],
+    resolve: {
+        alias: {
+            'react-dom': '@hot-loader/react-dom',
+        },
+    },
 };
