@@ -30,8 +30,6 @@ import { Step3Form } from './Step3Form';
 import { UploadFile } from 'antd/lib/upload/interface';
 import { SettingsType } from '../types/SettingsType';
 import { PresetType } from '../types/PresetType';
-import axios from 'axios';
-import { apiRoutes } from 'routing/backend-config';
 
 const { Step } = Steps;
 
@@ -175,18 +173,17 @@ const Install = () => {
 
     const onFinish = () => {
         const formData: formType = stepForm.getFieldsValue(true);
- 
-
- 
         if (activeStep == 0) {
-            InstallService.collect_users(formData).then((result) => {
-                if (result.data.message) {
-                    setSuccessful(false);
-                    setMessage(result.data.message);
-                } else {
+            InstallService.collect_users(formData)
+                .then(() => {
                     next();
-                }
-            });
+                })
+                .catch((error) => {
+                    if (error.response.data.message) {
+                        setSuccessful(false);
+                        setMessage(error.response.data.message);
+                    }
+                });
         } else {
             if (activeStep < steps.length - 1) {
                 next();
@@ -207,18 +204,16 @@ const Install = () => {
                         console.log(error.response.data);
                     });
                 if (file != undefined) {
-                    console.log(file);
                     const fdata: FormData = new FormData();
                     fdata.append('logo', file.originFileObj, file.originFileObj.name);
                     fdata.append('logo_name', file.originFileObj.name);
 
-                    axios
-                        .post(apiRoutes.SAVE_FILE_URL, fdata)
+                    InstallService.save_file(fdata)
                         .then((response) => {
                             console.log(response);
                         })
-                        .catch((err) => {
-                            console.log(err);
+                        .catch((error) => {
+                            console.log(error);
                         });
                 }
             }

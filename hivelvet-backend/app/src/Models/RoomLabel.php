@@ -21,11 +21,8 @@ declare(strict_types=1);
  */
 
 namespace Models;
-use Models\Room;
-use Models\Label;
+
 use DateTime;
-use Enum\ResponseCode;
-use Enum\UserStatus;
 use Models\Base as BaseModel;
 
 /**
@@ -33,14 +30,9 @@ use Models\Base as BaseModel;
  *
  * @property int      $id
  * @property int      $label_id
-
-
  * @property int      $room_id
- *  @property DateTime $created_on
+ * @property DateTime $created_on
  * @property DateTime $updated_on
-
- *
-
  */
 class RoomLabel extends BaseModel
 {
@@ -55,18 +47,16 @@ class RoomLabel extends BaseModel
 
     protected $table = 'rooms_labels';
 
-
     public function collectAll(): array
     {
         return $this->db->exec('SELECT id, room_id, label_id FROM rooms_labels');
     }
 
-   /**
-     * @return array
+    /**
+     * @param mixed $roomId
      */
     public function collectAllByRoomId($roomId): array
     {
         return $this->db->exec('SELECT id, room_id, label_id FROM rooms_labels where room_id = ? ', $roomId);
     }
-
 }

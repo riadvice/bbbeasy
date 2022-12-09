@@ -37,31 +37,30 @@ class Login extends BaseAction
 {
     public function authorise($f3): void
     {
-        $form = $this->getDecodedBody();
-
+        $form        = $this->getDecodedBody();
+        $email       = $form['email'];
+        $password    = $form['password'];
         $dataChecker = new DataChecker();
-        $dataChecker->verify($email = $form['email'], Validator::email()->setName('email'));
-        $dataChecker->verify($form['password'], Validator::length(8)->setName('password'));
+        $dataChecker->verify($email, Validator::email()->setName('email'));
+        $dataChecker->verify($password, Validator::length(8)->setName('password'));
 
-        $userInfos    = [];
         $errorMessage = 'Could not authenticate user with email';
         if ($dataChecker->allValid()) {
-            $this->login($form, $email, $userInfos, $dataChecker, $errorMessage);
+            $this->login($email, $password, $errorMessage);
         } else {
             $this->logger->error($errorMessage, ['errors' => $dataChecker->getErrors()]);
             $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
         }
     }
 
-    private function login($form, $email, $userInfos, $dataChecker, $errorMessage): void
+    private function login($email, $password, $errorMessage): void
     {
         $user = new User();
         $user = $user->getByEmail($email);
         $this->logger->info('Login attempt using email', ['email' => $email]);
-        // Check if the user exists
-        if ($user->valid() && UserStatus::ACTIVE === $user->status && $user->verifyPassword($form['password'])) {
+
+        if ($user->valid() && UserStatus::ACTIVE === $user->status && $user->verifyPassword($password)) {
             // @todo: test UserRole::API !== $user->role->name
-            // valid credentials
             $this->session->authorizeUser($user);
 
             $user->last_login        = Time::db();
@@ -81,7 +80,7 @@ class Login extends BaseAction
             ];
             $this->logger->info('User successfully logged in', ['email' => $email]);
             $this->renderJson($userInfos);
-        } elseif ($user->valid() && UserStatus::ACTIVE === $user->status && !$user->verifyPassword($form['password']) && $user->password_attempts > 1) {
+        } elseif ($user->valid() && UserStatus::ACTIVE === $user->status && !$user->verifyPassword($password) && $user->password_attempts > 1) {
             --$user->password_attempts;
             $user->save();
             $this->logger->error($errorMessage, ['email' => $email]);
@@ -92,7 +91,7 @@ class Login extends BaseAction
             $user->save();
             $this->logger->error($errorMessage, ['email' => $email]);
             $this->renderJson(['message' => 'Your account has been locked because you have reached the maximum number of invalid sign-in attempts. You can contact the administrator or click here to receive an email containing instructions on how to unlock your account'], ResponseCode::HTTP_BAD_REQUEST);
-        } elseif ($user->valid() && UserStatus::PENDING === $user->status) {
+        } elseif ($user->valid() && (UserStatus::PENDING === $user->status || UserStatus::INACTIVE === $user->status)) {
             $this->logger->error($errorMessage, ['email' => $email]);
             $this->renderJson(['message' => 'Your account is not active. Please contact your administrator'], ResponseCode::HTTP_BAD_REQUEST);
         } elseif ($user->valid() && UserStatus::DELETED === $user->status) {
@@ -101,9 +100,6 @@ class Login extends BaseAction
         } elseif (!$user->valid()) {
             $this->logger->error($errorMessage, ['email' => $email]);
             $this->renderJson(['message' => 'User does not exist with this email'], ResponseCode::HTTP_BAD_REQUEST);
-        } elseif (empty($userInfos) || \count($dataChecker->getErrors()) > 0) {
-            $this->logger->error($errorMessage, ['email' => $email]);
-            $this->renderJson(['message' => 'Invalid Authentication data'], ResponseCode::HTTP_BAD_REQUEST);
         }
     }
 }

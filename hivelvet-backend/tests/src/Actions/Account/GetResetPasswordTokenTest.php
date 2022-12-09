@@ -22,7 +22,10 @@ declare(strict_types=1);
 
 namespace Actions\Account;
 
+use Enum\UserStatus;
 use Faker\Factory as Faker;
+use Models\ResetPasswordToken;
+use Models\User;
 use Test\Scenario;
 
 /**
@@ -44,9 +47,49 @@ final class GetResetPasswordTokenTest extends Scenario
     {
         $test = $this->newTest();
         $f3->mock(self::CHECK_TOKEN_ROUTE . Faker::create()->md5);
+
         $test->expect($this->compareTemplateToResponse('account/password_reset_token_error.json'), 'Fetch data for a non existing password reset token');
 
-        // @todo: test a valid token for a non-active user
+        return $test->results();
+    }
+
+    /**
+     * @param $f3
+     *
+     * @throws \JsonException
+     */
+    public function testRequestNonActiveUser($f3): array
+    {
+        $test      = $this->newTest();
+        $lastToken = new ResetPasswordToken();
+        $user      = new User();
+        $lastToken->load(['id = ?', $lastToken->lastInsertId()]);
+        $user->load(['id = ?', $lastToken->user_id]);
+        $user->status = UserStatus::INACTIVE;
+        $user->save();
+        $f3->mock(self::CHECK_TOKEN_ROUTE . $lastToken->token);
+
+        $test->expect($this->compareTemplateToResponse('account/password_reset_token_user_error.json'), 'Fetch data for a non active user reset token');
+
+        $user->status = UserStatus::ACTIVE;
+        $user->save();
+
+        return $test->results();
+    }
+
+    /**
+     * @param $f3
+     *
+     * @throws \JsonException
+     */
+    public function testRequestValidResetPasswordToken($f3): array
+    {
+        $test      = $this->newTest();
+        $lastToken = new ResetPasswordToken();
+        $lastToken->load(['id = ?', $lastToken->lastInsertId()]);
+        $f3->mock(self::CHECK_TOKEN_ROUTE . $lastToken->token);
+
+        $test->expect($this->compareArrayToResponse(['token' => $lastToken->token]), 'Fetch data for a valid password reset token');
 
         return $test->results();
     }

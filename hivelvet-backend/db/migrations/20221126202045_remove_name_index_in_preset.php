@@ -34,9 +34,5 @@ final class RemoveNameIndexInPreset extends AbstractMigration
 
     public function down(): void
     {
-        $this->table('presets')
-            ->addIndex('name', ['unique' => true, 'name' => 'idx_presets_name'])
-            ->save()
-        ;
     }
 }

@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Models;
 
-use Base;
 use Fake\LabelFaker;
 use Faker\Factory as Faker;
 use Registry;
@@ -40,11 +39,9 @@ final class LabelTest extends Scenario
     protected $group = 'Label Model';
 
     /**
-     * @param Base $f3
-     *
      * @return array
      */
-    public function testLabelCreation($f3)
+    public function testLabelCreation()
     {
         $test               = $this->newTest();
         $faker              = Faker::create();
@@ -60,11 +57,9 @@ final class LabelTest extends Scenario
     }
 
     /**
-     * @param Base $f3
-     *
      * @return array
      */
-    public function testDefaultColor($f3)
+    public function testDefaultColor()
     {
         $test               = $this->newTest();
         $faker              = Faker::create();
@@ -80,11 +75,9 @@ final class LabelTest extends Scenario
     }
 
     /**
-     * @param Base $f3
-     *
      * @return array
      */
-    public function testNameFormatting($f3)
+    public function testNameFormatting()
     {
         $test               = $this->newTest();
         $faker              = Faker::create();
@@ -101,11 +94,9 @@ final class LabelTest extends Scenario
     }
 
     /**
-     * @param Base $f3
-     *
      * @return array
      */
-    public function testGetById($f3)
+    public function testGetById()
     {
         $test  = $this->newTest();
         $label = LabelFaker::create();
@@ -117,11 +108,23 @@ final class LabelTest extends Scenario
     }
 
     /**
-     * @param Base $f3
-     *
      * @return array
      */
-    public function testNameExists($f3)
+    public function testGetByColor()
+    {
+        $test  = $this->newTest();
+        $label = LabelFaker::create();
+
+        $test->expect($label->getByColor($label->color)->color === $label->color, 'getByColor(' . $label->color . ') found label');
+        $test->expect(!$label->getByColor('404')->color, 'getByColor(404) did not find label');
+
+        return $test->results();
+    }
+
+    /**
+     * @return array
+     */
+    public function testNameExists()
     {
         $test  = $this->newTest();
         $label = LabelFaker::create();
@@ -133,11 +136,9 @@ final class LabelTest extends Scenario
     }
 
     /**
-     * @param Base $f3
-     *
      * @return array
      */
-    public function testGetAllLabels($f3)
+    public function testGetAllLabels()
     {
         $test  = $this->newTest();
         $label = new Label(Registry::get('db'));
@@ -152,11 +153,9 @@ final class LabelTest extends Scenario
     }
 
     /**
-     * @param Base $f3
-     *
      * @return array
      */
-    public function testGetLabelInfos($f3)
+    public function testGetLabelInfos()
     {
         $test  = $this->newTest();
         $label = LabelFaker::create();

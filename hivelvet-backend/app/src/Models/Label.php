@@ -52,48 +52,47 @@ class Label extends BaseModel
      */
     public function getById(int $id): self
     {
-
         $this->load(['id = ?', $id]);
 
         return $this;
     }
+
     /**
      * Get label record by color.
      *
+     * @param mixed $color
+     *
      * @return $this
      */
-    public function getByColor( $color): self
+    public function getByColor($color): self
     {
-
         $this->load(['color = ?', $color]);
-
 
         return $this;
     }
 
-
-
     /**
      *check if name is already in use .
      *
-     * @param string $name
+     * @param null $id
      *
      * @return bool
      */
-    public function nameExists($name)
+    public function nameExists(string $name, $id = null)
     {
-        return $this->load(['lower(name) = ?', mb_strtolower($this->f3->snakecase($name))]);
+        return $this->load(['lower(name) = ? and id != ?', mb_strtolower($this->f3->snakecase($name)), $id]);
     }
+
     /**
      *check if color is already in use .
      *
-     * @param string $color
+     * @param null $id
      *
      * @return bool
      */
-    public function colorExists($color)
+    public function colorExists(string $color, $id = null)
     {
-        return $this->load(['lower(color) = ?', mb_strtolower($this->f3->snakecase($color))]);
+        return $this->load(['color = ? and id != ?', $color, $id]);
     }
 
     public function getAllLabels()

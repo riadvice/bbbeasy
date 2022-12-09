@@ -1,0 +1,7 @@
+{
+  "errors": {
+    "name": "- All of the required rules must pass for name",
+    "user_id": "- All of the required rules must pass for user id"
+  },
+  "status" : 422
+}

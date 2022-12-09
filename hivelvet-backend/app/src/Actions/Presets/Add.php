@@ -27,6 +27,7 @@ use Actions\RequirePrivilegeTrait;
 use Base;
 use Enum\ResponseCode;
 use Models\Preset;
+use Models\User;
 use Respect\Validation\Validator;
 use Validation\DataChecker;
 
@@ -54,22 +55,30 @@ class Add extends BaseAction
         $errorMessage   = 'Preset could not be added';
         $successMessage = 'Preset successfully added';
         if ($dataChecker->allValid()) {
-            $checkPreset  = new Preset();
-            $preset       = new Preset();
-            $preset->name = $form['name'];
-            if ($checkPreset->nameExists($preset->name, $userId)) {
-                $this->logger->error($errorMessage, ['error' => 'Name already exists']);
-                $this->renderJson(['errors' => ['name' => 'Name already exists']], ResponseCode::HTTP_PRECONDITION_FAILED);
-            } else {
-                $preset->user_id = $userId;
-                $result          = $preset->addDefaultSettings($successMessage, $errorMessage);
-                if ($result) {
-                    $this->renderJson(['result' => 'success', 'preset' => $preset->getMyPresetInfos($preset)], ResponseCode::HTTP_CREATED);
+            $user = new User();
+            $user = $user->getById($userId);
+            if (!$user->dry()) {
+                $checkPreset  = new Preset();
+                $preset       = new Preset();
+                $preset->name = $form['name'];
+                if ($checkPreset->nameExists($preset->name, $userId)) {
+                    $this->logger->error($errorMessage, ['error' => 'Name already exists']);
+                    $this->renderJson(['errors' => ['name' => 'Name already exists']], ResponseCode::HTTP_PRECONDITION_FAILED);
                 } else {
-                    $this->renderJson(['errors' => $result], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+                    $preset->user_id = $userId;
+                    $result          = $preset->addDefaultSettings($successMessage, $errorMessage);
+                    if ($result) {
+                        $this->renderJson(['result' => 'success', 'preset' => $preset->getMyPresetInfos($preset)], ResponseCode::HTTP_CREATED);
+                    } else {
+                        $this->renderJson(['errors' => $result], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+                    }
                 }
+            } else {
+                $this->logger->error($errorMessage);
+                $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
             }
         } else {
+            $this->logger->error($errorMessage, ['errors' => $dataChecker->getErrors()]);
             $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
         }
     }

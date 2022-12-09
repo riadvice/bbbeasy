@@ -29,13 +29,17 @@ class RoleFaker
 {
     private static array $storage = [];
 
-    public static function create($storageName = null)
+    public static function create($permissions = null, $storageName = null)
     {
         $faker      = Faker::create();
         $role       = new Role();
         $role->name = $faker->name;
 
-        $role->save();
+        if (null !== $permissions) {
+            $role->saveRoleAndPermissions($permissions);
+        } else {
+            $role->save();
+        }
 
         if (null !== $storageName) {
             self::$storage[$storageName] = $role;

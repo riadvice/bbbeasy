@@ -22,8 +22,12 @@ declare(strict_types=1);
 
 namespace Suite;
 
+use Actions\Account\ChangePasswordTest;
 use Actions\Account\GetResetPasswordTokenTest;
 use Actions\Account\LoginTest;
+use Actions\Account\RegisterTest;
+use Actions\Account\ResetPasswordTest;
+use Actions\Account\SetLocaleTest;
 use Test\TestGroup;
 
 /**
@@ -33,7 +37,14 @@ use Test\TestGroup;
  */
 final class AccountActionsTest extends TestGroup
 {
-    protected $classes = [LoginTest::class, GetResetPasswordTokenTest::class];
+    protected $classes = [
+        SetLocaleTest::class,
+        ResetPasswordTest::class,
+        GetResetPasswordTokenTest::class,
+        ChangePasswordTest::class,
+        LoginTest::class,
+        RegisterTest::class,
+    ];
 
     protected $quiet = true;
 }

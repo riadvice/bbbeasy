@@ -25,6 +25,7 @@ namespace Actions\Account;
 use Actions\Base as BaseAction;
 use Enum\ResponseCode;
 use Enum\UserRole;
+use Models\Setting;
 use Models\User;
 use Respect\Validation\Validator;
 use Validation\DataChecker;
@@ -43,9 +44,16 @@ class Register extends BaseAction
         $dataChecker->verify($form['email'], Validator::email()->setName('email'));
         $dataChecker->verify($form['password'], Validator::length(8)->setName('password'));
         $dataChecker->verify($form['confirmPassword'], Validator::length(8)->equals($form['password'])->setName('confirmPassword'));
-        // @fixme: the agreement must be accepted only if there are terms for the website
-        // otherwise in the login it should look for available terms of they were not previously available and ask to accept them
-        $dataChecker->verify($form['agreement'], Validator::trueVal()->setName('agreement'));
+
+        $setting = new Setting();
+
+        /** @var Setting $settings */
+        $settings = $setting->find([], ['limit' => 1])->current();
+        if (!$settings->dry() && isset($settings->terms_use)) {
+            // the agreement must be accepted only if there are terms for the website
+            // otherwise in the login it should look for available terms of they were not previously available and ask to accept them
+            $dataChecker->verify($form['agreement'], Validator::trueVal()->setName('agreement'));
+        }
 
         /** @todo : move to locales */
         $errorMessage   = 'User could not be added';

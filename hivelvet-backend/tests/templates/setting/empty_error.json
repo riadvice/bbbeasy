@@ -1,0 +1,6 @@
+{
+  "errors": {
+    "logo_name": "- All of the required rules must pass for logo name"
+  },
+  "status" : 422
+}

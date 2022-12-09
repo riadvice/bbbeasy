@@ -44,62 +44,56 @@ class Edit extends BaseAction
      */
     public function save($f3, $params): void
     {
-        $body  = $this->getDecodedBody();
-        $form  = $body['data'];
+        $body = $this->getDecodedBody();
+        $form = $body['data'];
 
-        $id    = $params['id'];
-        $label = $this->loadData($id);
-        $name_error_message = 'Name already exists';
-        $color_error_message    = 'Color already exists';
+        $id                = $params['id'];
+        $label             = $this->loadData($id);
+        $errorMessage      = 'Label could not be updated';
+        $nameErrorMessage  = 'Label name already exists';
+        $colorErrorMessage = 'Label color already exists';
         if ($label->valid()) {
             $dataChecker = new DataChecker();
             $dataChecker->verify($form['name'], Validator::notEmpty()->setName('name'));
             $dataChecker->verify($form['color'], Validator::hexRgbColor()->setName('color'));
 
             if ($dataChecker->allValid()) {
-                $checklabel         = new Label();
+                $checkLabel         = new Label();
                 $label->name        = $form['name'];
                 $label->description = $form['description'];
                 $label->color       = $form['color'];
-                $labels    = $checklabel->find(['(name = ? and id != ?) or (color = ? and id != ?)', $form['name'], $id, $form['color'], $id]);
-                if($labels){
-                    $labels = $labels->castAll();
 
-                        $nameExist = $labels[0]['name'] === $form['name'];
-                        $colorExist    = $labels[0]['color'] === $form['color'];
-                        if ($nameExist && $colorExist) {
-
-                            $message = ['name' => $name_error_message, 'color' => $color_error_message];
-                        } elseif ($nameExist) {
-
-                            $message = ['name' => $name_error_message];
-                        } else {
-
-                            $message = ['color' => $color_error_message];
-                        }
-                    $this->logger->error($errorMessage, ['error' => $message]);
-                    $this->renderJson(['errors' => $message], ResponseCode::HTTP_PRECONDITION_FAILED);
-                    return;
+                $nameExist  = $checkLabel->nameExists($form['name'], $id);
+                $colorExist = $checkLabel->colorExists($form['color'], $id);
+                if ($nameExist || $colorExist) {
+                    if ($nameExist && $colorExist) {
+                        $message = ['name' => $nameErrorMessage, 'color' => $colorErrorMessage];
+                    } elseif ($nameExist) {
+                        $message = ['name' => $nameErrorMessage];
+                    } else {
+                        $message = ['color' => $colorErrorMessage];
                     }
+                    $this->logger->error($errorMessage, ['errors' => $message]);
+                    $this->renderJson(['errors' => $message], ResponseCode::HTTP_PRECONDITION_FAILED);
 
+                    return;
+                }
 
+                try {
+                    $label->save();
+                } catch (\Exception $e) {
+                    $this->logger->error($errorMessage, ['error' => $e->getMessage()]);
+                    $this->renderJson(['errors' => $e->getMessage()], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+
+                    return;
+                }
+
+                $this->logger->info('Label successfully updated', ['Label' => $label->toArray()]);
+                $this->renderJson(['result' => 'success', 'label' => $label->getLabelInfos()]);
             } else {
+                $this->logger->error($errorMessage, ['errors' => $dataChecker->getErrors()]);
                 $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
-
-                return;
             }
-
-            try {
-                $label->save();
-            } catch (\Exception $e) {
-                $this->logger->error('Label could not be updated', ['error' => $e->getMessage()]);
-                $this->renderJson(['errors' => $e->getMessage()], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-
-                return;
-            }
-
-            $this->logger->info('Label successfully updated', ['Label' => $label->toArray()]);
-            $this->renderJson(['result' => 'success', 'label' => $label->getLabelInfos()]);
         } else {
             $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
         }

@@ -46,45 +46,37 @@ class Add extends BaseAction
      */
     public function save($f3, $params): void
     {
-        $body        = $this->getDecodedBody();
+        $body = $this->getDecodedBody();
 
-    $form        = $body['data'];
-       $dataChecker = new DataChecker();
+        $form        = $body['data'];
+        $dataChecker = new DataChecker();
 
-     $dataChecker->verify($form['name'], Validator::notEmpty()->setName('name'));
+        $dataChecker->verify($form['name'], Validator::notEmpty()->setName('name'));
         $dataChecker->verify($form['shortlink'], Validator::notEmpty()->setName('shortlink'));
         $dataChecker->verify($form['preset'], Validator::notEmpty()->setName('preset'));
         $dataChecker->verify($form['labels'], Validator::notEmpty()->setName('labels'));
 
         $errorMessage = 'Room could not be added';
-       if ($dataChecker->allValid()) {
+        if ($dataChecker->allValid()) {
+            $checkRoom        = new Room();
+            $room             = new Room();
+            $room->name       = $form['name'];
+            $room->short_link = $form['shortlink'];
 
-            $checkRoom  = new Room();
-            $room      = new Room();
-            $room->name = $form['name'];
-            $room->short_link=$form["shortlink"];
+            $room->preset_id = $form['preset'];
 
-         $room->preset_id=$form["preset"];
+            $room->labels = $form['labels'];
 
-        $room->labels=$form["labels"];
-
-
-           if ($checkRoom->nameExists($room->name)) {
+            if ($checkRoom->nameExists($room->name)) {
                 $this->logger->error($errorMessage, ['error' => 'Name already exists']);
-               $this->renderJson(['errors' => ['name' => 'Room Name already exists']], ResponseCode::HTTP_PRECONDITION_FAILED);
-          }
-           elseif($checkRoom->shortlinkExists($room->short_link)){
-               $this->logger->error($errorMessage, ['error' => 'Room Link already exists']);
-               $this->renderJson(['errors' => ['short_link' => 'Room link already exists']], ResponseCode::HTTP_PRECONDITION_FAILED);
-
-           }
-
-
-           else {
+                $this->renderJson(['errors' => ['name' => 'Room Name already exists']], ResponseCode::HTTP_PRECONDITION_FAILED);
+            } elseif ($checkRoom->shortlinkExists($room->short_link)) {
+                $this->logger->error($errorMessage, ['error' => 'Room Link already exists']);
+                $this->renderJson(['errors' => ['short_link' => 'Room link already exists']], ResponseCode::HTTP_PRECONDITION_FAILED);
+            } else {
                 try {
                     $result = $room->save();
                     if (!$result) {
-
                         $this->renderJson(['errors' => $errorMessage], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
 
                         return;
@@ -95,27 +87,26 @@ class Add extends BaseAction
 
                     return;
                 }
-        if($form["labels"]){
-            foreach($form['labels'] as $label){
-                $l=new Label();
-                $l=$l->getByColor($label);
+        if ($form['labels']) {
+            foreach ($form['labels'] as $label) {
+                $l = new Label();
+                $l = $l->getByColor($label);
 
-                $room_label=new RoomLabel();
-                $room_label->label_id=$l["id"];
-                $room_label->room_id=$room->id;
+                $room_label           = new RoomLabel();
+                $room_label->label_id = $l['id'];
+                $room_label->room_id  = $room->id;
 
                 $room_label->save();
-              }
+            }
         }
-        $room=$room->getRoomInfos($room->id);
+        $room = $room->getRoomInfos($room->id);
 
-               $r=new Room();
-        $room["labels"]=$r->getLabels($room["key"]);
+                $r              = new Room();
+                $room['labels'] = $r->getLabels($room['key']);
                 $this->renderJson(['result' => 'success', 'room' => $room], ResponseCode::HTTP_CREATED);
-          }
-      } else {
-          $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
-       }
+            }
+        } else {
+            $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
+        }
     }
-
 }

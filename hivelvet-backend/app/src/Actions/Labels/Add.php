@@ -42,29 +42,31 @@ class Add extends BaseAction
         $body = $this->getDecodedBody();
         $form = $body['data'];
 
+        $errorMessage      = 'Label could not be added';
+        $nameErrorMessage  = 'Label name already exists';
+        $colorErrorMessage = 'Label color already exists';
+
         $dataChecker = new DataChecker();
         $dataChecker->verify($form['name'], Validator::notEmpty()->setName('name'));
         $dataChecker->verify($form['color'], Validator::hexRgbColor()->setName('color'));
 
         if ($dataChecker->allValid()) {
-            $label = new Label();
-            $error_name = $label->nameExists($form['name']);
-            $error_color=$label->colorExists($form["color"]);
-           if ($error_name && $error_color) {
-                $this->logger->error('Label could not be added', ['error' => 'Name and color already exists']);
-                $this->renderJson(['errors' => ['name' => 'Label Name already exists','color' => 'Label color already exists']], ResponseCode::HTTP_PRECONDITION_FAILED);
+            $label      = new Label();
+            $nameExist  = $label->nameExists($form['name']);
+            $colorExist = $label->colorExists($form['color']);
+            if ($nameExist || $colorExist) {
+                if ($nameExist && $colorExist) {
+                    $message = ['name' => $nameErrorMessage, 'color' => $colorErrorMessage];
+                } elseif ($nameExist) {
+                    $message = ['name' => $nameErrorMessage];
+                } else {
+                    $message = ['color' => $colorErrorMessage];
+                }
+
+                $this->logger->error($errorMessage, ['errors' => $message]);
+                $this->renderJson(['errors' => $message], ResponseCode::HTTP_PRECONDITION_FAILED);
 
                 return;
-            }
-            if($error_name){
-                $this->logger->error('Label could not be added', ['error' => 'Label name already exists']);
-                $this->renderJson(['errors' => ['name' => 'Label name already exists']], ResponseCode::HTTP_PRECONDITION_FAILED);
-                return;
-            }
-            if($error_color){
-                $this->logger->error('Label could not be added', ['error' => 'Label color already exists']);
-                $this->renderJson(['errors' => ['color' => 'Label color already exists']], ResponseCode::HTTP_PRECONDITION_FAILED);
-                  return;
             }
 
             $label->name        = $form['name'];
@@ -74,14 +76,14 @@ class Add extends BaseAction
             try {
                 $label->save();
             } catch (\Exception $e) {
-                $this->logger->error('Label could not be added', ['error' => $e->getMessage()]);
+                $this->logger->error($errorMessage, ['error' => $e->getMessage()]);
                 $this->renderJson(['errors' => $e->getMessage()], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
 
                 return;
             }
             $this->renderJson(['result' => 'success', 'label' => $label->getLabelInfos()], ResponseCode::HTTP_CREATED);
         } else {
-            $this->logger->error('Add label error', ['errors' => $dataChecker->getErrors()]);
+            $this->logger->error($errorMessage, ['errors' => $dataChecker->getErrors()]);
             $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
         }
     }

@@ -36,7 +36,7 @@ class InstallService {
 
     save_file(data) {
         return axios.post(apiRoutes.SAVE_FILE_URL, {
-            data
+            data,
         });
     }
 

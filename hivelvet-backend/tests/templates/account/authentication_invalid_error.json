@@ -1,0 +1,4 @@
+{
+  "message": "User does not exist with this email",
+  "status": 400
+}

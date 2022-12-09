@@ -67,8 +67,7 @@ final class PresetTest extends Scenario
     public function testGetById($f3)
     {
         $test   = $this->newTest();
-        $user   = UserFaker::create();
-        $preset = PresetFaker::create($user);
+        $preset = PresetFaker::create(UserFaker::create());
 
         $test->expect($preset->findById($preset->id)->id === $preset->id, 'findById(' . $preset->id . ') found preset');
         $test->expect(!$preset->findById(404)->id, 'findById(404) did not find user');
@@ -84,8 +83,7 @@ final class PresetTest extends Scenario
     public function testNameExists($f3)
     {
         $test   = $this->newTest();
-        $user   = UserFaker::create();
-        $preset = PresetFaker::create($user);
+        $preset = PresetFaker::create(UserFaker::create());
 
         $test->expect($preset->nameExists($preset->name, $preset->user_id), 'nameExists(' . $preset->name . ',' . $preset->user_id . ') exists');
         $test->expect(!$preset->nameExists('404', '404'), 'nameExists("404", "404") does not exist');
@@ -121,8 +119,7 @@ final class PresetTest extends Scenario
     public function testGetMyPresetInfos($f3)
     {
         $test     = $this->newTest();
-        $user     = UserFaker::create();
-        $preset   = PresetFaker::create($user);
+        $preset   = PresetFaker::create(UserFaker::create());
         $myPreset = $preset->toArray(['id', 'name', 'settings']);
 
         $data = [
@@ -131,7 +128,7 @@ final class PresetTest extends Scenario
             'categories' => $preset->getMyPresetCategories(json_decode($myPreset['settings'])),
         ];
 
-        $test->expect([] === array_udiff($data, $preset->getMyPresetInfos($myPreset), fn($obj_a, $obj_b) => $obj_a === $obj_b), 'getRoleInfos() returned role informations');
+        $test->expect(empty(array_udiff($data, $preset->getMyPresetInfos($myPreset), fn($obj1, $obj2) => $obj1 === $obj2)), 'getRoleInfos() returned role informations');
 
         return $test->results();
     }
@@ -154,7 +151,7 @@ final class PresetTest extends Scenario
         $data2   = ['id' => $preset2->id, 'name' => $preset2->name, 'settings' => $preset2->settings];
         $data    = [$data1, $data2];
 
-        $test->expect([] === array_udiff($data, $preset->collectAllByUserId($user->id), fn($obj_a, $obj_b) => $obj_a === $obj_b), 'CollectAllByUserId(' . $user->id . ') returned all presets for the given user');
+        $test->expect(empty(array_udiff($data, $preset->collectAllByUserId($user->id), fn($obj1, $obj2) => $obj1 === $obj2)), 'CollectAllByUserId(' . $user->id . ') returned all presets for the given user');
 
         return $test->results();
     }

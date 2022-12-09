@@ -70,11 +70,17 @@ final class EditTest extends Scenario
     {
         $test = $this->newTest();
 
-        $userLecturerOne = UserFaker::create(UserRole::LECTURER);
-        $userLecturerTwo = UserFaker::create(UserRole::LECTURER);
-        $data            = ['data' => ['username' => $userLecturerOne->username, 'email' => $userLecturerOne->email, 'role' => UserRole::LECTURER_ID, 'status' => UserStatus::INACTIVE]];
-        $f3->mock(self::EDIT_USER_ROUTE . $userLecturerTwo->id, null, null, $this->postJsonData($data));
-        $test->expect($this->compareTemplateToResponse('user/update_exist_error.json'), 'Update existing user with id "' . $userLecturerTwo->id . '" using an existing username "' . $userLecturerOne->username . '" and an existing email "' . $userLecturerOne->email . '" shown an error');
+        $userLecturer1 = UserFaker::create(UserRole::LECTURER);
+        $userLecturer2 = UserFaker::create(UserRole::LECTURER);
+        $userLecturer3 = UserFaker::create(UserRole::LECTURER);
+
+        $data = ['data' => ['username' => $userLecturer1->username, 'email' => $userLecturer1->email, 'role' => UserRole::LECTURER_ID, 'status' => UserStatus::INACTIVE]];
+        $f3->mock(self::EDIT_USER_ROUTE . $userLecturer3->id, null, null, $this->postJsonData($data));
+        $test->expect($this->compareTemplateToResponse('user/update_exist_error.json'), 'Update existing user with id "' . $userLecturer3->id . '" using an existing username "' . $userLecturer1->username . '" and an existing email "' . $userLecturer1->email . '" shown an error');
+
+        $data = ['data' => ['username' => $userLecturer1->username, 'email' => $userLecturer2->email, 'role' => UserRole::LECTURER_ID, 'status' => UserStatus::INACTIVE]];
+        $f3->mock(self::EDIT_USER_ROUTE . $userLecturer3->id, null, null, $this->postJsonData($data));
+        $test->expect($this->compareTemplateToResponse('user/update_exist_error.json'), 'Update existing user with id "' . $userLecturer3->id . '" using an existing username "' . $userLecturer1->username . '" and an existing email "' . $userLecturer2->email . '" shown an error');
 
         return $test->results();
     }

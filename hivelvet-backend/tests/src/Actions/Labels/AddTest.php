@@ -54,7 +54,7 @@ final class AddTest extends Scenario
         $data = LabelFaker::generateJsondata();
 
         $f3->mock(self::ADD_LABEL_ROUTE, null, null, $this->postJsonData($data));
-        $test->expect($this->compareTemplateToResponse('label/success.json'), 'Add label successuly');
+        $test->expect($this->compareTemplateToResponse('label/success.json'), 'Add label successfully');
 
         $test->expect($label->load(['name = ?', $f3->snakeCase($data['data']['name'])]), 'Label Added to DB:' . $label->name);
 
@@ -104,14 +104,22 @@ final class AddTest extends Scenario
      *
      * @throws ReflectionException
      */
-    public function testExistingName($f3)
+    public function testExistingNameOrColor($f3)
     {
         $test  = $this->newTest();
         $label = LabelFaker::create();
-        $data  = LabelFaker::generateJsondata(['name' => $label->name]);
 
-        $f3->mock(self::ADD_LABEL_ROUTE, null, null, $this->postJsonData($data));
+        $data1 = LabelFaker::generateJsondata(['name' => $label->name]);
+        $f3->mock(self::ADD_LABEL_ROUTE, null, null, $this->postJsonData($data1));
         $test->expect($this->compareTemplateToResponse('label/exist_error.json'), 'Add label with an existing name "' . $label->name . '" show an error');
+
+        $data2 = LabelFaker::generateJsondata(['color' => $label->color]);
+        $f3->mock(self::ADD_LABEL_ROUTE, null, null, $this->postJsonData($data2));
+        $test->expect($this->compareTemplateToResponse('label/exist_error.json'), 'Add label with an existing color "' . $label->color . '" show an error');
+
+        $data3 = LabelFaker::generateJsondata(['name' => $label->name, 'color' => $label->color]);
+        $f3->mock(self::ADD_LABEL_ROUTE, null, null, $this->postJsonData($data3));
+        $test->expect($this->compareTemplateToResponse('label/exist_error.json'), 'Add label with an existing name "' . $label->name . '" and an existing color "' . $label->color . '" show an error');
 
         return $test->results();
     }

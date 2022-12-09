@@ -46,35 +46,39 @@ class SaveLogo extends BaseAction
          * if ($f3->get('system.installed') === false) {
          */
         $form        = $f3->get('POST');
-
         $dataChecker = new DataChecker();
-        // if files not empty
         $dataChecker->verify($form['logo_name'], Validator::notEmpty()->setName('logo_name'));
 
-        if ($dataChecker->allValid()) {
-            // verify format file
+        if (!$dataChecker->allValid()) {
+            $this->logger->error('Logo could not be saved', ['errors' => $dataChecker->getErrors()]);
+            $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
+        } else {
             $format       = $f3->get('FILES')['logo']['type'];
-
             $validFormats = ['image/jpg', 'image/jpeg', 'image/png'];
             if (\in_array($format, $validFormats, true)) {
                 // correct
                 \Web::instance()->receive();
-                $setting        = new Setting();
-                $settings       = $setting->find([], ['limit' => 1])->current();
-                $settings->logo = $form['logo_name'];
+                $setting = new Setting();
 
-                try {
-                    $settings->save();
-                    $this->logger->info('Initial application setup : Update settings logo', ['setting' => $settings->toArray()]);
-                } catch (\Exception $e) {
-                    $message = $e->getMessage();
-                    $this->logger->info('Initial application setup : Logo could not be updated', ['error' => $message]);
-                    $this->renderJson(['errors' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+                /** @var Setting $settings */
+                $settings = $setting->find([], ['limit' => 1])->current();
+                if (!$settings->dry()) {
+                    $settings->logo = $form['logo_name'];
 
-                    return;
+                    try {
+                        $settings->save();
+                        $this->logger->info('Initial application setup : Update settings logo', ['setting' => $settings->toArray()]);
+                    } catch (\Exception $e) {
+                        $message = $e->getMessage();
+                        $this->logger->info('Initial application setup : Logo could not be updated', ['error' => $message]);
+                        $this->renderJson(['errors' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+
+                        return;
+                    }
                 }
             } else {
                 $this->logger->error('Initial application setup : Logo could not be updated', ['error' => 'invalid file format : ' . $format]);
+                $this->renderJson(['message' => 'invalid file format'], ResponseCode::HTTP_PRECONDITION_FAILED);
             }
         }
     }

@@ -67,85 +67,85 @@ class Install extends BaseAction
             $dataChecker->verify($form['policy_url'], Validator::url()->setName('policy_url'));
         }
 
+        $dataChecker->verify($form['branding_colors'], Validator::notEmpty()->setName('branding_colors'));
+        $dataChecker->verify($form['presetsConfig'], Validator::notEmpty()->setName('presetsConfig'));
+
         if (!$dataChecker->allValid()) {
             $this->logger->error('Initial application setup', ['errors' => $dataChecker->getErrors()]);
             $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
         } else {
-            $user           = new User();
-            $user->email    = $form['email'];
-            $user->username = $form['username'];
-            $user->password = $form['password'];
-            $user->status   = UserStatus::ACTIVE;
+            // load admin role to allow privileges and assign it to admin user
+            $roleAdmin = new Role();
+            $roleAdmin->load(['id = ?', [UserRole::ADMINISTRATOR_ID]]);
 
-            try {
-                $user->save();
-                $this->logger->info('Initial application setup : Add administrator', ['user' => $user->toArray()]);
+            if ($roleAdmin->valid()) {
+                // allow all privileges to admin role
+                $allPrivileges = PrivilegeUtils::listSystemPrivileges();
+                $result        = $roleAdmin->saveRoleAndPermissions($allPrivileges);
+                if ($result) {
+                    $this->logger->info('Initial application setup : Allow all privileges to administrator role');
+                    // add admin and assign admin created to role admin
+                    $user           = new User();
+                    $user->email    = $form['email'];
+                    $user->username = $form['username'];
+                    $user->password = $form['password'];
+                    $user->status   = UserStatus::ACTIVE;
+                    $user->role_id  = $roleAdmin->id;
 
-                $setting = new Setting();
+                    // @fixme: should not have embedded try/catch here
+                    try {
+                        $user->save();
+                        $user->saveDefaultPreset();
 
-                /** @var Setting $settings */
-                $settings = $setting->find([], ['limit' => 1])->current();
-                $settings->saveSettings(
-                    $form['company_name'],
-                    $form['company_url'],
-                    $form['platform_name'],
-                    $form['term_url'],
-                    $form['policy_url'],
-                    $form['branding_colors']
-                );
+                        $this->logger->info('Initial application setup : Add administrator with admin role and default preset', ['user' => $user->toArray()]);
 
-                // @fixme: should not have embedded try/catch here
-                try {
-                    $settings->save();
-                    $this->logger->info('Initial application setup : Update settings', ['settings' => $settings->toArray()]);
+                        $setting = new Setting();
 
-                    // add configured presets
-                    $presets = $form['presetsConfig'];
-                    if ($presets) {
-                        $presetSettings = new PresetSetting();
-                        $result         = $presetSettings->savePresetSettings($presets);
-                        if ('string' === \gettype($result)) {
-                            $this->renderJson(['errors' => $result], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-                        }
-                    }
-
-                    // load admin role to allow privileges and assign it to admin user
-                    $roleAdmin = new Role();
-                    $roleAdmin->load(['id = ?', [UserRole::ADMINISTRATOR_ID]]);
-                    if ($roleAdmin->valid()) {
-                        // allow all privileges to admin role
-                        $allPrivileges = PrivilegeUtils::listSystemPrivileges();
-                        $result        = $roleAdmin->saveRoleAndPermissions($allPrivileges);
-                        if ($result) {
-                            $this->logger->info('Initial application setup : Allow all privileges to administrator role');
-                            // assign admin created to role admin
-                            $user->role_id = $roleAdmin->id;
+                        /** @var Setting $settings */
+                        $settings = $setting->find([], ['limit' => 1])->current();
+                        if (!$settings->dry()) {
+                            $settings->saveSettings(
+                                $form['company_name'],
+                                $form['company_url'],
+                                $form['platform_name'],
+                                $form['term_url'],
+                                $form['policy_url'],
+                                $form['branding_colors'],
+                            );
 
                             // @fixme: should not have embedded try/catch here
                             try {
-                                $user->save();
-                                $this->logger->info('Initial application setup : Assign role to administrator user', ['user' => $user->toArray()]);
+                                $settings->save();
+                                $this->logger->info('Initial application setup : Update settings', ['settings' => $settings->toArray()]);
+
+                                // add configured presets
+                                $presets = $form['presetsConfig'];
+                                if ($presets) {
+                                    $presetSettings = new PresetSetting();
+                                    $result         = $presetSettings->savePresetSettings($presets);
+                                    if ('string' === \gettype($result)) {
+                                        $this->renderJson(['errors' => $result], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+                                    }
+                                }
+
+                                $this->logger->info('Initial application setup has been successfully done');
+                                $this->renderJson(['result' => 'success']);
                             } catch (\Exception $e) {
-                                $this->logger->error('Initial application setup : Role could not be assigned', ['error' => $e->getMessage()]);
+                                $message = $e->getMessage();
+                                $this->logger->error('Initial application setup : Settings could not be updated', ['error' => $message]);
+                                $this->renderJson(['errors' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+
+                                return;
                             }
                         }
+                    } catch (\Exception $e) {
+                        $message = $e->getMessage();
+                        $this->logger->error('Initial application setup : Administrator could not be added', ['error' => $message]);
+                        $this->renderJson(['errors' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+
+                        return;
                     }
-
-                    $this->logger->info('Initial application setup has been successfully done');
-                    $this->renderJson(['result' => 'success']);
-                } catch (\Exception $e) {
-                    $message = $e->getMessage();
-                    $this->logger->error('Initial application setup : Settings could not be updated', ['error' => $message]);
-                    $this->renderJson(['errors' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-
-                    return;
                 }
-            } catch (\Exception $e) {
-                $message = $e->getMessage();
-                $this->logger->error('Initial application setup : Administrator could not be added', ['error' => $message]);
-                $this->renderJson(['errors' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-
-                return;
             }
         }
     }

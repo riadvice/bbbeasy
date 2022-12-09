@@ -61,9 +61,13 @@ class Edit extends BaseAction
 
                 $categories->{$categoryName} = json_encode($subCategories);
                 $oldPreset['settings']       = json_encode($categories);
+
+                $oldPreset->save();
+                $this->renderJson(['result' => 'success', 'preset' => $preset->getMyPresetInfos($oldPreset)]);
             }
-            $oldPreset->save();
-            $this->renderJson(['result' => 'success', 'preset' => $preset->getMyPresetInfos($oldPreset)]);
+        } else {
+            $this->logger->error('Preset settings could not be updated');
+            $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
         }
     }
 
@@ -105,8 +109,12 @@ class Edit extends BaseAction
                     $this->renderJson(['result' => 'success', 'preset' => $preset->getMyPresetInfos($preset)]);
                 }
             } else {
+                $this->logger->error($errorMessage, ['errors' => $dataChecker->getErrors()]);
                 $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
             }
+        } else {
+            $this->logger->error($errorMessage);
+            $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
         }
     }
 }

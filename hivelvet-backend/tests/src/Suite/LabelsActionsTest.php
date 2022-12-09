@@ -25,6 +25,7 @@ namespace Suite;
 use Actions\Labels\AddTest;
 use Actions\Labels\DeleteTest;
 use Actions\Labels\EditTest;
+use Actions\Labels\IndexTest;
 use Test\TestGroup;
 
 /**
@@ -34,7 +35,7 @@ use Test\TestGroup;
  */
 final class LabelsActionsTest extends TestGroup
 {
-    protected $classes = [AddTest::class, DeleteTest::class, EditTest::class];
+    protected $classes = [AddTest::class, EditTest::class, DeleteTest::class, IndexTest::class];
 
     protected $quiet = true;
 }
