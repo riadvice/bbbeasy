@@ -24,9 +24,7 @@ namespace Actions\Rooms;
 
 use Actions\Base as BaseAction;
 use Actions\RequirePrivilegeTrait;
-use Models\Label;
 use Models\Room;
-use Models\RoomLabel;
 
 /**
  * Class Collect.
@@ -42,13 +40,13 @@ class Collect extends BaseAction
     public function show($f3, $params): void
     {
         $room  = new Room();
-        $data=[];
+        $data  = [];
         $rooms = $room->collectAll();
-        foreach ($rooms as $room){
-            $r=new Room();
+        foreach ($rooms as $room) {
+            $r = new Room();
 
-            $room["labels"]=$r->getLabels($room["id"]);
-            $data[]=$room;
+            $room['labels'] = $r->getLabels($room['id']);
+            $data[]         = $room;
         }
         $this->logger->debug('Collecting rooms');
         $this->renderJson($data);

@@ -1,6 +1,7 @@
 {
   "errors": {
-    "name": "Name already exist"
+    "name": "Label name already exists",
+    "color": "Label color already exists"
   },
   "status": 412
 }

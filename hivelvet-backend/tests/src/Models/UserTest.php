@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Models;
 
-use Base;
 use Enum\UserRole;
 use Enum\UserStatus;
 use Fake\UserFaker;
@@ -42,11 +41,9 @@ final class UserTest extends Scenario
     protected $group = 'User Model';
 
     /**
-     * @param Base $f3
-     *
      * @return array
      */
-    public function testPasswordHash($f3)
+    public function testPasswordHash()
     {
         $test           = $this->newTest();
         $faker          = Faker::create();
@@ -61,11 +58,9 @@ final class UserTest extends Scenario
     }
 
     /**
-     * @param \Base $f3
-     *
      * @return array
      */
-    public function testUserCreation($f3)
+    public function testUserCreation()
     {
         $test           = $this->newTest();
         $faker          = Faker::create();
@@ -82,11 +77,9 @@ final class UserTest extends Scenario
     }
 
     /**
-     * @param \Base $f3
-     *
      * @return array
      */
-    public function testSaveUserWithDefaultPreset($f3)
+    public function testSaveUserWithDefaultPreset()
     {
         $test   = $this->newTest();
         $faker  = Faker::create();
@@ -106,11 +99,9 @@ final class UserTest extends Scenario
     }
 
     /**
-     * @param Base $f3
-     *
      * @return array
      */
-    public function testGetByEmail($f3)
+    public function testGetByEmail()
     {
         $test = $this->newTest();
         $user = UserFaker::create();
@@ -122,11 +113,9 @@ final class UserTest extends Scenario
     }
 
     /**
-     * @param Base $f3
-     *
      * @return array
      */
-    public function testGetById($f3)
+    public function testGetById()
     {
         $test = $this->newTest();
         $user = UserFaker::create();
@@ -138,11 +127,9 @@ final class UserTest extends Scenario
     }
 
     /**
-     * @param Base $f3
-     *
      * @return array
      */
-    public function testEmailExists($f3)
+    public function testEmailExists()
     {
         $test = $this->newTest();
         $user = UserFaker::create();
@@ -154,11 +141,9 @@ final class UserTest extends Scenario
     }
 
     /**
-     * @param Base $f3
-     *
      * @return array
      */
-    public function testGetUsersByUsernameOrEmail($f3)
+    public function testGetUsersByUsernameOrEmail()
     {
         $test  = $this->newTest();
         $user  = new User(Registry::get('db'));
@@ -176,11 +161,9 @@ final class UserTest extends Scenario
     }
 
     /**
-     * @param Base $f3
-     *
      * @return array
      */
-    public function testUserExists($f3)
+    public function testUserExists()
     {
         $test = $this->newTest();
         $user = UserFaker::create();
@@ -188,33 +171,31 @@ final class UserTest extends Scenario
         $test->expect('Username and Email already exist' === $user->userExists(
             $user->username,
             $user->email,
-            $user->getUsersByUsernameOrEmail($user->username, $user->email)
+            $user->getUsersByUsernameOrEmail($user->username, $user->email),
         ), 'userExists(' . $user->username . ',' . $user->email . ') exists');
         $test->expect('Username already exists' === $user->userExists(
             $user->username,
             '404',
-            $user->getUsersByUsernameOrEmail($user->username, '404')
+            $user->getUsersByUsernameOrEmail($user->username, '404'),
         ), 'userExists(' . $user->username . ',"404") exists');
         $test->expect('Email already exists' === $user->userExists(
             '404',
             $user->email,
-            $user->getUsersByUsernameOrEmail('404', $user->email)
+            $user->getUsersByUsernameOrEmail('404', $user->email),
         ), 'userExists("404",' . $user->email . ') exists');
         $test->expect(null === $user->userExists(
             '404',
             '404',
-            $user->getUsersByUsernameOrEmail('404', '404')
+            $user->getUsersByUsernameOrEmail('404', '404'),
         ), 'userExists("404","404") does not exist');
 
         return $test->results();
     }
 
     /**
-     * @param Base $f3
-     *
      * @return array
      */
-    public function testGetAllUsers($f3)
+    public function testGetAllUsers()
     {
         $test   = $this->newTest();
         $preset = new Preset(Registry::get('db'));
@@ -235,11 +216,9 @@ final class UserTest extends Scenario
     }
 
     /**
-     * @param Base $f3
-     *
      * @return array
      */
-    public function testGetUserInfos($f3)
+    public function testGetUserInfos()
     {
         $test = $this->newTest();
         $user = UserFaker::create();
@@ -257,13 +236,11 @@ final class UserTest extends Scenario
     }
 
     /**
-     * @param Base $f3
-     *
      * @return array
      *
      * @throws \Exception
      */
-    public function testDeleteRole($f3)
+    public function testDeleteRole()
     {
         $test   = $this->newTest();
         $user   = UserFaker::create();

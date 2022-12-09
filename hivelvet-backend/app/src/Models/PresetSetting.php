@@ -103,21 +103,21 @@ class PresetSetting extends BaseModel
         foreach ($presets as $preset) {
             $subcategories = $preset['subcategories'];
             foreach ($subcategories as $subcategory) {
-                $presetSettings          = new self();
-                $presetSettings->group   = $preset['name'];
-                $presetSettings->name    = $subcategory['name'];
-                $presetSettings->enabled = $subcategory['enabled'];
+                $presetSetting          = new self();
+                $presetSetting->group   = $preset['name'];
+                $presetSetting->name    = $subcategory['name'];
+                $presetSetting->enabled = $subcategory['enabled'];
 
                 // @fixme: should not have embedded try/catch here
                 try {
-                    $presetSettings->save();
+                    $presetSetting->save();
                 } catch (\Exception $e) {
                     $message = $e->getMessage();
-                    $this->logger->error('Initial application setup : Preset settings could not be added', ['error' => $message]);
+                    $this->logger->error('Initial application setup : Preset setting could not be added', ['error' => $message]);
 
                     return $message;
                 }
-                $this->logger->info('Initial application setup : Add preset settings', ['preset' => $presetSettings->toArray()]);
+                $this->logger->info('Initial application setup : Add preset setting', ['preset' => $presetSetting->toArray()]);
             }
         }
 

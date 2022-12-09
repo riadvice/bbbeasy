@@ -25,6 +25,7 @@ namespace Suite;
 use Actions\Users\AddTest;
 use Actions\Users\DeleteTest;
 use Actions\Users\EditTest;
+use Actions\Users\IndexTest;
 use Test\TestGroup;
 
 /**
@@ -34,7 +35,7 @@ use Test\TestGroup;
  */
 final class UsersActionsTest extends TestGroup
 {
-    protected $classes = [AddTest::class, EditTest::class, DeleteTest::class];
+    protected $classes = [AddTest::class, EditTest::class, DeleteTest::class, IndexTest::class];
 
     protected $quiet = true;
 }

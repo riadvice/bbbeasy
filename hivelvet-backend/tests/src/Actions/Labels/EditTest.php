@@ -81,13 +81,23 @@ final class EditTest extends Scenario
      *
      * @throws ReflectionException
      */
-    public function testExistingName($f3)
+    public function testExistingNameOrColor($f3)
     {
-        $test  = $this->newTest();
-        $label = LabelFaker::create();
-        $data  = LabelFaker::generateJsondata(['name' => $label->name]);
-        $f3->mock(self::EDIT_LABEL_ROUTE . $label->id, null, null, $this->postJsonData($data));
-        $test->expect($this->compareTemplateToResponse('label/exist_error.json'), 'edit label with an existing name "' . $label->name . '" show an error');
+        $test   = $this->newTest();
+        $label1 = LabelFaker::create();
+        $label2 = LabelFaker::create();
+
+        $data1 = LabelFaker::generateJsondata(['name' => $label1->name]);
+        $f3->mock(self::EDIT_LABEL_ROUTE . $label2->id, null, null, $this->postJsonData($data1));
+        $test->expect($this->compareTemplateToResponse('label/exist_error.json'), 'Edit label with an existing name "' . $label1->name . '" show an error');
+
+        $data2 = LabelFaker::generateJsondata(['color' => $label1->color]);
+        $f3->mock(self::EDIT_LABEL_ROUTE . $label2->id, null, null, $this->postJsonData($data2));
+        $test->expect($this->compareTemplateToResponse('label/exist_error.json'), 'Edit label with an existing color "' . $label1->color . '" show an error');
+
+        $data3 = LabelFaker::generateJsondata(['name' => $label1->name, 'color' => $label1->color]);
+        $f3->mock(self::EDIT_LABEL_ROUTE . $label2->id, null, null, $this->postJsonData($data3));
+        $test->expect($this->compareTemplateToResponse('label/exist_error.json'), 'Edit label with an existing name "' . $label1->name . '" and an existing color "' . $label1->color . '" show an error');
 
         return $test->results();
     }

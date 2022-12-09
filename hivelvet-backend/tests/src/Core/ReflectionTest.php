@@ -44,11 +44,9 @@ final class ReflectionTest extends Scenario
     ];
 
     /**
-     * @param $f3 \Base
-     *
      * @return array
      */
-    public function testReflectionConfiguration($f3)
+    public function testReflectionConfiguration()
     {
         $test = $this->newTest();
         $test->expect($this->permissions === PrivilegeUtils::listSystemPrivileges(), 'Permissions correctly configured in action classes');

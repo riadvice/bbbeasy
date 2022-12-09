@@ -37,11 +37,13 @@ class Collect extends BaseAction
      */
     public function execute($f3, $params): void
     {
-        $data            = [];
-        $setting         = new Setting();
+        $data    = [];
+        $setting = new Setting();
+
+        /** @var Setting $defaultSettings */
         $defaultSettings = $setting->find([], ['limit' => 1])->current();
 
-        if ($defaultSettings) {
+        if (!$defaultSettings->dry()) {
             $data = [
                 'company_name'    => $defaultSettings->company_name,
                 'company_website' => $defaultSettings->company_website,

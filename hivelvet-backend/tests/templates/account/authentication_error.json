@@ -1,3 +1,7 @@
 {
-  "message": "Invalid Authentication data"
+  "errors": {
+    "email": "- All of the required rules must pass for email",
+    "password": "- All of the required rules must pass for password"
+  },
+  "status" : 422
 }

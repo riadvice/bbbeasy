@@ -1,0 +1,16 @@
+{
+  "errors": {
+    "username": "- All of the required rules must pass for username",
+    "email": "- All of the required rules must pass for email",
+    "password": "- All of the required rules must pass for password",
+
+    "company_name":"- All of the required rules must pass for company name",
+    "company_url":"- All of the required rules must pass for company url",
+    "platform_name":"- All of the required rules must pass for platform name",
+    "term_url":"- All of the required rules must pass for term url",
+    "policy_url":"- All of the required rules must pass for policy url",
+    "branding_colors":"- All of the required rules must pass for branding colors",
+    "presetsConfig":"- All of the required rules must pass for presetsConfig"
+  },
+  "status" : 422
+}

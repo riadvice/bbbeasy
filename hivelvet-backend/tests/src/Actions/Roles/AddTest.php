@@ -23,6 +23,8 @@ declare(strict_types=1);
 namespace Actions\Roles;
 
 use Fake\RoleFaker;
+use Faker\Factory as Faker;
+use Models\Role;
 use ReflectionException;
 use Test\Scenario;
 
@@ -43,7 +45,7 @@ final class AddTest extends Scenario
      *
      * @throws ReflectionException
      */
-    public function testEmptyName($f3)
+    public function testInvalidName($f3)
     {
         $test = $this->newTest();
 
@@ -69,6 +71,27 @@ final class AddTest extends Scenario
         $data = ['data' => ['name' => $role->name]];
         $f3->mock(self::ADD_ROLE_ROUTE, null, null, $this->postJsonData($data));
         $test->expect($this->compareTemplateToResponse('role/exist_error.json'), 'Add role with an existing name "' . $role->name . '" show an error');
+
+        return $test->results();
+    }
+
+    /**
+     * @param $f3
+     *
+     * @return array
+     *
+     * @throws ReflectionException
+     */
+    public function testValidRole($f3)
+    {
+        $test = $this->newTest();
+
+        $role  = new Role();
+        $faker = Faker::create();
+        $data  = ['data' => ['name' => $faker->name]];
+        $f3->mock(self::ADD_ROLE_ROUTE, null, null, $this->postJsonData($data));
+
+        $test->expect($this->compareArrayToResponse(['result' => 'success']), 'Add role with valid name pass');
 
         return $test->results();
     }

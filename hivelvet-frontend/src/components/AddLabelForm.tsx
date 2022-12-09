@@ -59,7 +59,14 @@ export const AddLabelForm = (props: Props) => {
             <Form.Item label={<Trans i18nKey="description.label" />} name="description">
                 <Input placeholder={t('description.label')} />
             </Form.Item>
-            <Form.Item label={<Trans i18nKey="color.label" />} name="color">
+            <Form.Item
+                label={<Trans i18nKey="color.label" />}
+                name="color"
+                {...('color' in errors && {
+                    help: <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errors['color'])} />,
+                    validateStatus: 'error',
+                })}
+            >
                 <InputColor defaultColor={defaultColor} />
             </Form.Item>
         </>

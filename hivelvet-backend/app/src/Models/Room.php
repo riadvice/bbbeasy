@@ -23,11 +23,7 @@ declare(strict_types=1);
 namespace Models;
 
 use DateTime;
-use Models\Label;
-use Enum\ResponseCode;
-use Enum\UserStatus;
 use Models\Base as BaseModel;
-
 
 /**
  * Class Room.
@@ -37,11 +33,8 @@ use Models\Base as BaseModel;
  * @property string   $short_link
  * @property int      $preset_id
  * @property Label[]  $labels
- *  @property DateTime $created_on
+ * @property DateTime $created_on
  * @property DateTime $updated_on
-
- *
-
  */
 class Room extends BaseModel
 {
@@ -52,13 +45,15 @@ class Room extends BaseModel
     ];
 
     protected $table = 'rooms';
+
     public function nameExists($name)
     {
         return $this->load(['lower(name) = ?', mb_strtolower($name)]);
     }
+
     public function shortlinkExists($shortlink)
     {
-        return $this->load(['short_link = ?',  $shortlink]);
+        return $this->load(['short_link = ?', $shortlink]);
     }
 
     public function collectAll(): array
@@ -81,27 +76,23 @@ class Room extends BaseModel
             $params
         );
 
-
         return $id ? $result[0] : $result;
     }
-    public function getLabels( $room):array{
-        $roomlabel=new RoomLabel();
 
-        $roomlabels=$roomlabel->collectAllByRoomId($room);
-         $lbs=[];
-        if($roomlabels){
-            foreach ($roomlabels as $rl){
+    public function getLabels($room): array
+    {
+        $roomlabel = new RoomLabel();
 
-                $label=new Label();
-                $labels=$label->getById($rl["label_id"]);
-                if($labels){
-
-
-                    $lbs[]=$labels->getLabelInfos();
-
+        $roomlabels = $roomlabel->collectAllByRoomId($room);
+        $lbs        = [];
+        if ($roomlabels) {
+            foreach ($roomlabels as $rl) {
+                $label  = new Label();
+                $labels = $label->getById($rl['label_id']);
+                if ($labels) {
+                    $lbs[] = $labels->getLabelInfos();
                 }
             }
-
         }
 
         return $lbs;

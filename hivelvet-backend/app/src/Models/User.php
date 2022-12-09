@@ -213,6 +213,11 @@ class User extends BaseModel
 
         $this->logger->info($successMessage, ['user' => $this->toArray()]);
 
+        return $this->saveDefaultPreset();
+    }
+
+    public function saveDefaultPreset(): bool|string
+    {
         $preset          = new Preset();
         $preset->name    = 'default';
         $preset->user_id = $this->id;

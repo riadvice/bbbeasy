@@ -53,7 +53,7 @@ class Delete extends DeleteAction
                 return;
             }
             $this->logger->info('preset successfully deleted', ['preset' => $presetId]);
-            $this->renderJson(['result' => 'preset successfully deleted']);
+            $this->renderJson(['result' => 'success']);
         } else {
             $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
         }

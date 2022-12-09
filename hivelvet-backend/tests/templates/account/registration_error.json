@@ -1,0 +1,10 @@
+{
+  "errors": {
+    "username": "- All of the required rules must pass for username",
+    "email": "- All of the required rules must pass for email",
+    "password": "- All of the required rules must pass for password",
+    "confirmPassword": "- All of the required rules must pass for confirmPassword",
+    "agreement": "- All of the required rules must pass for agreement"
+  },
+  "status" : 422
+}
