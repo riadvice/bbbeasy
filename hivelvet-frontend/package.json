@@ -101,7 +101,7 @@
     "react-styleguidist": "^13.0.0",
     "simple-progress-webpack-plugin": "^2.0.0",
     "source-map-explorer": "^2.5.2",
-    "ts-loader": "^9.4.1"
+    "ts-loader": "^9.4.2"
   },
   "packageManager": "yarn@3.2.3"
 }
