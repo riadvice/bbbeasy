@@ -40,6 +40,7 @@ final class ReflectionTest extends Scenario
         'presets'           => ['add', 'collect_my_presets', 'delete', 'edit'],
         'roles_permissions' => ['collect'],
         'roles'             => ['add', 'collect', 'delete', 'edit', 'index'],
+        'rooms'             => ['add', 'collect'],
         'users'             => ['add', 'delete', 'edit', 'index'],
     ];
 
