@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace Utils;
 
-use Base;
-
 class PrivilegeUtils
 {
     public static function listSystemPrivileges(): array
@@ -56,7 +54,7 @@ class PrivilegeUtils
                 // Filter classes having RequirePrivilegeTrait
                 $privilegeInfos = explode('\\', $action);
                 array_shift($privilegeInfos);
-                $privileges[Base::instance()->snakecase($privilegeInfos[0])][] = Base::instance()->snakecase($privilegeInfos[1]);
+                $privileges[\Base::instance()->snakecase($privilegeInfos[0])][] = \Base::instance()->snakecase($privilegeInfos[1]);
             }
         }
 

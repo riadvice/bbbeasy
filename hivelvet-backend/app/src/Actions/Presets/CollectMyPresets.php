@@ -24,7 +24,6 @@ namespace Actions\Presets;
 
 use Actions\Base as BaseAction;
 use Actions\RequirePrivilegeTrait;
-use Base;
 use Models\Preset;
 
 /**
@@ -35,7 +34,7 @@ class CollectMyPresets extends BaseAction
     use RequirePrivilegeTrait;
 
     /**
-     * @param Base  $f3
+     * @param \Base $f3
      * @param array $params
      */
     public function execute($f3, $params): void

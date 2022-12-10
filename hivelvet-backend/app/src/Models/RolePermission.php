@@ -22,18 +22,17 @@ declare(strict_types=1);
 
 namespace Models;
 
-use DateTime;
 use Models\Base as BaseModel;
 
 /**
  * Class RolePermission.
  *
- * @property int      $id
- * @property int      $role_id
- * @property string   $group
- * @property string   $name
- * @property DateTime $created_on
- * @property DateTime $updated_on
+ * @property int       $id
+ * @property int       $role_id
+ * @property string    $group
+ * @property string    $name
+ * @property \DateTime $created_on
+ * @property \DateTime $updated_on
  */
 class RolePermission extends BaseModel
 {

@@ -22,11 +22,9 @@ declare(strict_types=1);
 
 namespace Models;
 
-use Base;
 use Enum\UserRole;
 use Fake\RoleFaker;
 use Faker\Factory as Faker;
-use Registry;
 use Test\Scenario;
 
 /**
@@ -41,14 +39,14 @@ final class RoleTest extends Scenario
     protected $group = 'Role Model';
 
     /**
-     * @param Base $f3
+     * @param \Base $f3
      *
      * @return array
      */
     public function testGetLecturerRole($f3)
     {
         $test = $this->newTest();
-        $role = new Role(Registry::get('db'));
+        $role = new Role(\Registry::get('db'));
         $role->load(['id = ?', 2]);
         $data = [
             'key'         => $role->id,
@@ -57,20 +55,20 @@ final class RoleTest extends Scenario
             'permissions' => $role->getRolePermissions(),
         ];
 
-        $test->expect(empty(array_udiff($data, $role->getLecturerRole(), fn($obj1, $obj2) => $obj1 === $obj2)), 'getLecturerRole() found lecturer role');
+        $test->expect(empty(array_udiff($data, $role->getLecturerRole(), fn ($obj1, $obj2) => $obj1 === $obj2)), 'getLecturerRole() found lecturer role');
 
         return $test->results();
     }
 
     /**
-     * @param Base $f3
+     * @param \Base $f3
      *
      * @return array
      */
     public function testGetAdministratorRole($f3)
     {
         $test = $this->newTest();
-        $role = new Role(Registry::get('db'));
+        $role = new Role(\Registry::get('db'));
         $role->load(['id = ?', 1]);
         $data = [
             'key'         => $role->id,
@@ -79,13 +77,13 @@ final class RoleTest extends Scenario
             'permissions' => $role->getRolePermissions(),
         ];
 
-        $test->expect(empty(array_udiff($data, $role->getAdministratorRole(), fn($obj1, $obj2) => $obj1 === $obj2)), 'getAdministratorRole() found administrator role');
+        $test->expect(empty(array_udiff($data, $role->getAdministratorRole(), fn ($obj1, $obj2) => $obj1 === $obj2)), 'getAdministratorRole() found administrator role');
 
         return $test->results();
     }
 
     /**
-     * @param Base $f3
+     * @param \Base $f3
      *
      * @return array
      */
@@ -93,7 +91,7 @@ final class RoleTest extends Scenario
     {
         $test       = $this->newTest();
         $faker      = Faker::create();
-        $role       = new Role(Registry::get('db'));
+        $role       = new Role(\Registry::get('db'));
         $role->name = $faker->name;
         $role->save();
 
@@ -103,14 +101,14 @@ final class RoleTest extends Scenario
     }
 
     /**
-     * @param Base $f3
+     * @param \Base $f3
      *
      * @return array
      */
     public function testNameFormatting($f3)
     {
         $test       = $this->newTest();
-        $role       = new Role(Registry::get('db'));
+        $role       = new Role(\Registry::get('db'));
         $role->name = 'roleRole';
         $role->save();
 
@@ -121,7 +119,7 @@ final class RoleTest extends Scenario
     }
 
     /**
-     * @param Base $f3
+     * @param \Base $f3
      *
      * @return array
      */
@@ -137,7 +135,7 @@ final class RoleTest extends Scenario
     }
 
     /**
-     * @param Base $f3
+     * @param \Base $f3
      *
      * @return array
      *
@@ -150,7 +148,7 @@ final class RoleTest extends Scenario
         $role   = RoleFaker::create();
         $roleId = $role->id;
 
-        $user           = new User(Registry::get('db'));
+        $user           = new User(\Registry::get('db'));
         $user->username = $faker->userName;
         $user->email    = $faker->email;
         $user->password = $faker->password(8);
@@ -164,7 +162,7 @@ final class RoleTest extends Scenario
     }
 
     /**
-     * @param Base $f3
+     * @param \Base $f3
      *
      * @return array
      */
@@ -172,8 +170,8 @@ final class RoleTest extends Scenario
     {
         $test       = $this->newTest();
         $resetToken = new ResetPasswordToken();
-        $user       = new User(Registry::get('db'));
-        $role       = new Role(Registry::get('db'));
+        $user       = new User(\Registry::get('db'));
+        $role       = new Role(\Registry::get('db'));
         $resetToken->erase(['']); // Cleaning the table for test.
         $user->erase(['']); // Cleaning the table for test.
         $role->erase(['id NOT IN (?,?)', UserRole::ADMINISTRATOR_ID, UserRole::LECTURER_ID]); // Cleaning the table for test.
@@ -200,7 +198,7 @@ final class RoleTest extends Scenario
     }
 
     /**
-     * @param Base $f3
+     * @param \Base $f3
      *
      * @return array
      */
@@ -215,13 +213,13 @@ final class RoleTest extends Scenario
             'permissions' => $role->getRolePermissions(),
         ];
 
-        $test->expect(empty(array_udiff($data, $role->getRoleInfos(), fn($obj1, $obj2) => $obj1 === $obj2)), 'getRoleInfos() returned role informations');
+        $test->expect(empty(array_udiff($data, $role->getRoleInfos(), fn ($obj1, $obj2) => $obj1 === $obj2)), 'getRoleInfos() returned role informations');
 
         return $test->results();
     }
 
     /**
-     * @param Base $f3
+     * @param \Base $f3
      *
      * @return array
      */
@@ -231,7 +229,7 @@ final class RoleTest extends Scenario
         $faker = Faker::create();
         $role  = RoleFaker::create();
 
-        $user           = new User(Registry::get('db'));
+        $user           = new User(\Registry::get('db'));
         $user->username = $faker->userName;
         $user->email    = $faker->email;
         $user->password = $faker->password(8);
@@ -244,7 +242,7 @@ final class RoleTest extends Scenario
     }
 
     /**
-     * @param Base $f3
+     * @param \Base $f3
      *
      * @return array
      */
@@ -252,7 +250,7 @@ final class RoleTest extends Scenario
     {
         $test       = $this->newTest();
         $data       = ['labels' => ['add', 'delete', 'edit']];
-        $role       = new Role(Registry::get('db'));
+        $role       = new Role(\Registry::get('db'));
         $role->name = 'labels manager';
         $result     = $role->saveRoleAndPermissions($data);
 
@@ -263,7 +261,7 @@ final class RoleTest extends Scenario
     }
 
     /**
-     * @param Base $f3
+     * @param \Base $f3
      *
      * @return array
      *
@@ -274,7 +272,7 @@ final class RoleTest extends Scenario
         $test       = $this->newTest();
         $faker      = Faker::create();
         $data       = ['labels' => ['add', 'delete', 'edit']];
-        $role       = new Role(Registry::get('db'));
+        $role       = new Role(\Registry::get('db'));
         $role->name = $faker->name;
         $role->saveRoleAndPermissions($data);
         $roleId = $role->id;

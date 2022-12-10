@@ -22,9 +22,7 @@ declare(strict_types=1);
 
 namespace Models;
 
-use Cache;
 use Core\Session;
-use DateTime;
 use DB\Cortex;
 use Helpers\Time;
 use Log\LogWriterTrait;
@@ -32,8 +30,8 @@ use Log\LogWriterTrait;
 /**
  * Base Model Class.
  *
- * @property DateTime $created_on
- * @property DateTime $updated_on
+ * @property \DateTime $created_on
+ * @property \DateTime $updated_on
  */
 abstract class Base extends Cortex
 {
@@ -47,7 +45,7 @@ abstract class Base extends Cortex
     protected $f3;
 
     /**
-     * @var Cache
+     * @var \Cache
      */
     protected $cache;
 
@@ -95,13 +93,11 @@ abstract class Base extends Cortex
     }
 
     /**
-     * @param $filter
-     *
      * @return array
      */
     public function prepareFilter($filter)
     {
-        return array_map(fn($value) => '' === $value ? '%' : '%' . $value . '%', $filter);
+        return array_map(fn ($value) => '' === $value ? '%' : '%' . $value . '%', $filter);
     }
 
     /**
@@ -160,9 +156,6 @@ abstract class Base extends Cortex
         }
     }
 
-    /**
-     * @param $set
-     */
     protected function toPostgreSqlArray($set): string
     {
         $set    = (array) $set;

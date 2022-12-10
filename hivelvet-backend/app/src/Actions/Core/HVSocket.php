@@ -24,14 +24,13 @@ namespace Actions\Core;
 
 use Actions\Base as BaseAction;
 use Actions\WebSocket\Server;
-use Base;
 
 class HVSocket extends BaseAction
 {
     /**
      * Loads a json translation files from cache or generates if it does not exist.
      *
-     * @param Base  $f3
+     * @param \Base $f3
      * @param array $params
      */
     public function execute($f3, $params): void

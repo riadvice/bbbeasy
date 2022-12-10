@@ -27,7 +27,6 @@ use Enum\UserStatus;
 use Fake\UserFaker;
 use Faker\Factory as Faker;
 use Models\User;
-use ReflectionException;
 use Test\Scenario;
 
 /**
@@ -41,8 +40,6 @@ final class LoginTest extends Scenario
     protected $group                  = 'Action User Login';
 
     /**
-     * @param $f3
-     *
      * @return array
      *
      * @throws \JsonException
@@ -72,8 +69,6 @@ final class LoginTest extends Scenario
     }
 
     /**
-     * @param $f3
-     *
      * @return array
      *
      * @throws \JsonException
@@ -125,11 +120,9 @@ final class LoginTest extends Scenario
     }
 
     /**
-     * @param $f3
-     *
      * @return array
      *
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function testAuthenticateExistingUser($f3)
     {

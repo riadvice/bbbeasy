@@ -26,7 +26,6 @@ class Track
 {
     /**
      * @param \Mailer $mailer
-     * @param $log
      */
     public static function logError($mailer, $log): void
     {

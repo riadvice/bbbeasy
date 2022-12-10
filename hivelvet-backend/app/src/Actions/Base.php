@@ -24,7 +24,6 @@ namespace Actions;
 
 use Acl\Access;
 use Core\Session;
-use DOMDocument;
 use Enum\ResponseCode;
 use Enum\UserRole;
 use Enum\UserStatus;
@@ -32,7 +31,6 @@ use Helpers\I18n;
 use Log\LogWriterTrait;
 use Models\User;
 use SimpleXMLElement;
-use Template;
 use Utils\Environment;
 use Utils\SecurityUtils;
 
@@ -299,9 +297,9 @@ abstract class Base extends \Prefab
 
     private function parseXMLView(string $view = null): string
     {
-        $xmlResponse = new SimpleXMLElement(Template::instance()->render($this->view . '.xml'));
+        $xmlResponse = new \SimpleXMLElement(\Template::instance()->render($this->view . '.xml'));
 
-        $xmlDocument                     = new DOMDocument('1.0');
+        $xmlDocument                     = new \DOMDocument('1.0');
         $xmlDocument->preserveWhiteSpace = false;
         $xmlDocument->formatOutput       = true;
 

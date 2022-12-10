@@ -24,7 +24,6 @@ namespace Core;
 
 use Base;
 use ByteUnits\Metric as ByteFormatter;
-use Exception;
 use Helpers\Time;
 use Nette\Utils\Strings;
 use SebastianBergmann\CodeCoverage\CodeCoverage;
@@ -53,10 +52,7 @@ class Statera
     private static $coverageEnabled;
 
     /**
-     * @param $f3
-     * @param $params
-     *
-     * @throws Exception
+     * @throws \Exception
      */
     public function index($f3, $params): void
     {
@@ -192,15 +188,15 @@ class Statera
 
     public function afterroute(): void
     {
-        Base::instance()->set('UI', '../tests/ui/');
+        \Base::instance()->set('UI', '../tests/ui/');
         $result = \Preview::instance()->render('statera.htm');
         if (!$this->cli) {
             echo $result;
         } else {
             // CliUtils::instance()->writeTestPassed('All teest passed');
-            foreach (Base::instance()->get('SERVER')['argv'] as $arg) {
+            foreach (\Base::instance()->get('SERVER')['argv'] as $arg) {
                 if (str_starts_with($arg, '-o=')) {
-                    Base::instance()->write(Strings::after($arg, '-o='), $result);
+                    \Base::instance()->write(Strings::after($arg, '-o='), $result);
                 }
             }
         }
@@ -245,7 +241,7 @@ class Statera
     }
 
     /**
-     * @param Base $f3
+     * @param \Base $f3
      */
     private function configF3ForTest($f3): void
     {

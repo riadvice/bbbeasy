@@ -32,9 +32,6 @@ class DataChecker
 {
     private array $errors;
 
-    /**
-     * @param $input
-     */
     public function verify($input, Validatable $validator): bool
     {
         if (null !== $validator->getName()) {
@@ -74,9 +71,6 @@ class DataChecker
      */
 
     /**
-     * @param $popErrors
-     * @param $errorsHiveKey
-     *
      * @return bool
      */
     public function allValid($popErrors = true, $errorsHiveKey = 'api_errors')

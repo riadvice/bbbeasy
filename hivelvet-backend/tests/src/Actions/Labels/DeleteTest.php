@@ -24,7 +24,6 @@ namespace Actions\Labels;
 
 use Fake\LabelFaker;
 use Faker\Factory as Faker;
-use ReflectionException;
 use Test\Scenario;
 
 /**
@@ -38,11 +37,9 @@ final class DeleteTest extends Scenario
     protected $group                         = 'Actions Label Delete';
 
     /**
-     * @param $f3
-     *
      * @return array
      *
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function testValidLabel($f3)
     {
@@ -57,11 +54,9 @@ final class DeleteTest extends Scenario
     }
 
     /**
-     * @param $f3
-     *
      * @return array
      *
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function testNonExistingLabel($f3)
     {

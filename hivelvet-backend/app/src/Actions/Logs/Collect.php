@@ -24,7 +24,6 @@ namespace Actions\Logs;
 
 use Actions\Base as BaseAction;
 use Actions\RequirePrivilegeTrait;
-use Base;
 
 /**
  * Class Collect.
@@ -34,7 +33,7 @@ class Collect extends BaseAction
     use RequirePrivilegeTrait;
 
     /**
-     * @param Base  $f3
+     * @param \Base $f3
      * @param array $params
      */
     public function execute($f3, $params): void

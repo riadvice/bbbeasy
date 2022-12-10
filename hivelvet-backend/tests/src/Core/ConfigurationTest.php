@@ -48,7 +48,7 @@ final class ConfigurationTest extends Scenario
         $test->expect(str_starts_with($f3->get('UI'), 'templates/;../public/;'), 'Templates folder correctly configured to "templates" and "public"');
         $test->expect('en-GB' === $f3->get('FALLBACK'), 'Fallback language set to en-GB');
         $test->expect('pgsql' === $f3->get('db.driver'), 'Using PostgreSQL database for session storage');
-        $test->expect($f3->get('application.logfile') === '../logs/' . (\PHP_SAPI !== 'cli' ? 'app' : 'cli') . '-' . date('Y-m-d') . '.log', 'Log file name set to daily rotation ' . 'app-' . date('Y-m-d') . '.log');
+        $test->expect($f3->get('application.logfile') === '../logs/' . (\PHP_SAPI !== 'cli' ? 'app' : 'cli') . '-' . date('Y-m-d') . '.log', 'Log file name set to daily rotation app-' . date('Y-m-d') . '.log');
 
         return $test->results();
     }

@@ -34,9 +34,6 @@ class Collect extends BaseAction
     use RequirePrivilegeTrait;
 
     /**
-     * @param $f3
-     * @param $params
-     *
      * @throws \JsonException
      */
     public function execute($f3, $params): void

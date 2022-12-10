@@ -22,22 +22,20 @@ declare(strict_types=1);
 
 namespace Core;
 
-use Base;
 use DB\SQL;
 use DB\SQL\Session as SQLSession;
 use Log\LogWriterTrait;
 use Models\User;
-use Prefab;
 use Session as F3Session;
 
-class Session extends Prefab
+class Session extends \Prefab
 {
     use LogWriterTrait;
 
     /**
      * f3 instance.
      *
-     * @var Base f3
+     * @var \Base f3
      */
     protected $f3;
 
@@ -53,7 +51,7 @@ class Session extends Prefab
      */
     public function __construct(SQL $db = null, $table = 'sessions', $force = false, $onsuspect = null, $key = null)
     {
-        $this->f3 = Base::instance();
+        $this->f3 = \Base::instance();
         $this->initLogger();
         if ('CACHE' === $table) {
             $this->internalSession = new F3Session(function(F3Session $session, $id) {
@@ -88,9 +86,6 @@ class Session extends Prefab
         $this->cleanup(\ini_get('session.gc_maxlifetime'));
     }
 
-    /**
-     * @param $key
-     */
     public function exists($key): bool
     {
         return $this->internalSession->exists($key);
@@ -103,8 +98,6 @@ class Session extends Prefab
     }
 
     /**
-     * @param $key
-     *
      * @return mixed
      */
     public function get($key)

@@ -24,7 +24,6 @@ namespace Actions\Labels;
 
 use Fake\LabelFaker;
 use Models\Label;
-use ReflectionException;
 use Test\Scenario;
 
 /**
@@ -40,11 +39,9 @@ final class AddTest extends Scenario
     protected $group                      = 'Action Label Add';
 
     /**
-     * @param $f3
-     *
      * @return array
      *
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function testValidInput($f3)
     {
@@ -62,11 +59,9 @@ final class AddTest extends Scenario
     }
 
     /**
-     * @param $f3
-     *
      * @return array
      *
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function testInvalidColor($f3)
     {
@@ -80,11 +75,9 @@ final class AddTest extends Scenario
     }
 
     /**
-     * @param $f3
-     *
      * @return array
      *
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function testEmptyName($f3)
     {
@@ -98,11 +91,9 @@ final class AddTest extends Scenario
     }
 
     /**
-     * @param $f3
-     *
      * @return array
      *
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function testExistingNameOrColor($f3)
     {

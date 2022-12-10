@@ -37,9 +37,6 @@ use Validation\DataChecker;
 class Install extends BaseAction
 {
     /**
-     * @param $f3
-     * @param $params
-     *
      * @throws \JsonException
      */
     public function execute($f3, $params): void

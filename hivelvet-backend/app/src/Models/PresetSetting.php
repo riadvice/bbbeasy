@@ -22,18 +22,17 @@ declare(strict_types=1);
 
 namespace Models;
 
-use DateTime;
 use Models\Base as BaseModel;
 
 /**
  * Class PresetSetting.
  *
- * @property int      $id
- * @property string   $group
- * @property string   $name
- * @property bool     $enabled
- * @property DateTime $created_on
- * @property DateTime $updated_on
+ * @property int       $id
+ * @property string    $group
+ * @property string    $name
+ * @property bool      $enabled
+ * @property \DateTime $created_on
+ * @property \DateTime $updated_on
  */
 class PresetSetting extends BaseModel
 {

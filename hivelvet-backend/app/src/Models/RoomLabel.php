@@ -22,17 +22,16 @@ declare(strict_types=1);
 
 namespace Models;
 
-use DateTime;
 use Models\Base as BaseModel;
 
 /**
  * Class Room.
  *
- * @property int      $id
- * @property int      $label_id
- * @property int      $room_id
- * @property DateTime $created_on
- * @property DateTime $updated_on
+ * @property int       $id
+ * @property int       $label_id
+ * @property int       $room_id
+ * @property \DateTime $created_on
+ * @property \DateTime $updated_on
  */
 class RoomLabel extends BaseModel
 {

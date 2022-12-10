@@ -24,13 +24,11 @@ namespace Helpers;
 
 use Core\Session;
 use Log\LogWriterTrait;
-use Prefab;
-use Registry;
 
 /**
  * Base Helper Class.
  */
-class Base extends Prefab
+class Base extends \Prefab
 {
     use LogWriterTrait;
 
@@ -54,7 +52,7 @@ class Base extends Prefab
     public function __construct()
     {
         $this->f3      = \Base::instance();
-        $this->session = Registry::get('session');
+        $this->session = \Registry::get('session');
         $this->initLogger();
     }
 }

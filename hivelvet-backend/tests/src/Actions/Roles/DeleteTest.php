@@ -24,7 +24,6 @@ namespace Actions\Roles;
 
 use Enum\UserRole;
 use Fake\RoleFaker;
-use ReflectionException;
 use Test\Scenario;
 
 /**
@@ -38,11 +37,9 @@ final class DeleteTest extends Scenario
     protected $group                        = 'Action Role Delete';
 
     /**
-     * @param $f3
-     *
      * @return array
      *
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function testNonExistingRole($f3)
     {
@@ -55,11 +52,9 @@ final class DeleteTest extends Scenario
     }
 
     /**
-     * @param $f3
-     *
      * @return array
      *
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function testValidRole($f3)
     {

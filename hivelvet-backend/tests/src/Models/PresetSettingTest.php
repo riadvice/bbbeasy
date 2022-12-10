@@ -24,7 +24,6 @@ namespace Models;
 
 use Fake\PresetSettingFaker;
 use Faker\Factory as Faker;
-use Registry;
 use Test\Scenario;
 
 /**
@@ -47,7 +46,7 @@ final class PresetSettingTest extends Scenario
     {
         $test                    = $this->newTest();
         $faker                   = Faker::create();
-        $presetSettings          = new PresetSetting(Registry::get('db'));
+        $presetSettings          = new PresetSetting(\Registry::get('db'));
         $presetSettings->group   = $faker->name;
         $presetSettings->name    = $faker->name;
         $presetSettings->enabled = true;
@@ -98,7 +97,7 @@ final class PresetSettingTest extends Scenario
     public function testGetAllPresets($f3)
     {
         $test          = $this->newTest();
-        $presetSetting = new PresetSetting(Registry::get('db'));
+        $presetSetting = new PresetSetting(\Registry::get('db'));
         $presetSetting->erase(['']); // Cleaning the table for test.
         $presetSetting1 = PresetSettingFaker::create();
         $presetSetting2 = PresetSettingFaker::create();
@@ -129,7 +128,7 @@ final class PresetSettingTest extends Scenario
     public function testSaveDefaultPresetSettings($f3)
     {
         $test          = $this->newTest();
-        $presetSetting = new PresetSetting(Registry::get('db'));
+        $presetSetting = new PresetSetting(\Registry::get('db'));
         $presetSetting->erase(['']); // Cleaning the table for test.
 
         $settings = $presetSetting->getDefaultPresetSettings(true);

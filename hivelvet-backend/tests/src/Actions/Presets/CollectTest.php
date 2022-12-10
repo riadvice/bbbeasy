@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Actions\Presets;
 
-use ReflectionException;
 use Test\Scenario;
 
 /**
@@ -36,11 +35,9 @@ final class CollectTest extends Scenario
     protected $group                                   = 'Action Preset Setting Collect';
 
     /**
-     * @param $f3
-     *
      * @return array
      *
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function testCollect($f3)
     {

@@ -22,17 +22,10 @@ declare(strict_types=1);
 
 namespace Utils;
 
-use Base;
 use Enum\BBBApiParams;
 
 class URLUtils
 {
-    /**
-     * @param $apiCall
-     * @param $data
-     * @param $checksumLength
-     * @param $sharedSecret
-     */
     public static function calculateChecksum($apiCall, $data, $checksumLength, $sharedSecret): string
     {
         $queryString = self::convertIncomingQuery($data);
@@ -40,12 +33,6 @@ class URLUtils
         return hash(64 !== $checksumLength ? 'sha1' : 'sha256', $apiCall . $queryString . $sharedSecret);
     }
 
-    /**
-     * @param $apiCall
-     * @param $queryString
-     * @param $checksumLength
-     * @param $sharedSecret
-     */
     public static function calculateOutgoingChecksum($apiCall, $queryString, $checksumLength, $sharedSecret): string
     {
         return hash(64 !== $checksumLength ? 'sha1' : 'sha256', $apiCall . $queryString . $sharedSecret);
@@ -63,12 +50,9 @@ class URLUtils
         // $value = str_replace('%2B', '+', $value);
         // Some integrations start their query with &, we need to add it back for the checksum calculation
         // even if it is removed later by the load balancer
-        return str_starts_with(Base::instance()->get('QUERY'), '&') ? '&' . $value : $value;
+        return str_starts_with(\Base::instance()->get('QUERY'), '&') ? '&' . $value : $value;
     }
 
-    /**
-     * @param $data
-     */
     public static function convertOutgoingQuery($data): string
     {
         $query = http_build_query($data, '', '&');

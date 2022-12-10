@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Actions\Settings;
 
 use Faker\Factory as Faker;
-use ReflectionException;
 use Test\Scenario;
 
 /**
@@ -39,11 +38,9 @@ final class SaveLogoTest extends Scenario
     protected $group                      = 'Action Logo Save';
 
     /**
-     * @param $f3
-     *
      * @return array
      *
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function testEmptyData($f3)
     {
@@ -57,11 +54,9 @@ final class SaveLogoTest extends Scenario
     }
 
     /**
-     * @param $f3
-     *
      * @return array
      *
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function testInvalidFormat($f3)
     {

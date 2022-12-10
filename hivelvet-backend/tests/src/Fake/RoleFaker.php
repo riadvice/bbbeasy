@@ -49,8 +49,6 @@ class RoleFaker
     }
 
     /**
-     * @param $storageName
-     *
      * @return Role
      */
     public static function get($storageName)

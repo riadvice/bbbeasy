@@ -24,7 +24,6 @@ namespace Models;
 
 use Fake\LabelFaker;
 use Faker\Factory as Faker;
-use Registry;
 use Test\Scenario;
 
 /**
@@ -45,7 +44,7 @@ final class LabelTest extends Scenario
     {
         $test               = $this->newTest();
         $faker              = Faker::create();
-        $label              = new Label(Registry::get('db'));
+        $label              = new Label(\Registry::get('db'));
         $label->name        = $faker->name;
         $label->color       = $faker->safeHexColor();
         $label->description = $faker->text();
@@ -63,7 +62,7 @@ final class LabelTest extends Scenario
     {
         $test               = $this->newTest();
         $faker              = Faker::create();
-        $label              = new Label(Registry::get('db'));
+        $label              = new Label(\Registry::get('db'));
         $label->name        = $faker->name;
         $label->description = $faker->text();
         $label->save();
@@ -81,7 +80,7 @@ final class LabelTest extends Scenario
     {
         $test               = $this->newTest();
         $faker              = Faker::create();
-        $label              = new Label(Registry::get('db'));
+        $label              = new Label(\Registry::get('db'));
         $label->name        = 'labelLabel';
         $label->color       = $faker->safeHexColor();
         $label->description = $faker->text();
@@ -141,7 +140,7 @@ final class LabelTest extends Scenario
     public function testGetAllLabels()
     {
         $test  = $this->newTest();
-        $label = new Label(Registry::get('db'));
+        $label = new Label(\Registry::get('db'));
         $label->erase(['']); // Cleaning the table for test.
         $label1 = LabelFaker::create();
         $label2 = LabelFaker::create();

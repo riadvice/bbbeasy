@@ -22,15 +22,12 @@ declare(strict_types=1);
 
 namespace Application;
 
-use Base;
-use Cache;
 use Core\Session;
 use DB\SQL;
 use F3;
 use Log\LogWriterTrait;
 use Mail\MailSender;
 use Nette\Utils\Strings;
-use Registry;
 use Utils\Environment;
 
 abstract class Boot
@@ -38,7 +35,7 @@ abstract class Boot
     use LogWriterTrait;
 
     /**
-     * @var F3
+     * @var \F3
      */
     protected $f3;
 
@@ -75,7 +72,7 @@ abstract class Boot
     public function __construct()
     {
         $this->isCli = \PHP_SAPI === 'cli';
-        $this->f3    = Base::instance();
+        $this->f3    = \Base::instance();
 
         $this->setPhpVariables();
         $this->detectEnvironment();
@@ -89,8 +86,8 @@ abstract class Boot
     public function prepareSession(): void
     {
         // store the session into sqlite database file
-        $this->session = new Session(Registry::get('db'), $this->f3->get('session.table'), false);
-        Registry::set('session', $this->session);
+        $this->session = new Session(\Registry::get('db'), $this->f3->get('session.table'), false);
+        \Registry::set('session', $this->session);
     }
 
     public function start(): void
@@ -124,7 +121,7 @@ abstract class Boot
             }
         } else {
             $this->f3->set('application.environment', Environment::TEST);
-            Cache::instance()->reset();
+            \Cache::instance()->reset();
         }
 
         $this->environment = $this->f3->get('application.environment');
@@ -141,7 +138,7 @@ abstract class Boot
     {
         $this->f3->config('config/smtp.ini');
         $mailer = new MailSender();
-        Registry::set('mailer', $mailer);
+        \Registry::set('mailer', $mailer);
     }
 
     protected function setupLogging(): void
@@ -173,7 +170,7 @@ abstract class Boot
         if (true === $this->logSession) {
             $db->log(true === $this->f3->get('log.session'));
         }
-        Registry::set('db', $db);
+        \Registry::set('db', $db);
     }
 
     protected function detectCli(): void
@@ -191,7 +188,7 @@ abstract class Boot
     {
         // log session SQL queries only in dev environment for debugging purpose
         if (true === $this->f3->get('log.session')) {
-            $this->logger->debug(Registry::get('db')->log());
+            $this->logger->debug(\Registry::get('db')->log());
         }
 
         $execution_time = round(microtime(true) - $this->f3->get('TIME'), 3);

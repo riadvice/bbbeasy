@@ -22,9 +22,7 @@ declare(strict_types=1);
 
 namespace Models;
 
-use Base;
 use Faker\Factory as Faker;
-use Registry;
 use Test\Scenario;
 
 /**
@@ -39,14 +37,14 @@ final class SettingTest extends Scenario
     protected $group = 'Setting Model';
 
     /**
-     * @param Base $f3
+     * @param \Base $f3
      *
      * @return array
      */
     public function testGetAllSettings($f3)
     {
         $test    = $this->newTest();
-        $setting = new Setting(Registry::get('db'));
+        $setting = new Setting(\Registry::get('db'));
 
         $test->expect(10 === \count($setting->getAllSettings()), 'getAllSettings() returned all settings');
 
@@ -54,7 +52,7 @@ final class SettingTest extends Scenario
     }
 
     /**
-     * @param Base $f3
+     * @param \Base $f3
      *
      * @return array
      */
@@ -62,7 +60,7 @@ final class SettingTest extends Scenario
     {
         $test    = $this->newTest();
         $faker   = Faker::create();
-        $setting = new Setting(Registry::get('db'));
+        $setting = new Setting(\Registry::get('db'));
 
         /** @var Setting $settings */
         $settings = $setting->find([], ['limit' => 1])->current();

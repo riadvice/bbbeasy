@@ -47,9 +47,6 @@ class Upload extends \Prefab
      */
     protected $v;
 
-    /**
-     * @var
-     */
     protected $uploads;
 
     /**

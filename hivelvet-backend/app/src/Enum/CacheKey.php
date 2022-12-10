@@ -35,8 +35,6 @@ class CacheKey extends Enum
 
     /**
      * Returns cache key for site logo plus size.
-     *
-     * @param $size
      */
     public static function logoSize($size): string
     {

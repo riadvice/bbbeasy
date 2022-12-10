@@ -24,7 +24,6 @@ namespace Actions\Users;
 
 use Actions\Base as BaseAction;
 use Actions\RequirePrivilegeTrait;
-use Base;
 use Enum\ResponseCode;
 use Models\Role;
 use Models\User;
@@ -39,7 +38,7 @@ class Edit extends BaseAction
     use RequirePrivilegeTrait;
 
     /**
-     * @param Base  $f3
+     * @param \Base $f3
      * @param array $params
      */
     public function save($f3, $params): void

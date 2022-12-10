@@ -22,9 +22,7 @@ declare(strict_types=1);
 
 namespace Helpers;
 
-use Base;
 use DateTime;
-use Exception;
 
 /**
  * Time and Date Helper Class.
@@ -34,22 +32,22 @@ class Time
     /**
      * format a database-specific date/time string.
      *
-     * @param DateTime|int|string $unixTime (optional) the unix time (null = now)
-     * @param null|string         $dbms     (optional) the database software the timestamp is for
+     * @param \DateTime|int|string $unixTime (optional) the unix time (null = now)
+     * @param null|string          $dbms     (optional) the database software the timestamp is for
      *
      * @return bool|string date in format of database driver
      *
-     * @throws Exception
+     * @throws \Exception
      *
      * @todo add a switch for the f3 database driver and set the timestamp
      */
-    public static function db(DateTime|int|string $unixTime = null, string $dbms = null): bool|string
+    public static function db(\DateTime|int|string $unixTime = null, string $dbms = null): bool|string
     {
         // use current time if bad time value or unset
         if (\is_string($unixTime)) {
-            $date     = new DateTime($unixTime);
+            $date     = new \DateTime($unixTime);
             $unixTime = $date->getTimestamp();
-        } elseif ($unixTime instanceof DateTime) {
+        } elseif ($unixTime instanceof \DateTime) {
             $unixTime = $unixTime->getTimestamp();
         }
         $unixTime = (int) $unixTime;
@@ -58,7 +56,7 @@ class Time
         }
 
         // format date/time according to database driver
-        $dbms = empty($dbms) ? Base::instance()->get('db.driver') : $dbms;
+        $dbms = empty($dbms) ? \Base::instance()->get('db.driver') : $dbms;
 
         return match ($dbms) {
             'pgsql', 'mysql' => date('Y-m-d H:i:s', $unixTime),
@@ -87,9 +85,6 @@ class Time
         return gmdate('D, d M Y H:i:s', $unixtime) . ' ' . $zone;
     }
 
-    /**
-     * @param $dateTime
-     */
     public static function formattedTime($dateTime = null): array
     {
         $formatTime = ' G:i';
@@ -103,12 +98,10 @@ class Time
     /**
      * Check if a particular DateTime is prior to now.
      *
-     * @param $dateTime
-     *
-     * @throws Exception
+     * @throws \Exception
      */
     public static function isInPast($dateTime): bool
     {
-        return new DateTime($dateTime) < new DateTime();
+        return new \DateTime($dateTime) < new \DateTime();
     }
 }

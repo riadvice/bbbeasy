@@ -26,7 +26,6 @@ use Enum\UserRole;
 use Enum\UserStatus;
 use Fake\UserFaker;
 use Faker\Factory as Faker;
-use ReflectionException;
 use Test\Scenario;
 
 /**
@@ -40,11 +39,9 @@ final class EditTest extends Scenario
     protected $group                      = 'Action User Edit';
 
     /**
-     * @param $f3
-     *
      * @return array
      *
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function testEmptyData($f3)
     {
@@ -59,11 +56,9 @@ final class EditTest extends Scenario
     }
 
     /**
-     * @param $f3
-     *
      * @return array
      *
-     * @throws ReflectionException
+     * @throws \ReflectionException
      * @throws \JsonException
      */
     public function testExistingUser($f3)
@@ -86,11 +81,9 @@ final class EditTest extends Scenario
     }
 
     /**
-     * @param $f3
-     *
      * @return array
      *
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function testExistingUsername($f3)
     {
@@ -106,11 +99,9 @@ final class EditTest extends Scenario
     }
 
     /**
-     * @param $f3
-     *
      * @return array
      *
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function testExistingEmail($f3)
     {
@@ -126,11 +117,9 @@ final class EditTest extends Scenario
     }
 
     /**
-     * @param $f3
-     *
      * @return array
      *
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function testNonExistingRole($f3)
     {
@@ -146,11 +135,9 @@ final class EditTest extends Scenario
     }
 
     /**
-     * @param $f3
-     *
      * @return array
      *
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function testNonExistingUser($f3)
     {
@@ -165,11 +152,9 @@ final class EditTest extends Scenario
     }
 
     /**
-     * @param $f3
-     *
      * @return array
      *
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function testValidUser($f3)
     {

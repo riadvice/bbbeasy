@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Actions\Settings;
 
 use Actions\Base as BaseAction;
-use Base;
 use Models\Setting;
 
 /**
@@ -32,7 +31,7 @@ use Models\Setting;
 class Collect extends BaseAction
 {
     /**
-     * @param Base  $f3
+     * @param \Base $f3
      * @param array $params
      */
     public function execute($f3, $params): void

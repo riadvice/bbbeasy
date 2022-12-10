@@ -24,7 +24,6 @@ namespace Actions\Users;
 
 use Actions\Base as BaseAction;
 use Actions\RequirePrivilegeTrait;
-use Base;
 use Enum\UserStatus;
 use Models\User;
 
@@ -36,7 +35,7 @@ class Index extends BaseAction
     use RequirePrivilegeTrait;
 
     /**
-     * @param Base  $f3
+     * @param \Base $f3
      * @param array $params
      */
     public function show($f3, $params): void

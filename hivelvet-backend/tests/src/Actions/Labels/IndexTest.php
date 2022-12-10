@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Actions\Labels;
 
-use ReflectionException;
 use Test\Scenario;
 
 /**
@@ -36,11 +35,9 @@ final class IndexTest extends Scenario
     protected $group                        = 'Action Label Index';
 
     /**
-     * @param $f3
-     *
      * @return array
      *
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function testGetAll($f3)
     {

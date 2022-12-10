@@ -26,7 +26,6 @@ use Enum\UserRole;
 use Fake\PresetFaker;
 use Fake\UserFaker;
 use Faker\Factory as Faker;
-use ReflectionException;
 use Test\Scenario;
 
 /**
@@ -40,11 +39,9 @@ final class AddTest extends Scenario
     protected $group                       = 'Action Preset Add';
 
     /**
-     * @param $f3
-     *
      * @return array
      *
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function testEmptyData($f3)
     {
@@ -58,11 +55,9 @@ final class AddTest extends Scenario
     }
 
     /**
-     * @param $f3
-     *
      * @return array
      *
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function testNonExistingUser($f3)
     {
@@ -77,11 +72,9 @@ final class AddTest extends Scenario
     }
 
     /**
-     * @param $f3
-     *
      * @return array
      *
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function testExistingName($f3)
     {
@@ -103,11 +96,9 @@ final class AddTest extends Scenario
     }
 
     /**
-     * @param $f3
-     *
      * @return array
      *
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function testValidPreset($f3)
     {

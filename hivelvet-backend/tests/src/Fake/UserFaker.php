@@ -22,12 +22,10 @@ declare(strict_types=1);
 
 namespace Fake;
 
-use Base;
 use Enum\UserRole;
 use Enum\UserStatus;
 use Faker\Factory as Faker;
 use models\User;
-use ReflectionException;
 
 class UserFaker
 {
@@ -39,7 +37,7 @@ class UserFaker
      *
      * @return User
      *
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public static function create($role = null, string $status = UserStatus::ACTIVE, $storageName = null)
     {
@@ -79,13 +77,12 @@ class UserFaker
     /**
      * Creates a user and authenticates it.
      *
-     * @param $role
      * @param string $status
      * @param null   $storageName
      *
      * @return User
      *
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public static function createAndLogin($role, $status = UserStatus::ACTIVE, $storageName = null)
     {
@@ -105,7 +102,7 @@ class UserFaker
         if (UserRole::ADMINISTRATOR === $role) {
             $password = $role . $role;
         }
-        Base::instance()->mock('POST /account/login', [
+        \Base::instance()->mock('POST /account/login', [
             'email'    => $user->email,
             'password' => $password,
         ]);
@@ -113,12 +110,10 @@ class UserFaker
 
     public static function logout(): void
     {
-        Base::instance()->mock('GET /account/logout');
+        \Base::instance()->mock('GET /account/logout');
     }
 
     /**
-     * @param $storageName
-     *
      * @return User
      */
     public static function get($storageName)

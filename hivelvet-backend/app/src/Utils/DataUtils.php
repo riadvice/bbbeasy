@@ -33,9 +33,6 @@ class DataUtils
 
     /**
      * Unsets an array item by its value.
-     *
-     * @param $array
-     * @param $value
      */
     public static function unsetByValue(&$array, $value): void
     {
@@ -47,18 +44,14 @@ class DataUtils
     /**
      * Returns a the key of the array as an array.
      *
-     * @param $array
-     * @param $key
-     *
      * @return array
      */
     public static function getArrayFromField($array, $key)
     {
-        return array_map(fn($item) => $item[$key], $array);
+        return array_map(fn ($item) => $item[$key], $array);
     }
 
     /**
-     * @param $array
      * @param false $stringData
      *
      * @return string
