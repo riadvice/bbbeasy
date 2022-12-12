@@ -36,22 +36,22 @@ sudo apt-get install -y wget gnupg2 lsb-release curl zip unzip nginx-full bc ntp
 sudo curl https://rclone.org/install.sh | sudo bash
 
 info "Install Redis for caching"
-sudo apt-get install -y redis
+sudo apt-get install -y redis-server
 
 info "Install Node.js"
 sudo apt-get install -y gcc g++ make
 sudo apt-get install -y libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
-curl -sL https://deb.nodesource.com/setup_18.x -o nodesource_setup.sh
+curl -sL https://deb.nodesource.com/setup_16.x -o nodesource_setup.sh
 sudo bash nodesource_setup.sh
 rm nodesource_setup.sh
 sudo apt-get -y install nodejs
 curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
 echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-sudo yarn set version berry
 sudo apt remove cmdtest
 sudo apt update && sudo apt install yarn
+sudo yarn set version berry
 # sudo npm install -g pm2@5 npm@8.3.0 yarn tar@6 svgo@2 uuid@8.3.2
-sudo yarn global add pm2 tar svgo uuid
+sudo yarn dlx -p pm2 -p tar -p svgo -p uuid
 
 info "Install PHP 8.1 with its dependencies"
 sudo apt-get install -y php8.1-curl php8.1-cli php8.1-intl php8.1-redis php8.1-gd php8.1-fpm php8.1-pgsql php8.1-mbstring php8.1-xml php8.1-bcmath php8.1-xdebug

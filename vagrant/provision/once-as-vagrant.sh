@@ -14,8 +14,8 @@ composer --no-progress --prefer-dist install --ignore-platform-req=ext-xdebug
 cd /app/hivelvet-frontend/
 yarn install
 pm2 install pm2-logrotate
-yarn global add serve
-yarn global add ts-node
+yarn add global serve
+yarn add global ts-node
 
 info "Create bash-alias 'app' for vagrant user"
 echo 'alias app="cd /app"' | tee /home/vagrant/.bash_aliases
