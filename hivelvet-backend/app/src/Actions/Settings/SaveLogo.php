@@ -34,6 +34,9 @@ use Validation\DataChecker;
 class SaveLogo extends BaseAction
 {
     /**
+     * @param mixed $f3
+     * @param mixed $params
+     *
      * @throws \JsonException
      */
     public function execute($f3, $params): void
@@ -48,10 +51,11 @@ class SaveLogo extends BaseAction
         $errorMessage = 'File could not be saved';
 
         $setting = new Setting();
+
         /** @var Setting $settings */
         $settings = $setting->find([], ['limit' => 1])->current();
         if (!$dataChecker->allValid()) {
-            if (empty($form) && $settings->logo != null) {
+            if (empty($form) && null !== $settings->logo) {
                 $this->updateSettingLogo($settings, null, $errorMessage);
             } else {
                 $this->logger->error($errorMessage, ['errors' => $dataChecker->getErrors()]);
@@ -71,7 +75,7 @@ class SaveLogo extends BaseAction
         }
     }
 
-    public function updateSettingLogo(Setting $settings, ?string $logo, string $errorMessage)
+    public function updateSettingLogo(Setting $settings, ?string $logo, string $errorMessage): void
     {
         if (!$settings->dry()) {
             $settings->logo = $logo;

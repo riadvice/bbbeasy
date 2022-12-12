@@ -35,6 +35,8 @@ final class IndexTest extends Scenario
     protected $group                       = 'Action User Index';
 
     /**
+     * @param mixed $f3
+     *
      * @return array
      *
      * @throws \ReflectionException
