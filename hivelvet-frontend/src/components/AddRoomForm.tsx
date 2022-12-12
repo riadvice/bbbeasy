@@ -59,7 +59,7 @@ type Item = {
     color: string;
 };
 export const AddRoomForm = (props: Props) => {
-    const { isModalShow, shortlink } = props;
+    const { shortlink } = props;
 
     const [loading, setLoading] = React.useState<boolean>(false);
     const [errorsAdd, setErrorsAdd] = React.useState<string[]>([]);
@@ -151,15 +151,12 @@ export const AddRoomForm = (props: Props) => {
         );
     };
 
-    const [currentUser, setCurrentUser] = React.useState<UserType>(null);
     const [myPresets, setMyPresets] = React.useState<MyPresetType[]>([]);
     const [cancelVisibility, setCancelVisibility] = React.useState<boolean>(true);
     useEffect(() => {
         const user: UserType = authService.getCurrentUser();
-
-        setCurrentUser(user);
         presetsService
-            .collect_my_presets(user.id)
+            .collect_presets(user.id)
             .then((response) => {
                 setMyPresets(response.data);
             })

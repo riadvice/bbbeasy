@@ -19,34 +19,17 @@
 import axios from 'axios';
 import { apiRoutes } from '../routing/backend-config';
 
-class PresetsService {
-    collect_presets(user_id: number) {
-        return axios.get(apiRoutes.COLLECT_PRESETS_URL + user_id);
+class PresetSettingsService {
+    collect_preset_settings() {
+        return axios.get(apiRoutes.COLLECT_PRESET_SETTINGS_URL);
     }
 
-    add_preset(data: object, user_id: number) {
-        return axios.post(apiRoutes.ADD_PRESET_URL, {
+    edit_preset_settings(category: string, data: object) {
+        return axios.put(apiRoutes.EDIT_PRESET_SETTINGS_URL, {
             data,
-            user_id,
+            category,
         });
-    }
-
-    edit_preset(data: object, id: number) {
-        return axios.put(apiRoutes.EDIT_PRESETS_URL + id, {
-            data,
-        });
-    }
-
-    edit_subcategory_preset(title: string, data: object, id: number) {
-        return axios.put(apiRoutes.EDIT_PRESETS_SUBCATEGORIES_URL + id, {
-            data,
-            title,
-        });
-    }
-
-    delete_preset(id: number) {
-        return axios.delete(apiRoutes.DELETE_PRESET_URL + id);
     }
 }
 
-export default new PresetsService();
+export default new PresetSettingsService();

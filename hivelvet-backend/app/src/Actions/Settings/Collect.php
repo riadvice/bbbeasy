@@ -38,27 +38,7 @@ class Collect extends BaseAction
     {
         $data    = [];
         $setting = new Setting();
-
-        /** @var Setting $defaultSettings */
-        $defaultSettings = $setting->find([], ['limit' => 1])->current();
-
-        if (!$defaultSettings->dry()) {
-            $data = [
-                'company_name'    => $defaultSettings->company_name,
-                'company_website' => $defaultSettings->company_website,
-                'platform_name'   => $defaultSettings->platform_name,
-
-                'terms_use'      => $defaultSettings->terms_use,
-                'privacy_policy' => $defaultSettings->privacy_policy,
-                'logo'           => $defaultSettings->logo,
-
-                'primary_color'    => $defaultSettings->primary_color,
-                'secondary_color'  => $defaultSettings->secondary_color,
-                'accent_color'     => $defaultSettings->accent_color,
-                'additional_color' => $defaultSettings->additional_color,
-            ];
-        }
-
+        $data    = $setting->getAllSettings();
         $this->logger->debug('collecting settings', ['data' => json_encode($data)]);
         $this->renderJson($data);
     }

@@ -1,6 +1,11 @@
 {
   "errors": {
-    "logo_name": "- All of the required rules must pass for logo name"
+    "company_name":"- All of the required rules must pass for company name",
+    "company_url":"- All of the required rules must pass for company url",
+    "platform_name":"- All of the required rules must pass for platform name",
+    "term_url":"- All of the required rules must pass for term url",
+    "policy_url":"- All of the required rules must pass for policy url",
+    "branding_colors":"- All of the required rules must pass for branding colors"
   },
   "status" : 422
 }

@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Suite;
 
 use Actions\Settings\CollectTest;
-use Actions\Settings\SaveLogoTest;
+use Actions\Settings\EditTest;
 use Test\TestGroup;
 
 /**
@@ -33,7 +33,7 @@ use Test\TestGroup;
  */
 final class SettingsActionsTest extends TestGroup
 {
-    protected $classes = [CollectTest::class]; // SaveLogoTest::class
+    protected $classes = [CollectTest::class, EditTest::class];
 
     protected $quiet = true;
 }

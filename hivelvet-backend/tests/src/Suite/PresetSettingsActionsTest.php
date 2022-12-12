@@ -20,37 +20,20 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Actions\Presets;
+namespace Suite;
 
-use Actions\Base as BaseAction;
-use Actions\RequirePrivilegeTrait;
-use Models\Preset;
+use Actions\PresetSettings\CollectTest;
+use Actions\PresetSettings\EditTest;
+use Test\TestGroup;
 
 /**
- * Class CollectMyPresets.
+ * @internal
+ *
+ * @coversNothing
  */
-class CollectMyPresets extends BaseAction
+final class PresetSettingsActionsTest extends TestGroup
 {
-    use RequirePrivilegeTrait;
+    protected $classes = [CollectTest::class, EditTest::class];
 
-    /**
-     * @param \Base $f3
-     * @param array $params
-     */
-    public function execute($f3, $params): void
-    {
-        $userId = $f3->get('PARAMS.user_id');
-
-        $preset      = new Preset();
-        $presets     = $preset->collectAllByUserId($userId);
-        $presetsData = [];
-
-        foreach ($presets as $myPreset) {
-            $presetData    = $preset->getMyPresetInfos($myPreset);
-            $presetsData[] = $presetData;
-        }
-
-        $this->logger->debug('collecting presets', ['data' => json_encode($presetsData)]);
-        $this->renderJson($presetsData);
-    }
+    protected $quiet = true;
 }

@@ -76,7 +76,7 @@ class Edit extends BaseAction
                     $form['platform_name'],
                     $form['term_url'],
                     $form['policy_url'],
-                    $form['branding_colors']
+                    $form['branding_colors'],
                 );
             } else {
                 $this->logger->error($errorMessage, ['errors' => $dataChecker->getErrors()]);
@@ -97,8 +97,6 @@ class Edit extends BaseAction
 
             $this->logger->info('Settings successfully updated', ['settings' => $settings->toArray()]);
             $this->renderJson(['result' => 'success', 'settings' => $settings->getAllSettings()]);
-        } else {
-            $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
         }
     }
 }

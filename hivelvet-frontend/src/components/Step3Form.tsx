@@ -31,6 +31,7 @@ const { Grid, Meta } = Card;
 
 type Props = {
     presets: PresetType[];
+    onFinish?: (category: string, subCategories: SubCategoryType[]) => void;
 };
 
 export const Step3Form = (props: Props) => {
@@ -43,6 +44,12 @@ export const Step3Form = (props: Props) => {
         setIsModalVisible(true);
         setModalTitle(title);
         setModalContent(content);
+    };
+    const Confirm = () => {
+        if (props.onFinish) {
+            props.onFinish(modalTitle, modalContent);
+        }
+        setIsModalVisible(false);
     };
 
     const getSubCategoryName = (name: string) => {
@@ -107,7 +114,7 @@ export const Step3Form = (props: Props) => {
                     onOk={() => setIsModalVisible(false)}
                     onCancel={() => setIsModalVisible(false)}
                     footer={[
-                        <Button key="submit" type="primary" onClick={() => setIsModalVisible(false)}>
+                        <Button key="submit" type="primary" onClick={Confirm}>
                             <Trans i18nKey="confirm" />
                         </Button>,
                     ]}

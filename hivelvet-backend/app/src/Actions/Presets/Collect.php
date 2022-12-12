@@ -23,22 +23,34 @@ declare(strict_types=1);
 namespace Actions\Presets;
 
 use Actions\Base as BaseAction;
-use Models\PresetSetting;
+use Actions\RequirePrivilegeTrait;
+use Models\Preset;
 
 /**
  * Class Collect.
  */
 class Collect extends BaseAction
 {
+    use RequirePrivilegeTrait;
+
     /**
      * @param \Base $f3
      * @param array $params
      */
     public function execute($f3, $params): void
     {
-        $presetSetting = new PresetSetting();
-        $data          = $presetSetting->getDefaultPresetSettings();
-        $this->logger->debug('collecting presets', ['data' => json_encode($data)]);
-        $this->renderJson($data);
+        $userId = $f3->get('PARAMS.user_id');
+
+        $preset      = new Preset();
+        $presets     = $preset->collectAllByUserId($userId);
+        $presetsData = [];
+
+        foreach ($presets as $myPreset) {
+            $presetData    = $preset->getMyPresetInfos($myPreset);
+            $presetsData[] = $presetData;
+        }
+
+        $this->logger->debug('collecting presets', ['data' => json_encode($presetsData)]);
+        $this->renderJson($presetsData);
     }
 }

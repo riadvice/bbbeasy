@@ -37,6 +37,7 @@ use Suite\CoreActionsTest;
 use Suite\LabelsActionsTest;
 use Suite\ModelsTest;
 use Suite\PresetsActionsTest;
+use Suite\PresetSettingsActionsTest;
 use Suite\RolesActionsTest;
 use Suite\RolesPermissionsActionsTest;
 use Suite\SettingsActionsTest;
@@ -71,6 +72,7 @@ class Statera
             UsersActionsTest::class,
             LabelsActionsTest::class,
             SettingsActionsTest::class,
+            PresetSettingsActionsTest::class,
             PresetsActionsTest::class,
             // Always leave CDN test as the last one
             // CdnDistributorTest::class

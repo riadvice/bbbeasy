@@ -268,5 +268,6 @@
     "room-link-already-exist": "Le lien du salle existe déjà",
     "add_room_success": "Salle ajoutée avec succés",
 
-    "edit_settings_success": "Paramètres de compagnie et de branding mis à jour avec succès"
+    "edit_settings_success": "Paramètres de compagnie et de branding mis à jour avec succès",
+    "edit_preset_settings_success": "Paramètres des salles BigBlueButton mis à jour avec succès"
 }

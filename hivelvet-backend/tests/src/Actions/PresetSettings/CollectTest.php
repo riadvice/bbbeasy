@@ -20,11 +20,8 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Actions\Presets;
+namespace Actions\PresetSettings;
 
-use Enum\UserRole;
-use Faker\Factory as Faker;
-use Models\User;
 use Test\Scenario;
 
 /**
@@ -32,10 +29,10 @@ use Test\Scenario;
  *
  * @coversNothing
  */
-final class CollectMyPresetsTest extends Scenario
+final class CollectTest extends Scenario
 {
-    final protected const COLLECT_MY_PRESETS_ROUTE = 'GET /collect-my-presets/';
-    protected $group                               = 'Action Preset Collect My Presets';
+    final protected const COLLECT_PRESET_SETTINGS_ROUTE = 'GET /preset_settings/collect';
+    protected $group                                    = 'Action Preset Setting Collect';
 
     /**
      * @return array
@@ -45,22 +42,10 @@ final class CollectMyPresetsTest extends Scenario
     public function testCollect($f3)
     {
         $test = $this->newTest();
+        $f3->mock(self::COLLECT_PRESET_SETTINGS_ROUTE);
 
-        $faker  = Faker::create();
-        $user   = new User(\Registry::get('db'));
-        $result = $user->saveUserWithDefaultPreset(
-            $faker->userName,
-            $faker->email,
-            $faker->password(8),
-            UserRole::LECTURER_ID,
-            'User successfully added',
-            'User could not be added',
-        );
-        $test->expect(true === $result, 'User with id "' . $user->id . '" saved to the database with default preset');
-
-        $f3->mock(self::COLLECT_MY_PRESETS_ROUTE . $user->id);
         json_decode($f3->get('RESPONSE'));
-        $test->expect(JSON_ERROR_NONE === json_last_error(), 'Collect presets of user with id "' . $user->id . '"');
+        $test->expect(JSON_ERROR_NONE === json_last_error(), 'Collect preset settings');
 
         return $test->results();
     }

@@ -19,7 +19,6 @@
 import React, { useEffect, useState } from 'react';
 
 import SettingsService from '../services/settings.service';
-import InstallService from '../services/install.service';
 
 import { Button, Col, Form, Row, Spin } from 'antd';
 import { Trans, withTranslation } from 'react-i18next';
@@ -31,6 +30,9 @@ import { SettingsType } from '../types/SettingsType';
 import Notifications from './Notifications';
 import { t } from 'i18next';
 import _ from 'lodash';
+
+import axios from 'axios';
+import { apiRoutes } from '../routing/backend-config';
 
 type formType = {
     company_name: string;
@@ -44,23 +46,11 @@ type formType = {
         accent_color: string;
         add_color: string;
     };
+    logo: string;
 };
 
 const Branding = () => {
     const [settingsForm] = Form.useForm();
-    const initialValues: formType = {
-        company_name: '',
-        company_url: '',
-        platform_name: '',
-        term_url: '',
-        policy_url: '',
-        branding_colors: {
-            primary_color: '',
-            secondary_color: '',
-            accent_color: '',
-            add_color: '',
-        },
-    };
 
     const [data, setData] = React.useState<formType>(null);
     const [primaryColor, setPrimaryColor] = React.useState<string>('');
@@ -88,7 +78,17 @@ const Branding = () => {
                 accent_color: settings.accent_color,
                 add_color: settings.additional_color,
             },
+            logo: settings.logo,
         });
+        if(settings.logo != null) {
+            const settingLogo: UploadFile = {
+                uid: '1',
+                name: settings.logo,
+                status: 'done',
+            };
+            setFileList([settingLogo]);
+            setFile(settingLogo);
+        }
         setIsLoading(false);
         setData(settingsForm.getFieldsValue(true));
     };
@@ -115,7 +115,8 @@ const Branding = () => {
             accent_color: accentColor,
             add_color: addColor,
         };
-        if (!_.isEqual(data, formData) || file != undefined) {
+
+        if (!_.isEqual(data, formData) || (file != undefined && file.originFileObj != null) || (file == undefined && formData.logo != null)) {
             if (!_.isEqual(data, formData)) {
                 //edit settings
                 SettingsService.edit_settings(formData)
@@ -130,15 +131,17 @@ const Branding = () => {
                         console.log(error);
                     });
             }
-            //edit logo
-            if (file != undefined) {
-                const fdata: FormData = new FormData();
-                fdata.append('logo', file.originFileObj, file.originFileObj.name);
-                fdata.append('logo_name', file.originFileObj.name);
-
-                InstallService.save_file(fdata)
-                    .then((response) => {
-                        console.log(response);
+            else {
+                //edit logo
+                const formData: FormData = new FormData();
+                if (file != undefined && file.originFileObj != null) {
+                    formData.append('logo', file.originFileObj, file.originFileObj.name);
+                    formData.append('logo_name', file.originFileObj.name);
+                }
+                axios
+                    .post(apiRoutes.SAVE_FILE_URL, formData)
+                    .then(() => {
+                        Notifications.openNotificationWithIcon('success', t('edit_settings_success'));
                     })
                     .catch((error) => {
                         console.log(error);
@@ -160,7 +163,6 @@ const Branding = () => {
                         name="install_form"
                         className="install-form steps-content"
                         form={settingsForm}
-                        initialValues={initialValues}
                         requiredMark={false}
                         scrollToFirstError={true}
                         validateTrigger="onSubmit"

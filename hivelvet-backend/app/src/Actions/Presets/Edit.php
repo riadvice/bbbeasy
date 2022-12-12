@@ -44,9 +44,11 @@ class Edit extends BaseAction
         $form         = $body['data'];
         $categoryName = $body['title'];
 
-        $preset    = new Preset();
-        $oldPreset = $preset->findById($id);
-        if (!$oldPreset->dry()) {
+        $preset       = new Preset();
+        $oldPreset    = $preset->findById($id);
+        $errorMessage = 'Preset could not be updated';
+
+        if ($oldPreset->valid()) {
             $categories    = json_decode($oldPreset['settings']);
             $subCategories = [];
             if (isset($categories->{$categoryName})) {
@@ -61,11 +63,18 @@ class Edit extends BaseAction
                 $categories->{$categoryName} = json_encode($subCategories);
                 $oldPreset['settings']       = json_encode($categories);
 
-                $oldPreset->save();
+                try {
+                    $oldPreset->save();
+                } catch (\Exception $e) {
+                    $this->logger->error($errorMessage, ['preset' => $oldPreset->toArray(), 'error' => $e->getMessage()]);
+                    $this->renderJson(['errors' => $errorMessage], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+
+                    return;
+                }
                 $this->renderJson(['result' => 'success', 'preset' => $preset->getMyPresetInfos($oldPreset)]);
             }
         } else {
-            $this->logger->error('Preset settings could not be updated');
+            $this->logger->error($errorMessage);
             $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
         }
     }
@@ -88,7 +97,7 @@ class Edit extends BaseAction
 
         $preset = new Preset();
         $preset = $preset->findById($id);
-        if (!$preset->dry()) {
+        if ($preset->valid()) {
             if ($dataChecker->allValid()) {
                 $checkPreset  = new Preset();
                 $preset->name = $form['name'];

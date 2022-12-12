@@ -59,13 +59,14 @@ import LocaleService from '../services/locale.service';
 import DynamicIcon from './DynamicIcon';
 
 import PresetsService from '../services/presets.service';
-import InstallService from '../services/install.service';
 import { MyPresetType } from '../types/MyPresetType';
 import { SubCategoryType } from '../types/SubCategoryType';
 import { UploadFile } from 'antd/lib/upload/interface';
 import { getIconName } from '../types/GetIconName';
 import authService from '../services/auth.service';
 import { UserType } from '../types/UserType';
+import axios from 'axios';
+import { apiRoutes } from '../routing/backend-config';
 
 const { Link, Title } = Typography;
 
@@ -150,7 +151,7 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editClickHandler, d
         setIsModalVisible(false);
         if (file != undefined) {
             const formData: FormData = new FormData();
-            const sub = subCategories.filter((subCategory) => {
+            sub = subCategories.filter((subCategory) => {
                 if (subCategory.type == 'file') {
                     subCategory.value = file.name;
                 }
@@ -158,7 +159,8 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editClickHandler, d
             formData.append('logo', file.originFileObj, file.originFileObj.name);
             formData.append('logo_name', file.originFileObj.name);
 
-            InstallService.save_file(formData)
+            axios
+                .post(apiRoutes.SAVE_FILE_URL, formData)
                 .then((response) => {
                     console.log(response);
                 })
@@ -289,8 +291,7 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editClickHandler, d
                                                     key={item.name + '_' + subItem.name}
                                                     className={subItem.value == '' ? 'text-grey' : 'text-black'}
                                                 >
-                                                    {subItem.name.replaceAll('_', ' ').charAt(0).toUpperCase() +
-                                                        subItem.name.replaceAll('_', ' ').slice(1)}
+                                                    {getName(subItem.name)}
                                                 </li>
                                             ))}
                                         </ul>
@@ -415,7 +416,7 @@ const Presets = () => {
     useEffect(() => {
         const user: UserType = authService.getCurrentUser();
         setCurrentUser(user);
-        PresetsService.collect_my_presets(user.id)
+        PresetsService.collect_presets(user.id)
             .then((response) => {
                 setMyPresets(response.data);
                 setIsLoading(false);

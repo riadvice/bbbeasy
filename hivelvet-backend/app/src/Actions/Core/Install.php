@@ -92,7 +92,6 @@ class Install extends BaseAction
                     // @fixme: should not have embedded try/catch here
                     try {
                         $user->save();
-                        $user->saveDefaultPreset();
 
                         $this->logger->info('Initial application setup : Add administrator with admin role and default preset', ['user' => $user->toArray()]);
 
@@ -124,6 +123,8 @@ class Install extends BaseAction
                                         $this->renderJson(['errors' => $result], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
                                     }
                                 }
+
+                                $user->saveDefaultPreset();
 
                                 $this->logger->info('Initial application setup has been successfully done');
                                 $this->renderJson(['result' => 'success']);

@@ -68,7 +68,7 @@ final class EditTest extends Scenario
         $faker = Faker::create();
         $data  = ['data' => ['name' => $faker->name]];
         $f3->mock(self::EDIT_PRESET_ROUTE . 404, null, null, $this->postJsonData($data));
-        $test->expect($this->compareTemplateToResponse('not_found_error.json'), 'Edit non existing preset with id "404" show an error');
+        $test->expect($this->compareTemplateToResponse('not_found_error.json'), 'Update non existing preset with id "404" show an error');
 
         return $test->results();
     }
@@ -123,7 +123,7 @@ final class EditTest extends Scenario
         $faker = Faker::create();
         $data  = ['data' => [], 'title' => $faker->name];
         $f3->mock(self::EDIT_PRESET_SUB_CATEG_ROUTE . 404, null, null, $this->postJsonData($data));
-        $test->expect($this->compareTemplateToResponse('not_found_error.json'), 'Edit settings for non existing preset with id "404" show an error');
+        $test->expect($this->compareTemplateToResponse('not_found_error.json'), 'Update settings for non existing preset with id "404" show an error');
 
         return $test->results();
     }
@@ -146,7 +146,7 @@ final class EditTest extends Scenario
             'title' => 'Audio',
         ];
         $f3->mock(self::EDIT_PRESET_SUB_CATEG_ROUTE . $preset->id, null, null, $this->postJsonData($data));
-        $test->expect($this->compareArrayToResponse(['result' => 'success', 'preset' => $preset->getMyPresetInfos($preset)]), 'Update existing preset with id "' . $preset->id . '" using new name "' . $preset->name . '"');
+        $test->expect($this->compareArrayToResponse(['result' => 'success', 'preset' => $preset->getMyPresetInfos($preset)]), 'Update settings for existing preset with id "' . $preset->id . '" pass successfully');
 
         return $test->results();
     }

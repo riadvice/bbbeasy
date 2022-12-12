@@ -20,7 +20,7 @@ import React, { useEffect } from 'react';
 
 import InstallService from '../services/install.service';
 import SettingsService from '../services/settings.service';
-import PresetsService from '../services/presets.service';
+import PresetSettingsService from '../services/preset.settings.service';
 import UsersService from '../services/users.service';
 
 import { Steps, Button, Row, Col, Form, Result } from 'antd';
@@ -34,6 +34,9 @@ import { Step3Form } from './Step3Form';
 import { UploadFile } from 'antd/lib/upload/interface';
 import { SettingsType } from '../types/SettingsType';
 import { PresetType } from '../types/PresetType';
+
+import axios from 'axios';
+import { apiRoutes } from '../routing/backend-config';
 
 const { Step } = Steps;
 
@@ -121,7 +124,7 @@ const Install = () => {
             .catch((error) => {
                 console.log(error);
             });
-        PresetsService.collect_presets()
+        PresetSettingsService.collect_preset_settings()
             .then((response) => {
                 setPresets(response.data);
             })
@@ -212,7 +215,8 @@ const Install = () => {
                     fdata.append('logo', file.originFileObj, file.originFileObj.name);
                     fdata.append('logo_name', file.originFileObj.name);
 
-                    InstallService.save_file(fdata)
+                    axios
+                        .post(apiRoutes.SAVE_FILE_URL, fdata)
                         .then((response) => {
                             console.log(response);
                         })
