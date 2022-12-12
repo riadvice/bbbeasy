@@ -51,10 +51,9 @@ class SaveLogo extends BaseAction
         /** @var Setting $settings */
         $settings = $setting->find([], ['limit' => 1])->current();
         if (!$dataChecker->allValid()) {
-            if (count($form) === 0 && $settings->logo != null) {
+            if (empty($form) && $settings->logo != null) {
                 $this->updateSettingLogo($settings, null, $errorMessage);
-            }
-            else {
+            } else {
                 $this->logger->error($errorMessage, ['errors' => $dataChecker->getErrors()]);
                 $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
             }

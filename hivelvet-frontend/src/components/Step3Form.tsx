@@ -71,9 +71,9 @@ export const Step3Form = (props: Props) => {
                 />
             </Paragraph>
             <Card bordered={false}>
-                {presets.map((item, subIndex) => (
+                {presets.map((item) => (
                     <Tooltip
-                        key={subIndex + '-' + item.name}
+                        key={item.name}
                         placement={LocaleService.direction == 'rtl' ? 'leftTop' : 'rightTop'}
                         overlayClassName="install-tooltip"
                         title={

@@ -151,7 +151,7 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editClickHandler, d
         setIsModalVisible(false);
         if (file != undefined) {
             const formData: FormData = new FormData();
-            subCategories.filter((subCategory) => {
+            sub = subCategories.filter((subCategory) => {
                 if (subCategory.type == 'file') {
                     subCategory.value = file.name;
                 }
