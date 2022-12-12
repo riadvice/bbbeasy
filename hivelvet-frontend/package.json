@@ -9,7 +9,7 @@
         "@babel/preset-env": "^7.19.1",
         "@hot-loader/react-dom": "^17.0.2",
         "antd-password-input-strength": "^2.0.1",
-        "axios": "^0.27.2",
+        "axios": "^1.2.1",
         "babel-loader": "^8.2.5",
         "babel-plugin-styled-components": "^2.0.7",
         "circular-dependency-plugin": "^5.2.2",
