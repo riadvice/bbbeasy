@@ -1,0 +1,39 @@
+version: "3.8"
+
+networks:
+    hivelvet-network:
+        ipam:
+            config:
+                - subnet: 172.55.0.0/24
+
+services:
+   webserver:
+        restart: always
+        image: nginx:1.23.2-alpine
+        container_name: hv_nginx
+        ports:
+            - "80:80"
+            - "443:443"
+        networks:
+            hivelvet-network:
+                ipv4_address: 172.55.0.10
+   #installer:
+   #webapp:
+   #backend:
+   db:
+        restart: always
+        image: perconalab/percona-distribution-postgresql:15.1
+        container_name: hv_db
+        environment:
+            POSTGRES_PASSWORD: hv
+        networks:
+            hivelvet-network:
+                ipv4_address: 172.55.0.50
+
+   cache:
+        restart: always
+        image: redis:7.0.5-alpine
+        container_name: hv_cache
+        networks:
+            hivelvet-network:
+                ipv4_address: 172.55.0.60
