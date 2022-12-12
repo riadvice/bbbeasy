@@ -25,7 +25,6 @@ namespace Actions\Roles;
 use Enum\UserRole;
 use Fake\RoleFaker;
 use Faker\Factory as Faker;
-use ReflectionException;
 use Test\Scenario;
 
 /**
@@ -39,11 +38,9 @@ final class EditTest extends Scenario
     protected $group                      = 'Action Role Edit';
 
     /**
-     * @param $f3
-     *
      * @return array
      *
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function testEmptyName($f3)
     {
@@ -58,11 +55,9 @@ final class EditTest extends Scenario
     }
 
     /**
-     * @param $f3
-     *
      * @return array
      *
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function testExistingName($f3)
     {
@@ -78,11 +73,9 @@ final class EditTest extends Scenario
     }
 
     /**
-     * @param $f3
-     *
      * @return array
      *
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function testNonExistingRole($f3)
     {
@@ -97,11 +90,9 @@ final class EditTest extends Scenario
     }
 
     /**
-     * @param $f3
-     *
      * @return array
      *
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function testValidRole($f3)
     {
@@ -125,11 +116,9 @@ final class EditTest extends Scenario
     }
 
     /**
-     * @param $f3
-     *
      * @return array
      *
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function testValidRoleAndNewPermissions($f3)
     {

@@ -39,9 +39,6 @@ class Add extends BaseAction
     use RequirePrivilegeTrait;
 
     /**
-     * @param $f3
-     * @param $params
-     *
      * @throws \JsonException
      */
     public function save($f3, $params): void

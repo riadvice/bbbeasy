@@ -22,12 +22,10 @@ declare(strict_types=1);
 
 namespace Application;
 
-use Base;
 use Enum\CacheKey;
 use Helpers\Time;
 use Mail\MailSender;
 use Models\Setting;
-use Registry;
 use Tracy\Debugger;
 
 // load composer autoload
@@ -79,7 +77,7 @@ class Bootstrap extends Boot
                 /**
                  * @var MailSender $mailer
                  */
-                $mailer = Registry::get('mailer');
+                $mailer = \Registry::get('mailer');
                 $mailer->sendExceptionEmail($exception);
             }];
         }
@@ -89,8 +87,8 @@ class Bootstrap extends Boot
             $this->f3->set(
                 'ONERROR',
                 function(): void {
-                    header('Expires:  ' . Time::http(time() + Base::instance()->get('error.ttl')));
-                    if ('404' === Base::instance()->get('ERROR.code')) {
+                    header('Expires:  ' . Time::http(time() + \Base::instance()->get('error.ttl')));
+                    if ('404' === \Base::instance()->get('ERROR.code')) {
                         include_once '/templates/error/404.phtml';
                     } else {
                         include_once '/templates/error/error.phtml';

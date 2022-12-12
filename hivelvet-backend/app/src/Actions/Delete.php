@@ -24,7 +24,6 @@ namespace Actions;
 
 use Actions\Base as BaseAction;
 use Enum\ResponseCode;
-use Exception;
 use Models\Base as Model;
 use Nette\Utils\Strings;
 
@@ -82,7 +81,7 @@ abstract class Delete extends BaseAction
         if ($this->modelInstance->valid()) {
             try {
                 $deleteResult = \call_user_func_array([$this->modelInstance, $this->deleteMethodName], []);
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 $this->logger->critical('Error occurred while deleting entity', ['model' => $this->model, 'id' => $this->recordId]);
                 $this->renderJson([], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
 

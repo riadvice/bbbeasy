@@ -22,19 +22,17 @@ declare(strict_types=1);
 
 namespace Models;
 
-use DateTime;
 use Models\Base as BaseModel;
-use ReflectionClass;
 
 /**
  * Class Preset.
  *
- * @property int      $id
- * @property string   $name
- * @property json     $settings
- * @property int      $user_id
- * @property DateTime $created_on
- * @property DateTime $updated_on
+ * @property int       $id
+ * @property string    $name
+ * @property json      $settings
+ * @property int       $user_id
+ * @property \DateTime $created_on
+ * @property \DateTime $updated_on
  */
 class Preset extends BaseModel
 {
@@ -43,7 +41,7 @@ class Preset extends BaseModel
     public function __construct($db = null, $table = null, $fluid = null, $ttl = 0)
     {
         parent::__construct($db, $table, $fluid, $ttl);
-        $this->onset('name', fn($self, $value) => $self->f3->snakecase($value));
+        $this->onset('name', fn ($self, $value) => $self->f3->snakecase($value));
     }
 
     public function collectAllByUserId($userId): array
@@ -195,7 +193,7 @@ class Preset extends BaseModel
                 $categoryName = $preset->getCategoryName($category);
 
                 // get the reflexion classes of category class
-                $class      = new ReflectionClass($category);
+                $class      = new \ReflectionClass($category);
                 $attributes = $class->getConstants();
                 $presetSett = new PresetSetting();
 

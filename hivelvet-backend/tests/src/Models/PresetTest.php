@@ -25,7 +25,6 @@ namespace Models;
 use Fake\PresetFaker;
 use Fake\UserFaker;
 use Faker\Factory as Faker;
-use Registry;
 use Test\Scenario;
 
 /**
@@ -49,7 +48,7 @@ final class PresetTest extends Scenario
         $test            = $this->newTest();
         $faker           = Faker::create();
         $user            = UserFaker::create();
-        $preset          = new Preset(Registry::get('db'));
+        $preset          = new Preset(\Registry::get('db'));
         $preset->name    = $faker->name;
         $preset->user_id = $user->id;
         $result          = $preset->addDefaultSettings('Default preset successfully added', 'Default preset could not be added');
@@ -100,7 +99,7 @@ final class PresetTest extends Scenario
     {
         $test            = $this->newTest();
         $user            = UserFaker::create();
-        $preset          = new Preset(Registry::get('db'));
+        $preset          = new Preset(\Registry::get('db'));
         $preset->name    = 'presetPreset';
         $preset->user_id = $user->id;
         $result          = $preset->addDefaultSettings('Default preset successfully added', 'Default preset could not be added');
@@ -128,7 +127,7 @@ final class PresetTest extends Scenario
             'categories' => $preset->getMyPresetCategories(json_decode($myPreset['settings'])),
         ];
 
-        $test->expect(empty(array_udiff($data, $preset->getMyPresetInfos($myPreset), fn($obj1, $obj2) => $obj1 === $obj2)), 'getRoleInfos() returned role informations');
+        $test->expect(empty(array_udiff($data, $preset->getMyPresetInfos($myPreset), fn ($obj1, $obj2) => $obj1 === $obj2)), 'getRoleInfos() returned role informations');
 
         return $test->results();
     }
@@ -141,7 +140,7 @@ final class PresetTest extends Scenario
     public function testCollectAllByUserId($f3)
     {
         $test   = $this->newTest();
-        $preset = new Preset(Registry::get('db'));
+        $preset = new Preset(\Registry::get('db'));
         $user   = UserFaker::create();
         $preset->erase(['']); // Cleaning the table for test.
 
@@ -151,7 +150,7 @@ final class PresetTest extends Scenario
         $data2   = ['id' => $preset2->id, 'name' => $preset2->name, 'settings' => $preset2->settings];
         $data    = [$data1, $data2];
 
-        $test->expect(empty(array_udiff($data, $preset->collectAllByUserId($user->id), fn($obj1, $obj2) => $obj1 === $obj2)), 'CollectAllByUserId(' . $user->id . ') returned all presets for the given user');
+        $test->expect(empty(array_udiff($data, $preset->collectAllByUserId($user->id), fn ($obj1, $obj2) => $obj1 === $obj2)), 'CollectAllByUserId(' . $user->id . ') returned all presets for the given user');
 
         return $test->results();
     }

@@ -26,7 +26,6 @@ use Enum\UserRole;
 use Enum\UserStatus;
 use Fake\UserFaker;
 use Faker\Factory as Faker;
-use Registry;
 use Test\Scenario;
 
 /**
@@ -64,7 +63,7 @@ final class UserTest extends Scenario
     {
         $test           = $this->newTest();
         $faker          = Faker::create();
-        $user           = new User(Registry::get('db'));
+        $user           = new User(\Registry::get('db'));
         $user->username = $faker->userName;
         $user->email    = $faker->email;
         $user->password = $faker->password(8);
@@ -83,7 +82,7 @@ final class UserTest extends Scenario
     {
         $test   = $this->newTest();
         $faker  = Faker::create();
-        $user   = new User(Registry::get('db'));
+        $user   = new User(\Registry::get('db'));
         $result = $user->saveUserWithDefaultPreset(
             $faker->userName,
             $faker->email,
@@ -146,7 +145,7 @@ final class UserTest extends Scenario
     public function testGetUsersByUsernameOrEmail()
     {
         $test  = $this->newTest();
-        $user  = new User(Registry::get('db'));
+        $user  = new User(\Registry::get('db'));
         $user1 = UserFaker::create();
         $user2 = UserFaker::create();
         $data  = [
@@ -198,8 +197,8 @@ final class UserTest extends Scenario
     public function testGetAllUsers()
     {
         $test   = $this->newTest();
-        $preset = new Preset(Registry::get('db'));
-        $user   = new User(Registry::get('db'));
+        $preset = new Preset(\Registry::get('db'));
+        $user   = new User(\Registry::get('db'));
         $preset->erase(['']); // Cleaning the table for test.
         $user->erase(['']); // Cleaning the table for test.
         $user1 = UserFaker::create();

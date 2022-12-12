@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Actions\Core;
 
 use Actions\Base as BaseAction;
-use Base;
 use Cache;
 
 /**
@@ -34,12 +33,12 @@ class GetLocale extends BaseAction
     /**
      * Loads a json translation files from cache or generates if it does not exist.
      *
-     * @param Base  $f3
+     * @param \Base $f3
      * @param array $params
      */
     public function execute($f3, $params): void
     {
-        $cache        = Cache::instance();
+        $cache        = \Cache::instance();
         $localePrefix = 'locale.' . $params['locale'];
 
         // checking if the file is already cached, the cache locale file is generated from the file last modification time

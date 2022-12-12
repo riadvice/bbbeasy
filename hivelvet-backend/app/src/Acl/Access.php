@@ -205,8 +205,6 @@ class Access extends \Prefab
      * - /foo
      * - * /foo.
      *
-     * @param $str
-     *
      * @return array
      */
     protected function parseRoute($str)

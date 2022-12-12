@@ -37,8 +37,6 @@ final class ChangePasswordTest extends Scenario
     protected $group                   = 'Action Change Password';
 
     /**
-     * @param $f3
-     *
      * @throws \JsonException
      */
     public function testRequestEmptyData($f3): array
@@ -58,8 +56,6 @@ final class ChangePasswordTest extends Scenario
     }
 
     /**
-     * @param $f3
-     *
      * @throws \JsonException
      */
     public function testRequestInvalidToken($f3): array
@@ -80,8 +76,6 @@ final class ChangePasswordTest extends Scenario
     }
 
     /**
-     * @param $f3
-     *
      * @throws \JsonException
      */
     public function testRequestInvalidUserData($f3): array
@@ -104,8 +98,6 @@ final class ChangePasswordTest extends Scenario
     }
 
     /**
-     * @param $f3
-     *
      * @throws \JsonException
      */
     public function testRequestValidUserData($f3): array

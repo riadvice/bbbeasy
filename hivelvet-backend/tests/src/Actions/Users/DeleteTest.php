@@ -24,7 +24,6 @@ namespace Actions\Users;
 
 use Enum\UserRole;
 use Fake\UserFaker;
-use ReflectionException;
 use Test\Scenario;
 
 /**
@@ -38,11 +37,9 @@ final class DeleteTest extends Scenario
     protected $group                        = 'Action User Delete';
 
     /**
-     * @param $f3
-     *
      * @return array
      *
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function testNonExistingUser($f3)
     {
@@ -55,11 +52,9 @@ final class DeleteTest extends Scenario
     }
 
     /**
-     * @param $f3
-     *
      * @return array
      *
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function testValidUser($f3)
     {

@@ -24,7 +24,6 @@ namespace Actions\Presets;
 
 use Actions\Base as BaseAction;
 use Actions\RequirePrivilegeTrait;
-use Base;
 use Enum\ResponseCode;
 use Models\Preset;
 use Respect\Validation\Validator;
@@ -35,7 +34,7 @@ class Edit extends BaseAction
     use RequirePrivilegeTrait;
 
     /**
-     * @param Base  $f3
+     * @param \Base $f3
      * @param array $params
      */
     public function save($f3, $params): void
@@ -81,7 +80,7 @@ class Edit extends BaseAction
     }
 
     /**
-     * @param Base  $f3
+     * @param \Base $f3
      * @param array $params
      */
     public function rename($f3, $params): void

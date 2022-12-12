@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Actions\Core;
 
 use Actions\Base as BaseAction;
-use Base;
 
 /**
  * Index Action Class.
@@ -31,7 +30,7 @@ use Base;
 class Main extends BaseAction
 {
     /**
-     * @param Base  $f3
+     * @param \Base $f3
      * @param array $params
      */
     public function execute($f3, $params): void

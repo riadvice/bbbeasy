@@ -24,9 +24,6 @@ namespace Test;
 
 use Base;
 use Core\Statera;
-use ReflectionClass;
-use ReflectionException;
-use ReflectionMethod;
 use SebastianBergmann\CodeCoverage\CodeCoverage;
 
 class Scenario
@@ -34,17 +31,15 @@ class Scenario
     protected $group = 'Test Scenario';
 
     /**
-     * @param $f3
-     *
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function run($f3): array
     {
         /**
          * @var CodeCoverage $coverage
          */
-        $class   = new ReflectionClass($this);
-        $methods = $class->getMethods(ReflectionMethod::IS_PUBLIC);
+        $class   = new \ReflectionClass($this);
+        $methods = $class->getMethods(\ReflectionMethod::IS_PUBLIC);
         $results = [];
         foreach ($methods as $method) {
             // Select methods starting by test and run them
@@ -64,7 +59,7 @@ class Scenario
      */
     public function compareTemplateToResponse(string $path): bool
     {
-        $f3 = Base::instance();
+        $f3 = \Base::instance();
 
         return empty(array_diff($this->loadResult($path), json_decode($f3->get('RESPONSE'), true, 512, JSON_THROW_ON_ERROR)));
     }
@@ -74,15 +69,11 @@ class Scenario
      */
     public function compareArrayToResponse(array $array): bool
     {
-        $f3 = Base::instance();
+        $f3 = \Base::instance();
 
         return empty(array_diff($array, json_decode($f3->get('RESPONSE'), true, 512, JSON_THROW_ON_ERROR)));
     }
 
-    /**
-     * @param $name
-     * @param $file
-     */
     public function uploadImage($name, $file): string
     {
         // Put the file in the magic variable
@@ -105,13 +96,13 @@ class Scenario
     protected function newTest()
     {
         // We logout any existing user if there is anyone to force flushing session data
-        Base::instance()->clear('utest.rerouted');
-        Base::instance()->clear('form_errors');
-        Base::instance()->clear('data');
-        Base::instance()->clear('cdn_render');
-        Base::instance()->clear('utest.headers');
+        \Base::instance()->clear('utest.rerouted');
+        \Base::instance()->clear('form_errors');
+        \Base::instance()->clear('data');
+        \Base::instance()->clear('cdn_render');
+        \Base::instance()->clear('utest.headers');
         // @fixme: to be activated Base::instance()->mock('GET /logout');
-        Base::instance()->set('utest.number', $this->currentTestNumber() + 1);
+        \Base::instance()->set('utest.number', $this->currentTestNumber() + 1);
         $this->resetErrorHandler();
 
         $test = new UnitTest();
@@ -122,7 +113,7 @@ class Scenario
 
     protected function resetErrorHandler(): void
     {
-        $f3 = Base::instance();
+        $f3 = \Base::instance();
 
         // Remove error handler in unit test mode
         $f3->set('ONERROR', function() use ($f3): void {
@@ -133,12 +124,9 @@ class Scenario
 
     protected function currentTestNumber(): int
     {
-        return Base::instance()->get('utest.number');
+        return \Base::instance()->get('utest.number');
     }
 
-    /**
-     * @param $array
-     */
     protected function postJsonData($array): string
     {
         $array['csrf_token'] = \Registry::get('session')->generateToken();
@@ -148,24 +136,20 @@ class Scenario
 
     protected function rerouted(): ?string
     {
-        return Base::instance()->get('utest.rerouted');
+        return \Base::instance()->get('utest.rerouted');
     }
 
     /**
-     * @param       $alias
      * @param array $params
      */
     protected function reroutedTo($alias, $params = []): bool
     {
-        return $this->rerouted() === Base::instance()->alias($alias, $params);
+        return $this->rerouted() === \Base::instance()->alias($alias, $params);
     }
 
-    /**
-     * @param $code
-     */
     protected function returnedError($code): bool
     {
-        $f3        = Base::instance();
+        $f3        = \Base::instance();
         $lastError = $f3->get('utest.errors.' . $this->hashError($f3->get('ERROR')));
         $f3->clear('utest.errors.' . $this->hashError($f3->get('ERROR')));
 
@@ -177,7 +161,7 @@ class Scenario
      */
     protected function hashError($error): string
     {
-        return Base::instance()->hash(serialize($error));
+        return \Base::instance()->hash(serialize($error));
     }
 
     /**

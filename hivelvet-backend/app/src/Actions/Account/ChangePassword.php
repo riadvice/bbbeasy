@@ -89,10 +89,6 @@ class ChangePassword extends BaseAction
     }
 
     /**
-     * @param $user
-     * @param $password
-     * @param $resetToken
-     * @param $errorMessage
      * @param $responseCode
      *
      * @throws \JsonException

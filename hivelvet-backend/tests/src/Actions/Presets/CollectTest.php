@@ -25,8 +25,6 @@ namespace Actions\Presets;
 use Enum\UserRole;
 use Faker\Factory as Faker;
 use Models\User;
-use ReflectionException;
-use Registry;
 use Test\Scenario;
 
 /**
@@ -40,18 +38,16 @@ final class CollectTest extends Scenario
     protected $group                            = 'Action Preset Collect Presets';
 
     /**
-     * @param $f3
-     *
      * @return array
      *
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function testCollect($f3)
     {
         $test = $this->newTest();
 
         $faker  = Faker::create();
-        $user   = new User(Registry::get('db'));
+        $user   = new User(\Registry::get('db'));
         $result = $user->saveUserWithDefaultPreset(
             $faker->userName,
             $faker->email,

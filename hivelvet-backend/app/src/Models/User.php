@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Models;
 
-use DateTime;
 use Enum\ResponseCode;
 use Enum\UserStatus;
 use Models\Base as BaseModel;
@@ -30,20 +29,20 @@ use Models\Base as BaseModel;
 /**
  * Class User.
  *
- * @property int      $id
- * @property string   $email
- * @property int      $role_id
- * @property Role     $role
- * @property string   $username
- * @property string   $first_name
- * @property string   $last_name
- * @property string   $password
- * @property string   $status
- * @property string   $resetToken
- * @property DateTime $created_on
- * @property DateTime $updated_on
- * @property DateTime $last_login
- * @property int      $password_attempts
+ * @property int       $id
+ * @property string    $email
+ * @property int       $role_id
+ * @property Role      $role
+ * @property string    $username
+ * @property string    $first_name
+ * @property string    $last_name
+ * @property string    $password
+ * @property string    $status
+ * @property string    $resetToken
+ * @property \DateTime $created_on
+ * @property \DateTime $updated_on
+ * @property \DateTime $last_login
+ * @property int       $password_attempts
  */
 class User extends BaseModel
 {
@@ -58,8 +57,8 @@ class User extends BaseModel
     public function __construct($db = null, $table = null, $fluid = null, $ttl = 0)
     {
         parent::__construct($db, $table, $fluid, $ttl);
-        $this->onset('password', fn($self, $value) => password_hash($value, PASSWORD_BCRYPT));
-        $this->virtual('role', fn() => $this->role_id);
+        $this->onset('password', fn ($self, $value) => password_hash($value, PASSWORD_BCRYPT));
+        $this->virtual('role', fn () => $this->role_id);
     }
 
     /**
@@ -161,9 +160,6 @@ class User extends BaseModel
         return (int) $result[0]['total'];
     }
 
-    /**
-     * @param $password
-     */
     public function verifyPassword($password): bool
     {
         return password_verify(trim($password), $this->password);

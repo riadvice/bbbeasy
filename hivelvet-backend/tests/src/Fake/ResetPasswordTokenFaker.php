@@ -46,8 +46,6 @@ class ResetPasswordTokenFaker
     }
 
     /**
-     * @param $storageName
-     *
      * @return User
      */
     public static function get($storageName)

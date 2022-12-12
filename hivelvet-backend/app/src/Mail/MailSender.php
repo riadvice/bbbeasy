@@ -22,44 +22,40 @@ declare(strict_types=1);
 
 namespace Mail;
 
-use Base;
-use Exception;
 use Log\LogWriterTrait;
-use Mailer;
 use Nette\Utils\Strings;
-use Prefab;
 use Template;
 use Utils\Environment;
 
 /**
  * MailSender Class.
  */
-class MailSender extends Prefab
+class MailSender extends \Prefab
 {
     use LogWriterTrait;
 
     /**
      * f3 instance.
      *
-     * @var Base f3
+     * @var \Base f3
      */
     protected $f3;
 
     /**
-     * @var Mailer
+     * @var \Mailer
      */
     protected $mailer;
 
     public function __construct()
     {
-        $this->mailer = new Mailer('UTF-8');
-        $this->f3     = Base::instance();
+        $this->mailer = new \Mailer('UTF-8');
+        $this->f3     = \Base::instance();
         $this->initLogger();
-        Mailer::initTracking();
+        \Mailer::initTracking();
     }
 
     /**
-     * @param Exception $exception
+     * @param \Exception $exception
      */
     public function sendExceptionEmail($exception): void
     {
@@ -75,13 +71,6 @@ class MailSender extends Prefab
         }
     }
 
-    /**
-     * @param $template
-     * @param $vars
-     * @param $to
-     * @param $title
-     * @param $subject
-     */
     public function send($template, $vars, $to, $title, $subject): bool
     {
         $messageId         = $this->generateId();
@@ -92,7 +81,7 @@ class MailSender extends Prefab
         $vars['PORT']      = $this->f3->get('PORT');
         $vars['BASE']      = $this->f3->get('BASE');
 
-        $message = Template::instance()->render('mail/' . $template . '.phtml', null, $vars);
+        $message = \Template::instance()->render('mail/' . $template . '.phtml', null, $vars);
 
         /*
         //replace the db template variables with provided $vars
@@ -123,14 +112,6 @@ class MailSender extends Prefab
         return $this->smtpSend($this->f3->get('from_mail'), $to, $title, $subject, $message, $messageId);
     }
 
-    /**
-     * @param $from
-     * @param $to
-     * @param $title
-     * @param $subject
-     * @param $message
-     * @param $messageId
-     */
     private function smtpSend($from, $to, $title, $subject, $message, $messageId): bool
     {
         if (\is_array($to)) {

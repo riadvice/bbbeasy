@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace Utils;
 
-use Base;
-
 class Environment
 {
     final public const TEST        = 'test';
@@ -32,7 +30,7 @@ class Environment
 
     public static function isProduction(): bool
     {
-        return self::PRODUCTION === Base::instance()->get('application.environment');
+        return self::PRODUCTION === \Base::instance()->get('application.environment');
     }
 
     public static function isNotProduction(): bool
@@ -42,6 +40,6 @@ class Environment
 
     public static function isTest(): bool
     {
-        return self::TEST === Base::instance()->get('application.environment');
+        return self::TEST === \Base::instance()->get('application.environment');
     }
 }

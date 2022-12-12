@@ -22,32 +22,29 @@ declare(strict_types=1);
 
 namespace Enum;
 
-use ReflectionClass;
-use ReflectionException;
-
 class Enum
 {
     public static function values(): array
     {
-        $class = new ReflectionClass(static::class);
+        $class = new \ReflectionClass(static::class);
 
         return array_values($class->getConstants());
     }
 
     public static function constants(): array
     {
-        return (new ReflectionClass(static::class))->getConstants();
+        return (new \ReflectionClass(static::class))->getConstants();
     }
 
     public static function staticProperties(): array
     {
-        return (new ReflectionClass(static::class))->getStaticProperties();
+        return (new \ReflectionClass(static::class))->getStaticProperties();
     }
 
     /**
      * @param $value string The class constant name
      *
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public static function contains(string $value): bool
     {

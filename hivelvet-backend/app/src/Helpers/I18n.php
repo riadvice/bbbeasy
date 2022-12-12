@@ -32,8 +32,6 @@ class I18n extends BaseHelper
     /**
      * Get a i18n label.
      *
-     * @param $key
-     *
      * @return string
      */
     public function lbl($key)
@@ -43,8 +41,6 @@ class I18n extends BaseHelper
 
     /**
      * Get a i18n message.
-     *
-     * @param $key
      *
      * @return string
      */
@@ -56,8 +52,6 @@ class I18n extends BaseHelper
     /**
      * Get a i18n error.
      *
-     * @param $key
-     *
      * @return string
      */
     public function err($key)
@@ -67,8 +61,6 @@ class I18n extends BaseHelper
 
     /**
      * Get a i18n list.
-     *
-     * @param $key
      *
      * @return array
      */

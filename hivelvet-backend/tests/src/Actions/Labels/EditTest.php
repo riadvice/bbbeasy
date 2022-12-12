@@ -24,7 +24,6 @@ namespace Actions\Labels;
 
 use Fake\LabelFaker;
 use Faker\Factory as Faker;
-use ReflectionException;
 use Test\Scenario;
 
 /**
@@ -38,11 +37,9 @@ final class EditTest extends Scenario
     protected $group                       = 'Actions Label Edit';
 
     /**
-     * @param $f3
-     *
      * @return array
      *
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function testNonExistingLabel($f3)
     {
@@ -57,11 +54,9 @@ final class EditTest extends Scenario
     }
 
     /**
-     * @param $f3
-     *
      * @return array
      *
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function testEmptyName($f3)
     {
@@ -75,11 +70,9 @@ final class EditTest extends Scenario
     }
 
     /**
-     * @param $f3
-     *
      * @return array
      *
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function testExistingNameOrColor($f3)
     {
@@ -103,11 +96,9 @@ final class EditTest extends Scenario
     }
 
     /**
-     * @param $f3
-     *
      * @return array
      *
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function testInvalidColor($f3)
     {

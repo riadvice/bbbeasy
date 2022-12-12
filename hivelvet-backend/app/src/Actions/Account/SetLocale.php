@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Actions\Account;
 
 use Actions\Base as BaseAction;
-use Base;
 use Enum\Locale;
 use Enum\ResponseCode;
 use Models\User;
@@ -36,7 +35,7 @@ class SetLocale extends BaseAction
     /**
      * Save the user locale.
      *
-     * @param Base  $f3
+     * @param \Base $f3
      * @param array $params
      *
      * @throws

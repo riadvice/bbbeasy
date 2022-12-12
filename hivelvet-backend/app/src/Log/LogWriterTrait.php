@@ -22,11 +22,9 @@ declare(strict_types=1);
 
 namespace Log;
 
-use Base;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
-use ReflectionClass;
 
 trait LogWriterTrait
 {
@@ -40,10 +38,10 @@ trait LogWriterTrait
     public function initLogger(): void
     {
         $this->logger = new Logger(static::class);
-        $level        = mb_strtoupper(Base::instance()->get('log.level'));
-        $class        = new ReflectionClass('Monolog\Logger');
-        $stream       = new StreamHandler(Base::instance()->get('application.logfile'), $class->getConstants()[$level]);
-        $stream->setFormatter(new LineFormatter('[' . (Base::instance()->ip() ?: 'CLI:PID.' . getmypid()) . '] ' . "[%datetime%] %channel%.%level_name%: %message% %context% %extra%\n", 'Y-m-d G:i:s.u'));
+        $level        = mb_strtoupper(\Base::instance()->get('log.level'));
+        $class        = new \ReflectionClass('Monolog\Logger');
+        $stream       = new StreamHandler(\Base::instance()->get('application.logfile'), $class->getConstants()[$level]);
+        $stream->setFormatter(new LineFormatter('[' . (\Base::instance()->ip() ?: 'CLI:PID.' . getmypid()) . '] ' . "[%datetime%] %channel%.%level_name%: %message% %context% %extra%\n", 'Y-m-d G:i:s.u'));
         $this->logger->pushHandler($stream);
     }
 }

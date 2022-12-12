@@ -22,18 +22,17 @@ declare(strict_types=1);
 
 namespace Models;
 
-use DateTime;
 use Models\Base as BaseModel;
 
 /**
  * Class Label.
  *
- * @property int      $id
- * @property string   $name
- * @property text     $description
- * @property string   $color
- * @property DateTime $created_on
- * @property DateTime $updated_on
+ * @property int       $id
+ * @property string    $name
+ * @property text      $description
+ * @property string    $color
+ * @property \DateTime $created_on
+ * @property \DateTime $updated_on
  */
 class Label extends BaseModel
 {
@@ -42,7 +41,7 @@ class Label extends BaseModel
     public function __construct($db = null, $table = null, $fluid = null, $ttl = 0)
     {
         parent::__construct($db, $table, $fluid, $ttl);
-        $this->onset('name', fn($self, $value) => $self->f3->snakecase($value));
+        $this->onset('name', fn ($self, $value) => $self->f3->snakecase($value));
     }
 
     /**

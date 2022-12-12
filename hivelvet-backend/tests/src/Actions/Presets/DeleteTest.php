@@ -24,7 +24,6 @@ namespace Actions\Presets;
 
 use Fake\PresetFaker;
 use Fake\UserFaker;
-use ReflectionException;
 use Test\Scenario;
 
 /**
@@ -38,11 +37,9 @@ final class DeleteTest extends Scenario
     protected $group                          = 'Action Preset Delete';
 
     /**
-     * @param $f3
-     *
      * @return array
      *
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function testNonExistingPreset($f3)
     {
@@ -55,11 +52,9 @@ final class DeleteTest extends Scenario
     }
 
     /**
-     * @param $f3
-     *
      * @return array
      *
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function testValidPreset($f3)
     {
