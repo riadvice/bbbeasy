@@ -73,7 +73,35 @@ class PresetSetting extends BaseModel
         return $data;
     }
 
-    public function getAllPresets(): array
+    public function collectAll(): array
+    {
+        $data           = [];
+        $presetSettings = $this->find([], ['order', 'id']);
+        if ($presetSettings) {
+            $categories = $this->db->exec('select distinct(p.group) as name from preset_settings p order by p.group');
+            if ($categories) {
+                foreach ($categories as $category) {
+                    $categoryName = $category['name'];
+                    $categoryData = $this->getCategoryInfos($categoryName);
+                    $data[]       = $categoryData;
+                }
+            }
+        }
+
+        return $data;
+    }
+
+    public function getCategoryInfos($category): array
+    {
+        $subCategories = $this->db->exec('select p.name, p.enabled from preset_settings p where p.group = ? order by p.id', [$category]);
+
+        return [
+            'name'          => $category,
+            'subcategories' => $subCategories,
+        ];
+    }
+
+    public function getAll(): array
     {
         $data           = [];
         $presetSettings = $this->find();

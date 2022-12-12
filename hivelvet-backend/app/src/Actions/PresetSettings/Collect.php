@@ -1,4 +1,8 @@
-/**
+<?php
+
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -16,10 +20,32 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-export type UserType = {
-    id: number;
-    username: string;
-    email: string;
-    role: string;
-    token?: string;
-};
+namespace Actions\PresetSettings;
+
+use Actions\Base as BaseAction;
+use Base;
+use Models\PresetSetting;
+
+/**
+ * Class Collect.
+ */
+class Collect extends BaseAction
+{
+    /**
+     * @param Base  $f3
+     * @param array $params
+     */
+    public function execute($f3, $params): void
+    {
+        $presetSetting = new PresetSetting();
+        // install process
+        if (null !== $f3->get('config.extension')) {
+            $data = $presetSetting->getDefaultPresetSettings();
+        } else {
+            $data = $presetSetting->collectAll();
+        }
+
+        $this->logger->debug('collecting preset settings', ['data' => json_encode($data)]);
+        $this->renderJson($data);
+    }
+}

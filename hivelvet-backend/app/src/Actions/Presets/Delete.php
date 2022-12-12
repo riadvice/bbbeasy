@@ -44,10 +44,7 @@ class Delete extends DeleteAction
                 $preset->erase();
             } catch (\Exception $e) {
                 $message = 'preset  could not be deleted';
-                $this->logger->error(
-                    'preset could not be deleted',
-                    ['preset' => $preset->toArray(), 'error' => $e->getMessage()]
-                );
+                $this->logger->error($message, ['preset' => $preset->toArray(), 'error' => $e->getMessage()]);
                 $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
 
                 return;

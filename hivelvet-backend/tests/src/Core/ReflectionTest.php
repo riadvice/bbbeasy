@@ -37,9 +37,12 @@ final class ReflectionTest extends Scenario
     protected array $permissions = [
         'labels'            => ['add', 'delete', 'edit'],
         'logs'              => ['collect'],
-        'presets'           => ['add', 'collect_my_presets', 'delete', 'edit'],
+        'preset_settings'   => ['edit'],
+        'presets'           => ['add', 'collect', 'delete', 'edit'],
         'roles_permissions' => ['collect'],
         'roles'             => ['add', 'collect', 'delete', 'edit', 'index'],
+        'rooms'             => ['add', 'collect'],
+        'settings'          => ['edit'],
         'users'             => ['add', 'delete', 'edit', 'index'],
     ];
 

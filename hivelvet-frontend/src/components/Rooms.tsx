@@ -19,20 +19,10 @@
 import React, { useEffect } from 'react';
 import RoomsService from '../services/rooms.service';
 
-import { FormInstance } from 'antd/lib/form';
 import { withTranslation } from 'react-i18next';
-
-import _ from 'lodash';
 
 import { Navigate } from 'react-router-dom';
 import { RoomType } from 'types/RoomType';
-
-type formType = {
-    name?: string;
-    description?: string;
-    color?: string;
-};
-const addForm: FormInstance = null;
 
 const Rooms = () => {
     const [data, setData] = React.useState<RoomType[]>([]);

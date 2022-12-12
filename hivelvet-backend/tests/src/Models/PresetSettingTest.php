@@ -39,11 +39,9 @@ final class PresetSettingTest extends Scenario
     protected $group = 'Preset Setting Model';
 
     /**
-     * @param \Base $f3
-     *
      * @return array
      */
-    public function testPresetSettingCreation($f3)
+    public function testPresetSettingCreation()
     {
         $test                    = $this->newTest();
         $faker                   = Faker::create();
@@ -59,11 +57,9 @@ final class PresetSettingTest extends Scenario
     }
 
     /**
-     * @param \Base $f3
-     *
      * @return array
      */
-    public function testGetByGroup($f3)
+    public function testGetByGroup()
     {
         $test          = $this->newTest();
         $presetSetting = PresetSettingFaker::create();
@@ -75,11 +71,9 @@ final class PresetSettingTest extends Scenario
     }
 
     /**
-     * @param \Base $f3
-     *
      * @return array
      */
-    public function testGetByName($f3)
+    public function testGetByName()
     {
         $test          = $this->newTest();
         $presetSetting = PresetSettingFaker::create();
@@ -91,11 +85,9 @@ final class PresetSettingTest extends Scenario
     }
 
     /**
-     * @param Base $f3
-     *
      * @return array
      */
-    public function testGetAllPresets($f3)
+    public function testGetAllPresets()
     {
         $test          = $this->newTest();
         $presetSetting = new PresetSetting(Registry::get('db'));
@@ -116,17 +108,48 @@ final class PresetSettingTest extends Scenario
         ];
         $data = [$data1, $data2];
 
-        $test->expect($data === $presetSetting->getAllPresets(), 'getAllPresets() returned all preset settings');
+        $test->expect($data === $presetSetting->getAll(), 'getAll() returned all preset settings');
 
         return $test->results();
     }
 
     /**
-     * @param Base $f3
-     *
      * @return array
      */
-    public function testSaveDefaultPresetSettings($f3)
+    public function testCollectAll()
+    {
+        $test          = $this->newTest();
+        $presetSetting = new PresetSetting(Registry::get('db'));
+        $presetSetting->erase(['']); // Cleaning the table for test.
+        $presetSetting1 = PresetSettingFaker::create('group1');
+        $presetSetting2 = PresetSettingFaker::create('group1');
+        $presetSetting3 = PresetSettingFaker::create('group2');
+        $data1          = [
+            'name'          => $presetSetting1->group,
+            'subcategories' => [
+                ['name' => $presetSetting1->name, 'enabled' => $presetSetting1->enabled],
+                ['name' => $presetSetting2->name, 'enabled' => $presetSetting2->enabled],
+            ],
+        ];
+        $data2 = [
+            'name'          => $presetSetting3->group,
+            'subcategories' => [
+                ['name' => $presetSetting3->name, 'enabled' => $presetSetting3->enabled],
+            ],
+        ];
+        $data = [$data1, $data2];
+
+        $test->expect($data === $presetSetting->collectAll(), 'collectAll() returned all preset settings informations');
+
+        $test->expect($data1 === $presetSetting->getCategoryInfos($presetSetting1->group), 'getCategoryInfos(' . $presetSetting1->group . ') returned all category informations');
+
+        return $test->results();
+    }
+
+    /**
+     * @return array
+     */
+    public function testSaveDefaultPresetSettings()
     {
         $test          = $this->newTest();
         $presetSetting = new PresetSetting(Registry::get('db'));
@@ -140,7 +163,7 @@ final class PresetSettingTest extends Scenario
         $lastSetting->enabled = false;
         $lastSetting->save();
 
-        $test->expect(54 === \count($presetSetting->getAllPresets()), 'All Default preset settings mocked & saved to the database');
+        $test->expect(54 === \count($presetSetting->getAll()), 'All Default preset settings mocked & saved to the database');
 
         return $test->results();
     }

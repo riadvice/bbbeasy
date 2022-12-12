@@ -70,18 +70,18 @@ class Setting extends BaseModel
 
         if ($defaultSettings->valid()) {
             $result = [
-                'company_name'    => $this->company_name,
-                'company_website' => $this->company_website,
-                'platform_name'   => $this->platform_name,
+                'company_name'    => $defaultSettings->company_name,
+                'company_website' => $defaultSettings->company_website,
+                'platform_name'   => $defaultSettings->platform_name,
 
-                'terms_use'      => $this->terms_use,
-                'privacy_policy' => $this->privacy_policy,
-                'logo'           => $this->logo,
+                'terms_use'      => $defaultSettings->terms_use,
+                'privacy_policy' => $defaultSettings->privacy_policy,
+                'logo'           => $defaultSettings->logo,
 
-                'primary_color'    => $this->primary_color,
-                'secondary_color'  => $this->secondary_color,
-                'accent_color'     => $this->accent_color,
-                'additional_color' => $this->additional_color,
+                'primary_color'    => $defaultSettings->primary_color,
+                'secondary_color'  => $defaultSettings->secondary_color,
+                'accent_color'     => $defaultSettings->accent_color,
+                'additional_color' => $defaultSettings->additional_color,
             ];
         }
 

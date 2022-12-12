@@ -20,23 +20,20 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Actions\Settings;
+namespace Actions\PresetSettings;
 
-use Faker\Factory as Faker;
 use ReflectionException;
 use Test\Scenario;
 
 /**
- * Class SaveLogoTest.
- *
  * @internal
  *
  * @coversNothing
  */
-final class SaveLogoTest extends Scenario
+final class CollectTest extends Scenario
 {
-    final protected const SAVE_LOGO_ROUTE = 'POST /save-logo';
-    protected $group                      = 'Action Logo Save';
+    final protected const COLLECT_PRESET_SETTINGS_ROUTE = 'GET /preset_settings/collect';
+    protected $group                                    = 'Action Preset Setting Collect';
 
     /**
      * @param $f3
@@ -45,32 +42,13 @@ final class SaveLogoTest extends Scenario
      *
      * @throws ReflectionException
      */
-    public function testEmptyData($f3)
+    public function testCollect($f3)
     {
         $test = $this->newTest();
+        $f3->mock(self::COLLECT_PRESET_SETTINGS_ROUTE);
 
-        $data = ['logo_name' => ''];
-        $f3->mock(self::SAVE_LOGO_ROUTE, null, null, $this->postJsonData($data));
-        $test->expect($this->compareTemplateToResponse('setting/empty_error.json'), 'Update logo setting with an empty data shown an error');
-
-        return $test->results();
-    }
-
-    /**
-     * @param $f3
-     *
-     * @return array
-     *
-     * @throws ReflectionException
-     */
-    public function testInvalidFormat($f3)
-    {
-        $test = $this->newTest();
-
-        $faker = Faker::create();
-        $data  = ['logo_name' => $faker->name];
-        $f3->mock(self::SAVE_LOGO_ROUTE, null, null, $this->postJsonData($data));
-        $test->expect($this->compareTemplateToResponse('setting/invalid_format_error.json'), 'Update logo setting with an invalid file format shown an error');
+        json_decode($f3->get('RESPONSE'));
+        $test->expect(JSON_ERROR_NONE === json_last_error(), 'Collect preset settings');
 
         return $test->results();
     }

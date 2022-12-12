@@ -30,11 +30,11 @@ class PresetSettingFaker
 {
     private static array $storage = [];
 
-    public static function create($storageName = null)
+    public static function create(string $group = null, $storageName = null)
     {
         $faker                  = Faker::create();
         $presetSetting          = new PresetSetting();
-        $presetSetting->group   = $faker->name;
+        $presetSetting->group   = $group ?? $faker->name;
         $presetSetting->name    = $faker->name;
         $presetSetting->enabled = (bool) random_int(0, 1);
 

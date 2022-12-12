@@ -29,7 +29,7 @@ class Audio extends Enum
     public const USERS_JOIN_MUTED                   = 'users_join_muted';
     public const MODERATORS_ALLOWED_TO_UNMUTE_USERS = 'moderators_allowed_to_unmute_users';
     public const AUTO_JOIN                          = 'auto_join';
-    public const LISTEN_ONLY                        = 'listen_only_enabled';
+    public const LISTEN_ONLY_ENABLED                = 'listen_only_enabled';
     public const SKIP_ECHO_TEST                     = 'skip_echo_test';
 
     public const USERS_JOIN_MUTED_TYPE                   = 'bool';

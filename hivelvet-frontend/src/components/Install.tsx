@@ -20,7 +20,7 @@ import React, { useEffect } from 'react';
 
 import InstallService from '../services/install.service';
 import SettingsService from '../services/settings.service';
-import PresetsService from '../services/presets.service';
+import PresetSettingsService from '../services/preset.settings.service';
 import UsersService from '../services/users.service';
 
 import { Steps, Button, Row, Col, Form, Result } from 'antd';
@@ -121,7 +121,7 @@ const Install = () => {
             .catch((error) => {
                 console.log(error);
             });
-        PresetsService.collect_presets()
+        PresetSettingsService.collect_preset_settings()
             .then((response) => {
                 setPresets(response.data);
             })

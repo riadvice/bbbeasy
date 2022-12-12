@@ -150,7 +150,7 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editClickHandler, d
         setIsModalVisible(false);
         if (file != undefined) {
             const formData: FormData = new FormData();
-            const sub = subCategories.filter((subCategory) => {
+            subCategories.filter((subCategory) => {
                 if (subCategory.type == 'file') {
                     subCategory.value = file.name;
                 }
@@ -289,8 +289,7 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editClickHandler, d
                                                     key={item.name + '_' + subItem.name}
                                                     className={subItem.value == '' ? 'text-grey' : 'text-black'}
                                                 >
-                                                    {subItem.name.replaceAll('_', ' ').charAt(0).toUpperCase() +
-                                                        subItem.name.replaceAll('_', ' ').slice(1)}
+                                                    {getName(subItem.name)}
                                                 </li>
                                             ))}
                                         </ul>
@@ -415,7 +414,7 @@ const Presets = () => {
     useEffect(() => {
         const user: UserType = authService.getCurrentUser();
         setCurrentUser(user);
-        PresetsService.collect_my_presets(user.id)
+        PresetsService.collect_presets(user.id)
             .then((response) => {
                 setMyPresets(response.data);
                 setIsLoading(false);

@@ -22,7 +22,11 @@ declare(strict_types=1);
 
 namespace Actions\Presets;
 
+use Enum\UserRole;
+use Faker\Factory as Faker;
+use Models\User;
 use ReflectionException;
+use Registry;
 use Test\Scenario;
 
 /**
@@ -32,8 +36,8 @@ use Test\Scenario;
  */
 final class CollectTest extends Scenario
 {
-    final protected const COLLECT_PRESET_SETTING_ROUTE = 'GET /collect-presets';
-    protected $group                                   = 'Action Preset Setting Collect';
+    final protected const COLLECT_PRESETS_ROUTE = 'GET /presets/collect/';
+    protected $group                            = 'Action Preset Collect Presets';
 
     /**
      * @param $f3
@@ -45,10 +49,22 @@ final class CollectTest extends Scenario
     public function testCollect($f3)
     {
         $test = $this->newTest();
-        $f3->mock(self::COLLECT_PRESET_SETTING_ROUTE);
 
+        $faker  = Faker::create();
+        $user   = new User(Registry::get('db'));
+        $result = $user->saveUserWithDefaultPreset(
+            $faker->userName,
+            $faker->email,
+            $faker->password(8),
+            UserRole::LECTURER_ID,
+            'User successfully added',
+            'User could not be added',
+        );
+        $test->expect(true === $result, 'User with id "' . $user->id . '" saved to the database with default preset');
+
+        $f3->mock(self::COLLECT_PRESETS_ROUTE . $user->id);
         json_decode($f3->get('RESPONSE'));
-        $test->expect(JSON_ERROR_NONE === json_last_error(), 'Collect presets settings');
+        $test->expect(JSON_ERROR_NONE === json_last_error(), 'Collect presets of user with id "' . $user->id . '"');
 
         return $test->results();
     }

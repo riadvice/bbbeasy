@@ -28,8 +28,9 @@ export const apiRoutes = {
 
     LOGS_URL: API_URL + '/logs',
 
-    COLLECT_USERS_URL: API_URL + '/collect-users',
-    COLLECT_PRESETS_URL: API_URL + '/collect-presets',
+    COLLECT_USERS_URL: API_URL + '/users/collect',
+    COLLECT_PRESET_SETTINGS_URL: API_URL + '/preset_settings/collect',
+    EDIT_PRESET_SETTINGS_URL: API_URL + '/preset_settings',
     COLLECT_SETTINGS_URL: API_URL + '/settings/collect',
     EDIT_SETTINGS_URL: API_URL + '/settings',
     SAVE_FILE_URL: API_URL + '/save-logo',
@@ -57,7 +58,7 @@ export const apiRoutes = {
     EDIT_PRESETS_URL: API_URL + '/presets/',
     EDIT_PRESETS_SUBCATEGORIES_URL: API_URL + '/presets/subcategories/',
     DELETE_PRESET_URL: API_URL + '/presets/',
-    COLLECT_MY_PRESETS_URL: API_URL + '/collect-my-presets/',
+    COLLECT_PRESETS_URL: API_URL + '/presets/collect/',
 
     LIST_ROOMS_URL: API_URL + '/rooms',
     ADD_ROOM_URL: API_URL + '/rooms',

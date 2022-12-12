@@ -268,5 +268,6 @@
     "room-link-already-exist": "رابط القاعة موجود بالفعل",
     "add_room_success": "تمت إضافة القاعة بنجاح",
 
-    "edit_settings_success": "تم تحديث إعدادات الشركة و العلامات التجارية بنجاح"
+    "edit_settings_success": "تم تحديث إعدادات الشركة و العلامات التجارية بنجاح",
+    "edit_preset_settings_success": "تم تحديث إعدادات غرف BigBlueButton بنجاح"
 }
