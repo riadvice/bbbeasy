@@ -80,7 +80,7 @@ const Branding = () => {
             },
             logo: settings.logo,
         });
-        if(settings.logo != null) {
+        if (settings.logo != null) {
             const settingLogo: UploadFile = {
                 uid: '1',
                 name: settings.logo,
@@ -116,7 +116,11 @@ const Branding = () => {
             add_color: addColor,
         };
 
-        if (!_.isEqual(data, formData) || (file != undefined && file.originFileObj != null) || (file == undefined && formData.logo != null)) {
+        if (
+            !_.isEqual(data, formData) ||
+            (file != undefined && file.originFileObj != null) ||
+            (file == undefined && formData.logo != null)
+        ) {
             if (!_.isEqual(data, formData)) {
                 //edit settings
                 SettingsService.edit_settings(formData)
@@ -130,8 +134,7 @@ const Branding = () => {
                     .catch((error) => {
                         console.log(error);
                     });
-            }
-            else {
+            } else {
                 //edit logo
                 const formData: FormData = new FormData();
                 if (file != undefined && file.originFileObj != null) {
