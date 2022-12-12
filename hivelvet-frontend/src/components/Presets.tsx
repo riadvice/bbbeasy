@@ -59,13 +59,14 @@ import LocaleService from '../services/locale.service';
 import DynamicIcon from './DynamicIcon';
 
 import PresetsService from '../services/presets.service';
-import InstallService from '../services/install.service';
 import { MyPresetType } from '../types/MyPresetType';
 import { SubCategoryType } from '../types/SubCategoryType';
 import { UploadFile } from 'antd/lib/upload/interface';
 import { getIconName } from '../types/GetIconName';
 import authService from '../services/auth.service';
 import { UserType } from '../types/UserType';
+import axios from 'axios';
+import { apiRoutes } from '../routing/backend-config';
 
 const { Link, Title } = Typography;
 
@@ -158,7 +159,8 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editClickHandler, d
             formData.append('logo', file.originFileObj, file.originFileObj.name);
             formData.append('logo_name', file.originFileObj.name);
 
-            InstallService.save_file(formData)
+            axios
+                .post(apiRoutes.SAVE_FILE_URL, formData)
                 .then((response) => {
                     console.log(response);
                 })

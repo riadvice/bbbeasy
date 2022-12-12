@@ -35,6 +35,9 @@ import { UploadFile } from 'antd/lib/upload/interface';
 import { SettingsType } from '../types/SettingsType';
 import { PresetType } from '../types/PresetType';
 
+import axios from 'axios';
+import { apiRoutes } from '../routing/backend-config';
+
 const { Step } = Steps;
 
 type stepType = {
@@ -212,7 +215,8 @@ const Install = () => {
                     fdata.append('logo', file.originFileObj, file.originFileObj.name);
                     fdata.append('logo_name', file.originFileObj.name);
 
-                    InstallService.save_file(fdata)
+                    axios
+                        .post(apiRoutes.SAVE_FILE_URL, fdata)
                         .then((response) => {
                             console.log(response);
                         })

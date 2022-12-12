@@ -20,12 +20,6 @@ import axios from 'axios';
 import { apiRoutes } from '../routing/backend-config';
 
 class InstallService {
-    save_file(data: object) {
-        return axios.post(apiRoutes.SAVE_FILE_URL, {
-            data,
-        });
-    }
-
     install(data: object) {
         return axios.post(apiRoutes.INSTALL_URL, {
             data,
