@@ -98,6 +98,8 @@ class Session extends \Prefab
     }
 
     /**
+     * @param mixed $key
+     *
      * @return mixed
      */
     public function get($key)

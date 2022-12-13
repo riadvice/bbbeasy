@@ -37,6 +37,8 @@ final class ResetPasswordTest extends Scenario
     protected $group                  = 'Action Reset Password';
 
     /**
+     * @param mixed $f3
+     *
      * @throws \JsonException
      */
     public function testRequestEmptyEmail($f3): array
@@ -50,6 +52,8 @@ final class ResetPasswordTest extends Scenario
     }
 
     /**
+     * @param mixed $f3
+     *
      * @throws \JsonException
      */
     public function testRequestInvalidEmail($f3): array
@@ -64,6 +68,8 @@ final class ResetPasswordTest extends Scenario
     }
 
     /**
+     * @param mixed $f3
+     *
      * @throws \JsonException
      */
     public function testRequestValidEmail($f3): array

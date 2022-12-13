@@ -52,7 +52,7 @@ class Role extends BaseModel
     public function __construct($db = null, $table = null, $fluid = null, $ttl = 0)
     {
         parent::__construct($db, $table, $fluid, $ttl);
-        $this->onset('name', fn ($self, $value) => $self->f3->snakecase($value));
+        $this->onset('name', fn($self, $value) => $self->f3->snakecase($value));
     }
 
     public function nameExists($name, $id = null): bool

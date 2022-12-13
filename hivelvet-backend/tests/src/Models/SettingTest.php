@@ -69,13 +69,14 @@ final class SettingTest extends Scenario
             $settings->company_name,
             $settings->company_website,
             $settings->platform_name,
-            $faker->name,
+            $faker->url,
             'policy updated',
+            'logo-1.png',
             ['primary_color' => '#006644']
         );
         $settings->save();
 
-        $test->expect('policy updated' === $settings->privacy_policy, 'saveSettings() updated setting with given params');
+        $test->expect('policy updated' === $settings->privacy_policy && 'logo-1.png' === $settings->logo && '#006644' === $settings->primary_color, 'saveSettings() updated setting with given params');
 
         return $test->results();
     }

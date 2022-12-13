@@ -60,6 +60,7 @@ class CliUtils extends \Prefab
 
     /**
      * @param $suite array
+     * @param mixed $name
      */
     public function writeSuiteResult($suite, $name): void
     {

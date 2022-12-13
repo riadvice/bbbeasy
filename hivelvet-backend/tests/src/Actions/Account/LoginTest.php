@@ -40,6 +40,8 @@ final class LoginTest extends Scenario
     protected $group                  = 'Action User Login';
 
     /**
+     * @param mixed $f3
+     *
      * @return array
      *
      * @throws \JsonException
@@ -69,6 +71,8 @@ final class LoginTest extends Scenario
     }
 
     /**
+     * @param mixed $f3
+     *
      * @return array
      *
      * @throws \JsonException
@@ -120,6 +124,8 @@ final class LoginTest extends Scenario
     }
 
     /**
+     * @param mixed $f3
+     *
      * @return array
      *
      * @throws \ReflectionException

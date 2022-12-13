@@ -36,6 +36,8 @@ final class RegisterTest extends Scenario
     protected $group                     = 'Action User Register';
 
     /**
+     * @param mixed $f3
+     *
      * @return array
      *
      * @throws \JsonException
@@ -79,6 +81,8 @@ final class RegisterTest extends Scenario
     }
 
     /**
+     * @param mixed $f3
+     *
      * @return array
      *
      * @throws \JsonException

@@ -27,6 +27,7 @@ import { Step2Form } from './Step2Form';
 
 import { UploadFile } from 'antd/lib/upload/interface';
 import { SettingsType } from '../types/SettingsType';
+import { BrandingColorsType } from '../types/BrandingColorsType';
 import Notifications from './Notifications';
 import { t } from 'i18next';
 import _ from 'lodash';
@@ -40,12 +41,7 @@ type formType = {
     platform_name: string;
     term_url: string;
     policy_url: string;
-    branding_colors: {
-        primary_color: string;
-        secondary_color: string;
-        accent_color: string;
-        add_color: string;
-    };
+    branding_colors: BrandingColorsType;
     logo: string;
 };
 
@@ -72,13 +68,13 @@ const Branding = () => {
             platform_name: settings.platform_name,
             term_url: settings.terms_use,
             policy_url: settings.privacy_policy,
+            logo: settings.logo,
             branding_colors: {
                 primary_color: settings.primary_color,
                 secondary_color: settings.secondary_color,
                 accent_color: settings.accent_color,
                 add_color: settings.additional_color,
             },
-            logo: settings.logo,
         });
         if (settings.logo != null) {
             const settingLogo: UploadFile = {
@@ -107,49 +103,55 @@ const Branding = () => {
     }, []);
 
     const onFinish = () => {
-        const formData: formType = settingsForm.getFieldsValue(true);
+        const settingsData: formType = settingsForm.getFieldsValue(true);
         //update branding colors
-        formData.branding_colors = {
+        settingsData.branding_colors = {
             primary_color: primaryColor,
             secondary_color: secondaryColor,
             accent_color: accentColor,
             add_color: addColor,
         };
+        let updateLogo = false;
+        let deleteLogo = false;
+        //edit file
+        if (file != undefined && file.originFileObj != null) {
+            const formData: FormData = new FormData();
+            formData.append('logo', file.originFileObj, file.originFileObj.name);
+            formData.append('logo_name', file.originFileObj.name);
+            updateLogo = true;
 
-        if (
-            !_.isEqual(data, formData) ||
-            (file != undefined && file.originFileObj != null) ||
-            (file == undefined && formData.logo != null)
-        ) {
-            if (!_.isEqual(data, formData)) {
-                //edit settings
-                SettingsService.edit_settings(formData)
-                    .then((response) => {
-                        const newData: SettingsType = response.data.settings;
-                        if (newData) {
-                            Notifications.openNotificationWithIcon('success', t('edit_settings_success'));
-                            setSettings(newData);
-                        }
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                    });
-            } else {
-                //edit logo
-                const formData: FormData = new FormData();
-                if (file != undefined && file.originFileObj != null) {
-                    formData.append('logo', file.originFileObj, file.originFileObj.name);
-                    formData.append('logo_name', file.originFileObj.name);
-                }
-                axios
-                    .post(apiRoutes.SAVE_FILE_URL, formData)
-                    .then(() => {
-                        Notifications.openNotificationWithIcon('success', t('edit_settings_success'));
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                    });
+            axios
+                .post(apiRoutes.SAVE_FILE_URL, formData)
+                .then((response) => {
+                    console.log(response);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        } else if (file == undefined && settingsData.logo != null) {
+            deleteLogo = true;
+        }
+
+        if (!_.isEqual(data, settingsData) || updateLogo || deleteLogo) {
+            //update logo
+            if (updateLogo) {
+                settingsData.logo = file.name;
+            } else if (deleteLogo) {
+                settingsData.logo = null;
             }
+
+            //edit settings
+            SettingsService.edit_settings(settingsData)
+                .then((response) => {
+                    const newData: SettingsType = response.data.settings;
+                    if (newData) {
+                        Notifications.openNotificationWithIcon('success', t('edit_settings_success'));
+                        setSettings(newData);
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
         } else {
             Notifications.openNotificationWithIcon('info', t('no_changes'));
         }

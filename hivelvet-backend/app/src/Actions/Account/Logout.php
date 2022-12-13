@@ -30,6 +30,8 @@ use Actions\Base as BaseAction;
 class Logout extends BaseAction
 {
     /**
+     * @param mixed $f3
+     *
      * @throws \JsonException
      */
     public function execute($f3): void

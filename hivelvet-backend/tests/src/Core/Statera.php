@@ -53,6 +53,9 @@ class Statera
     private static $coverageEnabled;
 
     /**
+     * @param mixed $f3
+     * @param mixed $params
+     *
      * @throws \Exception
      */
     public function index($f3, $params): void

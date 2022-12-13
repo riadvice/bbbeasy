@@ -37,6 +37,9 @@ class Edit extends BaseAction
     use RequirePrivilegeTrait;
 
     /**
+     * @param mixed $f3
+     * @param mixed $params
+     *
      * @throws \JsonException
      */
     public function save($f3, $params): void
@@ -70,12 +73,25 @@ class Edit extends BaseAction
             $dataChecker->verify($form['branding_colors']['add_color'], Validator::hexRgbColor()->setName('additional_color'));
 
             if ($dataChecker->allValid()) {
+                if (null !== $form['logo']) {
+                    $logoName     = $form['logo'];
+                    $logoFormat   = mb_substr($logoName, mb_strpos($logoName, '.') + 1);
+                    $validFormats = ['jpg', 'jpeg', 'png'];
+                    if (!\in_array($logoFormat, $validFormats, true)) {
+                        $this->logger->error($errorMessage, ['errors' => 'invalid file format : ' . $logoFormat]);
+
+                        $this->renderJson(['message' => 'invalid file format'], ResponseCode::HTTP_PRECONDITION_FAILED);
+
+                        return;
+                    }
+                }
                 $settings->saveSettings(
                     $form['company_name'],
                     $form['company_url'],
                     $form['platform_name'],
                     $form['term_url'],
                     $form['policy_url'],
+                    $form['logo'],
                     $form['branding_colors'],
                 );
             } else {

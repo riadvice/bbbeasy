@@ -54,6 +54,7 @@ final class EditTest extends Scenario
             'platform_name'   => '',
             'term_url'        => '',
             'policy_url'      => '',
+            'logo'            => '',
             'branding_colors' => [
                 'primary_color'   => '',
                 'secondary_color' => '',
@@ -79,6 +80,7 @@ final class EditTest extends Scenario
             'platform_name'   => $faker->name,
             'term_url'        => $faker->url,
             'policy_url'      => $faker->url,
+            'logo'            => 'logo-1.doc',
             'branding_colors' => [
                 'primary_color'   => $faker->safeHexColor,
                 'secondary_color' => $faker->safeHexColor,
@@ -86,6 +88,10 @@ final class EditTest extends Scenario
                 'add_color'       => $faker->safeHexColor,
             ],
         ]];
+        $f3->mock(self::EDIT_SETTINGS_ROUTE, null, null, $this->postJsonData($data));
+        $test->expect($this->compareTemplateToResponse('core/invalid_format_error.json'), 'Update existing settings with an invalid file format shown an error');
+
+        $data['data']['logo'] = 'logo-1.png';
         $f3->mock(self::EDIT_SETTINGS_ROUTE, null, null, $this->postJsonData($data));
         $test->expect($this->compareArrayToResponse(['result' => 'success', 'settings' => $setting->getAllSettings()]), 'Update existing settings using a valid data pass successfully');
 
