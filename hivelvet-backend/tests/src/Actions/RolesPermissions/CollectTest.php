@@ -35,6 +35,8 @@ final class CollectTest extends Scenario
     protected $group                                    = 'Action Role Permission Collect';
 
     /**
+     * @param mixed $f3
+     *
      * @return array
      *
      * @throws \ReflectionException

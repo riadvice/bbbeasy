@@ -37,6 +37,8 @@ final class DeleteTest extends Scenario
     protected $group                        = 'Action User Delete';
 
     /**
+     * @param mixed $f3
+     *
      * @return array
      *
      * @throws \ReflectionException
@@ -52,6 +54,8 @@ final class DeleteTest extends Scenario
     }
 
     /**
+     * @param mixed $f3
+     *
      * @return array
      *
      * @throws \ReflectionException

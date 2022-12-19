@@ -1,8 +1,4 @@
-<?php
-
-declare(strict_types=1);
-
-/*
+/**
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -20,27 +16,9 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Actions\Mail;
-
-class Track
-{
-    /**
-     * @param \Mailer $mailer
-     * @param mixed   $log
-     */
-    public static function logError($mailer, $log): void
-    {
-        $logger = new \Log('logs/smtp_' . date('Y_m_d') . '.log');
-        $logger->write($log);
-    }
-
-    public static function traceMail($hash): void
-    {
-        // your mail $hash is being read
-    }
-
-    public static function traceClick($target): void
-    {
-        // someone clicked $target link
-    }
-}
+export type BrandingColorsType = {
+    primary_color: string;
+    secondary_color: string;
+    accent_color: string;
+    add_color: string;
+};

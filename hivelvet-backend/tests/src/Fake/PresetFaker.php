@@ -46,6 +46,8 @@ class PresetFaker
     }
 
     /**
+     * @param mixed $storageName
+     *
      * @return Preset
      */
     public static function get($storageName)

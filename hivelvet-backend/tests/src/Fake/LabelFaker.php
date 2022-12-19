@@ -47,6 +47,8 @@ class LabelFaker
     }
 
     /**
+     * @param mixed $storageName
+     *
      * @return Label
      */
     public static function get($storageName)
@@ -55,6 +57,8 @@ class LabelFaker
     }
 
     /**
+     * @param mixed $data
+     *
      * @return array[]
      */
     public static function generateJsondata($data = []): array

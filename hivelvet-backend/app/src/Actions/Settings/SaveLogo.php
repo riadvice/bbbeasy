@@ -24,7 +24,6 @@ namespace Actions\Settings;
 
 use Actions\Base as BaseAction;
 use Enum\ResponseCode;
-use Models\Setting;
 use Respect\Validation\Validator;
 use Validation\DataChecker;
 
@@ -34,6 +33,9 @@ use Validation\DataChecker;
 class SaveLogo extends BaseAction
 {
     /**
+     * @param mixed $f3
+     * @param mixed $params
+     *
      * @throws \JsonException
      */
     public function execute($f3, $params): void
@@ -47,44 +49,18 @@ class SaveLogo extends BaseAction
         $dataChecker->verify($form['logo_name'], Validator::notEmpty()->setName('logo_name'));
         $errorMessage = 'File could not be saved';
 
-        $setting = new Setting();
-        /** @var Setting $settings */
-        $settings = $setting->find([], ['limit' => 1])->current();
         if (!$dataChecker->allValid()) {
-            if (empty($form) && $settings->logo != null) {
-                $this->updateSettingLogo($settings, null, $errorMessage);
-            } else {
-                $this->logger->error($errorMessage, ['errors' => $dataChecker->getErrors()]);
-                $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
-            }
+            $this->logger->error($errorMessage, ['errors' => $dataChecker->getErrors()]);
+            $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
         } else {
             $format       = $f3->get('FILES')['logo']['type'];
             $validFormats = ['image/jpg', 'image/jpeg', 'image/png'];
             if (\in_array($format, $validFormats, true)) {
                 // correct
                 \Web::instance()->receive();
-                $this->updateSettingLogo($settings, $form['logo_name'], $errorMessage);
             } else {
                 $this->logger->error($errorMessage, ['error' => 'invalid file format : ' . $format]);
                 $this->renderJson(['message' => 'invalid file format'], ResponseCode::HTTP_PRECONDITION_FAILED);
-            }
-        }
-    }
-
-    public function updateSettingLogo(Setting $settings, ?string $logo, string $errorMessage)
-    {
-        if (!$settings->dry()) {
-            $settings->logo = $logo;
-
-            try {
-                $settings->save();
-                $this->logger->info('Initial application setup : Update settings logo', ['setting' => $settings->toArray()]);
-            } catch (\Exception $e) {
-                $message = $e->getMessage();
-                $this->logger->error($errorMessage, ['error' => $message]);
-                $this->renderJson(['errors' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-
-                return;
             }
         }
     }

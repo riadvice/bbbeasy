@@ -93,11 +93,13 @@ abstract class Base extends Cortex
     }
 
     /**
+     * @param mixed $filter
+     *
      * @return array
      */
     public function prepareFilter($filter)
     {
-        return array_map(fn ($value) => '' === $value ? '%' : '%' . $value . '%', $filter);
+        return array_map(fn($value) => '' === $value ? '%' : '%' . $value . '%', $filter);
     }
 
     /**

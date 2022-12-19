@@ -48,6 +48,8 @@ class PresetSettingFaker
     }
 
     /**
+     * @param mixed $storageName
+     *
      * @return Label
      */
     public static function get($storageName)

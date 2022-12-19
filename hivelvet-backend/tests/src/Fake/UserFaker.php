@@ -79,6 +79,7 @@ class UserFaker
      *
      * @param string $status
      * @param null   $storageName
+     * @param mixed  $role
      *
      * @return User
      *
@@ -114,6 +115,8 @@ class UserFaker
     }
 
     /**
+     * @param mixed $storageName
+     *
      * @return User
      */
     public static function get($storageName)

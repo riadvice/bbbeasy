@@ -35,6 +35,8 @@ final class CollectTest extends Scenario
     protected $group                             = 'Action Setting Collect';
 
     /**
+     * @param mixed $f3
+     *
      * @return array
      *
      * @throws \ReflectionException

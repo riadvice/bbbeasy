@@ -38,6 +38,8 @@ final class CollectTest extends Scenario
     protected $group                            = 'Action Preset Collect Presets';
 
     /**
+     * @param mixed $f3
+     *
      * @return array
      *
      * @throws \ReflectionException

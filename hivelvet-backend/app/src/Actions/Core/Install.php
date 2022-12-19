@@ -37,6 +37,9 @@ use Validation\DataChecker;
 class Install extends BaseAction
 {
     /**
+     * @param mixed $f3
+     * @param mixed $params
+     *
      * @throws \JsonException
      */
     public function execute($f3, $params): void
@@ -71,6 +74,19 @@ class Install extends BaseAction
             $this->logger->error('Initial application setup', ['errors' => $dataChecker->getErrors()]);
             $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
         } else {
+            if (null !== $form['logo']) {
+                $logoName     = $form['logo'];
+                $logoFormat   = mb_substr($logoName, mb_strpos($logoName, '.') + 1);
+                $validFormats = ['jpg', 'jpeg', 'png'];
+                if (!\in_array($logoFormat, $validFormats, true)) {
+                    $this->logger->error('Settings could not be updated', ['errors' => 'invalid file format : ' . $logoFormat]);
+
+                    $this->renderJson(['message' => 'invalid file format'], ResponseCode::HTTP_PRECONDITION_FAILED);
+
+                    return;
+                }
+            }
+
             // load admin role to allow privileges and assign it to admin user
             $roleAdmin = new Role();
             $roleAdmin->load(['id = ?', [UserRole::ADMINISTRATOR_ID]]);
@@ -106,6 +122,7 @@ class Install extends BaseAction
                                 $form['platform_name'],
                                 $form['term_url'],
                                 $form['policy_url'],
+                                $form['logo'],
                                 $form['branding_colors'],
                             );
 
