@@ -22,9 +22,11 @@ declare(strict_types=1);
 
 namespace Application;
 
+use Acl\Access;
 use Enum\CacheKey;
 use Helpers\Time;
 use Mail\MailSender;
+use Models\Role;
 use Models\Setting;
 use Tracy\Debugger;
 
@@ -50,6 +52,7 @@ class Bootstrap extends Boot
         $this->loadAppSetting();
         $this->detectCli();
         $this->loadRoutesAndAssets();
+        $this->allowRoutesDynamically();
     }
 
     protected function loadConfiguration(): void
@@ -151,5 +154,45 @@ class Bootstrap extends Boot
         header('Access-Control-Allow-Headers: Content-Type, Origin, Authorization, X-Authorization, Accept, Accept-Language, Access-Control-Request-Method');
         header('Access-Control-Allow-Credentials: true');
         header('Access-Control-Expose-Headers: *, PHPSESSID');
+    }
+
+    protected function allowRoutesDynamically(): void
+    {
+        // allow routes according to role permissions of logged user
+        $access = Access::instance();
+        // get session user role
+        $roleId = $this->session->getRoleId();
+        if (0 !== $roleId) {
+            $role = new Role();
+            $role->load(['id = ?', [$roleId]]);
+            $role_name = $role->name;
+            // load role permissions
+            $permissions = $role->getRolePermissions();
+            if (\is_array($permissions)) {
+                foreach ($permissions as $group => $actions) {
+                    foreach ($actions as $action) {
+                        $method = match ($action) {
+                            'add'     => 'POST',
+                            'edit'    => 'PUT', //edit_subcategories
+                            'delete'  => 'DELETE',
+                            'index'   => 'GET',
+                            'collect' => 'GET|POST',
+                            default   => '',
+                        };
+                        if(str_contains($action, 'edit')) {
+                            $method = 'PUT';
+                        }
+                        if ('delete' === $action) {
+                            $acl = '@' . mb_substr($group, 0, -1) . '_' . $action;
+                        } else {
+                            $acl = '@' . $group . '_' . $action;
+                        }
+                        $route = $method . ' ' . $acl;
+                        // allow user role to access to route
+                        $access->allow($route, $role_name);
+                    }
+                }
+            }
+        }
     }
 }
