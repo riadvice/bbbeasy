@@ -35,6 +35,10 @@ import { withTranslation } from 'react-i18next';
 import { UserType } from './types/UserType';
 import { UserContext } from './lib/UserContext';
 import { hot } from 'react-hot-loader';
+import { RoomType } from 'types/RoomType';
+import roomsService from 'services/rooms.service';
+import { RoomsContext } from 'lib/RoomsContext';
+
 const { Content } = Layout;
 
 interface IProps {
@@ -44,14 +48,16 @@ interface IProps {
 }
 
 const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
+    console.log('routes', routes);
+
     const [currentUser, setCurrentUser] = React.useState<UserType>(null);
     const [isLogged, setIsLogged] = React.useState<boolean>(false);
-
+    const [data, setData] = React.useState<RoomType[]>([]);
     const providerValue = useMemo(
         () => ({ isLogged, setIsLogged, currentUser, setCurrentUser }),
         [isLogged, setIsLogged, currentUser, setCurrentUser]
     );
-
+    const providerValue1 = useMemo(() => ({ data, setData }), [data, setData]);
     //loading page and user already logged => set current user
     useEffect(() => {
         Logger.info(logs);
@@ -59,6 +65,18 @@ const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
         if (user != null) {
             setCurrentUser(user);
             setIsLogged(true);
+            roomsService
+                .list_rooms(user.id)
+                .then((response) => {
+                    console.log('response', response);
+                    roomsService.update_rooms(response.data);
+                    console.log('data of rooms service', roomsService.rooms);
+                    setData(response.data);
+                    console.log('data', data);
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
         }
     }, []);
 
@@ -66,14 +84,16 @@ const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
         <Layout className={LocaleService.direction == 'rtl' ? 'page-layout-content-rtl' : 'page-layout-content'}>
             <ConfigProvider locale={LocaleService.antdlocale} direction={LocaleService.direction} componentSize="large">
                 <UserContext.Provider value={providerValue}>
-                    {isLogged && isSider && <AppSider />}
-                    <Layout className="page-layout-body">
-                        <AppHeader />
-                        <Content className="site-content">
-                            <Router routes={routes} />
-                        </Content>
-                        <AppFooter />
-                    </Layout>
+                    <RoomsContext.Provider value={providerValue1}>
+                        {isLogged && isSider && <AppSider />}
+                        <Layout className="page-layout-body">
+                            <AppHeader />
+                            <Content className="site-content">
+                                <Router routes={routes} />
+                            </Content>
+                            <AppFooter />
+                        </Layout>
+                    </RoomsContext.Provider>
                 </UserContext.Provider>
             </ConfigProvider>
             <BackTop>

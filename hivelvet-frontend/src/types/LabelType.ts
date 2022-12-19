@@ -19,6 +19,7 @@
 import { SubCategoryType } from './SubCategoryType';
 
 export type LabelType = {
+    id: number;
     name: string;
     color: string;
     description: string;

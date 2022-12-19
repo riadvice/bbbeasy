@@ -41,14 +41,11 @@ class ChangePassword extends BaseAction
     {
         $form = $this->getDecodedBody();
 
-        $username = $form['username'];
-        $email    = $form['email'];
+
         $password = $form['password'];
         $token    = $form['token'];
 
         $dataChecker = new DataChecker();
-        $dataChecker->verify($username, Validator::length(4)->setName('username'));
-        $dataChecker->verify($email, Validator::email()->setName('email'));
         $dataChecker->verify($password, Validator::length(8)->setName('password'));
         $dataChecker->verify($token, Validator::length(16)->setName('token'));
 
@@ -66,7 +63,7 @@ class ChangePassword extends BaseAction
                 $user               = $user->getById($resetToken->user_id);
                 $resetToken->status = ResetTokenStatus::CONSUMED;
                 $compliant          = SecurityUtils::isGdprCompliant($password);
-                $common             = SecurityUtils::credentialsAreCommon($username, $email, $password);
+                $common             = SecurityUtils::credentialsAreCommon($user->username, $user->email, $password);
 
                 if (!$compliant) {
                     $this->logger->error($errorMessage, ['error' => $compliant]);

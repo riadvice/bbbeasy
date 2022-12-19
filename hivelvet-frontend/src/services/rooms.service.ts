@@ -20,25 +20,20 @@ import axios from 'axios';
 import { apiRoutes } from '../routing/backend-config';
 
 class RoomsService {
-    list_rooms() {
-        return axios.get(apiRoutes.LIST_ROOMS_URL);
+    rooms = [];
+    list_rooms(user_id) {
+        return axios.get(apiRoutes.LIST_ROOMS_URL + user_id);
     }
 
-    add_room(data: object) {
+    add_room(data: object, user_id) {
         return axios.post(apiRoutes.ADD_ROOM_URL, {
             data,
+            user_id,
         });
     }
-
-    /*  edit_label(data: object, id: number) {
-         return axios.put(apiRoutes.EDIT_LABEL_URL + id, {
-             data,
-         });
-     }
- 
-     delete_label(id: number) {
-         return axios.delete(apiRoutes.DELETE_LABEL_URL + id);
-     }*/
+    update_rooms(rooms: any) {
+        this.rooms = rooms;
+    }
 }
 
 export default new RoomsService();
