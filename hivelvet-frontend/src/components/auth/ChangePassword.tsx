@@ -63,6 +63,7 @@ const ChangePassword = () => {
                 } else if (result.data.result == 'success') setSuccessful(true);
             })
             .catch((error) => {
+                console.log(error)
                 setSuccessful(false);
                 setMessage(error.response.data.message);
             });
