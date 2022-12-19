@@ -27,6 +27,7 @@ use Enum\UserStatus;
 use Fake\UserFaker;
 use Faker\Factory as Faker;
 use Models\User;
+use Models\UserSession;
 use Test\Scenario;
 
 /**
@@ -40,6 +41,8 @@ final class LoginTest extends Scenario
     protected $group                  = 'Action User Login';
 
     /**
+     * @param mixed $f3
+     *
      * @return array
      *
      * @throws \JsonException
@@ -69,6 +72,8 @@ final class LoginTest extends Scenario
     }
 
     /**
+     * @param mixed $f3
+     *
      * @return array
      *
      * @throws \JsonException
@@ -120,23 +125,32 @@ final class LoginTest extends Scenario
     }
 
     /**
+     * @param mixed $f3
+     *
      * @return array
      *
      * @throws \ReflectionException
      */
     public function testAuthenticateExistingUser($f3)
     {
-        $test = $this->newTest();
-        $user = UserFaker::create(UserRole::ADMINISTRATOR);
+        $test        = $this->newTest();
+        $user        = UserFaker::create(UserRole::ADMINISTRATOR);
+        $userSession = new UserSession();
 
         $data = ['email' => $user->email, 'password' => UserRole::ADMINISTRATOR . UserRole::ADMINISTRATOR];
         $f3->mock(self::LOGIN_ROUTE, null, null, $this->postJsonData($data));
         $test->expect(
             $this->compareArrayToResponse([
-                'id'       => $user->id,
-                'username' => $user->username,
-                'email'    => $user->email,
-                'role'     => $user->role->name,
+                'user' => [
+                    'id'       => $user->id,
+                    'username' => $user->username,
+                    'email'    => $user->email,
+                    'role'     => $user->role->name,
+                ],
+                'session' => [
+                    'PHPSESSID' => session_id(),
+                    'expires'   => $userSession->getSessionExpirationTime(session_id()),
+                ],
             ]),
             'Login with user "' . $user->email . '" with status ' . $user->status . ' and correct credentials rerouted to dashboard'
         );

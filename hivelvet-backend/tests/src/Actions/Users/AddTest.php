@@ -38,6 +38,8 @@ final class AddTest extends Scenario
     protected $group                     = 'Action User Add';
 
     /**
+     * @param mixed $f3
+     *
      * @return array
      *
      * @throws \ReflectionException
@@ -54,6 +56,8 @@ final class AddTest extends Scenario
     }
 
     /**
+     * @param mixed $f3
+     *
      * @return array
      *
      * @throws \ReflectionException
@@ -71,6 +75,8 @@ final class AddTest extends Scenario
     }
 
     /**
+     * @param mixed $f3
+     *
      * @return array
      *
      * @throws \ReflectionException
@@ -89,6 +95,8 @@ final class AddTest extends Scenario
     }
 
     /**
+     * @param mixed $f3
+     *
      * @return array
      *
      * @throws \ReflectionException
@@ -107,6 +115,8 @@ final class AddTest extends Scenario
     }
 
     /**
+     * @param mixed $f3
+     *
      * @return array
      *
      * @throws \ReflectionException
@@ -124,6 +134,8 @@ final class AddTest extends Scenario
     }
 
     /**
+     * @param mixed $f3
+     *
      * @return array
      *
      * @throws \ReflectionException

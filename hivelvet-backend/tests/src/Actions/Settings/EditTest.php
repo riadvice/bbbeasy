@@ -24,7 +24,6 @@ namespace Actions\Settings;
 
 use Faker\Factory as Faker;
 use Models\Setting;
-use ReflectionException;
 use Test\Scenario;
 
 /**
@@ -38,11 +37,9 @@ final class EditTest extends Scenario
     protected $group                          = 'Action Setting Edit';
 
     /**
-     * @param $f3
-     *
      * @return array
      *
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function testEmptyData($f3)
     {

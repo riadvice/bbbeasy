@@ -18,7 +18,7 @@
 
 import pino from 'pino';
 import { apiRoutes } from '../routing/backend-config';
-import AuthService from '../services/auth.service';
+import { axiosInstance } from './AxiosInstance';
 
 const levels = {
     http: 10,
@@ -30,22 +30,9 @@ const levels = {
 };
 
 const send = async (_level, logEvent) => {
-    const response = await fetch(apiRoutes.LOGS_URL, {
-        method: 'POST',
-        body: JSON.stringify(logEvent),
+    await axiosInstance.post(apiRoutes.LOGS_URL, {
+        logEvent,
     });
-    const session = AuthService.getCurrentSession();
-    if (session == null) {
-        console.log(response.headers);
-        console.log(response.headers.get('set-cookie'));
-        /*
-        const session_infos = {
-            PHPSESSID: '...',
-            expired: '...',
-        };
-        localStorage.setItem('session', JSON.stringify(session_infos));
-         */
-    }
 };
 
 const Logger = pino({

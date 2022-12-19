@@ -31,6 +31,8 @@ class Scenario
     protected $group = 'Test Scenario';
 
     /**
+     * @param mixed $f3
+     *
      * @throws \ReflectionException
      */
     public function run($f3): array
@@ -141,6 +143,7 @@ class Scenario
 
     /**
      * @param array $params
+     * @param mixed $alias
      */
     protected function reroutedTo($alias, $params = []): bool
     {

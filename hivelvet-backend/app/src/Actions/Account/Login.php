@@ -27,6 +27,7 @@ use Enum\ResponseCode;
 use Enum\UserStatus;
 use Helpers\Time;
 use Models\User;
+use Models\UserSession;
 use Respect\Validation\Validator;
 use Validation\DataChecker;
 
@@ -78,8 +79,15 @@ class Login extends BaseAction
                 'email'    => $user->email,
                 'role'     => $user->role->name,
             ];
-            $this->logger->info('User successfully logged in', ['email' => $email]);
-            $this->renderJson($userInfos);
+
+            $userSession  = new UserSession();
+            $sessionInfos = [
+                'PHPSESSID' => session_id(),
+                'expires'   => $userSession->getSessionExpirationTime(session_id()),
+            ];
+
+            $this->logger->info('User successfully logged in', ['email' => $email, 'session' => $sessionInfos]);
+            $this->renderJson(['user' => $userInfos, 'session' => $sessionInfos]);
         } elseif ($user->valid() && UserStatus::ACTIVE === $user->status && !$user->verifyPassword($password) && $user->password_attempts > 1) {
             --$user->password_attempts;
             $user->save();

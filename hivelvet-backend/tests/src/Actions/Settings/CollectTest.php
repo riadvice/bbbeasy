@@ -31,10 +31,12 @@ use Test\Scenario;
  */
 final class CollectTest extends Scenario
 {
-    final protected const COLLECT_SETTINGS_ROUTE = 'GET /settings/collect';
+    final protected const COLLECT_SETTINGS_ROUTE = 'GET /settings';
     protected $group                             = 'Action Setting Collect';
 
     /**
+     * @param mixed $f3
+     *
      * @return array
      *
      * @throws \ReflectionException

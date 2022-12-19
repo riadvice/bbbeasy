@@ -98,6 +98,8 @@ class Time
     /**
      * Check if a particular DateTime is prior to now.
      *
+     * @param mixed $dateTime
+     *
      * @throws \Exception
      */
     public static function isInPast($dateTime): bool

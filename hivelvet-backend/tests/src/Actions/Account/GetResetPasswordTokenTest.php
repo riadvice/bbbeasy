@@ -39,6 +39,8 @@ final class GetResetPasswordTokenTest extends Scenario
     protected $group                        = 'Action Get Reset Password Token';
 
     /**
+     * @param mixed $f3
+     *
      * @throws \JsonException
      */
     public function testRequestInvalidResetPasswordToken($f3): array
@@ -52,6 +54,8 @@ final class GetResetPasswordTokenTest extends Scenario
     }
 
     /**
+     * @param mixed $f3
+     *
      * @throws \JsonException
      */
     public function testRequestNonActiveUser($f3): array
@@ -74,6 +78,8 @@ final class GetResetPasswordTokenTest extends Scenario
     }
 
     /**
+     * @param mixed $f3
+     *
      * @throws \JsonException
      */
     public function testRequestValidResetPasswordToken($f3): array

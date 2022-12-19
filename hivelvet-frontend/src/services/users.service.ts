@@ -16,41 +16,34 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import axios from 'axios';
+import { axiosInstance } from '../lib/AxiosInstance';
 import { apiRoutes } from '../routing/backend-config';
-import { authHeader } from '../lib/AuthHeader';
 
 class UsersService {
-    requestOptions: object = { headers: authHeader() };
-
     collect_users(data: object) {
-        return axios.post(apiRoutes.COLLECT_USERS_URL, {
+        return axiosInstance.post(apiRoutes.COLLECT_USERS_URL, {
             data,
         });
     }
 
     list_users() {
-        return axios.get(apiRoutes.LIST_USER_URL, this.requestOptions);
-    }
-
-    list_roles() {
-        return axios.get(apiRoutes.COLLECT_ROLES_URL);
+        return axiosInstance.get(apiRoutes.LIST_USER_URL);
     }
 
     add_user(data: object) {
-        return axios.post(apiRoutes.ADD_USER_URL, {
+        return axiosInstance.post(apiRoutes.ADD_USER_URL, {
             data,
-        }); //, this.requestOptions);
+        });
     }
 
     edit_user(data: object, id: number) {
-        return axios.put(apiRoutes.EDIT_USER_URL + id, {
+        return axiosInstance.put(apiRoutes.EDIT_USER_URL + id, {
             data,
         });
     }
 
     delete_user(id: number) {
-        return axios.delete(apiRoutes.DELETE_USER_URL + id);
+        return axiosInstance.delete(apiRoutes.DELETE_USER_URL + id);
     }
 }
 

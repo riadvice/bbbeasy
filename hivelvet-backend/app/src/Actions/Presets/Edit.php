@@ -37,52 +37,6 @@ class Edit extends BaseAction
      * @param \Base $f3
      * @param array $params
      */
-    public function save($f3, $params): void
-    {
-        $body         = $this->getDecodedBody();
-        $id           = $params['id'];
-        $form         = $body['data'];
-        $categoryName = $body['title'];
-
-        $preset       = new Preset();
-        $oldPreset    = $preset->findById($id);
-        $errorMessage = 'Preset could not be updated';
-
-        if ($oldPreset->valid()) {
-            $categories    = json_decode($oldPreset['settings']);
-            $subCategories = [];
-            if (isset($categories->{$categoryName})) {
-                $subCategories = json_decode($categories->{$categoryName});
-                foreach ($form as $editedSubCategory) {
-                    $subCategoryName  = $editedSubCategory['name'];
-                    $subCategoryValue = $editedSubCategory['value'];
-
-                    $subCategories->{$subCategoryName} = $subCategoryValue;
-                }
-
-                $categories->{$categoryName} = json_encode($subCategories);
-                $oldPreset['settings']       = json_encode($categories);
-
-                try {
-                    $oldPreset->save();
-                } catch (\Exception $e) {
-                    $this->logger->error($errorMessage, ['preset' => $oldPreset->toArray(), 'error' => $e->getMessage()]);
-                    $this->renderJson(['errors' => $errorMessage], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-
-                    return;
-                }
-                $this->renderJson(['result' => 'success', 'preset' => $preset->getMyPresetInfos($oldPreset)]);
-            }
-        } else {
-            $this->logger->error($errorMessage);
-            $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
-        }
-    }
-
-    /**
-     * @param \Base $f3
-     * @param array $params
-     */
     public function rename($f3, $params): void
     {
         $body        = $this->getDecodedBody();

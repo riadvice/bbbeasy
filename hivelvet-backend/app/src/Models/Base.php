@@ -93,6 +93,8 @@ abstract class Base extends Cortex
     }
 
     /**
+     * @param mixed $filter
+     *
      * @return array
      */
     public function prepareFilter($filter)

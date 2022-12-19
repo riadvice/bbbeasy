@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Actions\RolesPermissions;
 
 use Actions\Base as BaseAction;
-use Actions\RequirePrivilegeTrait;
 use Utils\PrivilegeUtils;
 
 /**
@@ -31,9 +30,10 @@ use Utils\PrivilegeUtils;
  */
 class Collect extends BaseAction
 {
-    use RequirePrivilegeTrait;
-
     /**
+     * @param mixed $f3
+     * @param mixed $params
+     *
      * @throws \JsonException
      */
     public function execute($f3, $params): void

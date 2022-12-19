@@ -98,7 +98,7 @@ const Labels = () => {
         const formValues: formType = values;
         setErrorsAdd([]);
         setLoading(true);
-        LabelsService.add_Label(formValues)
+        LabelsService.add_label(formValues)
             .then((response) => {
                 Notifications.openNotificationWithIcon('success', t('add_label_success'));
                 setIsModalVisible(false);
