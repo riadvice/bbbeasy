@@ -27,10 +27,11 @@ import { useTranslation, withTranslation } from 'react-i18next';
 import PerfectScrollbar from 'perfect-scrollbar';
 import { Location } from 'history';
 
-import { getRandomString } from 'types/getRandomString';
-import { PresetType } from 'types/PresetType';
-import { LabelType } from 'types/LabelType';
-import { AddRoomForm } from 'components/AddRoomForm';
+import { getRandomString } from '../../types/getRandomString';
+
+import { AddRoomForm } from '../../components/AddRoomForm';
+import { PresetType } from '../../types/PresetType';
+import { LabelType } from '../../types/LabelType';
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
@@ -51,7 +52,7 @@ const AppSider = () => {
     const initialAddValues: formType = {
         name: '',
         shortlink: getRandomString(),
-        preset: null,
+        preset: undefined,
         labels: [],
     };
     const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);

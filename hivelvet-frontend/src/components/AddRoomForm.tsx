@@ -47,7 +47,7 @@ type Props = {
     errors?: string[];
     defaultColor: string;
     isModalShow: boolean;
-    close: () => void;
+    close: any;
     shortlink: string;
 
     initialAddValues: formType;
@@ -59,8 +59,8 @@ type Item = {
     color: string;
 };
 export const AddRoomForm = (props: Props) => {
-    const { shortlink } = props;
-
+    const { isModalShow, shortlink } = props;
+    // const {currentUser,setCurrentUser}=
     const [loading, setLoading] = React.useState<boolean>(false);
     const [errorsAdd, setErrorsAdd] = React.useState<string[]>([]);
 
@@ -73,7 +73,7 @@ export const AddRoomForm = (props: Props) => {
         setErrorsAdd([]);
         setLoading(true);
         roomsService
-            .add_room(formValues)
+            .add_room(formValues, authService.getCurrentUser().id)
             .then((response) => {
                 console.log(response);
                 Notifications.openNotificationWithIcon('success', t('add_room_success'));
@@ -151,10 +151,13 @@ export const AddRoomForm = (props: Props) => {
         );
     };
 
+    const [currentUser, setCurrentUser] = React.useState<UserType>(null);
     const [myPresets, setMyPresets] = React.useState<MyPresetType[]>([]);
     const [cancelVisibility, setCancelVisibility] = React.useState<boolean>(true);
     useEffect(() => {
         const user: UserType = authService.getCurrentUser();
+
+        setCurrentUser(user);
         presetsService
             .collect_presets(user.id)
             .then((response) => {

@@ -31,6 +31,7 @@ use Models\Base as BaseModel;
  * @property string    $name
  * @property string    $short_link
  * @property int       $preset_id
+ * @property int       $user_id
  * @property Label[]   $labels
  * @property \DateTime $created_on
  * @property \DateTime $updated_on
@@ -48,6 +49,11 @@ class Room extends BaseModel
     public function nameExists($name)
     {
         return $this->load(['lower(name) = ?', mb_strtolower($name)]);
+    }
+
+    public function collectAllByUserId($userId): array
+    {
+        return $this->db->exec('SELECT id, name, short_link, preset_id ,user_id FROM rooms where user_id =?', $userId);
     }
 
     public function shortlinkExists($shortlink)
