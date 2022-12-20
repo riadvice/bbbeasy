@@ -20,37 +20,32 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Models;
+namespace Fake;
 
-use Models\Base as BaseModel;
+use Faker\Factory as Faker;
+use Models\Preset;
+use Models\Room;
+use Models\User;
 
-/**
- * Class Room.
- *
- * @property int       $id
- * @property int       $label_id
- * @property int       $room_id
- * @property \DateTime $created_on
- * @property \DateTime $updated_on
- */
-class RoomLabel extends BaseModel
+class RoomFaker
 {
-    protected $fieldConf = [
-        'room_id' => [
-            'belongs-to-one' => Room::class,
-        ],
-        'label_id' => [
-            'belongs-to-one' => Label::class,
-        ],
-    ];
+    private static array $storage = [];
 
-    protected $table = 'rooms_labels';
-
-    /**
-     * @param mixed $roomId
-     */
-    public function collectAllByRoomId($roomId): array
+    public static function create(User $user, Preset $preset, $storageName = null)
     {
-        return $this->db->exec('SELECT id, room_id, label_id FROM rooms_labels where room_id = ? ', $roomId);
+        $faker            = Faker::create();
+        $room             = new Room();
+        $room->name       = $faker->name;
+        $room->short_link = $faker->url;
+        $room->preset_id  = $preset->id;
+        $room->user_id    = $user->id;
+
+        $room->save();
+
+        if (null !== $storageName) {
+            self::$storage[$storageName] = $room;
+        }
+
+        return $room;
     }
 }

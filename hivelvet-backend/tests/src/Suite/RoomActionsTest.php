@@ -20,37 +20,20 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Models;
+namespace Suite;
 
-use Models\Base as BaseModel;
+use Actions\Rooms\AddTest;
+use Actions\Rooms\CollectTest;
+use Test\TestGroup;
 
 /**
- * Class Room.
+ * @internal
  *
- * @property int       $id
- * @property int       $label_id
- * @property int       $room_id
- * @property \DateTime $created_on
- * @property \DateTime $updated_on
+ * @coversNothing
  */
-class RoomLabel extends BaseModel
+final class RoomActionsTest extends TestGroup
 {
-    protected $fieldConf = [
-        'room_id' => [
-            'belongs-to-one' => Room::class,
-        ],
-        'label_id' => [
-            'belongs-to-one' => Label::class,
-        ],
-    ];
+    protected $classes = [AddTest::class, CollectTest::class];
 
-    protected $table = 'rooms_labels';
-
-    /**
-     * @param mixed $roomId
-     */
-    public function collectAllByRoomId($roomId): array
-    {
-        return $this->db->exec('SELECT id, room_id, label_id FROM rooms_labels where room_id = ? ', $roomId);
-    }
+    protected $quiet = true;
 }

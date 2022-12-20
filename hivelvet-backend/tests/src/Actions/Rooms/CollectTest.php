@@ -20,37 +20,41 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Models;
+namespace Actions\Rooms;
 
-use Models\Base as BaseModel;
+use Fake\UserFaker;
+use Faker\Factory as Faker;
+use Test\Scenario;
 
 /**
- * Class Room.
+ * @internal
  *
- * @property int       $id
- * @property int       $label_id
- * @property int       $room_id
- * @property \DateTime $created_on
- * @property \DateTime $updated_on
+ * @coversNothing
  */
-class RoomLabel extends BaseModel
+final class CollectTest extends Scenario
 {
-    protected $fieldConf = [
-        'room_id' => [
-            'belongs-to-one' => Room::class,
-        ],
-        'label_id' => [
-            'belongs-to-one' => Label::class,
-        ],
-    ];
-
-    protected $table = 'rooms_labels';
+    final protected const COLLECT_ROOMS_ROUTE = 'GET /rooms/';
+    protected $group                          = 'Action Room Collect Rooms';
 
     /**
-     * @param mixed $roomId
+     * @param mixed $f3
+     *
+     * @return array
+     *
+     * @throws \ReflectionException
      */
-    public function collectAllByRoomId($roomId): array
+    public function testCollect($f3)
     {
-        return $this->db->exec('SELECT id, room_id, label_id FROM rooms_labels where room_id = ? ', $roomId);
+        $test = $this->newTest();
+
+        $faker = Faker::create();
+
+        $user1  = UserFaker::create();
+        $result = $user1->save();
+        $f3->mock(self::COLLECT_ROOMS_ROUTE . $user1->id);
+        json_decode($f3->get('RESPONSE'));
+        $test->expect(JSON_ERROR_NONE === json_last_error(), 'Collect rooms of user with id "' . $user1->id . '"');
+
+        return $test->results();
     }
 }

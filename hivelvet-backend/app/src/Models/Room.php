@@ -46,9 +46,9 @@ class Room extends BaseModel
 
     protected $table = 'rooms';
 
-    public function nameExists($name)
+    public function nameExists($name, $userId, $id = null)
     {
-        return $this->load(['lower(name) = ?', mb_strtolower($name)]);
+        return $this->load(['lower(name) = ? and user_id = ? and id != ?', mb_strtolower($name), $userId, $id]);
     }
 
     public function collectAllByUserId($userId): array
@@ -63,10 +63,18 @@ class Room extends BaseModel
 
     public function collectAll(): array
     {
-        return $this->db->exec('SELECT id, name, short_link, preset_id FROM rooms');
+        $data  = [];
+        $rooms = $this->find([], ['order' => 'id']);
+        if ($rooms) {
+            foreach ($rooms as $room) {
+                $data[] = $room->getRoomInfos($room->id);
+            }
+        }
+
+        return $data;
     }
 
-    public function getRoomInfos(int $id = null): array
+    public function getRoomInfos($id): array
     {
         if ($id) {
             $subQuery = 'WHERE r.id = :room_id';
