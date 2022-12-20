@@ -113,6 +113,9 @@ const AppSider = () => {
         const items : MenuType[] = [];
         const newItems : string[] = [];
         const userPermissions = user.permissions;
+        const addActionExist = (key: string) => {
+            userPermissions[key].includes('add') ? newItems.push(key) : null;
+        }
         if(Object.keys(userPermissions).length != 0) {
             const keys = Object.keys(userPermissions);
             if(keys.includes('rooms')) {
@@ -121,7 +124,7 @@ const AppSider = () => {
                     icon: 'Room',
                     path: '/rooms',
                 });
-                userPermissions['rooms'].includes('add') ? newItems.push('room') : null;
+                addActionExist('rooms');
             }
             if(keys.includes('labels')) {
                 items.push({
@@ -129,7 +132,7 @@ const AppSider = () => {
                     icon: 'TagsOutlined',
                     path: '/labels',
                 });
-                userPermissions['labels'].includes('add') ? newItems.push('label') : null;
+                addActionExist('labels');
             }
             if(keys.includes('presets')) {
                 items.push({
@@ -137,7 +140,7 @@ const AppSider = () => {
                     icon: 'Preset',
                     path: '/presets',
                 });
-                userPermissions['presets'].includes('add') ? newItems.push('preset') : null;
+                addActionExist('presets');
             }
             addSettings(keys, items);
         }
@@ -167,15 +170,15 @@ const AppSider = () => {
                     {newMenuItems.length != 0 && (
                         <Dropdown overlay={
                             <Menu>
-                                {newMenuItems.includes('room') && (
+                                {newMenuItems.includes('rooms') && (
                                     <Menu.Item key="1" onClick={() => setIsModalVisible(true)}>
                                         <span>{t('room')}</span>
                                     </Menu.Item>
                                 )}
-                                {newMenuItems.includes('label') && (
+                                {newMenuItems.includes('labels') && (
                                     <Menu.Item key="2">{t('label')}</Menu.Item>
                                 )}
-                                {newMenuItems.includes('preset') && (
+                                {newMenuItems.includes('presets') && (
                                     <Menu.Item key="3">{t('preset.label')}</Menu.Item>
                                 )}
                             </Menu>
@@ -220,7 +223,7 @@ const AppSider = () => {
         )}
         {newMenuItems.length != 0 ?
             <>
-                {newMenuItems.includes('room') && (
+                {newMenuItems.includes('rooms') && (
                     <AddRoomForm
                         defaultColor="#fbbc0b"
                         isModalShow={isModalVisible}

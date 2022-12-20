@@ -164,7 +164,7 @@ class Bootstrap extends Boot
         if (0 !== $roleId) {
             $role = new Role();
             $role->load(['id = ?', [$roleId]]);
-            $role_name = $role->name;
+            $roleName = $role->name;
             // load role permissions
             $permissions = $role->getRolePermissions();
             if (\is_array($permissions)) {
@@ -188,7 +188,7 @@ class Bootstrap extends Boot
                         }
                         $route = $method . ' ' . $acl;
                         // allow user role to access to route
-                        $access->allow($route, $role_name);
+                        $access->allow($route, $roleName);
                     }
                 }
             }
