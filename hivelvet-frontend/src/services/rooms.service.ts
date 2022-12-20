@@ -20,14 +20,21 @@ import { axiosInstance } from '../lib/AxiosInstance';
 import { apiRoutes } from '../routing/backend-config';
 
 class RoomsService {
-    list_rooms() {
-        return axiosInstance.get(apiRoutes.LIST_ROOMS_URL);
+    rooms = [];
+
+    list_rooms(user_id) {
+        return axiosInstance.get(apiRoutes.LIST_ROOMS_URL + user_id);
     }
 
-    add_room(data: object) {
+    add_room(data: object, user_id: number) {
         return axiosInstance.post(apiRoutes.ADD_ROOM_URL, {
             data,
+            user_id,
         });
+    }
+
+    update_rooms(rooms: any) {
+        this.rooms = rooms;
     }
 }
 

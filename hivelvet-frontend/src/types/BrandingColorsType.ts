@@ -16,11 +16,9 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import { SubCategoryType } from './SubCategoryType';
-
-export type LabelType = {
-    id: number;
-    name: string;
-    color: string;
-    description: string;
+export type BrandingColorsType = {
+    primary_color: string;
+    secondary_color: string;
+    accent_color: string;
+    add_color: string;
 };

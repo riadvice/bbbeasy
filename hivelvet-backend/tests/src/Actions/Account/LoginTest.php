@@ -142,10 +142,10 @@ final class LoginTest extends Scenario
         $test->expect(
             $this->compareArrayToResponse([
                 'user' => [
-                    'id'       => $user->id,
-                    'username' => $user->username,
-                    'email'    => $user->email,
-                    'role'     => $user->role->name,
+                    'id'          => $user->id,
+                    'username'    => $user->username,
+                    'email'       => $user->email,
+                    'role'        => $user->role->name,
                     'permissions' => $user->role->getRolePermissions(),
                 ],
                 'session' => [

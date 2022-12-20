@@ -45,13 +45,14 @@ class Setting extends BaseModel
 {
     protected $table = 'settings';
 
-    public function saveSettings(string $name, string $website, string $plaform, string $terms, string $policy, ?array $colors): void
+    public function saveSettings(string $name, string $website, string $plaform, string $terms, string $policy, ?string $logo, ?array $colors): void
     {
         $this->company_name    = $name;
         $this->company_website = $website;
         $this->platform_name   = $plaform;
         $this->terms_use       = $terms;
         $this->privacy_policy  = $policy;
+        $this->logo            = $logo;
         if ($colors) {
             $this->primary_color    = $colors['primary_color'];
             $this->secondary_color  = $colors['secondary_color'];

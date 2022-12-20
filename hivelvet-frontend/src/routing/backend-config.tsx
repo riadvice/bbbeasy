@@ -60,6 +60,6 @@ export const apiRoutes = {
     DELETE_PRESET_URL: API_URL + '/presets/',
     COLLECT_PRESETS_URL: API_URL + '/presets/collect/',
 
-    LIST_ROOMS_URL: API_URL + '/rooms',
+    LIST_ROOMS_URL: API_URL + '/rooms/',
     ADD_ROOM_URL: API_URL + '/rooms',
 };

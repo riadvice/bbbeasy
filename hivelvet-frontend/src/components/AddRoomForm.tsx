@@ -59,8 +59,7 @@ type Item = {
     color: string;
 };
 export const AddRoomForm = (props: Props) => {
-    const { shortlink } = props;
-
+    const { isModalShow, shortlink } = props;
     const [loading, setLoading] = React.useState<boolean>(false);
     const [errorsAdd, setErrorsAdd] = React.useState<string[]>([]);
 
@@ -84,7 +83,7 @@ export const AddRoomForm = (props: Props) => {
         setErrorsAdd([]);
         setLoading(true);
         roomsService
-            .add_room(formValues)
+            .add_room(formValues, currentUser.id)
             .then((response) => {
                 console.log(response);
                 Notifications.openNotificationWithIcon('success', t('add_room_success'));
@@ -189,7 +188,7 @@ export const AddRoomForm = (props: Props) => {
                 title={<Trans i18nKey="new_room" />}
                 className="add-modal large-modal"
                 centered
-                visible={props.isModalShow}
+                visible={isModalShow}
                 onOk={handleAdd}
                 onCancel={props.close}
                 footer={null}

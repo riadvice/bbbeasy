@@ -83,6 +83,7 @@ let addForm: FormInstance = null;
 
 const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editClickHandler, deleteClickHandler }) => {
     const [file, setFile] = React.useState<UploadFile>(null);
+    const [fileList, setFileList] = React.useState<UploadFile[]>(null);
     const [isShown, setIsShown] = useState<boolean>(false);
     const [modalTitle, setModalTitle] = React.useState<string>('');
     const [modalContent, setModalContent] = React.useState<SubCategoryType[]>([]);
@@ -98,7 +99,22 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editClickHandler, d
             return isPNG || Upload.LIST_IGNORE;
         },
         onChange: (info) => {
-            setFile(info.fileList[0]);
+            let fileList: UploadFile[] = [...info.fileList];
+            fileList = fileList.slice(-1);
+            if (fileList[0] != undefined) {
+                const img: boolean =
+                    fileList[0].type === 'image/jpg' ||
+                    fileList[0].type === 'image/jpeg' ||
+                    fileList[0].type === 'image/png';
+                if (img) {
+                    setFileList(fileList);
+                    setFile(fileList[0]);
+                }
+            }
+        },
+        onRemove: () => {
+            setFileList(null);
+            setFile(null);
         },
     };
 
@@ -106,6 +122,16 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editClickHandler, d
         setIsModalVisible(true);
         setModalTitle(title);
         setModalContent(content);
+        const indexLogo = content.findIndex((item) => item.type === 'file');
+        if (indexLogo > -1 && content[indexLogo].value != '') {
+            const presetLogo: UploadFile = {
+                uid: '1',
+                name: content[indexLogo].value,
+                status: 'done',
+            };
+            setFileList([presetLogo]);
+            setFile(presetLogo);
+        }
     };
     const getName = (item) => {
         return item.replaceAll('_', ' ').charAt(0).toUpperCase() + item.replaceAll('_', ' ').slice(1);
@@ -149,13 +175,10 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editClickHandler, d
     //edit category
     const saveEditPresetCategory = (title: string, preset: MyPresetType, subCategories: SubCategoryType[]) => {
         setIsModalVisible(false);
-        if (file != undefined) {
+        const indexLogo = subCategories.findIndex((item) => item.type === 'file');
+        //edit file
+        if (indexLogo > -1 && file != undefined && file.originFileObj != null) {
             const formData: FormData = new FormData();
-            const sub = subCategories.filter((subCategory) => {
-                if (subCategory.type == 'file') {
-                    subCategory.value = file.name;
-                }
-            });
             formData.append('logo', file.originFileObj, file.originFileObj.name);
             formData.append('logo_name', file.originFileObj.name);
 
@@ -168,6 +191,18 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editClickHandler, d
                     console.log(error);
                 });
         }
+
+        if (indexLogo > -1) {
+            // updated logo
+            if (file != undefined && file.originFileObj != null) {
+                subCategories[indexLogo].value = file.name;
+            }
+            //deleted logo
+            else if (file == undefined && subCategories[indexLogo].value != null) {
+                subCategories[indexLogo].value = '';
+            }
+        }
+
         PresetsService.edit_subcategory_preset(title, subCategories, preset.id).then((response) => {
             editClickHandler(response.data.preset, preset);
         });
@@ -338,7 +373,6 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editClickHandler, d
 
                                         {item.type === 'string' && (
                                             <Input
-                                                //style={{ 'width': 'fit-content' }}
                                                 className="preset-input"
                                                 defaultValue={item.value}
                                                 placeholder={getName(item.name)}
@@ -362,9 +396,14 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editClickHandler, d
                                         )}
 
                                         {item.type === 'file' && (
-                                            <Upload {...props} multiple={false} name={item.name}>
+                                            <Upload
+                                                {...props}
+                                                multiple={false}
+                                                name={item.name}
+                                                fileList={fileList}
+                                                accept=".png,.jpg,.jpeg"
+                                            >
                                                 <Button icon={<UploadOutlined />}>Upload jpg, jpeg, png only</Button>
-                                                {item.value}
                                             </Upload>
                                         )}
 

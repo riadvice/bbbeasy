@@ -39,9 +39,10 @@ class Index extends BaseAction
      */
     public function show($f3, $params): void
     {
-        $room  = new Room();
-        $data  = [];
-        $rooms = $room->collectAll();
+        $room   = new Room();
+        $data   = [];
+        $userId = $f3->get('PARAMS.user_id');
+        $rooms  = $room->collectAllByUserId($userId);
         foreach ($rooms as $room) {
             $r = new Room();
 
