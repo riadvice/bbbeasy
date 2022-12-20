@@ -23,11 +23,11 @@ import { UserType } from '../types/UserType';
 import { SessionType } from '../types/SessionType';
 
 const PublicRoute = ({ children, restricted }) => {
-    const user: UserType = AuthService.getCurrentUser();
-    const session: SessionType = AuthService.getCurrentSession();
+    const currentUser: UserType = AuthService.getCurrentUser();
+    const currentSession: SessionType = AuthService.getCurrentSession();
 
     // restricted = true meaning restricted route else public route
-    if (user != null && session != null && restricted) {
+    if (currentUser != null && currentSession != null && restricted) {
         return <Navigate to="/home" />;
     }
     return children;

@@ -58,6 +58,7 @@ const Login = () => {
                     response.data.user.username &&
                     response.data.user.email &&
                     response.data.user.role &&
+                    response.data.user.permissions &&
                     response.data.session.PHPSESSID &&
                     response.data.session.expires
                 ) {

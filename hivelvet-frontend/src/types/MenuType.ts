@@ -16,27 +16,9 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
-import { Location } from 'history';
-import AuthService from '../services/auth.service';
-import { UserType } from '../types/UserType';
-import { SessionType } from '../types/SessionType';
-
-const PrivateRoute = ({ children }) => {
-    const { state }: Location = useLocation();
-    const currentUser: UserType = AuthService.getCurrentUser();
-    const currentSession: SessionType = AuthService.getCurrentSession();
-
-    if (state) {
-        return children;
-    } else {
-        if (currentUser != null && currentSession != null) {
-            return children;
-        } else {
-            return <Navigate to="/login" />;
-        }
-    }
+export type MenuType = {
+    name: string;
+    icon: string;
+    path: string;
+    children?: MenuType[];
 };
-
-export default PrivateRoute;
