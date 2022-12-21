@@ -24,7 +24,6 @@ namespace Actions\PresetSettings;
 
 use Faker\Factory as Faker;
 use Models\PresetSetting;
-use ReflectionException;
 use Test\Scenario;
 
 /**
@@ -38,11 +37,9 @@ final class EditTest extends Scenario
     protected $group                                 = 'Action Preset Settings Edit';
 
     /**
-     * @param $f3
-     *
      * @return array
      *
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function testNonExistingCategory($f3)
     {
@@ -57,11 +54,9 @@ final class EditTest extends Scenario
     }
 
     /**
-     * @param $f3
-     *
      * @return array
      *
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function testValidData($f3)
     {
@@ -85,11 +80,9 @@ final class EditTest extends Scenario
     }
 
     /**
-     * @param $f3
-     *
      * @return array
      *
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function testDisabledCategoryValidData($f3)
     {

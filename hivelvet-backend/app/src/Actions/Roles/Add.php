@@ -44,8 +44,9 @@ class Add extends BaseAction
      */
     public function save($f3, $params): void
     {
-        $body        = $this->getDecodedBody();
-        $form        = $body['data'];
+        $body = $this->getDecodedBody();
+        $form = $body['data'];
+
         $dataChecker = new DataChecker();
 
         $dataChecker->verify($form['name'], Validator::notEmpty()->setName('name'));

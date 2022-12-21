@@ -269,5 +269,6 @@
     "add_room_success": "Room Added Successfully",
 
     "edit_settings_success": "Company & Branding settings successfully updated",
-    "edit_preset_settings_success": "BigBlueButton rooms settings successfully updated"
+    "edit_preset_settings_success": "BigBlueButton rooms settings successfully updated",
+    "labels_cols.nbrooms": "N° Rooms"
 }

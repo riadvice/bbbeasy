@@ -28,12 +28,14 @@ final class CreateRoomsTable extends AbstractMigration
     {
         $table = $this->table('rooms');
         $table->addColumn('name', 'string', ['limit' => 256, 'null' => false])
-            ->addColumn('short_link', 'string', ['limit' => 32, 'null' => false])
+            ->addColumn('short_link', 'string', ['limit' => 256, 'null' => false])
             ->addColumn('preset_id', 'integer', ['null' => true])
+            ->addColumn('user_id', 'integer', ['null' => false])
             ->addColumn('created_on', 'datetime', ['default' => '0001-01-01 00:00:00', 'timezone' => true])
             ->addColumn('updated_on', 'datetime', ['default' => '0001-01-01 00:00:00', 'timezone' => true])
-            ->addIndex('name', ['unique' => true, 'name' => 'idx_rooms_name'])
+
             ->addForeignKey(['preset_id'], 'presets', ['id'], ['constraint' => 'room_preset_id'])
+            ->addForeignKey(['user_id'], 'users', ['id'], ['constraint' => 'room_user_id'])
             ->save()
         ;
     }

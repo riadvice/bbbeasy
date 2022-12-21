@@ -41,7 +41,6 @@ class ChangePassword extends BaseAction
     {
         $form = $this->getDecodedBody();
 
-
         $password = $form['password'];
         $token    = $form['token'];
 

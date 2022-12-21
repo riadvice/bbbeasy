@@ -269,5 +269,6 @@
     "add_room_success": "تمت إضافة القاعة بنجاح",
 
     "edit_settings_success": "تم تحديث إعدادات الشركة و العلامات التجارية بنجاح",
-    "edit_preset_settings_success": "تم تحديث إعدادات غرف BigBlueButton بنجاح"
+    "edit_preset_settings_success": "تم تحديث إعدادات غرف BigBlueButton بنجاح",
+    "labels_cols.nbrooms": "عدد القاعات"
 }

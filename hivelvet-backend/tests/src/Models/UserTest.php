@@ -191,28 +191,28 @@ final class UserTest extends Scenario
         return $test->results();
     }
 
-    /**
-     * @return array
-     */
-    public function testGetAllUsers()
-    {
-        $test   = $this->newTest();
-        $preset = new Preset(\Registry::get('db'));
-        $user   = new User(\Registry::get('db'));
-        $preset->erase(['']); // Cleaning the table for test.
-        $user->erase(['']); // Cleaning the table for test.
-        $user1 = UserFaker::create();
-        $user2 = UserFaker::create();
-        $user3 = UserFaker::create();
-        $data  = [$user1->getUserInfos(), $user2->getUserInfos(), $user3->getUserInfos()];
+   /**
+    * @return array
+    */
+   public function testGetAllUsers()
+   {
+       $test   = $this->newTest();
+       $preset = new Preset(\Registry::get('db'));
+       $user   = new User(\Registry::get('db'));
+       $preset->erase(['']); // Cleaning the table for test.
+       $user->erase(['']); // Cleaning the table for test.
+       $user1 = UserFaker::create();
+       $user2 = UserFaker::create();
+       $user3 = UserFaker::create();
+       $data  = [$user1->getUserInfos(), $user2->getUserInfos(), $user3->getUserInfos()];
 
-        $test->expect($data === $user->getAllUsers(), 'getAllUsers() returned all users informations');
-        $test->expect(3 === $user->countActiveUsers(), 'countActiveUsers() returned number of active users = ' . \count($data));
-        $test->expect(2 === $user->countActiveUsers([$user1->id, $user2->id]), 'countActiveUsers([' . $user1->id . ',' . $user2->id . ']) returned number of active users in given users array');
-        $test->expect(1 === $user->countActiveUsers([$user1->id]), 'countActiveUsers([' . $user1->id . ']) returned number of active users in given users array');
+       $test->expect($data === $user->getAllUsers(), 'getAllUsers() returned all users informations');
+       $test->expect(3 === $user->countActiveUsers(), 'countActiveUsers() returned number of active users = ' . \count($data));
+       $test->expect(2 === $user->countActiveUsers([$user1->id, $user2->id]), 'countActiveUsers([' . $user1->id . ',' . $user2->id . ']) returned number of active users in given users array');
+       $test->expect(1 === $user->countActiveUsers([$user1->id]), 'countActiveUsers([' . $user1->id . ']) returned number of active users in given users array');
 
-        return $test->results();
-    }
+       return $test->results();
+   }
 
     /**
      * @return array
@@ -220,6 +220,7 @@ final class UserTest extends Scenario
     public function testGetUserInfos()
     {
         $test = $this->newTest();
+
         $user = UserFaker::create();
         $data = [
             'key'      => $user->id,

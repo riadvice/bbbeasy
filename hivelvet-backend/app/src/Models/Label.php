@@ -41,7 +41,7 @@ class Label extends BaseModel
     public function __construct($db = null, $table = null, $fluid = null, $ttl = 0)
     {
         parent::__construct($db, $table, $fluid, $ttl);
-        $this->onset('name', fn($self, $value) => $self->f3->snakecase($value));
+        $this->onset('name', fn ($self, $value) => $self->f3->snakecase($value));
     }
 
     /**
@@ -114,6 +114,24 @@ class Label extends BaseModel
             'name'        => $this->name,
             'description' => $this->description,
             'color'       => $this->color,
+            'nb_rooms'    => \count($this->getRooms($this->id)),
         ];
+    }
+
+    public function getRooms($labelId): array
+    {
+        $roomlabel  = new RoomLabel();
+        $roomlabels = $roomlabel->collectAllByLabelId($labelId);
+
+        $data = [];
+        if ($roomlabels) {
+            foreach ($roomlabels as $rl) {
+                if (!\in_array($rl['room_id'], $data, true)) {
+                    $data[] = $rl['room_id'];
+                }
+            }
+        }
+
+        return $data;
     }
 }

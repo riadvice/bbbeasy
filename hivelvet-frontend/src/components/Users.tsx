@@ -41,6 +41,7 @@ type Item = {
     email: string;
     role: string;
     status: string;
+    nb_rooms: number;
 };
 type roleType = {
     id?: string;
@@ -498,6 +499,19 @@ const Users = () => {
             onFilter: (value, record) => record.status === value,
             sorter: {
                 compare: (a, b) => a.username.localeCompare(b.username),
+                multiple: 1,
+            },
+        },
+        {
+            title: t('labels_cols.nbrooms'),
+            dataIndex: 'nb_rooms',
+            inputType: 'text',
+            editable: false,
+
+            ...getColumnSearchProps('rooms_number'),
+            width: '15%',
+            sorter: {
+                compare: (a, b) => a.name.localeCompare(b.name),
                 multiple: 1,
             },
         },

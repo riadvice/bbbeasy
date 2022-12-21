@@ -24,7 +24,6 @@ namespace Actions\PresetSettings;
 
 use Actions\Base as BaseAction;
 use Actions\RequirePrivilegeTrait;
-use Base;
 use Enum\ResponseCode;
 use Models\Preset;
 use Models\PresetSetting;
@@ -34,7 +33,7 @@ class Edit extends BaseAction
     use RequirePrivilegeTrait;
 
     /**
-     * @param Base  $f3
+     * @param \Base $f3
      * @param array $params
      */
     public function save($f3, $params): void
