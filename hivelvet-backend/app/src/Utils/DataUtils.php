@@ -54,7 +54,7 @@ class DataUtils
      */
     public static function getArrayFromField($array, $key)
     {
-        return array_map(fn($item) => $item[$key], $array);
+        return array_map(fn ($item) => $item[$key], $array);
     }
 
     /**

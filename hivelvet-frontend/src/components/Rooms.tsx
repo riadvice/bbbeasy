@@ -37,6 +37,7 @@ import { apiRoutes } from 'routing/backend-config';
 
 import { RoomsContext } from 'lib/RoomsContext';
 import authService from 'services/auth.service';
+import Home from './Home';
 
 type formType = {
     name?: string;
@@ -135,7 +136,7 @@ const Rooms = () => {
     }, [rooms.data]);
 
     if (rooms.data.length == 0) {
-        return <Navigate to="/home" />;
+        return <Home />;
     } else {
         return (
             <>

@@ -85,11 +85,6 @@ class Add extends BaseAction
                     } else {
                         try {
                             $result = $room->save();
-                            if (!$result) {
-                                $this->renderJson(['errors' => $errorMessage], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-
-                                return;
-                            }
                         } catch (\Exception $e) {
                             $this->logger->error($errorMessage, ['error' => $e->getMessage()]);
                             $this->renderJson(['errors' => $e->getMessage()], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
@@ -100,12 +95,18 @@ class Add extends BaseAction
                             foreach ($form['labels'] as $label) {
                                 $l = new Label();
                                 $l = $l->getByColor($label);
+                                if (!$l->dry()) {
+                                    $room_label           = new RoomLabel();
+                                    $room_label->label_id = $l['id'];
+                                    $room_label->room_id  = $room->id;
 
-                                $room_label           = new RoomLabel();
-                                $room_label->label_id = $l['id'];
-                                $room_label->room_id  = $room->id;
+                                    $room_label->save();
+                                } else {
+                                    $this->logger->error($errorMessage);
+                                    $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
 
-                                $room_label->save();
+                                    return;
+                                }
                             }
                         }
                         $room = $room->getRoomInfos($room->id);

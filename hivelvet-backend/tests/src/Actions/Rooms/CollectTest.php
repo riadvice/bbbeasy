@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Actions\Rooms;
 
+use Fake\PresetFaker;
+use Fake\RoomFaker;
 use Fake\UserFaker;
 use Faker\Factory as Faker;
 use Test\Scenario;
@@ -43,17 +45,24 @@ final class CollectTest extends Scenario
      *
      * @throws \ReflectionException
      */
-    public function testCollect($f3)
+    public function testShow($f3)
     {
         $test = $this->newTest();
 
         $faker = Faker::create();
 
         $user1  = UserFaker::create();
-        $result = $user1->save();
+        $preset = PresetFaker::create($user1);
+        $room   = RoomFaker::create($user1, $preset);
         $f3->mock(self::COLLECT_ROOMS_ROUTE . $user1->id);
         json_decode($f3->get('RESPONSE'));
         $test->expect(JSON_ERROR_NONE === json_last_error(), 'Collect rooms of user with id "' . $user1->id . '"');
+
+        $f3->mock(self::COLLECT_ROOMS_ROUTE . 1000);
+        $resp = $f3->get('RESPONSE');
+        json_decode($f3->get('RESPONSE'));
+        $test->expect(JSON_THROW_ON_ERROR !== json_last_error(), 'Collect rooms of user with id "' . 1000 . '"throws an error');
+        // $test->expect(JSON_THROW_ON_ERROR === $resp, 'Collect rooms of user with id "' . $user1->id . '"');
 
         return $test->results();
     }

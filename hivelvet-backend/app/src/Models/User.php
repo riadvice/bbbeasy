@@ -57,8 +57,8 @@ class User extends BaseModel
     public function __construct($db = null, $table = null, $fluid = null, $ttl = 0)
     {
         parent::__construct($db, $table, $fluid, $ttl);
-        $this->onset('password', fn($self, $value) => password_hash($value, PASSWORD_BCRYPT));
-        $this->virtual('role', fn() => $this->role_id);
+        $this->onset('password', fn ($self, $value) => password_hash($value, PASSWORD_BCRYPT));
+        $this->virtual('role', fn () => $this->role_id);
     }
 
     /**
@@ -76,9 +76,11 @@ class User extends BaseModel
     /**
      * Get user record by id value.
      *
+     * @param mixed $id
+     *
      * @return $this
      */
-    public function getById(int $id): self
+    public function getById($id): self
     {
         $this->load(['id = ?', $id]);
 

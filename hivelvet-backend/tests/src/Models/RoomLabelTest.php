@@ -82,7 +82,7 @@ final class RoomLabelTest extends Scenario
         $roomlabel2 = RoomLabelFaker::create($room, $label);
 
         $data1 = ['id' => $roomlabel1->id];
-        $data2 = ['id' => $room2->id];
+        $data2 = ['id' => $roomlabel2->id];
         $data  = [$data1, $data2];
 
         $test->expect(empty(array_udiff($data, $roomlabel->collectAllByRoomId($room->id), fn ($obj1, $obj2) => $obj1 === $obj2)), 'CollectAllByRoomId(' . $room->id . ') returned all roomlabels for the given room');

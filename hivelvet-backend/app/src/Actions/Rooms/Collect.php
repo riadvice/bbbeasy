@@ -24,7 +24,9 @@ namespace Actions\Rooms;
 
 use Actions\Base as BaseAction;
 use Actions\RequirePrivilegeTrait;
+use Enum\ResponseCode;
 use Models\Room;
+use Models\User;
 
 /**
  * Class Collect.
@@ -42,12 +44,21 @@ class Collect extends BaseAction
         $room   = new Room();
         $data   = [];
         $userId = $f3->get('PARAMS.user_id');
-        $rooms  = $room->collectAllByUserId($userId);
-        foreach ($rooms as $room) {
-            $r = new Room();
+        $user   = new User();
+        $user   = $user->getById($userId);
+        if (!$user->dry()) {
+            $rooms = $room->collectAllByUserId($userId);
+            if ($rooms) {
+                foreach ($rooms as $room) {
+                    $r = new Room();
 
-            $room['labels'] = $r->getLabels($room['id']);
-            $data[]         = $room;
+                    $room['labels'] = $r->getLabels($room['id']);
+                    $data[]         = $room;
+                }
+            }
+        } else {
+            $this->logger->error('User not found');
+            $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
         }
         $this->logger->debug('Collecting rooms');
         $this->renderJson($data);

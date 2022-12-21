@@ -37,6 +37,8 @@ final class EditTest extends Scenario
     protected $group                          = 'Action Setting Edit';
 
     /**
+     * @param mixed $f3
+     *
      * @return array
      *
      * @throws \ReflectionException

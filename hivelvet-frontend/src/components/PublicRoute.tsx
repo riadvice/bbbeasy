@@ -26,7 +26,7 @@ const PublicRoute = ({ children, restricted }) => {
 
     // restricted = true meaning restricted route else public route
     if (user != null && restricted) {
-        return <Navigate to="/home" />;
+        return <Navigate to="/rooms" />;
     }
     return children;
 };

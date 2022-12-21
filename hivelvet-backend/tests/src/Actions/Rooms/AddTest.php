@@ -109,6 +109,28 @@ final class AddTest extends Scenario
      *
      * @throws \ReflectionException
      */
+    public function testInvalidLabels($f3)
+    {
+        $test = $this->newTest();
+
+        $faker = Faker::create();
+        $user  = UserFaker::create();
+
+        $label = LabelFaker::create();
+        $data  = ['data' => ['name' => $faker->name, 'shortlink' => $faker->url, 'preset' => 404, 'labels' => ['#fsbbcz%0b']], 'user_id' => $user->id];
+        $f3->mock(self::ADD_ROOM_ROUTE, null, null, $this->postJsonData($data));
+        $test->expect($this->compareTemplateToResponse('not_found_error.json'), 'Add room with non existing  labels shown an error');
+
+        return $test->results();
+    }
+
+    /**
+     * @param mixed $f3
+     *
+     * @return array
+     *
+     * @throws \ReflectionException
+     */
     public function testExistingNameOrLink($f3)
     {
         $test = $this->newTest();

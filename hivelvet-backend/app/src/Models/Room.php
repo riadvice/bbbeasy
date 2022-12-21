@@ -100,7 +100,8 @@ class Room extends BaseModel
         $lbs        = [];
         if ($roomlabels) {
             foreach ($roomlabels as $rl) {
-                $label  = new Label();
+                $label = new Label();
+
                 $labels = $label->getById($rl['label_id']);
                 if ($labels) {
                     $lbs[] = $labels->getLabelInfos();
