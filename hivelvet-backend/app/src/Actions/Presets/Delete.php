@@ -26,6 +26,7 @@ use Actions\Delete as DeleteAction;
 use Actions\RequirePrivilegeTrait;
 use Enum\ResponseCode;
 use Models\Preset;
+use Models\Room;
 
 /**
  * Class Delete.
@@ -41,6 +42,19 @@ class Delete extends DeleteAction
         $preset->load(['id = ?', $presetId]);
         if ($preset->valid()) {
             try {
+                $room  = new Room();
+                $rooms = $room->collectAllByPresetId($presetId);
+                foreach ($rooms as $r) {
+                    $defaultpreset = $preset->getDefaultOneByUserId($r['user_id']);
+                    foreach ($defaultpreset as $df) {
+                        if ('default' === $df['name']) {
+                            $r['preset_id'] = $df['id'];
+                            $room->load(['id = ?', $r['id']]);
+                            $room->preset_id = $df['id'];
+                            $room->save();
+                        }
+                    }
+                }
                 $preset->erase();
             } catch (\Exception $e) {
                 $message = 'preset  could not be deleted';

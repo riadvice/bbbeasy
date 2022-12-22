@@ -20,7 +20,6 @@ import axios from 'axios';
 import { apiRoutes } from '../routing/backend-config';
 
 class RoomsService {
-    rooms = [];
     list_rooms(user_id) {
         return axios.get(apiRoutes.LIST_ROOMS_URL + user_id);
     }
@@ -30,9 +29,6 @@ class RoomsService {
             data,
             user_id,
         });
-    }
-    update_rooms(rooms: any) {
-        this.rooms = rooms;
     }
 }
 

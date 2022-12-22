@@ -67,6 +67,7 @@ import authService from '../services/auth.service';
 import { UserType } from '../types/UserType';
 import axios from 'axios';
 import { apiRoutes } from '../routing/backend-config';
+import { DataContext } from 'lib/RoomsContext';
 
 const { Link, Title } = Typography;
 
@@ -159,6 +160,7 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editClickHandler, d
             PresetsService.edit_preset(values, preset.id)
                 .then((response) => {
                     editClickHandler(response.data.preset, preset);
+
                     cancelEdit();
                 })
                 .catch((error) => {
@@ -451,7 +453,7 @@ const Presets = () => {
     const [errorsAdd, setErrorsAdd] = useState<string[]>([]);
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(true);
-
+    const dataContext = React.useContext(DataContext);
     useEffect(() => {
         const user: UserType = authService.getCurrentUser();
         setCurrentUser(user);
@@ -476,6 +478,7 @@ const Presets = () => {
                 Notifications.openNotificationWithIcon('success', t('add_preset_success'));
                 addForm?.resetFields();
                 setMyPresets([...myPresets, newPreset]);
+                dataContext.setDataPresets([...dataContext.dataPresets, newPreset]);
             })
             .catch((error) => {
                 const responseData = error.response.data;
@@ -507,6 +510,8 @@ const Presets = () => {
                 ...newPreset,
             });
             setMyPresets(newPresets);
+            dataContext.setDataPresets(newPresets);
+
             Notifications.openNotificationWithIcon('success', t('edit_preset_success'));
         }
     };
@@ -516,6 +521,10 @@ const Presets = () => {
         PresetsService.delete_preset(id)
             .then(() => {
                 setMyPresets(myPresets.filter((p) => p.id != id));
+                const indexPreset = dataContext.dataPresets.findIndex((item) => id === item.id);
+                if (indexPreset !== -1) {
+                    dataContext.dataPresets.splice(indexPreset, 1);
+                }
                 Notifications.openNotificationWithIcon('success', t('delete_preset_success'));
             })
             .catch((error) => {

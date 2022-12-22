@@ -16,26 +16,15 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import RoomsService from '../services/rooms.service';
+import React, { useState } from 'react';
 
 import { FormInstance } from 'antd/lib/form';
 import { withTranslation } from 'react-i18next';
 
-import _ from 'lodash';
-
-import { Navigate, useLocation } from 'react-router-dom';
 import { RoomType } from 'types/RoomType';
-import { Badge, Button, Card, Col, Row, Space } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
-import { LabelType } from 'types/LabelType';
-import roomsService from '../services/rooms.service';
-import { type } from 'os';
-import { useReducer } from 'react';
-import axios from 'axios';
-import { apiRoutes } from 'routing/backend-config';
+import { Badge, Card, Col, Row, Space } from 'antd';
 
-import { RoomsContext } from 'lib/RoomsContext';
+import { DataContext } from 'lib/RoomsContext';
 import authService from 'services/auth.service';
 import Home from './Home';
 
@@ -51,27 +40,11 @@ interface RoomsColProps {
 const addForm: FormInstance = null;
 const RoomsCol: React.FC<RoomsColProps> = ({ key, room }) => {
     const [isShown, setIsShown] = useState<boolean>(false);
-    const [modalTitle, setModalTitle] = React.useState<string>('');
 
-    const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
-    const [isEditing, setIsEditing] = useState<boolean>(false);
-    const [errorsEdit, setErrorsEdit] = React.useState({});
-    console.log(room.labels);
     const labels = [];
     room.labels.map((item) => {
         labels.push(item);
     });
-    console.log(labels);
-
-    const props = {};
-
-    const getName = (item) => {
-        return item.replaceAll('_', ' ').charAt(0).toUpperCase() + item.replaceAll('_', ' ').slice(1);
-    };
-
-    const handleSaveEdit = async () => {
-        setErrorsEdit({});
-    };
 
     return (
         <Col key={key} span={4}>
@@ -104,7 +77,7 @@ const RoomsCol: React.FC<RoomsColProps> = ({ key, room }) => {
                 }
             >
                 <div className="room-card-body">
-                    {room.labels.map((item, subIndex) => {
+                    {room.labels.map((item) => {
                         return (
                             <Badge
                                 key={item.id}
@@ -122,26 +95,15 @@ const RoomsCol: React.FC<RoomsColProps> = ({ key, room }) => {
 };
 
 const Rooms = () => {
-    const [currentUser, setCurrentUser] = useState(authService.getCurrentUser);
+    const dataContext = React.useContext(DataContext);
 
-    const rooms = React.useContext(RoomsContext);
-
-    useEffect(() => {
-        setCurrentUser(authService.getCurrentUser);
-        const fetchData = async () => {
-            const result = await axios.get(apiRoutes.LIST_ROOMS_URL + currentUser.id);
-        };
-
-        fetchData();
-    }, [rooms.data]);
-
-    if (rooms.data.length == 0) {
+    if (dataContext.dataRooms.length == 0) {
         return <Home />;
     } else {
         return (
             <>
                 <Row gutter={10} className="rooms-cards">
-                    {rooms.data.map((singleRoom) => (
+                    {dataContext.dataRooms.map((singleRoom) => (
                         <RoomsCol key={singleRoom.id} room={singleRoom} />
                     ))}
                 </Row>

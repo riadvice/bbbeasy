@@ -29,6 +29,7 @@ import Highlighter from 'react-highlight-words/dist/main';
 import Notifications from './Notifications';
 import AddLabelForm from './AddLabelForm';
 import InputColor from './layout/InputColor';
+import { DataContext } from 'lib/RoomsContext';
 
 const { Link } = Typography;
 
@@ -57,6 +58,7 @@ const EditableContext = React.createContext<FormInstance | null>(null);
 let addForm: FormInstance = null;
 
 const Labels = () => {
+    const dataContext = React.useContext(DataContext);
     const [data, setData] = React.useState<Item[]>([]);
     const [loading, setLoading] = React.useState<boolean>(false);
     const [editingKey, setEditingKey] = React.useState<number>(null);
@@ -108,6 +110,7 @@ const Labels = () => {
                 addForm?.resetFields();
                 //add data to table
                 setData((data) => [...data, newRowData]);
+                dataContext.setDataLabels([...dataContext.dataLabels, newRowData]);
             })
             .catch((error) => {
                 const responseData = error.response.data;
@@ -134,6 +137,17 @@ const Labels = () => {
             .then(() => {
                 Notifications.openNotificationWithIcon('success', t('delete_label_success'));
                 setData((labels) => labels.filter((label) => label.key !== key));
+                const indexlabel = dataContext.dataLabels.findIndex((item) => key === item.key);
+                if (indexlabel !== -1) {
+                    dataContext.dataLabels.splice(indexlabel, 1);
+                }
+                dataContext.dataRooms.map((r) => {
+                    const index = r.labels.findIndex((item) => key === item.key);
+
+                    if (index !== -1) {
+                        r.labels.splice(index, 1);
+                    }
+                });
             })
             .catch((error) => {
                 console.error(error);
@@ -346,7 +360,13 @@ const Labels = () => {
                         if (index !== -1 && newRow) {
                             setData((data) => {
                                 data[index] = newRow;
+                                dataContext.dataLabels[index] = newRow;
+
                                 return [...data];
+                            });
+                            dataContext.dataRooms.map((r) => {
+                                const index = r.labels.findIndex((item) => key === item.key);
+                                r.labels[index] = newRow;
                             });
                             cancelEdit();
                         }
