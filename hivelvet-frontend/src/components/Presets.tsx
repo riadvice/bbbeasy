@@ -225,6 +225,7 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editClickHandler, d
                                     <span>{preset['name']}</span>
                                     {isShown && (
                                         <Button
+                                        disabled={preset["name"]=="default"?true:false}
                                             className="edit-btn"
                                             size="small"
                                             type="link"
@@ -293,6 +294,7 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editClickHandler, d
                 extra={
                     <div className="table-actions">
                         <Popconfirm
+                        disabled={preset["name"]==="default"?true:false}
                             title={t('delete_preset_confirm')}
                             icon={<QuestionCircleOutlined className="red-icon" />}
                             onConfirm={() => handleDelete()}

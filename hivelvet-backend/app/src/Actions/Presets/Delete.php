@@ -41,30 +41,35 @@ class Delete extends DeleteAction
         $presetId = $params['id'];
         $preset->load(['id = ?', $presetId]);
         if ($preset->valid()) {
-            try {
-                $room  = new Room();
-                $rooms = $room->collectAllByPresetId($presetId);
-                foreach ($rooms as $r) {
-                    $defaultpreset = $preset->getDefaultOneByUserId($r['user_id']);
-                    foreach ($defaultpreset as $df) {
-                        if ('default' === $df['name']) {
-                            $r['preset_id'] = $df['id'];
+            if($preset->name!=="default") {
+                try {
+                    $room = new Room();
+                    $rooms = $room->collectAllByPresetId($presetId);
+                    foreach ($rooms as $r) {
+                        $defaultpreset = $preset->getDefaultOneByUserId($r['user_id'], "default");
+                        if (!$defaultpreset->dry()) {
                             $room->load(['id = ?', $r['id']]);
-                            $room->preset_id = $df['id'];
+                            $room->preset_id = $defaultpreset->id;
                             $room->save();
                         }
+
                     }
+                    $preset->erase();
+                } catch (\Exception $e) {
+                    $message = 'preset  could not be deleted';
+                    $this->logger->error($message, ['preset' => $preset->toArray(), 'error' => $e->getMessage()]);
+                    $this->renderJson(['message' => $e->getMessage()], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+
+                    return;
                 }
-                $preset->erase();
-            } catch (\Exception $e) {
-                $message = 'preset  could not be deleted';
-                $this->logger->error($message, ['preset' => $preset->toArray(), 'error' => $e->getMessage()]);
+                $this->logger->info('preset successfully deleted', ['preset' => $presetId]);
+                $this->renderJson(['result' => 'success']);
+            }else{
+                $message = 'default preset could not be deleted';
+                $this->logger->error($message, ['preset' => $preset->toArray(), 'error' => $message]);
                 $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
 
-                return;
             }
-            $this->logger->info('preset successfully deleted', ['preset' => $presetId]);
-            $this->renderJson(['result' => 'success']);
         } else {
             $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
         }

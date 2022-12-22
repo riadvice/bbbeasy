@@ -161,9 +161,11 @@ class Preset extends BaseModel
         return $categoriesData;
     }
 
-    public function getDefaultOneByUserId($userId, $name = 'default'): array
+    public function getDefaultOneByUserId($userId,$name="default" )
     {
-        return $this->db->exec('SELECT id, name,user_id FROM presets where  user_id =?', $userId);
+         $this->load(['lower(name) = ? and user_id = ? ', mb_strtolower($name), $userId ]);
+         return $this;
+    //    return $this->db->exec('SELECT id, name,user_id FROM presets where  user_id =?  and lower(name) =?', $userId, mb_strtolower($name)  );
     }
 
     public function addDefaultSettings($successMessage, $errorMessage): bool|string
