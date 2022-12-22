@@ -41,18 +41,17 @@ class Delete extends DeleteAction
         $presetId = $params['id'];
         $preset->load(['id = ?', $presetId]);
         if ($preset->valid()) {
-            if($preset->name!=="default") {
+            if ('default' !== $preset->name) {
                 try {
-                    $room = new Room();
+                    $room  = new Room();
                     $rooms = $room->collectAllByPresetId($presetId);
                     foreach ($rooms as $r) {
-                        $defaultpreset = $preset->getDefaultOneByUserId($r['user_id'], "default");
+                        $defaultpreset = $preset->getDefaultOneByUserId($r['user_id'], 'default');
                         if (!$defaultpreset->dry()) {
                             $room->load(['id = ?', $r['id']]);
                             $room->preset_id = $defaultpreset->id;
                             $room->save();
                         }
-
                     }
                     $preset->erase();
                 } catch (\Exception $e) {
@@ -64,11 +63,10 @@ class Delete extends DeleteAction
                 }
                 $this->logger->info('preset successfully deleted', ['preset' => $presetId]);
                 $this->renderJson(['result' => 'success']);
-            }else{
+            } else {
                 $message = 'default preset could not be deleted';
                 $this->logger->error($message, ['preset' => $preset->toArray(), 'error' => $message]);
                 $this->renderJson(['message' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-
             }
         } else {
             $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
