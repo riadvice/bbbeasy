@@ -32,6 +32,8 @@ import { getRandomString } from '../../types/getRandomString';
 import { AddRoomForm } from '../../components/AddRoomForm';
 import { PresetType } from '../../types/PresetType';
 import { LabelType } from '../../types/LabelType';
+import AddLabelForm from 'components/AddLabelForm';
+import AddPresetForm from 'components/AddPresetForm';
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
@@ -55,7 +57,9 @@ const AppSider = () => {
         preset: undefined,
         labels: [],
     };
-    const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
+    const [isModalVisibleRoom, setIsModalVisibleRoom] = React.useState<boolean>(false);
+    const [isModalVisibleLabel, setIsModalVisibleLabel] = React.useState<boolean>(false);
+    const [isModalVisiblePreset, setIsModalVisiblePreset] = React.useState<boolean>(false);
     const location: Location = useLocation();
     const [currentPath, setCurrentPath] = React.useState<string>(location.pathname);
     const { t } = useTranslation();
@@ -76,13 +80,27 @@ const AppSider = () => {
             <Menu.Item
                 key="1"
                 onClick={() => {
-                    setIsModalVisible(true);
+                    setIsModalVisibleRoom(true);
                 }}
             >
                 <span>{t('room')}</span>
             </Menu.Item>
-            <Menu.Item key="2">{t('label')}</Menu.Item>
-            <Menu.Item key="3">{t('preset.label')}</Menu.Item>
+            <Menu.Item
+                key="2"
+                onClick={() => {
+                    setIsModalVisibleLabel(true);
+                }}
+            >
+                {t('label')}
+            </Menu.Item>
+            <Menu.Item
+                key="3"
+                onClick={() => {
+                    setIsModalVisiblePreset(true);
+                }}
+            >
+                {t('preset.label')}
+            </Menu.Item>
         </Menu>
     );
     const menuData: menuType[] = [
@@ -190,12 +208,26 @@ const AppSider = () => {
                 </div>
             </Sider>
             <AddRoomForm
-                defaultColor="#fbbc0b"
-                isModalShow={isModalVisible}
+                isModalShow={isModalVisibleRoom}
                 close={() => {
-                    setIsModalVisible(false);
+                    setIsModalVisibleRoom(false);
                 }}
                 shortlink={'/hv/' + initialAddValues.shortlink}
+                initialAddValues={initialAddValues}
+            />
+            <AddLabelForm
+                defaultColor="#fbbc0b"
+                isModalShow={isModalVisibleLabel}
+                close={() => {
+                    setIsModalVisibleLabel(false);
+                }}
+                initialAddValues={initialAddValues}
+            />
+            <AddPresetForm
+                isModalShow={isModalVisiblePreset}
+                close={() => {
+                    setIsModalVisiblePreset(false);
+                }}
                 initialAddValues={initialAddValues}
             />
         </>

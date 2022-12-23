@@ -21,16 +21,19 @@ import { Button, Form, Input, Modal } from 'antd';
 import { Trans, withTranslation } from 'react-i18next';
 import { t } from 'i18next';
 import EN_US from '../locale/en-US.json';
-import InputColor from './layout/InputColor';
+
 import { DataContext } from 'lib/RoomsContext';
-import labelsService from 'services/labels.service';
+
 import Notifications from './Notifications';
 import { FormInstance } from 'antd/lib/form';
-import { PaginationType } from '../types/PaginationType';
+
+import presetsService from 'services/presets.service';
+import { MyPresetType } from 'types/MyPresetType';
+import authService from 'services/auth.service';
 type Props = {
     isLogin?: boolean;
     errors?: string[];
-    defaultColor: string;
+
     isModalShow: boolean;
     close: any;
 
@@ -38,21 +41,14 @@ type Props = {
 };
 type formType = {
     name?: string;
-    description?: string;
-    color?: string;
 };
-type Item = {
-    key: number;
-    name: string;
-    description: string;
-    color: string;
-};
+
 let addForm: FormInstance = null;
 
-export const AddLabelForm = (props: Props) => {
-    const { defaultColor } = props;
+export const AddPresetForm = (props: Props) => {
     const dataContext = React.useContext(DataContext);
-    const [data, setData] = React.useState<Item[]>([]);
+
+    const [myPresets, setMyPresets] = React.useState<MyPresetType[]>([]);
     const [loading, setLoading] = React.useState<boolean>(false);
     const [errorsAdd, setErrorsAdd] = React.useState<string[]>([]);
 
@@ -60,18 +56,17 @@ export const AddLabelForm = (props: Props) => {
         const formValues: formType = values;
         setErrorsAdd([]);
         setLoading(true);
-        labelsService
-            .add_Label(formValues)
-            .then((response) => {
-                Notifications.openNotificationWithIcon('success', t('add_label_success'));
-                props.close();
-                const newRowData: Item = response.data.label;
 
-                //delete data of form
+        presetsService
+            .add_preset(formValues, authService.getCurrentUser().id)
+            .then((response) => {
+                const newPreset: MyPresetType = response.data.preset;
+                Notifications.openNotificationWithIcon('success', t('add_preset_success'));
+
                 addForm?.resetFields();
-                //add data to table
-                setData((data) => [...data, newRowData]);
-                dataContext.setDataLabels([...dataContext.dataLabels, newRowData]);
+                setMyPresets([...myPresets, newPreset]);
+                dataContext.setDataPresets([...dataContext.dataPresets, newPreset]);
+                props.close();
             })
             .catch((error) => {
                 const responseData = error.response.data;
@@ -95,7 +90,7 @@ export const AddLabelForm = (props: Props) => {
     return (
         <>
             <Modal
-                title={<Trans i18nKey="new_label" />}
+                title={<Trans i18nKey="new_preset" />}
                 className="add-modal"
                 centered
                 visible={props.isModalShow}
@@ -112,54 +107,31 @@ export const AddLabelForm = (props: Props) => {
                     onFinishFailed={failedAdd}
                     validateTrigger="onSubmit"
                 >
-                    {!props.isLogin && (
-                        <Form.Item
-                            label={<Trans i18nKey="name.label" />}
-                            name="name"
-                            {...('name' in errorsAdd && {
-                                help: (
-                                    <Trans
-                                        i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errorsAdd['name'])}
-                                    />
-                                ),
-                                validateStatus: 'error',
-                            })}
-                            rules={[
-                                {
-                                    required: true,
-                                    message: <Trans i18nKey="name.required" />,
-                                },
-                                {
-                                    min: 1,
-                                    message: <Trans i18nKey="label_name.size" />,
-                                },
-                            ]}
-                        >
-                            <Input placeholder={t('name.label')} />
-                        </Form.Item>
-                    )}
-                    <Form.Item label={<Trans i18nKey="description.label" />} name="description">
-                        <Input placeholder={t('description.label')} />
-                    </Form.Item>
                     <Form.Item
-                        label={<Trans i18nKey="color.label" />}
-                        name="color"
-                        {...('color' in errorsAdd && {
+                        label={<Trans i18nKey="name.label" />}
+                        name="name"
+                        {...('name' in errorsAdd && {
                             help: (
                                 <Trans
-                                    i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errorsAdd['color'])}
+                                    i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errorsAdd['name'])}
                                 />
                             ),
                             validateStatus: 'error',
                         })}
+                        rules={[
+                            {
+                                required: true,
+                                message: <Trans i18nKey="name.required" />,
+                            },
+                        ]}
                     >
-                        <InputColor defaultColor={defaultColor} />
+                        <Input placeholder={t('name.label')} />
                     </Form.Item>
                     <Form.Item className="modal-submit-btn button-container">
                         <Button type="text" className="cancel-btn prev" block onClick={cancelAdd}>
                             <Trans i18nKey="cancel" />
                         </Button>
-                        <Button type="primary" htmlType="submit" disabled={loading} block>
+                        <Button type="primary" htmlType="submit" block>
                             <Trans i18nKey="create" />
                         </Button>
                     </Form.Item>
@@ -168,4 +140,4 @@ export const AddLabelForm = (props: Props) => {
         </>
     );
 };
-export default withTranslation()(AddLabelForm);
+export default withTranslation()(AddPresetForm);

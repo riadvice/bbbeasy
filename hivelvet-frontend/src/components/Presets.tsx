@@ -49,7 +49,7 @@ import {
     SearchOutlined,
     UploadOutlined,
 } from '@ant-design/icons';
-import { FormInstance } from 'antd/lib/form';
+
 import ColorPicker from 'rc-color-picker/lib/ColorPicker';
 
 import { Trans, withTranslation } from 'react-i18next';
@@ -64,10 +64,11 @@ import { SubCategoryType } from '../types/SubCategoryType';
 import { UploadFile } from 'antd/lib/upload/interface';
 import { getIconName } from '../types/GetIconName';
 import authService from '../services/auth.service';
-import { UserType } from '../types/UserType';
+
 import axios from 'axios';
 import { apiRoutes } from '../routing/backend-config';
 import { DataContext } from 'lib/RoomsContext';
+import AddPresetForm from './AddPresetForm';
 
 const { Link, Title } = Typography;
 
@@ -80,7 +81,6 @@ interface PresetColProps {
 type formType = {
     name: string;
 };
-let addForm: FormInstance = null;
 
 const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editClickHandler, deleteClickHandler }) => {
     const [file, setFile] = React.useState<UploadFile>(null);
@@ -446,16 +446,16 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editClickHandler, d
 };
 
 const Presets = () => {
-    const [currentUser, setCurrentUser] = React.useState<UserType>(null);
     const [myPresets, setMyPresets] = useState<MyPresetType[]>([]);
-    const [errorsAdd, setErrorsAdd] = useState<string[]>([]);
+
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const dataContext = React.useContext(DataContext);
+    const initialAddValues: formType = {
+        name: '',
+    };
     useEffect(() => {
-        const user: UserType = authService.getCurrentUser();
-        setCurrentUser(user);
-        PresetsService.collect_presets(user.id)
+        PresetsService.collect_presets(authService.getCurrentUser().id)
             .then((response) => {
                 setMyPresets(response.data);
                 setIsLoading(false);
@@ -464,38 +464,6 @@ const Presets = () => {
                 console.log(error);
             });
     }, []);
-
-    //add
-    const handleAdd = (values) => {
-        const formValues: formType = values;
-        setErrorsAdd([]);
-        PresetsService.add_preset(formValues, currentUser.id)
-            .then((response) => {
-                setIsModalVisible(false);
-                const newPreset: MyPresetType = response.data.preset;
-                Notifications.openNotificationWithIcon('success', t('add_preset_success'));
-                addForm?.resetFields();
-                setMyPresets([...myPresets, newPreset]);
-                dataContext.setDataPresets([...dataContext.dataPresets, newPreset]);
-            })
-            .catch((error) => {
-                const responseData = error.response.data;
-                if (responseData.errors) {
-                    setErrorsAdd(responseData.errors);
-                }
-            });
-    };
-    const failedAdd = () => {
-        setErrorsAdd([]);
-    };
-    const cancelAdd = () => {
-        setIsModalVisible(false);
-    };
-    const toggleAdd = () => {
-        addForm?.resetFields();
-        setErrorsAdd([]);
-        setIsModalVisible(true);
-    };
 
     //edit
     const editPreset = (newPreset: MyPresetType, oldPreset: MyPresetType) => {
@@ -553,60 +521,19 @@ const Presets = () => {
                     >
                         <QuestionCircleOutlined className="help-icon" />
                     </Popover>,
-                    <Button key="1" type="primary" onClick={toggleAdd}>
+                    <Button key="1" type="primary" onClick={() => setIsModalVisible(true)}>
                         <Trans i18nKey="new_preset" />
                     </Button>,
                 ]}
             />
 
-            <Modal
-                title={<Trans i18nKey="new_preset" />}
-                className="add-modal"
-                centered
-                visible={isModalVisible}
-                onOk={handleAdd}
-                onCancel={cancelAdd}
-                footer={null}
-            >
-                <Form
-                    layout="vertical"
-                    ref={(form) => (addForm = form)}
-                    initialValues={{ name: '' }}
-                    hideRequiredMark
-                    onFinish={handleAdd}
-                    onFinishFailed={failedAdd}
-                    validateTrigger="onSubmit"
-                >
-                    <Form.Item
-                        label={<Trans i18nKey="name.label" />}
-                        name="name"
-                        {...('name' in errorsAdd && {
-                            help: (
-                                <Trans
-                                    i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errorsAdd['name'])}
-                                />
-                            ),
-                            validateStatus: 'error',
-                        })}
-                        rules={[
-                            {
-                                required: true,
-                                message: <Trans i18nKey="name.required" />,
-                            },
-                        ]}
-                    >
-                        <Input placeholder={t('name.label')} />
-                    </Form.Item>
-                    <Form.Item className="modal-submit-btn button-container">
-                        <Button type="text" className="cancel-btn prev" block onClick={cancelAdd}>
-                            <Trans i18nKey="cancel" />
-                        </Button>
-                        <Button type="primary" htmlType="submit" block>
-                            <Trans i18nKey="create" />
-                        </Button>
-                    </Form.Item>
-                </Form>
-            </Modal>
+            <AddPresetForm
+                isModalShow={isModalVisible}
+                close={() => {
+                    setIsModalVisible(false);
+                }}
+                initialAddValues={initialAddValues}
+            />
 
             <Row gutter={[32, 32]} justify="center" className="presets-cards">
                 {isLoading ? (

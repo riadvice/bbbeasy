@@ -16,14 +16,13 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { CustomTagProps } from 'rc-select/lib/BaseSelect';
 import { Button, Col, Form, Input, Modal, Popconfirm, Row, Select, Tag } from 'antd';
 import { Trans, withTranslation } from 'react-i18next';
 import { t } from 'i18next';
 import EN_US from '../locale/en-US.json';
 
-import { UserType } from 'types/UserType';
 import authService from 'services/auth.service';
 
 import { CheckOutlined, CloseOutlined, EditOutlined } from '@ant-design/icons';
@@ -45,7 +44,7 @@ let addForm: FormInstance = null;
 type Props = {
     isLogin?: boolean;
     errors?: string[];
-    defaultColor: string;
+
     isModalShow: boolean;
     close: any;
     shortlink: string;
@@ -73,12 +72,12 @@ export const AddRoomForm = (props: Props) => {
             .then((response) => {
                 console.log(response);
                 Notifications.openNotificationWithIcon('success', t('add_room_success'));
-                props.close();
 
                 dataContext.setDataRooms([...dataContext.dataRooms, response.data.room]);
                 setShortLink('');
 
                 addForm?.resetFields();
+                props.close();
             })
             .catch((error) => {
                 const responseData = error.response.data;
@@ -148,14 +147,7 @@ export const AddRoomForm = (props: Props) => {
         );
     };
 
-    const [currentUser, setCurrentUser] = React.useState<UserType>(null);
-
     const [cancelVisibility, setCancelVisibility] = React.useState<boolean>(true);
-    useEffect(() => {
-        const user: UserType = authService.getCurrentUser();
-
-        setCurrentUser(user);
-    }, []);
 
     const { Option } = Select;
 
