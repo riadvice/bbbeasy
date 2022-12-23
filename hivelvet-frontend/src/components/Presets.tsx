@@ -294,12 +294,11 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editClickHandler, d
                 extra={
                     <div className="table-actions">
                         <Popconfirm
-                            disabled={preset['name'] === 'default' ? true : false}
                             title={t('delete_preset_confirm')}
                             icon={<QuestionCircleOutlined className="red-icon" />}
                             onConfirm={() => handleDelete()}
                         >
-                            <Link>
+                            <Link disabled={preset['name'] === 'default' ? true : false}>
                                 <DeleteOutlined /> <Trans i18nKey="delete" />
                             </Link>
                         </Popconfirm>
@@ -362,10 +361,7 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editClickHandler, d
                         <Form>
                             {modalContent.map((item) => (
                                 <div key={modalTitle + '_' + item.name}>
-                                    <Form.Item
-                                        label={getName(item.name)}
-                                        name={item.name} /*switch valuePropName={item.name}*/
-                                    >
+                                    <Form.Item label={getName(item.name)} name={item.name}>
                                         {item.type == 'bool' && (
                                             <Switch
                                                 defaultChecked={item.value == true ? true : false}

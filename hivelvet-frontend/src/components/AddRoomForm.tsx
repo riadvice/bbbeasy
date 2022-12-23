@@ -52,14 +52,9 @@ type Props = {
 
     initialAddValues: formType;
 };
-type Item = {
-    key: number;
-    name: string;
-    description: string;
-    color: string;
-};
+
 export const AddRoomForm = (props: Props) => {
-    const { isModalShow, shortlink } = props;
+    const { shortlink } = props;
 
     const [loading, setLoading] = React.useState<boolean>(false);
     const [errorsAdd, setErrorsAdd] = React.useState<string[]>([]);

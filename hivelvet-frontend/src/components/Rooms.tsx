@@ -18,26 +18,21 @@
 
 import React, { useState } from 'react';
 
-import { FormInstance } from 'antd/lib/form';
 import { withTranslation } from 'react-i18next';
 
 import { RoomType } from 'types/RoomType';
-import { Badge, Card, Col, Row, Space } from 'antd';
+import { Badge, Button, Card, Col, Row, Space } from 'antd';
 
 import { DataContext } from 'lib/RoomsContext';
-import authService from 'services/auth.service';
+
 import Home from './Home';
 
-type formType = {
-    name?: string;
-    description?: string;
-    color?: string;
-};
+import { MoreOutlined } from '@ant-design/icons';
+
 interface RoomsColProps {
     key: number;
     room: RoomType;
 }
-const addForm: FormInstance = null;
 const RoomsCol: React.FC<RoomsColProps> = ({ key, room }) => {
     const [isShown, setIsShown] = useState<boolean>(false);
 
@@ -61,18 +56,20 @@ const RoomsCol: React.FC<RoomsColProps> = ({ key, room }) => {
                                     style={{
                                         backgroundColor: '#fbbc0b',
                                     }}
-                                    className="profil-btn"
+                                    className="profil-btn room"
                                 >
                                     <span style={{ fontWeight: 'bolder', color: 'white' }}>
                                         {' '}
                                         {room.name.slice(0, 2).toUpperCase()}
                                     </span>
                                 </div>
-                                <br />
                             </Space>
+                            <Button size={'large'} className="moreButton">
+                                <MoreOutlined className="moreIcon" />
+                            </Button>
                         </div>
 
-                        <h4 style={{ 'display': 'flex', 'marginLeft': '20%' }}>{room.name}</h4>
+                        <h4 style={{ 'display': 'flex' }}>{room.name}</h4>
                     </>
                 }
             >

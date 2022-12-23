@@ -144,8 +144,6 @@ class Label extends BaseModel
      */
     public function delete(): array
     {
-        //   $nbUsers = $this->getRoleUsers();
-
         // delete associated roomslabels
         $result = $this->deleteRoomsLabels();
 
