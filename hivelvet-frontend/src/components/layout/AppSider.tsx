@@ -72,7 +72,9 @@ const AppSider = () => {
     ) => {
         if (keys.includes(key)) {
             items.push(menuItem);
-            addActionFunction != null ? addActionFunction(key) : null;
+            if (addActionFunction != null) {
+                addActionFunction(key);
+            }
         }
     };
 
