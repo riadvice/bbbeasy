@@ -170,28 +170,33 @@ class Bootstrap extends Boot
             if (\is_array($permissions)) {
                 foreach ($permissions as $group => $actions) {
                     foreach ($actions as $action) {
-                        $method = match ($action) {
-                            'add'     => 'POST',
-                            'edit'    => 'PUT',
-                            'delete'  => 'DELETE',
-                            'index'   => 'GET',
-                            'collect' => 'GET|POST',
-                            default   => '',
-                        };
-                        if (str_contains($action, 'edit')) {
-                            $method = 'PUT';
-                        }
-                        if ('delete' === $action) {
-                            $acl = '@' . mb_substr($group, 0, -1) . '_' . $action;
-                        } else {
-                            $acl = '@' . $group . '_' . $action;
-                        }
-                        $route = $method . ' ' . $acl;
+                        $route = $this->getRouteByGroupAndAction($group,$action);
                         // allow user role to access to route
                         $access->allow($route, $roleName);
                     }
                 }
             }
         }
+    }
+
+    protected function getRouteByGroupAndAction(string $group, string $action): string
+    {
+        $method = match ($action) {
+            'add'     => 'POST',
+            'edit'    => 'PUT',
+            'delete'  => 'DELETE',
+            'index'   => 'GET',
+            'collect' => 'GET|POST',
+            default   => '',
+        };
+        if (str_contains($action, 'edit')) {
+            $method = 'PUT';
+        }
+        if ('delete' === $action) {
+            $acl = '@' . mb_substr($group, 0, -1) . '_' . $action;
+        } else {
+            $acl = '@' . $group . '_' . $action;
+        }
+        return $method . ' ' . $acl;
     }
 }

@@ -115,7 +115,9 @@ const AppSider = () => {
         const newItems: string[] = [];
         const userPermissions = user.permissions;
         const addActionExist = (key: string) => {
-            userPermissions[key].includes('add') ? newItems.push(key) : null;
+            if (userPermissions[key].includes('add')) {
+                newItems.push(key);
+            }
         };
         if (Object.keys(userPermissions).length != 0) {
             const keys = Object.keys(userPermissions);
