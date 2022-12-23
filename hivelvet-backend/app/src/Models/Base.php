@@ -99,7 +99,7 @@ abstract class Base extends Cortex
      */
     public function prepareFilter($filter)
     {
-        return array_map(fn($value) => '' === $value ? '%' : '%' . $value . '%', $filter);
+        return array_map(fn ($value) => '' === $value ? '%' : '%' . $value . '%', $filter);
     }
 
     /**

@@ -255,6 +255,9 @@
     "edit_preset_success": "Préaglage mis à jour avec succès",
     "delete_preset_success": "Préaglage supprimé avec succès",
 
+    "edit_settings_success": "Paramètres de compagnie et de branding mis à jour avec succès",
+    "edit_preset_settings_success": "Paramètres des salles BigBlueButton mis à jour avec succès",
+
     "new_room": "Nouvelle Salle",
     "room_name": {
         "size": "Le nom de la salle doit comporter au moins 4 caractères"
@@ -267,7 +270,19 @@
     "room-name-already-exist": "Le nom du salle existe déjà",
     "room-link-already-exist": "Le lien du salle existe déjà",
     "add_room_success": "Salle ajoutée avec succés",
-
-    "edit_settings_success": "Paramètres de compagnie et de branding mis à jour avec succès",
-    "edit_preset_settings_success": "Paramètres des salles BigBlueButton mis à jour avec succès"
+    "view": "Voir",
+    "copy_shortlink": "Copier le lien court",
+    "copied": "Copié",
+    "facebook_share": "Partager sur facebook",
+    "twitter_share": "Partager sur Twitter",
+    "linkedin_share": "Partager sur LinkedIn",
+    "email_share": "Envoyer par email",
+    "start": "Démarrer",
+    "room_ppts": "Présentations de la salle",
+    "upload": "Télécharger",
+    "room_recordings": "Enregistrements de salle",
+    "attendees": "Participants",
+    "publish": "Publier",
+    "replay": "Rejouer",
+    "mb": "Mo"
 }

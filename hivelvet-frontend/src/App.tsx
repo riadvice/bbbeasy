@@ -48,8 +48,6 @@ interface IProps {
 }
 
 const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
-    console.log('routes', routes);
-
     const [currentUser, setCurrentUser] = React.useState<UserType>(null);
     const [isLogged, setIsLogged] = React.useState<boolean>(false);
     const [data, setData] = React.useState<RoomType[]>([]);
@@ -58,6 +56,7 @@ const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
         [isLogged, setIsLogged, currentUser, setCurrentUser]
     );
     const providerValue1 = useMemo(() => ({ data, setData }), [data, setData]);
+
     //loading page and user already logged => set current user
     useEffect(() => {
         Logger.info(logs);
@@ -68,11 +67,8 @@ const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
             roomsService
                 .list_rooms(user.id)
                 .then((response) => {
-                    console.log('response', response);
                     roomsService.update_rooms(response.data);
-                    console.log('data of rooms service', roomsService.rooms);
                     setData(response.data);
-                    console.log('data', data);
                 })
                 .catch((error) => {
                     console.error(error);

@@ -16,14 +16,10 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import { LabelType } from './LabelType';
-import { PresetType } from './PresetType';
-import { SubCategoryType } from './SubCategoryType';
-
-export type RoomType = {
+export type RecordingType = {
     id: number;
     name: string;
-    short_link: string;
-    preset_id: number;
-    labels: LabelType[];
+    attendees: number;
+    date: string;
+    duration: string;
 };

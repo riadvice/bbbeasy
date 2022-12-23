@@ -255,6 +255,9 @@
     "edit_preset_success": "تم تحديث الاعدادات بنجاح",
     "delete_preset_success": "تم حذف الاعدادات بنجاح",
 
+    "edit_settings_success": "تم تحديث إعدادات الشركة و العلامات التجارية بنجاح",
+    "edit_preset_settings_success": "تم تحديث إعدادات غرف BigBlueButton بنجاح",
+
     "new_room": "غرفة جديدة",
     "room_name": {
         "size": "يجب أن تتكون اسم القاعة من 4 أحرف على الأقل"
@@ -267,7 +270,19 @@
     "room-name-already-exist": "اسم القاعة موجود بالفعل",
     "room-link-already-exist": "رابط القاعة موجود بالفعل",
     "add_room_success": "تمت إضافة القاعة بنجاح",
-
-    "edit_settings_success": "تم تحديث إعدادات الشركة و العلامات التجارية بنجاح",
-    "edit_preset_settings_success": "تم تحديث إعدادات غرف BigBlueButton بنجاح"
+    "view": "عرض",
+    "copy_shortlink": "نسخ الرابط المختصر",
+    "copied": "منسوخ",
+    "facebook_share": "مشاركة على الفيسبوك",
+    "twitter_share": "مشاركة على تويتر",
+    "linkedin_share": "مشاركة على لينكد إن",
+    "email_share": "إرسال بالبريد الإلكتروني",
+    "start": "ابدأ",
+    "room_ppts": "عروض الغرفة",
+    "upload": "تحميل",
+    "room_recordings": "تسجيلات الغرفة",
+    "attendees": "الحاضرون",
+    "publish": "نشر",
+    "replay": "إعادة",
+    "mb": "م.ب"
 }
