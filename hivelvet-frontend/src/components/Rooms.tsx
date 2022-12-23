@@ -40,11 +40,6 @@ interface RoomsColProps {
 }
 
 const RoomsCol: React.FC<RoomsColProps> = ({ index, room, clickHandler }) => {
-    const labels = [];
-    room.labels.map((item) => {
-        labels.push(item);
-    });
-
     const actions: MenuProps['items'] = [
         {
             key: '1',

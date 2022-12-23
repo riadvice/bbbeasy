@@ -17,8 +17,6 @@
  */
 
 import { LabelType } from './LabelType';
-import { PresetType } from './PresetType';
-import { SubCategoryType } from './SubCategoryType';
 
 export type RoomType = {
     id: number;

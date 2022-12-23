@@ -157,15 +157,6 @@ const RoomDetails = () => {
             5000
         );
     };
-    const DropdownMenu = () => (
-        <Dropdown
-            key="more"
-            menu={{ items: actionsItems }}
-            placement={LocaleService.direction == 'rtl' ? 'bottomLeft' : 'bottomRight'}
-        >
-            <MoreOutlined />
-        </Dropdown>
-    );
 
     //ppts
     const handleCancel = () => setPreviewOpen(false);
@@ -322,7 +313,17 @@ const RoomDetails = () => {
                                                     <Title level={3} style={{ height: addHeight }}>
                                                         {recordingName}
                                                     </Title>
-                                                    <DropdownMenu key="more" />
+                                                    <Dropdown
+                                                        key="more"
+                                                        menu={{ items: actionsItems }}
+                                                        placement={
+                                                            LocaleService.direction == 'rtl'
+                                                                ? 'bottomLeft'
+                                                                : 'bottomRight'
+                                                        }
+                                                    >
+                                                        <MoreOutlined />
+                                                    </Dropdown>
                                                 </div>
 
                                                 <Space direction="vertical" className="recording-infos">
