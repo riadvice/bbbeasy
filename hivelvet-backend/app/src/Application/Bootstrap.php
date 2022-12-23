@@ -170,7 +170,7 @@ class Bootstrap extends Boot
             if (\is_array($permissions)) {
                 foreach ($permissions as $group => $actions) {
                     foreach ($actions as $action) {
-                        $route = $this->getRouteByGroupAndAction($group,$action);
+                        $route = $this->getRouteByGroupAndAction($group, $action);
                         // allow user role to access to route
                         $access->allow($route, $roleName);
                     }
@@ -197,6 +197,7 @@ class Bootstrap extends Boot
         } else {
             $acl = '@' . $group . '_' . $action;
         }
+
         return $method . ' ' . $acl;
     }
 }

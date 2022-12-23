@@ -28,7 +28,7 @@ import { Location } from 'history';
 
 import { getRandomString } from '../../types/getRandomString';
 
-import { AddRoomForm } from '../../components/AddRoomForm';
+import { AddRoomForm } from '../AddRoomForm';
 import { PresetType } from '../../types/PresetType';
 import { LabelType } from '../../types/LabelType';
 
@@ -61,43 +61,74 @@ const AppSider = () => {
     const { t } = useTranslation();
     const comp = useRef();
 
+    type addActionType = (key: string) => void;
+
+    const addItemIfExist = (
+        key: string,
+        menuItem: MenuType,
+        keys: string[],
+        items: MenuType[],
+        addActionFunction?: addActionType
+    ) => {
+        if (keys.includes(key)) {
+            items.push(menuItem);
+            addActionFunction != null ? addActionFunction(key) : null;
+        }
+    };
+
     const addSettings = (keys: string[], items: MenuType[]) => {
-        const subItems = [];
-        if (keys.includes('settings')) {
-            subItems.push({
+        const subItems: MenuType[] = [];
+
+        addItemIfExist(
+            'settings',
+            {
                 name: 'company_branding',
                 icon: 'BgColorsOutlined',
                 path: '/settings/branding',
-            });
-        }
-        if (keys.includes('users')) {
-            subItems.push({
+            },
+            keys,
+            subItems
+        );
+        addItemIfExist(
+            'users',
+            {
                 name: 'users',
                 icon: 'UserOutlined',
                 path: '/settings/users',
-            });
-        }
-        if (keys.includes('roles')) {
-            subItems.push({
+            },
+            keys,
+            subItems
+        );
+        addItemIfExist(
+            'roles',
+            {
                 name: 'roles',
                 icon: 'Role',
                 path: '/settings/roles',
-            });
-        }
-        if (keys.includes('notifications')) {
-            subItems.push({
+            },
+            keys,
+            subItems
+        );
+        addItemIfExist(
+            'notifications',
+            {
                 name: 'notifications',
                 icon: 'BellOutlined',
                 path: '/settings/notifications',
-            });
-        }
-        if (keys.includes('preset_settings')) {
-            subItems.push({
+            },
+            keys,
+            subItems
+        );
+        addItemIfExist(
+            'preset_settings',
+            {
                 name: 'bigbluebutton',
                 icon: 'Bigbluebutton',
                 path: '/settings/bigbluebutton',
-            });
-        }
+            },
+            keys,
+            subItems
+        );
 
         if (subItems.length != 0) {
             items.push({
@@ -121,30 +152,41 @@ const AppSider = () => {
         };
         if (Object.keys(userPermissions).length != 0) {
             const keys = Object.keys(userPermissions);
-            if (keys.includes('rooms')) {
-                items.push({
+
+            addItemIfExist(
+                'rooms',
+                {
                     name: 'rooms',
                     icon: 'Room',
                     path: '/rooms',
-                });
-                addActionExist('rooms');
-            }
-            if (keys.includes('labels')) {
-                items.push({
+                },
+                keys,
+                items,
+                addActionExist
+            );
+            addItemIfExist(
+                'labels',
+                {
                     name: 'labels',
                     icon: 'TagsOutlined',
                     path: '/labels',
-                });
-                addActionExist('labels');
-            }
-            if (keys.includes('presets')) {
-                items.push({
+                },
+                keys,
+                items,
+                addActionExist
+            );
+            addItemIfExist(
+                'presets',
+                {
                     name: 'presets',
                     icon: 'Preset',
                     path: '/presets',
-                });
-                addActionExist('presets');
-            }
+                },
+                keys,
+                items,
+                addActionExist
+            );
+
             addSettings(keys, items);
         }
         items.push({
