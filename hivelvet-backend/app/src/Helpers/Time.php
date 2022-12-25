@@ -41,7 +41,7 @@ class Time
      *
      * @todo add a switch for the f3 database driver and set the timestamp
      */
-    public static function db(DateTime|int|string $unixTime = null, string $dbms = null): bool|string
+    public static function db(\DateTime|int|string $unixTime = null, string $dbms = null): bool|string
     {
         // use current time if bad time value or unset
         if (\is_string($unixTime)) {

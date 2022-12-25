@@ -24,8 +24,7 @@ import EN_US from '../locale/en-US.json';
 import InputColor from './layout/InputColor';
 
 type Props = {
-    isLogin?: boolean;
-    errors?: string[];
+    errors: string[];
     defaultColor: string;
 };
 
@@ -34,28 +33,26 @@ export const AddLabelForm = (props: Props) => {
 
     return (
         <>
-            {!props.isLogin && (
-                <Form.Item
-                    label={<Trans i18nKey="name.label" />}
-                    name="name"
-                    {...('name' in errors && {
-                        help: <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errors['name'])} />,
-                        validateStatus: 'error',
-                    })}
-                    rules={[
-                        {
-                            required: true,
-                            message: <Trans i18nKey="name.required" />,
-                        },
-                        {
-                            min: 1,
-                            message: <Trans i18nKey="label_name.size" />,
-                        },
-                    ]}
-                >
-                    <Input placeholder={t('name.label')} />
-                </Form.Item>
-            )}
+            <Form.Item
+                label={<Trans i18nKey="name.label" />}
+                name="name"
+                {...('name' in errors && {
+                    help: <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errors['name'])} />,
+                    validateStatus: 'error',
+                })}
+                rules={[
+                    {
+                        required: true,
+                        message: <Trans i18nKey="name.required" />,
+                    },
+                    {
+                        min: 1,
+                        message: <Trans i18nKey="label_name.size" />,
+                    },
+                ]}
+            >
+                <Input placeholder={t('name.label')} />
+            </Form.Item>
             <Form.Item label={<Trans i18nKey="description.label" />} name="description">
                 <Input placeholder={t('description.label')} />
             </Form.Item>

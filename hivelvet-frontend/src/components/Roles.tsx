@@ -128,7 +128,7 @@ const Roles = () => {
                                     <Row gutter={[32, 16]}>
                                         {allPrivileges[group].map((action) => (
                                             <Col key={action}>
-                                                <Checkbox value={action}>{action}</Checkbox>
+                                                <Checkbox value={action}>{action.replace('_', ' ')}</Checkbox>
                                             </Col>
                                         ))}
                                     </Row>

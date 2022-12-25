@@ -16,44 +16,50 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import axios from 'axios';
+import { axiosInstance } from '../lib/AxiosInstance';
 import { apiRoutes } from '../routing/backend-config';
 
 class AuthService {
     register(data: object) {
-        return axios.post(apiRoutes.REGISTER_URL, {
+        return axiosInstance.post(apiRoutes.REGISTER_URL, {
             data,
         });
     }
+
     login(email: string, password: string) {
-        return axios.post(apiRoutes.LOGIN_URL, {
+        return axiosInstance.post(apiRoutes.LOGIN_URL, {
             email,
             password,
         });
     }
+
     logout() {
-        return axios.get(apiRoutes.LOGOUT_URL);
+        return axiosInstance.get(apiRoutes.LOGOUT_URL);
     }
 
     reset_password(email: string) {
-        return axios.post(apiRoutes.RESET_PASSWORD_URL, {
+        return axiosInstance.post(apiRoutes.RESET_PASSWORD_URL, {
             email,
         });
     }
+
     change_password(token: string, password: string) {
-        return axios.post(apiRoutes.CHANGE_PASSWORD_URL, {
+        return axiosInstance.post(apiRoutes.CHANGE_PASSWORD_URL, {
             token,
             password,
         });
     }
+
     getResetPasswordByToken(token: string) {
-        return axios.get(apiRoutes.RESET_TOKEN_URL + token, {});
+        return axiosInstance.get(apiRoutes.RESET_TOKEN_URL + token);
     }
+
     getCurrentUser() {
         const userStr: string = localStorage.getItem('user');
         if (userStr) return JSON.parse(userStr);
         return null;
     }
+
     getCurrentSession() {
         const sessionStr: string = localStorage.getItem('session');
         if (sessionStr) return JSON.parse(sessionStr);

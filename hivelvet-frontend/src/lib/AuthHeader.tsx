@@ -17,13 +17,12 @@
  */
 
 import AuthService from '../services/auth.service';
+import { SessionType } from '../types/SessionType';
 
 export const authHeader = () => {
-    const currentSession = AuthService.getCurrentSession();
+    const currentSession: SessionType = AuthService.getCurrentSession();
     if (currentSession != null) {
         // return PHPSESSID cookie in request headers
-        return { Cookie: currentSession.PHPSESSID };
-    } else {
-        return {};
+        return { Cookie: 'PHPSESSID=' + currentSession.PHPSESSID + ';expires=' + currentSession.expires + ';' };
     }
 };

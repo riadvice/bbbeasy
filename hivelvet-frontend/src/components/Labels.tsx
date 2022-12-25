@@ -98,7 +98,7 @@ const Labels = () => {
         const formValues: formType = values;
         setErrorsAdd([]);
         setLoading(true);
-        LabelsService.add_Label(formValues)
+        LabelsService.add_label(formValues)
             .then((response) => {
                 Notifications.openNotificationWithIcon('success', t('add_label_success'));
                 setIsModalVisible(false);
@@ -121,6 +121,9 @@ const Labels = () => {
     };
     const cancelAdd = () => {
         setIsModalVisible(false);
+    };
+    const failedAdd = () => {
+        setErrorsAdd([]);
     };
     const toggleAdd = () => {
         addForm?.resetFields();
@@ -453,10 +456,6 @@ const Labels = () => {
         },
     ];
 
-    const failedAdd = () => {
-        setErrorsAdd([]);
-    };
-
     const mergedColumns = columns.map((col) => {
         if (!col.editable) {
             return col;
@@ -502,7 +501,7 @@ const Labels = () => {
                     onFinishFailed={failedAdd}
                     validateTrigger="onSubmit"
                 >
-                    <AddLabelForm defaultColor="#fbbc0b" errors={errorsAdd} />
+                    <AddLabelForm defaultColor={initialAddValues.color} errors={errorsAdd} />
                     <Form.Item className="modal-submit-btn button-container">
                         <Button type="text" className="cancel-btn prev" block onClick={cancelAdd}>
                             <Trans i18nKey="cancel" />
