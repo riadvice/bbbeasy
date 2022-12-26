@@ -53,7 +53,7 @@ class Room extends BaseModel
 
     public function collectAllByUserId($userId): array
     {
-        return $this->db->exec('SELECT id, name, short_link, preset_id ,user_id FROM rooms where user_id =?', $userId);
+        return $this->db->exec('SELECT id, name, short_link, preset_id FROM rooms where user_id =?', $userId);
     }
 
     public function shortlinkExists($shortlink)

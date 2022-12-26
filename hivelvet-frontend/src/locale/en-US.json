@@ -257,6 +257,9 @@
     "edit_preset_success": "Preset Successfully updated",
     "delete_preset_success": "Preset successfully deleted",
 
+    "edit_settings_success": "Company & Branding settings successfully updated",
+    "edit_preset_settings_success": "BigBlueButton rooms settings successfully updated",
+
     "new_room": "New Room",
     "room_name": {
         "size": "Room Name must have at least 4 characters"
@@ -269,7 +272,19 @@
     "room-name-already-exist": "Room Name already exists",
     "room-link-already-exist": "Room link already exists",
     "add_room_success": "Room Added Successfully",
-
-    "edit_settings_success": "Company & Branding settings successfully updated",
-    "edit_preset_settings_success": "BigBlueButton rooms settings successfully updated"
+    "view": "View",
+    "copy_shortlink": "Copy shortlink",
+    "copied": "Copied",
+    "facebook_share": "Share on facebook",
+    "twitter_share": "Share on twitter",
+    "linkedin_share": "Share on linkedIn",
+    "email_share": "Send by email",
+    "start": "Start",
+    "room_ppts": "Room presentations",
+    "upload": "Upload",
+    "room_recordings": "Room recordings",
+    "attendees": "Attendees",
+    "publish": "Publish",
+    "replay": "Replay",
+    "mb": "MB"
 }

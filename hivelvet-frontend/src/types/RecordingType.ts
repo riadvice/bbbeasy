@@ -16,6 +16,10 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import { UserType } from './UserType';
-
-export type UserFunctionType = (user: UserType, Logged: boolean) => void;
+export type RecordingType = {
+    id: number;
+    name: string;
+    attendees: number;
+    date: string;
+    duration: string;
+};

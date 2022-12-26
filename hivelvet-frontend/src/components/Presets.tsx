@@ -603,11 +603,7 @@ const Presets = () => {
                 {isLoading ? (
                     <Spin size="large" />
                 ) : myPresets.length == 0 ? (
-                    <Empty
-                        imageStyle={{
-                            height: 200,
-                        }}
-                    />
+                    <Empty className="empty-presets" />
                 ) : (
                     myPresets.map((singlePresets) => (
                         <PresetsCol

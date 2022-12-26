@@ -16,104 +16,108 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import RoomsService from '../services/rooms.service';
+import React, { useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Trans, withTranslation } from 'react-i18next';
 
-import { FormInstance } from 'antd/lib/form';
-import { withTranslation } from 'react-i18next';
+import { Avatar, Badge, Card, Col, Dropdown, Row, Space, Tag, Typography } from 'antd';
 
-import _ from 'lodash';
-
-import { Navigate, useLocation } from 'react-router-dom';
-import { RoomType } from 'types/RoomType';
-import { Badge, Button, Card, Col, Row, Space } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
-import { LabelType } from 'types/LabelType';
-import roomsService from '../services/rooms.service';
-import { type } from 'os';
-import { useReducer } from 'react';
-import axios from 'axios';
-import { apiRoutes } from 'routing/backend-config';
-
-import { RoomsContext } from 'lib/RoomsContext';
 import authService from 'services/auth.service';
+import { RoomsContext } from 'lib/RoomsContext';
+import { UserType } from '../types/UserType';
+import { RoomType } from 'types/RoomType';
+import RoomsService from '../services/rooms.service';
+import { ClockCircleOutlined, MoreOutlined, TeamOutlined } from '@ant-design/icons';
+import LocaleService from '../services/locale.service';
+import { MenuProps } from 'antd/lib/menu';
 
-type formType = {
-    name?: string;
-    description?: string;
-    color?: string;
-};
+const { Title } = Typography;
+
 interface RoomsColProps {
-    key: number;
+    index: number;
     room: RoomType;
+    clickHandler: (room: RoomType) => void;
 }
-const addForm: FormInstance = null;
-const RoomsCol: React.FC<RoomsColProps> = ({ key, room }) => {
-    const [isShown, setIsShown] = useState<boolean>(false);
-    const [modalTitle, setModalTitle] = React.useState<string>('');
 
-    const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
-    const [isEditing, setIsEditing] = useState<boolean>(false);
-    const [errorsEdit, setErrorsEdit] = React.useState({});
-    console.log(room.labels);
-    const labels = [];
-    room.labels.map((item) => {
-        labels.push(item);
-    });
-    console.log(labels);
-
-    const props = {};
-
-    const getName = (item) => {
-        return item.replaceAll('_', ' ').charAt(0).toUpperCase() + item.replaceAll('_', ' ').slice(1);
-    };
-
-    const handleSaveEdit = async () => {
-        setErrorsEdit({});
-    };
+const RoomsCol: React.FC<RoomsColProps> = ({ index, room, clickHandler }) => {
+    const actions: MenuProps['items'] = [
+        {
+            key: '1',
+            label: (
+                <Link to={'/rooms/details'} state={{ room: room }}>
+                    <Trans i18nKey={'view'} />
+                </Link>
+            ),
+        },
+        {
+            type: 'divider',
+        },
+        {
+            key: '2',
+            danger: true,
+            label: <Trans i18nKey={'delete'} />,
+        },
+    ];
 
     return (
-        <Col key={key} span={4}>
+        <Col key={index} span={5} className="custom-col-5">
             <Card
+                hoverable
+                bordered={false}
+                onClick={() => clickHandler(room)}
                 title={
-                    <>
-                        <div
-                            className="room-card-title"
-                            onMouseOver={() => setIsShown(true)}
-                            onMouseLeave={() => setIsShown(false)}
+                    <Space size="middle" direction="vertical" className="room-card-title">
+                        <Badge
+                            offset={LocaleService.direction == 'rtl' ? [22, 11] : [-22, 11]}
+                            count={
+                                room.id % 2 == 0 ? (
+                                    <div className="custom-badge-bg">
+                                        <div className="custom-badge">
+                                            <ClockCircleOutlined />
+                                        </div>
+                                    </div>
+                                ) : null
+                            }
                         >
-                            <Space>
-                                <div
-                                    style={{
-                                        backgroundColor: '#fbbc0b',
-                                    }}
-                                    className="profil-btn"
+                            <Badge
+                                offset={LocaleService.direction == 'rtl' ? [22, 69] : [-22, 69]}
+                                count={
+                                    room.id % 2 != 0 ? (
+                                        <div className="custom-badge-bg">
+                                            <div className="custom-badge">
+                                                <TeamOutlined />
+                                            </div>
+                                        </div>
+                                    ) : null
+                                }
+                            >
+                                <Avatar
+                                    size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 95 }}
+                                    className="hivelvet-btn"
                                 >
-                                    <span style={{ fontWeight: 'bolder', color: 'white' }}>
-                                        {' '}
-                                        {room.name.slice(0, 2).toUpperCase()}
-                                    </span>
-                                </div>
-                                <br />
-                            </Space>
-                        </div>
-
-                        <h4 style={{ 'display': 'flex', 'marginLeft': '20%' }}>{room.name}</h4>
-                    </>
+                                    {room.name.slice(0, 2).toUpperCase()}
+                                </Avatar>
+                            </Badge>
+                        </Badge>
+                        <Title level={4}>{room.name}</Title>
+                    </Space>
+                }
+                extra={
+                    <Dropdown
+                        key="more"
+                        menu={{ items: actions }}
+                        placement={LocaleService.direction == 'rtl' ? 'bottomLeft' : 'bottomRight'}
+                    >
+                        <MoreOutlined />
+                    </Dropdown>
                 }
             >
                 <div className="room-card-body">
-                    {room.labels.map((item, subIndex) => {
-                        return (
-                            <Badge
-                                key={item.id}
-                                count={item.name}
-                                style={{
-                                    backgroundColor: item.color,
-                                }}
-                            />
-                        );
-                    })}
+                    {room.labels.map((item) => (
+                        <Tag key={item.id} color={item.color}>
+                            {item.name}
+                        </Tag>
+                    ))}
                 </div>
             </Card>
         </Col>
@@ -121,32 +125,34 @@ const RoomsCol: React.FC<RoomsColProps> = ({ key, room }) => {
 };
 
 const Rooms = () => {
-    const [currentUser, setCurrentUser] = useState(authService.getCurrentUser);
-
     const rooms = React.useContext(RoomsContext);
+    const navigate = useNavigate();
+
+    const showRoomDetails = (room: RoomType) => {
+        navigate('/rooms/details', { state: { room: room } });
+    };
+
+    const fetchData = async () => {
+        const currentUser: UserType = authService.getCurrentUser();
+        await RoomsService.list_rooms(currentUser.id);
+    };
 
     useEffect(() => {
-        setCurrentUser(authService.getCurrentUser);
-        const fetchData = async () => {
-            const result = await axios.get(apiRoutes.LIST_ROOMS_URL + currentUser.id);
-        };
-
         fetchData();
     }, [rooms.data]);
 
-    if (rooms.data.length == 0) {
-        return <Navigate to="/home" />;
-    } else {
-        return (
-            <>
-                <Row gutter={10} className="rooms-cards">
-                    {rooms.data.map((singleRoom) => (
-                        <RoomsCol key={singleRoom.id} room={singleRoom} />
-                    ))}
-                </Row>
-            </>
-        );
-    }
+    return (
+        <Row gutter={10} className="rooms-cards">
+            {rooms.data.map((singleRoom, index) => (
+                <RoomsCol
+                    key={index + '-' + singleRoom.name}
+                    index={index}
+                    room={singleRoom}
+                    clickHandler={showRoomDetails}
+                />
+            ))}
+        </Row>
+    );
 };
 
 export default withTranslation()(Rooms);
