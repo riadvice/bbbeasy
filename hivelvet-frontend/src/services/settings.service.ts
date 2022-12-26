@@ -16,16 +16,16 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import axios from 'axios';
+import { axiosInstance } from '../lib/AxiosInstance';
 import { apiRoutes } from '../routing/backend-config';
 
 class SettingsService {
     collect_settings() {
-        return axios.get(apiRoutes.COLLECT_SETTINGS_URL);
+        return axiosInstance.get(apiRoutes.COLLECT_SETTINGS_URL);
     }
 
     edit_settings(data: object) {
-        return axios.put(apiRoutes.EDIT_SETTINGS_URL, {
+        return axiosInstance.put(apiRoutes.EDIT_SETTINGS_URL, {
             data,
         });
     }

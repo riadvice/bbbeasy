@@ -34,6 +34,7 @@ import { LabelType } from 'types/LabelType';
 import { PresetType } from 'types/PresetType';
 import roomsService from 'services/rooms.service';
 import Notifications from './Notifications';
+
 type formType = {
     name?: string;
     shortlink?: string;
@@ -43,11 +44,10 @@ type formType = {
 let addForm: FormInstance = null;
 
 type Props = {
-    isLogin?: boolean;
     errors?: string[];
     defaultColor: string;
     isModalShow: boolean;
-    close: any;
+    close: () => void;
     shortlink: string;
 
     initialAddValues: formType;
@@ -60,12 +60,22 @@ type Item = {
 };
 export const AddRoomForm = (props: Props) => {
     const { isModalShow, shortlink } = props;
-    // const {currentUser,setCurrentUser}=
     const [loading, setLoading] = React.useState<boolean>(false);
     const [errorsAdd, setErrorsAdd] = React.useState<string[]>([]);
 
     const [readOnly, setReadOnly] = React.useState<boolean>(true);
     const [shortLink, setShortLink] = React.useState<string>('');
+    const [cancelVisibility, setCancelVisibility] = React.useState<boolean>(true);
+
+    const currentUser: UserType = authService.getCurrentUser();
+    const [myPresets, setMyPresets] = React.useState<MyPresetType[]>([]);
+    const [data, setData] = React.useState<Item[]>([]);
+    const labels_data = [];
+
+    data.forEach((label) => {
+        const newlabel = { label: label.name, value: label.color };
+        labels_data.push(newlabel);
+    });
 
     const handleAdd = (values) => {
         const formValues: formType = values;
@@ -73,7 +83,7 @@ export const AddRoomForm = (props: Props) => {
         setErrorsAdd([]);
         setLoading(true);
         roomsService
-            .add_room(formValues, authService.getCurrentUser().id)
+            .add_room(formValues, currentUser.id)
             .then((response) => {
                 console.log(response);
                 Notifications.openNotificationWithIcon('success', t('add_room_success'));
@@ -99,7 +109,6 @@ export const AddRoomForm = (props: Props) => {
         setShortLink('');
         setErrorsAdd([]);
     };
-
     const cancelAdd = () => {
         props.close();
         setShortLink('');
@@ -125,13 +134,6 @@ export const AddRoomForm = (props: Props) => {
         setShortLink(addForm.getFieldValue('shortlink'));
     };
 
-    const [data, setData] = React.useState<Item[]>([]);
-    const labels_data = [];
-    data.forEach((label) => {
-        const newlabel = { label: label.name, value: label.color };
-        labels_data.push(newlabel);
-    });
-
     const tagRender = (props: CustomTagProps) => {
         const { label, value, closable, onClose } = props;
         const onPreventMouseDown = (event: React.MouseEvent<HTMLSpanElement>) => {
@@ -151,15 +153,9 @@ export const AddRoomForm = (props: Props) => {
         );
     };
 
-    const [currentUser, setCurrentUser] = React.useState<UserType>(null);
-    const [myPresets, setMyPresets] = React.useState<MyPresetType[]>([]);
-    const [cancelVisibility, setCancelVisibility] = React.useState<boolean>(true);
     useEffect(() => {
-        const user: UserType = authService.getCurrentUser();
-
-        setCurrentUser(user);
         presetsService
-            .collect_presets(user.id)
+            .collect_presets(currentUser.id)
             .then((response) => {
                 setMyPresets(response.data);
             })
@@ -192,7 +188,7 @@ export const AddRoomForm = (props: Props) => {
                 title={<Trans i18nKey="new_room" />}
                 className="add-modal large-modal"
                 centered
-                visible={props.isModalShow}
+                visible={isModalShow}
                 onOk={handleAdd}
                 onCancel={props.close}
                 footer={null}

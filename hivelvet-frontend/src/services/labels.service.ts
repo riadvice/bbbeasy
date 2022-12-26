@@ -16,28 +16,24 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import axios from 'axios';
+import { axiosInstance } from '../lib/AxiosInstance';
 import { apiRoutes } from '../routing/backend-config';
 
 class LabelsService {
     list_labels() {
-        return axios.get(apiRoutes.LIST_LABEL_URL);
+        return axiosInstance.get(apiRoutes.LIST_LABEL_URL);
     }
 
-    add_Label(data: object) {
-        return axios.post(apiRoutes.ADD_LABEL_URL, {
-            data,
-        });
+    add_label(data: object) {
+        return axiosInstance.post(apiRoutes.ADD_LABEL_URL, { data });
     }
 
     edit_label(data: object, id: number) {
-        return axios.put(apiRoutes.EDIT_LABEL_URL + id, {
-            data,
-        });
+        return axiosInstance.put(apiRoutes.EDIT_LABEL_URL + id, { data });
     }
 
     delete_label(id: number) {
-        return axios.delete(apiRoutes.DELETE_LABEL_URL + id);
+        return axiosInstance.delete(apiRoutes.DELETE_LABEL_URL + id);
     }
 }
 

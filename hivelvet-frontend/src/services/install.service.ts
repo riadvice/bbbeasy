@@ -16,12 +16,12 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import axios from 'axios';
+import { axiosInstance } from '../lib/AxiosInstance';
 import { apiRoutes } from '../routing/backend-config';
 
 class InstallService {
     install(data: object) {
-        return axios.post(apiRoutes.INSTALL_URL, {
+        return axiosInstance.post(apiRoutes.INSTALL_URL, {
             data,
         });
     }

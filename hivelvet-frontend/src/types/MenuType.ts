@@ -1,8 +1,4 @@
-<?php
-
-declare(strict_types=1);
-
-/*
+/**
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -20,35 +16,9 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Actions\PresetSettings;
-
-use Test\Scenario;
-
-/**
- * @internal
- *
- * @coversNothing
- */
-final class CollectTest extends Scenario
-{
-    final protected const COLLECT_PRESET_SETTINGS_ROUTE = 'GET /preset_settings';
-    protected $group                                    = 'Action Preset Setting Collect';
-
-    /**
-     * @param mixed $f3
-     *
-     * @return array
-     *
-     * @throws \ReflectionException
-     */
-    public function testCollect($f3)
-    {
-        $test = $this->newTest();
-        $f3->mock(self::COLLECT_PRESET_SETTINGS_ROUTE);
-
-        json_decode($f3->get('RESPONSE'));
-        $test->expect(JSON_ERROR_NONE === json_last_error(), 'Collect preset settings');
-
-        return $test->results();
-    }
-}
+export type MenuType = {
+    name: string;
+    icon: string;
+    path: string;
+    children?: MenuType[];
+};

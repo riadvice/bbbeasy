@@ -27,9 +27,9 @@ use Actions\RequirePrivilegeTrait;
 use Models\Room;
 
 /**
- * Class Collect.
+ * Class Index.
  */
-class Collect extends BaseAction
+class Index extends BaseAction
 {
     use RequirePrivilegeTrait;
 

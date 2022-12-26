@@ -29,6 +29,7 @@
    --hv-medimum-gray: #c6c6c6; //border bottom table
    --hv-darken-gray: #464a53; //body color
    --hv-medimum-hover-gray: #d9d9d9;
+   --hv-success-color: #52c41a;
    //--hv-bg-layout: #f6f6f6;
    --hv-bg-layout: #f2f2f2;
    --hv-sider-width: 260px;
@@ -144,21 +145,8 @@
  
  .site-header .profil-btn {
    color: var(--hv-darken-gray);
-   clip-path: polygon(50% 0, 50% 0, 95% 25%, 95% 75%, 50% 100%, 50% 100%, 5% 75%, 5% 25%);
+   clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%);
    border-radius: 50%;
- }
- .room-card-title .profil-btn {
-   clip-path: polygon(50% 0, 50% 0, 95% 25%, 95% 75%, 50% 100%, 50% 100%, 5% 75%, 5% 25%);
-   border-radius: 50%;
-   background-color: #fbbc0b;
-   width: 90px;
-   height: 90px;
-   display: flex;
-   justify-content: center;
-   /* display: grid; */
-   /* align-items: center; */
-   padding: 0;
-   padding: 30px 10px;
  }
  .rtl .anticon {
    -webkit-transform: scaleX(-1);
@@ -233,7 +221,7 @@
  .home-guide .hivelvet-btn {
    font-size: 45px !important;
    font-weight: 600;
-   clip-path: polygon(50% 0, 50% 0, 95% 25%, 95% 75%, 50% 100%, 50% 100%, 5% 75%, 5% 25%);
+   clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%);
    margin-bottom: 20px;
    border-radius: 50%;
  }
@@ -244,7 +232,7 @@
  .add-modal .ant-modal-header {
    text-align: center;
  }
- .add-modal{
+ .large-modal {
    width: 720px !important;
  }
  .add-modal .ant-form {
@@ -330,6 +318,10 @@
  .bordered-card .ant-card .ant-card-head .ant-card-head-title {
    padding: 6px 0;
  }
+ .install-form .ant-card-body {
+   display: flex;
+   flex-wrap: wrap;
+ }
  .bordered-card .ant-card .ant-card-body {
    padding: 8px 24px;
  }
@@ -352,10 +344,6 @@
  
  .preset-card-title .input-editable {
    width: 80%;
- }
- .room-card-title{
-   display: flex;
-     justify-content: center;
  }
  .input-editable .ant-input-suffix {
    font-size: 13px;
@@ -393,11 +381,11 @@
    border-color: @primary-color;
  }
  
- .cell-edit-icon, .preset-card-title .edit-btn {
+ .cell-edit-icon, .edit-btn {
    color: var(--hv-medimum-gray) !important;
  }
  
- .cell-edit-icon:hover, .preset-card-title .edit-btn:hover {
+ .cell-edit-icon:hover, .edit-btn:hover {
    color: @primary-color !important;
  }
  
@@ -598,7 +586,7 @@
  
  .features .hivelvet-btn {
    font-size: 22px;
-   clip-path: polygon(50% 0, 50% 0, 95% 25%, 95% 75%, 50% 100%, 50% 100%, 5% 75%, 5% 25%) !important;
+   clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%) !important;
    margin-bottom: 14px;
    border-radius: 50%;
  }
@@ -654,7 +642,8 @@
  }
  
  .install-form {
-   padding: 50px 54px;
+   padding: 16px 24px;
+   //padding: 50px 54px;
  }
  
  .install-steps {
@@ -688,7 +677,7 @@
    padding: 10px;
    color: white;
    background: @primary-color;
-   clip-path: polygon(50% 0, 50% 0, 95% 25%, 95% 75%, 50% 100%, 50% 100%, 5% 75%, 5% 25%);
+   clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%);
    border-radius: 50%;
  }
  
@@ -716,23 +705,6 @@
  .presets-header .ant-space {
    gap: 20px !important;
  }
- .rooms-cards .ant-card {
-   border-radius: 10px !important;
-   border: none !important;
-  
- }
- .rooms-cards .ant-card:hover   {
-   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
- }
- .rooms-cards .ant-card:focus   {
-   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
- }
- .rooms-cards .ant-card:active   {
-   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
- }
- .rooms-cards .ant-card-head {
-   border :none;
- }
  .presets-cards {
    padding-top: 16px;
  }
@@ -750,13 +722,17 @@
      }
    }
  }
+
+ .empty-presets {
+   height: 200px;
+ }
  
  .success-install-icon {
    font-size: 40px !important;
    padding: 20px;
    color: white !important;
    background: @primary-color;
-   clip-path: polygon(50% 0, 50% 0, 95% 25%, 95% 75%, 50% 100%, 50% 100%, 5% 75%, 5% 25%);
+   clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%);
    border-radius: 50%;
  }
  
@@ -786,7 +762,9 @@
  .button-container .ant-form-item-control-input-content {
    display: flex;
  }
- 
+ .button-padding {
+   padding: 0 20%;
+ }
  .install-form .box,
  .install-form .colors-container .ant-form-item {
    flex: 0 0 50%;
@@ -960,8 +938,28 @@
  .mb-0 {
    margin-bottom: 0 !important;
  }
- 
- .text-white {
+
+.mb-5 {
+  margin-bottom: 5px;
+}
+
+.mb-40 {
+  margin-bottom: 40px;
+}
+
+.mt-8 {
+  margin-top: 8px;
+}
+
+.mt-30 {
+  margin-top: 30px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.text-white {
    color: white !important;
  }
  .text-black {
@@ -970,6 +968,9 @@
  .text-grey {
    color: grey !important;
  }
+.text-success {
+  color: var(--hv-success-color) !important;
+}
  
  .site-footer .ant-typography {
    color: #989898 !important;
@@ -1003,30 +1004,207 @@
      width: 0;
    }
  }
- .btn-enabled{
-   background-color:yellow ;
- 
+ .branding-row, .preset-settings-row {
+   align-items: center;
+   min-height: 50vh;
  }
- .btn-disabled{
-   background-color: #c6c6c6;
+
+ /********************ROOMS*****************************/
+.custom-col-5 {
+  flex: 0 0 20% !important;
+  max-width: 20% !important;
+}
+.rooms-cards .ant-card {
+  border-radius: 10px !important;
+}
+.rooms-cards .ant-card-head {
+  border :none;
+}
+.rooms-cards .ant-card-head-wrapper {
+  align-items: start !important;
+}
+.rooms-cards .anticon-more {
+  font-size: 20px;
+}
+
+.rooms-cards .ant-card-body {
+  padding-top: 0;
+}
+
+.room-card-title .hivelvet-btn {
+  font-size: 22px !important;
+  font-weight: 600;
+  clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%);
+  background-color: @primary-color;
+}
+
+.room-card-title .custom-badge-bg {
+  -webkit-clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%);
+  clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%);
+  background: @primary-color;
+
+  width: 25px;
+  height: 25px;
+
+}
+
+.room-card-title .custom-badge {
+  -webkit-clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%);
+  clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%);
+  background: white;
+  padding: 4.5px;
+
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  //width: 23px;
+  //height: 23px;
+}
+
+.room-card-title .custom-badge .anticon {
+  color: @primary-color;
+}
+
+ .page-padding {
+   padding: 16px 24px !important;
  }
- .room-card-body{
-  margin-left: 15%;
+
+ .gray-bg {
+   background: var(--hv-bg-layout) !important;
  }
- .typography{
- //display: none;
- width:3rem;
- height: 3rem;
+
+ .room-details {
+   border-radius: 10px;
  }
- 
- .presets-body{
-   .input{
-     width: fit-content;
-   }
+
+ .room-details #room-shortlink.ant-input-rtl {
+   font-family: 'Poppins', sans-serif !important;
  }
- /*.input{
-   width: fit-content;
- }*/
- .input-add{
-   width: 100%;
+
+.room-details .medias {
+  justify-content: space-between;
+  display: flex;
+}
+
+.room-details .medias .anticon {
+  font-size: 20px;
+  color: var(--hv-darken-gray);
+}
+
+.room-details .hivelvet-btn {
+  font-size: 22px !important;
+  font-weight: 600;
+  clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%);
+  border-radius: 50%;
+}
+
+ .room-presentations {
+   border-radius: 5px;
  }
+
+ .room-presentations h5 {
+   margin-bottom: 15px;
+ }
+
+ .room-presentations .ant-upload-list-picture-card-container,
+ .room-presentations .ant-upload.ant-upload-select-picture-card {
+   width: 83px;
+   height: 83px;
+ }
+
+.room-recordings .search-input,
+.room-recordings .search-input input,
+.room-recordings .search-input.ant-input-affix-wrapper:hover,
+.room-recordings .search-input.ant-input-affix-wrapper:focus {
+   background: var(--hv-bg-layout) !important;
+ }
+
+.hv-mp4 {
+  font-size: 24px !important;
+}
+
+.rtl .hv-mp4 {
+  transform: scaleX(1) !important;
+}
+
+.hv-ppt {
+  font-size: 16px !important;
+}
+
+.room-recordings-body .ant-card {
+  border-radius: 8px;
+}
+
+.room-recordings-body .ant-card:not(:hover) {
+  box-shadow: 0 1px 2px -2px var(--hv-border-gray), 0 3px 6px 0 var(--hv-lighten-gray), 0 5px 12px 4px var(--hv-bg-layout);
+}
+
+.recording-box .recording-infos .anticon {
+  font-size: 14px;
+  padding: 7px;
+  color: white;
+  background: @primary-color;
+  clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%);
+  border-radius: 50%;
+}
+
+.recording-box .recording-infos span {
+  font-size: 12px;
+}
+
+.recording-box .share-icon {
+  float: right;
+  position: absolute;
+  bottom: -22%;
+  right: 20px;
+}
+
+.recording-box .share-icon.ant-btn-rtl {
+  float: left;
+  left: 20px;
+  right: unset;
+}
+
+.recording-box img {
+  filter: brightness(50%);
+  border-radius: 10px 10px 0 0;
+}
+
+.room-recordings-body .ant-card-body {
+  padding: 20px;
+}
+
+.recording-cover {
+  position: absolute;
+  top: 20px;
+  color: white;
+  width: 100%;
+  padding: 0 20px;
+}
+
+.recording-cover .recording-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.recording-cover .recording-header .anticon {
+  font-size: 22px;
+  margin: 0 5px;
+}
+
+.recording-cover h3 {
+  color: white !important;
+}
+
+.file-size {
+  color: var(--hv-medimum-gray);
+  font-size: 13px;
+  margin: 0 12px;
+}
+
+.actions .file-size {
+  font-size: 10px;
+  margin: 0;
+}
+

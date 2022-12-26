@@ -20,12 +20,14 @@ import React from 'react';
 import { Navigate } from 'react-router-dom';
 import AuthService from '../services/auth.service';
 import { UserType } from '../types/UserType';
+import { SessionType } from '../types/SessionType';
 
 const PublicRoute = ({ children, restricted }) => {
-    const user: UserType = AuthService.getCurrentUser();
+    const currentUser: UserType = AuthService.getCurrentUser();
+    const currentSession: SessionType = AuthService.getCurrentSession();
 
     // restricted = true meaning restricted route else public route
-    if (user != null && restricted) {
+    if (currentUser != null && currentSession != null && restricted) {
         return <Navigate to="/home" />;
     }
     return children;

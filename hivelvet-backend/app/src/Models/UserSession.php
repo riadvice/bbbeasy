@@ -20,35 +20,33 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Actions\PresetSettings;
+namespace Models;
 
-use Test\Scenario;
+use Models\Base as BaseModel;
 
 /**
- * @internal
+ * Class UserSession.
  *
- * @coversNothing
+ * @property int       $id
+ * @property string    $session_id
+ * @property text      $data
+ * @property string    $ip
+ * @property string    $agent
+ * @property int       $stamp
+ * @property \DateTime $expires
  */
-final class CollectTest extends Scenario
+class UserSession extends BaseModel
 {
-    final protected const COLLECT_PRESET_SETTINGS_ROUTE = 'GET /preset_settings';
-    protected $group                                    = 'Action Preset Setting Collect';
+    protected $table = 'users_sessions';
 
-    /**
-     * @param mixed $f3
-     *
-     * @return array
-     *
-     * @throws \ReflectionException
-     */
-    public function testCollect($f3)
+    public function getSessionExpirationTime(string $sessionId): string
     {
-        $test = $this->newTest();
-        $f3->mock(self::COLLECT_PRESET_SETTINGS_ROUTE);
+        $result  = $this->db->exec('SELECT expires FROM users_sessions where session_id = :session', [':session' => $sessionId]);
+        $expires = $result[0]['expires'];
+        if (!$expires) {
+            return date('c', time() + \ini_get('session.cookie_lifetime'));
+        }
 
-        json_decode($f3->get('RESPONSE'));
-        $test->expect(JSON_ERROR_NONE === json_last_error(), 'Collect preset settings');
-
-        return $test->results();
+        return $expires;
     }
 }
