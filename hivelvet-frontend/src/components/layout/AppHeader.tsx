@@ -36,7 +36,7 @@ const { Header } = Layout;
 const { Text, Paragraph } = Typography;
 
 const AppHeader = () => {
-    const { isLogged, setIsLogged, currentUser, setCurrentUser } = React.useContext(UserContext);
+    const { isLogged, setIsLogged, currentUser, setCurrentUser, setCurrentSession } = React.useContext(UserContext);
     const currentLocale = LocaleService.language;
     const result: LanguageType[] = Languages.filter((item) => item.value == currentLocale);
     const language: string = result[0].name;
@@ -46,6 +46,8 @@ const AppHeader = () => {
             .then(() => {
                 localStorage.removeItem('user');
                 setCurrentUser(null);
+                localStorage.removeItem('session');
+                setCurrentSession(null);
                 setIsLogged(false);
                 return <Navigate to="/login" />;
             })

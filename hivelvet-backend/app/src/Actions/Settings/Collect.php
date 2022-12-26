@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Actions\Settings;
 
 use Actions\Base as BaseAction;
+use Actions\RequirePrivilegeTrait;
 use Models\Setting;
 
 /**
@@ -30,6 +31,8 @@ use Models\Setting;
  */
 class Collect extends BaseAction
 {
+    use RequirePrivilegeTrait;
+
     /**
      * @param \Base $f3
      * @param array $params

@@ -16,4 +16,10 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-export type LanguageFunctionType = (lang: string) => void;
+export type RecordingType = {
+    id: number;
+    name: string;
+    attendees: number;
+    date: string;
+    duration: string;
+};

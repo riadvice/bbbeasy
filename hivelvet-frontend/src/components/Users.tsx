@@ -18,6 +18,7 @@
 
 import React, { useEffect } from 'react';
 import UsersService from '../services/users.service';
+import RolesService from '../services/roles.service';
 import Notifications from './Notifications';
 import AddUserForm from './AddUserForm';
 import { PaginationType } from '../types/PaginationType';
@@ -81,7 +82,7 @@ const Users = () => {
 
     //list
     const getRoles = () => {
-        UsersService.list_roles()
+        RolesService.collect_roles()
             .then((response) => {
                 const roles = response.data;
                 if (roles.length > 0) {

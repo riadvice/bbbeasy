@@ -16,75 +16,116 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useState } from 'react';
+import React from 'react';
 
 import { withTranslation } from 'react-i18next';
-
-import { RoomType } from 'types/RoomType';
-import { Badge, Button, Card, Col, Row, Space } from 'antd';
 
 import { DataContext } from 'lib/RoomsContext';
 
 import Home from './Home';
 
-import { MoreOutlined } from '@ant-design/icons';
+import { Link, useNavigate } from 'react-router-dom';
+import { Trans } from 'react-i18next';
+
+import { Avatar, Badge, Card, Col, Dropdown, Row, Space, Tag, Typography } from 'antd';
+
+import { RoomType } from 'types/RoomType';
+
+import { ClockCircleOutlined, MoreOutlined, TeamOutlined } from '@ant-design/icons';
+import LocaleService from '../services/locale.service';
+import { MenuProps } from 'antd/lib/menu';
+
+const { Title } = Typography;
 
 interface RoomsColProps {
-    key: number;
+    index: number;
     room: RoomType;
+    clickHandler: (room: RoomType) => void;
 }
-const RoomsCol: React.FC<RoomsColProps> = ({ key, room }) => {
-    const [isShown, setIsShown] = useState<boolean>(false);
 
+const RoomsCol: React.FC<RoomsColProps> = ({ index, room, clickHandler }) => {
     const labels = [];
     room.labels.map((item) => {
         labels.push(item);
     });
+    const actions: MenuProps['items'] = [
+        {
+            key: '1',
+            label: (
+                <Link to={'/rooms/details'} state={{ room: room }}>
+                    <Trans i18nKey={'view'} />
+                </Link>
+            ),
+        },
+        {
+            type: 'divider',
+        },
+        {
+            key: '2',
+            danger: true,
+            label: <Trans i18nKey={'delete'} />,
+        },
+    ];
 
     return (
-        <Col key={key} span={4}>
+        <Col key={index} span={5} className="custom-col-5">
             <Card
+                hoverable
+                bordered={false}
+                onClick={() => clickHandler(room)}
                 title={
-                    <>
-                        <div
-                            className="room-card-title"
-                            onMouseOver={() => setIsShown(true)}
-                            onMouseLeave={() => setIsShown(false)}
+                    <Space size="middle" direction="vertical" className="room-card-title">
+                        <Badge
+                            offset={LocaleService.direction == 'rtl' ? [22, 11] : [-22, 11]}
+                            count={
+                                room.id % 2 == 0 ? (
+                                    <div className="custom-badge-bg">
+                                        <div className="custom-badge">
+                                            <ClockCircleOutlined />
+                                        </div>
+                                    </div>
+                                ) : null
+                            }
                         >
-                            <Space>
-                                <div
-                                    style={{
-                                        backgroundColor: '#fbbc0b',
-                                    }}
-                                    className="profil-btn room"
+                            <Badge
+                                offset={LocaleService.direction == 'rtl' ? [22, 69] : [-22, 69]}
+                                count={
+                                    room.id % 2 != 0 ? (
+                                        <div className="custom-badge-bg">
+                                            <div className="custom-badge">
+                                                <TeamOutlined />
+                                            </div>
+                                        </div>
+                                    ) : null
+                                }
+                            >
+                                <Avatar
+                                    size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 95 }}
+                                    className="hivelvet-btn"
                                 >
-                                    <span style={{ fontWeight: 'bolder', color: 'white' }}>
-                                        {' '}
-                                        {room.name.slice(0, 2).toUpperCase()}
-                                    </span>
-                                </div>
-                            </Space>
-                            <Button size={'large'} className="moreButton">
-                                <MoreOutlined className="moreIcon" />
-                            </Button>
-                        </div>
-
-                        <h4 style={{ 'display': 'flex' }}>{room.name}</h4>
-                    </>
+                                    {room.name.slice(0, 2).toUpperCase()}
+                                </Avatar>
+                            </Badge>
+                        </Badge>
+                        <Title level={4}>{room.name}</Title>
+                    </Space>
+                }
+                extra={
+                    <Dropdown
+                        key="more"
+                        menu={{ items: actions }}
+                        placement={LocaleService.direction == 'rtl' ? 'bottomLeft' : 'bottomRight'}
+                    >
+                        <MoreOutlined />
+                    </Dropdown>
                 }
             >
                 <div className="room-card-body">
-                    {room.labels.map((item) => {
-                        return (
-                            <Badge
-                                key={item.id}
-                                count={item.name}
-                                style={{
-                                    backgroundColor: item.color,
-                                }}
-                            />
-                        );
-                    })}
+                    {room.labels.map((item) => (
+                        <Tag key={item.id} color={item.color}>
+                            {item.name}
+                        </Tag>
+                    ))}
                 </div>
             </Card>
         </Col>
@@ -93,6 +134,11 @@ const RoomsCol: React.FC<RoomsColProps> = ({ key, room }) => {
 
 const Rooms = () => {
     const dataContext = React.useContext(DataContext);
+    const navigate = useNavigate();
+
+    const showRoomDetails = (room: RoomType) => {
+        navigate('/rooms/details', { state: { room: room } });
+    };
 
     if (dataContext.dataRooms.length == 0) {
         return <Home />;
@@ -100,8 +146,13 @@ const Rooms = () => {
         return (
             <>
                 <Row gutter={10} className="rooms-cards">
-                    {dataContext.dataRooms.map((singleRoom) => (
-                        <RoomsCol key={singleRoom.id} room={singleRoom} />
+                    {dataContext.dataRooms.map((singleRoom, index) => (
+                        <RoomsCol
+                            key={index + '-' + singleRoom.name}
+                            index={index}
+                            room={singleRoom}
+                            clickHandler={showRoomDetails}
+                        />
                     ))}
                 </Row>
             </>

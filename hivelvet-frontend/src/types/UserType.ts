@@ -21,5 +21,5 @@ export type UserType = {
     username: string;
     email: string;
     role: string;
-    token?: string;
+    permissions: object;
 };

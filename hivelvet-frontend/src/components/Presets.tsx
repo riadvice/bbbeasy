@@ -63,12 +63,14 @@ import { MyPresetType } from '../types/MyPresetType';
 import { SubCategoryType } from '../types/SubCategoryType';
 import { UploadFile } from 'antd/lib/upload/interface';
 import { getIconName } from '../types/GetIconName';
+
 import authService from '../services/auth.service';
 
 import axios from 'axios';
 import { apiRoutes } from '../routing/backend-config';
 import { DataContext } from 'lib/RoomsContext';
 import AddPresetForm from './AddPresetForm';
+import { UserType } from 'types/UserType';
 
 const { Link, Title } = Typography;
 
@@ -446,16 +448,17 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editClickHandler, d
 };
 
 const Presets = () => {
+    const currentUser: UserType = authService.getCurrentUser();
+
     const [myPresets, setMyPresets] = useState<MyPresetType[]>([]);
 
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const dataContext = React.useContext(DataContext);
-    const initialAddValues: formType = {
-        name: '',
-    };
+
     useEffect(() => {
-        PresetsService.collect_presets(authService.getCurrentUser().id)
+        PresetsService.collect_presets(currentUser.id)
+
             .then((response) => {
                 setMyPresets(response.data);
                 setIsLoading(false);
@@ -532,18 +535,13 @@ const Presets = () => {
                 close={() => {
                     setIsModalVisible(false);
                 }}
-                initialAddValues={initialAddValues}
             />
 
             <Row gutter={[32, 32]} justify="center" className="presets-cards">
                 {isLoading ? (
                     <Spin size="large" />
                 ) : myPresets.length == 0 ? (
-                    <Empty
-                        imageStyle={{
-                            height: 200,
-                        }}
-                    />
+                    <Empty className="empty-presets" />
                 ) : (
                     myPresets.map((singlePresets) => (
                         <PresetsCol

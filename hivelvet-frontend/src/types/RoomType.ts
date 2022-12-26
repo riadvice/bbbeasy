@@ -17,11 +17,11 @@
  */
 
 import { LabelType } from './LabelType';
-import { PresetType } from './PresetType';
 
 export type RoomType = {
+    id: number;
     name: string;
-    shortlink: string;
-    preset: PresetType;
+    short_link: string;
+    preset_id: number;
     labels: LabelType[];
 };

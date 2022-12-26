@@ -33,8 +33,6 @@ type Props = {
     defaultColor: string;
     isModalShow: boolean;
     close: any;
-
-    initialAddValues: formType;
 };
 type formType = {
     name?: string;
@@ -50,6 +48,11 @@ type Item = {
 let addForm: FormInstance = null;
 
 export const AddLabelForm = (props: Props) => {
+    const initialAddValues: formType = {
+        name: '',
+        description: '',
+        color: '#fbbc0b',
+    };
     const { defaultColor } = props;
     const dataContext = React.useContext(DataContext);
     const [data, setData] = React.useState<Item[]>([]);
@@ -61,7 +64,7 @@ export const AddLabelForm = (props: Props) => {
         setErrorsAdd([]);
         setLoading(true);
         labelsService
-            .add_Label(formValues)
+            .add_label(formValues)
             .then((response) => {
                 Notifications.openNotificationWithIcon('success', t('add_label_success'));
                 props.close();
@@ -106,7 +109,7 @@ export const AddLabelForm = (props: Props) => {
                 <Form
                     layout="vertical"
                     ref={(form) => (addForm = form)}
-                    initialValues={props.initialAddValues}
+                    initialValues={initialAddValues}
                     hideRequiredMark
                     onFinish={handleAdd}
                     onFinishFailed={failedAdd}

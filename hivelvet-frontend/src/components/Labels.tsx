@@ -40,12 +40,6 @@ type Item = {
     color: string;
 };
 
-type formType = {
-    name?: string;
-    description?: string;
-    color?: string;
-};
-
 interface EditableCellProps {
     editing: boolean;
     children: React.ReactNode;
@@ -90,11 +84,6 @@ const Labels = () => {
         getLabels();
     }, []);
     // add
-    const initialAddValues: formType = {
-        name: '',
-        description: '',
-        color: '#fbbc0b',
-    };
 
     //delete
     const handleDelete = (key: number) => {
@@ -466,14 +455,15 @@ const Labels = () => {
                     </Button>,
                 ]}
             />
+
             <AddLabelForm
                 defaultColor="#fbbc0b"
                 isModalShow={isModalVisible}
                 close={() => {
                     setIsModalVisible(false);
                 }}
-                initialAddValues={initialAddValues}
             />
+
             <Table
                 className="hivelvet-table"
                 components={{

@@ -16,6 +16,8 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import { UserType } from './UserType';
+import axios from 'axios';
 
-export type UserFunctionType = (user: UserType, Logged: boolean) => void;
+axios.defaults.withCredentials = true;
+
+export const axiosInstance = axios.create();

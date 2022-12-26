@@ -33,6 +33,7 @@ import Branding from '../components/Branding';
 import Users from '../components/Users';
 import Roles from '../components/Roles';
 import PresetSettings from '../components/PresetSettings';
+import RoomDetails from '../components/RoomDetails';
 
 export const webRoutes: IRoute[] = [
     {
@@ -78,6 +79,11 @@ export const webRoutes: IRoute[] = [
     {
         path: '/rooms',
         element: <Rooms />,
+        private: true,
+    },
+    {
+        path: '/rooms/details',
+        element: <RoomDetails />,
         private: true,
     },
     {

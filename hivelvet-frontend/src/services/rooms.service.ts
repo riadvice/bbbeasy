@@ -16,16 +16,16 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import axios from 'axios';
+import { axiosInstance } from '../lib/AxiosInstance';
 import { apiRoutes } from '../routing/backend-config';
 
 class RoomsService {
     list_rooms(user_id) {
-        return axios.get(apiRoutes.LIST_ROOMS_URL + user_id);
+        return axiosInstance.get(apiRoutes.LIST_ROOMS_URL + user_id);
     }
 
-    add_room(data: object, user_id) {
-        return axios.post(apiRoutes.ADD_ROOM_URL, {
+    add_room(data: object, user_id: number) {
+        return axiosInstance.post(apiRoutes.ADD_ROOM_URL, {
             data,
             user_id,
         });

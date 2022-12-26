@@ -36,8 +36,6 @@ type Props = {
 
     isModalShow: boolean;
     close: any;
-
-    initialAddValues: formType;
 };
 type formType = {
     name?: string;
@@ -47,7 +45,9 @@ let addForm: FormInstance = null;
 
 export const AddPresetForm = (props: Props) => {
     const dataContext = React.useContext(DataContext);
-
+    const initialAddValues: formType = {
+        name: '',
+    };
     const [myPresets, setMyPresets] = React.useState<MyPresetType[]>([]);
     const [loading, setLoading] = React.useState<boolean>(false);
     const [errorsAdd, setErrorsAdd] = React.useState<string[]>([]);
@@ -101,7 +101,7 @@ export const AddPresetForm = (props: Props) => {
                 <Form
                     layout="vertical"
                     ref={(form) => (addForm = form)}
-                    initialValues={props.initialAddValues}
+                    initialValues={initialAddValues}
                     hideRequiredMark
                     onFinish={handleAdd}
                     onFinishFailed={failedAdd}

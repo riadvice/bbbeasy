@@ -197,14 +197,14 @@ const Install = () => {
     const onFinish = () => {
         const stepsData: formType = stepForm.getFieldsValue(true);
         if (activeStep == 0) {
-            UsersService.collect_users(stepsData).then((result) => {
-                if (result.data.message) {
-                    setSuccessful(false);
-                    setMessage(result.data.message);
-                } else {
+            UsersService.collect_users(stepsData)
+                .then((result) => {
                     next();
-                }
-            });
+                })
+                .catch((error) => {
+                    setSuccessful(false);
+                    setMessage(error.response.data.message);
+                });
         } else {
             if (activeStep < steps.length - 1) {
                 next();

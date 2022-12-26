@@ -30,7 +30,7 @@ final class CreateRoomsTable extends AbstractMigration
         $table->addColumn('name', 'string', ['limit' => 256, 'null' => false])
             ->addColumn('short_link', 'string', ['limit' => 256, 'null' => false])
             ->addColumn('preset_id', 'integer', ['null' => true])
-            ->addColumn('user_id', 'integer', ['null' => true])
+            ->addColumn('user_id', 'integer', ['null' => false])
             ->addColumn('created_on', 'datetime', ['default' => '0001-01-01 00:00:00', 'timezone' => true])
             ->addColumn('updated_on', 'datetime', ['default' => '0001-01-01 00:00:00', 'timezone' => true])
 

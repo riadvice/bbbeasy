@@ -24,32 +24,30 @@ import { PlusOutlined, DownOutlined } from '@ant-design/icons';
 import DynamicIcon from '../DynamicIcon';
 import { useTranslation, withTranslation } from 'react-i18next';
 
-import PerfectScrollbar from 'perfect-scrollbar';
 import { Location } from 'history';
 
 import { getRandomString } from '../../types/getRandomString';
 
-import { AddRoomForm } from '../../components/AddRoomForm';
+import { AddRoomForm } from '../AddRoomForm';
 import { PresetType } from '../../types/PresetType';
 import { LabelType } from '../../types/LabelType';
 import AddLabelForm from 'components/AddLabelForm';
 import AddPresetForm from 'components/AddPresetForm';
 
+import AuthService from '../../services/auth.service';
+import { UserType } from '../../types/UserType';
+import { MenuType } from '../../types/MenuType';
+
 const { Sider } = Layout;
 const { SubMenu } = Menu;
 
-type menuType = {
-    name: string;
-    icon: string;
-    path: string;
-    children?: menuType[];
-};
 type formType = {
     name?: string;
     shortlink?: string;
     preset?: PresetType;
     labels?: LabelType[];
 };
+
 const AppSider = () => {
     const initialAddValues: formType = {
         name: '',
@@ -57,179 +55,265 @@ const AppSider = () => {
         preset: undefined,
         labels: [],
     };
+
     const [isModalVisibleRoom, setIsModalVisibleRoom] = React.useState<boolean>(false);
     const [isModalVisibleLabel, setIsModalVisibleLabel] = React.useState<boolean>(false);
     const [isModalVisiblePreset, setIsModalVisiblePreset] = React.useState<boolean>(false);
+
+    const [menuItems, setMenuItems] = React.useState<MenuType[]>([]);
+    const [newMenuItems, setNewMenuItems] = React.useState<string[]>([]);
+
     const location: Location = useLocation();
     const [currentPath, setCurrentPath] = React.useState<string>(location.pathname);
     const { t } = useTranslation();
     const comp = useRef();
 
+    type addActionType = (key: string) => void;
+
+    const addItemIfExist = (
+        key: string,
+        menuItem: MenuType,
+        keys: string[],
+        items: MenuType[],
+        addActionFunction?: addActionType
+    ) => {
+        if (keys.includes(key)) {
+            items.push(menuItem);
+            if (addActionFunction != null) {
+                addActionFunction(key);
+            }
+        }
+    };
+
+    const addSettings = (keys: string[], items: MenuType[]) => {
+        const subItems: MenuType[] = [];
+
+        addItemIfExist(
+            'settings',
+            {
+                name: 'company_branding',
+                icon: 'BgColorsOutlined',
+                path: '/settings/branding',
+            },
+            keys,
+            subItems
+        );
+        addItemIfExist(
+            'users',
+            {
+                name: 'users',
+                icon: 'UserOutlined',
+                path: '/settings/users',
+            },
+            keys,
+            subItems
+        );
+        addItemIfExist(
+            'roles',
+            {
+                name: 'roles',
+                icon: 'Role',
+                path: '/settings/roles',
+            },
+            keys,
+            subItems
+        );
+        addItemIfExist(
+            'notifications',
+            {
+                name: 'notifications',
+                icon: 'BellOutlined',
+                path: '/settings/notifications',
+            },
+            keys,
+            subItems
+        );
+        addItemIfExist(
+            'preset_settings',
+            {
+                name: 'bigbluebutton',
+                icon: 'Bigbluebutton',
+                path: '/settings/bigbluebutton',
+            },
+            keys,
+            subItems
+        );
+
+        if (subItems.length != 0) {
+            items.push({
+                name: 'settings',
+                icon: 'General-settings',
+                path: 'sub1',
+                children: subItems,
+            });
+        }
+    };
+
     useEffect(() => {
-        let ps: PerfectScrollbar = new PerfectScrollbar(comp.current);
-        return () => {
-            if (ps) {
-                ps.destroy();
-                ps = null;
+        const user: UserType = AuthService.getCurrentUser();
+        console.log('user', user);
+        console.log('user permissions', user.permissions);
+        const items: MenuType[] = [];
+        const newItems: string[] = [];
+        const userPermissions = user.permissions;
+        const addActionExist = (key: string) => {
+            if (userPermissions[key].includes('add')) {
+                newItems.push(key);
             }
         };
-    }, []);
+        if (Object.keys(userPermissions).length != 0) {
+            const keys = Object.keys(userPermissions);
 
-    const newMenu: JSX.Element = (
-        <Menu>
-            <Menu.Item
-                key="1"
-                onClick={() => {
-                    setIsModalVisibleRoom(true);
-                }}
-            >
-                <span>{t('room')}</span>
-            </Menu.Item>
-            <Menu.Item
-                key="2"
-                onClick={() => {
-                    setIsModalVisibleLabel(true);
-                }}
-            >
-                {t('label')}
-            </Menu.Item>
-            <Menu.Item
-                key="3"
-                onClick={() => {
-                    setIsModalVisiblePreset(true);
-                }}
-            >
-                {t('preset.label')}
-            </Menu.Item>
-        </Menu>
-    );
-    const menuData: menuType[] = [
-        {
-            name: t('rooms'),
-            icon: 'Room',
-            path: '/rooms',
-        },
-        {
-            name: t('labels'),
-            icon: 'TagsOutlined',
-            path: '/labels',
-        },
-        {
-            name: t('presets'),
-            icon: 'Preset',
-            path: '/presets',
-        },
-        {
-            name: t('settings'),
-            icon: 'General-settings',
-            path: 'sub1',
-            children: [
+            addItemIfExist(
+                'rooms',
+
                 {
-                    name: t('company.label') + ' & ' + t('branding'),
-                    icon: 'BgColorsOutlined',
-                    path: '/settings/branding',
+                    name: 'rooms',
+                    icon: 'Room',
+                    path: '/rooms',
                 },
+                keys,
+                items,
+                addActionExist
+            );
+            addItemIfExist(
+                'labels',
                 {
-                    name: t('users'),
-                    icon: 'UserOutlined',
-                    path: '/settings/users',
+                    name: 'labels',
+                    icon: 'TagsOutlined',
+                    path: '/labels',
                 },
+                keys,
+                items,
+                addActionExist
+            );
+            addItemIfExist(
+                'presets',
                 {
-                    name: t('roles'),
-                    icon: 'Role',
-                    path: '/settings/roles',
+                    name: 'presets',
+                    icon: 'Preset',
+                    path: '/presets',
                 },
-                {
-                    name: t('notifications'),
-                    icon: 'BellOutlined',
-                    path: '/settings/notifications',
-                },
-                {
-                    name: 'BigBlueButton',
-                    icon: 'Bigbluebutton',
-                    path: '/settings/bigbluebutton',
-                },
-            ],
-        },
-        {
-            name: t('help'),
+                keys,
+                items,
+                addActionExist
+            );
+
+            addSettings(keys, items);
+        }
+        items.push({
+            name: 'help',
             icon: 'QuestionCircleOutlined',
             path: 'https://riadvice.tn/',
-        },
-    ];
+        });
+        setMenuItems(items);
+        setNewMenuItems(newItems);
+    }, []);
+
     const handleClick = (e) => {
         setCurrentPath(e.key);
     };
 
     return (
         <>
-            <Sider className="site-sider" ref={comp}>
-                <div className="logo">
-                    <Link to={'/'}>
-                        <img className="sider-logo-image" src="/images/logo_01.png" alt="Logo" />
-                    </Link>
-                </div>
-                <div className="menu-sider">
-                    <Dropdown overlay={newMenu}>
-                        <Button size="middle" className="sider-new-btn">
-                            <PlusOutlined /> {t('new')} <DownOutlined />
-                        </Button>
-                    </Dropdown>
-                    <Menu
-                        className="site-menu"
-                        mode="inline"
-                        theme="light"
-                        onClick={handleClick}
-                        selectedKeys={[currentPath]}
-                        defaultOpenKeys={['sub1']}
-                    >
-                        {menuData.map((item) =>
-                            item.children != null ? (
-                                <SubMenu key={item.path} icon={<DynamicIcon type={item.icon} />} title={item.name}>
-                                    {item.children.map((subItem) => (
-                                        <Menu.Item key={subItem.path} icon={<DynamicIcon type={subItem.icon} />}>
-                                            <Link to={subItem.path}>{subItem.name}</Link>
-                                        </Menu.Item>
-                                    ))}
-                                </SubMenu>
-                            ) : (
-                                <Menu.Item key={item.path} icon={<DynamicIcon type={item.icon} />}>
-                                    {item.path.includes('http') ? (
-                                        <a target="_blank" rel="noopener noreferrer" href={item.path}>
-                                            {item.name}
-                                        </a>
-                                    ) : (
-                                        <Link to={item.path}>{item.name}</Link>
-                                    )}
-                                </Menu.Item>
-                            )
+            {menuItems.length != 0 && (
+                <Sider className="site-sider" ref={comp}>
+                    <div className="logo">
+                        <Link to={'/'}>
+                            <img className="sider-logo-image" src="/images/logo_01.png" alt="Logo" />
+                        </Link>
+                    </div>
+                    <div className="menu-sider">
+                        {newMenuItems.length != 0 && (
+                            <Dropdown
+                                overlay={
+                                    <Menu>
+                                        {newMenuItems.includes('rooms') && (
+                                            <Menu.Item key="1" onClick={() => setIsModalVisibleRoom(true)}>
+                                                <span>{t('room')}</span>
+                                            </Menu.Item>
+                                        )}
+                                        {newMenuItems.includes('labels') && (
+                                            <Menu.Item key="2" onClick={() => setIsModalVisibleLabel(true)}>
+                                                {t('label')}
+                                            </Menu.Item>
+                                        )}
+                                        {newMenuItems.includes('presets') && (
+                                            <Menu.Item key="3" onClick={() => setIsModalVisiblePreset(true)}>
+                                                {t('preset.label')}
+                                            </Menu.Item>
+                                        )}
+                                    </Menu>
+                                }
+                            >
+                                <Button size="middle" className="sider-new-btn">
+                                    <PlusOutlined /> {t('new')} <DownOutlined />
+                                </Button>
+                            </Dropdown>
                         )}
-                    </Menu>
-                </div>
-            </Sider>
-            <AddRoomForm
-                isModalShow={isModalVisibleRoom}
-                close={() => {
-                    setIsModalVisibleRoom(false);
-                }}
-                shortlink={'/hv/' + initialAddValues.shortlink}
-                initialAddValues={initialAddValues}
-            />
-            <AddLabelForm
-                defaultColor="#fbbc0b"
-                isModalShow={isModalVisibleLabel}
-                close={() => {
-                    setIsModalVisibleLabel(false);
-                }}
-                initialAddValues={initialAddValues}
-            />
-            <AddPresetForm
-                isModalShow={isModalVisiblePreset}
-                close={() => {
-                    setIsModalVisiblePreset(false);
-                }}
-                initialAddValues={initialAddValues}
-            />
+
+                        <Menu
+                            className="site-menu"
+                            mode="inline"
+                            theme="light"
+                            onClick={handleClick}
+                            selectedKeys={[currentPath]}
+                            defaultOpenKeys={['sub1']}
+                        >
+                            {menuItems.map((item) =>
+                                item.children != null ? (
+                                    <SubMenu
+                                        key={item.path}
+                                        icon={<DynamicIcon type={item.icon} />}
+                                        title={t(item.name)}
+                                    >
+                                        {item.children.map((subItem) => (
+                                            <Menu.Item key={subItem.path} icon={<DynamicIcon type={subItem.icon} />}>
+                                                <Link to={subItem.path}>{t(subItem.name)}</Link>
+                                            </Menu.Item>
+                                        ))}
+                                    </SubMenu>
+                                ) : (
+                                    <Menu.Item key={item.path} icon={<DynamicIcon type={item.icon} />}>
+                                        {item.path.includes('http') ? (
+                                            <a target="_blank" rel="noopener noreferrer" href={item.path}>
+                                                {t(item.name)}
+                                            </a>
+                                        ) : (
+                                            <Link to={item.path}>{t(item.name)}</Link>
+                                        )}
+                                    </Menu.Item>
+                                )
+                            )}
+                        </Menu>
+                    </div>
+                </Sider>
+            )}
+            {newMenuItems.length != 0 ? (
+                <>
+                    {newMenuItems.includes('rooms') && (
+                        <AddRoomForm
+                            isModalShow={isModalVisibleRoom}
+                            close={() => setIsModalVisibleRoom(false)}
+                            shortlink={'/hv/' + initialAddValues.shortlink}
+                            initialAddValues={initialAddValues}
+                        />
+                    )}
+                    {newMenuItems.includes('labels') && (
+                        <AddLabelForm
+                            isModalShow={isModalVisibleLabel}
+                            close={() => setIsModalVisibleLabel(false)}
+                            defaultColor="#fbbc0b"
+                        />
+                    )}
+                    {newMenuItems.includes('presets') && (
+                        <AddPresetForm
+                            isModalShow={isModalVisiblePreset}
+                            close={() => setIsModalVisiblePreset(false)}
+                        />
+                    )}
+                </>
+            ) : null}
         </>
     );
 };
