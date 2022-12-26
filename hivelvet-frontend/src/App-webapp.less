@@ -232,7 +232,7 @@
  .add-modal .ant-modal-header {
    text-align: center;
  }
- .add-modal{
+ .large-modal {
    width: 720px !important;
  }
  .add-modal .ant-form {
@@ -317,6 +317,10 @@
  }
  .bordered-card .ant-card .ant-card-head .ant-card-head-title {
    padding: 6px 0;
+ }
+ .install-form .ant-card-body {
+   display: flex;
+   flex-wrap: wrap;
  }
  .bordered-card .ant-card .ant-card-body {
    padding: 8px 24px;
@@ -638,7 +642,8 @@
  }
  
  .install-form {
-   padding: 50px 54px;
+   padding: 16px 24px;
+   //padding: 50px 54px;
  }
  
  .install-steps {
@@ -757,7 +762,9 @@
  .button-container .ant-form-item-control-input-content {
    display: flex;
  }
- 
+ .button-padding {
+   padding: 0 20%;
+ }
  .install-form .box,
  .install-form .colors-container .ant-form-item {
    flex: 0 0 50%;
@@ -997,31 +1004,10 @@
      width: 0;
    }
  }
- .btn-enabled{
-   background-color:yellow ;
- 
+ .branding-row, .preset-settings-row {
+   align-items: center;
+   min-height: 50vh;
  }
- .btn-disabled{
-   background-color: #c6c6c6;
- }
- .typography{
- //display: none;
- width:3rem;
- height: 3rem;
- }
- 
- .presets-body{
-   .input{
-     width: fit-content;
-   }
- }
- /*.input{
-   width: fit-content;
- }*/
- .input-add{
-   width: 100%;
- }
-
 
  /********************ROOMS*****************************/
 .custom-col-5 {

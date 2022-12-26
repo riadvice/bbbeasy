@@ -63,7 +63,7 @@ import { MyPresetType } from '../types/MyPresetType';
 import { SubCategoryType } from '../types/SubCategoryType';
 import { UploadFile } from 'antd/lib/upload/interface';
 import { getIconName } from '../types/GetIconName';
-import authService from '../services/auth.service';
+import AuthService from '../services/auth.service';
 import { UserType } from '../types/UserType';
 import axios from 'axios';
 import { apiRoutes } from '../routing/backend-config';
@@ -446,16 +446,14 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editClickHandler, d
 };
 
 const Presets = () => {
-    const [currentUser, setCurrentUser] = React.useState<UserType>(null);
+    const currentUser: UserType = AuthService.getCurrentUser();
     const [myPresets, setMyPresets] = useState<MyPresetType[]>([]);
     const [errorsAdd, setErrorsAdd] = useState<string[]>([]);
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
     useEffect(() => {
-        const user: UserType = authService.getCurrentUser();
-        setCurrentUser(user);
-        PresetsService.collect_presets(user.id)
+        PresetsService.collect_presets(currentUser.id)
             .then((response) => {
                 setMyPresets(response.data);
                 setIsLoading(false);

@@ -20,35 +20,21 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Actions\PresetSettings;
+use Phinx\Migration\AbstractMigration;
 
-use Test\Scenario;
-
-/**
- * @internal
- *
- * @coversNothing
- */
-final class CollectTest extends Scenario
+final class AddExpiresColumnToSessionsTable extends AbstractMigration
 {
-    final protected const COLLECT_PRESET_SETTINGS_ROUTE = 'GET /preset_settings';
-    protected $group                                    = 'Action Preset Setting Collect';
-
-    /**
-     * @param mixed $f3
-     *
-     * @return array
-     *
-     * @throws \ReflectionException
-     */
-    public function testCollect($f3)
+    public function up(): void
     {
-        $test = $this->newTest();
-        $f3->mock(self::COLLECT_PRESET_SETTINGS_ROUTE);
+        $table = $this->table('users_sessions');
+        $table->addColumn('expires', 'datetime', ['timezone' => true, 'null' => false])
+            ->save()
+        ;
+    }
 
-        json_decode($f3->get('RESPONSE'));
-        $test->expect(JSON_ERROR_NONE === json_last_error(), 'Collect preset settings');
-
-        return $test->results();
+    public function down(): void
+    {
+        $table = $this->table('users_sessions');
+        $table->removeColumn('expires')->save();
     }
 }

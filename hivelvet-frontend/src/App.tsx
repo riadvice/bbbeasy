@@ -17,8 +17,10 @@
  */
 
 import React, { useEffect, useMemo } from 'react';
+import { withTranslation } from 'react-i18next';
 import { IRoute } from './routing/IRoute';
 import Router from './routing/Router';
+import { hot } from 'react-hot-loader';
 
 import { Layout, ConfigProvider, BackTop, Button } from 'antd';
 import { CaretUpOutlined } from '@ant-design/icons';
@@ -28,16 +30,15 @@ import AppFooter from './components/layout/AppFooter';
 import AppSider from './components/layout/AppSider';
 
 import Logger from './lib/Logger';
-
 import AuthService from './services/auth.service';
 import LocaleService from './services/locale.service';
-import { withTranslation } from 'react-i18next';
-import { UserType } from './types/UserType';
+import RoomsService from 'services/rooms.service';
+
 import { UserContext } from './lib/UserContext';
-import { hot } from 'react-hot-loader';
-import { RoomType } from 'types/RoomType';
-import roomsService from 'services/rooms.service';
 import { RoomsContext } from 'lib/RoomsContext';
+import { UserType } from './types/UserType';
+import { SessionType } from './types/SessionType';
+import { RoomType } from 'types/RoomType';
 
 const { Content } = Layout;
 
@@ -49,25 +50,27 @@ interface IProps {
 
 const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
     const [currentUser, setCurrentUser] = React.useState<UserType>(null);
+    const [currentSession, setCurrentSession] = React.useState<SessionType>(null);
     const [isLogged, setIsLogged] = React.useState<boolean>(false);
     const [data, setData] = React.useState<RoomType[]>([]);
-    const providerValue = useMemo(
-        () => ({ isLogged, setIsLogged, currentUser, setCurrentUser }),
-        [isLogged, setIsLogged, currentUser, setCurrentUser]
+    const userProvider = useMemo(
+        () => ({ isLogged, setIsLogged, currentUser, setCurrentUser, currentSession, setCurrentSession }),
+        [isLogged, setIsLogged, currentUser, setCurrentUser, currentSession, setCurrentSession]
     );
-    const providerValue1 = useMemo(() => ({ data, setData }), [data, setData]);
+    const roomsProvider = useMemo(() => ({ data, setData }), [data, setData]);
 
     //loading page and user already logged => set current user
     useEffect(() => {
-        Logger.info(logs);
         const user: UserType = AuthService.getCurrentUser();
-        if (user != null) {
+        const session: SessionType = AuthService.getCurrentSession();
+        if (user != null && session != null) {
+            Logger.info(logs);
             setCurrentUser(user);
+            setCurrentSession(session);
             setIsLogged(true);
-            roomsService
-                .list_rooms(user.id)
+            RoomsService.list_rooms(user.id)
                 .then((response) => {
-                    roomsService.update_rooms(response.data);
+                    RoomsService.update_rooms(response.data);
                     setData(response.data);
                 })
                 .catch((error) => {
@@ -79,8 +82,8 @@ const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
     return (
         <Layout className={LocaleService.direction == 'rtl' ? 'page-layout-content-rtl' : 'page-layout-content'}>
             <ConfigProvider locale={LocaleService.antdlocale} direction={LocaleService.direction} componentSize="large">
-                <UserContext.Provider value={providerValue}>
-                    <RoomsContext.Provider value={providerValue1}>
+                <UserContext.Provider value={userProvider}>
+                    <RoomsContext.Provider value={roomsProvider}>
                         {isLogged && isSider && <AppSider />}
                         <Layout className="page-layout-body">
                             <AppHeader />

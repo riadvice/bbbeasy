@@ -125,10 +125,11 @@ class Session extends \Prefab
     /**
      * @param $user User
      */
-    public function authorizeUser($user): void
+    public function authorizeUser(User $user): void
     {
         $this->set('user.id', $user->id);
         $this->set('user.role', $user->role->name);
+        $this->set('user.roleId', $user->role->id);
         $this->set('user.username', $user->username);
         $this->set('user.email', $user->email);
         $this->set('user.loggedIn', true);
@@ -157,6 +158,11 @@ class Session extends \Prefab
     public function getRole(): string
     {
         return $this->get('user.role') ?: '';
+    }
+
+    public function getRoleId(): int
+    {
+        return $this->get('user.roleId') ?: 0;
     }
 
     /**

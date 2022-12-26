@@ -20,35 +20,36 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Actions\PresetSettings;
+namespace Actions\Rooms;
 
-use Test\Scenario;
+use Actions\Base as BaseAction;
+use Actions\RequirePrivilegeTrait;
+use Models\Room;
 
 /**
- * @internal
- *
- * @coversNothing
+ * Class Index.
  */
-final class CollectTest extends Scenario
+class Index extends BaseAction
 {
-    final protected const COLLECT_PRESET_SETTINGS_ROUTE = 'GET /preset_settings';
-    protected $group                                    = 'Action Preset Setting Collect';
+    use RequirePrivilegeTrait;
 
     /**
-     * @param mixed $f3
-     *
-     * @return array
-     *
-     * @throws \ReflectionException
+     * @param \Base $f3
+     * @param array $params
      */
-    public function testCollect($f3)
+    public function show($f3, $params): void
     {
-        $test = $this->newTest();
-        $f3->mock(self::COLLECT_PRESET_SETTINGS_ROUTE);
+        $room   = new Room();
+        $data   = [];
+        $userId = $f3->get('PARAMS.user_id');
+        $rooms  = $room->collectAllByUserId($userId);
+        foreach ($rooms as $room) {
+            $r = new Room();
 
-        json_decode($f3->get('RESPONSE'));
-        $test->expect(JSON_ERROR_NONE === json_last_error(), 'Collect preset settings');
-
-        return $test->results();
+            $room['labels'] = $r->getLabels($room['id']);
+            $data[]         = $room;
+        }
+        $this->logger->debug('Collecting rooms');
+        $this->renderJson($data);
     }
 }

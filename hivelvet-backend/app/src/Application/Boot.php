@@ -86,6 +86,8 @@ abstract class Boot
     public function prepareSession(): void
     {
         // store the session into sqlite database file
+        ini_set('session.cookie_lifetime', 1209600);
+        ini_set('session.gc_maxlifetime', 1209600);
         $this->session = new Session(\Registry::get('db'), $this->f3->get('session.table'), false);
         \Registry::set('session', $this->session);
     }
