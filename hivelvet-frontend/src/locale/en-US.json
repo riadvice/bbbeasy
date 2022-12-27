@@ -287,5 +287,6 @@
     "publish": "Publish",
     "replay": "Replay",
     "mb": "MB",
-    "delete_room_success": "Room successfully deleted"
+    "delete_room_success": "Room successfully deleted",
+    "edit_room_success": "Room successfully updated"
 }

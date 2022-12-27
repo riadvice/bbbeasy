@@ -51,7 +51,17 @@ class Room extends BaseModel
     {
         return $this->load(['lower(name) = ? and user_id = ? and id != ?', mb_strtolower($name), $userId, $id]);
     }
+    /**
+     * Get room record by id value.
+     *
+     * @return $this
+     */
+    public function getById(  $id): self
+    {
+        $this->load(['id = ?', $id]);
 
+        return $this;
+    }
     public function collectAllByUserId($userId): array
     {
         return $this->db->exec('SELECT id, name, short_link, preset_id FROM rooms where user_id =?', $userId);
