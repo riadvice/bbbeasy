@@ -101,7 +101,7 @@ const Login = () => {
     };
 
     if (successful) {
-        return <Navigate to="/home" />;
+        return <Navigate to="/rooms" />;
     }
     return (
         <Row>

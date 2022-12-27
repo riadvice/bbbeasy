@@ -21,7 +21,7 @@ import LabelsService from '../services/labels.service';
 import { PaginationType } from '../types/PaginationType';
 import { Trans, withTranslation } from 'react-i18next';
 import { t } from 'i18next';
-import { Badge, Button, Form, Input, Modal, PageHeader, Popconfirm, Space, Table, Typography } from 'antd';
+import { Badge, Button, Form, Input, PageHeader, Popconfirm, Space, Table, Typography } from 'antd';
 import { DeleteOutlined, EditOutlined, QuestionCircleOutlined, SearchOutlined } from '@ant-design/icons';
 import { FormInstance } from 'antd/lib/form';
 import _ from 'lodash';
@@ -29,6 +29,7 @@ import Highlighter from 'react-highlight-words/dist/main';
 import Notifications from './Notifications';
 import AddLabelForm from './AddLabelForm';
 import InputColor from './layout/InputColor';
+import { DataContext } from 'lib/RoomsContext';
 
 const { Link } = Typography;
 
@@ -37,12 +38,6 @@ type Item = {
     name: string;
     description: string;
     color: string;
-};
-
-type formType = {
-    name?: string;
-    description?: string;
-    color?: string;
 };
 
 interface EditableCellProps {
@@ -54,9 +49,9 @@ interface EditableCellProps {
 }
 
 const EditableContext = React.createContext<FormInstance | null>(null);
-let addForm: FormInstance = null;
 
 const Labels = () => {
+    const dataContext = React.useContext(DataContext);
     const [data, setData] = React.useState<Item[]>([]);
     const [loading, setLoading] = React.useState<boolean>(false);
     const [editingKey, setEditingKey] = React.useState<number>(null);
@@ -65,7 +60,7 @@ const Labels = () => {
     const [pagination, setPagination] = React.useState<PaginationType>({ current: 1, pageSize: 5 });
     const [searchText, setSearchText] = React.useState<string>('');
     const [searchedColumn, setSearchedColumn] = React.useState<string>('');
-    const [errorsAdd, setErrorsAdd] = React.useState<string[]>([]);
+
     const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
 
     const getLabels = () => {
@@ -89,47 +84,7 @@ const Labels = () => {
         getLabels();
     }, []);
     // add
-    const initialAddValues: formType = {
-        name: '',
-        description: '',
-        color: '#fbbc0b',
-    };
-    const handleAdd = (values) => {
-        const formValues: formType = values;
-        setErrorsAdd([]);
-        setLoading(true);
-        LabelsService.add_label(formValues)
-            .then((response) => {
-                Notifications.openNotificationWithIcon('success', t('add_label_success'));
-                setIsModalVisible(false);
-                const newRowData: Item = response.data.label;
 
-                //delete data of form
-                addForm?.resetFields();
-                //add data to table
-                setData((data) => [...data, newRowData]);
-            })
-            .catch((error) => {
-                const responseData = error.response.data;
-                if (responseData.errors) {
-                    setErrorsAdd(responseData.errors);
-                }
-            })
-            .finally(() => {
-                setLoading(false);
-            });
-    };
-    const cancelAdd = () => {
-        setIsModalVisible(false);
-    };
-    const failedAdd = () => {
-        setErrorsAdd([]);
-    };
-    const toggleAdd = () => {
-        addForm?.resetFields();
-        setErrorsAdd([]);
-        setIsModalVisible(true);
-    };
     //delete
     const handleDelete = (key: number) => {
         setLoading(true);
@@ -137,6 +92,17 @@ const Labels = () => {
             .then(() => {
                 Notifications.openNotificationWithIcon('success', t('delete_label_success'));
                 setData((labels) => labels.filter((label) => label.key !== key));
+                const indexlabel = dataContext.dataLabels.findIndex((item) => key === item.key);
+                if (indexlabel !== -1) {
+                    dataContext.dataLabels.splice(indexlabel, 1);
+                }
+                dataContext.dataRooms.map((r) => {
+                    const index = r.labels.findIndex((item) => key === item.key);
+
+                    if (index !== -1) {
+                        r.labels.splice(index, 1);
+                    }
+                });
             })
             .catch((error) => {
                 console.error(error);
@@ -349,7 +315,13 @@ const Labels = () => {
                         if (index !== -1 && newRow) {
                             setData((data) => {
                                 data[index] = newRow;
+                                dataContext.dataLabels[index] = newRow;
+
                                 return [...data];
+                            });
+                            dataContext.dataRooms.map((r) => {
+                                const index = r.labels.findIndex((item) => key === item.key);
+                                r.labels[index] = newRow;
                             });
                             cancelEdit();
                         }
@@ -478,40 +450,20 @@ const Labels = () => {
                 className="site-page-header"
                 title={<Trans i18nKey="labels" />}
                 extra={[
-                    <Button key="1" type="primary" onClick={toggleAdd}>
+                    <Button key="1" type="primary" onClick={() => setIsModalVisible(true)}>
                         <Trans i18nKey="new_label" />
                     </Button>,
                 ]}
             />
-            <Modal
-                title={<Trans i18nKey="new_label" />}
-                className="add-modal"
-                centered
-                visible={isModalVisible}
-                onOk={handleAdd}
-                onCancel={cancelAdd}
-                footer={null}
-            >
-                <Form
-                    layout="vertical"
-                    ref={(form) => (addForm = form)}
-                    initialValues={initialAddValues}
-                    hideRequiredMark
-                    onFinish={handleAdd}
-                    onFinishFailed={failedAdd}
-                    validateTrigger="onSubmit"
-                >
-                    <AddLabelForm defaultColor={initialAddValues.color} errors={errorsAdd} />
-                    <Form.Item className="modal-submit-btn button-container">
-                        <Button type="text" className="cancel-btn prev" block onClick={cancelAdd}>
-                            <Trans i18nKey="cancel" />
-                        </Button>
-                        <Button type="primary" htmlType="submit" disabled={loading} block>
-                            <Trans i18nKey="create" />
-                        </Button>
-                    </Form.Item>
-                </Form>
-            </Modal>
+
+            <AddLabelForm
+                defaultColor="#fbbc0b"
+                isModalShow={isModalVisible}
+                close={() => {
+                    setIsModalVisible(false);
+                }}
+            />
+
             <Table
                 className="hivelvet-table"
                 components={{

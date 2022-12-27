@@ -27,6 +27,8 @@ use Models\PresetSettingTest;
 use Models\PresetTest;
 use Models\ResetPasswordTokenTest;
 use Models\RoleTest;
+use Models\RoomLabelTest;
+use Models\RoomTest;
 use Models\SettingTest;
 use Models\UserTest;
 use Test\TestGroup;
@@ -46,5 +48,7 @@ final class ModelsTest extends TestGroup
         SettingTest::class,
         PresetSettingTest::class,
         PresetTest::class,
+        RoomTest::class,
+        RoomLabelTest::class,
     ];
 }

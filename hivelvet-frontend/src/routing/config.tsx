@@ -26,7 +26,6 @@ import Register from '../components/auth/Register';
 import Reset from '../components/auth/ResetPassword';
 import ChangePassword from '../components/auth/ChangePassword';
 
-import Home from '../components/Home';
 import Rooms from '../components/Rooms';
 import Labels from '../components/Labels';
 import Presets from '../components/Presets';
@@ -72,11 +71,11 @@ export const webRoutes: IRoute[] = [
         restricted: true,
     },
 
-    {
+    /* {
         path: '/home',
         element: <Home />,
         private: true,
-    },
+    },*/
     {
         path: '/rooms',
         element: <Rooms />,

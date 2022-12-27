@@ -29,7 +29,7 @@ const PageNotFound = () => {
             subTitle={<Trans i18nKey="not_found" />}
             className="page-not-found"
             extra={
-                <Link className="ant-btn color-blue" to="/">
+                <Link className="ant-btn color-blue" to="/rooms">
                     <Trans i18nKey="back-home" />
                 </Link>
             }

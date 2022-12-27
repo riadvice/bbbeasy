@@ -45,7 +45,7 @@ class Setting extends BaseModel
 {
     protected $table = 'settings';
 
-    public function saveSettings(string $name, string $website, string $plaform, string $terms, string $policy, ?string $logo, ?array $colors): void
+    public function saveSettings(string $name, string $website, string $plaform, ?string $terms, ?string $policy, ?string $logo, ?array $colors): void
     {
         $this->company_name    = $name;
         $this->company_website = $website;

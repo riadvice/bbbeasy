@@ -49,7 +49,7 @@ import {
     SearchOutlined,
     UploadOutlined,
 } from '@ant-design/icons';
-import { FormInstance } from 'antd/lib/form';
+
 import ColorPicker from 'rc-color-picker/lib/ColorPicker';
 
 import { Trans, withTranslation } from 'react-i18next';
@@ -63,10 +63,14 @@ import { MyPresetType } from '../types/MyPresetType';
 import { SubCategoryType } from '../types/SubCategoryType';
 import { UploadFile } from 'antd/lib/upload/interface';
 import { getIconName } from '../types/GetIconName';
-import AuthService from '../services/auth.service';
-import { UserType } from '../types/UserType';
+
+import authService from '../services/auth.service';
+
 import axios from 'axios';
 import { apiRoutes } from '../routing/backend-config';
+import { DataContext } from 'lib/RoomsContext';
+import AddPresetForm from './AddPresetForm';
+import { UserType } from 'types/UserType';
 
 const { Link, Title } = Typography;
 
@@ -79,7 +83,6 @@ interface PresetColProps {
 type formType = {
     name: string;
 };
-let addForm: FormInstance = null;
 
 const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editClickHandler, deleteClickHandler }) => {
     const [file, setFile] = React.useState<UploadFile>(null);
@@ -159,6 +162,7 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editClickHandler, d
             PresetsService.edit_preset(values, preset.id)
                 .then((response) => {
                     editClickHandler(response.data.preset, preset);
+
                     cancelEdit();
                 })
                 .catch((error) => {
@@ -223,6 +227,7 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editClickHandler, d
                                     <span>{preset['name']}</span>
                                     {isShown && (
                                         <Button
+                                            disabled={preset['name'] == 'default' ? true : false}
                                             className="edit-btn"
                                             size="small"
                                             type="link"
@@ -295,7 +300,7 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editClickHandler, d
                             icon={<QuestionCircleOutlined className="red-icon" />}
                             onConfirm={() => handleDelete()}
                         >
-                            <Link>
+                            <Link disabled={preset['name'] === 'default' ? true : false}>
                                 <DeleteOutlined /> <Trans i18nKey="delete" />
                             </Link>
                         </Popconfirm>
@@ -358,10 +363,7 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editClickHandler, d
                         <Form>
                             {modalContent.map((item) => (
                                 <div key={modalTitle + '_' + item.name}>
-                                    <Form.Item
-                                        label={getName(item.name)}
-                                        name={item.name} /*switch valuePropName={item.name}*/
-                                    >
+                                    <Form.Item label={getName(item.name)} name={item.name}>
                                         {item.type == 'bool' && (
                                             <Switch
                                                 defaultChecked={item.value == true ? true : false}
@@ -446,14 +448,17 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editClickHandler, d
 };
 
 const Presets = () => {
-    const currentUser: UserType = AuthService.getCurrentUser();
+    const currentUser: UserType = authService.getCurrentUser();
+
     const [myPresets, setMyPresets] = useState<MyPresetType[]>([]);
-    const [errorsAdd, setErrorsAdd] = useState<string[]>([]);
+
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(true);
+    const dataContext = React.useContext(DataContext);
 
     useEffect(() => {
         PresetsService.collect_presets(currentUser.id)
+
             .then((response) => {
                 setMyPresets(response.data);
                 setIsLoading(false);
@@ -462,37 +467,6 @@ const Presets = () => {
                 console.log(error);
             });
     }, []);
-
-    //add
-    const handleAdd = (values) => {
-        const formValues: formType = values;
-        setErrorsAdd([]);
-        PresetsService.add_preset(formValues, currentUser.id)
-            .then((response) => {
-                setIsModalVisible(false);
-                const newPreset: MyPresetType = response.data.preset;
-                Notifications.openNotificationWithIcon('success', t('add_preset_success'));
-                addForm?.resetFields();
-                setMyPresets([...myPresets, newPreset]);
-            })
-            .catch((error) => {
-                const responseData = error.response.data;
-                if (responseData.errors) {
-                    setErrorsAdd(responseData.errors);
-                }
-            });
-    };
-    const failedAdd = () => {
-        setErrorsAdd([]);
-    };
-    const cancelAdd = () => {
-        setIsModalVisible(false);
-    };
-    const toggleAdd = () => {
-        addForm?.resetFields();
-        setErrorsAdd([]);
-        setIsModalVisible(true);
-    };
 
     //edit
     const editPreset = (newPreset: MyPresetType, oldPreset: MyPresetType) => {
@@ -505,6 +479,8 @@ const Presets = () => {
                 ...newPreset,
             });
             setMyPresets(newPresets);
+            dataContext.setDataPresets(newPresets);
+
             Notifications.openNotificationWithIcon('success', t('edit_preset_success'));
         }
     };
@@ -514,6 +490,10 @@ const Presets = () => {
         PresetsService.delete_preset(id)
             .then(() => {
                 setMyPresets(myPresets.filter((p) => p.id != id));
+                const indexPreset = dataContext.dataPresets.findIndex((item) => id === item.id);
+                if (indexPreset !== -1) {
+                    dataContext.dataPresets.splice(indexPreset, 1);
+                }
                 Notifications.openNotificationWithIcon('success', t('delete_preset_success'));
             })
             .catch((error) => {
@@ -544,60 +524,18 @@ const Presets = () => {
                     >
                         <QuestionCircleOutlined className="help-icon" />
                     </Popover>,
-                    <Button key="1" type="primary" onClick={toggleAdd}>
+                    <Button key="1" type="primary" onClick={() => setIsModalVisible(true)}>
                         <Trans i18nKey="new_preset" />
                     </Button>,
                 ]}
             />
 
-            <Modal
-                title={<Trans i18nKey="new_preset" />}
-                className="add-modal"
-                centered
-                visible={isModalVisible}
-                onOk={handleAdd}
-                onCancel={cancelAdd}
-                footer={null}
-            >
-                <Form
-                    layout="vertical"
-                    ref={(form) => (addForm = form)}
-                    initialValues={{ name: '' }}
-                    hideRequiredMark
-                    onFinish={handleAdd}
-                    onFinishFailed={failedAdd}
-                    validateTrigger="onSubmit"
-                >
-                    <Form.Item
-                        label={<Trans i18nKey="name.label" />}
-                        name="name"
-                        {...('name' in errorsAdd && {
-                            help: (
-                                <Trans
-                                    i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errorsAdd['name'])}
-                                />
-                            ),
-                            validateStatus: 'error',
-                        })}
-                        rules={[
-                            {
-                                required: true,
-                                message: <Trans i18nKey="name.required" />,
-                            },
-                        ]}
-                    >
-                        <Input placeholder={t('name.label')} />
-                    </Form.Item>
-                    <Form.Item className="modal-submit-btn button-container">
-                        <Button type="text" className="cancel-btn prev" block onClick={cancelAdd}>
-                            <Trans i18nKey="cancel" />
-                        </Button>
-                        <Button type="primary" htmlType="submit" block>
-                            <Trans i18nKey="create" />
-                        </Button>
-                    </Form.Item>
-                </Form>
-            </Modal>
+            <AddPresetForm
+                isModalShow={isModalVisible}
+                close={() => {
+                    setIsModalVisible(false);
+                }}
+            />
 
             <Row gutter={[32, 32]} justify="center" className="presets-cards">
                 {isLoading ? (

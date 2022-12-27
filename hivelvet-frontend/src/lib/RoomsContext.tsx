@@ -18,4 +18,4 @@
 
 import { createContext } from 'react';
 
-export const RoomsContext = createContext(null);
+export const DataContext = createContext(null);
