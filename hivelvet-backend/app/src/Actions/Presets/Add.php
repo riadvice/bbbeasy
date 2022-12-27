@@ -43,8 +43,9 @@ class Add extends BaseAction
      */
     public function save($f3, $params): void
     {
-        $body        = $this->getDecodedBody();
-        $form        = $body['data'];
+        $body = $this->getDecodedBody();
+        $form = $body['data'];
+
         $userId      = $body['user_id'];
         $dataChecker = new DataChecker();
 

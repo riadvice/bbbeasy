@@ -161,6 +161,13 @@ class Preset extends BaseModel
         return $categoriesData;
     }
 
+    public function getDefaultOneByUserId($userId, $name = 'default')
+    {
+        $this->load(['lower(name) = ? and user_id = ? ', mb_strtolower($name), $userId]);
+
+        return $this;
+    }
+
     public function addDefaultSettings($successMessage, $errorMessage): bool|string
     {
         try {

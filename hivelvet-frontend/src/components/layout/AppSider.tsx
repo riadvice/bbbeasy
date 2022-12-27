@@ -31,6 +31,8 @@ import { getRandomString } from '../../types/getRandomString';
 import { AddRoomForm } from '../AddRoomForm';
 import { PresetType } from '../../types/PresetType';
 import { LabelType } from '../../types/LabelType';
+import AddLabelForm from 'components/AddLabelForm';
+import AddPresetForm from 'components/AddPresetForm';
 
 import AuthService from '../../services/auth.service';
 import { UserType } from '../../types/UserType';
@@ -53,9 +55,14 @@ const AppSider = () => {
         preset: undefined,
         labels: [],
     };
-    const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
+
+    const [isModalVisibleRoom, setIsModalVisibleRoom] = React.useState<boolean>(false);
+    const [isModalVisibleLabel, setIsModalVisibleLabel] = React.useState<boolean>(false);
+    const [isModalVisiblePreset, setIsModalVisiblePreset] = React.useState<boolean>(false);
+
     const [menuItems, setMenuItems] = React.useState<MenuType[]>([]);
     const [newMenuItems, setNewMenuItems] = React.useState<string[]>([]);
+
     const location: Location = useLocation();
     const [currentPath, setCurrentPath] = React.useState<string>(location.pathname);
     const { t } = useTranslation();
@@ -144,6 +151,8 @@ const AppSider = () => {
 
     useEffect(() => {
         const user: UserType = AuthService.getCurrentUser();
+        console.log('user', user);
+        console.log('user permissions', user.permissions);
         const items: MenuType[] = [];
         const newItems: string[] = [];
         const userPermissions = user.permissions;
@@ -157,6 +166,7 @@ const AppSider = () => {
 
             addItemIfExist(
                 'rooms',
+
                 {
                     name: 'rooms',
                     icon: 'Room',
@@ -219,13 +229,19 @@ const AppSider = () => {
                                 overlay={
                                     <Menu>
                                         {newMenuItems.includes('rooms') && (
-                                            <Menu.Item key="1" onClick={() => setIsModalVisible(true)}>
+                                            <Menu.Item key="1" onClick={() => setIsModalVisibleRoom(true)}>
                                                 <span>{t('room')}</span>
                                             </Menu.Item>
                                         )}
-                                        {newMenuItems.includes('labels') && <Menu.Item key="2">{t('label')}</Menu.Item>}
+                                        {newMenuItems.includes('labels') && (
+                                            <Menu.Item key="2" onClick={() => setIsModalVisibleLabel(true)}>
+                                                {t('label')}
+                                            </Menu.Item>
+                                        )}
                                         {newMenuItems.includes('presets') && (
-                                            <Menu.Item key="3">{t('preset.label')}</Menu.Item>
+                                            <Menu.Item key="3" onClick={() => setIsModalVisiblePreset(true)}>
+                                                {t('preset.label')}
+                                            </Menu.Item>
                                         )}
                                     </Menu>
                                 }
@@ -235,6 +251,7 @@ const AppSider = () => {
                                 </Button>
                             </Dropdown>
                         )}
+
                         <Menu
                             className="site-menu"
                             mode="inline"
@@ -276,11 +293,23 @@ const AppSider = () => {
                 <>
                     {newMenuItems.includes('rooms') && (
                         <AddRoomForm
-                            defaultColor="#fbbc0b"
-                            isModalShow={isModalVisible}
-                            close={() => setIsModalVisible(false)}
+                            isModalShow={isModalVisibleRoom}
+                            close={() => setIsModalVisibleRoom(false)}
                             shortlink={'/hv/' + initialAddValues.shortlink}
                             initialAddValues={initialAddValues}
+                        />
+                    )}
+                    {newMenuItems.includes('labels') && (
+                        <AddLabelForm
+                            isModalShow={isModalVisibleLabel}
+                            close={() => setIsModalVisibleLabel(false)}
+                            defaultColor="#fbbc0b"
+                        />
+                    )}
+                    {newMenuItems.includes('presets') && (
+                        <AddPresetForm
+                            isModalShow={isModalVisiblePreset}
+                            close={() => setIsModalVisiblePreset(false)}
                         />
                     )}
                 </>

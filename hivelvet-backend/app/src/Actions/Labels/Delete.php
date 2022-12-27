@@ -31,4 +31,5 @@ use Actions\RequirePrivilegeTrait;
 class Delete extends DeleteAction
 {
     use RequirePrivilegeTrait;
+    protected $deleteMethodName = 'delete';
 }

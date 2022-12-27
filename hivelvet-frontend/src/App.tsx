@@ -35,10 +35,17 @@ import LocaleService from './services/locale.service';
 import RoomsService from 'services/rooms.service';
 
 import { UserContext } from './lib/UserContext';
-import { RoomsContext } from 'lib/RoomsContext';
+
+import { RoomType } from 'types/RoomType';
+
+import { DataContext } from 'lib/RoomsContext';
+import labelsService from 'services/labels.service';
+import { LabelType } from 'types/LabelType';
+import { PresetType } from 'types/PresetType';
+import presetsService from 'services/presets.service';
+
 import { UserType } from './types/UserType';
 import { SessionType } from './types/SessionType';
-import { RoomType } from 'types/RoomType';
 
 const { Content } = Layout;
 
@@ -52,12 +59,20 @@ const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
     const [currentUser, setCurrentUser] = React.useState<UserType>(null);
     const [currentSession, setCurrentSession] = React.useState<SessionType>(null);
     const [isLogged, setIsLogged] = React.useState<boolean>(false);
-    const [data, setData] = React.useState<RoomType[]>([]);
+
+    const [dataRooms, setDataRooms] = React.useState<RoomType[]>([]);
+    const [dataLabels, setDataLabels] = React.useState<LabelType[]>([]);
+    const [dataPresets, setDataPresets] = React.useState<PresetType[]>([]);
+
+    const dataProvider = useMemo(
+        () => ({ dataRooms, setDataRooms, dataLabels, setDataLabels, dataPresets, setDataPresets }),
+        [dataRooms, setDataRooms, dataLabels, setDataLabels, dataPresets, setDataPresets]
+    );
+
     const userProvider = useMemo(
         () => ({ isLogged, setIsLogged, currentUser, setCurrentUser, currentSession, setCurrentSession }),
         [isLogged, setIsLogged, currentUser, setCurrentUser, currentSession, setCurrentSession]
     );
-    const roomsProvider = useMemo(() => ({ data, setData }), [data, setData]);
 
     //loading page and user already logged => set current user
     useEffect(() => {
@@ -70,20 +85,35 @@ const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
             setIsLogged(true);
             RoomsService.list_rooms(user.id)
                 .then((response) => {
-                    RoomsService.update_rooms(response.data);
-                    setData(response.data);
+                    setDataRooms(response.data);
                 })
                 .catch((error) => {
                     console.error(error);
                 });
+            presetsService
+                .collect_presets(user.id)
+                .then((response) => {
+                    setDataPresets(response.data);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
         }
+        labelsService
+            .list_labels()
+            .then((response) => {
+                setDataLabels(response.data);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     }, []);
 
     return (
         <Layout className={LocaleService.direction == 'rtl' ? 'page-layout-content-rtl' : 'page-layout-content'}>
             <ConfigProvider locale={LocaleService.antdlocale} direction={LocaleService.direction} componentSize="large">
                 <UserContext.Provider value={userProvider}>
-                    <RoomsContext.Provider value={roomsProvider}>
+                    <DataContext.Provider value={dataProvider}>
                         {isLogged && isSider && <AppSider />}
                         <Layout className="page-layout-body">
                             <AppHeader />
@@ -92,7 +122,7 @@ const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
                             </Content>
                             <AppFooter />
                         </Layout>
-                    </RoomsContext.Provider>
+                    </DataContext.Provider>
                 </UserContext.Provider>
             </ConfigProvider>
             <BackTop>

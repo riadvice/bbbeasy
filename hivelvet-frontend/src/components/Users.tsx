@@ -345,7 +345,7 @@ const Users = () => {
                 err[errorKey] = error['errors'][0];
             });
             console.log(err);
-            //setErrorsEdit(err);
+            setErrorsEdit(err);
         }
     };
 

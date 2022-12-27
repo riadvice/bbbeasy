@@ -1,4 +1,8 @@
-/**
+<?php
+
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -16,10 +20,20 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import App from './App';
+namespace Suite;
 
-test('renders learn react link', () => {
-    // render(<App />);
-    // const linkElement = screen.getByText(/learn react/i);
-    // expect(linkElement).toBeInTheDocument();
-});
+use Actions\Rooms\AddTest;
+use Actions\Rooms\CollectTest;
+use Test\TestGroup;
+
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
+final class RoomActionsTest extends TestGroup
+{
+    protected $classes = [AddTest::class, CollectTest::class];
+
+    protected $quiet = true;
+}

@@ -16,17 +16,21 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useEffect } from 'react';
+import React from 'react';
+
+import { withTranslation } from 'react-i18next';
+
+import { DataContext } from 'lib/RoomsContext';
+
+import Home from './Home';
+
 import { Link, useNavigate } from 'react-router-dom';
-import { Trans, withTranslation } from 'react-i18next';
+import { Trans } from 'react-i18next';
 
 import { Avatar, Badge, Card, Col, Dropdown, Row, Space, Tag, Typography } from 'antd';
 
-import authService from 'services/auth.service';
-import { RoomsContext } from 'lib/RoomsContext';
-import { UserType } from '../types/UserType';
 import { RoomType } from 'types/RoomType';
-import RoomsService from '../services/rooms.service';
+
 import { ClockCircleOutlined, MoreOutlined, TeamOutlined } from '@ant-design/icons';
 import LocaleService from '../services/locale.service';
 import { MenuProps } from 'antd/lib/menu';
@@ -40,6 +44,10 @@ interface RoomsColProps {
 }
 
 const RoomsCol: React.FC<RoomsColProps> = ({ index, room, clickHandler }) => {
+    const labels = [];
+    room.labels.map((item) => {
+        labels.push(item);
+    });
     const actions: MenuProps['items'] = [
         {
             key: '1',
@@ -125,34 +133,31 @@ const RoomsCol: React.FC<RoomsColProps> = ({ index, room, clickHandler }) => {
 };
 
 const Rooms = () => {
-    const rooms = React.useContext(RoomsContext);
+    const dataContext = React.useContext(DataContext);
     const navigate = useNavigate();
 
     const showRoomDetails = (room: RoomType) => {
         navigate('/rooms/details', { state: { room: room } });
     };
 
-    const fetchData = async () => {
-        const currentUser: UserType = authService.getCurrentUser();
-        await RoomsService.list_rooms(currentUser.id);
-    };
-
-    useEffect(() => {
-        fetchData();
-    }, [rooms.data]);
-
-    return (
-        <Row gutter={10} className="rooms-cards">
-            {rooms.data.map((singleRoom, index) => (
-                <RoomsCol
-                    key={index + '-' + singleRoom.name}
-                    index={index}
-                    room={singleRoom}
-                    clickHandler={showRoomDetails}
-                />
-            ))}
-        </Row>
-    );
+    if (dataContext.dataRooms.length == 0) {
+        return <Home />;
+    } else {
+        return (
+            <>
+                <Row gutter={10} className="rooms-cards">
+                    {dataContext.dataRooms.map((singleRoom, index) => (
+                        <RoomsCol
+                            key={index + '-' + singleRoom.name}
+                            index={index}
+                            room={singleRoom}
+                            clickHandler={showRoomDetails}
+                        />
+                    ))}
+                </Row>
+            </>
+        );
+    }
 };
 
 export default withTranslation()(Rooms);

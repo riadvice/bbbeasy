@@ -27,8 +27,9 @@ const PublicRoute = ({ children, restricted }) => {
     const currentSession: SessionType = AuthService.getCurrentSession();
 
     // restricted = true meaning restricted route else public route
+
     if (currentUser != null && currentSession != null && restricted) {
-        return <Navigate to="/home" />;
+        return <Navigate to="/rooms" />;
     }
     return children;
 };

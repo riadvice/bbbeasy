@@ -1,4 +1,8 @@
-/**
+<?php
+
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -16,10 +20,31 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import App from './App';
+namespace Fake;
 
-test('renders learn react link', () => {
-    // render(<App />);
-    // const linkElement = screen.getByText(/learn react/i);
-    // expect(linkElement).toBeInTheDocument();
-});
+use Faker\Factory as Faker;
+use Models\Label;
+use Models\Room;
+use Models\RoomLabel;
+
+class RoomLabelFaker
+{
+    private static array $storage = [];
+
+    public static function create(Room $room, Label $label, $storageName = null)
+    {
+        $faker     = Faker::create();
+        $roomlabel = new RoomLabel();
+
+        $roomlabel->room_id  = $room->id;
+        $roomlabel->label_id = $label->id;
+
+        $roomlabel->save();
+
+        if (null !== $storageName) {
+            self::$storage[$storageName] = $roomlabel;
+        }
+
+        return $roomlabel;
+    }
+}

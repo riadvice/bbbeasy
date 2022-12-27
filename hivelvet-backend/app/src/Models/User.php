@@ -76,9 +76,11 @@ class User extends BaseModel
     /**
      * Get user record by id value.
      *
+     * @param mixed $id
+     *
      * @return $this
      */
-    public function getById(int $id): self
+    public function getById($id): self
     {
         $this->load(['id = ?', $id]);
 

@@ -16,24 +16,22 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { CustomTagProps } from 'rc-select/lib/BaseSelect';
 import { Button, Col, Form, Input, Modal, Popconfirm, Row, Select, Tag } from 'antd';
 import { Trans, withTranslation } from 'react-i18next';
 import { t } from 'i18next';
 import EN_US from '../locale/en-US.json';
 
-import { UserType } from 'types/UserType';
 import authService from 'services/auth.service';
-import presetsService from 'services/presets.service';
-import { MyPresetType } from 'types/MyPresetType';
-import labelsService from 'services/labels.service';
+
 import { CheckOutlined, CloseOutlined, EditOutlined } from '@ant-design/icons';
 import { FormInstance } from 'antd/es/form/Form';
 import { LabelType } from 'types/LabelType';
 import { PresetType } from 'types/PresetType';
 import roomsService from 'services/rooms.service';
 import Notifications from './Notifications';
+import { DataContext } from 'lib/RoomsContext';
 
 type formType = {
     name?: string;
@@ -44,38 +42,25 @@ type formType = {
 let addForm: FormInstance = null;
 
 type Props = {
+    isLogin?: boolean;
     errors?: string[];
-    defaultColor: string;
+
     isModalShow: boolean;
-    close: () => void;
+    close: any;
     shortlink: string;
 
     initialAddValues: formType;
 };
-type Item = {
-    key: number;
-    name: string;
-    description: string;
-    color: string;
-};
+
 export const AddRoomForm = (props: Props) => {
-    const { isModalShow, shortlink } = props;
+    const { shortlink } = props;
+
     const [loading, setLoading] = React.useState<boolean>(false);
     const [errorsAdd, setErrorsAdd] = React.useState<string[]>([]);
 
     const [readOnly, setReadOnly] = React.useState<boolean>(true);
     const [shortLink, setShortLink] = React.useState<string>('');
-    const [cancelVisibility, setCancelVisibility] = React.useState<boolean>(true);
-
-    const currentUser: UserType = authService.getCurrentUser();
-    const [myPresets, setMyPresets] = React.useState<MyPresetType[]>([]);
-    const [data, setData] = React.useState<Item[]>([]);
-    const labels_data = [];
-
-    data.forEach((label) => {
-        const newlabel = { label: label.name, value: label.color };
-        labels_data.push(newlabel);
-    });
+    const dataContext = React.useContext(DataContext);
 
     const handleAdd = (values) => {
         const formValues: formType = values;
@@ -83,14 +68,16 @@ export const AddRoomForm = (props: Props) => {
         setErrorsAdd([]);
         setLoading(true);
         roomsService
-            .add_room(formValues, currentUser.id)
+            .add_room(formValues, authService.getCurrentUser().id)
             .then((response) => {
                 console.log(response);
                 Notifications.openNotificationWithIcon('success', t('add_room_success'));
-                props.close();
+
+                dataContext.setDataRooms([...dataContext.dataRooms, response.data.room]);
                 setShortLink('');
 
                 addForm?.resetFields();
+                props.close();
             })
             .catch((error) => {
                 const responseData = error.response.data;
@@ -109,6 +96,7 @@ export const AddRoomForm = (props: Props) => {
         setShortLink('');
         setErrorsAdd([]);
     };
+
     const cancelAdd = () => {
         props.close();
         setShortLink('');
@@ -134,6 +122,12 @@ export const AddRoomForm = (props: Props) => {
         setShortLink(addForm.getFieldValue('shortlink'));
     };
 
+    const labels_data = [];
+    dataContext.dataLabels.forEach((label) => {
+        const newlabel = { label: label.name, value: label.color };
+        labels_data.push(newlabel);
+    });
+
     const tagRender = (props: CustomTagProps) => {
         const { label, value, closable, onClose } = props;
         const onPreventMouseDown = (event: React.MouseEvent<HTMLSpanElement>) => {
@@ -153,26 +147,7 @@ export const AddRoomForm = (props: Props) => {
         );
     };
 
-    useEffect(() => {
-        presetsService
-            .collect_presets(currentUser.id)
-            .then((response) => {
-                setMyPresets(response.data);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-        labelsService
-            .list_labels()
-            .then((response) => {
-                if (response.data) {
-                    setData(response.data);
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }, []);
+    const [cancelVisibility, setCancelVisibility] = React.useState<boolean>(true);
 
     const { Option } = Select;
 
@@ -188,7 +163,7 @@ export const AddRoomForm = (props: Props) => {
                 title={<Trans i18nKey="new_room" />}
                 className="add-modal large-modal"
                 centered
-                visible={isModalShow}
+                visible={props.isModalShow}
                 onOk={handleAdd}
                 onCancel={props.close}
                 footer={null}
@@ -260,7 +235,7 @@ export const AddRoomForm = (props: Props) => {
                                     }
                                     onFocus={() => setCancelVisibility(false)}
                                 >
-                                    {myPresets.map((item) => (
+                                    {dataContext.dataPresets.map((item) => (
                                         <Option key={item.id} value={item.id} className="text-capitalize">
                                             {item.name}
                                         </Option>

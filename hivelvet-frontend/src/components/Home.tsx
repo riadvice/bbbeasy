@@ -90,7 +90,6 @@ const Home = () => {
                     <Trans i18nKey="create-first-room" />
                 </Button>
                 <AddRoomForm
-                    defaultColor="#fbbc0b"
                     isModalShow={isModalVisible}
                     close={() => {
                         setIsModalVisible(false);
