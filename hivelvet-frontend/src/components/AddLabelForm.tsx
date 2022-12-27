@@ -26,7 +26,7 @@ import { DataContext } from 'lib/RoomsContext';
 import labelsService from 'services/labels.service';
 import Notifications from './Notifications';
 import { FormInstance } from 'antd/lib/form';
-import { PaginationType } from '../types/PaginationType';
+
 type Props = {
     isLogin?: boolean;
     errors?: string[];

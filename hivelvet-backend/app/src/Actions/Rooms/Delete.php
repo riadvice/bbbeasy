@@ -1,4 +1,8 @@
-/**
+<?php
+
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -16,28 +20,17 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import { axiosInstance } from '../lib/AxiosInstance';
-import { apiRoutes } from '../routing/backend-config';
+namespace Actions\Rooms;
 
-class RoomsService {
-    list_rooms(user_id) {
-        return axiosInstance.get(apiRoutes.LIST_ROOMS_URL + user_id);
-    }
+use Actions\Delete as DeleteAction;
+use Actions\RequirePrivilegeTrait;
 
-    add_room(data: object, user_id: number) {
-        return axiosInstance.post(apiRoutes.ADD_ROOM_URL, {
-            data,
-            user_id,
-        });
-    }
-    edit_room(data: object, id: number) {
-        return axiosInstance.put(apiRoutes.EDIT_ROOM_URL + id, {
-            data,
-        });
-    }
-    delete_room(id: number) {
-        return axiosInstance.delete(apiRoutes.DELETE_ROOM_URL + id);
-    }
+/**
+ * Class Delete.
+ */
+class Delete extends DeleteAction
+{
+    use RequirePrivilegeTrait;
+
+    protected $deleteMethodName = 'delete';
 }
-
-export default new RoomsService();

@@ -16,7 +16,7 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { withTranslation } from 'react-i18next';
 
@@ -24,55 +24,56 @@ import { DataContext } from 'lib/RoomsContext';
 
 import Home from './Home';
 
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Trans } from 'react-i18next';
 
-import { Avatar, Badge, Card, Col, Dropdown, Row, Space, Tag, Typography } from 'antd';
+import { Avatar, Badge, Card, Col, Dropdown, Row, Space, Tag, Typography, Menu } from 'antd';
 
 import { RoomType } from 'types/RoomType';
 
 import { ClockCircleOutlined, MoreOutlined, TeamOutlined } from '@ant-design/icons';
 import LocaleService from '../services/locale.service';
-import { MenuProps } from 'antd/lib/menu';
+import roomsService from 'services/rooms.service';
+import Notifications from './Notifications';
 
+import { t } from 'i18next';
+import authService from 'services/auth.service';
 const { Title } = Typography;
 
 interface RoomsColProps {
     index: number;
     room: RoomType;
-    clickHandler: (room: RoomType) => void;
+    rooms: RoomType[];
+    deleteClickHandler: () => void;
 }
 
-const RoomsCol: React.FC<RoomsColProps> = ({ index, room, clickHandler }) => {
+const RoomsCol: React.FC<RoomsColProps> = ({ index, room, deleteClickHandler }) => {
     const labels = [];
+    const navigate = useNavigate();
     room.labels.map((item) => {
         labels.push(item);
     });
-    const actions: MenuProps['items'] = [
-        {
-            key: '1',
-            label: (
-                <Link to={'/rooms/details'} state={{ room: room }}>
-                    <Trans i18nKey={'view'} />
-                </Link>
-            ),
-        },
-        {
-            type: 'divider',
-        },
-        {
-            key: '2',
-            danger: true,
-            label: <Trans i18nKey={'delete'} />,
-        },
-    ];
+    //delete
+    const handleDelete = () => {
+        deleteClickHandler();
+    };
+    const actions = (
+        <Menu>
+            <Menu.Item key="1" onClick={() => navigate('/rooms/details', { state: { room: room } })}>
+                <Trans i18nKey={'view'} />
+            </Menu.Item>
+            <Menu.Item key="2" danger onClick={() => handleDelete()}>
+                <Trans i18nKey={'delete'} />
+            </Menu.Item>
+        </Menu>
+    );
 
     return (
         <Col key={index} span={5} className="custom-col-5">
             <Card
                 hoverable
                 bordered={false}
-                onClick={() => clickHandler(room)}
+                //onClick={() => clickHandler(room)}
                 title={
                     <Space size="middle" direction="vertical" className="room-card-title">
                         <Badge
@@ -113,7 +114,7 @@ const RoomsCol: React.FC<RoomsColProps> = ({ index, room, clickHandler }) => {
                 extra={
                     <Dropdown
                         key="more"
-                        menu={{ items: actions }}
+                        overlay={actions}
                         placement={LocaleService.direction == 'rtl' ? 'bottomLeft' : 'bottomRight'}
                     >
                         <MoreOutlined />
@@ -134,24 +135,52 @@ const RoomsCol: React.FC<RoomsColProps> = ({ index, room, clickHandler }) => {
 
 const Rooms = () => {
     const dataContext = React.useContext(DataContext);
+    const [rooms, setRooms] = React.useState<RoomType[]>(dataContext.dataRooms);
     const navigate = useNavigate();
-
-    const showRoomDetails = (room: RoomType) => {
-        navigate('/rooms/details', { state: { room: room } });
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const deleteRoom = (id) => {
+        console.log('delete room');
+        roomsService
+            .delete_room(id)
+            .then((result) => {
+                console.log(result);
+                setRooms(rooms.filter((r) => r.id != id));
+                const indexRoom = dataContext.dataRooms.findIndex((item) => id === item.id);
+                if (indexRoom !== -1) {
+                    dataContext.dataRooms.splice(indexRoom, 1);
+                }
+                Notifications.openNotificationWithIcon('success', t('delete_room_success'));
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     };
+    useEffect(() => {
+        roomsService
+            .list_rooms(authService.getCurrentUser().id)
 
-    if (dataContext.dataRooms.length == 0) {
+            .then((response) => {
+                setRooms(response.data);
+                setIsLoading(false);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }, []);
+
+    if (rooms.length == 0) {
         return <Home />;
     } else {
         return (
             <>
                 <Row gutter={10} className="rooms-cards">
-                    {dataContext.dataRooms.map((singleRoom, index) => (
+                    {rooms.map((singleRoom, index) => (
                         <RoomsCol
                             key={index + '-' + singleRoom.name}
                             index={index}
                             room={singleRoom}
-                            clickHandler={showRoomDetails}
+                            rooms={rooms}
+                            deleteClickHandler={deleteRoom.bind(this, singleRoom.id)}
                         />
                     ))}
                 </Row>

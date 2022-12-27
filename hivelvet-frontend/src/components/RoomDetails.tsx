@@ -20,8 +20,10 @@ import React, { useState } from 'react';
 import { Trans, withTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import { t } from 'i18next';
-
+import { Form } from 'antd';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { Popconfirm } from 'antd';
+import { CloseOutlined } from '@ant-design/icons';
 
 import {
     CalendarOutlined,
@@ -48,12 +50,18 @@ import { RecordingType } from '../types/RecordingType';
 import DynamicIcon from './DynamicIcon';
 import { MenuProps } from 'antd/lib/menu';
 import LocaleService from '../services/locale.service';
-
+import EN_US from '../locale/en-US.json';
+import roomsService from 'services/rooms.service';
+import Notifications from './Notifications';
 const { Title } = Typography;
-
+type formType = {
+    name: string;
+};
 const RoomDetails = () => {
     const { state } = useLocation();
     const currentRoom: RoomType = state.room;
+    const [room, setRoom] = React.useState<RoomType>(state.room);
+
     const recordings: RecordingType[] = [
         {
             id: 1,
@@ -99,9 +107,11 @@ const RoomDetails = () => {
         },
     ];
     const [copied, setCopied] = useState<boolean>(false);
+    const [errorsEdit, setErrorsEdit] = React.useState({});
 
     const [previewOpen, setPreviewOpen] = useState<boolean>(false);
     const [previewImage, setPreviewImage] = useState<string>('');
+    const [isEditing, setIsEditing] = React.useState<boolean>(false);
     const [fileList, setFileList] = useState<UploadFile[]>([
         {
             uid: '-1',
@@ -184,21 +194,122 @@ const RoomDetails = () => {
             </div>
         </div>
     );
+    const [editForm] = Form.useForm();
+    const toggleEdit = () => {
+        setIsEditing(true);
+        editForm.setFieldsValue({ name: room ? room.name : currentRoom.name });
+    };
+    const cancelEdit = () => {
+        setErrorsEdit({});
+        setIsEditing(false);
+    };
+    const handleSaveEdit = async () => {
+        setErrorsEdit({});
+        try {
+            const values = (await editForm.validateFields()) as formType;
+
+            roomsService
+                .edit_room(values, currentRoom.id)
+                .then((response) => {
+                    setRoom(response.data.room);
+                    Notifications.openNotificationWithIcon('success', t('edit_room_success'));
+
+                    cancelEdit();
+                })
+                .catch((error) => {
+                    const responseData = error.response.data;
+                    if (responseData.errors) {
+                        setErrorsEdit(responseData.errors);
+                    }
+                    console.log(error);
+                });
+        } catch (errInfo) {
+            console.log('Save failed:', errInfo);
+        }
+    };
 
     return (
         <div className="page-padding">
             <Row align="bottom" className="mb-40">
                 <Col span={10}>
                     <Row justify="end" className="mb-5">
-                        <Button className="edit-btn" size="small" type="link" icon={<EditOutlined />}>
-                            {t('rename')}
-                        </Button>
+                        {!isEditing ? (
+                            <Button
+                                className="edit-btn"
+                                size="small"
+                                type="link"
+                                icon={<EditOutlined />}
+                                onClick={toggleEdit}
+                            >
+                                {t('rename')}
+                            </Button>
+                        ) : (
+                            <></>
+                        )}
                     </Row>
                     <Card bordered={false} className="room-details gray-bg">
                         <Row justify="center" align="middle">
                             <Col span={22}>
                                 <Space direction="vertical" size="large">
-                                    <Title level={3}>{currentRoom.name}</Title>
+                                    {!isEditing ? (
+                                        <>
+                                            <Title level={3}>{room ? room.name : currentRoom.name}</Title>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Form form={editForm}>
+                                                <Form.Item
+                                                    name="name"
+                                                    className="input-editable"
+                                                    {...('name' in errorsEdit && {
+                                                        help: (
+                                                            <Trans
+                                                                i18nKey={Object.keys(EN_US).filter(
+                                                                    (elem) => EN_US[elem] == errorsEdit['name']
+                                                                )}
+                                                            />
+                                                        ),
+                                                        validateStatus: 'error',
+                                                    })}
+                                                    rules={[
+                                                        {
+                                                            required: true,
+                                                            message: <Trans i18nKey="name.required" />,
+                                                        },
+                                                    ]}
+                                                >
+                                                    <Input
+                                                        className="input"
+                                                        onPressEnter={handleSaveEdit}
+                                                        suffix={
+                                                            <>
+                                                                <Popconfirm
+                                                                    title={t('cancel_edit')}
+                                                                    placement="leftTop"
+                                                                    onConfirm={() => cancelEdit()}
+                                                                >
+                                                                    <Button
+                                                                        icon={<CloseOutlined />}
+                                                                        size="small"
+                                                                        //onClick={cancelEdit}
+                                                                        className="cell-input-cancel"
+                                                                    />
+                                                                </Popconfirm>
+                                                                <Button
+                                                                    icon={<CheckOutlined />}
+                                                                    size="small"
+                                                                    onClick={handleSaveEdit}
+                                                                    type="primary"
+                                                                    className="cell-input-save"
+                                                                />
+                                                            </>
+                                                        }
+                                                    />
+                                                </Form.Item>
+                                            </Form>
+                                        </>
+                                    )}
+
                                     <div className="room-labels">
                                         {currentRoom.labels.map((item) => (
                                             <Tag key={item.id} color={item.color}>
