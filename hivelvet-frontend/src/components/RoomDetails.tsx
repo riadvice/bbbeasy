@@ -22,8 +22,8 @@ import { useLocation } from 'react-router-dom';
 import { t } from 'i18next';
 import { Form } from 'antd';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { PageHeader, Popconfirm, Popover, Switch, message, InputNumber, Empty, Spin } from 'antd';
-import { CloseOutlined, DeleteOutlined, QuestionCircleOutlined, UploadOutlined } from '@ant-design/icons';
+import { Popconfirm } from 'antd';
+import { CloseOutlined } from '@ant-design/icons';
 
 import {
     CalendarOutlined,

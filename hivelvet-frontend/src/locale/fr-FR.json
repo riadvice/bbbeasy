@@ -272,6 +272,9 @@
     "room-name-already-exist": "Le nom du salle existe déjà",
     "room-link-already-exist": "Le lien du salle existe déjà",
     "add_room_success": "Salle ajoutée avec succés",
+
+    "labels_cols.nbrooms": "N° Salles",
+
     "view": "Voir",
     "copy_shortlink": "Copier le lien court",
     "copied": "Copié",

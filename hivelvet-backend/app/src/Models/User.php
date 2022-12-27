@@ -182,13 +182,15 @@ class User extends BaseModel
 
     public function getUserInfos(): array
     {
+        $room = new Room();
+
         return [
             'key'      => $this->id,
             'username' => $this->username,
             'email'    => $this->email,
             'status'   => $this->status,
             'role'     => $this->role_id->name,
-            // 'role'     => $this->role->name,
+            'nb_rooms' => \count($room->collectAllByUserId($this->id)),
         ];
     }
 

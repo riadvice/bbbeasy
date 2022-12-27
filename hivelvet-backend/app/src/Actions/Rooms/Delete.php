@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -18,6 +19,7 @@ declare(strict_types=1);
  * You should have received a copy of the GNU Lesser General Public License along
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace Actions\Rooms;
 
 use Actions\Delete as DeleteAction;

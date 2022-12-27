@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -24,7 +25,6 @@ namespace Actions\Rooms;
 use Actions\Base as BaseAction;
 use Actions\RequirePrivilegeTrait;
 use Enum\ResponseCode;
-use Models\Preset;
 use Models\Room;
 use Respect\Validation\Validator;
 use Validation\DataChecker;
@@ -39,8 +39,8 @@ class Edit extends BaseAction
      */
     public function rename($f3, $params): void
     {
-        $body        = $this->getDecodedBody();
-        $form        = $body['data'];
+        $body = $this->getDecodedBody();
+        $form = $body['data'];
 
         $id          = $params['id'];
         $dataChecker = new DataChecker();
@@ -50,7 +50,7 @@ class Edit extends BaseAction
 
         $errorMessage = 'Room could not be updated';
 
-        $room= new Room();
+        $room = new Room();
         $room = $room->getById($id);
         if ($room->valid()) {
             if ($dataChecker->allValid()) {

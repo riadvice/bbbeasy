@@ -272,6 +272,9 @@
     "room-name-already-exist": "Room Name already exists",
     "room-link-already-exist": "Room link already exists",
     "add_room_success": "Room Added Successfully",
+
+    "labels_cols.nbrooms": "N° Rooms",
+
     "view": "View",
     "copy_shortlink": "Copy shortlink",
     "copied": "Copied",

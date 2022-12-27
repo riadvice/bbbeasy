@@ -53,4 +53,12 @@ class RoomLabel extends BaseModel
     {
         return $this->db->exec('SELECT id, room_id, label_id FROM rooms_labels where room_id = ? ', $roomId);
     }
+
+    /**
+     * @param mixed $labelId
+     */
+    public function collectAllByLabelId($labelId): array
+    {
+        return $this->db->exec('SELECT id, room_id, label_id FROM rooms_labels where label_id = ? ', $labelId);
+    }
 }

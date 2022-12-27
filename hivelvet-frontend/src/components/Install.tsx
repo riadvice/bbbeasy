@@ -198,7 +198,7 @@ const Install = () => {
         const stepsData: formType = stepForm.getFieldsValue(true);
         if (activeStep == 0) {
             UsersService.collect_users(stepsData)
-                .then((result) => {
+                .then(() => {
                     next();
                 })
                 .catch((error) => {

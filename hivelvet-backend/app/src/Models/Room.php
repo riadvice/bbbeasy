@@ -51,17 +51,21 @@ class Room extends BaseModel
     {
         return $this->load(['lower(name) = ? and user_id = ? and id != ?', mb_strtolower($name), $userId, $id]);
     }
+
     /**
      * Get room record by id value.
      *
+     * @param mixed $id
+     *
      * @return $this
      */
-    public function getById(  $id): self
+    public function getById($id): self
     {
         $this->load(['id = ?', $id]);
 
         return $this;
     }
+
     public function collectAllByUserId($userId): array
     {
         return $this->db->exec('SELECT id, name, short_link, preset_id FROM rooms where user_id =?', $userId);
@@ -127,6 +131,7 @@ class Room extends BaseModel
 
         return $lbs;
     }
+
     /**
      * Delete a room if it's allowed and  removing its associated roomlabels.
      *
@@ -152,6 +157,7 @@ class Room extends BaseModel
 
         return [[], ResponseCode::HTTP_FORBIDDEN];
     }
+
     public function deleteRoomsLabels(): bool
     {
         $this->logger->info('Starting delete rooms labels transaction.');

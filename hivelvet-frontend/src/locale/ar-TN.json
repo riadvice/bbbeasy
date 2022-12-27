@@ -272,6 +272,9 @@
     "room-name-already-exist": "اسم القاعة موجود بالفعل",
     "room-link-already-exist": "رابط القاعة موجود بالفعل",
     "add_room_success": "تمت إضافة القاعة بنجاح",
+
+    "labels_cols.nbrooms": "عدد القاعات",
+
     "view": "عرض",
     "copy_shortlink": "نسخ الرابط المختصر",
     "copied": "منسوخ",

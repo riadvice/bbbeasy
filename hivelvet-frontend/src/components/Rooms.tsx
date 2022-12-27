@@ -24,7 +24,7 @@ import { DataContext } from 'lib/RoomsContext';
 
 import Home from './Home';
 
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Trans } from 'react-i18next';
 
 import { Avatar, Badge, Card, Col, Dropdown, Row, Space, Tag, Typography, Menu } from 'antd';
@@ -33,8 +33,6 @@ import { RoomType } from 'types/RoomType';
 
 import { ClockCircleOutlined, MoreOutlined, TeamOutlined } from '@ant-design/icons';
 import LocaleService from '../services/locale.service';
-import { MenuProps } from 'antd/lib/menu';
-import { axiosInstance } from 'lib/AxiosInstance';
 import roomsService from 'services/rooms.service';
 import Notifications from './Notifications';
 
@@ -47,10 +45,9 @@ interface RoomsColProps {
     room: RoomType;
     rooms: RoomType[];
     deleteClickHandler: () => void;
-    //  clickHandler: (room: RoomType) => void;
 }
 
-const RoomsCol: React.FC<RoomsColProps> = ({ index, room, rooms, deleteClickHandler }) => {
+const RoomsCol: React.FC<RoomsColProps> = ({ index, room, deleteClickHandler }) => {
     const labels = [];
     const navigate = useNavigate();
     room.labels.map((item) => {
@@ -141,7 +138,7 @@ const Rooms = () => {
     const [rooms, setRooms] = React.useState<RoomType[]>(dataContext.dataRooms);
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState<boolean>(true);
-    const deleteRoom = (id, index) => {
+    const deleteRoom = (id) => {
         console.log('delete room');
         roomsService
             .delete_room(id)
@@ -170,9 +167,6 @@ const Rooms = () => {
                 console.log(error);
             });
     }, []);
-    const showRoomDetails = (room: RoomType) => {
-        navigate('/rooms/details', { state: { room: room } });
-    };
 
     if (rooms.length == 0) {
         return <Home />;
@@ -187,7 +181,6 @@ const Rooms = () => {
                             room={singleRoom}
                             rooms={rooms}
                             deleteClickHandler={deleteRoom.bind(this, singleRoom.id)}
-                            //clickHandler={showRoomDetails}
                         />
                     ))}
                 </Row>
