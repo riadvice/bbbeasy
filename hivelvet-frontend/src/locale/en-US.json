@@ -286,5 +286,6 @@
     "attendees": "Attendees",
     "publish": "Publish",
     "replay": "Replay",
-    "mb": "MB"
+    "mb": "MB",
+    "delete_room_success": "Room successfully deleted"
 }

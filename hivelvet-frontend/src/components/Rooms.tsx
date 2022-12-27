@@ -27,52 +27,57 @@ import Home from './Home';
 import { Link, useNavigate } from 'react-router-dom';
 import { Trans } from 'react-i18next';
 
-import { Avatar, Badge, Card, Col, Dropdown, Row, Space, Tag, Typography } from 'antd';
+import { Avatar, Badge, Card, Col, Dropdown, Row, Space, Tag, Typography,Menu } from 'antd';
 
 import { RoomType } from 'types/RoomType';
 
 import { ClockCircleOutlined, MoreOutlined, TeamOutlined } from '@ant-design/icons';
 import LocaleService from '../services/locale.service';
 import { MenuProps } from 'antd/lib/menu';
-
+import { axiosInstance } from 'lib/AxiosInstance';
+import roomsService from 'services/rooms.service';
+import Notifications from './Notifications';
+ 
+import { t } from 'i18next';
 const { Title } = Typography;
 
 interface RoomsColProps {
     index: number;
     room: RoomType;
-    clickHandler: (room: RoomType) => void;
+    rooms:RoomType[];
+    deleteClickHandler: () => void;
+  //  clickHandler: (room: RoomType) => void;
 }
 
-const RoomsCol: React.FC<RoomsColProps> = ({ index, room, clickHandler }) => {
+const RoomsCol: React.FC<RoomsColProps> = ({ index, room,rooms,deleteClickHandler }) => {
     const labels = [];
+    const navigate = useNavigate();
     room.labels.map((item) => {
         labels.push(item);
     });
-    const actions: MenuProps['items'] = [
-        {
-            key: '1',
-            label: (
-                <Link to={'/rooms/details'} state={{ room: room }}>
-                    <Trans i18nKey={'view'} />
-                </Link>
-            ),
-        },
-        {
-            type: 'divider',
-        },
-        {
-            key: '2',
-            danger: true,
-            label: <Trans i18nKey={'delete'} />,
-        },
-    ];
+   //delete
+   const handleDelete = () => {
+    deleteClickHandler();
+};
+    const actions =  <Menu>
+ 
+        <Menu.Item key="1"  onClick={() =>  navigate('/rooms/details', { state: { room: room } })}>
+        <Trans i18nKey={'view'} />                     
+           
+        </Menu.Item>
+        <Menu.Item key="2" danger  onClick={() =>   handleDelete()}>
+        <Trans i18nKey={'delete'} />                     
+           
+        </Menu.Item>
+  
+</Menu>
 
     return (
         <Col key={index} span={5} className="custom-col-5">
             <Card
                 hoverable
                 bordered={false}
-                onClick={() => clickHandler(room)}
+                //onClick={() => clickHandler(room)}
                 title={
                     <Space size="middle" direction="vertical" className="room-card-title">
                         <Badge
@@ -113,7 +118,7 @@ const RoomsCol: React.FC<RoomsColProps> = ({ index, room, clickHandler }) => {
                 extra={
                     <Dropdown
                         key="more"
-                        menu={{ items: actions }}
+                        overlay={actions}
                         placement={LocaleService.direction == 'rtl' ? 'bottomLeft' : 'bottomRight'}
                     >
                         <MoreOutlined />
@@ -134,8 +139,20 @@ const RoomsCol: React.FC<RoomsColProps> = ({ index, room, clickHandler }) => {
 
 const Rooms = () => {
     const dataContext = React.useContext(DataContext);
+    const [rooms,setRooms]=React.useState<RoomType[]>(dataContext.dataRooms);
     const navigate = useNavigate();
-
+    const deleteRoom=(id,index)=>{
+        console.log("delete room");
+        roomsService.delete_room(id)
+        .then((result)=>{
+            console.log(result);
+            rooms.splice(index,1);
+            Notifications.openNotificationWithIcon('success', t('delete_room_success'));
+        })
+        .catch((error)=>{
+            console.log(error);
+        })
+    }
     const showRoomDetails = (room: RoomType) => {
         navigate('/rooms/details', { state: { room: room } });
     };
@@ -151,7 +168,9 @@ const Rooms = () => {
                             key={index + '-' + singleRoom.name}
                             index={index}
                             room={singleRoom}
-                            clickHandler={showRoomDetails}
+                            rooms={rooms}
+                            deleteClickHandler={deleteRoom.bind(this, singleRoom.id)}
+                            //clickHandler={showRoomDetails}
                         />
                     ))}
                 </Row>

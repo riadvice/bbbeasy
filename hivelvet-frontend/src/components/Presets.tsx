@@ -488,7 +488,8 @@ const Presets = () => {
     //delete
     const deletePreset = (id) => {
         PresetsService.delete_preset(id)
-            .then(() => {
+            .then((response) => {
+                console.log(response);
                 setMyPresets(myPresets.filter((p) => p.id != id));
                 const indexPreset = dataContext.dataPresets.findIndex((item) => id === item.id);
                 if (indexPreset !== -1) {

@@ -62,4 +62,5 @@ export const apiRoutes = {
 
     LIST_ROOMS_URL: API_URL + '/rooms/',
     ADD_ROOM_URL: API_URL + '/rooms',
+    DELETE_ROOM_URL: API_URL + '/rooms/'
 };

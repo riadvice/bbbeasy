@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Models;
 
+use Enum\ResponseCode;
 use Models\Base as BaseModel;
 
 /**
@@ -115,5 +116,48 @@ class Room extends BaseModel
         }
 
         return $lbs;
+    }
+    /**
+     * Delete a room if it's allowed and  removing its associated roomlabels.
+     *
+     * @return Array[2](Array[], ResponsCode)
+     */
+    public function delete(): array
+    {
+        // delete associated roomslabels
+        $result = $this->deleteRoomsLabels();
+
+        if ($result) {
+            try {
+                $this->erase();
+                $this->logger->info('Room successfully deleted', ['room' => $this->toArray()]);
+            } catch (\Exception $e) {
+                $this->logger->error('room could not be deleted', ['room' => $this->toArray(), 'error' => $e->getMessage()]);
+
+                throw $e;
+            }
+
+            return [['result' => 'success'], ResponseCode::HTTP_OK];
+        }
+
+        return [[], ResponseCode::HTTP_FORBIDDEN];
+    }
+    public function deleteRoomsLabels(): bool
+    {
+        $this->logger->info('Starting delete rooms labels transaction.');
+        $this->db->begin();
+        $roomId = $this->id;
+
+        $roomlabel    = new RoomLabel();
+        $deleteResult = $roomlabel->erase(['room_id = ?', $roomId]);
+        if ($deleteResult) {
+            $this->logger->info('All Rooms Labels successfully deleted');
+            $this->db->commit();
+            $this->logger->info('Delete rooms and its associations transaction successfully commit.');
+
+            return true;
+        }
+
+        return false;
     }
 }

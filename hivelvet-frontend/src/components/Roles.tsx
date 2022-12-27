@@ -84,6 +84,7 @@ const Roles = () => {
     const getPrivileges = () => {
         RolesService.list_permissions()
             .then((response) => {
+                console.log(response);
                 const privileges = response.data;
                 if (privileges instanceof Object) {
                     setAllPrivileges(privileges);

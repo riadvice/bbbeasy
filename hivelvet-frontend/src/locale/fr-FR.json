@@ -286,5 +286,6 @@
     "attendees": "Participants",
     "publish": "Publier",
     "replay": "Rejouer",
-    "mb": "Mo"
+    "mb": "Mo",
+    "delete_room_success": "Salle a été supprimée avec succés"
 }

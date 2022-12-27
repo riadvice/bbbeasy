@@ -286,5 +286,6 @@
     "attendees": "الحاضرون",
     "publish": "نشر",
     "replay": "إعادة",
-    "mb": "م.ب"
+    "mb": "م.ب",
+    "delete_room_success": "تم حذف القاعة بنجاح"
 }

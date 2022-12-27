@@ -30,6 +30,9 @@ class RoomsService {
             user_id,
         });
     }
+    delete_room(id: number) {
+        return axiosInstance.delete(apiRoutes.DELETE_ROOM_URL + id);
+    }
 }
 
 export default new RoomsService();
