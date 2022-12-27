@@ -115,7 +115,25 @@ class Label extends BaseModel
             'name'        => $this->name,
             'description' => $this->description,
             'color'       => $this->color,
+            'nb_rooms'    => \count($this->getRooms($this->id)),
         ];
+    }
+
+    public function getRooms($labelId): array
+    {
+        $roomlabel  = new RoomLabel();
+        $roomlabels = $roomlabel->collectAllByLabelId($labelId);
+
+        $data = [];
+        if ($roomlabels) {
+            foreach ($roomlabels as $rl) {
+                if (!\in_array($rl['room_id'], $data, true)) {
+                    $data[] = $rl['room_id'];
+                }
+            }
+        }
+
+        return $data;
     }
 
     public function deleteRoomsLabels(): bool

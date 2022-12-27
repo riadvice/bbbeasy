@@ -36,9 +36,10 @@ final class EditTest extends Scenario
     final protected const EDIT_SETTINGS_ROUTE = 'PUT /settings';
     protected $group                          = 'Action Setting Edit';
 
-    /**
+/**
      * @param mixed $f3
      *
+
      * @return array
      *
      * @throws \ReflectionException

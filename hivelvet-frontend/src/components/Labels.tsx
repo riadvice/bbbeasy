@@ -38,6 +38,7 @@ type Item = {
     name: string;
     description: string;
     color: string;
+    nb_rooms: number;
 };
 
 interface EditableCellProps {
@@ -69,6 +70,7 @@ const Labels = () => {
             .then((response) => {
                 if (response.data) {
                     setData(response.data);
+                    console.log(response.data);
                 }
             })
             .catch((error) => {
@@ -372,6 +374,20 @@ const Labels = () => {
                 multiple: 1,
             },
         },
+        {
+            title: t('labels_cols.nbrooms'),
+            dataIndex: 'nb_rooms',
+            inputType: 'text',
+            editable: false,
+
+            ...getColumnSearchProps('rooms_number'),
+            width: '20%',
+            sorter: {
+                compare: (a, b) => a.name.localeCompare(b.name),
+                multiple: 1,
+            },
+        },
+
         {
             title: t('actions_col'),
             dataIndex: 'actions',
