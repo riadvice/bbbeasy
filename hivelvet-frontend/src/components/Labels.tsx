@@ -22,8 +22,14 @@ import { Trans, withTranslation } from 'react-i18next';
 import EN_US from '../locale/en-US.json';
 import { t } from 'i18next';
 
-import { Badge, Button, Form, Input, PageHeader, Popconfirm, Space, Table, Typography } from 'antd';
-import { DeleteOutlined, EditOutlined, QuestionCircleOutlined, SearchOutlined } from '@ant-design/icons';
+import { Badge, Button, Form, Input, Modal, PageHeader, Popconfirm, Space, Table, Typography } from 'antd';
+import {
+    DeleteOutlined,
+    EditOutlined,
+    QuestionCircleOutlined,
+    SearchOutlined,
+    WarningOutlined,
+} from '@ant-design/icons';
 
 import { PaginationType } from '../types/PaginationType';
 import { FormInstance } from 'antd/lib/form';
@@ -95,7 +101,7 @@ const Labels = () => {
     }, []);
 
     //delete
-    const handleDelete = (key: number) => {
+    const deleteLabel = (key: number) => {
         setLoading(true);
         LabelsService.delete_label(key)
             .then(() => {
@@ -120,6 +126,31 @@ const Labels = () => {
                 setLoading(false);
             });
     };
+    const handleDelete = (key: number, nbRooms: number) => {
+        if (nbRooms > 0) {
+            Modal.confirm({
+                wrapClassName: 'delete-wrap',
+                title: undefined,
+                icon: undefined,
+                content: (
+                    <>
+                        <WarningOutlined className="delete-icon" />
+                        <span className="ant-modal-confirm-title">
+                            <Trans i18nKey="delete_label_title" />
+                        </span>
+                        <Trans i18nKey="delete_label_content" />
+                    </>
+                ),
+                okType: 'danger',
+                okText: <Trans i18nKey="confirm_yes" />,
+                cancelText: <Trans i18nKey="confirm_no" />,
+                onOk: () => deleteLabel(key),
+            });
+        } else {
+            deleteLabel(key);
+        }
+    };
+
     // search
     const handleReset = (clearFilters) => {
         clearFilters();
@@ -440,7 +471,7 @@ const Labels = () => {
                                 <Popconfirm
                                     title={t('delete_label_confirm')}
                                     icon={<QuestionCircleOutlined className="red-icon" />}
-                                    onConfirm={() => handleDelete(record.key)}
+                                    onConfirm={() => handleDelete(record.key, record.nb_rooms)}
                                 >
                                     <Link>
                                         <DeleteOutlined /> <Trans i18nKey="delete" />

@@ -109,6 +109,10 @@ class Preset extends BaseModel
         $categoriesData           = $this->getMyPresetCategories($enabledCategories);
         $presetData['categories'] = $categoriesData;
 
+        $room = new Room();
+        $rooms = $room->collectAllByPresetId($myPreset['id']);
+        $presetData['nb_rooms'] = count($rooms);
+
         return $presetData;
     }
 

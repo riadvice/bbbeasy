@@ -48,6 +48,7 @@ import {
     QuestionCircleOutlined,
     SearchOutlined,
     UploadOutlined,
+    WarningOutlined,
 } from '@ant-design/icons';
 
 import ColorPicker from 'rc-color-picker/lib/ColorPicker';
@@ -93,6 +94,7 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editName, editClick
     const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [errorsEdit, setErrorsEdit] = React.useState({});
+    const isDefault = preset['name'] == 'default';
     const props = {
         beforeUpload: (file) => {
             const isPNG = file.type === 'image/png' || file.type === 'image/jpeg' || file.type === 'image/jpg';
@@ -142,7 +144,28 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editName, editClick
 
     //delete
     const handleDelete = () => {
-        deleteClickHandler();
+        if (preset.nb_rooms > 0) {
+            Modal.confirm({
+                wrapClassName: 'delete-wrap',
+                title: undefined,
+                icon: undefined,
+                content: (
+                    <>
+                        <WarningOutlined className="delete-icon" />
+                        <span className="ant-modal-confirm-title">
+                            <Trans i18nKey="delete_preset_title" />
+                        </span>
+                        <Trans i18nKey="delete_preset_content" />
+                    </>
+                ),
+                okType: 'danger',
+                okText: <Trans i18nKey="confirm_yes" />,
+                cancelText: <Trans i18nKey="confirm_no" />,
+                onOk: () => deleteClickHandler(),
+            });
+        } else {
+            deleteClickHandler();
+        }
     };
 
     //edit name
@@ -225,9 +248,8 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editName, editClick
                             {!isEditing ? (
                                 <>
                                     <span>{preset['name']}</span>
-                                    {isShown && editName && (
+                                    {isShown && editName && !isDefault && (
                                         <Button
-                                            disabled={preset['name'] == 'default' ? true : false}
                                             className="edit-btn"
                                             size="small"
                                             type="link"
@@ -294,14 +316,14 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editName, editClick
                     </div>
                 }
                 extra={
-                    deleteClickHandler != null && (
+                    deleteClickHandler != null && !isDefault && (
                         <div className="table-actions">
                             <Popconfirm
                                 title={t('delete_preset_confirm')}
                                 icon={<QuestionCircleOutlined className="red-icon" />}
                                 onConfirm={() => handleDelete()}
                             >
-                                <Link disabled={preset['name'] === 'default'}>
+                                <Link>
                                     <DeleteOutlined /> <Trans i18nKey="delete" />
                                 </Link>
                             </Popconfirm>
