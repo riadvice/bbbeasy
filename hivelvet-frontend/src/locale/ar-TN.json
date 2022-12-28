@@ -290,6 +290,7 @@
     "publish": "نشر",
     "replay": "إعادة",
     "mb": "م.ب",
+    "delete_room_confirm": "هل أنت متأكد من حذف هذه القاعة ؟",
     "delete_room_success": "تم حذف القاعة بنجاح",
     "edit_room_success": "تم تحديث القاعة بنجاح"
 }

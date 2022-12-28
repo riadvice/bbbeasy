@@ -34,6 +34,7 @@ import _ from 'lodash';
 
 import axios from 'axios';
 import { apiRoutes } from '../routing/backend-config';
+import AuthService from '../services/auth.service';
 
 type formType = {
     company_name: string;
@@ -47,15 +48,15 @@ type formType = {
 
 const Branding = () => {
     const [settingsForm] = Form.useForm();
-
     const [data, setData] = React.useState<formType>(null);
+    const [actions, setActions] = React.useState<string[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
     const [primaryColor, setPrimaryColor] = React.useState<string>('');
     const [secondaryColor, setSecondaryColor] = React.useState<string>('');
     const [accentColor, setAccentColor] = React.useState<string>('');
     const [addColor, setAddColor] = React.useState<string>('');
     const [file, setFile] = React.useState<UploadFile>(null);
     const [fileList, setFileList] = React.useState<UploadFile[]>(null);
-    const [isLoading, setIsLoading] = useState<boolean>(true);
 
     const setSettings = (settings: SettingsType) => {
         setPrimaryColor(settings.primary_color);
@@ -100,6 +101,9 @@ const Branding = () => {
             .catch((error) => {
                 console.log(error);
             });
+
+        const settingsActions = AuthService.getActionsPermissionsByGroup('settings');
+        setActions(settingsActions);
     }, []);
 
     const onFinish = () => {
@@ -163,36 +167,40 @@ const Branding = () => {
                 <Spin size="large" />
             ) : (
                 <Col span={18}>
-                    <Form
-                        layout="vertical"
-                        name="install_form"
-                        className="install-form steps-content"
-                        form={settingsForm}
-                        requiredMark={false}
-                        scrollToFirstError={true}
-                        validateTrigger="onSubmit"
-                        onFinish={onFinish}
-                    >
-                        <Step2Form
-                            primaryColor={primaryColor}
-                            secondaryColor={secondaryColor}
-                            accentColor={accentColor}
-                            addColor={addColor}
-                            setPrimaryColor={setPrimaryColor}
-                            setSecondaryColor={setSecondaryColor}
-                            setAccentColor={setAccentColor}
-                            setAddColor={setAddColor}
-                            setFile={setFile}
-                            fileList={fileList}
-                            setFileList={setFileList}
-                        />
+                    <fieldset disabled={!AuthService.isAllowedAction(actions, 'edit')}>
+                        <Form
+                            layout="vertical"
+                            name="install_form"
+                            className="install-form steps-content"
+                            form={settingsForm}
+                            requiredMark={false}
+                            scrollToFirstError={true}
+                            validateTrigger="onSubmit"
+                            onFinish={onFinish}
+                        >
+                            <Step2Form
+                                primaryColor={primaryColor}
+                                secondaryColor={secondaryColor}
+                                accentColor={accentColor}
+                                addColor={addColor}
+                                setPrimaryColor={setPrimaryColor}
+                                setSecondaryColor={setSecondaryColor}
+                                setAccentColor={setAccentColor}
+                                setAddColor={setAddColor}
+                                setFile={setFile}
+                                fileList={fileList}
+                                setFileList={setFileList}
+                            />
 
-                        <Form.Item className="button-container button-padding">
-                            <Button type="primary" id="submit-btn" htmlType="submit" block>
-                                <Trans i18nKey={'edit'} />
-                            </Button>
-                        </Form.Item>
-                    </Form>
+                            {AuthService.isAllowedAction(actions, 'edit') && (
+                                <Form.Item className="button-container button-padding">
+                                    <Button type="primary" id="submit-btn" htmlType="submit" block>
+                                        <Trans i18nKey={'edit'} />
+                                    </Button>
+                                </Form.Item>
+                            )}
+                        </Form>
+                    </fieldset>
                 </Col>
             )}
         </Row>

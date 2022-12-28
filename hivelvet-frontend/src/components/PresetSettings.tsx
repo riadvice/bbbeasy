@@ -29,10 +29,12 @@ import Notifications from './Notifications';
 import { t } from 'i18next';
 import { PresetType } from '../types/PresetType';
 import { SubCategoryType } from '../types/SubCategoryType';
+import AuthService from '../services/auth.service';
 
 const PresetSettings = () => {
     const [presets, setPresets] = React.useState<PresetType[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [actions, setActions] = React.useState<string[]>([]);
 
     useEffect(() => {
         PresetSettingsService.collect_preset_settings()
@@ -47,6 +49,9 @@ const PresetSettings = () => {
                 setIsLoading(false);
                 console.log(error);
             });
+
+        const presetSettingsActions = AuthService.getActionsPermissionsByGroup('preset_settings');
+        setActions(presetSettingsActions);
     }, []);
 
     const onFinish = (category: string, subCategories: SubCategoryType[]) => {
@@ -77,7 +82,11 @@ const PresetSettings = () => {
             ) : (
                 <Col span={20}>
                     <Form className="install-form">
-                        <Step3Form presets={presets} onFinish={onFinish} />
+                        <Step3Form
+                            presets={presets}
+                            onFinish={onFinish}
+                            enabled={AuthService.isAllowedAction(actions, 'edit')}
+                        />
                     </Form>
                 </Col>
             )}

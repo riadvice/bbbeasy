@@ -273,7 +273,7 @@
     "room-link-already-exist": "Room link already exists",
     "add_room_success": "Room Added Successfully",
 
-    "labels_cols.nbrooms": "N° Rooms",
+    "labels_cols.nbrooms": "N° of Rooms",
 
     "view": "View",
     "copy_shortlink": "Copy shortlink",
@@ -290,6 +290,7 @@
     "publish": "Publish",
     "replay": "Replay",
     "mb": "MB",
+    "delete_room_confirm": "Are you sure to delete this room ?",
     "delete_room_success": "Room successfully deleted",
     "edit_room_success": "Room successfully updated"
 }

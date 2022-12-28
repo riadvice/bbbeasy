@@ -1,8 +1,4 @@
-<?php
-
-declare(strict_types=1);
-
-/*
+/**
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -20,22 +16,10 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Suite;
+import { MenuType } from './MenuType';
 
-use Actions\Presets\AddTest;
-use Actions\Presets\DeleteTest;
-use Actions\Presets\EditTest;
-use Actions\Presets\IndexTest;
-use Test\TestGroup;
-
-/**
- * @internal
- *
- * @coversNothing
- */
-final class PresetsActionsTest extends TestGroup
-{
-    protected $classes = [AddTest::class, EditTest::class, DeleteTest::class, IndexTest::class];
-
-    protected $quiet = true;
-}
+export type MenuSiderType = {
+    items: MenuType[];
+    news: string[];
+    defaultRoute: string;
+};

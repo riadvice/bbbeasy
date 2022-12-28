@@ -32,10 +32,10 @@ use Test\Scenario;
  *
  * @coversNothing
  */
-final class CollectTest extends Scenario
+final class IndexTest extends Scenario
 {
-    final protected const COLLECT_PRESETS_ROUTE = 'GET /presets/collect/';
-    protected $group                            = 'Action Preset Collect Presets';
+    final protected const LIST_PRESETS_ROUTE = 'GET /presets/';
+    protected $group                         = 'Action Preset Index Presets';
 
     /**
      * @param mixed $f3
@@ -60,7 +60,7 @@ final class CollectTest extends Scenario
         );
         $test->expect(true === $result, 'User with id "' . $user->id . '" saved to the database with default preset');
 
-        $f3->mock(self::COLLECT_PRESETS_ROUTE . $user->id);
+        $f3->mock(self::LIST_PRESETS_ROUTE . $user->id);
         json_decode($f3->get('RESPONSE'));
         $test->expect(JSON_ERROR_NONE === json_last_error(), 'Collect presets of user with id "' . $user->id . '"');
 

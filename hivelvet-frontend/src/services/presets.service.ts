@@ -20,8 +20,8 @@ import { axiosInstance } from '../lib/AxiosInstance';
 import { apiRoutes } from '../routing/backend-config';
 
 class PresetsService {
-    collect_presets(user_id: number) {
-        return axiosInstance.get(apiRoutes.COLLECT_PRESETS_URL + user_id);
+    list_presets(user_id: number) {
+        return axiosInstance.get(apiRoutes.LIST_PRESETS_URL + user_id);
     }
 
     add_preset(data: object, user_id: number) {

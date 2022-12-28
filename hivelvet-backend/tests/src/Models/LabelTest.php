@@ -163,6 +163,7 @@ final class LabelTest extends Scenario
             'name'        => $label->name,
             'description' => $label->description,
             'color'       => $label->color,
+            'nb_rooms'    => \count($label->getRooms($label->id)),
         ];
         $test->expect($data === $label->getLabelInfos(), 'getLabelInfos() returned label');
 

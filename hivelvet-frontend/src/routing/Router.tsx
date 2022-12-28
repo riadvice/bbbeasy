@@ -31,6 +31,7 @@ const Router: React.FC<IProps> = ({ routes }) => {
         if (route.private) return <PrivateRoute>{route.element}</PrivateRoute>;
         else return <PublicRoute restricted={route.restricted}>{route.element}</PublicRoute>;
     };
+
     const RenderComponent = (props): JSX.Element => {
         const route = props.route;
         if (route.path == '*') return route.element;
@@ -38,6 +39,7 @@ const Router: React.FC<IProps> = ({ routes }) => {
             return checkAccess(route);
         }
     };
+
     return (
         <Routes>
             {routes &&

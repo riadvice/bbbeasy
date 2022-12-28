@@ -18,6 +18,7 @@
 
 import { axiosInstance } from '../lib/AxiosInstance';
 import { apiRoutes } from '../routing/backend-config';
+import { UserType } from '../types/UserType';
 
 class AuthService {
     register(data: object) {
@@ -65,6 +66,19 @@ class AuthService {
         if (sessionStr) return JSON.parse(sessionStr);
         return null;
     }
+
+    getActionsPermissionsByGroup(group: string): string[] {
+        const currentUser: UserType = this.getCurrentUser();
+        return currentUser.permissions[group];
+    }
+
+    isAllowedGroup = (groups: string[], group: string): boolean => {
+        return groups.includes(group);
+    };
+
+    isAllowedAction = (actions: string[], action: string): boolean => {
+        return actions.includes(action);
+    };
 }
 
 export default new AuthService();

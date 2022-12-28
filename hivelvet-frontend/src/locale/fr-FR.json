@@ -273,7 +273,7 @@
     "room-link-already-exist": "Le lien du salle existe déjà",
     "add_room_success": "Salle ajoutée avec succés",
 
-    "labels_cols.nbrooms": "N° Salles",
+    "labels_cols.nbrooms": "N° de Salles",
 
     "view": "Voir",
     "copy_shortlink": "Copier le lien court",
@@ -290,6 +290,7 @@
     "publish": "Publier",
     "replay": "Rejouer",
     "mb": "Mo",
+    "delete_room_confirm": "Êtes-vous sûr de vouloir supprimer cette salle ?",
     "delete_room_success": "Salle a été supprimée avec succés",
     "edit_room_success": "Salle a été mis a jour avec succés"
 }

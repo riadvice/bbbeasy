@@ -222,12 +222,14 @@ final class UserTest extends Scenario
         $test = $this->newTest();
 
         $user = UserFaker::create();
+        $room = new Room();
         $data = [
             'key'      => $user->id,
             'username' => $user->username,
             'email'    => $user->email,
             'status'   => $user->status,
             'role'     => $user->role->name,
+            'nb_rooms' => \count($room->collectAllByUserId($user->id)),
         ];
 
         $test->expect($data === $user->getUserInfos(), 'getUserInfos() returned user informations with id = ' . $user->id);

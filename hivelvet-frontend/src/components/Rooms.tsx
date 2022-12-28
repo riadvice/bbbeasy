@@ -17,54 +17,93 @@
  */
 
 import React, { useEffect, useState } from 'react';
-
-import { withTranslation } from 'react-i18next';
-
-import { DataContext } from 'lib/RoomsContext';
-
-import Home from './Home';
-
+import { Trans, withTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { Trans } from 'react-i18next';
+import { t } from 'i18next';
 
-import { Avatar, Badge, Card, Col, Dropdown, Row, Space, Tag, Typography, Menu } from 'antd';
+import {
+    Avatar,
+    Badge,
+    Card,
+    Col,
+    Dropdown,
+    Row,
+    Space,
+    Tag,
+    Typography,
+    Menu,
+    Spin,
+    Button,
+    Empty,
+    Modal,
+} from 'antd';
+import { ClockCircleOutlined, MoreOutlined, TeamOutlined, WarningOutlined } from '@ant-design/icons';
 
-import { RoomType } from 'types/RoomType';
-
-import { ClockCircleOutlined, MoreOutlined, TeamOutlined } from '@ant-design/icons';
 import LocaleService from '../services/locale.service';
 import roomsService from 'services/rooms.service';
+import AuthService from 'services/auth.service';
 import Notifications from './Notifications';
+import AddRoomForm from './AddRoomForm';
+import { DataContext } from 'lib/RoomsContext';
 
-import { t } from 'i18next';
-import authService from 'services/auth.service';
-const { Title } = Typography;
+import { RoomType } from 'types/RoomType';
+import { PresetType } from 'types/PresetType';
+import { LabelType } from 'types/LabelType';
+
+import { getRandomString } from 'types/getRandomString';
+
+const { Title, Paragraph } = Typography;
 
 interface RoomsColProps {
     index: number;
     room: RoomType;
-    rooms: RoomType[];
+    editable: boolean;
     deleteClickHandler: () => void;
 }
 
-const RoomsCol: React.FC<RoomsColProps> = ({ index, room, deleteClickHandler }) => {
+const RoomsCol: React.FC<RoomsColProps> = ({ index, room, editable, deleteClickHandler }) => {
     const labels = [];
     const navigate = useNavigate();
     room.labels.map((item) => {
         labels.push(item);
     });
+
+    //view
+    const showRoomDetails = () => {
+        navigate('/rooms/details', { state: { room: room, editable: editable } });
+    };
+
     //delete
     const handleDelete = () => {
-        deleteClickHandler();
+        Modal.confirm({
+            wrapClassName: 'delete-wrap',
+            title: undefined,
+            icon: undefined,
+            content: (
+                <>
+                    <WarningOutlined className="delete-icon" />
+                    <span className="ant-modal-confirm-title">
+                        <Trans i18nKey="delete_room_confirm" />
+                    </span>
+                </>
+            ),
+            okType: 'danger',
+            okText: <Trans i18nKey="confirm_yes" />,
+            cancelText: <Trans i18nKey="confirm_no" />,
+            onOk: () => deleteClickHandler(),
+        });
     };
+
     const actions = (
         <Menu>
-            <Menu.Item key="1" onClick={() => navigate('/rooms/details', { state: { room: room } })}>
+            <Menu.Item key="1" onClick={() => showRoomDetails()}>
                 <Trans i18nKey={'view'} />
             </Menu.Item>
-            <Menu.Item key="2" danger onClick={() => handleDelete()}>
-                <Trans i18nKey={'delete'} />
-            </Menu.Item>
+            {deleteClickHandler != null && (
+                <Menu.Item key="2" danger onClick={() => handleDelete()}>
+                    <Trans i18nKey={'delete'} />
+                </Menu.Item>
+            )}
         </Menu>
     );
 
@@ -73,7 +112,6 @@ const RoomsCol: React.FC<RoomsColProps> = ({ index, room, deleteClickHandler }) 
             <Card
                 hoverable
                 bordered={false}
-                //onClick={() => clickHandler(room)}
                 title={
                     <Space size="middle" direction="vertical" className="room-card-title">
                         <Badge
@@ -133,17 +171,50 @@ const RoomsCol: React.FC<RoomsColProps> = ({ index, room, deleteClickHandler }) 
     );
 };
 
+type formType = {
+    name?: string;
+    shortlink?: string;
+    preset?: PresetType;
+    labels?: LabelType[];
+};
+
 const Rooms = () => {
     const dataContext = React.useContext(DataContext);
     const [rooms, setRooms] = React.useState<RoomType[]>(dataContext.dataRooms);
-    const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [actions, setActions] = React.useState<string[]>([]);
+
+    useEffect(() => {
+        roomsService
+            .list_rooms(AuthService.getCurrentUser().id)
+            .then((response) => {
+                setRooms(response.data);
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+            .finally(() => {
+                setIsLoading(false);
+            });
+
+        const roomsActions = AuthService.getActionsPermissionsByGroup('rooms');
+        setActions(roomsActions);
+    }, []);
+
+    //add
+    const initialAddValues: formType = {
+        name: '',
+        shortlink: getRandomString(),
+        preset: null,
+        labels: [],
+    };
+    const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
+
+    //delete
     const deleteRoom = (id) => {
-        console.log('delete room');
         roomsService
             .delete_room(id)
-            .then((result) => {
-                console.log(result);
+            .then(() => {
                 setRooms(rooms.filter((r) => r.id != id));
                 const indexRoom = dataContext.dataRooms.findIndex((item) => id === item.id);
                 if (indexRoom !== -1) {
@@ -155,38 +226,86 @@ const Rooms = () => {
                 console.log(error);
             });
     };
-    useEffect(() => {
-        roomsService
-            .list_rooms(authService.getCurrentUser().id)
 
-            .then((response) => {
-                setRooms(response.data);
-                setIsLoading(false);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }, []);
-
-    if (rooms.length == 0) {
-        return <Home />;
-    } else {
-        return (
-            <>
+    return (
+        <>
+            {isLoading ? (
+                <Spin size="large" className="mt-30 content-center" />
+            ) : rooms.length == 0 ? (
+                AuthService.isAllowedAction(actions, 'add') ? (
+                    <Paragraph className="text-center home-guide">
+                        <Title level={2}>
+                            <Trans i18nKey="create-easy-room" />
+                        </Title>
+                        <Row justify="center">
+                            <Col span={5}>
+                                <Avatar
+                                    size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 85, xxl: 100 }}
+                                    className="ant-btn-primary hivelvet-btn"
+                                >
+                                    1
+                                </Avatar>
+                                <Title level={4}>
+                                    <Trans i18nKey="give-it-name" />
+                                </Title>
+                            </Col>
+                            <Col span={5}>
+                                <Avatar
+                                    size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 85, xxl: 100 }}
+                                    className="ant-btn-primary hivelvet-btn"
+                                >
+                                    2
+                                </Avatar>
+                                <Title level={4}>
+                                    <Trans i18nKey="assign-preset" />
+                                </Title>
+                            </Col>
+                            <Col span={5}>
+                                <Avatar
+                                    size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 85, xxl: 100 }}
+                                    className="ant-btn-primary hivelvet-btn"
+                                >
+                                    3
+                                </Avatar>
+                                <Title level={4}>
+                                    <Trans i18nKey="mark-labels" />
+                                </Title>
+                            </Col>
+                        </Row>
+                        <Button type="primary" onClick={() => setIsModalVisible(true)}>
+                            <Trans i18nKey="create-first-room" />
+                        </Button>
+                        <AddRoomForm
+                            isModalShow={isModalVisible}
+                            close={() => {
+                                setIsModalVisible(false);
+                            }}
+                            shortlink={'/hv/' + initialAddValues.shortlink}
+                            initialAddValues={initialAddValues}
+                        />
+                    </Paragraph>
+                ) : (
+                    <Empty className="mt-30" />
+                )
+            ) : (
                 <Row gutter={10} className="rooms-cards">
                     {rooms.map((singleRoom, index) => (
                         <RoomsCol
                             key={index + '-' + singleRoom.name}
                             index={index}
                             room={singleRoom}
-                            rooms={rooms}
-                            deleteClickHandler={deleteRoom.bind(this, singleRoom.id)}
+                            editable={AuthService.isAllowedAction(actions, 'edit')}
+                            deleteClickHandler={
+                                AuthService.isAllowedAction(actions, 'delete')
+                                    ? deleteRoom.bind(this, singleRoom.id)
+                                    : null
+                            }
                         />
                     ))}
                 </Row>
-            </>
-        );
-    }
+            )}
+        </>
+    );
 };
 
 export default withTranslation()(Rooms);

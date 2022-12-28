@@ -60,10 +60,10 @@ class Install extends BaseAction
         $dataChecker->verify($form['company_url'], Validator::url()->setName('company_url'));
         $dataChecker->verify($form['platform_name'], Validator::notEmpty()->setName('platform_name'));
 
-        if ('' !== $form['term_url'] && null !== $form['term_url']) {
+        if (null !== $form['term_url']) {
             $dataChecker->verify($form['term_url'], Validator::url()->setName('term_url'));
         }
-        if ('' !== $form['policy_url'] && null !== $form['policy_url']) {
+        if (null !== $form['policy_url']) {
             $dataChecker->verify($form['policy_url'], Validator::url()->setName('policy_url'));
         }
 
