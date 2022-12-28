@@ -33,17 +33,15 @@ import Logger from './lib/Logger';
 import AuthService from './services/auth.service';
 import LocaleService from './services/locale.service';
 import RoomsService from 'services/rooms.service';
+import LabelsService from 'services/labels.service';
+import PresetsService from 'services/presets.service';
 
 import { UserContext } from './lib/UserContext';
+import { DataContext } from 'lib/RoomsContext';
 
 import { RoomType } from 'types/RoomType';
-
-import { DataContext } from 'lib/RoomsContext';
-import labelsService from 'services/labels.service';
 import { LabelType } from 'types/LabelType';
 import { PresetType } from 'types/PresetType';
-import presetsService from 'services/presets.service';
-
 import { UserType } from './types/UserType';
 import { SessionType } from './types/SessionType';
 
@@ -79,39 +77,50 @@ const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
         const user: UserType = AuthService.getCurrentUser();
         const session: SessionType = AuthService.getCurrentSession();
         if (user != null && session != null) {
-            Logger.info(logs);
             setCurrentUser(user);
             setCurrentSession(session);
             setIsLogged(true);
-            RoomsService.list_rooms(user.id)
-                .then((response) => {
-                    setDataRooms(response.data);
-                })
-                .catch((error) => {
-                    console.error(error);
-                });
-            presetsService
-                .collect_presets(user.id)
-                .then((response) => {
-                    setDataPresets(response.data);
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
+
+            const allowedGroups = Object.keys(user.permissions);
+            if (allowedGroups.length != 0) {
+                if (AuthService.isAllowedGroup(allowedGroups, 'logs')) {
+                    Logger.info(logs);
+                }
+
+                if (AuthService.isAllowedGroup(allowedGroups, 'rooms')) {
+                    RoomsService.list_rooms(user.id)
+                        .then((response) => {
+                            setDataRooms(response.data);
+                        })
+                        .catch((error) => {
+                            console.error(error);
+                        });
+                }
+                if (AuthService.isAllowedGroup(allowedGroups, 'labels')) {
+                    LabelsService.list_labels()
+                        .then((response) => {
+                            setDataLabels(response.data);
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                        });
+                }
+                if (AuthService.isAllowedGroup(allowedGroups, 'presets')) {
+                    PresetsService.list_presets(user.id)
+                        .then((response) => {
+                            setDataPresets(response.data);
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                        });
+                }
+            }
         }
-        labelsService
-            .list_labels()
-            .then((response) => {
-                setDataLabels(response.data);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
     }, []);
 
     return (
         <Layout className={LocaleService.direction == 'rtl' ? 'page-layout-content-rtl' : 'page-layout-content'}>
-            <ConfigProvider locale={LocaleService.antdlocale} direction={LocaleService.direction} componentSize="large">
+            <ConfigProvider locale={LocaleService.antLocale} direction={LocaleService.direction} componentSize="large">
                 <UserContext.Provider value={userProvider}>
                     <DataContext.Provider value={dataProvider}>
                         {isLogged && isSider && <AppSider />}

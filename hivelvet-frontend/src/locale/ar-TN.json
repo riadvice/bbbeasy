@@ -292,5 +292,8 @@
     "mb": "م.ب",
     "delete_room_confirm": "هل أنت متأكد من حذف هذه القاعة ؟",
     "delete_room_success": "تم حذف القاعة بنجاح",
-    "edit_room_success": "تم تحديث القاعة بنجاح"
+    "edit_room_success": "تم تحديث القاعة بنجاح",
+
+    "update_profile": "تحديث الملف الشخصي",
+    "change_avatar": "تغيير الصورة الرمزية"
 }

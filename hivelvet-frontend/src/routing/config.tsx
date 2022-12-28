@@ -34,6 +34,7 @@ import Users from '../components/Users';
 import Roles from '../components/Roles';
 import PresetSettings from '../components/PresetSettings';
 import RoomDetails from '../components/RoomDetails';
+import Profile from '../components/Profile';
 
 export const webRoutes: IRoute[] = [
     {
@@ -109,6 +110,11 @@ export const webRoutes: IRoute[] = [
     {
         path: '/settings/bigbluebutton',
         element: <PresetSettings />,
+        private: true,
+    },
+    {
+        path: '/profile',
+        element: <Profile />,
         private: true,
     },
 ];

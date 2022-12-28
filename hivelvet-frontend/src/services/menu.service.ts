@@ -158,7 +158,11 @@ class MenuService {
 
         if (items.length != 0) {
             if (items[0].children == null) {
-                defaultRoute = items[0].path;
+                if (items[0].path.startsWith('http')) {
+                    defaultRoute = '/profile';
+                } else {
+                    defaultRoute = items[0].path;
+                }
             } else {
                 defaultRoute = items[0].children[0].path;
             }

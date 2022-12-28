@@ -292,5 +292,8 @@
     "mb": "Mo",
     "delete_room_confirm": "Êtes-vous sûr de vouloir supprimer cette salle ?",
     "delete_room_success": "Salle a été supprimée avec succés",
-    "edit_room_success": "Salle a été mis a jour avec succés"
+    "edit_room_success": "Salle a été mis a jour avec succés",
+
+    "update_profile": "Mettre à jour le profil",
+    "change_avatar": "Changer Avatar"
 }
