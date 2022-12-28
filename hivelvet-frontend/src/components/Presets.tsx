@@ -316,7 +316,8 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editName, editClick
                     </div>
                 }
                 extra={
-                    deleteClickHandler != null && !isDefault && (
+                    deleteClickHandler != null &&
+                    !isDefault && (
                         <div className="table-actions">
                             <Popconfirm
                                 title={t('delete_preset_confirm')}
