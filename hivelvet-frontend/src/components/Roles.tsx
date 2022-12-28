@@ -42,6 +42,7 @@ import EN_US from '../locale/en-US.json';
 import { AxiosResponse } from 'axios';
 import _ from 'lodash';
 import AuthService from '../services/auth.service';
+import { TableColumnType } from '../types/TableColumnType';
 
 const { Link } = Typography;
 
@@ -582,7 +583,7 @@ const Roles = () => {
         },
     });
 
-    const columns = [
+    const columns: TableColumnType[] = [
         {
             title: t('name_col'),
             dataIndex: 'name',
@@ -613,6 +614,7 @@ const Roles = () => {
         },
         {
             title: t('actions_col'),
+            dataIndex: 'actions',
             editable: false,
             render: (text, record) => {
                 return (

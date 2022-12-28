@@ -33,6 +33,7 @@ import Highlighter from 'react-highlight-words/dist/main';
 import { FormInstance } from 'antd/lib/form';
 import _ from 'lodash';
 import AuthService from '../services/auth.service';
+import { TableColumnType } from '../types/TableColumnType';
 
 const { Option } = Select;
 const { Link } = Typography;
@@ -129,13 +130,14 @@ const Users = () => {
         const usersActions = AuthService.getActionsPermissionsByGroup('users');
         setActions(usersActions);
     }, []);
-    const getSelectRoles = () => {
+
+    const getSelectItems = (placeholderText: string, options) => {
         return (
             <Select
                 className="select-field"
                 showSearch
                 allowClear
-                placeholder={t('role.placeholder')}
+                placeholder={placeholderText}
                 filterOption={(input, option) =>
                     option.children.toString().toLowerCase().indexOf(input.toString().toLowerCase()) >= 0
                 }
@@ -144,36 +146,17 @@ const Users = () => {
                 }
                 onFocus={() => setCancelVisibility(false)}
             >
-                {allRoles.map((item) => (
-                    <Option key={item.id} value={item.id} className="text-capitalize">
-                        {item.name}
-                    </Option>
-                ))}
+                {options}
             </Select>
         );
     };
-    const getSelectStatus = () => {
-        return (
-            <Select
-                className="select-field"
-                showSearch
-                allowClear
-                placeholder={t('status.placeholder')}
-                filterOption={(input, option) =>
-                    option.children.toString().toLowerCase().indexOf(input.toString().toLowerCase()) >= 0
-                }
-                filterSort={(optionA, optionB) =>
-                    optionA.children.toString().toLowerCase().localeCompare(optionB.children.toString().toLowerCase())
-                }
-                onFocus={() => setCancelVisibility(false)}
-            >
-                {allStates.map((item, index) => (
-                    <Option key={index} value={item} className="text-capitalize">
-                        {t(item)}
-                    </Option>
-                ))}
-            </Select>
-        );
+    const getSelectRoles = () => {
+        const rolesOptions = allRoles.map((item) => (
+            <Option key={item.id} value={item.id} className="text-capitalize">
+                {item.name}
+            </Option>
+        ));
+        return getSelectItems(t('role.placeholder'), rolesOptions);
     };
 
     // add
@@ -244,7 +227,13 @@ const Users = () => {
     }) => {
         let inputNode: JSX.Element;
         if (inputType === 'select') {
-            inputNode = dataIndex == 'role' ? getSelectRoles() : getSelectStatus();
+            const statesOptions = allStates.map((item, index) => (
+                <Option key={index} value={item} className="text-capitalize">
+                    {t(item)}
+                </Option>
+            ));
+
+            inputNode = dataIndex == 'role' ? getSelectRoles() : getSelectItems(t('status.placeholder'), statesOptions);
         } else {
             inputNode = <Input onFocus={() => setCancelVisibility(false)} />;
         }
@@ -446,235 +435,155 @@ const Users = () => {
         },
     });
 
-    let columns;
+    const columns: TableColumnType[] = [
+        {
+            title: t('username_col'),
+            dataIndex: 'username',
+            editable: true,
+            ...getColumnSearchProps('username'),
+            width: '20%',
+            sorter: {
+                compare: (a, b) => a.username.localeCompare(b.username),
+                multiple: 5,
+            },
+        },
+        {
+            title: t('email_col'),
+            dataIndex: 'email',
+            editable: true,
+            ...getColumnSearchProps('email'),
+            width: '30%',
+            sorter: {
+                compare: (a, b) => a.username.localeCompare(b.username),
+                multiple: 4,
+            },
+        },
+        {
+            title: t('role_col'),
+            dataIndex: 'role',
+            editable: true,
+            ...getColumnSearchProps('role'),
+            width: '15%',
+            sorter: {
+                compare: (a, b) => a.username.localeCompare(b.username),
+                multiple: 3,
+            },
+        },
+        {
+            title: t('status_col'),
+            dataIndex: 'status',
+            editable: true,
+            width: '15%',
+            render: (status) => {
+                let color;
+                switch (status) {
+                    case 'active':
+                        color = 'success';
+                        break;
+                    case 'inactive':
+                        color = 'default';
+                        break;
+                    case 'pending':
+                        color = 'warning';
+                        break;
+                    case 'deleted':
+                        color = 'error';
+                        break;
+                    default:
+                        color = '';
+                }
+                return <Tag color={color}>{t(status)}</Tag>;
+            },
+            filters: allStates.map((item) => ({
+                text: t(item),
+                value: item,
+            })),
+            onFilter: (value, record) => record.status === value,
+            sorter: {
+                compare: (a, b) => a.username.localeCompare(b.username),
+                multiple: 2,
+            },
+        },
+        {
+            title: t('labels_cols.nbrooms'),
+            dataIndex: 'nb_rooms',
+            inputType: 'text',
+            editable: false,
+            ...getColumnSearchProps('rooms_number'),
+            width: '15%',
+            sorter: {
+                compare: (a, b) => a.name.localeCompare(b.name),
+                multiple: 1,
+            },
+        },
+    ];
 
     if (
         (AuthService.isAllowedAction(actions, 'edit') && colletRolesAction) ||
         AuthService.isAllowedAction(actions, 'delete')
     ) {
-        columns = [
-            {
-                title: t('username_col'),
-                dataIndex: 'username',
-                editable: true,
-                ...getColumnSearchProps('username'),
-                width: '15%',
-                sorter: {
-                    compare: (a, b) => a.username.localeCompare(b.username),
-                    multiple: 5,
-                },
-            },
-            {
-                title: t('email_col'),
-                dataIndex: 'email',
-                editable: true,
-                ...getColumnSearchProps('email'),
-                width: '25%',
-                sorter: {
-                    compare: (a, b) => a.username.localeCompare(b.username),
-                    multiple: 4,
-                },
-            },
-            {
-                title: t('role_col'),
-                dataIndex: 'role',
-                editable: true,
-                ...getColumnSearchProps('role'),
-                width: '15%',
-                sorter: {
-                    compare: (a, b) => a.username.localeCompare(b.username),
-                    multiple: 3,
-                },
-            },
-            {
-                title: t('status_col'),
-                dataIndex: 'status',
-                editable: true,
-                width: '10%',
-                render: (status) => {
-                    let color;
-                    switch (status) {
-                        case 'active':
-                            color = 'success';
-                            break;
-                        case 'inactive':
-                            color = 'default';
-                            break;
-                        case 'pending':
-                            color = 'warning';
-                            break;
-                        case 'deleted':
-                            color = 'error';
-                            break;
-                        default:
-                            color = '';
-                    }
-                    return <Tag color={color}>{t(status)}</Tag>;
-                },
-                filters: allStates.map((item) => ({
-                    text: t(item),
-                    value: item,
-                })),
-                onFilter: (value, record) => record.status === value,
-                sorter: {
-                    compare: (a, b) => a.username.localeCompare(b.username),
-                    multiple: 2,
-                },
-            },
-            {
-                title: t('labels_cols.nbrooms'),
-                dataIndex: 'nb_rooms',
-                inputType: 'text',
-                editable: false,
-                ...getColumnSearchProps('rooms_number'),
-                width: '15%',
-                sorter: {
-                    compare: (a, b) => a.name.localeCompare(b.name),
-                    multiple: 1,
-                },
-            },
-            {
-                title: t('actions_col'),
-                editable: false,
-                render: (text, record) => {
-                    const clickCancel = (record) => {
-                        const oldData = record;
-                        const newData = editForm.getFieldsValue(true);
-                        compareEdit(oldData, newData) ? cancelEdit() : setCancelVisibility(true);
-                    };
-                    const editable = isEditing(record);
-                    const deletedRow = record.status == 'deleted';
+        columns[0].width = '15%';
+        columns[1].width = '25%';
+        columns[3].width = '10%';
 
-                    return editable ? (
-                        <Space size="middle">
-                            <Popconfirm
-                                title={t('cancel_edit')}
-                                placement="leftTop"
-                                visible={cancelVisibility}
-                                onVisibleChange={() => clickCancel(record)}
-                                onConfirm={() => cancelEdit()}
-                                onCancel={() => setCancelVisibility(false)}
-                            >
-                                <Button size="middle" className="cell-input-cancel">
-                                    <Trans i18nKey="cancel" />
-                                </Button>
-                            </Popconfirm>
-                            <Button
-                                size="middle"
-                                type="primary"
-                                className="cell-input-save"
-                                onClick={() => saveEdit(record, record.key)}
-                            >
-                                <Trans i18nKey="save" />
+        columns.push({
+            title: t('actions_col'),
+            dataIndex: 'actions',
+            editable: false,
+            render: (text, record) => {
+                const clickCancel = (record) => {
+                    const oldData = record;
+                    const newData = editForm.getFieldsValue(true);
+                    compareEdit(oldData, newData) ? cancelEdit() : setCancelVisibility(true);
+                };
+                const editable = isEditing(record);
+                const deletedRow = record.status == 'deleted';
+
+                return editable ? (
+                    <Space size="middle">
+                        <Popconfirm
+                            title={t('cancel_edit')}
+                            placement="leftTop"
+                            visible={cancelVisibility}
+                            onVisibleChange={() => clickCancel(record)}
+                            onConfirm={() => cancelEdit()}
+                            onCancel={() => setCancelVisibility(false)}
+                        >
+                            <Button size="middle" className="cell-input-cancel">
+                                <Trans i18nKey="cancel" />
                             </Button>
-                        </Space>
-                    ) : (
-                        <Space size="middle" className="table-actions">
-                            {AuthService.isAllowedAction(actions, 'edit') && colletRolesAction && (
-                                <Link disabled={editingKey !== null} onClick={() => toggleEdit(record)}>
-                                    <EditOutlined /> <Trans i18nKey="edit" />
+                        </Popconfirm>
+                        <Button
+                            size="middle"
+                            type="primary"
+                            className="cell-input-save"
+                            onClick={() => saveEdit(record, record.key)}
+                        >
+                            <Trans i18nKey="save" />
+                        </Button>
+                    </Space>
+                ) : (
+                    <Space size="middle" className="table-actions">
+                        {AuthService.isAllowedAction(actions, 'edit') && colletRolesAction && (
+                            <Link disabled={editingKey !== null} onClick={() => toggleEdit(record)}>
+                                <EditOutlined /> <Trans i18nKey="edit" />
+                            </Link>
+                        )}
+                        {AuthService.isAllowedAction(actions, 'delete') && !deletedRow && (
+                            <Popconfirm
+                                title={t('delete_user_confirm')}
+                                icon={<QuestionCircleOutlined className="red-icon" />}
+                                onConfirm={() => handleDelete(record.key)}
+                            >
+                                <Link>
+                                    <DeleteOutlined /> <Trans i18nKey="delete" />
                                 </Link>
-                            )}
-                            {AuthService.isAllowedAction(actions, 'delete') && !deletedRow && (
-                                <Popconfirm
-                                    title={t('delete_user_confirm')}
-                                    icon={<QuestionCircleOutlined className="red-icon" />}
-                                    onConfirm={() => handleDelete(record.key)}
-                                >
-                                    <Link>
-                                        <DeleteOutlined /> <Trans i18nKey="delete" />
-                                    </Link>
-                                </Popconfirm>
-                            )}
-                        </Space>
-                    );
-                },
+                            </Popconfirm>
+                        )}
+                    </Space>
+                );
             },
-        ];
-    } else {
-        columns = [
-            {
-                title: t('username_col'),
-                dataIndex: 'username',
-                editable: true,
-                ...getColumnSearchProps('username'),
-                width: '20%',
-                sorter: {
-                    compare: (a, b) => a.username.localeCompare(b.username),
-                    multiple: 5,
-                },
-            },
-            {
-                title: t('email_col'),
-                dataIndex: 'email',
-                editable: true,
-                ...getColumnSearchProps('email'),
-                width: '30%',
-                sorter: {
-                    compare: (a, b) => a.username.localeCompare(b.username),
-                    multiple: 4,
-                },
-            },
-            {
-                title: t('role_col'),
-                dataIndex: 'role',
-                editable: true,
-                ...getColumnSearchProps('role'),
-                width: '15%',
-                sorter: {
-                    compare: (a, b) => a.username.localeCompare(b.username),
-                    multiple: 3,
-                },
-            },
-            {
-                title: t('status_col'),
-                dataIndex: 'status',
-                editable: true,
-                width: '15%',
-                render: (status) => {
-                    let color;
-                    switch (status) {
-                        case 'active':
-                            color = 'success';
-                            break;
-                        case 'inactive':
-                            color = 'default';
-                            break;
-                        case 'pending':
-                            color = 'warning';
-                            break;
-                        case 'deleted':
-                            color = 'error';
-                            break;
-                        default:
-                            color = '';
-                    }
-                    return <Tag color={color}>{t(status)}</Tag>;
-                },
-                filters: allStates.map((item) => ({
-                    text: t(item),
-                    value: item,
-                })),
-                onFilter: (value, record) => record.status === value,
-                sorter: {
-                    compare: (a, b) => a.username.localeCompare(b.username),
-                    multiple: 2,
-                },
-            },
-            {
-                title: t('labels_cols.nbrooms'),
-                dataIndex: 'nb_rooms',
-                inputType: 'text',
-                editable: false,
-
-                ...getColumnSearchProps('rooms_number'),
-                width: '15%',
-                sorter: {
-                    compare: (a, b) => a.name.localeCompare(b.name),
-                    multiple: 1,
-                },
-            },
-        ];
+        });
     }
 
     const mergedColumns = columns.map((col) => {

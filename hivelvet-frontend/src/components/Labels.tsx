@@ -42,6 +42,7 @@ import { DataContext } from 'lib/RoomsContext';
 
 import AuthService from '../services/auth.service';
 import LabelsService from '../services/labels.service';
+import { TableColumnType } from '../types/TableColumnType';
 
 const { Link } = Typography;
 
@@ -214,6 +215,7 @@ const Labels = () => {
             return text;
         },
     });
+
     //edit
     const [editForm] = Form.useForm();
     const EditableRow: React.FC = ({ ...props }) => {
@@ -225,7 +227,6 @@ const Labels = () => {
             </Form>
         );
     };
-
     const EditableCell: React.FC<EditableCellProps> = ({ editing, children, dataIndex, record, ...restProps }) => {
         const EditableCol = (
             <Space size="middle">
@@ -325,7 +326,6 @@ const Labels = () => {
             );
         return <td {...restProps}>{editing ? EditableCol : RegularCol}</td>;
     };
-
     const isEditing = (record: Item) => record.key == editingKey;
     const toggleEdit = (record: Item) => {
         setCancelVisibility(false);
@@ -334,14 +334,11 @@ const Labels = () => {
         const recordClone = { ...record };
         editForm.setFieldsValue(recordClone);
     };
-
     const cancelEdit = () => {
         setCancelVisibility(false);
         setEditingKey(null);
     };
-
     const compareEdit = (oldRecord: Item, newRecord: object): boolean => _.isEqual(oldRecord, newRecord);
-
     const saveEdit = async (record: Item, key: number) => {
         try {
             const formValues: object = await editForm.validateFields();
@@ -387,145 +384,103 @@ const Labels = () => {
         }
     };
 
-    let columns;
-
+    const columns: TableColumnType[] = [
+        {
+            title: t('labels_cols.name'),
+            dataIndex: 'name',
+            inputType: 'text',
+            editable: true,
+            ...getColumnSearchProps('name'),
+            width: '20%',
+            sorter: {
+                compare: (a, b) => a.name.localeCompare(b.name),
+                multiple: 3,
+            },
+        },
+        {
+            title: t('labels_cols.description'),
+            dataIndex: 'description',
+            inputType: 'text',
+            editable: true,
+            ...getColumnSearchProps('description'),
+            width: '40%',
+            sorter: {
+                compare: (a, b) => a.name.localeCompare(b.name),
+                multiple: 2,
+            },
+        },
+        {
+            title: t('labels_cols.nbrooms'),
+            dataIndex: 'nb_rooms',
+            inputType: 'text',
+            editable: false,
+            ...getColumnSearchProps('rooms_number'),
+            width: '15%',
+            sorter: {
+                compare: (a, b) => a.name.localeCompare(b.name),
+                multiple: 1,
+            },
+        },
+    ];
     if (AuthService.isAllowedAction(actions, 'edit') || AuthService.isAllowedAction(actions, 'delete')) {
-        columns = [
-            {
-                title: t('labels_cols.name'),
-                dataIndex: 'name',
-                inputType: 'text',
-                editable: true,
-                ...getColumnSearchProps('name'),
-                width: '20%',
-                sorter: {
-                    compare: (a, b) => a.name.localeCompare(b.name),
-                    multiple: 3,
-                },
-            },
-            {
-                title: t('labels_cols.description'),
-                dataIndex: 'description',
-                inputType: 'text',
-                editable: true,
-                ...getColumnSearchProps('description'),
-                width: '40%',
-                sorter: {
-                    compare: (a, b) => a.name.localeCompare(b.name),
-                    multiple: 2,
-                },
-            },
-            {
-                title: t('labels_cols.nbrooms'),
-                dataIndex: 'nb_rooms',
-                inputType: 'text',
-                editable: false,
-                ...getColumnSearchProps('rooms_number'),
-                width: '15%',
-                sorter: {
-                    compare: (a, b) => a.name.localeCompare(b.name),
-                    multiple: 1,
-                },
-            },
-            {
-                title: t('actions_col'),
-                dataIndex: 'actions',
-                editable: false,
-                render: (text, record) => {
-                    const handleCancelVisibilityChange = () => {
-                        compareEdit(record, editForm.getFieldsValue(true)) ? cancelEdit() : setCancelVisibility(true);
-                    };
+        columns.push({
+            title: t('actions_col'),
+            dataIndex: 'actions',
+            editable: false,
+            render: (text, record) => {
+                const handleCancelVisibilityChange = () => {
+                    compareEdit(record, editForm.getFieldsValue(true)) ? cancelEdit() : setCancelVisibility(true);
+                };
 
-                    const EditActions = (
-                        <Space size="middle">
-                            <Popconfirm
-                                title={t('cancel_edit')}
-                                placement="leftTop"
-                                visible={cancelVisibility}
-                                onConfirm={() => cancelEdit()}
-                                onCancel={() => setCancelVisibility(false)}
-                                onVisibleChange={handleCancelVisibilityChange}
-                            >
-                                <Button size="middle">
-                                    <Trans i18nKey="cancel" />
-                                </Button>
-                            </Popconfirm>
-                            <Button
-                                disabled={loading}
-                                size="middle"
-                                type="primary"
-                                onClick={() => saveEdit(record, record.key)}
-                            >
-                                <Trans i18nKey="save" />
+                const EditActions = (
+                    <Space size="middle">
+                        <Popconfirm
+                            title={t('cancel_edit')}
+                            placement="leftTop"
+                            visible={cancelVisibility}
+                            onConfirm={() => cancelEdit()}
+                            onCancel={() => setCancelVisibility(false)}
+                            onVisibleChange={handleCancelVisibilityChange}
+                        >
+                            <Button size="middle">
+                                <Trans i18nKey="cancel" />
                             </Button>
-                        </Space>
-                    );
-                    const Actions = (
-                        <Space size="middle" className="table-actions">
-                            {AuthService.isAllowedAction(actions, 'edit') && (
-                                <Link disabled={editingKey !== null} onClick={() => toggleEdit(record)}>
-                                    <EditOutlined /> <Trans i18nKey="edit" />
+                        </Popconfirm>
+                        <Button
+                            disabled={loading}
+                            size="middle"
+                            type="primary"
+                            onClick={() => saveEdit(record, record.key)}
+                        >
+                            <Trans i18nKey="save" />
+                        </Button>
+                    </Space>
+                );
+                const Actions = (
+                    <Space size="middle" className="table-actions">
+                        {AuthService.isAllowedAction(actions, 'edit') && (
+                            <Link disabled={editingKey !== null} onClick={() => toggleEdit(record)}>
+                                <EditOutlined /> <Trans i18nKey="edit" />
+                            </Link>
+                        )}
+                        {AuthService.isAllowedAction(actions, 'delete') && (
+                            <Popconfirm
+                                title={t('delete_label_confirm')}
+                                icon={<QuestionCircleOutlined className="red-icon" />}
+                                onConfirm={() => handleDelete(record.key, record.nb_rooms)}
+                            >
+                                <Link>
+                                    <DeleteOutlined /> <Trans i18nKey="delete" />
                                 </Link>
-                            )}
-                            {AuthService.isAllowedAction(actions, 'delete') && (
-                                <Popconfirm
-                                    title={t('delete_label_confirm')}
-                                    icon={<QuestionCircleOutlined className="red-icon" />}
-                                    onConfirm={() => handleDelete(record.key, record.nb_rooms)}
-                                >
-                                    <Link>
-                                        <DeleteOutlined /> <Trans i18nKey="delete" />
-                                    </Link>
-                                </Popconfirm>
-                            )}
-                        </Space>
-                    );
+                            </Popconfirm>
+                        )}
+                    </Space>
+                );
 
-                    const editable = isEditing(record);
-                    return editable ? EditActions : Actions;
-                },
+                const editable = isEditing(record);
+                return editable ? EditActions : Actions;
             },
-        ];
-    } else {
-        columns = [
-            {
-                title: t('labels_cols.name'),
-                dataIndex: 'name',
-                inputType: 'text',
-                editable: true,
-                ...getColumnSearchProps('name'),
-                width: '20%',
-                sorter: {
-                    compare: (a, b) => a.name.localeCompare(b.name),
-                    multiple: 3,
-                },
-            },
-            {
-                title: t('labels_cols.description'),
-                dataIndex: 'description',
-                inputType: 'text',
-                editable: true,
-                ...getColumnSearchProps('description'),
-                width: '40%',
-                sorter: {
-                    compare: (a, b) => a.name.localeCompare(b.name),
-                    multiple: 2,
-                },
-            },
-            {
-                title: t('labels_cols.nbrooms'),
-                dataIndex: 'nb_rooms',
-                inputType: 'text',
-                editable: false,
-
-                ...getColumnSearchProps('rooms_number'),
-                width: '20%',
-                sorter: {
-                    compare: (a, b) => a.name.localeCompare(b.name),
-                    multiple: 1,
-                },
-            },
-        ];
+        });
     }
 
     const mergedColumns = columns.map((col) => {

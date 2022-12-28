@@ -72,6 +72,34 @@ const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
         [isLogged, setIsLogged, currentUser, setCurrentUser, currentSession, setCurrentSession]
     );
 
+    const getRooms = (userId: number) => {
+        RoomsService.list_rooms(userId)
+            .then((response) => {
+                setDataRooms(response.data);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    };
+    const getLabels = () => {
+        LabelsService.list_labels()
+            .then((response) => {
+                setDataLabels(response.data);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
+    const getPresets = (userId: number) => {
+        PresetsService.list_presets(userId)
+            .then((response) => {
+                setDataPresets(response.data);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
+
     //loading page and user already logged => set current user
     useEffect(() => {
         const user: UserType = AuthService.getCurrentUser();
@@ -86,33 +114,14 @@ const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
                 if (AuthService.isAllowedGroup(allowedGroups, 'logs')) {
                     Logger.info(logs);
                 }
-
                 if (AuthService.isAllowedGroup(allowedGroups, 'rooms')) {
-                    RoomsService.list_rooms(user.id)
-                        .then((response) => {
-                            setDataRooms(response.data);
-                        })
-                        .catch((error) => {
-                            console.error(error);
-                        });
+                    getRooms(user.id);
                 }
                 if (AuthService.isAllowedGroup(allowedGroups, 'labels')) {
-                    LabelsService.list_labels()
-                        .then((response) => {
-                            setDataLabels(response.data);
-                        })
-                        .catch((error) => {
-                            console.log(error);
-                        });
+                    getLabels();
                 }
                 if (AuthService.isAllowedGroup(allowedGroups, 'presets')) {
-                    PresetsService.list_presets(user.id)
-                        .then((response) => {
-                            setDataPresets(response.data);
-                        })
-                        .catch((error) => {
-                            console.log(error);
-                        });
+                    getPresets(user.id);
                 }
             }
         }

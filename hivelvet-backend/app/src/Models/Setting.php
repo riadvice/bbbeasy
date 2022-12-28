@@ -23,6 +23,8 @@ declare(strict_types=1);
 namespace Models;
 
 use Models\Base as BaseModel;
+use Respect\Validation\Validator;
+use Validation\DataChecker;
 
 /**
  * Class Setting.
@@ -86,5 +88,26 @@ class Setting extends BaseModel
         }
 
         return $result;
+    }
+
+    public function checkSettingsData(DataChecker $dataChecker, array $form): DataChecker
+    {
+        $dataChecker->verify($form['company_name'], Validator::notEmpty()->setName('company_name'));
+        $dataChecker->verify($form['company_url'], Validator::url()->setName('company_url'));
+        $dataChecker->verify($form['platform_name'], Validator::notEmpty()->setName('platform_name'));
+
+        if (null !== $form['term_url']) {
+            $dataChecker->verify($form['term_url'], Validator::url()->setName('term_url'));
+        }
+        if (null !== $form['policy_url']) {
+            $dataChecker->verify($form['policy_url'], Validator::url()->setName('policy_url'));
+        }
+        $dataChecker->verify($form['branding_colors'], Validator::notEmpty()->setName('color'));
+        $dataChecker->verify($form['branding_colors']['primary_color'], Validator::hexRgbColor()->setName('primary_color'));
+        $dataChecker->verify($form['branding_colors']['secondary_color'], Validator::hexRgbColor()->setName('secondary_color'));
+        $dataChecker->verify($form['branding_colors']['accent_color'], Validator::hexRgbColor()->setName('accent_color'));
+        $dataChecker->verify($form['branding_colors']['add_color'], Validator::hexRgbColor()->setName('additional_color'));
+
+        return $dataChecker;
     }
 }

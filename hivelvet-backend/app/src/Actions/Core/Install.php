@@ -50,24 +50,13 @@ class Install extends BaseAction
          */
         $body        = $this->getDecodedBody();
         $form        = $body['data'];
+        $setting     = new Setting();
         $dataChecker = new DataChecker();
 
         $dataChecker->verify($form['username'], Validator::length(4)->setName('username'));
         $dataChecker->verify($form['email'], Validator::email()->setName('email'));
         $dataChecker->verify($form['password'], Validator::length(8)->setName('password'));
-
-        $dataChecker->verify($form['company_name'], Validator::notEmpty()->setName('company_name'));
-        $dataChecker->verify($form['company_url'], Validator::url()->setName('company_url'));
-        $dataChecker->verify($form['platform_name'], Validator::notEmpty()->setName('platform_name'));
-
-        if (null !== $form['term_url']) {
-            $dataChecker->verify($form['term_url'], Validator::url()->setName('term_url'));
-        }
-        if (null !== $form['policy_url']) {
-            $dataChecker->verify($form['policy_url'], Validator::url()->setName('policy_url'));
-        }
-
-        $dataChecker->verify($form['branding_colors'], Validator::notEmpty()->setName('branding_colors'));
+        $dataChecker = $setting->checkSettingsData($dataChecker, $form);
         $dataChecker->verify($form['presetsConfig'], Validator::notEmpty()->setName('presetsConfig'));
 
         if (!$dataChecker->allValid()) {
@@ -110,8 +99,6 @@ class Install extends BaseAction
                         $user->save();
 
                         $this->logger->info('Initial application setup : Add administrator with admin role and default preset', ['user' => $user->toArray()]);
-
-                        $setting = new Setting();
 
                         /** @var Setting $settings */
                         $settings = $setting->find([], ['limit' => 1])->current();

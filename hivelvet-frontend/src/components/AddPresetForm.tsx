@@ -35,7 +35,7 @@ type Props = {
     errors?: string[];
 
     isModalShow: boolean;
-    close: any;
+    close: () => void;
 };
 type formType = {
     name?: string;

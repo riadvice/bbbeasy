@@ -46,7 +46,7 @@ type Props = {
     errors?: string[];
 
     isModalShow: boolean;
-    close: any;
+    close: () => void;
     shortlink: string;
 
     initialAddValues: formType;
