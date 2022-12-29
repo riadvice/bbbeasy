@@ -16,11 +16,26 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import { PresetType } from './PresetType';
+import * as React from 'react';
+import { ColumnFilterItem, FilterConfirmProps } from 'antd/lib/table/interface';
 
-export type MyPresetType = {
-    id: number;
-    name: string;
-    categories: PresetType[];
-    nb_rooms: number;
+export interface FilterDropdownProps {
+    setSelectedKeys: (selectedKeys: React.Key[]) => void;
+    selectedKeys: React.Key[];
+    confirm: (param?: FilterConfirmProps) => void;
+    clearFilters?: () => void;
+}
+
+export type TableColumnType = {
+    title: string;
+    dataIndex: string;
+    inputType?: string;
+    editable?: boolean;
+    width?: string;
+    sorter?: { compare?: (a, b) => number; multiple?: number };
+    render?: (text: string, record) => JSX.Element;
+    filterDropdown?: (props: FilterDropdownProps) => JSX.Element;
+    filterIcon?: (filtered: boolean) => JSX.Element;
+    filters?: ColumnFilterItem[];
+    onFilter?: (value: string | number | boolean, record) => any;
 };

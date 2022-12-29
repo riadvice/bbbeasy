@@ -196,7 +196,7 @@
     "delete": "حذف",
     "delete_role_confirm": "هل أنت متأكد من حذف هذا الدور ؟",
     "delete_role_title": "هل تريد حذف هذا الدور ؟",
-    "delete_role_content": "تم تعيين مستخدمين لهذا الدور ، إذا أكدت الحذف ، ينتقل جميع المستخدمين إلى دور القارئ",
+    "delete_role_content": "تم تعيين هذا الدور لبعض المستخدمين ، إذا أكدت الحذف ، سيتحول جميع المستخدمين المعينين إلى دور القارئ",
     "delete_role_success": "تم حذف الدور بنجاح",
     "confirm_yes": "نعم",
     "confirm_no": "لا",
@@ -233,7 +233,9 @@
     },
     "label-name-already-exist": "اسم التصنيف موجود بالفعل",
     "label-color-already-exist": "لون التصنيف موجود بالفعل",
-    "delete_label_confirm": "هل أنت متأكد من حذف هذا العلامة ؟",
+    "delete_label_confirm": "هل أنت متأكد من حذف هذه العلامة ؟",
+    "delete_label_title": "هل تريد حذف هذه العلامة ؟",
+    "delete_label_content": "تم تعيين هذه العلامة لبعض الغرف ، إذا أكدت الحذف ، لن يتم تخصيصها لها",
     "delete_label_success": "تم حذف العلامة بنجاح",
     "add_label_success": "تمت اضافة العلامة بنجاح",
     "edit_label_success": "تم تحديث العلامة بنجاح",
@@ -253,9 +255,11 @@
     "search_preset": "البحث في إعداداتي المسبقة",
     "rename": "إعادة التسمية",
     "delete_preset_confirm": "هل أنت متأكد من حذف هذا الإعداد المسبق ؟",
+    "delete_preset_title": "هل تريد حذف هذا الإعداد ؟",
+    "delete_preset_content": "تم تعيين هذا الإعداد المسبق لبعض الغرف ، إذا أكدت الحذف ، ستتحول جميع الغرف المعينة إلى الإعداد المسبق الافتراضي",
+    "delete_preset_success": "تم حذف الاعدادات بنجاح",
     "add_preset_success": "تمت إضافة الاعدادات بنجاح",
     "edit_preset_success": "تم تحديث الاعدادات بنجاح",
-    "delete_preset_success": "تم حذف الاعدادات بنجاح",
 
     "edit_settings_success": "تم تحديث إعدادات الشركة و العلامات التجارية بنجاح",
     "edit_preset_settings_success": "تم تحديث إعدادات غرف BigBlueButton بنجاح",
@@ -290,6 +294,10 @@
     "publish": "نشر",
     "replay": "إعادة",
     "mb": "م.ب",
+    "delete_room_confirm": "هل أنت متأكد من حذف هذه القاعة ؟",
     "delete_room_success": "تم حذف القاعة بنجاح",
-    "edit_room_success": "تم تحديث القاعة بنجاح"
+    "edit_room_success": "تم تحديث القاعة بنجاح",
+
+    "update_profile": "تحديث الملف الشخصي",
+    "change_avatar": "تغيير الصورة الرمزية"
 }

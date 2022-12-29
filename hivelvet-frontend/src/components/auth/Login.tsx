@@ -17,7 +17,7 @@
  */
 
 import React from 'react';
-import { Link, Navigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import AuthService from '../../services/auth.service';
 import Notifications from '../Notifications';
 
@@ -100,9 +100,6 @@ const Login = () => {
         });
     };
 
-    if (successful) {
-        return <Navigate to="/rooms" />;
-    }
     return (
         <Row>
             <Col span={8} offset={8} className="section-top">

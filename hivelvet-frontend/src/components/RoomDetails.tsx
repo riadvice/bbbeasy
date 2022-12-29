@@ -57,9 +57,11 @@ const { Title } = Typography;
 type formType = {
     name: string;
 };
+
 const RoomDetails = () => {
     const { state } = useLocation();
     const currentRoom: RoomType = state.room;
+    const editable: boolean = state.editable;
     const [room, setRoom] = React.useState<RoomType>(state.room);
 
     const recordings: RecordingType[] = [
@@ -189,7 +191,7 @@ const RoomDetails = () => {
     const uploadButton = (
         <div>
             <PlusOutlined />
-            <div className="mt-8">
+            <div className="mt-8 upload-file">
                 <Trans i18nKey="upload" />
             </div>
         </div>
@@ -233,7 +235,7 @@ const RoomDetails = () => {
             <Row align="bottom" className="mb-40">
                 <Col span={10}>
                     <Row justify="end" className="mb-5">
-                        {!isEditing ? (
+                        {!isEditing && editable ? (
                             <Button
                                 className="edit-btn"
                                 size="small"

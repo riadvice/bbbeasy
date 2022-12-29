@@ -16,8 +16,8 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useEffect, useRef } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import { Button, Dropdown, Layout, Menu } from 'antd';
 import { PlusOutlined, DownOutlined } from '@ant-design/icons';
@@ -35,6 +35,7 @@ import AddLabelForm from 'components/AddLabelForm';
 import AddPresetForm from 'components/AddPresetForm';
 
 import AuthService from '../../services/auth.service';
+import MenuService from '../../services/menu.service';
 import { UserType } from '../../types/UserType';
 import { MenuType } from '../../types/MenuType';
 
@@ -62,152 +63,25 @@ const AppSider = () => {
 
     const [menuItems, setMenuItems] = React.useState<MenuType[]>([]);
     const [newMenuItems, setNewMenuItems] = React.useState<string[]>([]);
+    const navigate = useNavigate();
 
     const location: Location = useLocation();
     const [currentPath, setCurrentPath] = React.useState<string>(location.pathname);
     const { t } = useTranslation();
-    const comp = useRef();
-
-    type addActionType = (key: string) => void;
-
-    const addItemIfExist = (
-        key: string,
-        menuItem: MenuType,
-        keys: string[],
-        items: MenuType[],
-        addActionFunction?: addActionType
-    ) => {
-        if (keys.includes(key)) {
-            items.push(menuItem);
-            if (addActionFunction != null) {
-                addActionFunction(key);
-            }
-        }
-    };
-
-    const addSettings = (keys: string[], items: MenuType[]) => {
-        const subItems: MenuType[] = [];
-
-        addItemIfExist(
-            'settings',
-            {
-                name: 'company_branding',
-                icon: 'BgColorsOutlined',
-                path: '/settings/branding',
-            },
-            keys,
-            subItems
-        );
-        addItemIfExist(
-            'users',
-            {
-                name: 'users',
-                icon: 'UserOutlined',
-                path: '/settings/users',
-            },
-            keys,
-            subItems
-        );
-        addItemIfExist(
-            'roles',
-            {
-                name: 'roles',
-                icon: 'Role',
-                path: '/settings/roles',
-            },
-            keys,
-            subItems
-        );
-        addItemIfExist(
-            'notifications',
-            {
-                name: 'notifications',
-                icon: 'BellOutlined',
-                path: '/settings/notifications',
-            },
-            keys,
-            subItems
-        );
-        addItemIfExist(
-            'preset_settings',
-            {
-                name: 'bigbluebutton',
-                icon: 'Bigbluebutton',
-                path: '/settings/bigbluebutton',
-            },
-            keys,
-            subItems
-        );
-
-        if (subItems.length != 0) {
-            items.push({
-                name: 'settings',
-                icon: 'General-settings',
-                path: 'sub1',
-                children: subItems,
-            });
-        }
-    };
 
     useEffect(() => {
         const user: UserType = AuthService.getCurrentUser();
-        console.log('user', user);
-        console.log('user permissions', user.permissions);
-        const items: MenuType[] = [];
-        const newItems: string[] = [];
-        const userPermissions = user.permissions;
-        const addActionExist = (key: string) => {
-            if (userPermissions[key].includes('add')) {
-                newItems.push(key);
+        const menuSider = MenuService.getMenuSider(user.permissions);
+        setMenuItems(menuSider.items);
+        setNewMenuItems(menuSider.news);
+
+        if (currentPath == '/login') {
+            const defaultRoute = menuSider.defaultRoute;
+            if (defaultRoute != '') {
+                navigate(defaultRoute);
+                setCurrentPath(defaultRoute);
             }
-        };
-        if (Object.keys(userPermissions).length != 0) {
-            const keys = Object.keys(userPermissions);
-
-            addItemIfExist(
-                'rooms',
-
-                {
-                    name: 'rooms',
-                    icon: 'Room',
-                    path: '/rooms',
-                },
-                keys,
-                items,
-                addActionExist
-            );
-            addItemIfExist(
-                'labels',
-                {
-                    name: 'labels',
-                    icon: 'TagsOutlined',
-                    path: '/labels',
-                },
-                keys,
-                items,
-                addActionExist
-            );
-            addItemIfExist(
-                'presets',
-                {
-                    name: 'presets',
-                    icon: 'Preset',
-                    path: '/presets',
-                },
-                keys,
-                items,
-                addActionExist
-            );
-
-            addSettings(keys, items);
         }
-        items.push({
-            name: 'help',
-            icon: 'QuestionCircleOutlined',
-            path: 'https://riadvice.tn/',
-        });
-        setMenuItems(items);
-        setNewMenuItems(newItems);
     }, []);
 
     const handleClick = (e) => {
@@ -217,7 +91,7 @@ const AppSider = () => {
     return (
         <>
             {menuItems.length != 0 && (
-                <Sider className="site-sider" ref={comp}>
+                <Sider className="site-sider">
                     <div className="logo">
                         <Link to={'/'}>
                             <img className="sider-logo-image" src="/images/logo_01.png" alt="Logo" />
@@ -225,31 +99,57 @@ const AppSider = () => {
                     </div>
                     <div className="menu-sider">
                         {newMenuItems.length != 0 && (
-                            <Dropdown
-                                overlay={
-                                    <Menu>
-                                        {newMenuItems.includes('rooms') && (
-                                            <Menu.Item key="1" onClick={() => setIsModalVisibleRoom(true)}>
-                                                <span>{t('room')}</span>
-                                            </Menu.Item>
-                                        )}
-                                        {newMenuItems.includes('labels') && (
-                                            <Menu.Item key="2" onClick={() => setIsModalVisibleLabel(true)}>
-                                                {t('label')}
-                                            </Menu.Item>
-                                        )}
-                                        {newMenuItems.includes('presets') && (
-                                            <Menu.Item key="3" onClick={() => setIsModalVisiblePreset(true)}>
-                                                {t('preset.label')}
-                                            </Menu.Item>
-                                        )}
-                                    </Menu>
-                                }
-                            >
-                                <Button size="middle" className="sider-new-btn">
-                                    <PlusOutlined /> {t('new')} <DownOutlined />
-                                </Button>
-                            </Dropdown>
+                            <>
+                                <Dropdown
+                                    overlay={
+                                        <Menu>
+                                            {newMenuItems.includes('rooms') && (
+                                                <Menu.Item key="1" onClick={() => setIsModalVisibleRoom(true)}>
+                                                    <span>{t('room')}</span>
+                                                </Menu.Item>
+                                            )}
+                                            {newMenuItems.includes('labels') && (
+                                                <Menu.Item key="2" onClick={() => setIsModalVisibleLabel(true)}>
+                                                    {t('label')}
+                                                </Menu.Item>
+                                            )}
+                                            {newMenuItems.includes('presets') && (
+                                                <Menu.Item key="3" onClick={() => setIsModalVisiblePreset(true)}>
+                                                    {t('preset.label')}
+                                                </Menu.Item>
+                                            )}
+                                        </Menu>
+                                    }
+                                >
+                                    <Button size="middle" className="sider-new-btn">
+                                        <PlusOutlined /> {t('new')} <DownOutlined />
+                                    </Button>
+                                </Dropdown>
+
+                                <>
+                                    {newMenuItems.includes('rooms') && (
+                                        <AddRoomForm
+                                            isModalShow={isModalVisibleRoom}
+                                            close={() => setIsModalVisibleRoom(false)}
+                                            shortlink={'/hv/' + initialAddValues.shortlink}
+                                            initialAddValues={initialAddValues}
+                                        />
+                                    )}
+                                    {newMenuItems.includes('labels') && (
+                                        <AddLabelForm
+                                            isModalShow={isModalVisibleLabel}
+                                            close={() => setIsModalVisibleLabel(false)}
+                                            defaultColor="#fbbc0b"
+                                        />
+                                    )}
+                                    {newMenuItems.includes('presets') && (
+                                        <AddPresetForm
+                                            isModalShow={isModalVisiblePreset}
+                                            close={() => setIsModalVisiblePreset(false)}
+                                        />
+                                    )}
+                                </>
+                            </>
                         )}
 
                         <Menu
@@ -289,31 +189,6 @@ const AppSider = () => {
                     </div>
                 </Sider>
             )}
-            {newMenuItems.length != 0 ? (
-                <>
-                    {newMenuItems.includes('rooms') && (
-                        <AddRoomForm
-                            isModalShow={isModalVisibleRoom}
-                            close={() => setIsModalVisibleRoom(false)}
-                            shortlink={'/hv/' + initialAddValues.shortlink}
-                            initialAddValues={initialAddValues}
-                        />
-                    )}
-                    {newMenuItems.includes('labels') && (
-                        <AddLabelForm
-                            isModalShow={isModalVisibleLabel}
-                            close={() => setIsModalVisibleLabel(false)}
-                            defaultColor="#fbbc0b"
-                        />
-                    )}
-                    {newMenuItems.includes('presets') && (
-                        <AddPresetForm
-                            isModalShow={isModalVisiblePreset}
-                            close={() => setIsModalVisiblePreset(false)}
-                        />
-                    )}
-                </>
-            ) : null}
         </>
     );
 };

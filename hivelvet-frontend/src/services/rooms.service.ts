@@ -30,11 +30,13 @@ class RoomsService {
             user_id,
         });
     }
+
     edit_room(data: object, id: number) {
         return axiosInstance.put(apiRoutes.EDIT_ROOM_URL + id, {
             data,
         });
     }
+
     delete_room(id: number) {
         return axiosInstance.delete(apiRoutes.DELETE_ROOM_URL + id);
     }

@@ -121,11 +121,13 @@ final class PresetTest extends Scenario
         $test     = $this->newTest();
         $preset   = PresetFaker::create(UserFaker::create());
         $myPreset = $preset->toArray(['id', 'name', 'settings']);
+        $room     = new Room();
 
         $data = [
             'id'         => $myPreset['id'],
             'name'       => $myPreset['name'],
             'categories' => $preset->getMyPresetCategories(json_decode($myPreset['settings'])),
+            'nb_rooms'   => \count($room->collectAllByPresetId($myPreset['id'])),
         ];
 
         $test->expect(empty(array_udiff($data, $preset->getMyPresetInfos($myPreset), fn ($obj1, $obj2) => $obj1 === $obj2)), 'getRoleInfos() returned role informations');

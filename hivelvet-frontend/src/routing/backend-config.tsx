@@ -54,11 +54,11 @@ export const apiRoutes = {
     EDIT_LABEL_URL: API_URL + '/labels/',
     DELETE_LABEL_URL: API_URL + '/labels/',
 
+    LIST_PRESETS_URL: API_URL + '/presets/',
     ADD_PRESET_URL: API_URL + '/presets',
     EDIT_PRESETS_URL: API_URL + '/presets/',
     EDIT_PRESETS_SUBCATEGORIES_URL: API_URL + '/presets/subcategories/',
     DELETE_PRESET_URL: API_URL + '/presets/',
-    COLLECT_PRESETS_URL: API_URL + '/presets/collect/',
 
     LIST_ROOMS_URL: API_URL + '/rooms/',
     ADD_ROOM_URL: API_URL + '/rooms',

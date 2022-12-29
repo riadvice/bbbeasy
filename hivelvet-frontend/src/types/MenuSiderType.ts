@@ -16,11 +16,10 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import { PresetType } from './PresetType';
+import { MenuType } from './MenuType';
 
-export type MyPresetType = {
-    id: number;
-    name: string;
-    categories: PresetType[];
-    nb_rooms: number;
+export type MenuSiderType = {
+    items: MenuType[];
+    news: string[];
+    defaultRoute: string;
 };

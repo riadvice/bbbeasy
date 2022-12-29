@@ -15,14 +15,23 @@
  * You should have received a copy of the GNU Lesser General Public License along
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
+
 import React, { useEffect } from 'react';
-import EN_US from '../locale/en-US.json';
-import LabelsService from '../services/labels.service';
-import { PaginationType } from '../types/PaginationType';
+
 import { Trans, withTranslation } from 'react-i18next';
+import EN_US from '../locale/en-US.json';
 import { t } from 'i18next';
-import { Badge, Button, Form, Input, PageHeader, Popconfirm, Space, Table, Typography } from 'antd';
-import { DeleteOutlined, EditOutlined, QuestionCircleOutlined, SearchOutlined } from '@ant-design/icons';
+
+import { Badge, Button, Form, Input, Modal, PageHeader, Popconfirm, Space, Table, Typography } from 'antd';
+import {
+    DeleteOutlined,
+    EditOutlined,
+    QuestionCircleOutlined,
+    SearchOutlined,
+    WarningOutlined,
+} from '@ant-design/icons';
+
+import { PaginationType } from '../types/PaginationType';
 import { FormInstance } from 'antd/lib/form';
 import _ from 'lodash';
 import Highlighter from 'react-highlight-words/dist/main';
@@ -30,6 +39,10 @@ import Notifications from './Notifications';
 import AddLabelForm from './AddLabelForm';
 import InputColor from './layout/InputColor';
 import { DataContext } from 'lib/RoomsContext';
+
+import AuthService from '../services/auth.service';
+import LabelsService from '../services/labels.service';
+import { TableColumnType } from '../types/TableColumnType';
 
 const { Link } = Typography;
 
@@ -55,13 +68,13 @@ const Labels = () => {
     const dataContext = React.useContext(DataContext);
     const [data, setData] = React.useState<Item[]>([]);
     const [loading, setLoading] = React.useState<boolean>(false);
+    const [actions, setActions] = React.useState<string[]>([]);
     const [editingKey, setEditingKey] = React.useState<number>(null);
     const [errorsEdit, setErrorsEdit] = React.useState({});
     const [cancelVisibility, setCancelVisibility] = React.useState<boolean>(false);
     const [pagination, setPagination] = React.useState<PaginationType>({ current: 1, pageSize: 5 });
     const [searchText, setSearchText] = React.useState<string>('');
     const [searchedColumn, setSearchedColumn] = React.useState<string>('');
-
     const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
 
     const getLabels = () => {
@@ -70,7 +83,6 @@ const Labels = () => {
             .then((response) => {
                 if (response.data) {
                     setData(response.data);
-                    console.log(response.data);
                 }
             })
             .catch((error) => {
@@ -84,19 +96,21 @@ const Labels = () => {
     useEffect(() => {
         //Runs only on the first render
         getLabels();
+
+        const labelsActions = AuthService.getActionsPermissionsByGroup('labels');
+        setActions(labelsActions);
     }, []);
-    // add
 
     //delete
-    const handleDelete = (key: number) => {
+    const deleteLabel = (key: number) => {
         setLoading(true);
         LabelsService.delete_label(key)
             .then(() => {
                 Notifications.openNotificationWithIcon('success', t('delete_label_success'));
                 setData((labels) => labels.filter((label) => label.key !== key));
-                const indexlabel = dataContext.dataLabels.findIndex((item) => key === item.key);
-                if (indexlabel !== -1) {
-                    dataContext.dataLabels.splice(indexlabel, 1);
+                const indexLabel = dataContext.dataLabels.findIndex((item) => key === item.key);
+                if (indexLabel !== -1) {
+                    dataContext.dataLabels.splice(indexLabel, 1);
                 }
                 dataContext.dataRooms.map((r) => {
                     const index = r.labels.findIndex((item) => key === item.key);
@@ -113,6 +127,31 @@ const Labels = () => {
                 setLoading(false);
             });
     };
+    const handleDelete = (key: number, nbRooms: number) => {
+        if (nbRooms > 0) {
+            Modal.confirm({
+                wrapClassName: 'delete-wrap',
+                title: undefined,
+                icon: undefined,
+                content: (
+                    <>
+                        <WarningOutlined className="delete-icon" />
+                        <span className="ant-modal-confirm-title">
+                            <Trans i18nKey="delete_label_title" />
+                        </span>
+                        <Trans i18nKey="delete_label_content" />
+                    </>
+                ),
+                okType: 'danger',
+                okText: <Trans i18nKey="confirm_yes" />,
+                cancelText: <Trans i18nKey="confirm_no" />,
+                onOk: () => deleteLabel(key),
+            });
+        } else {
+            deleteLabel(key);
+        }
+    };
+
     // search
     const handleReset = (clearFilters) => {
         clearFilters();
@@ -176,6 +215,7 @@ const Labels = () => {
             return text;
         },
     });
+
     //edit
     const [editForm] = Form.useForm();
     const EditableRow: React.FC = ({ ...props }) => {
@@ -187,7 +227,6 @@ const Labels = () => {
             </Form>
         );
     };
-
     const EditableCell: React.FC<EditableCellProps> = ({ editing, children, dataIndex, record, ...restProps }) => {
         const EditableCol = (
             <Space size="middle">
@@ -287,7 +326,6 @@ const Labels = () => {
             );
         return <td {...restProps}>{editing ? EditableCol : RegularCol}</td>;
     };
-
     const isEditing = (record: Item) => record.key == editingKey;
     const toggleEdit = (record: Item) => {
         setCancelVisibility(false);
@@ -296,14 +334,11 @@ const Labels = () => {
         const recordClone = { ...record };
         editForm.setFieldsValue(recordClone);
     };
-
     const cancelEdit = () => {
         setCancelVisibility(false);
         setEditingKey(null);
     };
-
     const compareEdit = (oldRecord: Item, newRecord: object): boolean => _.isEqual(oldRecord, newRecord);
-
     const saveEdit = async (record: Item, key: number) => {
         try {
             const formValues: object = await editForm.validateFields();
@@ -349,7 +384,7 @@ const Labels = () => {
         }
     };
 
-    const columns = [
+    const columns: TableColumnType[] = [
         {
             title: t('labels_cols.name'),
             dataIndex: 'name',
@@ -359,7 +394,7 @@ const Labels = () => {
             width: '20%',
             sorter: {
                 compare: (a, b) => a.name.localeCompare(b.name),
-                multiple: 2,
+                multiple: 3,
             },
         },
         {
@@ -371,7 +406,7 @@ const Labels = () => {
             width: '40%',
             sorter: {
                 compare: (a, b) => a.name.localeCompare(b.name),
-                multiple: 1,
+                multiple: 2,
             },
         },
         {
@@ -379,16 +414,16 @@ const Labels = () => {
             dataIndex: 'nb_rooms',
             inputType: 'text',
             editable: false,
-
             ...getColumnSearchProps('rooms_number'),
-            width: '20%',
+            width: '15%',
             sorter: {
                 compare: (a, b) => a.name.localeCompare(b.name),
                 multiple: 1,
             },
         },
-
-        {
+    ];
+    if (AuthService.isAllowedAction(actions, 'edit') || AuthService.isAllowedAction(actions, 'delete')) {
+        columns.push({
             title: t('actions_col'),
             dataIndex: 'actions',
             editable: false,
@@ -423,26 +458,30 @@ const Labels = () => {
                 );
                 const Actions = (
                     <Space size="middle" className="table-actions">
-                        <Link disabled={editingKey !== null} onClick={() => toggleEdit(record)}>
-                            <EditOutlined /> <Trans i18nKey="edit" />
-                        </Link>
-                        <Popconfirm
-                            title={t('delete_label_confirm')}
-                            icon={<QuestionCircleOutlined className="red-icon" />}
-                            onConfirm={() => handleDelete(record.key)}
-                        >
-                            <Link>
-                                <DeleteOutlined /> <Trans i18nKey="delete" />
+                        {AuthService.isAllowedAction(actions, 'edit') && (
+                            <Link disabled={editingKey !== null} onClick={() => toggleEdit(record)}>
+                                <EditOutlined /> <Trans i18nKey="edit" />
                             </Link>
-                        </Popconfirm>
+                        )}
+                        {AuthService.isAllowedAction(actions, 'delete') && (
+                            <Popconfirm
+                                title={t('delete_label_confirm')}
+                                icon={<QuestionCircleOutlined className="red-icon" />}
+                                onConfirm={() => handleDelete(record.key, record.nb_rooms)}
+                            >
+                                <Link>
+                                    <DeleteOutlined /> <Trans i18nKey="delete" />
+                                </Link>
+                            </Popconfirm>
+                        )}
                     </Space>
                 );
 
                 const editable = isEditing(record);
                 return editable ? EditActions : Actions;
             },
-        },
-    ];
+        });
+    }
 
     const mergedColumns = columns.map((col) => {
         if (!col.editable) {
@@ -465,20 +504,24 @@ const Labels = () => {
             <PageHeader
                 className="site-page-header"
                 title={<Trans i18nKey="labels" />}
-                extra={[
-                    <Button key="1" type="primary" onClick={() => setIsModalVisible(true)}>
-                        <Trans i18nKey="new_label" />
-                    </Button>,
-                ]}
+                extra={
+                    AuthService.isAllowedAction(actions, 'add') && [
+                        <Button key="1" type="primary" onClick={() => setIsModalVisible(true)}>
+                            <Trans i18nKey="new_label" />
+                        </Button>,
+                    ]
+                }
             />
 
-            <AddLabelForm
-                defaultColor="#fbbc0b"
-                isModalShow={isModalVisible}
-                close={() => {
-                    setIsModalVisible(false);
-                }}
-            />
+            {AuthService.isAllowedAction(actions, 'add') && (
+                <AddLabelForm
+                    defaultColor="#fbbc0b"
+                    isModalShow={isModalVisible}
+                    close={() => {
+                        setIsModalVisible(false);
+                    }}
+                />
+            )}
 
             <Table
                 className="hivelvet-table"
@@ -497,4 +540,5 @@ const Labels = () => {
         </>
     );
 };
+
 export default withTranslation()(Labels);

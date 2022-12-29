@@ -32,6 +32,8 @@ import { DeleteOutlined, EditOutlined, QuestionCircleOutlined, SearchOutlined } 
 import Highlighter from 'react-highlight-words/dist/main';
 import { FormInstance } from 'antd/lib/form';
 import _ from 'lodash';
+import AuthService from '../services/auth.service';
+import { TableColumnType } from '../types/TableColumnType';
 
 const { Option } = Select;
 const { Link } = Typography;
@@ -69,12 +71,14 @@ let addForm: FormInstance = null;
 
 const Users = () => {
     const [data, setData] = React.useState<Item[]>([]);
+    const [loading, setLoading] = React.useState<boolean>(false);
+    const [actions, setActions] = React.useState<string[]>([]);
+    const [colletRolesAction, setCollectRolesAction] = React.useState<boolean>(false);
     const [allStates, setAllStates] = React.useState<string[]>([]);
     const [allRoles, setAllRoles] = React.useState<roleType[]>([]);
     const [editingKey, setEditingKey] = React.useState<number>(null);
     const [cancelVisibility, setCancelVisibility] = React.useState<boolean>(false);
     const [pagination, setPagination] = React.useState<PaginationType>({ current: 1, pageSize: 5 });
-    const [loading, setLoading] = React.useState<boolean>(false);
     const [errorsAdd, setErrorsAdd] = React.useState<string>('');
     const [errorsEdit, setErrorsEdit] = React.useState({});
     const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
@@ -114,16 +118,26 @@ const Users = () => {
     };
     useEffect(() => {
         //Runs only on the first render
-        getRoles();
+        const rolesActions = AuthService.getActionsPermissionsByGroup('roles');
+        const isCollect = AuthService.isAllowedAction(rolesActions, 'collect');
+        setCollectRolesAction(isCollect);
+
+        if (isCollect) {
+            getRoles();
+        }
         getUsers();
+
+        const usersActions = AuthService.getActionsPermissionsByGroup('users');
+        setActions(usersActions);
     }, []);
-    const getSelectRoles = () => {
+
+    const getSelectItems = (placeholderText: string, options) => {
         return (
             <Select
                 className="select-field"
                 showSearch
                 allowClear
-                placeholder={t('role.placeholder')}
+                placeholder={placeholderText}
                 filterOption={(input, option) =>
                     option.children.toString().toLowerCase().indexOf(input.toString().toLowerCase()) >= 0
                 }
@@ -132,36 +146,17 @@ const Users = () => {
                 }
                 onFocus={() => setCancelVisibility(false)}
             >
-                {allRoles.map((item) => (
-                    <Option key={item.id} value={item.id} className="text-capitalize">
-                        {item.name}
-                    </Option>
-                ))}
+                {options}
             </Select>
         );
     };
-    const getSelectStatus = () => {
-        return (
-            <Select
-                className="select-field"
-                showSearch
-                allowClear
-                placeholder={t('status.placeholder')}
-                filterOption={(input, option) =>
-                    option.children.toString().toLowerCase().indexOf(input.toString().toLowerCase()) >= 0
-                }
-                filterSort={(optionA, optionB) =>
-                    optionA.children.toString().toLowerCase().localeCompare(optionB.children.toString().toLowerCase())
-                }
-                onFocus={() => setCancelVisibility(false)}
-            >
-                {allStates.map((item, index) => (
-                    <Option key={index} value={item} className="text-capitalize">
-                        {t(item)}
-                    </Option>
-                ))}
-            </Select>
-        );
+    const getSelectRoles = () => {
+        const rolesOptions = allRoles.map((item) => (
+            <Option key={item.id} value={item.id} className="text-capitalize">
+                {item.name}
+            </Option>
+        ));
+        return getSelectItems(t('role.placeholder'), rolesOptions);
     };
 
     // add
@@ -232,7 +227,13 @@ const Users = () => {
     }) => {
         let inputNode: JSX.Element;
         if (inputType === 'select') {
-            inputNode = dataIndex == 'role' ? getSelectRoles() : getSelectStatus();
+            const statesOptions = allStates.map((item, index) => (
+                <Option key={index} value={item} className="text-capitalize">
+                    {t(item)}
+                </Option>
+            ));
+
+            inputNode = dataIndex == 'role' ? getSelectRoles() : getSelectItems(t('status.placeholder'), statesOptions);
         } else {
             inputNode = <Input onFocus={() => setCancelVisibility(false)} />;
         }
@@ -434,7 +435,7 @@ const Users = () => {
         },
     });
 
-    const columns = [
+    const columns: TableColumnType[] = [
         {
             title: t('username_col'),
             dataIndex: 'username',
@@ -443,7 +444,7 @@ const Users = () => {
             width: '20%',
             sorter: {
                 compare: (a, b) => a.username.localeCompare(b.username),
-                multiple: 4,
+                multiple: 5,
             },
         },
         {
@@ -454,7 +455,7 @@ const Users = () => {
             width: '30%',
             sorter: {
                 compare: (a, b) => a.username.localeCompare(b.username),
-                multiple: 3,
+                multiple: 4,
             },
         },
         {
@@ -465,7 +466,7 @@ const Users = () => {
             width: '15%',
             sorter: {
                 compare: (a, b) => a.username.localeCompare(b.username),
-                multiple: 2,
+                multiple: 3,
             },
         },
         {
@@ -500,7 +501,7 @@ const Users = () => {
             onFilter: (value, record) => record.status === value,
             sorter: {
                 compare: (a, b) => a.username.localeCompare(b.username),
-                multiple: 1,
+                multiple: 2,
             },
         },
         {
@@ -508,7 +509,6 @@ const Users = () => {
             dataIndex: 'nb_rooms',
             inputType: 'text',
             editable: false,
-
             ...getColumnSearchProps('rooms_number'),
             width: '15%',
             sorter: {
@@ -516,8 +516,19 @@ const Users = () => {
                 multiple: 1,
             },
         },
-        {
+    ];
+
+    if (
+        (AuthService.isAllowedAction(actions, 'edit') && colletRolesAction) ||
+        AuthService.isAllowedAction(actions, 'delete')
+    ) {
+        columns[0].width = '15%';
+        columns[1].width = '25%';
+        columns[3].width = '10%';
+
+        columns.push({
             title: t('actions_col'),
+            dataIndex: 'actions',
             editable: false,
             render: (text, record) => {
                 const clickCancel = (record) => {
@@ -553,10 +564,12 @@ const Users = () => {
                     </Space>
                 ) : (
                     <Space size="middle" className="table-actions">
-                        <Link disabled={editingKey !== null} onClick={() => toggleEdit(record)}>
-                            <EditOutlined /> <Trans i18nKey="edit" />
-                        </Link>
-                        {!deletedRow && (
+                        {AuthService.isAllowedAction(actions, 'edit') && colletRolesAction && (
+                            <Link disabled={editingKey !== null} onClick={() => toggleEdit(record)}>
+                                <EditOutlined /> <Trans i18nKey="edit" />
+                            </Link>
+                        )}
+                        {AuthService.isAllowedAction(actions, 'delete') && !deletedRow && (
                             <Popconfirm
                                 title={t('delete_user_confirm')}
                                 icon={<QuestionCircleOutlined className="red-icon" />}
@@ -570,8 +583,9 @@ const Users = () => {
                     </Space>
                 );
             },
-        },
-    ];
+        });
+    }
+
     const mergedColumns = columns.map((col) => {
         if (!col.editable) {
             return col;
@@ -593,63 +607,70 @@ const Users = () => {
             <PageHeader
                 className="site-page-header"
                 title={<Trans i18nKey="users" />}
-                extra={[
-                    <Button key="1" type="primary" id="add-user-btn" onClick={toggleAdd}>
-                        <Trans i18nKey="new_user" />
-                    </Button>,
-                ]}
+                extra={
+                    AuthService.isAllowedAction(actions, 'add') &&
+                    colletRolesAction && [
+                        <Button key="1" type="primary" id="add-user-btn" onClick={toggleAdd}>
+                            <Trans i18nKey="new_user" />
+                        </Button>,
+                    ]
+                }
             />
 
-            <Modal
-                title={<Trans i18nKey="new_user" />}
-                className="add-modal"
-                centered
-                visible={isModalVisible}
-                onOk={handleAdd}
-                onCancel={cancelAdd}
-                footer={null}
-            >
-                <Form
-                    layout="vertical"
-                    name="users_form"
-                    ref={(form) => (addForm = form)}
-                    initialValues={initialAddValues}
-                    hideRequiredMark
-                    onFinish={handleAdd}
-                    validateTrigger="onSubmit"
+            {AuthService.isAllowedAction(actions, 'add') && colletRolesAction && (
+                <Modal
+                    title={<Trans i18nKey="new_user" />}
+                    className="add-modal"
+                    centered
+                    visible={isModalVisible}
+                    onOk={handleAdd}
+                    onCancel={cancelAdd}
+                    footer={null}
                 >
-                    {errorsAdd != '' && (
-                        <Alert
-                            type="error"
-                            className="alert-msg"
-                            message={<Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errorsAdd)} />}
-                            showIcon
-                        />
-                    )}
-                    <AddUserForm />
-                    <Form.Item
-                        label={<Trans i18nKey="role.label" />}
-                        name="role"
-                        rules={[
-                            {
-                                required: true,
-                                message: <Trans i18nKey="role.required" />,
-                            },
-                        ]}
+                    <Form
+                        layout="vertical"
+                        name="users_form"
+                        ref={(form) => (addForm = form)}
+                        initialValues={initialAddValues}
+                        hideRequiredMark
+                        onFinish={handleAdd}
+                        validateTrigger="onSubmit"
                     >
-                        {getSelectRoles()}
-                    </Form.Item>
+                        {errorsAdd != '' && (
+                            <Alert
+                                type="error"
+                                className="alert-msg"
+                                message={
+                                    <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errorsAdd)} />
+                                }
+                                showIcon
+                            />
+                        )}
+                        <AddUserForm />
+                        <Form.Item
+                            label={<Trans i18nKey="role.label" />}
+                            name="role"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: <Trans i18nKey="role.required" />,
+                                },
+                            ]}
+                        >
+                            {getSelectRoles()}
+                        </Form.Item>
 
-                    <Form.Item className="modal-submit-btn button-container">
-                        <Button type="text" className="cancel-btn prev" block onClick={cancelAdd}>
-                            <Trans i18nKey="cancel" />
-                        </Button>
-                        <Button type="primary" id="submit-btn" htmlType="submit" block>
-                            <Trans i18nKey="create" />
-                        </Button>
-                    </Form.Item>
-                </Form>
-            </Modal>
+                        <Form.Item className="modal-submit-btn button-container">
+                            <Button type="text" className="cancel-btn prev" block onClick={cancelAdd}>
+                                <Trans i18nKey="cancel" />
+                            </Button>
+                            <Button type="primary" id="submit-btn" htmlType="submit" block>
+                                <Trans i18nKey="create" />
+                            </Button>
+                        </Form.Item>
+                    </Form>
+                </Modal>
+            )}
 
             <Table
                 className="hivelvet-table"

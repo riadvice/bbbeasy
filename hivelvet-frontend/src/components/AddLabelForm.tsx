@@ -32,7 +32,7 @@ type Props = {
     errors?: string[];
     defaultColor: string;
     isModalShow: boolean;
-    close: any;
+    close: () => void;
 };
 type formType = {
     name?: string;

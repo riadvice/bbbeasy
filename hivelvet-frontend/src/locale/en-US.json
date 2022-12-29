@@ -196,7 +196,7 @@
     "delete": "Delete",
     "delete_role_confirm": "Are you sure to delete this role ?",
     "delete_role_title": "Do you Want to delete this role ?",
-    "delete_role_content": "This role already has users assigned, if you confirm all users switch to role Lecturer",
+    "delete_role_content": "This role is already assigned to some users, if you confirm, all assigned users will switch to Lecturer role",
     "delete_role_success": "Role successfully deleted",
     "confirm_yes": "Yes",
     "confirm_no": "No",
@@ -234,6 +234,8 @@
     "label-name-already-exist": "Label name already exists",
     "label-color-already-exist": "Label color already exists",
     "delete_label_confirm": "Are you sure to delete this label ?",
+    "delete_label_title": "Do you Want to delete this label ?",
+    "delete_label_content": "This label is already assigned to some rooms, if you confirm, it will be unassigned to them",
     "delete_label_success": "Label successfully deleted",
     "add_label_success": "Label successfully added",
     "edit_label_success": "Label successfully updated",
@@ -253,9 +255,11 @@
     "search_preset": "Search all my presets",
     "rename": "Rename",
     "delete_preset_confirm": "Are you sure to delete this preset ?",
+    "delete_preset_title": "Do you Want to delete this preset ?",
+    "delete_preset_content": "This preset is already assigned to some rooms, if you confirm, all assigned rooms will switch to Default preset",
+    "delete_preset_success": "Preset successfully deleted",
     "add_preset_success": "Preset Successfully added",
     "edit_preset_success": "Preset Successfully updated",
-    "delete_preset_success": "Preset successfully deleted",
 
     "edit_settings_success": "Company & Branding settings successfully updated",
     "edit_preset_settings_success": "BigBlueButton rooms settings successfully updated",
@@ -273,7 +277,7 @@
     "room-link-already-exist": "Room link already exists",
     "add_room_success": "Room Added Successfully",
 
-    "labels_cols.nbrooms": "N° Rooms",
+    "labels_cols.nbrooms": "N° of Rooms",
 
     "view": "View",
     "copy_shortlink": "Copy shortlink",
@@ -290,6 +294,10 @@
     "publish": "Publish",
     "replay": "Replay",
     "mb": "MB",
+    "delete_room_confirm": "Are you sure to delete this room ?",
     "delete_room_success": "Room successfully deleted",
-    "edit_room_success": "Room successfully updated"
+    "edit_room_success": "Room successfully updated",
+
+    "update_profile": "Update Profile",
+    "change_avatar": "Change Avatar"
 }

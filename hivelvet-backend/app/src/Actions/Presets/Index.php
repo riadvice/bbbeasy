@@ -27,9 +27,9 @@ use Actions\RequirePrivilegeTrait;
 use Models\Preset;
 
 /**
- * Class Collect.
+ * Class Index.
  */
-class Collect extends BaseAction
+class Index extends BaseAction
 {
     use RequirePrivilegeTrait;
 
@@ -37,7 +37,7 @@ class Collect extends BaseAction
      * @param \Base $f3
      * @param array $params
      */
-    public function execute($f3, $params): void
+    public function show($f3, $params): void
     {
         $userId = $f3->get('PARAMS.user_id');
 

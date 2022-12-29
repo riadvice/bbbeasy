@@ -32,10 +32,12 @@ const { Grid, Meta } = Card;
 type Props = {
     presets: PresetType[];
     onFinish?: (category: string, subCategories: SubCategoryType[]) => void;
+    enabled?: boolean;
 };
 
 export const Step3Form = (props: Props) => {
     const { presets } = props;
+    const enabled = props.enabled ?? true;
     const [modalTitle, setModalTitle] = React.useState<string>('');
     const [modalContent, setModalContent] = React.useState<SubCategoryType[]>([]);
     const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
@@ -96,7 +98,7 @@ export const Step3Form = (props: Props) => {
                         <Grid
                             key={item.name}
                             className="presets-grid"
-                            onClick={() => showModal(item.name, item.subcategories)}
+                            onClick={() => (enabled ? showModal(item.name, item.subcategories) : null)}
                         >
                             <Meta
                                 avatar={<DynamicIcon type={getIconName(item.name)} className="PresetIcon" />}
@@ -106,38 +108,40 @@ export const Step3Form = (props: Props) => {
                     </Tooltip>
                 ))}
 
-                <Modal
-                    title={modalTitle}
-                    className="presets-modal"
-                    centered
-                    visible={isModalVisible}
-                    onOk={() => setIsModalVisible(false)}
-                    onCancel={() => setIsModalVisible(false)}
-                    footer={[
-                        <Button key="submit" type="primary" onClick={Confirm}>
-                            <Trans i18nKey="confirm" />
-                        </Button>,
-                    ]}
-                >
-                    <div className="presets-body">
-                        {modalContent.map((item) => {
-                            const subcategory = getSubCategoryName(item.name);
+                {enabled && (
+                    <Modal
+                        title={modalTitle}
+                        className="presets-modal"
+                        centered
+                        visible={isModalVisible}
+                        onOk={() => setIsModalVisible(false)}
+                        onCancel={() => setIsModalVisible(false)}
+                        footer={[
+                            <Button key="submit" type="primary" onClick={Confirm}>
+                                <Trans i18nKey="confirm" />
+                            </Button>,
+                        ]}
+                    >
+                        <div className="presets-body">
+                            {modalContent.map((item) => {
+                                const subcategory = getSubCategoryName(item.name);
 
-                            return (
-                                <div key={modalTitle + '_' + item.name}>
-                                    <Form.Item label={subcategory} valuePropName={item.name}>
-                                        <Switch
-                                            defaultChecked={item.enabled == true ? true : false}
-                                            onChange={(checked) => {
-                                                item.enabled = checked;
-                                            }}
-                                        />
-                                    </Form.Item>
-                                </div>
-                            );
-                        })}
-                    </div>
-                </Modal>
+                                return (
+                                    <div key={modalTitle + '_' + item.name}>
+                                        <Form.Item label={subcategory} valuePropName={item.name}>
+                                            <Switch
+                                                defaultChecked={item.enabled == true ? true : false}
+                                                onChange={(checked) => {
+                                                    item.enabled = checked;
+                                                }}
+                                            />
+                                        </Form.Item>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </Modal>
+                )}
             </Card>
         </>
     );
