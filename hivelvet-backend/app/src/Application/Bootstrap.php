@@ -185,9 +185,8 @@ class Bootstrap extends Boot
             'add'     => 'POST',
             'edit'    => 'PUT',
             'delete'  => 'DELETE',
-            'index'   => 'GET',
             'collect' => 'GET|POST',
-            default   => '',
+            default   => 'GET',
         };
         if (str_contains($action, 'edit')) {
             $method = 'PUT';

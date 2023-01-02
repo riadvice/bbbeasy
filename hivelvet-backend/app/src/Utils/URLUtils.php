@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace Utils;
 
-use Enum\BBBApiParams;
-
 class URLUtils
 {
     public static function calculateChecksum($apiCall, $data, $checksumLength, $sharedSecret): string
@@ -43,7 +41,7 @@ class URLUtils
      */
     public static function convertIncomingQuery($requestData): string
     {
-        unset($requestData[BBBApiParams::CHECKSUM]);
+        unset($requestData['checksum']);
         // rebuild the HTTP query without teh checksum
         $value = http_build_query($requestData, '', '&');
         $value = str_replace('%20', '+', $value);
