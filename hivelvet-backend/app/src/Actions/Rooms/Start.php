@@ -44,7 +44,7 @@ class Start extends BaseAction
     {
         $bbbRequester = new BigBlueButtonRequester();
         $meetingName  = bin2hex(openssl_random_pseudo_bytes(8));
-        $params       = [
+        $queryParams  = [
             'meetingID'   => 'random-' . $meetingName,
             'name'        => $meetingName,
             'fullName'    => $this->session->get('user.username'),
@@ -54,10 +54,10 @@ class Start extends BaseAction
             'record'      => 'true',
             'redirect'    => 'true',
         ];
-        $queryBuild = http_build_query($params);
+        $queryBuild = http_build_query($queryParams);
         $checksum   = URLUtils::calculateOutgoingChecksum(ApiMethod::CREATE, $queryBuild, 40, $this->f3->get('bbb.shared_secret'));
 
-        $this->logger->info('Received request to create a new meeting.', ['meetingID' => $params['meetingID']]);
+        $this->logger->info('Received request to create a new meeting.', ['meetingID' => $queryParams['meetingID']]);
         $result = $bbbRequester->proxyApiRequest(ApiMethod::CREATE, $queryBuild . '&checksum=' . $checksum, 'GET');
         if (!$bbbRequester->isValidResponse($result)) {
             $this->logger->error('Could not create a meeting due to an error.');

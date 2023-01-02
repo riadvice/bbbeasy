@@ -66,7 +66,7 @@ class BigBlueButtonRequester extends BigBlueButton
     {
         $options    = ['method' => $verb];
         $serverUrl  = $this->f3->get('bbb.server');
-        $bbbBaseUrl = '/bigbluebutton/api/';
+        $bbbBaseUrl = self::BBB_PATH . 'api/';
 
         $url = $serverUrl . $bbbBaseUrl . $path . '?' . $params;
 
