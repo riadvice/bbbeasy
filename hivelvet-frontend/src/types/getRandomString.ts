@@ -16,7 +16,7 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-const characters = 'abcdefghijklmnopqrstuvwxyz';
+const characters = 'abcdefghijklmnopqrstuvwxyz1234567890';
 
 export const getRandomString = () => {
     let result = '';
