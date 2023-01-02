@@ -25,6 +25,8 @@ namespace Actions\Rooms;
 use Actions\Base as BaseAction;
 use Actions\RequirePrivilegeTrait;
 use BigBlueButton\Core\ApiMethod;
+use BigBlueButton\Parameters\CreateMeetingParameters;
+use BigBlueButton\Parameters\JoinMeetingParameters;
 use BigBlueButton\Responses\CreateMeetingResponse;
 use Utils\BigBlueButtonRequester;
 use Utils\URLUtils;
@@ -43,22 +45,17 @@ class Start extends BaseAction
     public function execute($f3, $params): void
     {
         $bbbRequester = new BigBlueButtonRequester();
-        $meetingName  = bin2hex(openssl_random_pseudo_bytes(8));
-        $queryParams  = [
-            'meetingID'   => 'random-' . $meetingName,
-            'name'        => $meetingName,
-            'fullName'    => $this->session->get('user.username'),
-            'moderatorPW' => 'mp',
-            'password'    => 'mp',
-            'attendeePW'  => 'ap',
-            'record'      => 'true',
-            'redirect'    => 'true',
-        ];
-        $queryBuild = http_build_query($queryParams);
-        $checksum   = URLUtils::calculateOutgoingChecksum(ApiMethod::CREATE, $queryBuild, 40, $this->f3->get('bbb.shared_secret'));
+        $meetingId    = bin2hex(openssl_random_pseudo_bytes(8));
 
-        $this->logger->info('Received request to create a new meeting.', ['meetingID' => $queryParams['meetingID']]);
-        $result = $bbbRequester->proxyApiRequest(ApiMethod::CREATE, $queryBuild . '&checksum=' . $checksum, 'GET');
+        $createParams = new CreateMeetingParameters($meetingId, 'meeting-' . $meetingId);
+        $createParams->setModeratorPassword('mp');
+        $createParams->setAttendeePassword('ap');
+        $createParams->setRecord('true');
+        $createQuery = $createParams->getHTTPQuery();
+
+        $this->logger->info('Received request to create a new meeting.', ['meetingID' => $createParams->getMeetingId()]);
+        $checksum = URLUtils::calculateOutgoingChecksum(ApiMethod::CREATE, $createQuery, 40, $this->f3->get('bbb.shared_secret'));
+        $result   = $bbbRequester->proxyApiRequest(ApiMethod::CREATE, $createQuery . '&checksum=' . $checksum, 'GET');
         if (!$bbbRequester->isValidResponse($result)) {
             $this->logger->error('Could not create a meeting due to an error.');
             $this->renderXmlString($result);
@@ -72,10 +69,13 @@ class Start extends BaseAction
 
             return;
         }
-
         $this->logger->info('Meeting successfully created.', ['meetingID' => $response->getMeetingId(), 'internal_meeting_id' => $response->getInternalMeetingId()]);
 
-        $this->logger->info('Meeting join request is going to redirect to the web client.', ['meetingID' => $response->getMeetingId()]);
-        $bbbRequester->proxyApiRequest(ApiMethod::JOIN, $queryBuild . '&checksum=' . $checksum, 'GET', true);
+        $joinParams = new JoinMeetingParameters($createParams->getMeetingId(), $this->session->get('user.username'), 'mp');
+        $joinParams->setRedirect('true');
+        $joinQuery = $joinParams->getHTTPQuery();
+
+        $this->logger->info('Meeting join request is going to redirect to the web client.', ['meetingID' => $joinParams->getMeetingId()]);
+        $bbbRequester->proxyApiRequest(ApiMethod::JOIN, $joinQuery . '&checksum=' . $checksum, 'GET', true);
     }
 }
