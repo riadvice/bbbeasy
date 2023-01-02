@@ -39,7 +39,10 @@ class Session extends \Prefab
      */
     protected $f3;
 
-    private readonly SQLSession $internalSession;
+    /**
+     * @var SQLSession
+     */
+    private $internalSession;
 
     /**
      * Session constructor.
