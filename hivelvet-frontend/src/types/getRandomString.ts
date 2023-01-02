@@ -16,17 +16,17 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+const characters = 'abcdefghijklmnopqrstuvwxyz';
 
 export const getRandomString = () => {
     let result = '';
-    for (let j = 0; j < 3; j++) {
-        for (let i = 0; i < 3; i++) {
+    for (let j = 0; j < 2; j++) {
+        for (let i = 0; i < 6; i++) {
             result += characters.charAt(
                 Math.floor((crypto.getRandomValues(new Uint32Array(1))[0] / 2 ** 32) * characters.length)
             );
         }
-        if (j != 2) {
+        if (j != 1) {
             result += '-';
         }
     }
