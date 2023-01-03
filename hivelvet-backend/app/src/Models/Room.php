@@ -30,6 +30,7 @@ use Models\Base as BaseModel;
  *
  * @property int       $id
  * @property string    $name
+ * @property string    $meeting_id
  * @property string    $short_link
  * @property int       $preset_id
  * @property int       $user_id
@@ -50,6 +51,11 @@ class Room extends BaseModel
     public function nameExists($name, $userId, $id = null)
     {
         return $this->load(['lower(name) = ? and user_id = ? and id != ?', mb_strtolower($name), $userId, $id]);
+    }
+
+    public function meetingIdExists($meetingId)
+    {
+        return $this->load(['meeting_id = ?', $meetingId]);
     }
 
     /**

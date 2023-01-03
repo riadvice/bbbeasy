@@ -20,22 +20,22 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Utils;
+use Phinx\Migration\AbstractMigration;
 
-class URLUtils
+final class AddMeetingIdInRoom extends AbstractMigration
 {
-    public static function calculateOutgoingChecksum($apiCall, $queryString, $checksumLength, $sharedSecret): string
+    public function up(): void
     {
-        return hash(64 !== $checksumLength ? 'sha1' : 'sha256', $apiCall . $queryString . $sharedSecret);
+        $table = $this->table('rooms');
+        $table->addColumn('meeting_id', 'string', ['limit' => 32, 'null' => false])
+            ->addIndex('meeting_id', ['unique' => true, 'name' => 'idx_rooms_meeting_id'])
+            ->save()
+        ;
     }
 
-    public static function convertOutgoingQuery($data): string
+    public function down(): void
     {
-        $query = http_build_query($data, '', '&');
-        $query = str_replace('!', '%21', $query);
-        $query = str_replace('*', '%2A', $query);
-
-        return str_replace('%20', '+', $query);
-        // $query = str_replace('%2B', '+', $query);
+        $table = $this->table('rooms');
+        $table->removeColumn('meeting_id')->save();
     }
 }
