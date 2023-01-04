@@ -3308,7 +3308,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:^18.11.9":
+"@types/node@npm:*":
   version: 18.11.17
   resolution: "@types/node@npm:18.11.17"
   checksum: 1933afd068d5c75c068c6c4df6d10edb3b0b2bb6503d544e2f0496ac007c90596e6a5e284a8ef032451bc16f871b7e46719d7d2bea60e9b25d13a77d52161cac
@@ -3319,6 +3319,13 @@ __metadata:
   version: 14.18.35
   resolution: "@types/node@npm:14.18.35"
   checksum: edaeea2735aa62a12b9f67311ef6efdb960560e055dc127a658b3571e0bbd52e020bd570227362bf255cd156ddfae18c18205515f1fb3599e34c06a914f167a1
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:^18.11.18":
+  version: 18.11.18
+  resolution: "@types/node@npm:18.11.18"
+  checksum: 03f17f9480f8d775c8a72da5ea7e9383db5f6d85aa5fefde90dd953a1449bd5e4ffde376f139da4f3744b4c83942166d2a7603969a6f8ea826edfb16e6e3b49d
   languageName: node
   linkType: hard
 
@@ -9182,7 +9189,7 @@ __metadata:
     "@testing-library/react": ^12.0.0
     "@testing-library/user-event": ^14.4.2
     "@types/lodash": ^4.14.191
-    "@types/node": ^18.11.9
+    "@types/node": ^18.11.18
     "@types/pino": ^7.0.5
     "@types/react": ^17.0.20
     "@types/react-dom": ^17.0.9
