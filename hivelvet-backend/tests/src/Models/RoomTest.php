@@ -57,6 +57,7 @@ final class RoomTest extends Scenario
         $room->short_link = $faker->url;
         $room->user_id    = $user->id;
         $room->preset_id  = $preset->id;
+        $room->meeting_id = $faker->randomNumber();
         $room->save();
 
         $test->expect(0 !== $room->id, 'Room mocked & saved to the database');
@@ -64,50 +65,6 @@ final class RoomTest extends Scenario
         return $test->results();
     }
 
-        /** @return array */
-    /* public function testDefaultColor()
-    {
-       $test               = $this->newTest();
-       $faker              = Faker::create();
-       $label              = new Label(\Registry::get('db'));
-       $label->name        = $faker->name;
-       $label->description = $faker->text();
-       $label->save();
-
-       $test->expect(0 !== $label->id, 'Label mocked and saved to the database');
-       $test->expect($label->color, 'Color defaulted to ' . $label->color);
-
-       return $test->results();
-    }*/
-
-        /** @return array */
-    /* public function testNameFormatting()
-    {
-       $test               = $this->newTest();
-       $faker              = Faker::create();
-       $label              = new Label(\Registry::get('db'));
-       $label->name        = 'labelLabel';
-       $label->color       = $faker->safeHexColor();
-       $label->description = $faker->text();
-       $label->save();
-
-       $test->expect(0 !== $label->id, 'Label mocked and saved to the database');
-       $test->expect('label_label' === $label->name, 'Name formatted to ' . $label->name);
-
-       return $test->results();
-    }*/
-
-        /** @return array */
-    /* public function testGetByColor()
-       {
-         $test  = $this->newTest();
-         $label = LabelFaker::create();
-
-         $test->expect($label->getByColor($label->color)->color === $label->color, 'getByColor(' . $label->color . ') found label');
-         $test->expect(!$label->getByColor('404')->color, 'getByColor(404) did not find label');
-
-         return $test->results();
-       }*/
         /**
          * @return array
          * */

@@ -34,6 +34,7 @@ use BigBlueButton\Util\UrlBuilder;
 use Enum\ResponseCode;
 use Models\Room;
 use Utils\BigBlueButtonRequester;
+use Utils\DataUtils;
 
 /**
  * Class Start.
@@ -114,8 +115,8 @@ class Start extends BaseAction
     public function createMeeting(string $meetingId, UrlBuilder $urlBuilder, BigBlueButtonRequester $bbbRequester)
     {
         $createParams = new CreateMeetingParameters($meetingId, 'meeting-' . $meetingId);
-        $createParams->setModeratorPassword(bin2hex(openssl_random_pseudo_bytes(8)));
-        $createParams->setAttendeePassword(bin2hex(openssl_random_pseudo_bytes(8)));
+        $createParams->setModeratorPassword(DataUtils::generateRandomString());
+        $createParams->setAttendeePassword(DataUtils::generateRandomString());
         $createParams->setRecord('true');
         $createQuery      = $createParams->getHTTPQuery();
         $createBuildQuery = $urlBuilder->buildQs(ApiMethod::CREATE, $createQuery);
@@ -126,7 +127,7 @@ class Start extends BaseAction
             $this->logger->error('Could not create a meeting due to an error.');
             $this->renderXmlString($result);
 
-            return;
+            return null;
         }
         $response = new CreateMeetingResponse(new \SimpleXMLElement($result['body']));
         if ($response->failed()) {

@@ -39,6 +39,7 @@ class RoomFaker
         $room->short_link = $faker->url;
         $room->preset_id  = $preset->id;
         $room->user_id    = $user->id;
+        $room->meeting_id = $faker->randomNumber();
 
         $room->save();
 
