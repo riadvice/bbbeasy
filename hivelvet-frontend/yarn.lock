@@ -4855,7 +4855,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"babel-loader@npm:^8.2.3, babel-loader@npm:^8.2.5":
+"babel-loader@npm:^8.2.3":
   version: 8.3.0
   resolution: "babel-loader@npm:8.3.0"
   dependencies:
@@ -4867,6 +4867,19 @@ __metadata:
     "@babel/core": ^7.0.0
     webpack: ">=2"
   checksum: d48bcf9e030e598656ad3ff5fb85967db2eaaf38af5b4a4b99d25618a2057f9f100e6b231af2a46c1913206db506115ca7a8cbdf52c9c73d767070dae4352ab5
+  languageName: node
+  linkType: hard
+
+"babel-loader@npm:^9.1.2":
+  version: 9.1.2
+  resolution: "babel-loader@npm:9.1.2"
+  dependencies:
+    find-cache-dir: ^3.3.2
+    schema-utils: ^4.0.0
+  peerDependencies:
+    "@babel/core": ^7.12.0
+    webpack: ">=5"
+  checksum: f0edb8e157f9806b810ba3f2c8ca8fa489d377ae5c2b7b00c2ace900a6925641ce4ec520b9c12f70e37b94aa5366e7003e0f6271b26821643e109966ce741cb7
   languageName: node
   linkType: hard
 
@@ -8487,7 +8500,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"find-cache-dir@npm:^3.2.0, find-cache-dir@npm:^3.3.1":
+"find-cache-dir@npm:^3.2.0, find-cache-dir@npm:^3.3.1, find-cache-dir@npm:^3.3.2":
   version: 3.3.2
   resolution: "find-cache-dir@npm:3.3.2"
   dependencies:
@@ -9301,7 +9314,7 @@ __metadata:
     antd: ^4.22.8
     antd-password-input-strength: ^2.0.1
     axios: ^1.2.2
-    babel-loader: ^8.2.5
+    babel-loader: ^9.1.2
     babel-plugin-import: ^1.13.5
     babel-plugin-istanbul: ^6.1.1
     babel-plugin-styled-components: ^2.0.7
