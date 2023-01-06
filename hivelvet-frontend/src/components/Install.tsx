@@ -17,6 +17,7 @@
  */
 
 import React, { useEffect } from 'react';
+import { Trans, useTranslation, withTranslation } from 'react-i18next';
 
 import InstallService from '../services/install.service';
 import SettingsService from '../services/settings.service';
@@ -25,13 +26,13 @@ import UsersService from '../services/users.service';
 
 import { Steps, Button, Row, Col, Form, Result } from 'antd';
 import DynamicIcon from './DynamicIcon';
-import { Trans, useTranslation, withTranslation } from 'react-i18next';
 
 import { Step1Form } from './Step1Form';
 import { Step2Form } from './Step2Form';
 import { Step3Form } from './Step3Form';
 
 import { UploadFile } from 'antd/lib/upload/interface';
+import { BrandingColorsType } from '../types/BrandingColorsType';
 import { SettingsType } from '../types/SettingsType';
 import { PresetType } from '../types/PresetType';
 
@@ -56,12 +57,8 @@ type formType = {
     platform_name: string;
     term_url: string;
     policy_url: string;
-    branding_colors: {
-        primary_color: string;
-        secondary_color: string;
-        accent_color: string;
-        add_color: string;
-    };
+    logo: string;
+    branding_colors: BrandingColorsType;
     presetsConfig: PresetType[];
 };
 
@@ -79,6 +76,7 @@ const Install = () => {
         platform_name: '',
         term_url: '',
         policy_url: '',
+        logo: '',
         branding_colors: {
             primary_color: '',
             secondary_color: '',
@@ -114,11 +112,27 @@ const Install = () => {
                         platform_name: settings.platform_name,
                         term_url: settings.terms_use,
                         policy_url: settings.privacy_policy,
+                        logo: settings.logo,
+                        branding_colors: {
+                            primary_color: settings.primary_color,
+                            secondary_color: settings.secondary_color,
+                            accent_color: settings.accent_color,
+                            add_color: settings.additional_color,
+                        },
                     });
                     setPrimaryColor(settings.primary_color);
                     setSecondaryColor(settings.secondary_color);
                     setAccentColor(settings.accent_color);
                     setAddColor(settings.additional_color);
+                    if (settings.logo != null) {
+                        const settingLogo: UploadFile = {
+                            uid: '1',
+                            name: settings.logo,
+                            status: 'done',
+                        };
+                        setFileList([settingLogo]);
+                        setFile(settingLogo);
+                    }
                 }
             })
             .catch((error) => {
@@ -181,42 +195,28 @@ const Install = () => {
     ];
 
     const onFinish = () => {
-        const formData: formType = stepForm.getFieldsValue(true);
+        const stepsData: formType = stepForm.getFieldsValue(true);
         if (activeStep == 0) {
-            UsersService.collect_users(formData).then((result) => {
-                if (result.data.message) {
-                    setSuccessful(false);
-                    setMessage(result.data.message);
-                } else {
+            UsersService.collect_users(stepsData)
+                .then(() => {
                     next();
-                }
-            });
+                })
+                .catch((error) => {
+                    setSuccessful(false);
+                    setMessage(error.response.data.message);
+                });
         } else {
             if (activeStep < steps.length - 1) {
                 next();
             } else {
-                formData.branding_colors = {
-                    primary_color: primaryColor,
-                    secondary_color: secondaryColor,
-                    accent_color: accentColor,
-                    add_color: addColor,
-                };
-                formData.presetsConfig = presets;
-
-                InstallService.install(formData)
-                    .then(() => {
-                        setSuccessful(true);
-                    })
-                    .catch((error) => {
-                        console.log(error.response.data);
-                    });
-                if (file != undefined) {
-                    const fdata: FormData = new FormData();
-                    fdata.append('logo', file.originFileObj, file.originFileObj.name);
-                    fdata.append('logo_name', file.originFileObj.name);
+                //edit file
+                if (file != undefined && file.originFileObj != null) {
+                    const formData: FormData = new FormData();
+                    formData.append('logo', file.originFileObj, file.originFileObj.name);
+                    formData.append('logo_name', file.originFileObj.name);
 
                     axios
-                        .post(apiRoutes.SAVE_FILE_URL, fdata)
+                        .post(apiRoutes.SAVE_FILE_URL, formData)
                         .then((response) => {
                             console.log(response);
                         })
@@ -224,6 +224,28 @@ const Install = () => {
                             console.log(error);
                         });
                 }
+
+                stepsData.branding_colors = {
+                    primary_color: primaryColor,
+                    secondary_color: secondaryColor,
+                    accent_color: accentColor,
+                    add_color: addColor,
+                };
+                stepsData.presetsConfig = presets;
+
+                if (file != undefined && file.originFileObj != null) {
+                    stepsData.logo = file.name;
+                } else if (file == undefined && stepsData.logo != null) {
+                    stepsData.logo = null;
+                }
+
+                InstallService.install(stepsData)
+                    .then(() => {
+                        setSuccessful(true);
+                    })
+                    .catch((error) => {
+                        console.log(error.response.data);
+                    });
             }
         }
     };

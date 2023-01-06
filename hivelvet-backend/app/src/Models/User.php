@@ -76,9 +76,11 @@ class User extends BaseModel
     /**
      * Get user record by id value.
      *
+     * @param mixed $id
+     *
      * @return $this
      */
-    public function getById(int $id): self
+    public function getById($id): self
     {
         $this->load(['id = ?', $id]);
 
@@ -180,13 +182,15 @@ class User extends BaseModel
 
     public function getUserInfos(): array
     {
+        $room = new Room();
+
         return [
             'key'      => $this->id,
             'username' => $this->username,
             'email'    => $this->email,
             'status'   => $this->status,
             'role'     => $this->role_id->name,
-            // 'role'     => $this->role->name,
+            'nb_rooms' => \count($room->collectAllByUserId($this->id)),
         ];
     }
 

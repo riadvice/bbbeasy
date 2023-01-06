@@ -1,0 +1,9 @@
+{
+  "errors": {
+    "name": "- All of the required rules must pass for name",
+    "short_link": "- All of the required rules must pass for short_link",
+    "labels": "- All of the required rules must pass for labels",
+    "user_id": "- All of the required rules must pass for user id"
+  },
+  "status" : 422
+}

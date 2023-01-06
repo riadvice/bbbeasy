@@ -46,16 +46,19 @@ class RoomLabel extends BaseModel
 
     protected $table = 'rooms_labels';
 
-    public function collectAll(): array
-    {
-        return $this->db->exec('SELECT id, room_id, label_id FROM rooms_labels');
-    }
-
     /**
      * @param mixed $roomId
      */
     public function collectAllByRoomId($roomId): array
     {
         return $this->db->exec('SELECT id, room_id, label_id FROM rooms_labels where room_id = ? ', $roomId);
+    }
+
+    /**
+     * @param mixed $labelId
+     */
+    public function collectAllByLabelId($labelId): array
+    {
+        return $this->db->exec('SELECT id, room_id, label_id FROM rooms_labels where label_id = ? ', $labelId);
     }
 }

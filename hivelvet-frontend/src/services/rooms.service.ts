@@ -16,29 +16,30 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import axios from 'axios';
+import { axiosInstance } from '../lib/AxiosInstance';
 import { apiRoutes } from '../routing/backend-config';
 
 class RoomsService {
-    list_rooms() {
-        return axios.get(apiRoutes.LIST_ROOMS_URL);
+    list_rooms(user_id) {
+        return axiosInstance.get(apiRoutes.LIST_ROOMS_URL + user_id);
     }
 
-    add_room(data: object) {
-        return axios.post(apiRoutes.ADD_ROOM_URL, {
+    add_room(data: object, user_id: number) {
+        return axiosInstance.post(apiRoutes.ADD_ROOM_URL, {
+            data,
+            user_id,
+        });
+    }
+
+    edit_room(data: object, id: number) {
+        return axiosInstance.put(apiRoutes.EDIT_ROOM_URL + id, {
             data,
         });
     }
 
-    /*  edit_label(data: object, id: number) {
-         return axios.put(apiRoutes.EDIT_LABEL_URL + id, {
-             data,
-         });
-     }
- 
-     delete_label(id: number) {
-         return axios.delete(apiRoutes.DELETE_LABEL_URL + id);
-     }*/
+    delete_room(id: number) {
+        return axiosInstance.delete(apiRoutes.DELETE_ROOM_URL + id);
+    }
 }
 
 export default new RoomsService();

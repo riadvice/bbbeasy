@@ -16,36 +16,36 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import axios from 'axios';
+import { axiosInstance } from '../lib/AxiosInstance';
 import { apiRoutes } from '../routing/backend-config';
 
 class PresetsService {
-    collect_presets(user_id: number) {
-        return axios.get(apiRoutes.COLLECT_PRESETS_URL + user_id);
+    list_presets(user_id: number) {
+        return axiosInstance.get(apiRoutes.LIST_PRESETS_URL + user_id);
     }
 
     add_preset(data: object, user_id: number) {
-        return axios.post(apiRoutes.ADD_PRESET_URL, {
+        return axiosInstance.post(apiRoutes.ADD_PRESET_URL, {
             data,
             user_id,
         });
     }
 
     edit_preset(data: object, id: number) {
-        return axios.put(apiRoutes.EDIT_PRESETS_URL + id, {
+        return axiosInstance.put(apiRoutes.EDIT_PRESETS_URL + id, {
             data,
         });
     }
 
     edit_subcategory_preset(title: string, data: object, id: number) {
-        return axios.put(apiRoutes.EDIT_PRESETS_SUBCATEGORIES_URL + id, {
+        return axiosInstance.put(apiRoutes.EDIT_PRESETS_SUBCATEGORIES_URL + id, {
             data,
             title,
         });
     }
 
     delete_preset(id: number) {
-        return axios.delete(apiRoutes.DELETE_PRESET_URL + id);
+        return axiosInstance.delete(apiRoutes.DELETE_PRESET_URL + id);
     }
 }
 

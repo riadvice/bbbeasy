@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Models;
 
 use Fake\PresetFaker;
+use Fake\ResetPasswordTokenFaker;
 use Fake\UserFaker;
 use Faker\Factory as Faker;
 use Test\Scenario;
@@ -120,11 +121,13 @@ final class PresetTest extends Scenario
         $test     = $this->newTest();
         $preset   = PresetFaker::create(UserFaker::create());
         $myPreset = $preset->toArray(['id', 'name', 'settings']);
+        $room     = new Room();
 
         $data = [
             'id'         => $myPreset['id'],
             'name'       => $myPreset['name'],
             'categories' => $preset->getMyPresetCategories(json_decode($myPreset['settings'])),
+            'nb_rooms'   => \count($room->collectAllByPresetId($myPreset['id'])),
         ];
 
         $test->expect(empty(array_udiff($data, $preset->getMyPresetInfos($myPreset), fn ($obj1, $obj2) => $obj1 === $obj2)), 'getRoleInfos() returned role informations');
@@ -142,13 +145,16 @@ final class PresetTest extends Scenario
         $test   = $this->newTest();
         $preset = new Preset(\Registry::get('db'));
         $user   = UserFaker::create();
+        // $reset_password_token=ResetPasswordTokenFaker::create();
+
         $preset->erase(['']); // Cleaning the table for test.
 
         $preset1 = PresetFaker::create($user);
         $preset2 = PresetFaker::create($user);
-        $data1   = ['id' => $preset1->id, 'name' => $preset1->name, 'settings' => $preset1->settings];
-        $data2   = ['id' => $preset2->id, 'name' => $preset2->name, 'settings' => $preset2->settings];
-        $data    = [$data1, $data2];
+
+        $data1 = ['id' => $preset1->id, 'name' => $preset1->name, 'settings' => $preset1->settings];
+        $data2 = ['id' => $preset2->id, 'name' => $preset2->name, 'settings' => $preset2->settings];
+        $data  = [$data1, $data2];
 
         $test->expect(empty(array_udiff($data, $preset->collectAllByUserId($user->id), fn ($obj1, $obj2) => $obj1 === $obj2)), 'CollectAllByUserId(' . $user->id . ') returned all presets for the given user');
 

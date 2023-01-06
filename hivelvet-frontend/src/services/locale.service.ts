@@ -39,8 +39,8 @@ const defaultLang: string = process.env.REACT_APP_FALLBACK_LANG;
 
 const initLang = (): string => {
     if (localStorage.getItem('locale') == null) {
-        const navigLang: string = navigator.language.substring(0, 2);
-        const res = Languages.filter((item) => item.key == navigLang);
+        const navigatorLang: string = navigator.language.substring(0, 2);
+        const res = Languages.filter((item) => item.key == navigatorLang);
         return res.length != 0 ? res[0].value : defaultLang;
     } else {
         return localStorage.getItem('locale');
@@ -65,7 +65,7 @@ class LocaleService {
     localeMap: object = { 'en': enUS, 'fr': frFR, 'ar': arEG };
     rtlLocales: string[] = ['ar'];
     language: string;
-    antdlocale: Locale;
+    antLocale: Locale;
     direction: DirectionType;
 
     constructor() {
@@ -79,7 +79,7 @@ class LocaleService {
 
     private setLocale(language: string) {
         this.language = language;
-        this.antdlocale = this.localeMap[language.substring(0, 2)];
+        this.antLocale = this.localeMap[language.substring(0, 2)];
         this.direction = this.getLanguageDirection(language);
         document.body.className = this.direction;
         document.body.dir = this.direction;

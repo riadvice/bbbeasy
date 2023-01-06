@@ -22,4 +22,5 @@ export type MyPresetType = {
     id: number;
     name: string;
     categories: PresetType[];
+    nb_rooms: number;
 };

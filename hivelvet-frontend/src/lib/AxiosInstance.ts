@@ -1,8 +1,4 @@
-<?php
-
-declare(strict_types=1);
-
-/*
+/**
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -20,35 +16,8 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Actions\Rooms;
+import axios from 'axios';
 
-use Actions\Base as BaseAction;
-use Actions\RequirePrivilegeTrait;
-use Models\Room;
+axios.defaults.withCredentials = true;
 
-/**
- * Class Collect.
- */
-class Collect extends BaseAction
-{
-    use RequirePrivilegeTrait;
-
-    /**
-     * @param \Base $f3
-     * @param array $params
-     */
-    public function show($f3, $params): void
-    {
-        $room  = new Room();
-        $data  = [];
-        $rooms = $room->collectAll();
-        foreach ($rooms as $room) {
-            $r = new Room();
-
-            $room['labels'] = $r->getLabels($room['id']);
-            $data[]         = $room;
-        }
-        $this->logger->debug('Collecting rooms');
-        $this->renderJson($data);
-    }
-}
+export const axiosInstance = axios.create();

@@ -17,7 +17,7 @@
  */
 
 import React from 'react';
-import { Link, Navigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import AuthService from '../../services/auth.service';
 import Notifications from '../Notifications';
 
@@ -28,6 +28,7 @@ import { Trans, withTranslation } from 'react-i18next';
 import EN_US from '../../locale/en-US.json';
 import AddUserForm from '../AddUserForm';
 import { UserType } from '../../types/UserType';
+import { SessionType } from '../../types/SessionType';
 import { UserContext } from '../../lib/UserContext';
 import { t } from 'i18next';
 
@@ -39,7 +40,7 @@ type formType = {
 };
 
 const Login = () => {
-    const { setIsLogged, setCurrentUser } = React.useContext(UserContext);
+    const { setIsLogged, setCurrentUser, setCurrentSession } = React.useContext(UserContext);
     const [successful, setSuccessful] = React.useState<boolean>(false);
     const [message, setMessage] = React.useState<string>('');
     const [email, setEmail] = React.useState<string>('');
@@ -53,13 +54,16 @@ const Login = () => {
         setEmail(email);
         AuthService.login(email, password)
             .then((response) => {
-                if (response.data.username && response.data.email && response.data.role) {
-                    const user_infos: UserType = {
-                        id: response.data.id,
-                        username: response.data.username,
-                        email: response.data.email,
-                        role: response.data.role,
-                    };
+                if (
+                    response.data.user.username &&
+                    response.data.user.email &&
+                    response.data.user.role &&
+                    response.data.user.permissions &&
+                    response.data.session.PHPSESSID &&
+                    response.data.session.expires
+                ) {
+                    const user_infos: UserType = response.data.user;
+                    const session_infos: SessionType = response.data.session;
 
                     Notifications.openNotificationWithIcon(
                         'success',
@@ -70,7 +74,9 @@ const Login = () => {
                         2.5
                     );
                     localStorage.setItem('user', JSON.stringify(user_infos));
+                    localStorage.setItem('session', JSON.stringify(session_infos));
                     setCurrentUser(user_infos);
+                    setCurrentSession(session_infos);
                     setIsLogged(true);
                     setSuccessful(true);
                 }
@@ -94,9 +100,6 @@ const Login = () => {
         });
     };
 
-    if (successful) {
-        return <Navigate to="/home" />;
-    }
     return (
         <Row>
             <Col span={8} offset={8} className="section-top">

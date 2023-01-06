@@ -20,13 +20,20 @@ import React from 'react';
 import { Navigate } from 'react-router-dom';
 import AuthService from '../services/auth.service';
 import { UserType } from '../types/UserType';
+import { SessionType } from '../types/SessionType';
+import MenuService from '../services/menu.service';
 
 const PublicRoute = ({ children, restricted }) => {
-    const user: UserType = AuthService.getCurrentUser();
+    const currentUser: UserType = AuthService.getCurrentUser();
+    const currentSession: SessionType = AuthService.getCurrentSession();
 
     // restricted = true meaning restricted route else public route
-    if (user != null && restricted) {
-        return <Navigate to="/home" />;
+    if (currentUser != null && currentSession != null && restricted) {
+        const menuSider = MenuService.getMenuSider(currentUser.permissions);
+        const defaultRoute = menuSider.defaultRoute;
+        if (defaultRoute != '') {
+            return <Navigate to={defaultRoute} />;
+        }
     }
     return children;
 };

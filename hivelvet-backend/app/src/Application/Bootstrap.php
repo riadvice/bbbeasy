@@ -22,9 +22,11 @@ declare(strict_types=1);
 
 namespace Application;
 
+use Acl\Access;
 use Enum\CacheKey;
 use Helpers\Time;
 use Mail\MailSender;
+use Models\Role;
 use Models\Setting;
 use Tracy\Debugger;
 
@@ -50,6 +52,7 @@ class Bootstrap extends Boot
         $this->loadAppSetting();
         $this->detectCli();
         $this->loadRoutesAndAssets();
+        $this->allowRoutesDynamically();
     }
 
     protected function loadConfiguration(): void
@@ -145,10 +148,56 @@ class Bootstrap extends Boot
         $this->f3->config('config/assets.ini');
 
         // enable cors to allow cross-origin requests from frontend react client
-        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Origin: http://hivelvet.test:3300');
         header('Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE');
         header('Access-Control-Allow-Headers: Content-Type, Origin, Authorization, X-Authorization, Accept, Accept-Language, Access-Control-Request-Method');
         header('Access-Control-Allow-Credentials: true');
-        // header("Allow: GET, POST, OPTIONS, PUT, DELETE");
+        header('Access-Control-Expose-Headers: *, PHPSESSID');
+    }
+
+    protected function allowRoutesDynamically(): void
+    {
+        // allow routes according to role permissions of logged user
+        $access = Access::instance();
+        // get session user role
+        $roleId = $this->session->getRoleId();
+        if (0 !== $roleId) {
+            $role = new Role();
+            $role->load(['id = ?', [$roleId]]);
+            $roleName = $role->name;
+            // load role permissions
+            $permissions = $role->getRolePermissions();
+            if (\is_array($permissions)) {
+                foreach ($permissions as $group => $actions) {
+                    foreach ($actions as $action) {
+                        $route = $this->getRouteByGroupAndAction($group, $action);
+                        // allow user role to access to route
+                        $access->allow($route, $roleName);
+                    }
+                }
+            }
+        }
+    }
+
+    protected function getRouteByGroupAndAction(string $group, string $action): string
+    {
+        $method = match ($action) {
+            'add'     => 'POST',
+            'edit'    => 'PUT',
+            'delete'  => 'DELETE',
+            'index'   => 'GET',
+            'collect' => 'GET|POST',
+            default   => '',
+        };
+        if (str_contains($action, 'edit')) {
+            $method = 'PUT';
+        }
+        if ('delete' === $action) {
+            $acl = '@' . mb_substr($group, 0, -1) . '_' . $action;
+        } else {
+            $acl = '@' . $group . '_' . $action;
+        }
+
+        return $method . ' ' . $acl;
     }
 }

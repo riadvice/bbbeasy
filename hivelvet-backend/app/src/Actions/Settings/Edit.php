@@ -26,7 +26,6 @@ use Actions\Base as BaseAction;
 use Actions\RequirePrivilegeTrait;
 use Enum\ResponseCode;
 use Models\Setting;
-use Respect\Validation\Validator;
 use Validation\DataChecker;
 
 /**
@@ -56,29 +55,28 @@ class Edit extends BaseAction
 
         if ($settings->valid()) {
             $dataChecker = new DataChecker();
-            $dataChecker->verify($form['company_name'], Validator::notEmpty()->setName('company_name'));
-            $dataChecker->verify($form['company_url'], Validator::url()->setName('company_url'));
-            $dataChecker->verify($form['platform_name'], Validator::notEmpty()->setName('platform_name'));
-
-            if ('' !== $form['term_url']) {
-                $dataChecker->verify($form['term_url'], Validator::url()->setName('term_url'));
-            }
-            if ('' !== $form['policy_url']) {
-                $dataChecker->verify($form['policy_url'], Validator::url()->setName('policy_url'));
-            }
-            $dataChecker->verify($form['branding_colors'], Validator::notEmpty()->setName('color'));
-            $dataChecker->verify($form['branding_colors']['primary_color'], Validator::hexRgbColor()->setName('primary_color'));
-            $dataChecker->verify($form['branding_colors']['secondary_color'], Validator::hexRgbColor()->setName('secondary_color'));
-            $dataChecker->verify($form['branding_colors']['accent_color'], Validator::hexRgbColor()->setName('accent_color'));
-            $dataChecker->verify($form['branding_colors']['add_color'], Validator::hexRgbColor()->setName('additional_color'));
+            $dataChecker = $setting->checkSettingsData($dataChecker, $form);
 
             if ($dataChecker->allValid()) {
+                if (null !== $form['logo']) {
+                    $logoName     = $form['logo'];
+                    $logoFormat   = mb_substr($logoName, mb_strpos($logoName, '.') + 1);
+                    $validFormats = ['jpg', 'jpeg', 'png'];
+                    if (!\in_array($logoFormat, $validFormats, true)) {
+                        $this->logger->error($errorMessage, ['errors' => 'invalid file format : ' . $logoFormat]);
+
+                        $this->renderJson(['message' => 'invalid file format'], ResponseCode::HTTP_PRECONDITION_FAILED);
+
+                        return;
+                    }
+                }
                 $settings->saveSettings(
                     $form['company_name'],
                     $form['company_url'],
                     $form['platform_name'],
                     $form['term_url'],
                     $form['policy_url'],
+                    $form['logo'],
                     $form['branding_colors'],
                 );
             } else {

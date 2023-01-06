@@ -17,58 +17,157 @@
  */
 
 import React from 'react';
-import { Form, Input } from 'antd';
+import { Button, Form, Input, Modal } from 'antd';
 import { Trans, withTranslation } from 'react-i18next';
 import { t } from 'i18next';
 import EN_US from '../locale/en-US.json';
 import InputColor from './layout/InputColor';
+import { DataContext } from 'lib/RoomsContext';
+import labelsService from 'services/labels.service';
+import Notifications from './Notifications';
+import { FormInstance } from 'antd/lib/form';
 
 type Props = {
     isLogin?: boolean;
     errors?: string[];
     defaultColor: string;
+    isModalShow: boolean;
+    close: () => void;
 };
+type formType = {
+    name?: string;
+    description?: string;
+    color?: string;
+};
+type Item = {
+    key: number;
+    name: string;
+    description: string;
+    color: string;
+};
+let addForm: FormInstance = null;
 
 export const AddLabelForm = (props: Props) => {
-    const { errors, defaultColor } = props;
+    const initialAddValues: formType = {
+        name: '',
+        description: '',
+        color: '#fbbc0b',
+    };
+    const { defaultColor } = props;
+    const dataContext = React.useContext(DataContext);
+    const [data, setData] = React.useState<Item[]>([]);
+    const [loading, setLoading] = React.useState<boolean>(false);
+    const [errorsAdd, setErrorsAdd] = React.useState<string[]>([]);
 
+    const handleAdd = (values) => {
+        const formValues: formType = values;
+        setErrorsAdd([]);
+        setLoading(true);
+        labelsService
+            .add_label(formValues)
+            .then((response) => {
+                Notifications.openNotificationWithIcon('success', t('add_label_success'));
+                props.close();
+                const newRowData: Item = response.data.label;
+
+                //delete data of form
+                addForm?.resetFields();
+                //add data to table
+                setData((data) => [...data, newRowData]);
+                dataContext.setDataLabels([...dataContext.dataLabels, newRowData]);
+            })
+            .catch((error) => {
+                const responseData = error.response.data;
+                if (responseData.errors) {
+                    setErrorsAdd(responseData.errors);
+                }
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    };
+    const cancelAdd = () => {
+        props.close();
+
+        addForm?.resetFields();
+    };
+
+    const failedAdd = () => {
+        setErrorsAdd([]);
+    };
     return (
         <>
-            {!props.isLogin && (
-                <Form.Item
-                    label={<Trans i18nKey="name.label" />}
-                    name="name"
-                    {...('name' in errors && {
-                        help: <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errors['name'])} />,
-                        validateStatus: 'error',
-                    })}
-                    rules={[
-                        {
-                            required: true,
-                            message: <Trans i18nKey="name.required" />,
-                        },
-                        {
-                            min: 1,
-                            message: <Trans i18nKey="label_name.size" />,
-                        },
-                    ]}
-                >
-                    <Input placeholder={t('name.label')} />
-                </Form.Item>
-            )}
-            <Form.Item label={<Trans i18nKey="description.label" />} name="description">
-                <Input placeholder={t('description.label')} />
-            </Form.Item>
-            <Form.Item
-                label={<Trans i18nKey="color.label" />}
-                name="color"
-                {...('color' in errors && {
-                    help: <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errors['color'])} />,
-                    validateStatus: 'error',
-                })}
+            <Modal
+                title={<Trans i18nKey="new_label" />}
+                className="add-modal"
+                centered
+                visible={props.isModalShow}
+                onOk={handleAdd}
+                onCancel={props.close}
+                footer={null}
             >
-                <InputColor defaultColor={defaultColor} />
-            </Form.Item>
+                <Form
+                    layout="vertical"
+                    ref={(form) => (addForm = form)}
+                    initialValues={initialAddValues}
+                    hideRequiredMark
+                    onFinish={handleAdd}
+                    onFinishFailed={failedAdd}
+                    validateTrigger="onSubmit"
+                >
+                    {!props.isLogin && (
+                        <Form.Item
+                            label={<Trans i18nKey="name.label" />}
+                            name="name"
+                            {...('name' in errorsAdd && {
+                                help: (
+                                    <Trans
+                                        i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errorsAdd['name'])}
+                                    />
+                                ),
+                                validateStatus: 'error',
+                            })}
+                            rules={[
+                                {
+                                    required: true,
+                                    message: <Trans i18nKey="name.required" />,
+                                },
+                                {
+                                    min: 1,
+                                    message: <Trans i18nKey="label_name.size" />,
+                                },
+                            ]}
+                        >
+                            <Input placeholder={t('name.label')} />
+                        </Form.Item>
+                    )}
+                    <Form.Item label={<Trans i18nKey="description.label" />} name="description">
+                        <Input placeholder={t('description.label')} />
+                    </Form.Item>
+                    <Form.Item
+                        label={<Trans i18nKey="color.label" />}
+                        name="color"
+                        {...('color' in errorsAdd && {
+                            help: (
+                                <Trans
+                                    i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errorsAdd['color'])}
+                                />
+                            ),
+                            validateStatus: 'error',
+                        })}
+                    >
+                        <InputColor defaultColor={defaultColor} />
+                    </Form.Item>
+                    <Form.Item className="modal-submit-btn button-container">
+                        <Button type="text" className="cancel-btn prev" block onClick={cancelAdd}>
+                            <Trans i18nKey="cancel" />
+                        </Button>
+                        <Button type="primary" htmlType="submit" disabled={loading} block>
+                            <Trans i18nKey="create" />
+                        </Button>
+                    </Form.Item>
+                </Form>
+            </Modal>
         </>
     );
 };

@@ -17,8 +17,10 @@
  */
 
 import React, { useEffect, useMemo } from 'react';
+import { withTranslation } from 'react-i18next';
 import { IRoute } from './routing/IRoute';
 import Router from './routing/Router';
+import { hot } from 'react-hot-loader';
 
 import { Layout, ConfigProvider, BackTop, Button } from 'antd';
 import { CaretUpOutlined } from '@ant-design/icons';
@@ -28,13 +30,21 @@ import AppFooter from './components/layout/AppFooter';
 import AppSider from './components/layout/AppSider';
 
 import Logger from './lib/Logger';
-
 import AuthService from './services/auth.service';
 import LocaleService from './services/locale.service';
-import { withTranslation } from 'react-i18next';
-import { UserType } from './types/UserType';
+import RoomsService from 'services/rooms.service';
+import LabelsService from 'services/labels.service';
+import PresetsService from 'services/presets.service';
+
 import { UserContext } from './lib/UserContext';
-import { hot } from 'react-hot-loader';
+import { DataContext } from 'lib/RoomsContext';
+
+import { RoomType } from 'types/RoomType';
+import { LabelType } from 'types/LabelType';
+import { PresetType } from 'types/PresetType';
+import { UserType } from './types/UserType';
+import { SessionType } from './types/SessionType';
+
 const { Content } = Layout;
 
 interface IProps {
@@ -45,35 +55,92 @@ interface IProps {
 
 const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
     const [currentUser, setCurrentUser] = React.useState<UserType>(null);
+    const [currentSession, setCurrentSession] = React.useState<SessionType>(null);
     const [isLogged, setIsLogged] = React.useState<boolean>(false);
 
-    const providerValue = useMemo(
-        () => ({ isLogged, setIsLogged, currentUser, setCurrentUser }),
-        [isLogged, setIsLogged, currentUser, setCurrentUser]
+    const [dataRooms, setDataRooms] = React.useState<RoomType[]>([]);
+    const [dataLabels, setDataLabels] = React.useState<LabelType[]>([]);
+    const [dataPresets, setDataPresets] = React.useState<PresetType[]>([]);
+
+    const dataProvider = useMemo(
+        () => ({ dataRooms, setDataRooms, dataLabels, setDataLabels, dataPresets, setDataPresets }),
+        [dataRooms, setDataRooms, dataLabels, setDataLabels, dataPresets, setDataPresets]
     );
+
+    const userProvider = useMemo(
+        () => ({ isLogged, setIsLogged, currentUser, setCurrentUser, currentSession, setCurrentSession }),
+        [isLogged, setIsLogged, currentUser, setCurrentUser, currentSession, setCurrentSession]
+    );
+
+    const getRooms = (userId: number) => {
+        RoomsService.list_rooms(userId)
+            .then((response) => {
+                setDataRooms(response.data);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    };
+    const getLabels = () => {
+        LabelsService.list_labels()
+            .then((response) => {
+                setDataLabels(response.data);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
+    const getPresets = (userId: number) => {
+        PresetsService.list_presets(userId)
+            .then((response) => {
+                setDataPresets(response.data);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
 
     //loading page and user already logged => set current user
     useEffect(() => {
-        Logger.info(logs);
         const user: UserType = AuthService.getCurrentUser();
-        if (user != null) {
+        const session: SessionType = AuthService.getCurrentSession();
+        if (user != null && session != null) {
             setCurrentUser(user);
+            setCurrentSession(session);
             setIsLogged(true);
+
+            const allowedGroups = Object.keys(user.permissions);
+            if (allowedGroups.length != 0) {
+                if (AuthService.isAllowedGroup(allowedGroups, 'logs')) {
+                    Logger.info(logs);
+                }
+                if (AuthService.isAllowedGroup(allowedGroups, 'rooms')) {
+                    getRooms(user.id);
+                }
+                if (AuthService.isAllowedGroup(allowedGroups, 'labels')) {
+                    getLabels();
+                }
+                if (AuthService.isAllowedGroup(allowedGroups, 'presets')) {
+                    getPresets(user.id);
+                }
+            }
         }
     }, []);
 
     return (
         <Layout className={LocaleService.direction == 'rtl' ? 'page-layout-content-rtl' : 'page-layout-content'}>
-            <ConfigProvider locale={LocaleService.antdlocale} direction={LocaleService.direction} componentSize="large">
-                <UserContext.Provider value={providerValue}>
-                    {isLogged && isSider && <AppSider />}
-                    <Layout className="page-layout-body">
-                        <AppHeader />
-                        <Content className="site-content">
-                            <Router routes={routes} />
-                        </Content>
-                        <AppFooter />
-                    </Layout>
+            <ConfigProvider locale={LocaleService.antLocale} direction={LocaleService.direction} componentSize="large">
+                <UserContext.Provider value={userProvider}>
+                    <DataContext.Provider value={dataProvider}>
+                        {isLogged && isSider && <AppSider />}
+                        <Layout className="page-layout-body">
+                            <AppHeader />
+                            <Content className="site-content">
+                                <Router routes={routes} />
+                            </Content>
+                            <AppFooter />
+                        </Layout>
+                    </DataContext.Provider>
                 </UserContext.Provider>
             </ConfigProvider>
             <BackTop>

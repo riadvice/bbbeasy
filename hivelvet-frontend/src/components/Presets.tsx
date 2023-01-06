@@ -48,8 +48,9 @@ import {
     QuestionCircleOutlined,
     SearchOutlined,
     UploadOutlined,
+    WarningOutlined,
 } from '@ant-design/icons';
-import { FormInstance } from 'antd/lib/form';
+
 import ColorPicker from 'rc-color-picker/lib/ColorPicker';
 
 import { Trans, withTranslation } from 'react-i18next';
@@ -63,32 +64,37 @@ import { MyPresetType } from '../types/MyPresetType';
 import { SubCategoryType } from '../types/SubCategoryType';
 import { UploadFile } from 'antd/lib/upload/interface';
 import { getIconName } from '../types/GetIconName';
-import authService from '../services/auth.service';
-import { UserType } from '../types/UserType';
+
 import axios from 'axios';
 import { apiRoutes } from '../routing/backend-config';
+import { DataContext } from 'lib/RoomsContext';
+import AddPresetForm from './AddPresetForm';
+import { UserType } from 'types/UserType';
+import AuthService from '../services/auth.service';
 
 const { Link, Title } = Typography;
 
 interface PresetColProps {
     key: number;
     preset: MyPresetType;
+    editName: boolean;
     editClickHandler: (newPreset: MyPresetType, oldPreset: MyPresetType) => void;
     deleteClickHandler: () => void;
 }
 type formType = {
     name: string;
 };
-let addForm: FormInstance = null;
 
-const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editClickHandler, deleteClickHandler }) => {
+const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editName, editClickHandler, deleteClickHandler }) => {
     const [file, setFile] = React.useState<UploadFile>(null);
+    const [fileList, setFileList] = React.useState<UploadFile[]>(null);
     const [isShown, setIsShown] = useState<boolean>(false);
     const [modalTitle, setModalTitle] = React.useState<string>('');
     const [modalContent, setModalContent] = React.useState<SubCategoryType[]>([]);
     const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [errorsEdit, setErrorsEdit] = React.useState({});
+    const isDefault = preset['name'] == 'default';
     const props = {
         beforeUpload: (file) => {
             const isPNG = file.type === 'image/png' || file.type === 'image/jpeg' || file.type === 'image/jpg';
@@ -98,7 +104,22 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editClickHandler, d
             return isPNG || Upload.LIST_IGNORE;
         },
         onChange: (info) => {
-            setFile(info.fileList[0]);
+            let fileList: UploadFile[] = [...info.fileList];
+            fileList = fileList.slice(-1);
+            if (fileList[0] != undefined) {
+                const img: boolean =
+                    fileList[0].type === 'image/jpg' ||
+                    fileList[0].type === 'image/jpeg' ||
+                    fileList[0].type === 'image/png';
+                if (img) {
+                    setFileList(fileList);
+                    setFile(fileList[0]);
+                }
+            }
+        },
+        onRemove: () => {
+            setFileList(null);
+            setFile(null);
         },
     };
 
@@ -106,6 +127,16 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editClickHandler, d
         setIsModalVisible(true);
         setModalTitle(title);
         setModalContent(content);
+        const indexLogo = content.findIndex((item) => item.type === 'file');
+        if (indexLogo > -1 && content[indexLogo].value != '') {
+            const presetLogo: UploadFile = {
+                uid: '1',
+                name: content[indexLogo].value,
+                status: 'done',
+            };
+            setFileList([presetLogo]);
+            setFile(presetLogo);
+        }
     };
     const getName = (item) => {
         return item.replaceAll('_', ' ').charAt(0).toUpperCase() + item.replaceAll('_', ' ').slice(1);
@@ -113,7 +144,28 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editClickHandler, d
 
     //delete
     const handleDelete = () => {
-        deleteClickHandler();
+        if (preset.nb_rooms > 0) {
+            Modal.confirm({
+                wrapClassName: 'delete-wrap',
+                title: undefined,
+                icon: undefined,
+                content: (
+                    <>
+                        <WarningOutlined className="delete-icon" />
+                        <span className="ant-modal-confirm-title">
+                            <Trans i18nKey="delete_preset_title" />
+                        </span>
+                        <Trans i18nKey="delete_preset_content" />
+                    </>
+                ),
+                okType: 'danger',
+                okText: <Trans i18nKey="confirm_yes" />,
+                cancelText: <Trans i18nKey="confirm_no" />,
+                onOk: () => deleteClickHandler(),
+            });
+        } else {
+            deleteClickHandler();
+        }
     };
 
     //edit name
@@ -133,6 +185,7 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editClickHandler, d
             PresetsService.edit_preset(values, preset.id)
                 .then((response) => {
                     editClickHandler(response.data.preset, preset);
+
                     cancelEdit();
                 })
                 .catch((error) => {
@@ -149,13 +202,10 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editClickHandler, d
     //edit category
     const saveEditPresetCategory = (title: string, preset: MyPresetType, subCategories: SubCategoryType[]) => {
         setIsModalVisible(false);
-        if (file != undefined) {
+        const indexLogo = subCategories.findIndex((item) => item.type === 'file');
+        //edit file
+        if (indexLogo > -1 && file != undefined && file.originFileObj != null) {
             const formData: FormData = new FormData();
-            const sub = subCategories.filter((subCategory) => {
-                if (subCategory.type == 'file') {
-                    subCategory.value = file.name;
-                }
-            });
             formData.append('logo', file.originFileObj, file.originFileObj.name);
             formData.append('logo_name', file.originFileObj.name);
 
@@ -168,6 +218,18 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editClickHandler, d
                     console.log(error);
                 });
         }
+
+        if (indexLogo > -1) {
+            // updated logo
+            if (file != undefined && file.originFileObj != null) {
+                subCategories[indexLogo].value = file.name;
+            }
+            //deleted logo
+            else if (file == undefined && subCategories[indexLogo].value != null) {
+                subCategories[indexLogo].value = '';
+            }
+        }
+
         PresetsService.edit_subcategory_preset(title, subCategories, preset.id).then((response) => {
             editClickHandler(response.data.preset, preset);
         });
@@ -186,7 +248,7 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editClickHandler, d
                             {!isEditing ? (
                                 <>
                                     <span>{preset['name']}</span>
-                                    {isShown && (
+                                    {isShown && editName && !isDefault && (
                                         <Button
                                             className="edit-btn"
                                             size="small"
@@ -254,17 +316,20 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editClickHandler, d
                     </div>
                 }
                 extra={
-                    <div className="table-actions">
-                        <Popconfirm
-                            title={t('delete_preset_confirm')}
-                            icon={<QuestionCircleOutlined className="red-icon" />}
-                            onConfirm={() => handleDelete()}
-                        >
-                            <Link>
-                                <DeleteOutlined /> <Trans i18nKey="delete" />
-                            </Link>
-                        </Popconfirm>
-                    </div>
+                    deleteClickHandler != null &&
+                    !isDefault && (
+                        <div className="table-actions">
+                            <Popconfirm
+                                title={t('delete_preset_confirm')}
+                                icon={<QuestionCircleOutlined className="red-icon" />}
+                                onConfirm={() => handleDelete()}
+                            >
+                                <Link>
+                                    <DeleteOutlined /> <Trans i18nKey="delete" />
+                                </Link>
+                            </Popconfirm>
+                        </div>
+                    )
                 }
             >
                 {preset.categories.map((item, subIndex) => {
@@ -302,7 +367,9 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editClickHandler, d
                             }
                         >
                             <Button
-                                onClick={() => showModal(item.name, item.subcategories)}
+                                onClick={() =>
+                                    editClickHandler != null ? showModal(item.name, item.subcategories) : null
+                                }
                                 disabled={!item.enabled}
                                 type="link"
                                 icon={<DynamicIcon type={getIconName(item.name)} className={'PresetIcon'} />}
@@ -310,152 +377,131 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editClickHandler, d
                         </Tooltip>
                     );
                 })}
-                <Modal
-                    title={modalTitle}
-                    className="presets-modal"
-                    centered
-                    visible={isModalVisible}
-                    onOk={() => setIsModalVisible(false)}
-                    onCancel={() => setIsModalVisible(false)}
-                    footer={null}
-                >
-                    <div className="presets-body">
-                        <Form>
-                            {modalContent.map((item) => (
-                                <div key={modalTitle + '_' + item.name}>
-                                    <Form.Item
-                                        label={getName(item.name)}
-                                        name={item.name} /*switch valuePropName={item.name}*/
+
+                {editClickHandler != null && (
+                    <Modal
+                        title={modalTitle}
+                        className="presets-modal"
+                        centered
+                        visible={isModalVisible}
+                        onOk={() => setIsModalVisible(false)}
+                        onCancel={() => setIsModalVisible(false)}
+                        footer={null}
+                    >
+                        <div className="presets-body">
+                            <Form>
+                                {modalContent.map((item) => (
+                                    <div key={modalTitle + '_' + item.name}>
+                                        <Form.Item label={getName(item.name)} name={item.name}>
+                                            {item.type == 'bool' && (
+                                                <Switch
+                                                    defaultChecked={item.value == true ? true : false}
+                                                    onChange={(checked) => {
+                                                        item.value = checked;
+                                                    }}
+                                                />
+                                            )}
+
+                                            {item.type === 'string' && (
+                                                <Input
+                                                    className="preset-input"
+                                                    defaultValue={item.value}
+                                                    placeholder={getName(item.name)}
+                                                    onChange={(event) => {
+                                                        item.value = event.target.value;
+                                                    }}
+                                                />
+                                            )}
+
+                                            {item.type === 'color' && (
+                                                <ColorPicker
+                                                    animation="slide-up"
+                                                    defaultColor={item.value}
+                                                    onClose={(color) => {
+                                                        item.value = color.color;
+                                                    }}
+                                                    placement="bottomLeft"
+                                                >
+                                                    <span className="rc-color-picker-trigger" />
+                                                </ColorPicker>
+                                            )}
+
+                                            {item.type === 'file' && (
+                                                <Upload
+                                                    {...props}
+                                                    multiple={false}
+                                                    name={item.name}
+                                                    fileList={fileList}
+                                                    accept=".png,.jpg,.jpeg"
+                                                >
+                                                    <Button icon={<UploadOutlined />}>
+                                                        Upload jpg, jpeg, png only
+                                                    </Button>
+                                                </Upload>
+                                            )}
+
+                                            {item.type === 'integer' && (
+                                                <InputNumber
+                                                    min={1}
+                                                    max={100}
+                                                    defaultValue={item.value}
+                                                    placeholder={item.name}
+                                                    onChange={(val) => (item.value = val)}
+                                                />
+                                            )}
+                                        </Form.Item>
+                                    </div>
+                                ))}
+                                <Form.Item className="modal-submit-btn button-container">
+                                    <Button
+                                        type="text"
+                                        className="cancel-btn prev"
+                                        block
+                                        onClick={() => setIsModalVisible(false)}
                                     >
-                                        {item.type == 'bool' && (
-                                            <Switch
-                                                defaultChecked={item.value == true ? true : false}
-                                                onChange={(checked) => {
-                                                    item.value = checked;
-                                                }}
-                                            />
-                                        )}
-
-                                        {item.type === 'string' && (
-                                            <Input
-                                                //style={{ 'width': 'fit-content' }}
-                                                className="preset-input"
-                                                defaultValue={item.value}
-                                                placeholder={getName(item.name)}
-                                                onChange={(event) => {
-                                                    item.value = event.target.value;
-                                                }}
-                                            />
-                                        )}
-
-                                        {item.type === 'color' && (
-                                            <ColorPicker
-                                                animation="slide-up"
-                                                defaultColor={item.value}
-                                                onClose={(color) => {
-                                                    item.value = color.color;
-                                                }}
-                                                placement="bottomLeft"
-                                            >
-                                                <span className="rc-color-picker-trigger" />
-                                            </ColorPicker>
-                                        )}
-
-                                        {item.type === 'file' && (
-                                            <Upload {...props} multiple={false} name={item.name}>
-                                                <Button icon={<UploadOutlined />}>Upload jpg, jpeg, png only</Button>
-                                                {item.value}
-                                            </Upload>
-                                        )}
-
-                                        {item.type === 'integer' && (
-                                            <InputNumber
-                                                min={1}
-                                                max={100}
-                                                defaultValue={item.value}
-                                                placeholder={item.name}
-                                                onChange={(val) => (item.value = val)}
-                                            />
-                                        )}
-                                    </Form.Item>
-                                </div>
-                            ))}
-                            <Form.Item className="modal-submit-btn button-container">
-                                <Button
-                                    type="text"
-                                    className="cancel-btn prev"
-                                    block
-                                    onClick={() => setIsModalVisible(false)}
-                                >
-                                    <Trans i18nKey="cancel" />
-                                </Button>
-                                <Button
-                                    type="primary"
-                                    htmlType="submit"
-                                    block
-                                    onClick={() => saveEditPresetCategory(modalTitle, preset, modalContent)}
-                                >
-                                    <Trans i18nKey="save" />
-                                </Button>
-                            </Form.Item>
-                        </Form>
-                    </div>
-                </Modal>
+                                        <Trans i18nKey="cancel" />
+                                    </Button>
+                                    <Button
+                                        type="primary"
+                                        htmlType="submit"
+                                        block
+                                        onClick={() => saveEditPresetCategory(modalTitle, preset, modalContent)}
+                                    >
+                                        <Trans i18nKey="save" />
+                                    </Button>
+                                </Form.Item>
+                            </Form>
+                        </div>
+                    </Modal>
+                )}
             </Card>
         </Col>
     );
 };
 
 const Presets = () => {
-    const [currentUser, setCurrentUser] = React.useState<UserType>(null);
     const [myPresets, setMyPresets] = useState<MyPresetType[]>([]);
-    const [errorsAdd, setErrorsAdd] = useState<string[]>([]);
-    const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [actions, setActions] = React.useState<string[]>([]);
+    const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+    const dataContext = React.useContext(DataContext);
 
     useEffect(() => {
-        const user: UserType = authService.getCurrentUser();
-        setCurrentUser(user);
-        PresetsService.collect_presets(user.id)
+        const currentUser: UserType = AuthService.getCurrentUser();
+        PresetsService.list_presets(currentUser.id)
             .then((response) => {
                 setMyPresets(response.data);
-                setIsLoading(false);
             })
             .catch((error) => {
                 console.log(error);
-            });
-    }, []);
-
-    //add
-    const handleAdd = (values) => {
-        const formValues: formType = values;
-        setErrorsAdd([]);
-        PresetsService.add_preset(formValues, currentUser.id)
-            .then((response) => {
-                setIsModalVisible(false);
-                const newPreset: MyPresetType = response.data.preset;
-                Notifications.openNotificationWithIcon('success', t('add_preset_success'));
-                addForm?.resetFields();
-                setMyPresets([...myPresets, newPreset]);
             })
-            .catch((error) => {
-                const responseData = error.response.data;
-                if (responseData.errors) {
-                    setErrorsAdd(responseData.errors);
-                }
+            .finally(() => {
+                setIsLoading(false);
             });
-    };
-    const failedAdd = () => {
-        setErrorsAdd([]);
-    };
-    const cancelAdd = () => {
-        setIsModalVisible(false);
-    };
-    const toggleAdd = () => {
-        addForm?.resetFields();
-        setErrorsAdd([]);
-        setIsModalVisible(true);
-    };
+
+        const presetsActions = AuthService.getActionsPermissionsByGroup('presets');
+        setActions(presetsActions);
+    }, []);
 
     //edit
     const editPreset = (newPreset: MyPresetType, oldPreset: MyPresetType) => {
@@ -468,6 +514,8 @@ const Presets = () => {
                 ...newPreset,
             });
             setMyPresets(newPresets);
+            dataContext.setDataPresets(newPresets);
+
             Notifications.openNotificationWithIcon('success', t('edit_preset_success'));
         }
     };
@@ -475,8 +523,13 @@ const Presets = () => {
     //delete
     const deletePreset = (id) => {
         PresetsService.delete_preset(id)
-            .then(() => {
+            .then((response) => {
+                console.log(response);
                 setMyPresets(myPresets.filter((p) => p.id != id));
+                const indexPreset = dataContext.dataPresets.findIndex((item) => id === item.id);
+                if (indexPreset !== -1) {
+                    dataContext.dataPresets.splice(indexPreset, 1);
+                }
                 Notifications.openNotificationWithIcon('success', t('delete_preset_success'));
             })
             .catch((error) => {
@@ -507,77 +560,42 @@ const Presets = () => {
                     >
                         <QuestionCircleOutlined className="help-icon" />
                     </Popover>,
-                    <Button key="1" type="primary" onClick={toggleAdd}>
-                        <Trans i18nKey="new_preset" />
-                    </Button>,
+                    AuthService.isAllowedAction(actions, 'add') && (
+                        <Button key="1" type="primary" onClick={() => setIsModalVisible(true)}>
+                            <Trans i18nKey="new_preset" />
+                        </Button>
+                    ),
                 ]}
             />
 
-            <Modal
-                title={<Trans i18nKey="new_preset" />}
-                className="add-modal"
-                centered
-                visible={isModalVisible}
-                onOk={handleAdd}
-                onCancel={cancelAdd}
-                footer={null}
-            >
-                <Form
-                    layout="vertical"
-                    ref={(form) => (addForm = form)}
-                    initialValues={{ name: '' }}
-                    hideRequiredMark
-                    onFinish={handleAdd}
-                    onFinishFailed={failedAdd}
-                    validateTrigger="onSubmit"
-                >
-                    <Form.Item
-                        label={<Trans i18nKey="name.label" />}
-                        name="name"
-                        {...('name' in errorsAdd && {
-                            help: (
-                                <Trans
-                                    i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errorsAdd['name'])}
-                                />
-                            ),
-                            validateStatus: 'error',
-                        })}
-                        rules={[
-                            {
-                                required: true,
-                                message: <Trans i18nKey="name.required" />,
-                            },
-                        ]}
-                    >
-                        <Input placeholder={t('name.label')} />
-                    </Form.Item>
-                    <Form.Item className="modal-submit-btn button-container">
-                        <Button type="text" className="cancel-btn prev" block onClick={cancelAdd}>
-                            <Trans i18nKey="cancel" />
-                        </Button>
-                        <Button type="primary" htmlType="submit" block>
-                            <Trans i18nKey="create" />
-                        </Button>
-                    </Form.Item>
-                </Form>
-            </Modal>
+            {AuthService.isAllowedAction(actions, 'add') && (
+                <AddPresetForm
+                    isModalShow={isModalVisible}
+                    close={() => {
+                        setIsModalVisible(false);
+                    }}
+                />
+            )}
 
             <Row gutter={[32, 32]} justify="center" className="presets-cards">
                 {isLoading ? (
                     <Spin size="large" />
                 ) : myPresets.length == 0 ? (
-                    <Empty
-                        imageStyle={{
-                            height: 200,
-                        }}
-                    />
+                    <Empty className="empty-presets" />
                 ) : (
                     myPresets.map((singlePresets) => (
                         <PresetsCol
                             key={singlePresets.id}
                             preset={singlePresets}
-                            editClickHandler={editPreset}
-                            deleteClickHandler={deletePreset.bind(this, singlePresets.id)}
+                            editName={AuthService.isAllowedAction(actions, 'edit')}
+                            editClickHandler={
+                                AuthService.isAllowedAction(actions, 'edit_subcategories') ? editPreset : null
+                            }
+                            deleteClickHandler={
+                                AuthService.isAllowedAction(actions, 'delete')
+                                    ? deletePreset.bind(this, singlePresets.id)
+                                    : null
+                            }
                         />
                     ))
                 )}

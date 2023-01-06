@@ -1,4 +1,8 @@
-/**
+<?php
+
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -16,6 +20,17 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import { UserType } from './UserType';
+namespace Actions\Rooms;
 
-export type UserFunctionType = (user: UserType, Logged: boolean) => void;
+use Actions\Delete as DeleteAction;
+use Actions\RequirePrivilegeTrait;
+
+/**
+ * Class Delete.
+ */
+class Delete extends DeleteAction
+{
+    use RequirePrivilegeTrait;
+
+    protected $deleteMethodName = 'delete';
+}

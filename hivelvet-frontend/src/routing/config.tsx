@@ -26,7 +26,6 @@ import Register from '../components/auth/Register';
 import Reset from '../components/auth/ResetPassword';
 import ChangePassword from '../components/auth/ChangePassword';
 
-import Home from '../components/Home';
 import Rooms from '../components/Rooms';
 import Labels from '../components/Labels';
 import Presets from '../components/Presets';
@@ -34,6 +33,8 @@ import Branding from '../components/Branding';
 import Users from '../components/Users';
 import Roles from '../components/Roles';
 import PresetSettings from '../components/PresetSettings';
+import RoomDetails from '../components/RoomDetails';
+import Profile from '../components/Profile';
 
 export const webRoutes: IRoute[] = [
     {
@@ -72,13 +73,13 @@ export const webRoutes: IRoute[] = [
     },
 
     {
-        path: '/home',
-        element: <Home />,
+        path: '/rooms',
+        element: <Rooms />,
         private: true,
     },
     {
-        path: '/rooms',
-        element: <Rooms />,
+        path: '/rooms/details',
+        element: <RoomDetails />,
         private: true,
     },
     {
@@ -109,6 +110,11 @@ export const webRoutes: IRoute[] = [
     {
         path: '/settings/bigbluebutton',
         element: <PresetSettings />,
+        private: true,
+    },
+    {
+        path: '/profile',
+        element: <Profile />,
         private: true,
     },
 ];

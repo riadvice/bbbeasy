@@ -50,30 +50,32 @@ class Install extends BaseAction
          */
         $body        = $this->getDecodedBody();
         $form        = $body['data'];
+        $setting     = new Setting();
         $dataChecker = new DataChecker();
 
         $dataChecker->verify($form['username'], Validator::length(4)->setName('username'));
         $dataChecker->verify($form['email'], Validator::email()->setName('email'));
         $dataChecker->verify($form['password'], Validator::length(8)->setName('password'));
-
-        $dataChecker->verify($form['company_name'], Validator::notEmpty()->setName('company_name'));
-        $dataChecker->verify($form['company_url'], Validator::url()->setName('company_url'));
-        $dataChecker->verify($form['platform_name'], Validator::notEmpty()->setName('platform_name'));
-
-        if ('' !== $form['term_url']) {
-            $dataChecker->verify($form['term_url'], Validator::url()->setName('term_url'));
-        }
-        if ('' !== $form['policy_url']) {
-            $dataChecker->verify($form['policy_url'], Validator::url()->setName('policy_url'));
-        }
-
-        $dataChecker->verify($form['branding_colors'], Validator::notEmpty()->setName('branding_colors'));
+        $dataChecker = $setting->checkSettingsData($dataChecker, $form);
         $dataChecker->verify($form['presetsConfig'], Validator::notEmpty()->setName('presetsConfig'));
 
         if (!$dataChecker->allValid()) {
             $this->logger->error('Initial application setup', ['errors' => $dataChecker->getErrors()]);
             $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
         } else {
+            if (null !== $form['logo']) {
+                $logoName     = $form['logo'];
+                $logoFormat   = mb_substr($logoName, mb_strpos($logoName, '.') + 1);
+                $validFormats = ['jpg', 'jpeg', 'png'];
+                if (!\in_array($logoFormat, $validFormats, true)) {
+                    $this->logger->error('Settings could not be updated', ['errors' => 'invalid file format : ' . $logoFormat]);
+
+                    $this->renderJson(['message' => 'invalid file format'], ResponseCode::HTTP_PRECONDITION_FAILED);
+
+                    return;
+                }
+            }
+
             // load admin role to allow privileges and assign it to admin user
             $roleAdmin = new Role();
             $roleAdmin->load(['id = ?', [UserRole::ADMINISTRATOR_ID]]);
@@ -98,8 +100,6 @@ class Install extends BaseAction
 
                         $this->logger->info('Initial application setup : Add administrator with admin role and default preset', ['user' => $user->toArray()]);
 
-                        $setting = new Setting();
-
                         /** @var Setting $settings */
                         $settings = $setting->find([], ['limit' => 1])->current();
                         if (!$settings->dry()) {
@@ -109,6 +109,7 @@ class Install extends BaseAction
                                 $form['platform_name'],
                                 $form['term_url'],
                                 $form['policy_url'],
+                                $form['logo'],
                                 $form['branding_colors'],
                             );
 

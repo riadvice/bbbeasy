@@ -41,8 +41,10 @@ import EN_US from '../locale/en-US.json';
 
 import { AxiosResponse } from 'axios';
 import _ from 'lodash';
+import AuthService from '../services/auth.service';
+import { TableColumnType } from '../types/TableColumnType';
 
-const { Paragraph, Link } = Typography;
+const { Link } = Typography;
 
 type Item = {
     key: number;
@@ -68,10 +70,11 @@ let addForm: FormInstance = null;
 
 const Roles = () => {
     const [data, setData] = React.useState<Item[]>([]);
+    const [loading, setLoading] = React.useState<boolean>(false);
+    const [actions, setActions] = React.useState<string[]>([]);
     const [expandedKeys, setExpandedKeys] = React.useState<number[]>([]);
     const [changedKeys, setChangedKeys] = React.useState<number[]>([]);
     const [pagination, setPagination] = React.useState<PaginationType>({ current: 1, pageSize: 5 });
-    const [loading, setLoading] = React.useState<boolean>(false);
     const [allPrivileges, setAllPrivileges] = React.useState<object>({});
 
     const [errorsAdd, setErrorsAdd] = React.useState<string[]>([]);
@@ -84,6 +87,7 @@ const Roles = () => {
     const getPrivileges = () => {
         RolesService.list_permissions()
             .then((response) => {
+                console.log(response);
                 const privileges = response.data;
                 if (privileges instanceof Object) {
                     setAllPrivileges(privileges);
@@ -109,6 +113,9 @@ const Roles = () => {
         //Runs only on the first render
         getPrivileges();
         getRoles();
+
+        const rolesActions = AuthService.getActionsPermissionsByGroup('roles');
+        setActions(rolesActions);
     }, []);
     const transformText = (text: string): string => {
         if (text != '') {
@@ -128,7 +135,7 @@ const Roles = () => {
                                     <Row gutter={[32, 16]}>
                                         {allPrivileges[group].map((action) => (
                                             <Col key={action}>
-                                                <Checkbox value={action}>{action}</Checkbox>
+                                                <Checkbox value={action}>{action.replace('_', ' ')}</Checkbox>
                                             </Col>
                                         ))}
                                     </Row>
@@ -277,42 +284,44 @@ const Roles = () => {
         };
 
         return (
-            <Form
-                ref={(form) => (editRowForm = form)}
-                initialValues={permissionsChecked}
-                onFinish={() => saveEdit(record.key)}
-                onChange={() => changeEdit(record.key)}
-            >
-                <Card bordered={false} className="card-parent">
-                    {getPermissionsCard(record.key)}
-                    {record.key != 1 && (
-                        <Space size="middle" className="actions-expanded">
-                            {changedKeys.includes(record.key) ? (
-                                <Popconfirm
-                                    title={t('cancel_edit')}
-                                    placement="leftTop"
-                                    onConfirm={() => cancelEdit(record.key)}
-                                >
-                                    <Button size="middle" className="cell-input-cancel">
+            <fieldset disabled={!AuthService.isAllowedAction(actions, 'edit')}>
+                <Form
+                    ref={(form) => (editRowForm = form)}
+                    initialValues={permissionsChecked}
+                    onFinish={() => saveEdit(record.key)}
+                    onChange={() => changeEdit(record.key)}
+                >
+                    <Card bordered={false} className="card-parent">
+                        {getPermissionsCard(record.key)}
+                        {AuthService.isAllowedAction(actions, 'edit') && record.key != 1 && (
+                            <Space size="middle" className="actions-expanded">
+                                {changedKeys.includes(record.key) ? (
+                                    <Popconfirm
+                                        title={t('cancel_edit')}
+                                        placement="leftTop"
+                                        onConfirm={() => cancelEdit(record.key)}
+                                    >
+                                        <Button size="middle" className="cell-input-cancel">
+                                            <Trans i18nKey="cancel" />
+                                        </Button>
+                                    </Popconfirm>
+                                ) : (
+                                    <Button
+                                        size="middle"
+                                        className="cell-input-cancel"
+                                        onClick={() => cancelEdit(record.key)}
+                                    >
                                         <Trans i18nKey="cancel" />
                                     </Button>
-                                </Popconfirm>
-                            ) : (
-                                <Button
-                                    size="middle"
-                                    className="cell-input-cancel"
-                                    onClick={() => cancelEdit(record.key)}
-                                >
-                                    <Trans i18nKey="cancel" />
+                                )}
+                                <Button size="middle" type="primary" className="cell-input-save" htmlType="submit">
+                                    <Trans i18nKey="save" />
                                 </Button>
-                            )}
-                            <Button size="middle" type="primary" className="cell-input-save" htmlType="submit">
-                                <Trans i18nKey="save" />
-                            </Button>
-                        </Space>
-                    )}
-                </Card>
-            </Form>
+                            </Space>
+                        )}
+                    </Card>
+                </Form>
+            </fieldset>
         );
     };
 
@@ -430,7 +439,7 @@ const Roles = () => {
                     ) : (
                         <>
                             {children}
-                            {isShown && (
+                            {isShown && AuthService.isAllowedAction(actions, 'edit') && (
                                 <Button
                                     size="small"
                                     type="link"
@@ -574,7 +583,7 @@ const Roles = () => {
         },
     });
 
-    const columns = [
+    const columns: TableColumnType[] = [
         {
             title: t('name_col'),
             dataIndex: 'name',
@@ -605,6 +614,7 @@ const Roles = () => {
         },
         {
             title: t('actions_col'),
+            dataIndex: 'actions',
             editable: false,
             render: (text, record) => {
                 return (
@@ -615,7 +625,7 @@ const Roles = () => {
                         <Link onClick={() => toggleEdit(record.key)}>
                             <KeyOutlined /> <Trans i18nKey="permissions.label" />
                         </Link>
-                        {record.key != 1 && record.key != 2 && (
+                        {AuthService.isAllowedAction(actions, 'delete') && record.key != 1 && record.key != 2 && (
                             <Popconfirm
                                 title={t('delete_role_confirm')}
                                 icon={<QuestionCircleOutlined className="red-icon" />}
@@ -651,91 +661,93 @@ const Roles = () => {
             <PageHeader
                 className="site-page-header"
                 title={<Trans i18nKey="roles" />}
-                extra={[
-                    <Button key="1" type="primary" id="add-role-btn" onClick={toggleAdd}>
-                        <Trans i18nKey="new_role" />
-                    </Button>,
-                ]}
+                extra={
+                    AuthService.isAllowedAction(actions, 'add') && [
+                        <Button key="1" type="primary" id="add-role-btn" onClick={toggleAdd}>
+                            <Trans i18nKey="new_role" />
+                        </Button>,
+                    ]
+                }
             />
 
-            <Modal
-                title={<Trans i18nKey="new_role" />}
-                className="add-modal"
-                centered
-                visible={isModalVisible}
-                onOk={handleAdd}
-                onCancel={cancelAdd}
-                footer={null}
-                width={600}
-            >
-                <Form
-                    layout="vertical"
-                    name="roles_form"
-                    ref={(form) => (addForm = form)}
-                    initialValues={{ name: '' }}
-                    hideRequiredMark
-                    onFinish={handleAdd}
-                    onFinishFailed={failedAdd}
-                    validateTrigger="onSubmit"
+            {AuthService.isAllowedAction(actions, 'add') && (
+                <Modal
+                    title={<Trans i18nKey="new_role" />}
+                    className="add-modal"
+                    centered
+                    visible={isModalVisible}
+                    onOk={handleAdd}
+                    onCancel={cancelAdd}
+                    footer={null}
+                    width={600}
                 >
-                    <Form.Item
-                        label={<Trans i18nKey="name.label" />}
-                        name="name"
-                        {...('name' in errorsAdd && {
-                            help: (
-                                <Trans
-                                    i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errorsAdd['name'])}
-                                />
-                            ),
-                            validateStatus: 'error',
-                        })}
-                        rules={[
-                            {
-                                required: true,
-                                message: <Trans i18nKey="name.required" />,
-                            },
-                        ]}
+                    <Form
+                        layout="vertical"
+                        name="roles_form"
+                        ref={(form) => (addForm = form)}
+                        initialValues={{ name: '' }}
+                        hideRequiredMark
+                        onFinish={handleAdd}
+                        onFinishFailed={failedAdd}
+                        validateTrigger="onSubmit"
                     >
-                        <Input placeholder={t('name.label')} />
-                    </Form.Item>
-                    <div className="ant-col ant-form-item-label">
-                        <label>
-                            <Trans i18nKey="permissions.label" />
-                        </label>
-                    </div>
-                    {getPermissionsCard()}
-                    <Form.Item className="modal-submit-btn button-container">
-                        <Button type="text" className="cancel-btn prev" block onClick={cancelAdd}>
-                            <Trans i18nKey="cancel" />
-                        </Button>
-                        <Button type="primary" className="cell-input-save" htmlType="submit" block>
-                            <Trans i18nKey="create" />
-                        </Button>
-                    </Form.Item>
-                </Form>
-            </Modal>
+                        <Form.Item
+                            label={<Trans i18nKey="name.label" />}
+                            name="name"
+                            {...('name' in errorsAdd && {
+                                help: (
+                                    <Trans
+                                        i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errorsAdd['name'])}
+                                    />
+                                ),
+                                validateStatus: 'error',
+                            })}
+                            rules={[
+                                {
+                                    required: true,
+                                    message: <Trans i18nKey="name.required" />,
+                                },
+                            ]}
+                        >
+                            <Input placeholder={t('name.label')} />
+                        </Form.Item>
+                        <div className="ant-col ant-form-item-label">
+                            <label>
+                                <Trans i18nKey="permissions.label" />
+                            </label>
+                        </div>
+                        {getPermissionsCard()}
+                        <Form.Item className="modal-submit-btn button-container">
+                            <Button type="text" className="cancel-btn prev" block onClick={cancelAdd}>
+                                <Trans i18nKey="cancel" />
+                            </Button>
+                            <Button type="primary" className="cell-input-save" htmlType="submit" block>
+                                <Trans i18nKey="create" />
+                            </Button>
+                        </Form.Item>
+                    </Form>
+                </Modal>
+            )}
 
-            <Paragraph>
-                <Table
-                    className="hivelvet-table"
-                    components={{
-                        body: {
-                            cell: EditableCell,
-                            row: EditableRow,
-                        },
-                    }}
-                    columns={mergedColumns}
-                    dataSource={data}
-                    pagination={pagination}
-                    loading={loading}
-                    onChange={(newPagination: PaginationType) => setPagination(newPagination)}
-                    expandable={{
-                        expandedRowRender: expandedRowRender,
-                        showExpandColumn: false,
-                        expandedRowKeys: expandedKeys,
-                    }}
-                />
-            </Paragraph>
+            <Table
+                className="hivelvet-table"
+                components={{
+                    body: {
+                        cell: EditableCell,
+                        row: EditableRow,
+                    },
+                }}
+                columns={mergedColumns}
+                dataSource={data}
+                pagination={pagination}
+                loading={loading}
+                onChange={(newPagination: PaginationType) => setPagination(newPagination)}
+                expandable={{
+                    expandedRowRender: expandedRowRender,
+                    showExpandColumn: false,
+                    expandedRowKeys: expandedKeys,
+                }}
+            />
         </>
     );
 };

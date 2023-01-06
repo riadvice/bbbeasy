@@ -17,7 +17,7 @@
  */
 
 import React from 'react';
-import { Link, Navigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { Layout, Typography, Radio, Button, Menu, Dropdown, Space, Input, Row, Col, RadioChangeEvent } from 'antd';
 import { SearchOutlined, GlobalOutlined, UserOutlined, LogoutOutlined } from '@ant-design/icons';
 
@@ -36,16 +36,19 @@ const { Header } = Layout;
 const { Text, Paragraph } = Typography;
 
 const AppHeader = () => {
-    const { isLogged, setIsLogged, currentUser, setCurrentUser } = React.useContext(UserContext);
+    const { isLogged, setIsLogged, currentUser, setCurrentUser, setCurrentSession } = React.useContext(UserContext);
     const currentLocale = LocaleService.language;
     const result: LanguageType[] = Languages.filter((item) => item.value == currentLocale);
     const language: string = result[0].name;
+    const navigate = useNavigate();
 
     const logout = () => {
         AuthService.logout()
             .then(() => {
                 localStorage.removeItem('user');
                 setCurrentUser(null);
+                localStorage.removeItem('session');
+                setCurrentSession(null);
                 setIsLogged(false);
                 return <Navigate to="/login" />;
             })
@@ -53,6 +56,7 @@ const AppHeader = () => {
                 console.log(error);
             });
     };
+
     const handleChange = (e: RadioChangeEvent) => {
         const selectedLang: string = e.target.value;
         LocaleService.changeLocale(selectedLang);
@@ -90,13 +94,11 @@ const AppHeader = () => {
                 <Text>{currentUser?.email}</Text>
             </Menu.Item>
             <Menu.Divider />
-            <Menu.Item key="2" icon={<UserOutlined />}>
+            <Menu.Item key="2" icon={<UserOutlined />} onClick={() => navigate('/profile')}>
                 <Trans i18nKey="user_dropdown.profile" />
             </Menu.Item>
-            <Menu.Item key="3" icon={<LogoutOutlined />}>
-                <a id="logout-btn" onClick={() => logout()}>
-                    <Trans i18nKey="user_dropdown.logout" />
-                </a>
+            <Menu.Item id="logout-btn" key="3" icon={<LogoutOutlined />} onClick={() => logout()}>
+                <Trans i18nKey="user_dropdown.logout" />
             </Menu.Item>
         </Menu>
     );

@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Models;
 
+use Enum\ResponseCode;
 use Models\Base as BaseModel;
 
 /**
@@ -31,6 +32,7 @@ use Models\Base as BaseModel;
  * @property string    $name
  * @property string    $short_link
  * @property int       $preset_id
+ * @property int       $user_id
  * @property Label[]   $labels
  * @property \DateTime $created_on
  * @property \DateTime $updated_on
@@ -45,9 +47,33 @@ class Room extends BaseModel
 
     protected $table = 'rooms';
 
-    public function nameExists($name)
+    public function nameExists($name, $userId, $id = null)
     {
-        return $this->load(['lower(name) = ?', mb_strtolower($name)]);
+        return $this->load(['lower(name) = ? and user_id = ? and id != ?', mb_strtolower($name), $userId, $id]);
+    }
+
+    /**
+     * Get room record by id value.
+     *
+     * @param mixed $id
+     *
+     * @return $this
+     */
+    public function getById($id): self
+    {
+        $this->load(['id = ?', $id]);
+
+        return $this;
+    }
+
+    public function collectAllByUserId($userId): array
+    {
+        return $this->db->exec('SELECT id, name, short_link, preset_id FROM rooms where user_id =?', $userId);
+    }
+
+    public function collectAllByPresetId($presetId): array
+    {
+        return $this->db->exec('SELECT id, name, short_link, preset_id ,user_id FROM rooms where preset_id =?', $presetId);
     }
 
     public function shortlinkExists($shortlink)
@@ -57,10 +83,18 @@ class Room extends BaseModel
 
     public function collectAll(): array
     {
-        return $this->db->exec('SELECT id, name, short_link, preset_id FROM rooms');
+        $data  = [];
+        $rooms = $this->find([], ['order' => 'id']);
+        if ($rooms) {
+            foreach ($rooms as $room) {
+                $data[] = $room->getRoomInfos($room->id);
+            }
+        }
+
+        return $data;
     }
 
-    public function getRoomInfos(int $id = null): array
+    public function getRoomInfos($id): array
     {
         if ($id) {
             $subQuery = 'WHERE r.id = :room_id';
@@ -86,7 +120,8 @@ class Room extends BaseModel
         $lbs        = [];
         if ($roomlabels) {
             foreach ($roomlabels as $rl) {
-                $label  = new Label();
+                $label = new Label();
+
                 $labels = $label->getById($rl['label_id']);
                 if ($labels) {
                     $lbs[] = $labels->getLabelInfos();
@@ -95,5 +130,50 @@ class Room extends BaseModel
         }
 
         return $lbs;
+    }
+
+    /**
+     * Delete a room if it's allowed and  removing its associated roomlabels.
+     *
+     * @return Array[2](Array[], ResponsCode)
+     */
+    public function delete(): array
+    {
+        // delete associated roomslabels
+        $result = $this->deleteRoomsLabels();
+
+        if ($result) {
+            try {
+                $this->erase();
+                $this->logger->info('Room successfully deleted', ['room' => $this->toArray()]);
+            } catch (\Exception $e) {
+                $this->logger->error('room could not be deleted', ['room' => $this->toArray(), 'error' => $e->getMessage()]);
+
+                throw $e;
+            }
+
+            return [['result' => 'success'], ResponseCode::HTTP_OK];
+        }
+
+        return [[], ResponseCode::HTTP_FORBIDDEN];
+    }
+
+    public function deleteRoomsLabels(): bool
+    {
+        $this->logger->info('Starting delete rooms labels transaction.');
+        $this->db->begin();
+        $roomId = $this->id;
+
+        $roomlabel    = new RoomLabel();
+        $deleteResult = $roomlabel->erase(['room_id = ?', $roomId]);
+        if ($deleteResult) {
+            $this->logger->info('All Rooms Labels successfully deleted');
+            $this->db->commit();
+            $this->logger->info('Delete rooms and its associations transaction successfully commit.');
+
+            return true;
+        }
+
+        return false;
     }
 }

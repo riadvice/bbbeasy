@@ -16,9 +16,8 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import { SubCategoryType } from './SubCategoryType';
-
 export type LabelType = {
+    id: number;
     name: string;
     color: string;
     description: string;

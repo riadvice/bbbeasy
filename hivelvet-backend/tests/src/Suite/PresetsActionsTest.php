@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace Suite;
 
 use Actions\Presets\AddTest;
-use Actions\Presets\CollectTest;
 use Actions\Presets\DeleteTest;
 use Actions\Presets\EditTest;
+use Actions\Presets\IndexTest;
 use Test\TestGroup;
 
 /**
@@ -35,7 +35,7 @@ use Test\TestGroup;
  */
 final class PresetsActionsTest extends TestGroup
 {
-    protected $classes = [AddTest::class, EditTest::class, DeleteTest::class, CollectTest::class];
+    protected $classes = [AddTest::class, EditTest::class, DeleteTest::class, IndexTest::class];
 
     protected $quiet = true;
 }

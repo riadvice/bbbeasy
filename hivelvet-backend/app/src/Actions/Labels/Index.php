@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Actions\Labels;
 
 use Actions\Base as BaseAction;
+use Actions\RequirePrivilegeTrait;
 use Models\Label;
 
 /**
@@ -30,6 +31,8 @@ use Models\Label;
  */
 class Index extends BaseAction
 {
+    use RequirePrivilegeTrait;
+
     /**
      * @param \Base $f3
      * @param array $params
