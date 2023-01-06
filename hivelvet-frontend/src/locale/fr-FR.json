@@ -51,7 +51,7 @@
     "register": "S'inscrire maintenant",
     "have-already-account": "Vous avez déjà un compte",
     "login-here": "Connectez-vous ici",
-    "paswords-not-match": "Les deux mots de passe ne correspondent pas",
+    "passwords-not-match": "Les deux mots de passe ne correspondent pas",
     "user-could-not-logged": "L'utilisateur n'a pas pu se connecter",
     "success-title": "Succès",
     "error-title": "Erreur",
@@ -258,7 +258,7 @@
     "delete_preset_title": "Voulez-vous supprimer ce préréglage ?",
     "delete_preset_content": "Ce préréglage est déjà attribué à certaines salles, si vous confirmez, toutes les salles attribuées passeront au préréglage par défaut",
     "delete_preset_success": "Préaglage supprimé avec succès",
-    "add_preset_success": "Préaglage ajouté avec succés",
+    "add_preset_success": "Préaglage ajouté avec succès",
     "edit_preset_success": "Préaglage mis à jour avec succès",
 
     "edit_settings_success": "Paramètres de compagnie et de branding mis à jour avec succès",
@@ -275,7 +275,7 @@
     "labels_required": "Les labels sont obligatoires",
     "room-name-already-exist": "Le nom du salle existe déjà",
     "room-link-already-exist": "Le lien du salle existe déjà",
-    "add_room_success": "Salle ajoutée avec succés",
+    "add_room_success": "Salle ajoutée avec succès",
 
     "labels_cols.nbrooms": "N° de Salles",
 
@@ -295,9 +295,13 @@
     "replay": "Rejouer",
     "mb": "Mo",
     "delete_room_confirm": "Êtes-vous sûr de vouloir supprimer cette salle ?",
-    "delete_room_success": "Salle a été supprimée avec succés",
-    "edit_room_success": "Salle a été mis a jour avec succés",
+    "delete_room_success": "Salle a été supprimée avec succès",
+    "edit_room_success": "Salle a été mis a jour avec succès",
 
-    "update_profile": "Mettre à jour le profil",
-    "change_avatar": "Changer Avatar"
+    "edit_profile": "Mettre à jour le profil",
+    "current_password": "Mot de passe Actuel",
+    "new_password": "Nouveau Mot de passe",
+    "confirm_new_password": "Retaper le Nouveau Mot de passe",
+    "change_avatar": "Changer Avatar",
+    "edit_account_success": "Profil mis à jour avec succès"
 }

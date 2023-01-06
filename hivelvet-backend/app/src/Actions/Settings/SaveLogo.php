@@ -25,6 +25,7 @@ namespace Actions\Settings;
 use Actions\Base as BaseAction;
 use Enum\ResponseCode;
 use Respect\Validation\Validator;
+use Utils\DataUtils;
 use Validation\DataChecker;
 
 /**
@@ -55,7 +56,7 @@ class SaveLogo extends BaseAction
         } else {
             $format       = $f3->get('FILES')['logo']['type'];
             $validFormats = ['image/jpg', 'image/jpeg', 'image/png'];
-            if (\in_array($format, $validFormats, true)) {
+            if (DataUtils::validateImageFormat($format, $validFormats)) {
                 // correct
                 \Web::instance()->receive();
             } else {

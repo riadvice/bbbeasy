@@ -51,7 +51,7 @@
     "register": "سجل الآن",
     "have-already-account": "لديك حساب مسبقاً",
     "login-here": "تسجيل الدخول هنا",
-    "paswords-not-match": "كلمتا المرور غير متطابقتين",
+    "passwords-not-match": "كلمتا المرور غير متطابقتين",
     "user-could-not-logged": "لم يتمكن المستخدم من تسجيل الدخول",
     "success-title": "تم الإجراء بنجاح",
     "error-title": "خطأ",
@@ -298,6 +298,10 @@
     "delete_room_success": "تم حذف القاعة بنجاح",
     "edit_room_success": "تم تحديث القاعة بنجاح",
 
-    "update_profile": "تحديث الملف الشخصي",
-    "change_avatar": "تغيير الصورة الرمزية"
+    "edit_profile": "تحديث الملف الشخصي",
+    "current_password": "كلمة المرور الحالية",
+    "new_password": "كلمة المرور الجديدة",
+    "confirm_new_password": "أعد كتابة كلمة المرور الجديدة",
+    "change_avatar": "تغيير الصورة الرمزية",
+    "edit_account_success": "تم تحديث الملف الشخصي بنجاح"
 }

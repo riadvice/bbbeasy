@@ -35,6 +35,7 @@ final class ReflectionTest extends Scenario
     protected $group = 'Reflection Based Configuration';
 
     protected array $permissions = [
+        'account'         => ['edit'],
         'labels'          => ['add', 'delete', 'edit', 'index'],
         'logs'            => ['collect'],
         'preset_settings' => ['collect', 'edit'],

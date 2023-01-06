@@ -140,6 +140,16 @@ class Session extends \Prefab
     }
 
     /**
+     * @param $user User
+     */
+    public function updateUser(User $user): void
+    {
+        $this->set('user.username', $user->username);
+        $this->set('user.email', $user->email);
+        $this->logger->debug("User with id {$user->id} is now updated");
+    }
+
+    /**
      * Clean all information in the session to mark the user as logged out.
      */
     public function revokeUser(): void

@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 use Phinx\Migration\AbstractMigration;
 
-final class AddExpiresColumnToSessionsTable extends AbstractMigration
+final class AddExpiresColumnToSession extends AbstractMigration
 {
     public function up(): void
     {

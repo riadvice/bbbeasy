@@ -51,7 +51,7 @@
     "register": "Register now",
     "have-already-account": "Already have an account",
     "login-here": "Login Here",
-    "paswords-not-match": "The two passwords do not match",
+    "passwords-not-match": "The two passwords do not match",
     "user-could-not-logged": "User could not be logged",
     "success-title": "Success",
     "error-title": "Error",
@@ -298,6 +298,10 @@
     "delete_room_success": "Room successfully deleted",
     "edit_room_success": "Room successfully updated",
 
-    "update_profile": "Update Profile",
-    "change_avatar": "Change Avatar"
+    "edit_profile": "Update Profile",
+    "current_password": "Current Password",
+    "new_password": "New Password",
+    "confirm_new_password": "Re-Type New Password",
+    "change_avatar": "Change Avatar",
+    "edit_account_success": "Profile successfully updated"
 }

@@ -44,7 +44,7 @@ const ChangePassword = () => {
     const params: _URLSearchParams = new URLSearchParams(window.location.search);
 
     useEffect(() => {
-        AuthService.getResetPasswordByToken(params.get('token'))
+        AuthService.get_reset_password(params.get('token'))
             .then(() => {
                 setAvailableToken(true);
             })

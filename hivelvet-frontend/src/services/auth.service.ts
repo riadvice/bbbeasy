@@ -19,6 +19,7 @@
 import { axiosInstance } from '../lib/AxiosInstance';
 import { apiRoutes } from '../routing/backend-config';
 import { UserType } from '../types/UserType';
+import { SessionType } from '../types/SessionType';
 
 class AuthService {
     register(data: object) {
@@ -51,8 +52,20 @@ class AuthService {
         });
     }
 
-    getResetPasswordByToken(token: string) {
+    get_reset_password(token: string) {
         return axiosInstance.get(apiRoutes.RESET_TOKEN_URL + token);
+    }
+
+    edit_account(data: object) {
+        return axiosInstance.put(apiRoutes.EDIT_ACCOUNT_URL, { data });
+    }
+
+    addCurrentUser(user: UserType) {
+        localStorage.setItem('user', JSON.stringify(user));
+    }
+
+    addCurrentSession(session: SessionType) {
+        localStorage.setItem('session', JSON.stringify(session));
     }
 
     getCurrentUser() {
@@ -65,6 +78,18 @@ class AuthService {
         const sessionStr: string = localStorage.getItem('session');
         if (sessionStr) return JSON.parse(sessionStr);
         return null;
+    }
+
+    updateCurrentUser(username: string, email: string, avatar: string) {
+        const userStr: string = localStorage.getItem('user');
+        if (userStr) {
+            const userObj: UserType = JSON.parse(userStr);
+            userObj.username = username;
+            userObj.email = email;
+            userObj.avatar = avatar;
+
+            this.addCurrentUser(userObj);
+        }
     }
 
     getActionsPermissionsByGroup(group: string): string[] {
