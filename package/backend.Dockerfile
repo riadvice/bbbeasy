@@ -65,5 +65,7 @@ COPY . /var/www/hivelvet
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/hivelvet
+RUN composer install -o --no-dev
 
+EXPOSE 9000
 CMD ["php-fpm"]

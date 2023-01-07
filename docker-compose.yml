@@ -1,39 +1,57 @@
 version: "3.8"
 
 networks:
-    hivelvet-network:
-        ipam:
-            config:
-                - subnet: 172.55.0.0/24
+  hivelvet-network:
+    ipam:
+      config:
+        - subnet: 172.55.0.0/24
 
 services:
-   webserver:
-        restart: always
-        image: nginx:1.23.2-alpine
-        container_name: hv_nginx
-        ports:
-            - "80:80"
-            - "443:443"
-        networks:
-            hivelvet-network:
-                ipv4_address: 172.55.0.10
-   #installer:
-   #webapp:
-   #backend:
-   db:
-        restart: always
-        image: perconalab/percona-distribution-postgresql:15.1
-        container_name: hv_db
-        environment:
-            POSTGRES_PASSWORD: hv
-        networks:
-            hivelvet-network:
-                ipv4_address: 172.55.0.50
+  webserver:
+    restart: always
+    image: nginx:1.23.2-alpine
+    container_name: hv_nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      hivelvet-network:
+        ipv4_address: 172.55.0.10
+    volumes:
+      - hivelvet-backend-repo:/var/www/hivelvet
+      - ./docker/site_backend.conf:/etc/nginx/conf.d/site_backend.conf:ro
+  backend:
+    restart: always
+    image: riadvice/hivelvet-backend
+    container_name: hv_backend
+    ports:
+      - "9000:9000"
+    networks:
+      hivelvet-network:
+        ipv4_address: 172.55.0.20
+    volumes:
+      - hivelvet-backend-repo:/var/www/hivelvet
+      - ./docker/php.ini:/usr/local/etc/php/conf.d/custom.ini:ro
+      - ./docker/www-hivelvet.conf:/usr/local/etc/php-fpm.d/www-hivelvet.conf:ro
+  #installer:
+  #webapp:
+  db:
+    restart: always
+    image: perconalab/percona-distribution-postgresql:15.1
+    container_name: hv_db
+    environment:
+      POSTGRES_PASSWORD: hv
+    networks:
+      hivelvet-network:
+        ipv4_address: 172.55.0.50
 
-   cache:
-        restart: always
-        image: redis:7.0.5-alpine
-        container_name: hv_cache
-        networks:
-            hivelvet-network:
-                ipv4_address: 172.55.0.60
+  cache:
+    restart: always
+    image: redis:7.0.5-alpine
+    container_name: hv_cache
+    networks:
+      hivelvet-network:
+        ipv4_address: 172.55.0.60
+
+volumes:
+  hivelvet-backend-repo:
