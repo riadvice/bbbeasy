@@ -38,6 +38,15 @@ sudo curl https://rclone.org/install.sh | sudo bash
 info "Install Redis for caching"
 sudo apt-get install -y redis-server
 
+info "Install Docker"
+sudo mkdir -p /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+
 info "Install Node.js"
 sudo apt-get install -y gcc g++ make
 sudo apt-get install -y libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
@@ -50,8 +59,7 @@ echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/source
 sudo apt remove cmdtest
 sudo apt update && sudo apt install yarn
 sudo yarn set version berry
-# sudo npm install -g pm2@5 npm@8.3.0 yarn tar@6 svgo@2 uuid@8.3.2
-sudo yarn dlx -p pm2 -p tar -p svgo -p uuid
+sudo npm install -g pm2
 
 info "Install PHP 8.1 with its dependencies"
 sudo apt-get install -y php8.1-curl php8.1-cli php8.1-intl php8.1-redis php8.1-gd php8.1-fpm php8.1-pgsql php8.1-mbstring php8.1-xml php8.1-bcmath php8.1-xdebug
@@ -68,7 +76,8 @@ sudo ln -s /app/vagrant/dev/php-fpm/xdebug.ini /etc/php/8.1/mods-available/xdebu
 echo "Done!"
 
 info "Configure NGINX"
-sudo sed -i 's/user www-data/user vagrant/g' /etc/nginx/nginx.conf
+sudo rm /etc/nginx/nginx.conf
+sudo ln -s /app/vagrant/dev/nginx/nginx.conf /etc/nginx/nginx.conf
 echo "Done!"
 
 info "Enabling site configuration"
