@@ -37,6 +37,8 @@ final class EditTest extends Scenario
     protected $group                                 = 'Action Preset Settings Edit';
 
     /**
+     * @param mixed $f3
+     *
      * @return array
      *
      * @throws \ReflectionException
@@ -54,6 +56,8 @@ final class EditTest extends Scenario
     }
 
     /**
+     * @param mixed $f3
+     *
      * @return array
      *
      * @throws \ReflectionException
@@ -80,6 +84,8 @@ final class EditTest extends Scenario
     }
 
     /**
+     * @param mixed $f3
+     *
      * @return array
      *
      * @throws \ReflectionException

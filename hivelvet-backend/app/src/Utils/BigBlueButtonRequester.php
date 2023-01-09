@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Utils;
 
-use Actions\Base as BaseAction;
 use BigBlueButton\BigBlueButton;
 use Log\LogWriterTrait;
 
@@ -40,52 +39,16 @@ class BigBlueButtonRequester extends BigBlueButton
     protected $f3;
 
     /**
-     * The name of the call api method name.
-     *
-     * @var string
-     */
-    protected $apiCall;
-
-    /**
      * initialize controller.
      */
     public function __construct()
     {
-        BigBlueButton::__construct();
+        BigBlueButton::__construct(
+            $this->f3->get('bbb.shared_secret'),
+            $this->f3->get('bbb.server')
+        );
 
         $this->f3 = \Base::instance();
         $this->initLogger();
-
-        $this->apiCall = basename(\Base::instance()->get('PATH'));
-    }
-
-    /**
-     * @return null|array|bool|false
-     */
-    public function proxyApiRequest(string $path, string $params, string $verb, bool $redirect = false)
-    {
-        $options    = ['method' => $verb];
-        $serverUrl  = $this->f3->get('bbb.server');
-        $bbbBaseUrl = self::BBB_PATH . 'api/';
-
-        $url = $serverUrl . $bbbBaseUrl . $path . '?' . $params;
-
-        if ('POST' === $verb) {
-            $options['content'] = $this->f3->get('BODY');
-            $options['header']  = BaseAction::APPLICATION_XML;
-        }
-
-        $this->logger->info('Forwarding the BigBlueButton request to server.', ['verb' => $verb, 'path' => $path]);
-
-        if ($redirect) {
-            return $this->f3->reroute($url);
-        }
-
-        return \Web::instance()->request($url, $options);
-    }
-
-    public function isValidResponse(array $result): bool
-    {
-        return !empty($result['body']);
     }
 }

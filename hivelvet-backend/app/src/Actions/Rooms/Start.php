@@ -24,13 +24,9 @@ namespace Actions\Rooms;
 
 use Actions\Base as BaseAction;
 use Actions\RequirePrivilegeTrait;
-use BigBlueButton\Core\ApiMethod;
 use BigBlueButton\Parameters\CreateMeetingParameters;
 use BigBlueButton\Parameters\GetMeetingInfoParameters;
 use BigBlueButton\Parameters\JoinMeetingParameters;
-use BigBlueButton\Responses\CreateMeetingResponse;
-use BigBlueButton\Responses\GetMeetingInfoResponse;
-use BigBlueButton\Util\UrlBuilder;
 use Enum\ResponseCode;
 use Models\Room;
 use Utils\BigBlueButtonRequester;
@@ -57,29 +53,25 @@ class Start extends BaseAction
         $room = new Room();
         $room = $room->getById($id);
         if ($room->valid()) {
-            $serverSecret = $this->f3->get('bbb.shared_secret');
-            $serverUrl    = $this->f3->get('bbb.server');
-            $urlBuilder   = new UrlBuilder($serverSecret, $serverUrl);
             $bbbRequester = new BigBlueButtonRequester();
 
             // get room meeting id
             $meetingId = $room->meeting_id;
 
             // call meeting info to check if meeting is running
-            $result = $this->getMeetingInfo($meetingId, $urlBuilder, $bbbRequester);
-            if (null === $result) {
+            $getMeetingInfoResponse = $this->getMeetingInfo($meetingId, $bbbRequester);
+            if (null === $getMeetingInfoResponse) {
                 return;
             }
-            $response = new GetMeetingInfoResponse(new \SimpleXMLElement($result['body']));
 
             $moderatorPw = '';
-            if ($response->success()) {
-                $moderatorPw = $response->getMeeting()->getModeratorPassword();
+            if ($getMeetingInfoResponse->success()) {
+                $moderatorPw = $getMeetingInfoResponse->getMeeting()->getModeratorPassword();
             } else {
                 // meeting not found
-                if ('notFound' === $response->getMessageKey()) {
+                if ('notFound' === $getMeetingInfoResponse->getMessageKey()) {
                     // create new meeting with the same meetingId
-                    $createResult = $this->createMeeting($meetingId, $urlBuilder, $bbbRequester);
+                    $createResult = $this->createMeeting($meetingId, $bbbRequester);
                     if (null === $createResult) {
                         return;
                     }
@@ -87,68 +79,56 @@ class Start extends BaseAction
                 }
             }
 
-            $this->joinMeeting($meetingId, $moderatorPw, $urlBuilder, $bbbRequester);
+            $this->joinMeeting($meetingId, $moderatorPw, $bbbRequester);
         } else {
             $this->logger->error($errorMessage);
             $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
         }
     }
 
-    public function getMeetingInfo(string $meetingId, UrlBuilder $urlBuilder, BigBlueButtonRequester $bbbRequester)
+    public function getMeetingInfo(string $meetingId, BigBlueButtonRequester $bbbRequester)
     {
-        $getInfosParams     = new GetMeetingInfoParameters($meetingId);
-        $getInfosQuery      = $getInfosParams->getHTTPQuery();
-        $getInfosBuildQuery = $urlBuilder->buildQs(ApiMethod::GET_MEETING_INFO, $getInfosQuery);
+        $getInfosParams      = new GetMeetingInfoParameters($meetingId);
+        $meetingInfoResponse = $bbbRequester->getMeetingInfo($getInfosParams);
         $this->logger->info('Received request to fetch meeting info.', ['meetingID' => $meetingId]);
-        $result = $bbbRequester->proxyApiRequest(ApiMethod::GET_MEETING_INFO, $getInfosBuildQuery, 'GET');
-        if (!$bbbRequester->isValidResponse($result)) {
+        if (!$meetingInfoResponse->success()) {
             $this->logger->error('Could not fetch a meeting due to an error.');
-            $this->renderXmlString($result);
+            $this->renderXmlString($meetingInfoResponse->getRawXml());
 
             return null;
         }
         $this->logger->info('Meeting info successfully fetched from server.', ['meetingID' => $meetingId]);
 
-        return $result;
+        return $meetingInfoResponse;
     }
 
-    public function createMeeting(string $meetingId, UrlBuilder $urlBuilder, BigBlueButtonRequester $bbbRequester)
+    public function createMeeting(string $meetingId, BigBlueButtonRequester $bbbRequester)
     {
         $createParams = new CreateMeetingParameters($meetingId, 'meeting-' . $meetingId);
         $createParams->setModeratorPassword(DataUtils::generateRandomString());
         $createParams->setAttendeePassword(DataUtils::generateRandomString());
+        // @todo : set later via presets
         $createParams->setRecord('true');
-        $createQuery      = $createParams->getHTTPQuery();
-        $createBuildQuery = $urlBuilder->buildQs(ApiMethod::CREATE, $createQuery);
 
         $this->logger->info('Received request to create a new meeting.', ['meetingID' => $meetingId]);
-        $result = $bbbRequester->proxyApiRequest(ApiMethod::CREATE, $createBuildQuery, 'POST');
-        if (!$bbbRequester->isValidResponse($result)) {
-            $this->logger->error('Could not create a meeting due to an error.');
-            $this->renderXmlString($result);
+        $createMeetingResponse = $bbbRequester->createMeeting($createParams);
+        if ($createMeetingResponse->failed()) {
+            $this->logger->warning('Meeting could not be created.');
+            $this->renderXmlString($createMeetingResponse->getRawXml());
 
             return null;
         }
-        $response = new CreateMeetingResponse(new \SimpleXMLElement($result['body']));
-        if ($response->failed()) {
-            $this->logger->warning('Meeting could be created.');
-            $this->renderXmlString($result['body']);
-
-            return null;
-        }
-        $this->logger->info('Meeting successfully created.', ['meetingID' => $meetingId, 'internal_meeting_id' => $response->getInternalMeetingId()]);
+        $this->logger->info('Meeting successfully created.', ['meetingID' => $meetingId, 'internal_meeting_id' => $createMeetingResponse->getInternalMeetingId()]);
 
         return $createParams->getModeratorPassword();
     }
 
-    public function joinMeeting(string $meetingId, string $moderatorPw, UrlBuilder $urlBuilder, BigBlueButtonRequester $bbbRequester): void
+    public function joinMeeting(string $meetingId, string $moderatorPw, BigBlueButtonRequester $bbbRequester): void
     {
         $joinParams = new JoinMeetingParameters($meetingId, $this->session->get('user.username'), $moderatorPw);
         $joinParams->setRedirect('true');
-        $joinQuery      = $joinParams->getHTTPQuery();
-        $joinBuildQuery = $urlBuilder->buildQs(ApiMethod::JOIN, $joinQuery);
 
         $this->logger->info('Meeting join request is going to redirect to the web client.', ['meetingID' => $meetingId]);
-        $bbbRequester->proxyApiRequest(ApiMethod::JOIN, $joinBuildQuery, 'GET', true);
+        $this->f3->reroute($bbbRequester->getJoinMeetingURL($joinParams));
     }
 }
