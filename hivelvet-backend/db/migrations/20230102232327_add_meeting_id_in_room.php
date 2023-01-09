@@ -20,33 +20,22 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Fake;
+use Phinx\Migration\AbstractMigration;
 
-use Faker\Factory as Faker;
-use Models\Preset;
-use Models\Room;
-use Models\User;
-
-class RoomFaker
+final class AddMeetingIdInRoom extends AbstractMigration
 {
-    private static array $storage = [];
-
-    public static function create(User $user, Preset $preset, $storageName = null)
+    public function up(): void
     {
-        $faker            = Faker::create();
-        $room             = new Room();
-        $room->name       = $faker->name;
-        $room->short_link = $faker->url;
-        $room->preset_id  = $preset->id;
-        $room->user_id    = $user->id;
-        $room->meeting_id = $faker->randomNumber();
+        $table = $this->table('rooms');
+        $table->addColumn('meeting_id', 'string', ['limit' => 32, 'null' => false])
+            ->addIndex('meeting_id', ['unique' => true, 'name' => 'idx_rooms_meeting_id'])
+            ->save()
+        ;
+    }
 
-        $room->save();
-
-        if (null !== $storageName) {
-            self::$storage[$storageName] = $room;
-        }
-
-        return $room;
+    public function down(): void
+    {
+        $table = $this->table('rooms');
+        $table->removeColumn('meeting_id')->save();
     }
 }

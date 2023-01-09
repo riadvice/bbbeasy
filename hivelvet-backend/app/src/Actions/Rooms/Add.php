@@ -31,6 +31,7 @@ use Models\Room;
 use Models\RoomLabel;
 use Models\User;
 use Respect\Validation\Validator;
+use Utils\DataUtils;
 use Validation\DataChecker;
 
 /**
@@ -73,8 +74,8 @@ class Add extends BaseAction
                     $room->short_link = $form['shortlink'];
                     $room->user_id    = $userId;
                     $room->preset_id  = $form['preset'];
-
-                    $room->labels = $form['labels'];
+                    $room->labels     = $form['labels'];
+                    $room->meeting_id = DataUtils::generateRandomString();
 
                     if ($checkRoom->nameExists($room->name, $userId)) {
                         $this->logger->error($errorMessage, ['error' => 'Name already exists']);
@@ -83,8 +84,12 @@ class Add extends BaseAction
                         $this->logger->error($errorMessage, ['error' => 'Room Link already exists']);
                         $this->renderJson(['errors' => ['short_link' => 'Room link already exists']], ResponseCode::HTTP_PRECONDITION_FAILED);
                     } else {
+                        while ($checkRoom->meetingIdExists($room->meeting_id)) {
+                            $room->meeting_id = DataUtils::generateRandomString();
+                        }
+
                         try {
-                            $result = $room->save();
+                            $room->save();
                         } catch (\Exception $e) {
                             $this->logger->error($errorMessage, ['error' => $e->getMessage()]);
                             $this->renderJson(['errors' => $e->getMessage()], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);

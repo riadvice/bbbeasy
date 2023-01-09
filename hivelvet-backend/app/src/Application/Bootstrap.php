@@ -182,12 +182,11 @@ class Bootstrap extends Boot
     protected function getRouteByGroupAndAction(string $group, string $action): string
     {
         $method = match ($action) {
-            'add'     => 'POST',
+            'add', 'start' => 'POST',
             'edit'    => 'PUT',
             'delete'  => 'DELETE',
-            'index'   => 'GET',
             'collect' => 'GET|POST',
-            default   => '',
+            default   => 'GET',
         };
         if (str_contains($action, 'edit')) {
             $method = 'PUT';
