@@ -148,7 +148,7 @@ class Bootstrap extends Boot
         $this->f3->config('config/assets.ini');
 
         // enable cors to allow cross-origin requests from frontend react client
-        header('Access-Control-Allow-Origin: http://hivelvet.test:3300');
+        header('Access-Control-Allow-Origin: ' . $this->f3->get('webapps.allowed'));
         header('Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE');
         header('Access-Control-Allow-Headers: Content-Type, Origin, Authorization, X-Authorization, Accept, Accept-Language, Access-Control-Request-Method');
         header('Access-Control-Allow-Credentials: true');
