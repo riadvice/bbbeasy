@@ -29,8 +29,6 @@ class BigBlueButtonRequester extends BigBlueButton
 {
     use LogWriterTrait;
 
-    private const BBB_PATH = '/bigbluebutton/';
-
     /**
      * f3 instance.
      *

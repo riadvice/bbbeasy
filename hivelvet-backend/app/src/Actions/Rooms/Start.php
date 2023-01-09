@@ -118,7 +118,10 @@ class Start extends BaseAction
 
             return null;
         }
-        $this->logger->info('Meeting successfully created.', ['meetingID' => $meetingId, 'internal_meeting_id' => $createMeetingResponse->getInternalMeetingId()]);
+        $this->logger->info(
+            'Meeting successfully created.',
+            ['meetingID' => $meetingId, 'internal_meeting_id' => $createMeetingResponse->getInternalMeetingId()]
+        );
 
         return $createParams->getModeratorPassword();
     }
@@ -128,7 +131,10 @@ class Start extends BaseAction
         $joinParams = new JoinMeetingParameters($meetingId, $this->session->get('user.username'), $moderatorPw);
         $joinParams->setRedirect('true');
 
-        $this->logger->info('Meeting join request is going to redirect to the web client.', ['meetingID' => $meetingId]);
+        $this->logger->info(
+            'Meeting join request is going to redirect to the web client.',
+            ['meetingID' => $meetingId]
+        );
         $this->f3->reroute($bbbRequester->getJoinMeetingURL($joinParams));
     }
 }
