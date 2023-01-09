@@ -1585,21 +1585,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@craco/craco@npm:^6.4.3":
-  version: 6.4.5
-  resolution: "@craco/craco@npm:6.4.5"
+"@craco/craco@npm:^7.0.0":
+  version: 7.0.0
+  resolution: "@craco/craco@npm:7.0.0"
   dependencies:
+    autoprefixer: ^10.4.12
     cosmiconfig: ^7.0.1
     cosmiconfig-typescript-loader: ^1.0.0
-    cross-spawn: ^7.0.0
-    lodash: ^4.17.15
-    semver: ^7.3.2
-    webpack-merge: ^4.2.2
+    cross-spawn: ^7.0.3
+    lodash: ^4.17.21
+    semver: ^7.3.7
+    webpack-merge: ^5.8.0
   peerDependencies:
-    react-scripts: ^4.0.0
+    react-scripts: ^5.0.0
   bin:
-    craco: bin/craco.js
-  checksum: 7a8865fee9ab670a8fc6771971e6ab53ab6fb536feec414d9a69a09008e2e2437f2133aa70f2f7ffd3748af448d43f42007dc325b1c7ab0648ef5fc9d6a9f61c
+    craco: dist/bin/craco.js
+  checksum: d8371d5508a586ea00070d66010e632c8dab2761c2dd51163003e5b4e62e044f5931b081c3d19f02eea187fd970f9ddffeeaefcae004962e63286682e41e86b1
   languageName: node
   linkType: hard
 
@@ -4792,7 +4793,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"autoprefixer@npm:^10.4.13":
+"autoprefixer@npm:^10.4.12, autoprefixer@npm:^10.4.13":
   version: 10.4.13
   resolution: "autoprefixer@npm:10.4.13"
   dependencies:
@@ -5893,6 +5894,17 @@ __metadata:
     strip-ansi: ^6.0.0
     wrap-ansi: ^7.0.0
   checksum: ce2e8f578a4813806788ac399b9e866297740eecd4ad1823c27fd344d78b22c5f8597d548adbcc46f0573e43e21e751f39446c5a5e804a12aace402b7a315d7f
+  languageName: node
+  linkType: hard
+
+"clone-deep@npm:^4.0.1":
+  version: 4.0.1
+  resolution: "clone-deep@npm:4.0.1"
+  dependencies:
+    is-plain-object: ^2.0.4
+    kind-of: ^6.0.2
+    shallow-clone: ^3.0.0
+  checksum: 770f912fe4e6f21873c8e8fbb1e99134db3b93da32df271d00589ea4a29dbe83a9808a322c93f3bcaf8584b8b4fa6fc269fc8032efbaa6728e0c9886c74467d2
   languageName: node
   linkType: hard
 
@@ -9414,7 +9426,7 @@ __metadata:
     "@babel/plugin-proposal-private-methods": ^7.18.6
     "@babel/plugin-proposal-private-property-in-object": ^7.20.5
     "@babel/preset-env": ^7.19.1
-    "@craco/craco": ^6.4.3
+    "@craco/craco": ^7.0.0
     "@crowdin/cli": 3
     "@cypress/code-coverage": ^3.9.12
     "@hot-loader/react-dom": ^17.0.2
@@ -17165,6 +17177,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"shallow-clone@npm:^3.0.0":
+  version: 3.0.1
+  resolution: "shallow-clone@npm:3.0.1"
+  dependencies:
+    kind-of: ^6.0.2
+  checksum: 39b3dd9630a774aba288a680e7d2901f5c0eae7b8387fc5c8ea559918b29b3da144b7bdb990d7ccd9e11be05508ac9e459ce51d01fd65e583282f6ffafcba2e7
+  languageName: node
+  linkType: hard
+
 "shallowequal@npm:^1.1.0":
   version: 1.1.0
   resolution: "shallowequal@npm:1.1.0"
@@ -19128,6 +19149,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"webpack-merge@npm:^5.8.0":
+  version: 5.8.0
+  resolution: "webpack-merge@npm:5.8.0"
+  dependencies:
+    clone-deep: ^4.0.1
+    wildcard: ^2.0.0
+  checksum: 88786ab91013f1bd2a683834ff381be81c245a4b0f63304a5103e90f6653f44dab496a0768287f8531761f8ad957d1f9f3ccb2cb55df0de1bd9ee343e079da26
+  languageName: node
+  linkType: hard
+
 "webpack-sources@npm:^1.4.3":
   version: 1.4.3
   resolution: "webpack-sources@npm:1.4.3"
@@ -19383,6 +19414,13 @@ __metadata:
   dependencies:
     string-width: ^5.0.1
   checksum: 64c48cf27171221be5f86fc54b94dd29879165bdff1a7aa92dde723d9a8c99fb108312768a5d62c8c2b80b701fa27bbd36a1ddc58367585cd45c0db7920a0cba
+  languageName: node
+  linkType: hard
+
+"wildcard@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "wildcard@npm:2.0.0"
+  checksum: 1f4fe4c03dfc492777c60f795bbba597ac78794f1b650d68f398fbee9adb765367c516ebd4220889b6a81e9626e7228bbe0d66237abb311573c2ee1f4902a5ad
   languageName: node
   linkType: hard
 
