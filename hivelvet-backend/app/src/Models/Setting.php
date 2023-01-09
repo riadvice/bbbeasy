@@ -72,13 +72,13 @@ class Setting extends BaseModel
 
         if ($defaultSettings->valid()) {
             $result = [
-                'company_name'    => $defaultSettings->company_name,
-                'company_website' => $defaultSettings->company_website,
-                'platform_name'   => $defaultSettings->platform_name,
+                'company_name'     => $defaultSettings->company_name,
+                'company_website'  => $defaultSettings->company_website,
+                'platform_name'    => $defaultSettings->platform_name,
 
-                'terms_use'      => $defaultSettings->terms_use,
-                'privacy_policy' => $defaultSettings->privacy_policy,
-                'logo'           => $defaultSettings->logo,
+                'terms_use'        => $defaultSettings->terms_use,
+                'privacy_policy'   => $defaultSettings->privacy_policy,
+                'logo'             => $defaultSettings->logo,
 
                 'primary_color'    => $defaultSettings->primary_color,
                 'secondary_color'  => $defaultSettings->secondary_color,
