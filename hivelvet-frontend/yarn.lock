@@ -9484,7 +9484,7 @@ __metadata:
     react-copy-to-clipboard: ^5.1.0
     react-dom: ^17.0.2
     react-highlight-words: ^0.18.0
-    react-hook-form: ^7.41.3
+    react-hook-form: ^7.41.5
     react-hot-loader: ^4.13.0
     react-i18next: ^12.1.1
     react-intl: ^6.2.2
@@ -15875,12 +15875,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-hook-form@npm:^7.41.3":
-  version: 7.41.3
-  resolution: "react-hook-form@npm:7.41.3"
+"react-hook-form@npm:^7.41.5":
+  version: 7.41.5
+  resolution: "react-hook-form@npm:7.41.5"
   peerDependencies:
     react: ^16.8.0 || ^17 || ^18
-  checksum: 25223f3001cbd1b4e04e20144b1f71b090925feaf2f1996f268c2beb17b190562c8d80ad2a786c7feafb45eae7e1284fc42f5f886eaf7034a9532457cc9adacd
+  checksum: ca28b2deb4fdbf120ff726f4d66366711725df03b677f52b2577a69bf761e409644bf06b8342dbc2dd5cdfdb05efecdbc2361799f405a35d65911fd0b4d8bdde
   languageName: node
   linkType: hard
 
