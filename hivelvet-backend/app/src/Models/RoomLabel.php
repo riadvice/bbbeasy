@@ -36,7 +36,7 @@ use Models\Base as BaseModel;
 class RoomLabel extends BaseModel
 {
     protected $fieldConf = [
-        'room_id'  => [
+        'room_id' => [
             'belongs-to-one' => Room::class,
         ],
         'label_id' => [

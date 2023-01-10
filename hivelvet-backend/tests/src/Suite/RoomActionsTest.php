@@ -24,6 +24,8 @@ namespace Suite;
 
 use Actions\Rooms\AddTest;
 use Actions\Rooms\CollectTest;
+use Actions\Rooms\EditTest;
+use Actions\Rooms\StartTest;
 use Test\TestGroup;
 
 /**
@@ -33,7 +35,7 @@ use Test\TestGroup;
  */
 final class RoomActionsTest extends TestGroup
 {
-    protected $classes = [AddTest::class, CollectTest::class];
+    protected $classes = [AddTest::class, EditTest::class, CollectTest::class, StartTest::class];
 
     protected $quiet = true;
 }

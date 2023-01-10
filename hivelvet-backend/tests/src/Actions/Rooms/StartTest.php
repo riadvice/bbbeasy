@@ -32,10 +32,10 @@ use Test\Scenario;
  *
  * @coversNothing
  */
-final class CollectTest extends Scenario
+final class StartTest extends Scenario
 {
-    final protected const COLLECT_ROOMS_ROUTE = 'GET /rooms/';
-    protected $group                          = 'Action Room Collect Rooms';
+    final protected const START_ROOM_ROUTE = 'POST /rooms/';
+    protected $group                       = 'Action Room Start';
 
     /**
      * @param mixed $f3
@@ -44,18 +44,35 @@ final class CollectTest extends Scenario
      *
      * @throws \ReflectionException
      */
-    public function testCollect($f3)
+    public function testNonExistingRoom($f3)
+    {
+        $test = $this->newTest();
+
+        $f3->mock(self::START_ROOM_ROUTE . 404, null, null);
+        $test->expect($this->compareTemplateToResponse('not_found_error.json'), 'Start meeting for non existing room with id "404" show an error');
+
+        return $test->results();
+    }
+
+    /**
+     * @param mixed $f3
+     *
+     * @return array
+     *
+     * @throws \ReflectionException
+     */
+    public function testValidRoom($f3)
     {
         $test = $this->newTest();
 
         $user   = UserFaker::create();
         $preset = PresetFaker::create($user);
         $room   = RoomFaker::create($user, $preset);
-        $test->expect(0 !== $room->id, 'Room mocked & saved to the database');
 
-        $f3->mock(self::COLLECT_ROOMS_ROUTE . $user->id);
+        $f3->mock(self::START_ROOM_ROUTE . $room->id, null, null);
+
         json_decode($f3->get('RESPONSE'));
-        $test->expect(JSON_ERROR_NONE === json_last_error(), 'Collect rooms of user with id "' . $user->id . '"');
+        $test->expect(JSON_ERROR_NONE === json_last_error(), 'Start room meeting with id "' . $room->id . '" and meeting_id "' . $room->meeting_id . '"');
 
         return $test->results();
     }

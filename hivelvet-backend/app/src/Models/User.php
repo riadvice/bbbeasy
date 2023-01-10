@@ -216,7 +216,7 @@ class User extends BaseModel
         return $this->saveDefaultPreset();
     }
 
-    public function saveDefaultPreset(): bool|string
+    public function saveDefaultPreset($returnPreset = null): bool|string|Preset
     {
         $preset          = new Preset();
         $preset->name    = 'default';
@@ -225,6 +225,10 @@ class User extends BaseModel
         $presetErrorMessage   = 'Default preset could not be added';
         $presetSuccessMessage = 'Default preset successfully added';
         $result               = $preset->addDefaultSettings($presetSuccessMessage, $presetErrorMessage);
+
+        if (true === $returnPreset) {
+            return $preset;
+        }
 
         return $result ? true : $result;
     }

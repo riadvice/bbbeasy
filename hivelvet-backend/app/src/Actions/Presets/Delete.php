@@ -46,7 +46,7 @@ class Delete extends DeleteAction
                     $room  = new Room();
                     $rooms = $room->collectAllByPresetId($presetId);
                     foreach ($rooms as $r) {
-                        $defaultpreset = $preset->getDefaultOneByUserId($r['user_id'], 'default');
+                        $defaultpreset = $preset->getDefaultOneByUserId($r['user_id']);
                         if (!$defaultpreset->dry()) {
                             $room->load(['id = ?', $r['id']]);
                             $room->preset_id = $defaultpreset->id;
