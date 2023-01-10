@@ -58,6 +58,11 @@ class Room extends BaseModel
         return $this->load(['meeting_id = ?', $meetingId]);
     }
 
+    public function shortlinkExists($shortlink)
+    {
+        return $this->load(['short_link = ?', $shortlink]);
+    }
+
     /**
      * Get room record by id value.
      *
@@ -80,11 +85,6 @@ class Room extends BaseModel
     public function collectAllByPresetId($presetId): array
     {
         return $this->db->exec('SELECT id, name, short_link, preset_id ,user_id FROM rooms where preset_id =?', $presetId);
-    }
-
-    public function shortlinkExists($shortlink)
-    {
-        return $this->load(['short_link = ?', $shortlink]);
     }
 
     public function collectAll(): array

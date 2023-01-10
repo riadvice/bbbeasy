@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Models;
 
 use Fake\PresetFaker;
-use Fake\ResetPasswordTokenFaker;
 use Fake\UserFaker;
 use Faker\Factory as Faker;
 use Test\Scenario;
@@ -40,11 +39,9 @@ final class PresetTest extends Scenario
     protected $group = 'Preset Model';
 
     /**
-     * @param \Base $f3
-     *
      * @return array
      */
-    public function testPresetCreation($f3)
+    public function testPresetCreation()
     {
         $test            = $this->newTest();
         $faker           = Faker::create();
@@ -60,11 +57,9 @@ final class PresetTest extends Scenario
     }
 
     /**
-     * @param Base $f3
-     *
      * @return array
      */
-    public function testGetById($f3)
+    public function testGetById()
     {
         $test   = $this->newTest();
         $preset = PresetFaker::create(UserFaker::create());
@@ -76,11 +71,9 @@ final class PresetTest extends Scenario
     }
 
     /**
-     * @param Base $f3
-     *
      * @return array
      */
-    public function testNameExists($f3)
+    public function testNameExists()
     {
         $test   = $this->newTest();
         $preset = PresetFaker::create(UserFaker::create());
@@ -92,11 +85,9 @@ final class PresetTest extends Scenario
     }
 
     /**
-     * @param Base $f3
-     *
      * @return array
      */
-    public function testNameFormatting($f3)
+    public function testNameFormatting()
     {
         $test            = $this->newTest();
         $user            = UserFaker::create();
@@ -112,11 +103,9 @@ final class PresetTest extends Scenario
     }
 
     /**
-     * @param Base $f3
-     *
      * @return array
      */
-    public function testGetMyPresetInfos($f3)
+    public function testGetMyPresetInfos()
     {
         $test     = $this->newTest();
         $preset   = PresetFaker::create(UserFaker::create());
@@ -136,16 +125,32 @@ final class PresetTest extends Scenario
     }
 
     /**
-     * @param Base $f3
-     *
      * @return array
+     *
+     * @throws \ReflectionException
      */
-    public function testCollectAllByUserId($f3)
+    public function testGetDefaultOneByUserId()
+    {
+        $test       = $this->newTest();
+        $preset     = new Preset(\Registry::get('db'));
+        $user       = UserFaker::create();
+        $userPreset = $user->saveDefaultPreset(true);
+
+        $test->expect($preset->getDefaultOneByUserId($user->id)->id === $userPreset->id, 'getDefaultOneByUserId(' . $user->id . ') found default preset for given user');
+
+        return $test->results();
+    }
+
+    /**
+     * @return array
+     *
+     * @throws \ReflectionException
+     */
+    public function testCollectAllByUserId()
     {
         $test   = $this->newTest();
         $preset = new Preset(\Registry::get('db'));
         $user   = UserFaker::create();
-        // $reset_password_token=ResetPasswordTokenFaker::create();
 
         $preset->erase(['']); // Cleaning the table for test.
 

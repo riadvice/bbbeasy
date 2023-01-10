@@ -28,7 +28,7 @@ use Fake\UserFaker;
 use Test\Scenario;
 
 /**
- * Class UserTest.
+ * Class ResetPasswordTokenTest.
  *
  * @internal
  *

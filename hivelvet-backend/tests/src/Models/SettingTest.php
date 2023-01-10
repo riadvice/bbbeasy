@@ -37,11 +37,9 @@ final class SettingTest extends Scenario
     protected $group = 'Setting Model';
 
     /**
-     * @param \Base $f3
-     *
      * @return array
      */
-    public function testGetAllSettings($f3)
+    public function testGetAllSettings()
     {
         $test    = $this->newTest();
         $setting = new Setting(\Registry::get('db'));
@@ -52,11 +50,9 @@ final class SettingTest extends Scenario
     }
 
     /**
-     * @param \Base $f3
-     *
      * @return array
      */
-    public function testSaveSettings($f3)
+    public function testSaveSettings()
     {
         $test    = $this->newTest();
         $faker   = Faker::create();

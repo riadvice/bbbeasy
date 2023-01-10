@@ -19,6 +19,7 @@
 import { SubCategoryType } from './SubCategoryType';
 
 export type PresetType = {
+    id?: number;
     name: string;
     enabled: boolean;
     subcategories: SubCategoryType[];
