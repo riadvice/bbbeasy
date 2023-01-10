@@ -280,7 +280,7 @@ const Rooms = () => {
                             close={() => {
                                 setIsModalVisible(false);
                             }}
-                            shortlink={'/hv/' + initialAddValues.shortlink}
+                            shortlink={initialAddValues.shortlink}
                             initialAddValues={initialAddValues}
                         />
                     </Paragraph>
