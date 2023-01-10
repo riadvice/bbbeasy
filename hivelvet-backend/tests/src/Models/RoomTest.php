@@ -42,11 +42,9 @@ final class RoomTest extends Scenario
     protected $group = 'Room Model';
 
     /**
-     * @param mixed $f3
-     *
      * @return array
      */
-    public function testRoomCreation($f3)
+    public function testRoomCreation()
     {
         $test             = $this->newTest();
         $faker            = Faker::create();
@@ -65,25 +63,41 @@ final class RoomTest extends Scenario
         return $test->results();
     }
 
-        /**
-         * @return array
-         * */
-        public function testNameExists()
-        {
-            $test   = $this->newTest();
-            $user   = UserFaker::create();
-            $preset = PresetFaker::create($user);
-            $room   = RoomFaker::create($user, $preset);
+    /**
+     * @return array
+     */
+    public function testNameExists()
+    {
+        $test   = $this->newTest();
+        $user   = UserFaker::create();
+        $preset = PresetFaker::create($user);
+        $room   = RoomFaker::create($user, $preset);
 
-            $test->expect($room->nameExists($room->name, $user->id), 'nameExists(' . $room->name . ') exists');
-            $test->expect(!$room->nameExists('404', $user->id), 'nameExists("404") does not exist');
+        $test->expect($room->nameExists($room->name, $user->id), 'nameExists(' . $room->name . ') exists');
+        $test->expect(!$room->nameExists('404', $user->id), 'nameExists("404") does not exist');
 
-            return $test->results();
-        }
+        return $test->results();
+    }
 
     /**
      * @return array
-     * */
+     */
+    public function testMeetingIdExists()
+    {
+        $test   = $this->newTest();
+        $user   = UserFaker::create();
+        $preset = PresetFaker::create($user);
+        $room   = RoomFaker::create($user, $preset);
+
+        $test->expect($room->meetingIdExists($room->meeting_id), 'meetingIdExists(' . $room->meeting_id . ') exists');
+        $test->expect(!$room->meetingIdExists('404'), 'meetingIdExists("404") does not exist');
+
+        return $test->results();
+    }
+
+    /**
+     * @return array
+     */
     public function testShortLinkExists()
     {
         $test   = $this->newTest();
@@ -97,24 +111,21 @@ final class RoomTest extends Scenario
         return $test->results();
     }
 
-      /**
-       * @return array
-       */
-      public function testCollectAll()
-      {
-          $test = $this->newTest();
-          $room = new Room(\Registry::get('db'));
-          $room->erase(['']); // Cleaning the table for test.
-          $user   = UserFaker::create();
-          $preset = PresetFaker::create($user);
-          $room1  = RoomFaker::create($user, $preset);
-          $room2  = RoomFaker::create($user, $preset);
-          $data   = [$room1->getRoomInfos($room1->id), $room2->getRoomInfos($room2->id)];
+    /**
+     * @return array
+     */
+    public function testGetById()
+    {
+        $test   = $this->newTest();
+        $user   = UserFaker::create();
+        $preset = PresetFaker::create($user);
+        $room   = RoomFaker::create($user, $preset);
 
-          $test->expect($data === $room->collectAll(), 'collectAll() returned all rooms');
+        $test->expect($room->getById($room->id)->id === $room->id, 'getById(' . $room->id . ') found room');
+        $test->expect(!$room->getById(404)->id, 'getById(404) did not find room');
 
-          return $test->results();
-      }
+        return $test->results();
+    }
 
     /**
      * @return array
@@ -138,19 +149,21 @@ final class RoomTest extends Scenario
     }
 
     /**
-     * @retrun array
+     * @return array
      */
-    public function testgetLabels()
+    public function testGetLabels()
     {
-        $test      = $this->newTest();
-        $user      = UserFaker::create();
-        $preset    = PresetFaker::create($user);
-        $room      = RoomFaker::create($user, $preset);
-        $label1    = LabelFaker::create();
-        $label2    = LabelFaker::create();
-        $roomlabel = RoomLabelFaker::create($room, $label1);
-        $roomlabel = RoomLabelFaker::create($room, $label2);
-        $labels    = [$label1->getLabelInfos(), $label2->getLabelInfos()];
+        $test   = $this->newTest();
+        $user   = UserFaker::create();
+        $preset = PresetFaker::create($user);
+        $room   = RoomFaker::create($user, $preset);
+
+        $label1 = LabelFaker::create();
+        $label2 = LabelFaker::create();
+
+        RoomLabelFaker::create($room, $label1);
+        RoomLabelFaker::create($room, $label2);
+        $labels = [$label1->getLabelInfos(), $label2->getLabelInfos()];
 
         $test->expect($labels === $room->getLabels($room->id), 'getLabels() returned room labels');
 
@@ -158,28 +171,56 @@ final class RoomTest extends Scenario
     }
 
     /**
-     * @param Base $f3
-     *
      * @return array
      */
-    public function testCollectAllByUserId($f3)
+    public function testCollectAll()
     {
         $test      = $this->newTest();
         $room      = new Room(\Registry::get('db'));
-        $user      = UserFaker::create();
-        $preset    = PresetFaker::create($user);
-        $roomlabel = new RoomLabel(\Registry::get('db'));
-        $roomlabel->erase(['']);
+        $roomLabel = new RoomLabel(\Registry::get('db'));
+        $roomLabel->erase(['']);
         $room->erase(['']); // Cleaning the table for test.
 
-        $room1 = RoomFaker::create($user, $preset);
-        $room2 = RoomFaker::create($user, $preset);
+        $user1   = UserFaker::create();
+        $user2   = UserFaker::create();
+        $preset1 = PresetFaker::create($user1);
+        $preset2 = PresetFaker::create($user2);
+
+        $room1 = RoomFaker::create($user1, $preset1);
+        $room2 = RoomFaker::create($user1, $preset1);
+        $room3 = RoomFaker::create($user2, $preset2);
+
+        $data = [$room1->getRoomInfos($room1->id), $room2->getRoomInfos($room2->id), $room3->getRoomInfos($room3->id)];
+        $test->expect($data === $room->collectAll(), 'collectAll() returned all rooms');
 
         $data1 = ['id' => $room1->id, 'name' => $room1->name, 'short_link' => $room1->short_link];
         $data2 = ['id' => $room2->id, 'name' => $room2->name, 'short_link' => $room2->short_link];
         $data  = [$data1, $data2];
+        $test->expect(empty(array_udiff($data, $room->collectAllByUserId($user1->id), fn ($obj1, $obj2) => $obj1 === $obj2)), 'CollectAllByUserId(' . $user1->id . ') returned all rooms for the given user');
 
-        $test->expect(empty(array_udiff($data, $room->collectAllByUserId($user->id), fn ($obj1, $obj2) => $obj1 === $obj2)), 'CollectAllByUserId(' . $user->id . ') returned all rooms for the given user');
+        $data = ['id' => $room3->id, 'name' => $room3->name, 'short_link' => $room3->short_link];
+        $test->expect(empty(array_udiff($data, $room->collectAllByPresetId($preset2->id), fn ($obj1, $obj2) => $obj1 === $obj2)), 'CollectAllByPresetId(' . $preset2->id . ') returned all rooms for the given preset');
+
+        return $test->results();
+    }
+
+    /**
+     * @return array
+     *
+     * @throws \Exception
+     */
+    public function testDeleteRoom()
+    {
+        $test   = $this->newTest();
+        $user   = UserFaker::create();
+        $preset = PresetFaker::create($user);
+        $room   = RoomFaker::create($user, $preset);
+        $roomId = $room->id;
+
+        $test->expect(0 !== $roomId, 'Room with id "' . $roomId . '" mocked & saved to the database');
+
+        $room->delete();
+        $test->expect(!$room->load(['id = ?', $roomId]), 'Room with id "' . $roomId . '" deleted from DB');
 
         return $test->results();
     }

@@ -39,11 +39,9 @@ final class RoleTest extends Scenario
     protected $group = 'Role Model';
 
     /**
-     * @param \Base $f3
-     *
      * @return array
      */
-    public function testGetLecturerRole($f3)
+    public function testGetLecturerRole()
     {
         $test = $this->newTest();
         $role = new Role(\Registry::get('db'));
@@ -61,11 +59,9 @@ final class RoleTest extends Scenario
     }
 
     /**
-     * @param \Base $f3
-     *
      * @return array
      */
-    public function testGetAdministratorRole($f3)
+    public function testGetAdministratorRole()
     {
         $test = $this->newTest();
         $role = new Role(\Registry::get('db'));
@@ -83,11 +79,9 @@ final class RoleTest extends Scenario
     }
 
     /**
-     * @param \Base $f3
-     *
      * @return array
      */
-    public function testRoleCreation($f3)
+    public function testRoleCreation()
     {
         $test       = $this->newTest();
         $faker      = Faker::create();
@@ -101,11 +95,9 @@ final class RoleTest extends Scenario
     }
 
     /**
-     * @param \Base $f3
-     *
      * @return array
      */
-    public function testNameFormatting($f3)
+    public function testNameFormatting()
     {
         $test       = $this->newTest();
         $role       = new Role(\Registry::get('db'));
@@ -119,11 +111,9 @@ final class RoleTest extends Scenario
     }
 
     /**
-     * @param \Base $f3
-     *
      * @return array
      */
-    public function testNameExists($f3)
+    public function testNameExists()
     {
         $test = $this->newTest();
         $role = RoleFaker::create();
@@ -135,13 +125,11 @@ final class RoleTest extends Scenario
     }
 
     /**
-     * @param \Base $f3
-     *
      * @return array
      *
      * @throws \Exception
      */
-    public function testSwitchAllRoleUsers($f3)
+    public function testSwitchAllRoleUsers()
     {
         $test   = $this->newTest();
         $faker  = Faker::create();
@@ -162,11 +150,9 @@ final class RoleTest extends Scenario
     }
 
     /**
-     * @param \Base $f3
-     *
      * @return array
      */
-    public function testCollectAllRolesAndGetAllRoles($f3)
+    public function testCollectAllRolesAndGetAllRoles()
     {
         $test       = $this->newTest();
         $resetToken = new ResetPasswordToken();
@@ -198,11 +184,9 @@ final class RoleTest extends Scenario
     }
 
     /**
-     * @param \Base $f3
-     *
      * @return array
      */
-    public function testGetRoleInfos($f3)
+    public function testGetRoleInfos()
     {
         $test = $this->newTest();
         $role = RoleFaker::create();
@@ -219,11 +203,9 @@ final class RoleTest extends Scenario
     }
 
     /**
-     * @param \Base $f3
-     *
      * @return array
      */
-    public function testGetRoleUsers($f3)
+    public function testGetRoleUsers()
     {
         $test  = $this->newTest();
         $faker = Faker::create();
@@ -242,11 +224,9 @@ final class RoleTest extends Scenario
     }
 
     /**
-     * @param \Base $f3
-     *
      * @return array
      */
-    public function testSaveRoleAndPermissions($f3)
+    public function testSaveRoleAndPermissions()
     {
         $test       = $this->newTest();
         $data       = ['labels' => ['add', 'delete', 'edit']];
@@ -261,13 +241,11 @@ final class RoleTest extends Scenario
     }
 
     /**
-     * @param \Base $f3
-     *
      * @return array
      *
      * @throws \Exception
      */
-    public function testDeleteRole($f3)
+    public function testDeleteRole()
     {
         $test       = $this->newTest();
         $faker      = Faker::create();

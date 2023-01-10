@@ -41,12 +41,13 @@ class BigBlueButtonRequester extends BigBlueButton
      */
     public function __construct()
     {
+        $this->f3 = \Base::instance();
+
         BigBlueButton::__construct(
+            $this->f3->get('bbb.server'),
             $this->f3->get('bbb.shared_secret'),
-            $this->f3->get('bbb.server')
         );
 
-        $this->f3 = \Base::instance();
         $this->initLogger();
     }
 }

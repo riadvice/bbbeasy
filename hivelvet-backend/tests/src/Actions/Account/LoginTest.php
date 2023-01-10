@@ -141,7 +141,7 @@ final class LoginTest extends Scenario
         $f3->mock(self::LOGIN_ROUTE, null, null, $this->postJsonData($data));
         $test->expect(
             $this->compareArrayToResponse([
-                'user'    => [
+                'user' => [
                     'id'          => $user->id,
                     'username'    => $user->username,
                     'email'       => $user->email,

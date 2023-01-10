@@ -96,9 +96,6 @@ const RoomsCol: React.FC<RoomsColProps> = ({ index, room, editable, deleteClickH
 
     const actions = (
         <Menu>
-            <Menu.Item key="1" onClick={() => showRoomDetails()}>
-                <Trans i18nKey={'view'} />
-            </Menu.Item>
             {deleteClickHandler != null && (
                 <Menu.Item key="2" danger onClick={() => handleDelete()}>
                     <Trans i18nKey={'delete'} />
@@ -111,6 +108,7 @@ const RoomsCol: React.FC<RoomsColProps> = ({ index, room, editable, deleteClickH
         <Col key={index} span={5} className="custom-col-5">
             <Card
                 hoverable
+                onClick={() => showRoomDetails()}
                 bordered={false}
                 title={
                     <Space size="middle" direction="vertical" className="room-card-title">
