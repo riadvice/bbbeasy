@@ -131,7 +131,7 @@ const AppSider = () => {
                                         <AddRoomForm
                                             isModalShow={isModalVisibleRoom}
                                             close={() => setIsModalVisibleRoom(false)}
-                                            shortlink={'/hv/' + initialAddValues.shortlink}
+                                            shortlink={initialAddValues.shortlink}
                                             initialAddValues={initialAddValues}
                                         />
                                     )}

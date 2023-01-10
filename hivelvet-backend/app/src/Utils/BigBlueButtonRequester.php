@@ -20,33 +20,33 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Fake;
+namespace Utils;
 
-use Faker\Factory as Faker;
-use Models\Preset;
-use Models\Room;
-use Models\User;
+use BigBlueButton\BigBlueButton;
+use Log\LogWriterTrait;
 
-class RoomFaker
+class BigBlueButtonRequester extends BigBlueButton
 {
-    private static array $storage = [];
+    use LogWriterTrait;
 
-    public static function create(User $user, Preset $preset, $storageName = null)
+    /**
+     * f3 instance.
+     *
+     * @var \Base f3
+     */
+    protected $f3;
+
+    /**
+     * initialize controller.
+     */
+    public function __construct()
     {
-        $faker            = Faker::create();
-        $room             = new Room();
-        $room->name       = $faker->name;
-        $room->short_link = $faker->url;
-        $room->preset_id  = $preset->id;
-        $room->user_id    = $user->id;
-        $room->meeting_id = $faker->randomNumber();
+        BigBlueButton::__construct(
+            $this->f3->get('bbb.shared_secret'),
+            $this->f3->get('bbb.server')
+        );
 
-        $room->save();
-
-        if (null !== $storageName) {
-            self::$storage[$storageName] = $room;
-        }
-
-        return $room;
+        $this->f3 = \Base::instance();
+        $this->initLogger();
     }
 }

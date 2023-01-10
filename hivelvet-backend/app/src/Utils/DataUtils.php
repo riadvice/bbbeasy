@@ -71,4 +71,14 @@ class DataUtils
 
         return "'" . implode("','", $array) . "'";
     }
+
+    /**
+     * @param int $length
+     *
+     * @return string
+     */
+    public static function generateRandomString($length = 8)
+    {
+        return bin2hex(openssl_random_pseudo_bytes($length));
+    }
 }
