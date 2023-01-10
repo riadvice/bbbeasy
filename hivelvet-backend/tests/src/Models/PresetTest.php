@@ -125,11 +125,11 @@ final class PresetTest extends Scenario
     }
 
     /**
-     * @param mixed $f3
-     *
      * @return array
+     *
+     * @throws \ReflectionException
      */
-    public function testGetDefaultOneByUserId($f3)
+    public function testGetDefaultOneByUserId()
     {
         $test       = $this->newTest();
         $preset     = new Preset(\Registry::get('db'));
@@ -142,11 +142,11 @@ final class PresetTest extends Scenario
     }
 
     /**
-     * @param Base $f3
-     *
      * @return array
+     *
+     * @throws \ReflectionException
      */
-    public function testCollectAllByUserId($f3)
+    public function testCollectAllByUserId()
     {
         $test   = $this->newTest();
         $preset = new Preset(\Registry::get('db'));
