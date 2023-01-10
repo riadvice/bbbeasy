@@ -299,5 +299,8 @@
     "edit_room_success": "Salle a été mis a jour avec succés",
 
     "update_profile": "Mettre à jour le profil",
-    "change_avatar": "Changer Avatar"
+    "change_avatar": "Changer Avatar",
+
+    "install_locked_title": "Processus d'installation verrouillé",
+    "install_locked_text": "Désolé, vous n'êtes pas autorisé à accéder à cette page, application déjà installée"
 }

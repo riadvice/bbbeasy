@@ -299,5 +299,8 @@
     "edit_room_success": "Room successfully updated",
 
     "update_profile": "Update Profile",
-    "change_avatar": "Change Avatar"
+    "change_avatar": "Change Avatar",
+
+    "install_locked_title": "Install Process locked",
+    "install_locked_text": "Sorry, you are not authorized to access this page, application already installed"
 }

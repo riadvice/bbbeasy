@@ -60,6 +60,7 @@ usage() {
   echo "# Configuration:"
   echo "#    --version                        Display Hivelvet version"
   echo "#    --selfinstall                    Make hivelvet runnable from anywhere"
+  echo "#    --disableinstaller               Disable Hivelvet installer app"
   echo "#    --enableinstaller                Enable Hivelvet installer app"
   echo "#    --enableweb                      Enable Hivelvet Web app"
   echo "#"
@@ -204,6 +205,18 @@ fix_styles() {
   cd "$BASEDIR/../hivelvet-backend/"
   composer csfix
   echo "✔ PHP Code Style Fixed"
+}
+
+#
+# Disable backend installer app
+#
+disable_installer() {
+  echo "► Disable backend installer app"
+    if [ $(grep -c "system.installed =" "$BASEDIR/../hivelvet-backend/app/config/config-$ENVIRONMENT.ini") != 0 ]; then
+      sed -i '/system.installed = false/ c system.installed = true' "$BASEDIR/../hivelvet-backend/app/config/config-$ENVIRONMENT.ini"
+      printf "%s %s [✔ - DONE]\n"
+    fi
+  echo "✔ Installer app Disabled"
 }
 
 #
@@ -399,6 +412,12 @@ run() {
 
     if [ "$1" = "--selfinstall" -o "$1" = "-selfinstall" -o "$1" = "-si" ]; then
       self_install
+      shift
+      continue
+    fi
+
+    if [ "$1" = "--disableinstaller" -o "$1" = "-disableinstaller" -o "$1" = "-di" ]; then
+      disable_installer
       shift
       continue
     fi

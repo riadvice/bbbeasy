@@ -26,7 +26,7 @@ const { Title, Paragraph } = Typography;
 
 type Props = {
     message: string;
-    successful: boolean;
+    success: boolean;
 };
 
 export const Step1Form = (props: Props) => {
@@ -38,7 +38,7 @@ export const Step1Form = (props: Props) => {
                 </Title>
             </Paragraph>
 
-            {props.message && !props.successful && (
+            {props.message && !props.success && (
                 <Alert
                     type="error"
                     className="alert-error-msg text-center"

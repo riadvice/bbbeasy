@@ -20,7 +20,7 @@ import { axiosInstance } from '../lib/AxiosInstance';
 import { apiRoutes } from '../routing/backend-config';
 
 class InstallService {
-    install(data: object) {
+    install(data?: object) {
         return axiosInstance.post(apiRoutes.INSTALL_URL, {
             data,
         });
