@@ -87,7 +87,7 @@ final class UserTest extends Scenario
             $faker->userName,
             $faker->email,
             $faker->password(8),
-            UserRole::LECTURER_ID,
+            UserRole::ADMINISTRATOR_ID,
             'User successfully added',
             'User could not be added',
         );
@@ -121,6 +121,19 @@ final class UserTest extends Scenario
 
         $test->expect($user->getById($user->id)->id === $user->id, 'getById(' . $user->id . ') found user');
         $test->expect(!$user->getById(404)->id, 'getById(404) did not find user');
+
+        return $test->results();
+    }
+
+    /**
+     * @return array
+     */
+    public function testAdminExists()
+    {
+        $test = $this->newTest();
+        $user = new User(\Registry::get('db'));
+
+        $test->expect(true === $user->adminUserExists(), 'adminUserExists() check if administrator account exists or not');
 
         return $test->results();
     }

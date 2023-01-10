@@ -44,7 +44,8 @@ class Install extends BaseAction
      */
     public function execute($f3, $params): void
     {
-        if (false === $f3->get('system.installed')) {
+        $checkUser = new User();
+        if (!$checkUser->adminUserExists()) {
             $body = $this->getDecodedBody();
             $form = $body['data'];
 

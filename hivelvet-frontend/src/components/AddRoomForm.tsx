@@ -266,7 +266,7 @@ export const AddRoomForm = (props: Props) => {
                                     ]}
                                 >
                                     <Input.Group compact>
-                                        <Input defaultValue={'/hv/'} readOnly style={{ width: '20%'  }} />
+                                        <Input defaultValue={'/hv/'} readOnly style={{ width: '20%' }} />
                                         <Input
                                             style={{ width: '60%', backgroundColor: '#dddfe1' }}
                                             readOnly={readOnly}
@@ -302,7 +302,7 @@ export const AddRoomForm = (props: Props) => {
                                         },
                                     ]}
                                 >
-                                    <Input defaultValue={'/hv/'} readOnly style={{ width: '20%'  }} />
+                                    <Input defaultValue={'/hv/'} readOnly style={{ width: '20%' }} />
                                     <Input
                                         style={{ width: '80%' }}
                                         onChange={handleChange}
