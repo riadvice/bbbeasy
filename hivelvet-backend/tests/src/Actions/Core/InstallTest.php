@@ -22,9 +22,18 @@ declare(strict_types=1);
 
 namespace Actions\Core;
 
+use Enum\UserRole;
 use Fake\UserFaker;
 use Faker\Factory as Faker;
+use Models\Label;
+use Models\Preset;
 use Models\PresetSetting;
+use Models\ResetPasswordToken;
+use Models\Role;
+use Models\RolePermission;
+use Models\Room;
+use Models\RoomLabel;
+use Models\User;
 use Test\Scenario;
 
 /**
@@ -114,7 +123,34 @@ final class InstallTest extends Scenario
      */
     public function testInstallWithEmptyData($f3)
     {
-        $test = $this->newTest();
+        $test      = $this->newTest();
+        $roomLabel = new RoomLabel(\Registry::get('db'));
+        $room      = new Room(\Registry::get('db'));
+        $label     = new Label(\Registry::get('db'));
+
+        $presetSetting = new PresetSetting(\Registry::get('db'));
+        $preset        = new Preset(\Registry::get('db'));
+
+        $rolePermission = new RolePermission(\Registry::get('db'));
+        $role           = new Role(\Registry::get('db'));
+
+        $resetToken = new ResetPasswordToken(\Registry::get('db'));
+        $user       = new User(\Registry::get('db'));
+
+        // Cleaning tables for test.
+        $roomLabel->erase(['']);
+        $room->erase(['']);
+        $label->erase(['']);
+
+        $presetSetting->erase(['']);
+        $preset->erase(['']);
+
+        $rolePermission->erase(['']);
+        $role->erase(['id NOT IN (?,?)', UserRole::ADMINISTRATOR_ID, UserRole::LECTURER_ID]);
+
+        $resetToken->erase(['']);
+        $user->erase(['']);
+
         $data = [
             'data' => [
                 'username'        => '',
@@ -152,9 +188,7 @@ final class InstallTest extends Scenario
         $test          = $this->newTest();
         $faker         = Faker::create();
         $presetSetting = new PresetSetting();
-        $presetSetting->erase(['']); // Cleaning the table for test.
-
-        $data = [
+        $data          = [
             'data' => [
                 'username'        => $faker->userName,
                 'email'           => $faker->email,
