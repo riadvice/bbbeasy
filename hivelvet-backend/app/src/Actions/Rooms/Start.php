@@ -80,7 +80,7 @@ class Start extends BaseAction
                     $preset = new Preset();
                     $p      = $preset->findById($room->getPresetID($room->id)['preset_id']);
                     if ($room->getRoomInfos($room->id)['user_id'] === $this->session->get('user.id') || $p->allowStart($p->getMyPresetInfos($p))) {
-                        $createResult = $this->createMeeting($meetingId, $bbbRequester);
+                        $createResult = $this->createMeeting($meetingId, $bbbRequester, $room->short_link);
 
                         if (null === $createResult) {
                             return;
@@ -122,14 +122,14 @@ class Start extends BaseAction
         return $meetingInfoResponse;
     }
 
-    public function createMeeting(string $meetingId, BigBlueButtonRequester $bbbRequester)
+    public function createMeeting(string $meetingId, BigBlueButtonRequester $bbbRequester, $link)
     {
         $createParams = new CreateMeetingParameters($meetingId, 'meeting-' . $meetingId);
         $createParams->setModeratorPassword(DataUtils::generateRandomString());
         $createParams->setAttendeePassword(DataUtils::generateRandomString());
         // @todo : set later via presets
         $createParams->setRecord('true');
-        $createParams->setModeratorOnlyMessage('to invite someone you can use this link http://hivelvet.test:3300/hv/' . $room->short_link);
+        $createParams->setModeratorOnlyMessage('to invite someone you can use this link http://hivelvet.test:3300/hv/' . $link);
 
         $this->logger->info('Received request to create a new meeting.', ['meetingID' => $meetingId]);
         $createMeetingResponse = $bbbRequester->createMeeting($createParams);
