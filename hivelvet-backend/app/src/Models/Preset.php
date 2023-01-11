@@ -44,6 +44,39 @@ class Preset extends BaseModel
         $this->onset('name', fn ($self, $value) => $self->f3->snakecase($value));
     }
 
+    public function allowStart($preset)
+    {
+        $anyonestart = false;
+
+        foreach ($preset['categories'] as $category) {
+            if ('General' === $category['name'] && $category['enabled']) {
+                foreach ($category['subcategories'] as $subcategory) {
+                    if ('anyone_can_start' === $subcategory['name'] && $subcategory['value']) {
+                        $anyonestart = true;
+                    }
+                }
+            }
+        }
+
+        return $anyonestart;
+    }
+
+    public function joinAllAsModerator($preset)
+    {
+        $joinAsModerator = false;
+        foreach ($preset['categories'] as $category) {
+            if ('General' === $category['name'] && $category['enabled']) {
+                foreach ($category['subcategories'] as $subcategory) {
+                    if ('all_join_as_moderator' === $subcategory['name'] && $subcategory['value']) {
+                        $joinAsModerator = true;
+                    }
+                }
+            }
+        }
+
+        return $joinAsModerator;
+    }
+
     public function collectAllByUserId($userId): array
     {
         $data    = [];

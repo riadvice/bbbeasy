@@ -70,7 +70,7 @@ const RoomsCol: React.FC<RoomsColProps> = ({ index, room, editable, deleteClickH
 
     //view
     const showRoomDetails = () => {
-        navigate('/rooms/details', { state: { room: room, editable: editable } });
+        navigate('/hv/' + room.short_link, { state: { room: room, editable: editable } });
     };
 
     //delete

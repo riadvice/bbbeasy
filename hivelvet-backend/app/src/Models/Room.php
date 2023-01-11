@@ -53,6 +53,20 @@ class Room extends BaseModel
         return $this->load(['lower(name) = ? and user_id = ? and id != ?', mb_strtolower($name), $userId, $id]);
     }
 
+    /**
+     * Get room record by link.
+     *
+     * @param mixed $link
+     *
+     * @return $this
+     */
+    public function getByLink($link): self
+    {
+        $this->load(['short_link = ?', $link]);
+
+        return $this;
+    }
+
     public function meetingIdExists($meetingId)
     {
         return $this->load(['meeting_id = ?', $meetingId]);
@@ -102,16 +116,60 @@ class Room extends BaseModel
 
     public function getRoomInfos($id): array
     {
+        return [
+            'id'         => $this->id,
+            'name'       => $this->name,
+            'preset_id'  => $this->getPresetID($this->id)['preset_id'],
+            'user_id'    => $this->getUserID($this->id)['user_id'],
+            'short_link' => $this->short_link,
+            'labels'     => $this->getLabels($this->id),
+        ];
+        /* if ($id) {
+             $subQuery = 'WHERE r.id = :room_id';
+             $params   = [':room_id' => $id];
+         }
+         $result = $this->db->exec(
+             'SELECT
+                 r.id AS id, r.name, r.short_link,  p.id AS preset_id
+             FROM
+                 rooms r
+             LEFT JOIN presets p ON r.preset_id = p.id ' . $subQuery,
+             $params
+         );
+
+         return $id ? $result[0] : $result;*/
+    }
+
+    public function getPresetID($id)
+    {
         if ($id) {
             $subQuery = 'WHERE r.id = :room_id';
             $params   = [':room_id' => $id];
         }
         $result = $this->db->exec(
             'SELECT
-                r.id AS key, r.name, r.short_link,  p.name AS preset
+                 p.id AS preset_id
             FROM
                 rooms r
             LEFT JOIN presets p ON r.preset_id = p.id ' . $subQuery,
+            $params
+        );
+
+        return $id ? $result[0] : $result;
+    }
+
+    public function getUserID($id)
+    {
+        if ($id) {
+            $subQuery = 'WHERE r.id = :room_id';
+            $params   = [':room_id' => $id];
+        }
+        $result = $this->db->exec(
+            'SELECT
+                 u.id AS user_id
+            FROM
+                rooms r
+            LEFT JOIN users u ON r.user_id = u.id ' . $subQuery,
             $params
         );
 

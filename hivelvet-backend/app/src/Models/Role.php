@@ -42,7 +42,7 @@ class Role extends BaseModel
         'permissions' => [
             'has-many' => [RolePermission::class, 'role_id'],
         ],
-        'users' => [
+        'users'       => [
             'has-many' => [User::class, 'role_id'],
         ],
     ];

@@ -78,7 +78,7 @@ export const webRoutes: IRoute[] = [
         private: true,
     },
     {
-        path: '/rooms/details',
+        path: '/hv/:shortlink',
         element: <RoomDetails />,
         private: true,
     },

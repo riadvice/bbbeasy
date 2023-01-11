@@ -299,5 +299,7 @@
     "edit_room_success": "تم تحديث القاعة بنجاح",
 
     "update_profile": "تحديث الملف الشخصي",
-    "change_avatar": "تغيير الصورة الرمزية"
+    "change_avatar": "تغيير الصورة الرمزية",
+    "join": "انضم",
+    "meeting_not_started": "لم يبدأ الاجتماع بعد"
 }

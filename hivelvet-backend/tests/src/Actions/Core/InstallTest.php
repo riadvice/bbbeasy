@@ -132,7 +132,7 @@ final class InstallTest extends Scenario
                     'accent_color'    => '',
                     'add_color'       => '',
                 ],
-                'presetsConfig' => [],
+                'presetsConfig'   => [],
             ],
         ];
         $f3->mock(self::INSTALL_ROUTE, null, null, $this->postJsonData($data));
@@ -171,7 +171,7 @@ final class InstallTest extends Scenario
                     'accent_color'    => $faker->safeHexColor,
                     'add_color'       => $faker->safeHexColor,
                 ],
-                'presetsConfig' => $presetSetting->getDefaultPresetSettings(true),
+                'presetsConfig'   => $presetSetting->getDefaultPresetSettings(true),
             ],
         ];
         $f3->mock(self::INSTALL_ROUTE, null, null, $this->postJsonData($data));

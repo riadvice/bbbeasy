@@ -299,5 +299,7 @@
     "edit_room_success": "Room successfully updated",
 
     "update_profile": "Update Profile",
-    "change_avatar": "Change Avatar"
+    "change_avatar": "Change Avatar",
+    "join": "Join",
+    "meeting_not_started": "Meeting has not started yet"
 }

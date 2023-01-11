@@ -287,6 +287,7 @@
     "linkedin_share": "Partager sur LinkedIn",
     "email_share": "Envoyer par email",
     "start": "Démarrer",
+    "join": "Rejoindre",
     "room_ppts": "Présentations de la salle",
     "upload": "Télécharger",
     "room_recordings": "Enregistrements de salle",
@@ -299,5 +300,6 @@
     "edit_room_success": "Salle a été mis a jour avec succés",
 
     "update_profile": "Mettre à jour le profil",
-    "change_avatar": "Changer Avatar"
+    "change_avatar": "Changer Avatar",
+    "meeting_not_started": "la réunion n'a pas encore commencé"
 }
