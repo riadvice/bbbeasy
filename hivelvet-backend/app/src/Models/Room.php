@@ -124,20 +124,6 @@ class Room extends BaseModel
             'short_link' => $this->short_link,
             'labels'     => $this->getLabels($this->id),
         ];
-        /* if ($id) {
-             $subQuery = 'WHERE r.id = :room_id';
-             $params   = [':room_id' => $id];
-         }
-         $result = $this->db->exec(
-             'SELECT
-                 r.id AS id, r.name, r.short_link,  p.id AS preset_id
-             FROM
-                 rooms r
-             LEFT JOIN presets p ON r.preset_id = p.id ' . $subQuery,
-             $params
-         );
-
-         return $id ? $result[0] : $result;*/
     }
 
     public function getPresetID($id)

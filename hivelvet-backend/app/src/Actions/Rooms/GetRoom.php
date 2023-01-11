@@ -45,7 +45,7 @@ class GetRoom extends BaseAction
     {
         $room = new Room();
         $data = [];
-        $link = $f3->get('PARAMS.link');
+        $link = $params['link'];
         $room = new Room();
         $room = $room->getByLink($link);
         if (!$room->dry()) {
@@ -54,8 +54,7 @@ class GetRoom extends BaseAction
             $getInfosParams      = new GetMeetingInfoParameters($room->meeting_id);
             $meetingInfoResponse = $bbbRequester->getMeetingInfo($getInfosParams);
             $canstart            = false;
-            if ($meetingInfoResponse->success()) {
-            } else {
+            if (!$meetingInfoResponse->success()) {
                 if ('notFound' === $meetingInfoResponse->getMessageKey()) {
                     $anyonestart = false;
                     $preset      = new Preset();
