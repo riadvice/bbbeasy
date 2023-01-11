@@ -301,5 +301,9 @@
 
     "update_profile": "Mettre à jour le profil",
     "change_avatar": "Changer Avatar",
-    "meeting_not_started": "la réunion n'a pas encore commencé"
+
+    "meeting_not_started": "la réunion n'a pas encore commencé",
+
+    "install_locked_title": "Processus d'installation verrouillé",
+    "install_locked_text": "Désolé, vous n'êtes pas autorisé à accéder à cette page, application déjà installée"
 }

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Models;
 
 use Enum\ResponseCode;
+use Enum\UserRole;
 use Enum\UserStatus;
 use Models\Base as BaseModel;
 
@@ -85,6 +86,14 @@ class User extends BaseModel
         $this->load(['id = ?', $id]);
 
         return $this;
+    }
+
+    /**
+     * Check if admin account already exists.
+     */
+    public function adminUserExists(): bool
+    {
+        return $this->load(['role_id = ?', UserRole::ADMINISTRATOR_ID]);
     }
 
     /**

@@ -24,7 +24,7 @@ import SettingsService from '../services/settings.service';
 import PresetSettingsService from '../services/preset.settings.service';
 import UsersService from '../services/users.service';
 
-import { Steps, Button, Row, Col, Form, Result } from 'antd';
+import { Steps, Button, Row, Col, Form, Result, Spin } from 'antd';
 import DynamicIcon from './DynamicIcon';
 
 import { Step1Form } from './Step1Form';
@@ -87,6 +87,8 @@ const Install = () => {
         presetsConfig: [],
     };
 
+    const [isLoading, setIsLoading] = React.useState<boolean>(true);
+    const [locked, setLocked] = React.useState<boolean>(null);
     const [activeStep, setActiveStep] = React.useState<number>(0);
     const [successful, setSuccessful] = React.useState<boolean>(false);
     const [message, setMessage] = React.useState<string>('');
@@ -100,8 +102,7 @@ const Install = () => {
 
     const [presets, setPresets] = React.useState<PresetType[]>([]);
 
-    useEffect(() => {
-        localStorage.removeItem('user');
+    const getSettings = () => {
         SettingsService.collect_settings()
             .then((response) => {
                 const settings: SettingsType = response.data;
@@ -138,12 +139,35 @@ const Install = () => {
             .catch((error) => {
                 console.log(error);
             });
+    };
+
+    const getPresetSettings = () => {
         PresetSettingsService.collect_preset_settings()
             .then((response) => {
                 setPresets(response.data);
             })
             .catch((error) => {
                 console.log(error);
+            });
+    };
+
+    useEffect(() => {
+        localStorage.removeItem('user');
+
+        InstallService.install()
+            .then(() => {
+                setLocked(false);
+
+                getSettings();
+                getPresetSettings();
+            })
+            .catch((error) => {
+                if (error.response.data.locked) {
+                    setLocked(true);
+                }
+            })
+            .finally(() => {
+                setIsLoading(false);
             });
     }, []);
 
@@ -159,7 +183,7 @@ const Install = () => {
     const steps: stepType[] = [
         {
             title: t('administrator_account'),
-            content: <Step1Form message={message} successful={successful} />,
+            content: <Step1Form message={message} success={message != ''} />,
             button: t('create'),
             span: 8,
             offset: 4,
@@ -202,7 +226,6 @@ const Install = () => {
                     next();
                 })
                 .catch((error) => {
-                    setSuccessful(false);
                     setMessage(error.response.data.message);
                 });
         } else {
@@ -251,8 +274,16 @@ const Install = () => {
     };
 
     return (
-        <Row>
-            {successful ? (
+        <Row justify={isLoading || locked ? 'center' : 'start'}>
+            {isLoading ? (
+                <Spin size="large" className="m-5" />
+            ) : locked ? (
+                <Result
+                    status="403"
+                    title={<Trans i18nKey="install_locked_title" />}
+                    subTitle={<Trans i18nKey="install_locked_text" />}
+                />
+            ) : successful ? (
                 <Col span={10} offset={7} className="section-top">
                     <Result
                         status="success"

@@ -9463,8 +9463,8 @@ __metadata:
     eslint-webpack-plugin: ^3.2.0
     global: ^4.4.0
     history: ^5.3.0
-    husky: 8.0.2
-    i18next: ^22.4.8
+    husky: 8.0.3
+    i18next: ^22.4.9
     istanbul-lib-coverage: ^3.2.0
     lint-staged: ^13.0.3
     lodash: ^4.17.21
@@ -9497,7 +9497,7 @@ __metadata:
     ts-loader: ^9.4.2
     ts-node: ^10.9.1
     typescript: ^4.9.4
-    web-vitals: ^3.1.0
+    web-vitals: ^3.1.1
     webpack: ^5.75.0
     webpackbar: ^5.0.2
     websocket: ^1.0.34
@@ -9763,12 +9763,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"husky@npm:8.0.2":
-  version: 8.0.2
-  resolution: "husky@npm:8.0.2"
+"husky@npm:8.0.3":
+  version: 8.0.3
+  resolution: "husky@npm:8.0.3"
   bin:
     husky: lib/bin.js
-  checksum: e101656fcb56163d610488f186448c78b132626aa427094489d886ce9374955a90274912b0f3a34af3326eaa74977883b032e5f701d7aaf4554daa5a7931be43
+  checksum: 837bc7e4413e58c1f2946d38fb050f5d7324c6f16b0fd66411ffce5703b294bd21429e8ba58711cd331951ee86ed529c5be4f76805959ff668a337dbfa82a1b0
   languageName: node
   linkType: hard
 
@@ -9779,12 +9779,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"i18next@npm:^22.4.8":
-  version: 22.4.8
-  resolution: "i18next@npm:22.4.8"
+"i18next@npm:^22.4.9":
+  version: 22.4.9
+  resolution: "i18next@npm:22.4.9"
   dependencies:
     "@babel/runtime": ^7.20.6
-  checksum: bac5eb763ba6e2e34ff58d52da2ad8ef506d42d0be9efb4abb116d649fef4d6af097a8be1bade3439ff1a1c66c207e661212a1c7caefd405f02a738e37e7bc37
+  checksum: 8cce4aaced4857e006fab2c9d4adb0eb1375829e459076be79d4d3532b1be6342b7003a720e187098f17bb276bea46df8b3fc2cf21f0f3a230bd519243048d1a
   languageName: node
   linkType: hard
 
@@ -19034,10 +19034,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"web-vitals@npm:^3.1.0":
-  version: 3.1.0
-  resolution: "web-vitals@npm:3.1.0"
-  checksum: 867161fd16e22b39720c8da3a5976ab08f414490123d94543b427832354bcdd36c64ff589a2c8de636cbe9593c5121e4a9a804d40b34a6e2b1c4cf275c5ba8e2
+"web-vitals@npm:^3.1.1":
+  version: 3.1.1
+  resolution: "web-vitals@npm:3.1.1"
+  checksum: 26d552d7e0bba470e1426bbf55c3c1a701c683bbde4553791a2c7e1bc3a7b7b29bf66ccf67c74872af3aa39e5668728736b90f8b3fee2910c0c566e7eb1b6096
   languageName: node
   linkType: hard
 
