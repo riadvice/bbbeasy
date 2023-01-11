@@ -30,7 +30,7 @@
     "nette/utils": "^3.1",
     "tracy/tracy": "^2.7",
     "monolog/monolog": "^2.0",
-    "bigbluebutton/bigbluebutton-api-php": "^2.0",
+    "bigbluebutton/bigbluebutton-api-php": "dev-master",
     "robmorgan/phinx": "^0.12",
     "symfony/yaml": "^6.0",
     "linfo/linfo": "^4.0",

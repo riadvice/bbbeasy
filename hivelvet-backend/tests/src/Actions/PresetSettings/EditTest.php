@@ -68,7 +68,7 @@ final class EditTest extends Scenario
 
         $presetSetting = new PresetSetting();
         $data          = [
-            'data' => [
+            'data'     => [
                 ['name' => 'users_join_muted', 'enabled' => false],
                 ['name' => 'moderators_allowed_to_unmute_users', 'enabled' => false],
                 ['name' => 'auto_join', 'enabled' => false],
@@ -96,7 +96,7 @@ final class EditTest extends Scenario
 
         $presetSetting = new PresetSetting();
         $data          = [
-            'data' => [
+            'data'     => [
                 ['name' => 'users_join_muted', 'enabled' => true],
                 ['name' => 'moderators_allowed_to_unmute_users', 'enabled' => false],
                 ['name' => 'auto_join', 'enabled' => false],

@@ -301,6 +301,9 @@
     "update_profile": "Update Profile",
     "change_avatar": "Change Avatar",
 
+    "join": "Join",
+    "meeting_not_started": "Meeting has not started yet",
+
     "install_locked_title": "Install Process locked",
     "install_locked_text": "Sorry, you are not authorized to access this page, application already installed"
 }
