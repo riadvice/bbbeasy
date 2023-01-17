@@ -544,7 +544,7 @@ const RoomDetails = () => {
                                         </Col>
                                     </Row>
                                 </Card>
-                                ):()
+                                
                             </Col>
                             <Col span={8} offset={6}>
                                 <Card bordered={false} size="small" className="room-presentations gray-bg">
