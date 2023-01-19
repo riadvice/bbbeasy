@@ -115,7 +115,7 @@ final class EditTest extends Scenario
         $data   = ['data' => ['name' => $faker->name]];
 
         $f3->mock(self::EDIT_ROOM_ROUTE . $room->id, null, null, $this->postJsonData($data));
-        $test->expect($this->compareArrayToResponse(['result' => 'success', 'room' => $room->getRoomInfos($room->id)]), 'Update existing room with id "' . $room->id . '" using new name "' . $room->name . '" successfully');
+        $test->expect($this->compareArrayToResponse(['result' => 'success', 'room' => $room->getRoomInfos()]), 'Update existing room with id "' . $room->id . '" using new name "' . $room->name . '" successfully');
 
         return $test->results();
     }

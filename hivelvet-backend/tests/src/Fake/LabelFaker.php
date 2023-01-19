@@ -33,7 +33,7 @@ class LabelFaker
     {
         $faker              = Faker::create();
         $label              = new Label();
-        $label->name        = $faker->name;
+        $label->name        = $faker->text(14);
         $label->color       = $faker->safeHexColor;
         $label->description = $faker->text;
 

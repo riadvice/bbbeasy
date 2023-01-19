@@ -38,9 +38,10 @@ use Suite\LabelsActionsTest;
 use Suite\ModelsTest;
 use Suite\PresetsActionsTest;
 use Suite\PresetSettingsActionsTest;
+use Suite\RecordingsActionsTest;
 use Suite\RolesActionsTest;
 use Suite\RolesPermissionsActionsTest;
-use Suite\RoomActionsTest;
+use Suite\RoomsActionsTest;
 use Suite\SettingsActionsTest;
 use Suite\UsersActionsTest;
 use Utils\CliUtils;
@@ -78,7 +79,8 @@ class Statera
             SettingsActionsTest::class,
             PresetSettingsActionsTest::class,
             PresetsActionsTest::class,
-            RoomActionsTest::class,
+            RoomsActionsTest::class,
+            RecordingsActionsTest::class,
             // Always leave CDN test as the last one
             // CdnDistributorTest::class
         ];

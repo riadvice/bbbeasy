@@ -32,11 +32,10 @@ use Test\Scenario;
  *
  * @coversNothing
  */
-final class StartTest extends Scenario
+final class ViewTest extends Scenario
 {
-    final protected const LOGIN_ROUTE      = 'POST /account/login';
-    final protected const START_ROOM_ROUTE = 'POST /rooms/';
-    protected $group                       = 'Action Room Start';
+    final protected const VIEW_ROOM_ROUTE = 'GET /rooms/get/';
+    protected $group                      = 'Action Room View';
 
     /**
      * @param mixed $f3
@@ -45,12 +44,12 @@ final class StartTest extends Scenario
      *
      * @throws \ReflectionException
      */
-    public function testNonExistingRoom($f3)
+    public function testNonExistingLink($f3)
     {
         $test = $this->newTest();
 
-        $f3->mock(self::START_ROOM_ROUTE . 404, null, null);
-        $test->expect($this->compareTemplateToResponse('not_found_error.json'), 'Start meeting for non existing room with id "404" show an error');
+        $f3->mock(self::VIEW_ROOM_ROUTE . 404, null, null);
+        $test->expect($this->compareTemplateToResponse('not_found_error.json'), 'View room with non existing shortLink "404" shown an error');
 
         return $test->results();
     }
@@ -62,16 +61,16 @@ final class StartTest extends Scenario
      *
      * @throws \ReflectionException
      */
-    public function testValidRoom($f3)
+    public function testValidLink($f3)
     {
         $test = $this->newTest();
 
         $loggedUser = new User();
         $loggedUser->load(['id = ?', [$f3->get('SESSION.user.id')]]);
         $preset = PresetFaker::create($loggedUser);
-        $room   = RoomFaker::create($loggedUser, $preset);
-        $f3->mock(self::START_ROOM_ROUTE . $room->id, null, null);
-        $test->expect(null === json_decode($f3->get('RESPONSE')), 'Start room meeting with id "' . $room->id . '" and meeting_id "' . $room->meeting_id . '"');
+        $room   = RoomFaker::create($loggedUser, $preset, 'abcdef-123456');
+        $f3->mock(self::VIEW_ROOM_ROUTE . $room->short_link, null, null);
+        $test->expect($this->compareArrayToResponse(['room' => $room->getRoomInfos()]), 'View room with a valid shortLink');
 
         return $test->results();
     }

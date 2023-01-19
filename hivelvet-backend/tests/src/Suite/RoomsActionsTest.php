@@ -26,6 +26,7 @@ use Actions\Rooms\AddTest;
 use Actions\Rooms\CollectTest;
 use Actions\Rooms\EditTest;
 use Actions\Rooms\StartTest;
+use Actions\Rooms\ViewTest;
 use Test\TestGroup;
 
 /**
@@ -33,9 +34,9 @@ use Test\TestGroup;
  *
  * @coversNothing
  */
-final class RoomActionsTest extends TestGroup
+final class RoomsActionsTest extends TestGroup
 {
-    protected $classes = [AddTest::class, EditTest::class, CollectTest::class, StartTest::class];
+    protected $classes = [AddTest::class, EditTest::class, CollectTest::class, ViewTest::class, StartTest::class];
 
     protected $quiet = true;
 }

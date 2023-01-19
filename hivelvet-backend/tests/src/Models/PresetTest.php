@@ -165,4 +165,20 @@ final class PresetTest extends Scenario
 
         return $test->results();
     }
+
+    /**
+     * @return array
+     *
+     * @throws \ReflectionException
+     */
+    public function testPresetParams()
+    {
+        $test   = $this->newTest();
+        $preset = PresetFaker::create(UserFaker::create());
+
+        $test->expect(false === $preset->allowStart($preset->getMyPresetInfos($preset)), 'allowStart() test if anyone can start meeting');
+        $test->expect(false === $preset->joinAllAsModerator($preset->getMyPresetInfos($preset)), 'joinAllAsModerator() test if all users join meeting as moderator');
+
+        return $test->results();
+    }
 }

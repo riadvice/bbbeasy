@@ -20,11 +20,12 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Actions\Rooms;
+namespace Actions\Recordings;
 
 use Fake\PresetFaker;
 use Fake\RoomFaker;
-use Models\User;
+use Fake\UserFaker;
+use Faker\Factory as Faker;
 use Test\Scenario;
 
 /**
@@ -32,11 +33,10 @@ use Test\Scenario;
  *
  * @coversNothing
  */
-final class StartTest extends Scenario
+final class IndexTest extends Scenario
 {
-    final protected const LOGIN_ROUTE      = 'POST /account/login';
-    final protected const START_ROOM_ROUTE = 'POST /rooms/';
-    protected $group                       = 'Action Room Start';
+    final protected const INDEX_RECORDING_ROUTE = 'GET /recordings/';
+    protected $group                            = 'Action Recording Index';
 
     /**
      * @param mixed $f3
@@ -49,8 +49,9 @@ final class StartTest extends Scenario
     {
         $test = $this->newTest();
 
-        $f3->mock(self::START_ROOM_ROUTE . 404, null, null);
-        $test->expect($this->compareTemplateToResponse('not_found_error.json'), 'Start meeting for non existing room with id "404" show an error');
+        $faker = Faker::create();
+        $f3->mock(self::INDEX_RECORDING_ROUTE . $nonExistingId = $faker->numberBetween(1000), null, null);
+        $test->expect($this->compareTemplateToResponse('not_found_error.json'), 'Get all recordings for non existing room with id "' . $nonExistingId . '" show an error');
 
         return $test->results();
     }
@@ -62,16 +63,17 @@ final class StartTest extends Scenario
      *
      * @throws \ReflectionException
      */
-    public function testValidRoom($f3)
+    public function testGetRoomRecordings($f3)
     {
         $test = $this->newTest();
 
-        $loggedUser = new User();
-        $loggedUser->load(['id = ?', [$f3->get('SESSION.user.id')]]);
-        $preset = PresetFaker::create($loggedUser);
-        $room   = RoomFaker::create($loggedUser, $preset);
-        $f3->mock(self::START_ROOM_ROUTE . $room->id, null, null);
-        $test->expect(null === json_decode($f3->get('RESPONSE')), 'Start room meeting with id "' . $room->id . '" and meeting_id "' . $room->meeting_id . '"');
+        $user   = UserFaker::create();
+        $preset = PresetFaker::create($user);
+        $room   = RoomFaker::create($user, $preset);
+        $f3->mock(self::INDEX_RECORDING_ROUTE . $room->id);
+
+        json_decode($f3->get('RESPONSE'));
+        $test->expect(JSON_ERROR_NONE === json_last_error(), 'Get all room recordings');
 
         return $test->results();
     }

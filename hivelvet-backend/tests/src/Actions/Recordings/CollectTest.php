@@ -20,34 +20,35 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Fake;
+namespace Actions\Recordings;
 
-use Faker\Factory as Faker;
-use Models\Preset;
-use Models\Room;
-use Models\User;
-use Utils\DataUtils;
+use Test\Scenario;
 
-class RoomFaker
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
+final class CollectTest extends Scenario
 {
-    private static array $storage = [];
+    final protected const COLLECT_RECORDING_ROUTE = 'GET /recordings';
+    protected $group                              = 'Action Recording Collect';
 
-    public static function create(User $user, Preset $preset, string $shortLink = null, $storageName = null)
+    /**
+     * @param mixed $f3
+     *
+     * @return array
+     *
+     * @throws \ReflectionException
+     */
+    public function testCollect($f3)
     {
-        $faker            = Faker::create();
-        $room             = new Room();
-        $room->name       = $faker->name;
-        $room->short_link = $shortLink ?? $faker->text(14);
-        $room->preset_id  = $preset->id;
-        $room->user_id    = $user->id;
-        $room->meeting_id = DataUtils::generateRandomString();
+        $test = $this->newTest();
+        $f3->mock(self::COLLECT_RECORDING_ROUTE);
 
-        $room->save();
+        json_decode($f3->get('RESPONSE'));
+        $test->expect(JSON_ERROR_NONE === json_last_error(), 'Collect all recordings');
 
-        if (null !== $storageName) {
-            self::$storage[$storageName] = $room;
-        }
-
-        return $room;
+        return $test->results();
     }
 }

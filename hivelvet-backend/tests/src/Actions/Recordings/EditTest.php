@@ -20,34 +20,37 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Fake;
+namespace Actions\Recordings;
 
 use Faker\Factory as Faker;
-use Models\Preset;
-use Models\Room;
-use Models\User;
-use Utils\DataUtils;
+use Test\Scenario;
 
-class RoomFaker
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
+final class EditTest extends Scenario
 {
-    private static array $storage = [];
+    final protected const EDIT_RECORDING_ROUTE = 'PUT /recordings/';
+    protected $group                           = 'Actions Recording Edit';
 
-    public static function create(User $user, Preset $preset, string $shortLink = null, $storageName = null)
+    /**
+     * @param mixed $f3
+     *
+     * @return array
+     *
+     * @throws \ReflectionException
+     */
+    public function testNonExistingRecording($f3)
     {
-        $faker            = Faker::create();
-        $room             = new Room();
-        $room->name       = $faker->name;
-        $room->short_link = $shortLink ?? $faker->text(14);
-        $room->preset_id  = $preset->id;
-        $room->user_id    = $user->id;
-        $room->meeting_id = DataUtils::generateRandomString();
+        $test = $this->newTest();
 
-        $room->save();
+        $faker = Faker::create();
+        $data  = ['data' => ['name' => '']];
+        $f3->mock(self::EDIT_RECORDING_ROUTE . $nonExistingId = $faker->numberBetween(1000), null, null, $this->postJsonData($data));
+        $test->expect($this->compareTemplateToResponse('not_found_error.json'), 'Edit non existing recording with id "' . $nonExistingId . '" show an error');
 
-        if (null !== $storageName) {
-            self::$storage[$storageName] = $room;
-        }
-
-        return $room;
+        return $test->results();
     }
 }

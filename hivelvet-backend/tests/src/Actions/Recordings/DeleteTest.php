@@ -20,34 +20,36 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Fake;
+namespace Actions\Recordings;
 
 use Faker\Factory as Faker;
-use Models\Preset;
-use Models\Room;
-use Models\User;
-use Utils\DataUtils;
+use Test\Scenario;
 
-class RoomFaker
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
+final class DeleteTest extends Scenario
 {
-    private static array $storage = [];
+    final protected const DELETE_RECORDING_ROUTE = 'DELETE /recordings/';
+    protected $group                             = 'Actions Recording Delete';
 
-    public static function create(User $user, Preset $preset, string $shortLink = null, $storageName = null)
+    /**
+     * @param mixed $f3
+     *
+     * @return array
+     *
+     * @throws \ReflectionException
+     */
+    public function testNonExistingRecording($f3)
     {
-        $faker            = Faker::create();
-        $room             = new Room();
-        $room->name       = $faker->name;
-        $room->short_link = $shortLink ?? $faker->text(14);
-        $room->preset_id  = $preset->id;
-        $room->user_id    = $user->id;
-        $room->meeting_id = DataUtils::generateRandomString();
+        $test = $this->newTest();
 
-        $room->save();
+        $faker = Faker::create();
+        $f3->mock(self::DELETE_RECORDING_ROUTE . $nonExistingId = $faker->numberBetween(1000), null, null);
+        $test->expect($this->compareTemplateToResponse('not_found_error.json'), 'Delete non existing recording with id "' . $nonExistingId . '" show an error');
 
-        if (null !== $storageName) {
-            self::$storage[$storageName] = $room;
-        }
-
-        return $room;
+        return $test->results();
     }
 }

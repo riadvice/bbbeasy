@@ -20,34 +20,22 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Fake;
+namespace Suite;
 
-use Faker\Factory as Faker;
-use Models\Preset;
-use Models\Room;
-use Models\User;
-use Utils\DataUtils;
+use Actions\Recordings\CollectTest;
+use Actions\Recordings\DeleteTest;
+use Actions\Recordings\EditTest;
+use Actions\Recordings\IndexTest;
+use Test\TestGroup;
 
-class RoomFaker
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
+final class RecordingsActionsTest extends TestGroup
 {
-    private static array $storage = [];
+    protected $classes = [CollectTest::class, IndexTest::class, EditTest::class, DeleteTest::class];
 
-    public static function create(User $user, Preset $preset, string $shortLink = null, $storageName = null)
-    {
-        $faker            = Faker::create();
-        $room             = new Room();
-        $room->name       = $faker->name;
-        $room->short_link = $shortLink ?? $faker->text(14);
-        $room->preset_id  = $preset->id;
-        $room->user_id    = $user->id;
-        $room->meeting_id = DataUtils::generateRandomString();
-
-        $room->save();
-
-        if (null !== $storageName) {
-            self::$storage[$storageName] = $room;
-        }
-
-        return $room;
-    }
+    protected $quiet = true;
 }

@@ -45,8 +45,6 @@ final class ChangePasswordTest extends Scenario
     {
         $test = $this->newTest();
         $data = [
-            'username' => '',
-            'email'    => '',
             'password' => '',
             'token'    => '',
         ];
@@ -67,8 +65,6 @@ final class ChangePasswordTest extends Scenario
         $test  = $this->newTest();
         $faker = Faker::create();
         $data  = [
-            'username' => $faker->userName,
-            'email'    => $faker->email,
             'password' => $faker->password(8),
             'token'    => $faker->md5,
         ];
@@ -91,8 +87,6 @@ final class ChangePasswordTest extends Scenario
         $lastToken = new ResetPasswordToken();
         $lastToken->load(['id = ?', $lastToken->lastInsertId()]);
         $data = [
-            'username' => $faker->userName,
-            'email'    => $faker->email,
             'password' => 'password',
             'token'    => $lastToken->token,
         ];
@@ -115,8 +109,6 @@ final class ChangePasswordTest extends Scenario
         $lastToken = new ResetPasswordToken();
         $lastToken->load(['id = ?', $lastToken->lastInsertId()]);
         $data = [
-            'username' => $faker->userName,
-            'email'    => $faker->email,
             'password' => $faker->password(8),
             'token'    => $lastToken->token,
         ];

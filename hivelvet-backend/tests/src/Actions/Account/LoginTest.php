@@ -161,4 +161,23 @@ final class LoginTest extends Scenario
 
         return $test->results();
     }
+
+    /**
+     * @param mixed $f3
+     *
+     * @return array
+     *
+     * @throws \ReflectionException
+     */
+    public function testValidAuthentication($f3)
+    {
+        $test = $this->newTest();
+
+        $user = UserFaker::create(UserRole::ADMINISTRATOR);
+        $data = ['email' => $user->email, 'password' => UserRole::ADMINISTRATOR . UserRole::ADMINISTRATOR];
+        $f3->mock(self::LOGIN_ROUTE, null, null, $this->postJsonData($data));
+        $test->expect($f3->exists('SESSION.user'), 'User with id "' . $user->id . '" is now logged in');
+
+        return $test->results();
+    }
 }
