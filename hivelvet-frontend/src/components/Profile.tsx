@@ -20,9 +20,11 @@ import React from 'react';
 import { Trans, withTranslation } from 'react-i18next';
 
 import { Avatar, Badge, Button, Col, Form, PageHeader, Row, Space, Tooltip } from 'antd';
-import { AddUserForm } from './AddUserForm';
-import AuthService from '../services/auth.service';
 import { EditOutlined, UserOutlined } from '@ant-design/icons';
+
+import { AddUserForm } from './AddUserForm';
+
+import AuthService from '../services/auth.service';
 import LocaleService from '../services/locale.service';
 
 type formType = {

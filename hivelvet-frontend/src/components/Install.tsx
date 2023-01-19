@@ -267,7 +267,7 @@ const Install = () => {
                         setSuccessful(true);
                     })
                     .catch((error) => {
-                        console.log(error.response.data);
+                        console.log(error);
                     });
             }
         }

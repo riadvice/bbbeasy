@@ -16,11 +16,25 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-export type LabelType = {
-    id?: number;
-    key?: number;
-    name: string;
-    description: string;
-    color: string;
-    nb_rooms?: number;
+import React from 'react';
+import { Form } from 'antd';
+import { FormInstance } from 'antd/lib/form';
+
+type Props = {
+    editForm: FormInstance;
+    editContext?: React.Context<FormInstance>;
 };
+
+const EditableTableRow: React.FC<Props> = ({ editForm, editContext, ...restProps }) => {
+    const EditableContext = editContext ?? React.createContext<FormInstance | null>(null);
+
+    return (
+        <Form size="middle" form={editForm} component={false} validateTrigger="onSubmit">
+            <EditableContext.Provider value={editForm}>
+                <tr {...restProps} />
+            </EditableContext.Provider>
+        </Form>
+    );
+};
+
+export default EditableTableRow;

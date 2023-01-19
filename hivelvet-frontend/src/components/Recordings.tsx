@@ -20,12 +20,10 @@ import React, { useEffect, useState } from 'react';
 
 import { Trans, withTranslation } from 'react-i18next';
 import { t } from 'i18next';
-import EN_US from '../locale/en-US.json';
 
 import { PageHeader, Button, Typography, Table, Space, Popconfirm, Input, Tooltip, Modal, Avatar, Tag } from 'antd';
 import {
     DeleteOutlined,
-    SearchOutlined,
     QuestionCircleOutlined,
     UserOutlined,
     EditOutlined,
@@ -41,21 +39,22 @@ import {
     MinusCircleOutlined,
 } from '@ant-design/icons';
 
-import Highlighter from 'react-highlight-words/dist/main';
-import Form, { FormInstance } from 'antd/lib/form';
+import Form from 'antd/lib/form';
 import DynamicIcon from './DynamicIcon';
-
+import Notifications from './Notifications';
+import { CompareRecords } from '../functions/compare.function';
+import EditableTableRow from './EditableTableRow';
+import EditableTableCell from './EditableTableCell';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { getColumnSearch } from './EditableTableColumnSearch';
 
 import LocaleService from '../services/locale.service';
 import AuthService from '../services/auth.service';
+import RecordingsService from '../services/recordings.service';
 
 import { TableColumnType } from '../types/TableColumnType';
 import { PaginationType } from '../types/PaginationType';
-import RecordingsService from '../services/recordings.service';
 import { RecordingType } from '../types/RecordingType';
-import Notifications from './Notifications';
-import { CompareRecords } from '../functions/compare.function';
 
 const { Link } = Typography;
 
@@ -65,7 +64,6 @@ interface EditableCellProps {
     dataIndex: keyof RecordingType;
     record: RecordingType;
 }
-const EditableContext = React.createContext<FormInstance | null>(null);
 
 const Recordings = () => {
     const [data, setData] = React.useState<RecordingType[]>([]);
@@ -82,9 +80,6 @@ const Recordings = () => {
     const [modalFormats, setModalFormats] = React.useState<string[]>(null);
     const [modalUrl, setModalUrl] = React.useState<string>(null);
     const [copied, setCopied] = useState<boolean>(false);
-
-    const [searchText, setSearchText] = React.useState<string>('');
-    const [searchedColumn, setSearchedColumn] = React.useState<string>('');
 
     //list
     const getRecordings = () => {
@@ -116,48 +111,18 @@ const Recordings = () => {
 
     // edit
     const [editForm] = Form.useForm();
-    const EditableRow: React.FC = ({ ...props }) => {
-        return (
-            <Form size="middle" form={editForm} component={false} validateTrigger="onSubmit">
-                <EditableContext.Provider value={editForm}>
-                    <tr {...props} />
-                </EditableContext.Provider>
-            </Form>
-        );
-    };
     const EditableCell: React.FC<EditableCellProps> = ({ editing, children, dataIndex, record, ...restProps }) => {
-        const inputNode: JSX.Element = <Input />;
-
         return (
-            <td {...restProps}>
-                {editing ? (
-                    <Form.Item
-                        name={dataIndex}
-                        className="input-editable editable-row"
-                        {...(dataIndex in errorsEdit &&
-                            record.key == errorsEdit['key'] && {
-                                help: (
-                                    <Trans
-                                        i18nKey={Object.keys(EN_US).filter(
-                                            (elem) => EN_US[elem] == errorsEdit[dataIndex]
-                                        )}
-                                    />
-                                ),
-                                validateStatus: 'error',
-                            })}
-                        rules={[
-                            {
-                                required: true,
-                                message: t('required_' + dataIndex),
-                            },
-                        ]}
-                    >
-                        {inputNode}
-                    </Form.Item>
-                ) : (
-                    children
-                )}
-            </td>
+            <EditableTableCell
+                editing={editing}
+                dataIndex={dataIndex}
+                record={record}
+                inputNode={<Input />}
+                errorsEdit={errorsEdit}
+                {...restProps}
+            >
+                {children}
+            </EditableTableCell>
         );
     };
     const toggleEdit = (record: RecordingType) => {
@@ -176,7 +141,6 @@ const Recordings = () => {
             if (!CompareRecords(record, editForm.getFieldsValue(true))) {
                 RecordingsService.edit_recording(formValues, record.key)
                     .then((response) => {
-                        console.log(response.data);
                         const newRowData: RecordingType = response.data.recording;
                         const newData = [...data];
                         const index = newData.findIndex((item) => record.key === item.key);
@@ -243,78 +207,6 @@ const Recordings = () => {
         console.log(modalUrl);
     };
 
-    // search
-    const handleReset = (clearFilters) => {
-        clearFilters();
-        setSearchText('');
-    };
-    const handleSearch = (selectedKeys: string[], confirm, dataIndex: string, closed = false) => {
-        if (closed) confirm({ closeDropdown: false });
-        else confirm();
-        setSearchText(selectedKeys[0]);
-        setSearchedColumn(dataIndex);
-    };
-    const getColumnSearchProps = (dataIndex: string) => ({
-        filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-            <div className="table-search-bloc">
-                <Input
-                    size="middle"
-                    className="table-search-input"
-                    placeholder={t('search') + ' ' + t(dataIndex + '_col')}
-                    value={selectedKeys[0]}
-                    onChange={(e) => setSelectedKeys([e.target.value])}
-                    onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-                />
-                <Space className="table-search-btn">
-                    <Button
-                        type="primary"
-                        size="small"
-                        icon={<SearchOutlined />}
-                        onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-                    >
-                        {' '}
-                        <Trans i18nKey="search" />
-                    </Button>
-                    <Button size="small" onClick={() => handleReset(clearFilters)}>
-                        <Trans i18nKey="reset" />
-                    </Button>
-                    <Button
-                        type="link"
-                        size="small"
-                        onClick={() => handleSearch(selectedKeys, confirm, dataIndex, true)}
-                    >
-                        <Trans i18nKey="filter" />
-                    </Button>
-                </Space>
-            </div>
-        ),
-        filterIcon: (filtered: boolean) => <SearchOutlined className={filtered && 'search-icon-filtered'} />,
-        onFilter: (value, record: RecordingType) => {
-            const deleteWhiteSpaces = (text: string): string => {
-                if (text.indexOf(' ') != -1) {
-                    if (text[0] == ' ') {
-                        text = text.slice(1);
-                    }
-                    if (text[text.length - 1]) {
-                        text = text.slice(0, -1);
-                    }
-                }
-                return text;
-            };
-            value = deleteWhiteSpaces(value);
-            return record[dataIndex] ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()) : '';
-        },
-        render: (text) => {
-            const renderColumn = () => {
-                if (searchedColumn === dataIndex) {
-                    return <Highlighter searchWords={[searchText]} autoEscape textToHighlight={text.toString()} />;
-                }
-                return text;
-            };
-            return renderColumn();
-        },
-    });
-
     const getFormatIcons = (formats: string[], showDisabled?: boolean) => {
         const getFormatIcon = (format: string, icon: string, className?: string) => {
             const enabled = formats.includes(format);
@@ -326,8 +218,6 @@ const Recordings = () => {
                 );
             }
         };
-
-        //f_presentation, f_podcast, f_screenshare, f_notes, f_report_pdf
 
         return (
             <Space size="middle" className="recording-formats">
@@ -346,7 +236,7 @@ const Recordings = () => {
             dataIndex: 'name',
             editable: true,
             //width: '35%',
-            ...getColumnSearchProps('name'),
+            ...getColumnSearch('name'),
             sorter: {
                 compare: (a, b) => a.name.localeCompare(b.name),
                 multiple: 2,
@@ -356,7 +246,7 @@ const Recordings = () => {
             title: t('date_col'),
             dataIndex: 'date',
             editable: false,
-            ...getColumnSearchProps('date'),
+            ...getColumnSearch('date'),
             sorter: {
                 compare: (a, b) => a.date.localeCompare(b.date),
                 multiple: 2,
@@ -366,7 +256,7 @@ const Recordings = () => {
             title: t('duration_col'),
             dataIndex: 'duration',
             editable: false,
-            ...getColumnSearchProps('duration'),
+            ...getColumnSearch('duration'),
             sorter: {
                 compare: (a, b) => a.duration.localeCompare(b.duration),
                 multiple: 2,
@@ -591,7 +481,9 @@ const Recordings = () => {
                 components={{
                     body: {
                         cell: EditableCell,
-                        row: EditableRow,
+                        row: ({ ...props }) => {
+                            return <EditableTableRow editForm={editForm} {...props} />;
+                        },
                     },
                 }}
                 columns={mergedColumns}

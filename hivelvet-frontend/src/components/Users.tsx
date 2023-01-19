@@ -17,35 +17,32 @@
  */
 
 import React, { useEffect } from 'react';
-import UsersService from '../services/users.service';
-import RolesService from '../services/roles.service';
-import Notifications from './Notifications';
-import AddUserForm from './AddUserForm';
-import { PaginationType } from '../types/PaginationType';
-
 import { Trans, withTranslation } from 'react-i18next';
 import EN_US from '../locale/en-US.json';
 import { t } from 'i18next';
 
 import { Alert, Button, Form, Input, Modal, PageHeader, Popconfirm, Select, Space, Table, Tag, Typography } from 'antd';
-import { DeleteOutlined, EditOutlined, QuestionCircleOutlined, SearchOutlined } from '@ant-design/icons';
-import Highlighter from 'react-highlight-words/dist/main';
+import { DeleteOutlined, EditOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+
 import { FormInstance } from 'antd/lib/form';
-import AuthService from '../services/auth.service';
-import { TableColumnType } from '../types/TableColumnType';
 import { CompareRecords } from '../functions/compare.function';
+import EditableTableRow from './EditableTableRow';
+import EditableTableCell from './EditableTableCell';
+import Notifications from './Notifications';
+import AddUserForm from './AddUserForm';
+import { getColumnSearch } from './EditableTableColumnSearch';
+
+import AuthService from '../services/auth.service';
+import UsersService from '../services/users.service';
+import RolesService from '../services/roles.service';
+
+import { TableColumnType } from '../types/TableColumnType';
+import { PaginationType } from '../types/PaginationType';
+import { UserType } from '../types/UserType';
 
 const { Option } = Select;
 const { Link } = Typography;
 
-type Item = {
-    key: number;
-    username: string;
-    email: string;
-    role: string;
-    status: string;
-    nb_rooms: number;
-};
 type roleType = {
     id?: string;
     name?: string;
@@ -61,16 +58,14 @@ type formType = {
 interface EditableCellProps {
     editing: boolean;
     children: React.ReactNode;
-    dataIndex: keyof Item;
-    record: Item;
+    dataIndex: keyof UserType;
+    record: UserType;
     inputType: 'text' | 'select';
 }
-const EditableContext = React.createContext<FormInstance | null>(null);
-
 let addForm: FormInstance = null;
 
 const Users = () => {
-    const [data, setData] = React.useState<Item[]>([]);
+    const [data, setData] = React.useState<UserType[]>([]);
     const [loading, setLoading] = React.useState<boolean>(false);
     const [actions, setActions] = React.useState<string[]>([]);
     const [colletRolesAction, setCollectRolesAction] = React.useState<boolean>(false);
@@ -82,8 +77,6 @@ const Users = () => {
     const [errorsAdd, setErrorsAdd] = React.useState<string>('');
     const [errorsEdit, setErrorsEdit] = React.useState({});
     const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
-    const [searchText, setSearchText] = React.useState<string>('');
-    const [searchedColumn, setSearchedColumn] = React.useState<string>('');
 
     //list
     const getRoles = () => {
@@ -174,7 +167,7 @@ const Users = () => {
             .then((response) => {
                 setLoading(true);
                 setIsModalVisible(false);
-                const newRowData: Item = response.data.user;
+                const newRowData: UserType = response.data.user;
 
                 Notifications.openNotificationWithIcon('success', t('add_user_success'));
                 //delete data of form
@@ -200,24 +193,7 @@ const Users = () => {
     };
 
     // edit
-    const validateUsername = (dataIndex) =>
-        (dataIndex == 'username' && {
-            min: 4,
-            message: t('invalid_username'),
-        }) ||
-        (dataIndex == 'role' && {
-            validator: (_, value) => (value ? Promise.resolve() : Promise.reject(new Error())),
-        });
     const [editForm] = Form.useForm();
-    const EditableRow: React.FC = ({ ...props }) => {
-        return (
-            <Form size="middle" form={editForm} component={false} validateTrigger="onSubmit">
-                <EditableContext.Provider value={editForm}>
-                    <tr {...props} />
-                </EditableContext.Provider>
-            </Form>
-        );
-    };
     const EditableCell: React.FC<EditableCellProps> = ({
         editing,
         children,
@@ -239,80 +215,63 @@ const Users = () => {
             inputNode = <Input onFocus={() => setCancelVisibility(false)} />;
         }
         return (
-            <td {...restProps}>
-                {editing ? (
-                    <Form.Item
-                        name={dataIndex}
-                        className="input-editable editable-row"
-                        {...(dataIndex in errorsEdit &&
-                            record.key == errorsEdit['key'] && {
-                                help: (
-                                    <Trans
-                                        i18nKey={Object.keys(EN_US).filter(
-                                            (elem) => EN_US[elem] == errorsEdit[dataIndex]
-                                        )}
-                                    />
-                                ),
-                                validateStatus: 'error',
-                            })}
-                        rules={[
-                            {
-                                required: true,
-                                message: t('required_' + dataIndex),
-                            },
-                            { ...validateUsername(dataIndex) },
-                            {
-                                ...((dataIndex == 'email' && {
-                                    type: 'email',
-                                    message: t('invalid_email'),
-                                }) ||
-                                    (dataIndex == 'role' && {
-                                        validator: (_, value) =>
-                                            value ? Promise.resolve() : Promise.reject(new Error()),
-                                    })),
-                            },
-                        ]}
-                    >
-                        {inputNode}
-                    </Form.Item>
-                ) : (
-                    children
-                )}
-            </td>
+            <EditableTableCell
+                editing={editing}
+                dataIndex={dataIndex}
+                record={record}
+                inputNode={inputNode}
+                errorsEdit={errorsEdit}
+                editRules={
+                    (dataIndex == 'username' && {
+                        min: 4,
+                        message: t('invalid_username'),
+                    }) ||
+                    (dataIndex == 'email' && {
+                        type: 'email',
+                        message: t('invalid_email'),
+                    }) ||
+                    (dataIndex == 'role' && {
+                        validator: (_, value) => (value ? Promise.resolve() : Promise.reject(new Error())),
+                    })
+                }
+                {...restProps}
+            >
+                {children}
+            </EditableTableCell>
         );
     };
-    const isEditing = (record: Item) => record.key == editingKey;
-    const changeRoleCol = (record: Item): object => {
+    const isEditing = (record: UserType) => record.key == editingKey;
+    const changeRoleCol = (record: UserType): object => {
         if (typeof record.role == 'string') {
             const res = allRoles.filter((role) => role.name == record.role);
             record.role = res[0].id;
         }
         return record;
     };
-    const toggleEdit = (record: Item) => {
+    const toggleEdit = (record: UserType) => {
         setCancelVisibility(false);
         setEditingKey(record.key);
         let newRecord: object = { ...record };
-        newRecord = changeRoleCol(newRecord as Item);
+        newRecord = changeRoleCol(newRecord as UserType);
         editForm.setFieldsValue(newRecord);
     };
     const cancelEdit = () => {
         setCancelVisibility(false);
         setEditingKey(null);
     };
-    const compareEdit = (oldRecord: Item, newRecord: object): boolean => {
+    const compareEdit = (oldRecord: UserType, newRecord: object): boolean => {
         let oldEdit: object = { ...oldRecord };
-        oldEdit = changeRoleCol(oldEdit as Item);
+        oldEdit = changeRoleCol(oldEdit as UserType);
         return CompareRecords(oldEdit, newRecord);
     };
-    const saveEdit = async (record: Item, key: number) => {
+    const saveEdit = async (record: UserType, key: number) => {
         try {
             const formValues: object = await editForm.validateFields();
             setErrorsEdit({});
             if (!compareEdit(record, editForm.getFieldsValue(true))) {
                 UsersService.edit_user(formValues, key)
                     .then((response) => {
-                        const newRowData: Item = response.data.user;
+                        const newRowData: UserType = response.data.user;
                         const newData = [...data];
                         const index = newData.findIndex((item) => key === item.key);
                         if (index > -1 && newRowData != undefined) {
@@ -358,7 +317,7 @@ const Users = () => {
                 setLoading(true);
                 const newData = [...data];
                 // update item
-                const newRowData: Item = response.data.user;
+                const newRowData: UserType = response.data.user;
                 const index = newData.findIndex((item) => key === item.key);
                 if (index > -1 && newRowData != undefined) {
                     const item = newData[index];
@@ -376,72 +335,12 @@ const Users = () => {
             });
     };
 
-    // search
-    const handleReset = (clearFilters) => {
-        clearFilters();
-        setSearchText('');
-    };
-    const handleSearch = (selectedKeys: string[], confirm, dataIndex: string, closed = false) => {
-        if (closed) confirm({ closeDropdown: false });
-        else confirm();
-        setSearchText(selectedKeys[0]);
-        setSearchedColumn(dataIndex);
-    };
-    const getColumnSearchProps = (dataIndex: string) => ({
-        filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-            <div className="table-search-bloc">
-                <Input
-                    size="middle"
-                    className="table-search-input"
-                    placeholder={t('search') + ' ' + t(dataIndex + '_col')}
-                    value={selectedKeys[0]}
-                    onChange={(e) => setSelectedKeys([e.target.value])}
-                    onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-                />
-                <Space className="table-search-btn">
-                    <Button
-                        type="primary"
-                        size="small"
-                        icon={<SearchOutlined />}
-                        onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-                    >
-                        {' '}
-                        <Trans i18nKey="search" />
-                    </Button>
-                    <Button size="small" onClick={() => handleReset(clearFilters)}>
-                        <Trans i18nKey="reset" />
-                    </Button>
-                    <Button
-                        type="link"
-                        size="small"
-                        onClick={() => handleSearch(selectedKeys, confirm, dataIndex, true)}
-                    >
-                        <Trans i18nKey="filter" />
-                    </Button>
-                </Space>
-            </div>
-        ),
-        filterIcon: (filtered: boolean) => <SearchOutlined className={filtered && 'search-icon-filtered'} />,
-        onFilter: (value, record: Item) => {
-            return record[dataIndex] ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()) : '';
-        },
-        render: (text) => {
-            if (dataIndex == 'username' || dataIndex == 'role') {
-                text = text[0].toUpperCase() + text.slice(1);
-            }
-            if (searchedColumn === dataIndex) {
-                return <Highlighter searchWords={[searchText]} autoEscape textToHighlight={text && text.toString()} />;
-            }
-            return text;
-        },
-    });
-
     const columns: TableColumnType[] = [
         {
             title: t('username_col'),
             dataIndex: 'username',
             editable: true,
-            ...getColumnSearchProps('username'),
+            ...getColumnSearch('username'),
             width: '20%',
             sorter: {
                 compare: (a, b) => a.username.localeCompare(b.username),
@@ -452,7 +351,7 @@ const Users = () => {
             title: t('email_col'),
             dataIndex: 'email',
             editable: true,
-            ...getColumnSearchProps('email'),
+            ...getColumnSearch('email'),
             width: '30%',
             sorter: {
                 compare: (a, b) => a.email.localeCompare(b.email),
@@ -463,7 +362,7 @@ const Users = () => {
             title: t('role_col'),
             dataIndex: 'role',
             editable: true,
-            ...getColumnSearchProps('role'),
+            ...getColumnSearch('role'),
             width: '15%',
             sorter: {
                 compare: (a, b) => a.role.localeCompare(b.role),
@@ -510,7 +409,7 @@ const Users = () => {
             dataIndex: 'nb_rooms',
             inputType: 'text',
             editable: false,
-            ...getColumnSearchProps('rooms_number'),
+            ...getColumnSearch('nb_rooms'),
             width: '15%',
             sorter: {
                 compare: (a, b) => a.nb_rooms - b.nb_rooms,
@@ -593,7 +492,7 @@ const Users = () => {
         }
         return {
             ...col,
-            onCell: (record: Item) => ({
+            onCell: (record: UserType) => ({
                 record,
                 inputType: col.dataIndex === 'role' || col.dataIndex === 'status' ? 'select' : 'text',
                 dataIndex: col.dataIndex,
@@ -678,7 +577,9 @@ const Users = () => {
                 components={{
                     body: {
                         cell: EditableCell,
-                        row: EditableRow,
+                        row: ({ ...props }) => {
+                            return <EditableTableRow editForm={editForm} {...props} />;
+                        },
                     },
                 }}
                 columns={mergedColumns}

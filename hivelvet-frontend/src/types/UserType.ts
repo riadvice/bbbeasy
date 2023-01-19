@@ -17,9 +17,12 @@
  */
 
 export type UserType = {
-    id: number;
+    id?: number;
+    key?: number;
     username: string;
     email: string;
     role: string;
-    permissions: object;
+    permissions?: object;
+    status?: string;
+    nb_rooms?: number;
 };

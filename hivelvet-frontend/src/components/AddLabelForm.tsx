@@ -17,15 +17,19 @@
  */
 
 import React from 'react';
-import { Button, Form, Input, Modal } from 'antd';
 import { Trans, withTranslation } from 'react-i18next';
 import { t } from 'i18next';
 import EN_US from '../locale/en-US.json';
+
+import { Button, Form, Input, Modal } from 'antd';
 import InputColor from './layout/InputColor';
 import { DataContext } from 'lib/RoomsContext';
-import labelsService from 'services/labels.service';
 import Notifications from './Notifications';
+
+import LabelsService from 'services/labels.service';
+
 import { FormInstance } from 'antd/lib/form';
+import { LabelType } from '../types/LabelType';
 
 type Props = {
     isLogin?: boolean;
@@ -39,12 +43,6 @@ type formType = {
     description?: string;
     color?: string;
 };
-type Item = {
-    key: number;
-    name: string;
-    description: string;
-    color: string;
-};
 let addForm: FormInstance = null;
 
 export const AddLabelForm = (props: Props) => {
@@ -55,7 +53,7 @@ export const AddLabelForm = (props: Props) => {
     };
     const { defaultColor } = props;
     const dataContext = React.useContext(DataContext);
-    const [data, setData] = React.useState<Item[]>([]);
+    const [data, setData] = React.useState<LabelType[]>([]);
     const [loading, setLoading] = React.useState<boolean>(false);
     const [errorsAdd, setErrorsAdd] = React.useState<string[]>([]);
 
@@ -63,12 +61,11 @@ export const AddLabelForm = (props: Props) => {
         const formValues: formType = values;
         setErrorsAdd([]);
         setLoading(true);
-        labelsService
-            .add_label(formValues)
+        LabelsService.add_label(formValues)
             .then((response) => {
                 Notifications.openNotificationWithIcon('success', t('add_label_success'));
                 props.close();
-                const newRowData: Item = response.data.label;
+                const newRowData: LabelType = response.data.label;
 
                 //delete data of form
                 addForm?.resetFields();

@@ -39,17 +39,17 @@ import {
 } from 'antd';
 import { ClockCircleOutlined, MoreOutlined, TeamOutlined, WarningOutlined } from '@ant-design/icons';
 
-import LocaleService from '../services/locale.service';
-import roomsService from 'services/rooms.service';
-import AuthService from 'services/auth.service';
 import Notifications from './Notifications';
 import AddRoomForm from './AddRoomForm';
 import { DataContext } from 'lib/RoomsContext';
 
+import LocaleService from '../services/locale.service';
+import RoomsService from 'services/rooms.service';
+import AuthService from 'services/auth.service';
+
 import { RoomType } from 'types/RoomType';
 import { PresetType } from 'types/PresetType';
 import { LabelType } from 'types/LabelType';
-
 import { getRandomString } from 'types/getRandomString';
 
 const { Title, Paragraph } = Typography;
@@ -183,8 +183,7 @@ const Rooms = () => {
     const [actions, setActions] = React.useState<string[]>([]);
 
     useEffect(() => {
-        roomsService
-            .list_rooms(AuthService.getCurrentUser().id)
+        RoomsService.list_rooms(AuthService.getCurrentUser().id)
             .then((response) => {
                 setRooms(response.data);
             })
@@ -210,8 +209,7 @@ const Rooms = () => {
 
     //delete
     const deleteRoom = (id) => {
-        roomsService
-            .delete_room(id)
+        RoomsService.delete_room(id)
             .then(() => {
                 setRooms(rooms.filter((r) => r.id != id));
                 const indexRoom = dataContext.dataRooms.findIndex((item) => id === item.id);

@@ -17,9 +17,11 @@
  */
 
 import React from 'react';
-import { Form, Input } from 'antd';
 import { Trans, withTranslation } from 'react-i18next';
 import { t } from 'i18next';
+
+import { Form, Input } from 'antd';
+
 import { PasswordInput } from 'antd-password-input-strength';
 
 type Props = {

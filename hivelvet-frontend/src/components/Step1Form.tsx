@@ -17,10 +17,11 @@
  */
 
 import React from 'react';
-import { Alert, Typography } from 'antd';
-import AddUserForm from './AddUserForm';
 import { Trans } from 'react-i18next';
 import EN_US from '../locale/en-US.json';
+
+import { Alert, Typography } from 'antd';
+import AddUserForm from './AddUserForm';
 
 const { Title, Paragraph } = Typography;
 

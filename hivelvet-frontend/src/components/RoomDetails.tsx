@@ -19,8 +19,6 @@
 import React, { useEffect, useState } from 'react';
 import { Trans, withTranslation } from 'react-i18next';
 import { useLocation, useParams } from 'react-router-dom';
-
-import LocaleService from '../services/locale.service';
 import EN_US from '../locale/en-US.json';
 import { t } from 'i18next';
 
@@ -69,6 +67,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import RoomsService from 'services/rooms.service';
 import RecordingsService from '../services/recordings.service';
+import LocaleService from '../services/locale.service';
 
 import type { RcFile, UploadProps } from 'antd/es/upload';
 import type { UploadFile } from 'antd/es/upload/interface';

@@ -17,21 +17,23 @@
  */
 
 import React from 'react';
-import { CustomTagProps } from 'rc-select/lib/BaseSelect';
-import { Button, Col, Form, Input, Modal, Popconfirm, Row, Select, Tag } from 'antd';
 import { Trans, withTranslation } from 'react-i18next';
 import { t } from 'i18next';
 import EN_US from '../locale/en-US.json';
 
-import authService from 'services/auth.service';
-
+import { Button, Col, Form, Input, Modal, Popconfirm, Row, Select, Tag } from 'antd';
 import { CheckOutlined, CloseOutlined, EditOutlined } from '@ant-design/icons';
+
+import Notifications from './Notifications';
+import { DataContext } from 'lib/RoomsContext';
+import { CustomTagProps } from 'rc-select/lib/BaseSelect';
+
+import RoomsService from 'services/rooms.service';
+import AuthService from 'services/auth.service';
+
 import { FormInstance } from 'antd/es/form/Form';
 import { LabelType } from 'types/LabelType';
 import { PresetType } from 'types/PresetType';
-import roomsService from 'services/rooms.service';
-import Notifications from './Notifications';
-import { DataContext } from 'lib/RoomsContext';
 
 type formType = {
     name?: string;
@@ -67,10 +69,8 @@ export const AddRoomForm = (props: Props) => {
         const formValues: formType = values;
         setErrorsAdd([]);
         setLoading(true);
-        roomsService
-            .add_room(formValues, authService.getCurrentUser().id)
+        RoomsService.add_room(formValues, AuthService.getCurrentUser().id)
             .then((response) => {
-                console.log(response);
                 Notifications.openNotificationWithIcon('success', t('add_room_success'));
 
                 dataContext.setDataRooms([...dataContext.dataRooms, response.data.room]);

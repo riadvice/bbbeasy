@@ -17,13 +17,13 @@
  */
 
 import React from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 
 import { message, Form, Input, Typography, Upload } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
+
 import ColorPicker from 'rc-color-picker/lib/ColorPicker';
 import { RcFile, UploadChangeParam } from 'antd/lib/upload';
-import { Trans, useTranslation } from 'react-i18next';
-
 import { UploadFile } from 'antd/lib/upload/interface';
 
 const { Title, Text, Paragraph } = Typography;

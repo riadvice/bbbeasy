@@ -22,19 +22,19 @@ import SettingsService from '../services/settings.service';
 
 import { Button, Col, Form, Row, Spin } from 'antd';
 import { Trans, withTranslation } from 'react-i18next';
+import { t } from 'i18next';
 
 import { Step2Form } from './Step2Form';
-
-import { UploadFile } from 'antd/lib/upload/interface';
-import { SettingsType } from '../types/SettingsType';
-import { BrandingColorsType } from '../types/BrandingColorsType';
 import Notifications from './Notifications';
-import { t } from 'i18next';
+import { CompareRecords } from '../functions/compare.function';
 
 import axios from 'axios';
 import { apiRoutes } from '../routing/backend-config';
 import AuthService from '../services/auth.service';
-import { CompareRecords } from '../functions/compare.function';
+
+import { UploadFile } from 'antd/lib/upload/interface';
+import { SettingsType } from '../types/SettingsType';
+import { BrandingColorsType } from '../types/BrandingColorsType';
 
 type formType = {
     company_name: string;

@@ -16,11 +16,9 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-export type LabelType = {
-    id?: number;
-    key?: number;
+export type RoleType = {
+    key: number;
     name: string;
-    description: string;
-    color: string;
-    nb_rooms?: number;
+    users: number;
+    permissions: object;
 };
