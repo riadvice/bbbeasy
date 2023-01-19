@@ -60,12 +60,13 @@ type formType = {
 
 const RoomDetails = () => {
     const { state } = useLocation();
-    // const currentRoom: RoomType = state.room;
+
     const param = useParams();
-    // const editable: boolean = state.editable;
+    console.log(param);
+
     const [room, setRoom] = React.useState<RoomType>(state ? state.room : null);
     const [isLoading, setIsLoading] = useState<boolean>(true);
-    const [isRunning, setIsRunning] = useState<boolean>(false);
+
     const [canStart, setCanStart] = useState<boolean>(false);
 
     useEffect(() => {
@@ -76,7 +77,6 @@ const RoomDetails = () => {
             .then((result) => {
                 setRoom(result.data.room);
                 setCanStart(result.data.meeting.canStart);
-                setIsRunning(result.data.meeting.running);
             })
             .catch((error) => {
                 console.log(error);
