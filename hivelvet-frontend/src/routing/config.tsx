@@ -35,6 +35,7 @@ import Roles from '../components/Roles';
 import PresetSettings from '../components/PresetSettings';
 import RoomDetails from '../components/RoomDetails';
 import Profile from '../components/Profile';
+import Recordings from '../components/Recordings';
 
 export const webRoutes: IRoute[] = [
     {
@@ -80,6 +81,11 @@ export const webRoutes: IRoute[] = [
     {
         path: '/hv/:shortlink',
         element: <RoomDetails />,
+        private: true,
+    },
+    {
+        path: '/recordings',
+        element: <Recordings />,
         private: true,
     },
     {

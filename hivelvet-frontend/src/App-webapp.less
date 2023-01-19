@@ -34,6 +34,8 @@
    --hv-bg-layout: #f2f2f2;
    --hv-sider-width: 260px;
    --hv-page-height: 100vh;
+
+   --hv-info-color: #1890ff;
  }
  
  body,input,select,textarea,
@@ -538,8 +540,8 @@
  
  .color-blue {
    color:#fff;
-   border-color:#1890ff;
-   background:#1890ff;
+   border-color: var(--hv-info-color);
+   background: var(--hv-info-color);
    text-shadow:0 -1px 0 rgba(0,0,0,.12);
    box-shadow:0 2px #0000000b
  }
@@ -950,6 +952,10 @@
   margin-top: 15px;
 }
 
+.mt-24 {
+  margin-top: 24px;
+}
+
 .mt-30 {
   margin-top: 30px;
 }
@@ -1258,6 +1264,96 @@
   position: absolute;
   top: 1px;
   left: 1px;
-  width: 38px;
-  height: 38px;
+  right: 1px;
+  bottom: 1px;
+  width: 37.5px;
+  height: 37.5px;
+  border-radius: 50%;
+}
+
+.recording-formats .icon-hivelvet-playback-presentation,
+.recording-formats .icon-hivelvet-playback-podcast,
+.recording-formats .anticon-desktop,
+.recording-formats .icon-hivelvet-activity-reports {
+  font-size: 17px;
+}
+
+.recording-formats .icon-hivelvet-mp4 {
+  font-size: 24px;
+}
+
+.recording-formats .icon-desktop {
+  height: 12px; //height: 15px;
+}
+
+.recording-formats .icon-disabled {
+  color: var(--hv-medimum-gray) !important;
+}
+
+.share-modal {
+  padding: 0 30px;
+  text-align: center !important;
+}
+
+.share-modal .recording-formats .anticon:not(.icon-disabled) .icon-hivelvet-playback-presentation,
+.share-modal .recording-formats .anticon:not(.icon-disabled) .icon-hivelvet-playback-podcast,
+.share-modal .recording-formats .anticon-desktop:not(.icon-disabled),
+.share-modal .recording-formats .anticon:not(.icon-disabled) .icon-hivelvet-activity-reports {
+  font-size: 25px;
+}
+.share-modal .recording-formats .icon-disabled .icon-hivelvet-playback-presentation,
+.share-modal .recording-formats .icon-disabled .icon-hivelvet-playback-podcast,
+.share-modal .recording-formats .anticon-desktop.icon-disabled,
+.share-modal .recording-formats .icon-disabled .icon-hivelvet-activity-reports {
+  font-size: 22px;
+}
+
+.share-modal .recording-formats .icon-hivelvet-mp4 { //.anticon:not(.icon-disabled)
+  font-size: 29px;
+}
+
+.share-modal .recording-formats .icon-disabled .icon-hivelvet-mp4 {
+  font-size: 26px;
+}
+
+.share-modal .recording-formats .icon-desktop:not(.disabled) { //.anticon:not(.icon-disabled)
+  height: 23px;
+}
+
+.share-modal .recording-formats .icon-desktop.disabled {
+  height: 20px;
+}
+
+.share-modal .hivelvet-btn .ant-avatar-string {
+  position: unset !important;
+}
+
+.share-modal .hivelvet-btn:not(:hover) .hivelvet-white-btn {
+  -webkit-clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%);
+  clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%);
+  background: white;
+
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  right: 1px;
+  bottom: 1px;
+  width: 73px;
+  height: 73px;
+  border-radius: 50%;
+}
+
+.share-modal .hivelvet-btn:not(:hover) .anticon {
+  color: @primary-color;
+}
+
+.share-modal .hivelvet-btn {
+  -webkit-clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%);
+  clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%);
+  background: @primary-color;
+
+  font-size: 32px !important;
+
+  width: 25px;
+  height: 25px;
 }

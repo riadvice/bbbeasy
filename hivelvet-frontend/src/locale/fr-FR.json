@@ -167,6 +167,7 @@
 
     "name_col": "Nom",
     "users_col": "N◦ Utilisateurs",
+    "nb_rooms_col": "N° de Salles",
     "actions_col": "Actions",
     "new_role": "Nouveau rôle",
     "name": {
@@ -207,11 +208,7 @@
     "status_col": "Status",
     "new_user": "Nouvel utilisateur",
     "new_label": "Nouvel libellé",
-    "labels_cols": {
-        "name": "Nom",
-        "description": "Description",
-        "color": "Couleur"
-    },
+    "description_col": "Description",
     "role": {
         "label": "Rôle",
         "required": "Veuillez sélectionner un rôle",
@@ -277,8 +274,6 @@
     "room-link-already-exist": "Le lien du salle existe déjà",
     "add_room_success": "Salle ajoutée avec succés",
 
-    "labels_cols.nbrooms": "N° de Salles",
-
     "view": "Voir",
     "copy_shortlink": "Copier le lien court",
     "copied": "Copié",
@@ -305,5 +300,22 @@
     "meeting_not_started": "la réunion n'a pas encore commencé",
 
     "install_locked_title": "Processus d'installation verrouillé",
-    "install_locked_text": "Désolé, vous n'êtes pas autorisé à accéder à cette page, application déjà installée"
+    "install_locked_text": "Désolé, vous n'êtes pas autorisé à accéder à cette page, application déjà installée",
+
+    "recordings": "Enregistrements",
+    "date_col": "Date",
+    "duration_col": "Durée",
+    "state_col": "Visibilité",
+    "publishing": "Publication en cours",
+    "published": "Publié",
+    "processing": "Traitement en cours",
+    "processed": "Traité",
+    "unpublishing": "Dépublication en cours",
+    "unpublished": "Non publié",
+    "deleting": "Suppression en cours",
+    "formats_col": "Formats",
+    "share": "Partager",
+    "edit_recording_success": "Enregistrement mis à jour avec succès",
+    "delete_recording_confirm": "Êtes-vous sûr de vouloir supprimer cet enregistrement ?",
+    "delete_recording_success": "Enregistrement supprimé avec succès"
 }

@@ -40,9 +40,9 @@ import { t } from 'i18next';
 import EN_US from '../locale/en-US.json';
 
 import { AxiosResponse } from 'axios';
-import _ from 'lodash';
 import AuthService from '../services/auth.service';
 import { TableColumnType } from '../types/TableColumnType';
+import { CompareRecords } from '../functions/compare.function';
 
 const { Link } = Typography;
 
@@ -101,11 +101,12 @@ const Roles = () => {
         setLoading(true);
         RolesService.list_roles()
             .then((response) => {
-                setLoading(false);
                 setData(response.data);
             })
             .catch((error) => {
                 console.log(error);
+            })
+            .finally(() => {
                 setLoading(false);
             });
     };
@@ -386,7 +387,9 @@ const Roles = () => {
             cancelName();
         };
         const compareName = () => {
-            return !_.isEqual(transformText(record.name), editForm.getFieldsValue(true).name) ? saveName() : keepName();
+            return !CompareRecords(transformText(record.name), editForm.getFieldsValue(true).name)
+                ? saveName()
+                : keepName();
         };
 
         return (

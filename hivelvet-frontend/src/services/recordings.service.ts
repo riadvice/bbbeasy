@@ -16,13 +16,27 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-export type RecordingType = {
-    key: string;
-    name: string;
-    date: string;
-    duration: string;
-    users: number;
-    state: string;
-    formats: string[];
-    url: string;
-};
+import { axiosInstance } from '../lib/AxiosInstance';
+import { apiRoutes } from '../routing/backend-config';
+
+class RecordingsService {
+    collect_recordings() {
+        return axiosInstance.get(apiRoutes.COLLECT_RECORDINGS_URL);
+    }
+
+    list_recordings(roomId: number) {
+        return axiosInstance.get(apiRoutes.LIST_RECORDINGS_URL + roomId);
+    }
+
+    edit_recording(data: object, id: string) {
+        return axiosInstance.put(apiRoutes.EDIT_RECORDING_URL + id, {
+            data,
+        });
+    }
+
+    delete_recording(id: string) {
+        return axiosInstance.delete(apiRoutes.DELETE_RECORDING_URL + id);
+    }
+}
+
+export default new RecordingsService();

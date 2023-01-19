@@ -33,7 +33,6 @@ import {
 
 import { PaginationType } from '../types/PaginationType';
 import { FormInstance } from 'antd/lib/form';
-import _ from 'lodash';
 import Highlighter from 'react-highlight-words/dist/main';
 import Notifications from './Notifications';
 import AddLabelForm from './AddLabelForm';
@@ -43,6 +42,7 @@ import { DataContext } from 'lib/RoomsContext';
 import AuthService from '../services/auth.service';
 import LabelsService from '../services/labels.service';
 import { TableColumnType } from '../types/TableColumnType';
+import { CompareRecords } from '../functions/compare.function';
 
 const { Link } = Typography;
 
@@ -338,11 +338,10 @@ const Labels = () => {
         setCancelVisibility(false);
         setEditingKey(null);
     };
-    const compareEdit = (oldRecord: Item, newRecord: object): boolean => _.isEqual(oldRecord, newRecord);
     const saveEdit = async (record: Item, key: number) => {
         try {
             const formValues: object = await editForm.validateFields();
-            if (!compareEdit(record, editForm.getFieldsValue(true))) {
+            if (!CompareRecords(record, editForm.getFieldsValue(true))) {
                 setLoading(true);
                 setErrorsEdit({});
                 LabelsService.edit_label(formValues, key)
@@ -386,7 +385,7 @@ const Labels = () => {
 
     const columns: TableColumnType[] = [
         {
-            title: t('labels_cols.name'),
+            title: t('name_col'),
             dataIndex: 'name',
             inputType: 'text',
             editable: true,
@@ -398,26 +397,26 @@ const Labels = () => {
             },
         },
         {
-            title: t('labels_cols.description'),
+            title: t('description_col'),
             dataIndex: 'description',
             inputType: 'text',
             editable: true,
             ...getColumnSearchProps('description'),
             width: '40%',
             sorter: {
-                compare: (a, b) => a.name.localeCompare(b.name),
+                compare: (a, b) => a.description.localeCompare(b.description),
                 multiple: 2,
             },
         },
         {
-            title: t('labels_cols.nbrooms'),
+            title: t('nb_rooms_col'),
             dataIndex: 'nb_rooms',
             inputType: 'text',
             editable: false,
-            ...getColumnSearchProps('rooms_number'),
+            ...getColumnSearchProps('nb_rooms'),
             width: '15%',
             sorter: {
-                compare: (a, b) => a.name.localeCompare(b.name),
+                compare: (a, b) => a.nb_rooms - b.nb_rooms,
                 multiple: 1,
             },
         },
@@ -429,7 +428,7 @@ const Labels = () => {
             editable: false,
             render: (text, record) => {
                 const handleCancelVisibilityChange = () => {
-                    compareEdit(record, editForm.getFieldsValue(true)) ? cancelEdit() : setCancelVisibility(true);
+                    CompareRecords(record, editForm.getFieldsValue(true)) ? cancelEdit() : setCancelVisibility(true);
                 };
 
                 const EditActions = (

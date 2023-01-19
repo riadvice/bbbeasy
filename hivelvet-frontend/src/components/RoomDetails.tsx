@@ -19,11 +19,10 @@
 import React, { useEffect, useState } from 'react';
 import { Trans, withTranslation } from 'react-i18next';
 import { useLocation, useParams } from 'react-router-dom';
+
+import LocaleService from '../services/locale.service';
+import EN_US from '../locale/en-US.json';
 import { t } from 'i18next';
-import { Form, Spin } from 'antd';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { Popconfirm } from 'antd';
-import { CloseOutlined } from '@ant-design/icons';
 
 import {
     CalendarOutlined,
@@ -41,18 +40,41 @@ import {
     ShareAltOutlined,
     TeamOutlined,
     TwitterOutlined,
+    CloseOutlined,
 } from '@ant-design/icons';
-import { Avatar, Button, Card, Col, Dropdown, Input, Modal, Row, Space, Tag, Tooltip, Typography, Upload } from 'antd';
+import {
+    Avatar,
+    Button,
+    Card,
+    Col,
+    Dropdown,
+    Input,
+    Modal,
+    Row,
+    Space,
+    Tag,
+    Tooltip,
+    Typography,
+    Upload,
+    Empty,
+    Form,
+    Spin,
+    Popconfirm,
+} from 'antd';
+
+import DynamicIcon from './DynamicIcon';
+import Notifications from './Notifications';
+import { MenuProps } from 'antd/lib/menu';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+
+import RoomsService from 'services/rooms.service';
+import RecordingsService from '../services/recordings.service';
+
 import type { RcFile, UploadProps } from 'antd/es/upload';
 import type { UploadFile } from 'antd/es/upload/interface';
 import { RoomType } from '../types/RoomType';
 import { RecordingType } from '../types/RecordingType';
-import DynamicIcon from './DynamicIcon';
-import { MenuProps } from 'antd/lib/menu';
-import LocaleService from '../services/locale.service';
-import EN_US from '../locale/en-US.json';
-import roomsService from 'services/rooms.service';
-import Notifications from './Notifications';
+
 const { Title } = Typography;
 type formType = {
     name: string;
@@ -60,23 +82,26 @@ type formType = {
 
 const RoomDetails = () => {
     const { state } = useLocation();
-    // const currentRoom: RoomType = state.room;
     const param = useParams();
-    // const editable: boolean = state.editable;
+    const editable: boolean = state.editable;
     const [room, setRoom] = React.useState<RoomType>(state ? state.room : null);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [isRunning, setIsRunning] = useState<boolean>(false);
     const [canStart, setCanStart] = useState<boolean>(false);
 
-    useEffect(() => {
-        //Runs only on the first render
+    const [roomRecordings, setRoomRecordings] = React.useState<RecordingType[]>([]);
+    const [loading, setLoading] = React.useState<boolean>(false);
 
-        roomsService
-            .getRoomByLink(param.shortlink)
-            .then((result) => {
-                setRoom(result.data.room);
-                setCanStart(result.data.meeting.canStart);
-                setIsRunning(result.data.meeting.running);
+    const checkRoomStarted = () => {
+        RoomsService.getRoomByLink(param.shortlink)
+            .then((response) => {
+                if (response.data.room) {
+                    setRoom(response.data.room);
+                }
+                if (response.data.meeting) {
+                    setCanStart(response.data.meeting.canStart);
+                    setIsRunning(response.data.meeting.running);
+                }
             })
             .catch((error) => {
                 console.log(error);
@@ -84,51 +109,27 @@ const RoomDetails = () => {
             .finally(() => {
                 setIsLoading(false);
             });
+    };
+    const getRoomRecordings = () => {
+        setLoading(true);
+        RecordingsService.list_recordings(room.id)
+            .then((response) => {
+                setRoomRecordings(response.data);
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    };
+
+    useEffect(() => {
+        //Runs only on the first render
+        checkRoomStarted();
+        getRoomRecordings();
     }, []);
-    const recordings: RecordingType[] = [
-        {
-            id: 1,
-            name: 'English & Spanish Courses Level 1',
-            attendees: 2,
-            date: 'Mar 28, 2018',
-            duration: '3h 56',
-        },
-        {
-            id: 2,
-            name: 'English Courses',
-            attendees: 10,
-            date: 'Mar 20, 2022',
-            duration: '2h 00',
-        },
-        {
-            id: 3,
-            name: 'English Courses Level 2',
-            attendees: 4,
-            date: 'Mar 20, 2022',
-            duration: '1h 30',
-        },
-        {
-            id: 4,
-            name: 'English Course Level 3',
-            attendees: 20,
-            date: 'Mar 20, 2022',
-            duration: '2h 25',
-        },
-        {
-            id: 5,
-            name: 'English Course Level 4',
-            attendees: 30,
-            date: 'Mar 20, 2022',
-            duration: '3h 15',
-        },
-        {
-            id: 6,
-            name: 'English Course Level 5',
-            attendees: 10,
-            date: 'Mar 20, 2022',
-            duration: '2h 00',
-        },
-    ];
+
     const [copied, setCopied] = useState<boolean>(false);
     const [errorsEdit, setErrorsEdit] = React.useState({});
 
@@ -209,12 +210,9 @@ const RoomDetails = () => {
         setPreviewOpen(true);
     };
     const start = () => {
-        roomsService
-            .start_room(room.id)
+        RoomsService.start_room(room.id)
             .then((result) => {
-                console.log(result.data);
-
-                window.location.replace(result.data);
+                window.open(result.data, '_blank');
             })
             .catch((error) => {
                 console.log(error);
@@ -244,8 +242,7 @@ const RoomDetails = () => {
         try {
             const values = (await editForm.validateFields()) as formType;
 
-            roomsService
-                .edit_room(values, room.id)
+            RoomsService.edit_room(values, room.id)
                 .then((response) => {
                     setRoom(response.data.room);
                     Notifications.openNotificationWithIcon('success', t('edit_room_success'));
@@ -268,35 +265,31 @@ const RoomDetails = () => {
         <>
             {isLoading ? (
                 <Spin size="large" className="mt-30 content-center" />
-            ) : room ? (
-                <div className="page-padding">
-                    <Row align="bottom" className="mb-40">
-                        <Col span={10}>
-                            <Row justify="end" className="mb-5">
-                                {!isEditing ? (
-                                    <Button
-                                        className="edit-btn"
-                                        size="small"
-                                        type="link"
-                                        icon={<EditOutlined />}
-                                        onClick={toggleEdit}
-                                    >
-                                        {t('rename')}
-                                    </Button>
-                                ) : (
-                                    <></>
-                                )}
-                            </Row>
-                            <Card bordered={false} className="room-details gray-bg">
-                                <Row justify="center" align="middle">
-                                    <Col span={22}>
-                                        <Space direction="vertical" size="large">
-                                            {!isEditing ? (
-                                                <>
+            ) : (
+                room && (
+                    <div className="page-padding">
+                        <Row align="bottom" className="mb-40">
+                            <Col span={10}>
+                                <Row justify="end" className="mb-5">
+                                    {!isEditing && (
+                                        <Button
+                                            className="edit-btn"
+                                            size="small"
+                                            type="link"
+                                            icon={<EditOutlined />}
+                                            onClick={toggleEdit}
+                                        >
+                                            {t('rename')}
+                                        </Button>
+                                    )}
+                                </Row>
+                                <Card bordered={false} className="room-details gray-bg">
+                                    <Row justify="center" align="middle">
+                                        <Col span={22}>
+                                            <Space direction="vertical" size="large">
+                                                {!isEditing && editable ? (
                                                     <Title level={3}>{room.name}</Title>
-                                                </>
-                                            ) : (
-                                                <>
+                                                ) : (
                                                     <Form form={editForm}>
                                                         <Form.Item
                                                             name="name"
@@ -331,7 +324,6 @@ const RoomDetails = () => {
                                                                             <Button
                                                                                 icon={<CloseOutlined />}
                                                                                 size="small"
-                                                                                //onClick={cancelEdit}
                                                                                 className="cell-input-cancel"
                                                                             />
                                                                         </Popconfirm>
@@ -347,244 +339,251 @@ const RoomDetails = () => {
                                                             />
                                                         </Form.Item>
                                                     </Form>
-                                                </>
-                                            )}
+                                                )}
 
-                                            <div className="room-labels">
-                                                {room.labels.map((item) => (
-                                                    <Tag key={item.id} color={item.color}>
-                                                        {item.name}
-                                                    </Tag>
-                                                ))}
-                                            </div>
-                                            <Input
-                                                id={'room-shortlink'}
-                                                readOnly
-                                                defaultValue={room.short_link}
-                                                prefix={<LinkOutlined />}
-                                                suffix={
-                                                    copied ? (
-                                                        <Tooltip title={<Trans i18nKey="copied" />}>
-                                                            <CheckOutlined className="text-success" />
+                                                <div className="room-labels">
+                                                    {room.labels.map((item) => (
+                                                        <Tag key={item.id} color={item.color}>
+                                                            {item.name}
+                                                        </Tag>
+                                                    ))}
+                                                </div>
+                                                <Input
+                                                    id={'room-shortlink'}
+                                                    readOnly
+                                                    defaultValue={room.short_link}
+                                                    prefix={<LinkOutlined />}
+                                                    suffix={
+                                                        copied ? (
+                                                            <Tooltip title={<Trans i18nKey="copied" />}>
+                                                                <CheckOutlined className="text-success" />
+                                                            </Tooltip>
+                                                        ) : (
+                                                            <Tooltip title={<Trans i18nKey="copy_shortlink" />}>
+                                                                <CopyToClipboard
+                                                                    text={room.short_link}
+                                                                    onCopy={copyClipboard}
+                                                                >
+                                                                    <CopyOutlined />
+                                                                </CopyToClipboard>
+                                                            </Tooltip>
+                                                        )
+                                                    }
+                                                />
+
+                                                <div className="medias">
+                                                    <Space size="middle" className="social-media">
+                                                        <Tooltip
+                                                            placement="bottom"
+                                                            title={<Trans i18nKey="facebook_share" />}
+                                                        >
+                                                            <FacebookOutlined />
                                                         </Tooltip>
-                                                    ) : (
-                                                        <Tooltip title={<Trans i18nKey="copy_shortlink" />}>
-                                                            <CopyToClipboard
-                                                                text={room.short_link}
-                                                                onCopy={copyClipboard}
-                                                            >
-                                                                <CopyOutlined />
-                                                            </CopyToClipboard>
+                                                        <Tooltip
+                                                            placement="bottom"
+                                                            title={<Trans i18nKey="twitter_share" />}
+                                                        >
+                                                            <TwitterOutlined />
                                                         </Tooltip>
-                                                    )
-                                                }
-                                            />
+                                                        <Tooltip
+                                                            placement="bottom"
+                                                            title={<Trans i18nKey="linkedin_share" />}
+                                                        >
+                                                            <LinkedinOutlined />
+                                                        </Tooltip>
+                                                    </Space>
+                                                    <Tooltip placement="bottom" title={<Trans i18nKey="email_share" />}>
+                                                        <MailOutlined />
+                                                    </Tooltip>
+                                                </div>
+                                            </Space>
+                                        </Col>
+                                        <Col span={2}>
+                                            <Avatar
+                                                size={{ xs: 40, sm: 64, md: 85, lg: 100, xl: 120, xxl: 140 }}
+                                                className="ant-btn-primary hivelvet-btn"
+                                                onClick={start}
+                                            >
+                                                <Trans i18nKey={canStart ? 'start' : isRunning && 'join'} />
+                                            </Avatar>
+                                        </Col>
+                                    </Row>
+                                </Card>
+                            </Col>
+                            <Col span={8} offset={6}>
+                                <Card bordered={false} size="small" className="room-presentations gray-bg">
+                                    <Title level={5}>
+                                        <Trans i18nKey="room_ppts" />
+                                    </Title>
+                                    <Upload
+                                        action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                                        listType="picture-card"
+                                        fileList={fileList}
+                                        onPreview={handlePreview}
+                                        onChange={handleChange}
+                                    >
+                                        {fileList.length >= 8 ? null : uploadButton}
+                                    </Upload>
+                                </Card>
+                                <Modal open={previewOpen} footer={null} onCancel={handleCancel}>
+                                    <img className="full-width" src={previewImage} />
+                                </Modal>
+                            </Col>
+                        </Row>
 
-                                            <div className="medias">
-                                                <Space size="middle" className="social-media">
-                                                    <Tooltip
-                                                        placement="bottom"
-                                                        title={<Trans i18nKey="facebook_share" />}
-                                                    >
-                                                        <FacebookOutlined />
-                                                    </Tooltip>
-                                                    <Tooltip
-                                                        placement="bottom"
-                                                        title={<Trans i18nKey="twitter_share" />}
-                                                    >
-                                                        <TwitterOutlined />
-                                                    </Tooltip>
-                                                    <Tooltip
-                                                        placement="bottom"
-                                                        title={<Trans i18nKey="linkedin_share" />}
-                                                    >
-                                                        <LinkedinOutlined />
-                                                    </Tooltip>
-                                                </Space>
-                                                <Tooltip placement="bottom" title={<Trans i18nKey="email_share" />}>
-                                                    <MailOutlined />
-                                                </Tooltip>
-                                            </div>
-                                        </Space>
-                                    </Col>
-                                    <Col span={2}>
-                                        <Avatar
-                                            size={{ xs: 40, sm: 64, md: 85, lg: 100, xl: 120, xxl: 140 }}
-                                            className="ant-btn-primary hivelvet-btn"
-                                            onClick={start}
-                                        >
-                                            <Trans i18nKey={canStart ? 'start' : 'join'} />
-                                        </Avatar>
-                                    </Col>
-                                </Row>
-                            </Card>
-                        </Col>
-                        <Col span={8} offset={6}>
-                            <Card bordered={false} size="small" className="room-presentations gray-bg">
-                                <Title level={5}>
-                                    <Trans i18nKey="room_ppts" />
-                                </Title>
-                                <Upload
-                                    action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                                    listType="picture-card"
-                                    fileList={fileList}
-                                    onPreview={handlePreview}
-                                    onChange={handleChange}
-                                >
-                                    {fileList.length >= 8 ? null : uploadButton}
-                                </Upload>
-                            </Card>
-                            <Modal open={previewOpen} footer={null} onCancel={handleCancel}>
-                                <img className="full-width" src={previewImage} />
-                            </Modal>
-                        </Col>
-                    </Row>
-                    <div className="room-recordings">
-                        <div className="mb-40">
-                            <Space size="middle">
-                                <Title level={4}>
-                                    <Trans i18nKey="room_recordings" />
-                                </Title>
-                                <Input
-                                    className="search-input"
-                                    size="middle"
-                                    placeholder={t('search')}
-                                    allowClear
-                                    suffix={<SearchOutlined />}
-                                    bordered={false}
-                                />
-                            </Space>
-                        </div>
-                        <Row gutter={[16, 20]} className="room-recordings-body">
-                            {recordings.map((recording) => {
-                                const addHeight = recording.name.length <= 16 ? '65px' : null;
-                                const recordingName =
-                                    recording.name.length <= 24
-                                        ? recording.name
-                                        : recording.name.substring(0, 21) + '...';
-
-                                return (
-                                    <Col span={6} key={recording.id}>
-                                        <Card
+                        <div className="room-recordings">
+                            <div className="mb-40">
+                                <Space size="middle">
+                                    <Title level={4}>
+                                        <Trans i18nKey="room_recordings" />
+                                    </Title>
+                                    {roomRecordings.length != 0 && (
+                                        <Input
+                                            className="search-input"
+                                            size="middle"
+                                            placeholder={t('search')}
+                                            allowClear
+                                            suffix={<SearchOutlined />}
                                             bordered={false}
-                                            hoverable
-                                            cover={
-                                                <div className="recording-box">
-                                                    <img src="/images/meeting.png" width={281} height={220} />
-                                                    <div className="recording-cover">
-                                                        <div className="recording-header">
-                                                            <Title level={3} style={{ height: addHeight }}>
-                                                                {recordingName}
-                                                            </Title>
-                                                            <Dropdown
-                                                                key="more"
-                                                                menu={{ items: actionsItems }}
-                                                                placement={
-                                                                    LocaleService.direction == 'rtl'
-                                                                        ? 'bottomLeft'
-                                                                        : 'bottomRight'
+                                        />
+                                    )}
+                                </Space>
+                            </div>
+                            {loading ? (
+                                <Spin size="large" className="mt-30 content-center" />
+                            ) : roomRecordings.length != 0 ? (
+                                <Row gutter={[16, 20]} className="room-recordings-body">
+                                    {roomRecordings.map((recording) => {
+                                        const addHeight = recording.name.length <= 16 ? '65px' : null;
+                                        const recordingName =
+                                            recording.name.length <= 24
+                                                ? recording.name
+                                                : recording.name.substring(0, 21) + '...';
+
+                                        return (
+                                            <Col span={6} key={recording.key}>
+                                                <Card
+                                                    bordered={false}
+                                                    hoverable
+                                                    cover={
+                                                        <div className="recording-box">
+                                                            <img src="/images/meeting.png" width={281} height={220} />
+                                                            <div className="recording-cover">
+                                                                <div className="recording-header">
+                                                                    <Title level={3} style={{ height: addHeight }}>
+                                                                        {recordingName}
+                                                                    </Title>
+                                                                    <Dropdown
+                                                                        key="more"
+                                                                        menu={{ items: actionsItems }}
+                                                                        placement={
+                                                                            LocaleService.direction == 'rtl'
+                                                                                ? 'bottomLeft'
+                                                                                : 'bottomRight'
+                                                                        }
+                                                                    >
+                                                                        <MoreOutlined />
+                                                                    </Dropdown>
+                                                                </div>
+
+                                                                <Space direction="vertical" className="recording-infos">
+                                                                    <span>
+                                                                        <TeamOutlined /> {recording.users}{' '}
+                                                                        <Trans i18nKey="attendees" />{' '}
+                                                                    </span>
+                                                                    <span>
+                                                                        <CalendarOutlined /> {recording.date}
+                                                                    </span>
+                                                                    <span>
+                                                                        <ClockCircleOutlined /> {recording.duration}
+                                                                    </span>
+                                                                </Space>
+
+                                                                <Button
+                                                                    className="share-icon"
+                                                                    size="middle"
+                                                                    type="primary"
+                                                                    shape="circle"
+                                                                    icon={<ShareAltOutlined />}
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                >
+                                                    <Space direction="vertical" size="large">
+                                                        <div>
+                                                            <Button
+                                                                size="middle"
+                                                                type="primary"
+                                                                icon={
+                                                                    <DynamicIcon
+                                                                        type="playback-presentation"
+                                                                        className="hv-ppt"
+                                                                    />
                                                                 }
                                                             >
-                                                                <MoreOutlined />
-                                                            </Dropdown>
+                                                                <span>
+                                                                    <Trans i18nKey="replay" />
+                                                                </span>
+                                                            </Button>
+                                                            <span className="file-size">
+                                                                35,6 <Trans i18nKey="mb" />
+                                                            </span>
                                                         </div>
-
-                                                        <Space direction="vertical" className="recording-infos">
-                                                            <span>
-                                                                <TeamOutlined /> {recording.attendees}{' '}
-                                                                <Trans i18nKey="attendees" />{' '}
-                                                            </span>
-                                                            <span>
-                                                                <CalendarOutlined /> {recording.date}
-                                                            </span>
-                                                            <span>
-                                                                <ClockCircleOutlined /> {recording.duration}
-                                                            </span>
+                                                        <Space size="large" className="actions">
+                                                            <div>
+                                                                <Button
+                                                                    type="primary"
+                                                                    ghost
+                                                                    icon={<DynamicIcon type="playback-podcast" />}
+                                                                />
+                                                                <span className="file-size">
+                                                                    35,6 <Trans i18nKey="mb" />
+                                                                </span>
+                                                            </div>
+                                                            <div>
+                                                                <Button
+                                                                    type="primary"
+                                                                    ghost
+                                                                    icon={<DynamicIcon type="DesktopOutlined" />}
+                                                                />
+                                                                <span className="file-size">
+                                                                    35,6 <Trans i18nKey="mb" />
+                                                                </span>
+                                                            </div>
+                                                            <div>
+                                                                <Button
+                                                                    type="primary"
+                                                                    ghost
+                                                                    icon={<DynamicIcon type="mp4" className="hv-mp4" />}
+                                                                />
+                                                                <span className="file-size">
+                                                                    35,6 <Trans i18nKey="mb" />
+                                                                </span>
+                                                            </div>
+                                                            <div>
+                                                                <Button
+                                                                    type="primary"
+                                                                    ghost
+                                                                    icon={<DynamicIcon type="activity-reports" />}
+                                                                />
+                                                                <span className="file-size">
+                                                                    35,6 <Trans i18nKey="mb" />
+                                                                </span>
+                                                            </div>
                                                         </Space>
-
-                                                        <Button
-                                                            className="share-icon"
-                                                            size="middle"
-                                                            type="primary"
-                                                            shape="circle"
-                                                            icon={<ShareAltOutlined />}
-                                                        />
-                                                    </div>
-                                                </div>
-                                            }
-                                        >
-                                            <Space direction="vertical" size="large">
-                                                <div>
-                                                    <Button
-                                                        size="middle"
-                                                        type="primary"
-                                                        icon={
-                                                            <DynamicIcon
-                                                                type="playback-presentation"
-                                                                className="hv-ppt"
-                                                            />
-                                                        }
-                                                    >
-                                                        <span>
-                                                            <Trans i18nKey="replay" />
-                                                        </span>
-                                                    </Button>
-                                                    <span className="file-size">
-                                                        35,6 <Trans i18nKey="mb" />
-                                                    </span>
-                                                </div>
-                                                <Space size="large" className="actions">
-                                                    <div>
-                                                        <Button
-                                                            type="primary"
-                                                            ghost
-                                                            icon={<DynamicIcon type="playback-podcast" />}
-                                                        />
-                                                        <span className="file-size">
-                                                            35,6 <Trans i18nKey="mb" />
-                                                        </span>
-                                                    </div>
-                                                    <div>
-                                                        <Button
-                                                            type="primary"
-                                                            ghost
-                                                            icon={<DynamicIcon type="DesktopOutlined" />}
-                                                        />
-                                                        <span className="file-size">
-                                                            35,6 <Trans i18nKey="mb" />
-                                                        </span>
-                                                    </div>
-                                                    <div>
-                                                        <Button
-                                                            type="primary"
-                                                            ghost
-                                                            icon={<DynamicIcon type="mp4" className="hv-mp4" />}
-                                                        />
-                                                        <span className="file-size">
-                                                            35,6 <Trans i18nKey="mb" />
-                                                        </span>
-                                                    </div>
-                                                    <div>
-                                                        <Button
-                                                            type="primary"
-                                                            ghost
-                                                            icon={<DynamicIcon type="activity-reports" />}
-                                                        />
-                                                        <span className="file-size">
-                                                            35,6 <Trans i18nKey="mb" />
-                                                        </span>
-                                                    </div>
-                                                </Space>
-                                            </Space>
-                                        </Card>
-                                    </Col>
-                                );
-                            })}
-                        </Row>
+                                                    </Space>
+                                                </Card>
+                                            </Col>
+                                        );
+                                    })}
+                                </Row>
+                            ) : (
+                                <Empty className="mt-30" />
+                            )}
+                        </div>
                     </div>
-                </div>
-            ) : (
-                <></>
+                )
             )}
         </>
     );

@@ -30,11 +30,11 @@ import { SettingsType } from '../types/SettingsType';
 import { BrandingColorsType } from '../types/BrandingColorsType';
 import Notifications from './Notifications';
 import { t } from 'i18next';
-import _ from 'lodash';
 
 import axios from 'axios';
 import { apiRoutes } from '../routing/backend-config';
 import AuthService from '../services/auth.service';
+import { CompareRecords } from '../functions/compare.function';
 
 type formType = {
     company_name: string;
@@ -136,7 +136,7 @@ const Branding = () => {
             deleteLogo = true;
         }
 
-        if (!_.isEqual(data, settingsData) || updateLogo || deleteLogo) {
+        if (!CompareRecords(data, settingsData) || updateLogo || deleteLogo) {
             //update logo
             if (updateLogo) {
                 settingsData.logo = file.name;

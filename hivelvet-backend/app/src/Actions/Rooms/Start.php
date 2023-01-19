@@ -70,22 +70,18 @@ class Start extends BaseAction
                 return;
             }
 
-            $moderatorPw = '';
-            if ($getMeetingInfoResponse->success()) {
-                $moderatorPw = $getMeetingInfoResponse->getMeeting()->getModeratorPassword();
-            } else {
+            if (!$getMeetingInfoResponse->success()) {
                 // meeting not found
                 if ('notFound' === $getMeetingInfoResponse->getMessageKey()) {
                     // create new meeting with the same meetingId
                     $preset = new Preset();
                     $p      = $preset->findById($room->getPresetID($room->id)['preset_id']);
-                    if ($room->getRoomInfos($room->id)['user_id'] === $this->session->get('user.id') || $p->allowStart($p->getMyPresetInfos($p))) {
+                    if ($room->getRoomInfos()['user_id'] === $this->session->get('user.id') || $p->allowStart($p->getMyPresetInfos($p))) {
                         $createResult = $this->createMeeting($meetingId, $bbbRequester, $room->short_link);
 
                         if (null === $createResult) {
                             return;
                         }
-                        $moderatorPw = $createResult;
                     } else {
                         $this->renderJson(['meeting' => 'Meeting has not started yet'], ResponseCode::HTTP_NOT_FOUND);
 
@@ -99,7 +95,7 @@ class Start extends BaseAction
                 }
             }
 
-            if ($room->getRoomInfos($room->id)['user_id'] === $this->session->get('user.id') || $p->joinAllAsModerator($p->getMyPresetInfos($p))) {
+            if ($room->getRoomInfos()['user_id'] === $this->session->get('user.id') || $p->joinAllAsModerator($p->getMyPresetInfos($p))) {
                 $this->joinMeeting($meetingId, Role::MODERATOR, $bbbRequester);
             } else {
                 $this->joinMeeting($meetingId, Role::VIEWER, $bbbRequester);

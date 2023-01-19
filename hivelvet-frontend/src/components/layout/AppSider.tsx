@@ -75,6 +75,13 @@ const AppSider = () => {
         setMenuItems(menuSider.items);
         setNewMenuItems(menuSider.news);
 
+        if (currentPath.startsWith('/hv/')) {
+            const index = menuSider.items.findIndex((item) => item.name === 'recordings');
+            if (index !== -1) {
+                setCurrentPath(menuSider.items[index].path);
+            }
+        }
+
         if (currentPath == '/login') {
             const defaultRoute = menuSider.defaultRoute;
             if (defaultRoute != '') {

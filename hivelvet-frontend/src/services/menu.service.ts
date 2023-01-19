@@ -125,6 +125,17 @@ class MenuService {
                 items,
                 addActionExist
             );
+
+            addItemIfExist(
+                'recordings',
+                {
+                    name: 'recordings',
+                    icon: 'playback-podcast',
+                    path: '/recordings',
+                },
+                keys,
+                items
+            );
             addItemIfExist(
                 'labels',
                 {
@@ -150,6 +161,7 @@ class MenuService {
 
             addSettings(keys, items);
         }
+
         items.push({
             name: 'help',
             icon: 'QuestionCircleOutlined',

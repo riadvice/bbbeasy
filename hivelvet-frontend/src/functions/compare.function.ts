@@ -16,13 +16,6 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-export type RecordingType = {
-    key: string;
-    name: string;
-    date: string;
-    duration: string;
-    users: number;
-    state: string;
-    formats: string[];
-    url: string;
-};
+import _ from 'lodash';
+
+export const CompareRecords = (oldRecord, newRecord): boolean => _.isEqual(oldRecord, newRecord);

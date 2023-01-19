@@ -97,15 +97,16 @@ class Add extends BaseAction
                             return;
                         }
                         if ($form['labels']) {
-                            foreach ($form['labels'] as $label) {
-                                $l = new Label();
-                                $l = $l->getByColor($label);
-                                if (!$l->dry()) {
-                                    $room_label           = new RoomLabel();
-                                    $room_label->label_id = $l['id'];
-                                    $room_label->room_id  = $room->id;
+                            foreach ($form['labels'] as $labelColor) {
+                                $label = new Label();
+                                $label = $label->getByColor($labelColor);
 
-                                    $room_label->save();
+                                if (!$label->dry()) {
+                                    $roomLabel           = new RoomLabel();
+                                    $roomLabel->label_id = $label['id'];
+                                    $roomLabel->room_id  = $room->id;
+
+                                    $roomLabel->save();
                                 } else {
                                     $this->logger->error($errorMessage);
                                     $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
@@ -114,11 +115,7 @@ class Add extends BaseAction
                                 }
                             }
                         }
-                        $room = $room->getRoomInfos($room->id);
-
-                        $r              = new Room();
-                        $room['labels'] = $r->getLabels($room['key']);
-                        $this->renderJson(['result' => 'success', 'room' => $room], ResponseCode::HTTP_CREATED);
+                        $this->renderJson(['result' => 'success', 'room' => $room->getRoomInfos()], ResponseCode::HTTP_CREATED);
                     }
                 } else {
                     $this->logger->error($errorMessage);

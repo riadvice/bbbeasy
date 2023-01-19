@@ -31,9 +31,9 @@ import { Alert, Button, Form, Input, Modal, PageHeader, Popconfirm, Select, Spac
 import { DeleteOutlined, EditOutlined, QuestionCircleOutlined, SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words/dist/main';
 import { FormInstance } from 'antd/lib/form';
-import _ from 'lodash';
 import AuthService from '../services/auth.service';
 import { TableColumnType } from '../types/TableColumnType';
+import { CompareRecords } from '../functions/compare.function';
 
 const { Option } = Select;
 const { Link } = Typography;
@@ -102,7 +102,6 @@ const Users = () => {
         setLoading(true);
         UsersService.list_users()
             .then((response) => {
-                setLoading(false);
                 if (response.data.users) {
                     setData(response.data.users);
                 }
@@ -113,6 +112,8 @@ const Users = () => {
             })
             .catch((error) => {
                 console.log(error);
+            })
+            .finally(() => {
                 setLoading(false);
             });
     };
@@ -302,7 +303,7 @@ const Users = () => {
     const compareEdit = (oldRecord: Item, newRecord: object): boolean => {
         let oldEdit: object = { ...oldRecord };
         oldEdit = changeRoleCol(oldEdit as Item);
-        return _.isEqual(oldEdit, newRecord);
+        return CompareRecords(oldEdit, newRecord);
     };
     const saveEdit = async (record: Item, key: number) => {
         try {
@@ -454,7 +455,7 @@ const Users = () => {
             ...getColumnSearchProps('email'),
             width: '30%',
             sorter: {
-                compare: (a, b) => a.username.localeCompare(b.username),
+                compare: (a, b) => a.email.localeCompare(b.email),
                 multiple: 4,
             },
         },
@@ -465,7 +466,7 @@ const Users = () => {
             ...getColumnSearchProps('role'),
             width: '15%',
             sorter: {
-                compare: (a, b) => a.username.localeCompare(b.username),
+                compare: (a, b) => a.role.localeCompare(b.role),
                 multiple: 3,
             },
         },
@@ -500,19 +501,19 @@ const Users = () => {
             })),
             onFilter: (value, record) => record.status === value,
             sorter: {
-                compare: (a, b) => a.username.localeCompare(b.username),
+                compare: (a, b) => a.status.localeCompare(b.status),
                 multiple: 2,
             },
         },
         {
-            title: t('labels_cols.nbrooms'),
+            title: t('nb_rooms_col'),
             dataIndex: 'nb_rooms',
             inputType: 'text',
             editable: false,
             ...getColumnSearchProps('rooms_number'),
             width: '15%',
             sorter: {
-                compare: (a, b) => a.name.localeCompare(b.name),
+                compare: (a, b) => a.nb_rooms - b.nb_rooms,
                 multiple: 1,
             },
         },
