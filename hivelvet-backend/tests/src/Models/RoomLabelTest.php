@@ -77,9 +77,9 @@ final class RoomLabelTest extends Scenario
         $test->expect($roomLabel->getByRoomAndLabel($room->id, $label->id)->id === $roomLabel->id, 'getByRoomAndLabel(' . $room->id . ',' . $label->id . ') found room label');
         $test->expect(!$roomLabel->getByRoomAndLabel(404, 404)->id, 'getByRoomAndLabel(404, 404) did not find room label');
 
-        $test->expect(true === $roomLabel->roomAndLabelExists($room->id, $label->id), 'roomAndLabelExists(' . $room->id . ',' . $label->id . ') exists');
-        $test->expect(true === $roomLabel->roomAndLabelExists($room->id, $label->id, $room->id), 'roomAndLabelExists(' . $room->id . ',' . $label->id . ',' . $room->id . ') exists');
-        $test->expect(false === $roomLabel->roomAndLabelExists(404, 404), 'roomAndLabelExists(404, 404) does not exist');
+        $test->expect($roomLabel->roomAndLabelExists($room->id, $label->id), 'roomAndLabelExists(' . $room->id . ',' . $label->id . ') exists');
+        $test->expect($roomLabel->roomAndLabelExists($room->id, $label->id, $room->id), 'roomAndLabelExists(' . $room->id . ',' . $label->id . ',' . $room->id . ') exists');
+        $test->expect(!$roomLabel->roomAndLabelExists(404, 404), 'roomAndLabelExists(404, 404) does not exist');
 
         return $test->results();
     }

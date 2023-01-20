@@ -58,7 +58,7 @@ final class IndexTest extends Scenario
             'User successfully added',
             'User could not be added',
         );
-        $test->expect(true === $result, 'User with id "' . $user->id . '" saved to the database with default preset');
+        $test->expect($result, 'User with id "' . $user->id . '" saved to the database with default preset');
 
         $f3->mock(self::LIST_PRESETS_ROUTE . $user->id);
         json_decode($f3->get('RESPONSE'));

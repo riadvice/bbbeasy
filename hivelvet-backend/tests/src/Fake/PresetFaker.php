@@ -38,7 +38,7 @@ class PresetFaker
         $preset->user_id = $user->id;
         $result          = $preset->addDefaultSettings('Default preset successfully added', 'Default preset could not be added');
 
-        if (null !== $storageName && true === $result) {
+        if (null !== $storageName && $result) {
             self::$storage[$storageName] = $preset;
         }
 

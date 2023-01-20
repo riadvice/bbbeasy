@@ -187,7 +187,7 @@ final class RoomTest extends Scenario
             $recordingExist = $room->getRecordingByRecordId($recordId);
             $recording      = $room->getRecordingByRecordId($recordId, true);
 
-            $test->expect(true === $recordingExist && empty(array_udiff($recordings[0], $recording, fn ($obj1, $obj2) => $obj1 === $obj2)), 'getRecordingByRecordId(' . $recordId . ') returned recording for the given recordId');
+            $test->expect($recordingExist && empty(array_udiff($recordings[0], $recording, fn ($obj1, $obj2) => $obj1 === $obj2)), 'getRecordingByRecordId(' . $recordId . ') returned recording for the given recordId');
             $test->expect(null === $room->getRecordingByRecordId('404', true), 'getRecordingByRecordId(404) did not found recording');
         }
 
