@@ -69,11 +69,12 @@ const RoomDetails = () => {
     const { state } = useLocation();
 
     const param = useParams();
+
     const { Option } = Select;
 
     const [room, setRoom] = React.useState<RoomType>(state ? state.room : null);
     const [isLoading, setIsLoading] = useState<boolean>(true);
-    const [isRunning, setIsRunning] = useState<boolean>(false);
+
     const [canStart, setCanStart] = useState<boolean>(false);
 
     const dataContext = React.useContext(DataContext);
@@ -102,7 +103,7 @@ const RoomDetails = () => {
             .then((result) => {
                 setRoom(result.data.room);
                 setCanStart(result.data.meeting.canStart);
-                setIsRunning(result.data.meeting.running);
+
                 presetsService.list_presets(authService.getCurrentUser().id).then((result) => {
                     setPresets(result.data);
                 });
@@ -302,6 +303,11 @@ const RoomDetails = () => {
 
                 .then((response) => {
                     setRoom(response.data.room);
+                    const index = dataContext.dataRooms.findIndex((item) => room.id === item.id);
+
+                    if (index !== -1) {
+                        dataContext.dataRooms[index] = response.data.room;
+                    }
 
                     Notifications.openNotificationWithIcon('success', t('edit_room_success'));
 
@@ -544,7 +550,6 @@ const RoomDetails = () => {
                                         </Col>
                                     </Row>
                                 </Card>
-                                
                             </Col>
                             <Col span={8} offset={6}>
                                 <Card bordered={false} size="small" className="room-presentations gray-bg">
