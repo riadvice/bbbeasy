@@ -99,11 +99,17 @@ class User extends BaseModel
     /**
      * Check if email already in use.
      */
-    public function emailExists(string $email): bool
+    public function emailExists(string $email , $id=null): bool
     {
-        return $this->load(['lower(email) = ?', mb_strtolower($email)]);
+        return $this->load(['lower(email) = ? and id != ?', mb_strtolower($email),$id]);
     }
-
+    /**
+     * Check if username already in use.
+     */
+    public function usernameExists(string $username,$id=null): bool
+    {
+        return $this->load(['lower(username) = ? and  id != ?', mb_strtolower($username),$id]);
+    }
     /**
      * Check if email or username already in use.
      */

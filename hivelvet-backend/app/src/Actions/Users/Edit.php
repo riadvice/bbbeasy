@@ -25,6 +25,7 @@ namespace Actions\Users;
 use Actions\Base as BaseAction;
 use Actions\RequirePrivilegeTrait;
 use Enum\ResponseCode;
+use Models\Label;
 use Models\Role;
 use Models\User;
 use Respect\Validation\Validator;
@@ -62,24 +63,27 @@ class Edit extends BaseAction
 
             if ($dataChecker->allValid()) {
                 $checkUser = new User();
-                $users     = $checkUser->find(['(username = ? and id != ?) or (email = ? and id != ?)', $form['username'], $id, $form['email'], $id]);
-                if ($users) {
-                    $users = $users->castAll();
-                    if (1 === \count($users)) {
-                        $usernameExist = $users[0]['username'] === $form['username'];
-                        $emailExist    = $users[0]['email'] === $form['email'];
-                        if ($usernameExist && $emailExist) {
-                            $message = ['username' => $username_error_message, 'email' => $email_error_message];
-                        } elseif ($usernameExist) {
-                            $message = ['username' => $username_error_message];
-                        } else {
-                            $message = ['email' => $email_error_message];
-                        }
-                    } else {
+
+
+
+
+                $usernameExist  = $checkUser->usernameExists($form['username'], $id);
+                $emailExist = $checkUser->emailExists($form['email'], $id);
+
+                if ($usernameExist || $emailExist) {
+                    if ($usernameExist && $emailExist) {
+
                         $message = ['username' => $username_error_message, 'email' => $email_error_message];
+                    } elseif ($usernameExist) {
+                        $message = ['username' => $username_error_message];
+                    } else {
+                        $message = ['email' => $email_error_message];
                     }
-                    $this->logger->error($errorMessage, ['error' => $message]);
+                    $this->logger->error($errorMessage, ['errors' => $message]);
                     $this->renderJson(['errors' => $message], ResponseCode::HTTP_PRECONDITION_FAILED);
+
+                    return;
+
                 } else {
                     $role = new Role();
                     $role->load(['id = ?', [$form['role']]]);
