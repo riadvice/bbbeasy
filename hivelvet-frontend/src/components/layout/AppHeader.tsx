@@ -50,8 +50,6 @@ import { UserContext } from '../../lib/UserContext';
 
 import { DataContext } from 'lib/RoomsContext';
 
-import roomsService from 'services/rooms.service';
-import authService from '../../services/auth.service';
 import { RoomType } from 'types/RoomType';
 
 import DynamicIcon from 'components/DynamicIcon';
@@ -73,16 +71,6 @@ const AppHeader = () => {
     const location = useLocation();
 
     const [searchForm] = Form.useForm();
-    useEffect(() => {
-        roomsService
-            .list_rooms(authService.getCurrentUser().id)
-            .then((result) => {
-                setRooms(result.data);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }, []);
 
     const logout = () => {
         AuthService.logout()
@@ -106,8 +94,8 @@ const AppHeader = () => {
 
     const handleFilter = (e) => {
         const data = [];
-        rooms.map((room) => {
-            const lbs = room.labels.filter((item) => item.name.toLowerCase().includes(e.target.value));
+        dataContext.dataRooms.map((room) => {
+            const lbs = room.labels.filter((item) => item.name.toLowerCase().includes(e.target.value.toLowerCase()));
 
             if (lbs.length > 0) {
                 data.push(room);
