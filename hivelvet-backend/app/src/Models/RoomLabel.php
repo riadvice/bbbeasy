@@ -56,7 +56,7 @@ class RoomLabel extends BaseModel
      */
     public function getByRoomAndLabel($room_id, $label_id): self
     {
-        $this->load(['room_id = ? and label_id =?', $room_id, $label_id]);
+        $this->load(['room_id = ? and label_id = ?', $room_id, $label_id]);
 
         return $this;
     }
@@ -79,6 +79,6 @@ class RoomLabel extends BaseModel
 
     public function roomAndLabelExists($room, $label, $id = null)
     {
-        return $this->load(['room_id = ? and label_id=? and id != ?', $room, $label, $id]);
+        return $this->load(['room_id = ? and label_id = ? and id != ?', $room, $label, $id]);
     }
 }

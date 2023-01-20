@@ -1,8 +1,4 @@
-<?php
-
-declare(strict_types=1);
-
-/*
+/**
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -20,22 +16,15 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Enum;
+import React from 'react';
+import { Spin } from 'antd';
 
-class CacheKey extends Enum
-{
-    final public const CONFIG_LOADED = 'config.loaded';
+type Props = {
+    className?: string;
+};
 
-    final public const ORGANISATION = 'organisation';
-    final public const SITE_LOGO    = 'site.logo_';
+const LoadingSpinner = (props: Props) => {
+    return <Spin size="large" className={props.className} />;
+};
 
-    /**
-     * Returns cache key for site logo plus size.
-     *
-     * @param mixed $size
-     */
-    public static function logoSize($size): string
-    {
-        return self::SITE_LOGO . $size;
-    }
-}
+export default LoadingSpinner;

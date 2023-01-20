@@ -18,12 +18,13 @@
 
 import React, { useEffect, useState } from 'react';
 
-import { Col, Form, Row, Spin } from 'antd';
+import { Col, Form, Row } from 'antd';
 import { withTranslation } from 'react-i18next';
 import { t } from 'i18next';
 
 import { Step3Form } from './Step3Form';
 import Notifications from './Notifications';
+import LoadingSpinner from './LoadingSpinner';
 
 import AuthService from '../services/auth.service';
 import PresetSettingsService from '../services/preset.settings.service';
@@ -78,7 +79,7 @@ const PresetSettings = () => {
     return (
         <Row justify="center" className="preset-settings-row">
             {isLoading ? (
-                <Spin size="large" />
+                <LoadingSpinner />
             ) : (
                 <Col span={20}>
                     <Form className="install-form">

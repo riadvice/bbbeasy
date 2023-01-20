@@ -21,27 +21,14 @@ import { Trans, withTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { t } from 'i18next';
 
-import {
-    Avatar,
-    Badge,
-    Card,
-    Col,
-    Dropdown,
-    Row,
-    Space,
-    Tag,
-    Typography,
-    Menu,
-    Spin,
-    Button,
-    Empty,
-    Modal,
-} from 'antd';
+import { Avatar, Badge, Card, Col, Dropdown, Row, Space, Tag, Typography, Menu, Button, Modal } from 'antd';
 import { ClockCircleOutlined, MoreOutlined, TeamOutlined, WarningOutlined } from '@ant-design/icons';
 
 import Notifications from './Notifications';
 import AddRoomForm from './AddRoomForm';
 import { DataContext } from 'lib/RoomsContext';
+import LoadingSpinner from './LoadingSpinner';
+import EmptyData from './EmptyData';
 
 import LocaleService from '../services/locale.service';
 import RoomsService from 'services/rooms.service';
@@ -226,7 +213,7 @@ const Rooms = () => {
     return (
         <>
             {isLoading ? (
-                <Spin size="large" className="mt-30 content-center" />
+                <LoadingSpinner className="mt-30 content-center" />
             ) : rooms.length == 0 ? (
                 AuthService.isAllowedAction(actions, 'add') ? (
                     <Paragraph className="text-center home-guide">
@@ -281,7 +268,7 @@ const Rooms = () => {
                         />
                     </Paragraph>
                 ) : (
-                    <Empty className="mt-30" />
+                    <EmptyData />
                 )
             ) : (
                 <Row gutter={10} className="rooms-cards">

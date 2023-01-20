@@ -114,7 +114,10 @@ final class LabelTest extends Scenario
         $test  = $this->newTest();
         $label = LabelFaker::create();
 
+        $arrayColor = ['name' => $label->name, 'value' => $label->color];
+
         $test->expect($label->getByColor($label->color)->color === $label->color, 'getByColor(' . $label->color . ') found label');
+        $test->expect($label->getByColor($arrayColor)->color === $label->color, 'getByColor(' . $arrayColor . ') found label');
         $test->expect(!$label->getByColor('404')->color, 'getByColor(404) did not find label');
 
         return $test->results();

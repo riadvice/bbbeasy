@@ -138,7 +138,8 @@ final class AddTest extends Scenario
         $label  = LabelFaker::create();
         $faker  = Faker::create();
         $room   = RoomFaker::create($user1, $preset);
-        $data   = ['data' => ['name' => $room->name, 'shortlink' => $faker->text(14), 'preset' => $preset->id, 'labels' => [$label->color]], 'user_id' => $user1->id];
+
+        $data = ['data' => ['name' => $room->name, 'shortlink' => $faker->text(14), 'preset' => $preset->id, 'labels' => [$label->color]], 'user_id' => $user1->id];
         $f3->mock(self::ADD_ROOM_ROUTE, null, null, $this->postJsonData($data));
         $test->expect($this->compareTemplateToResponse('room/exist_error.json'), 'Add room with an existing name "' . $room->name . '" to user "' . $user1->id . '" shown an error');
 

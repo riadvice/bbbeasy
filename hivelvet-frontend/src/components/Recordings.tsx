@@ -16,7 +16,7 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 
 import { Trans, withTranslation } from 'react-i18next';
 import { t } from 'i18next';
@@ -28,8 +28,6 @@ import {
     UserOutlined,
     EditOutlined,
     ShareAltOutlined,
-    CheckOutlined,
-    CopyOutlined,
     FacebookOutlined,
     TwitterOutlined,
     LinkedinOutlined,
@@ -45,7 +43,6 @@ import Notifications from './Notifications';
 import { CompareRecords } from '../functions/compare.function';
 import { EditableTable } from './EditableTable';
 import EditableTableCell from './EditableTableCell';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
 import EditableTableColumnSearch from './EditableTableColumnSearch';
 
 import LocaleService from '../services/locale.service';
@@ -54,6 +51,7 @@ import RecordingsService from '../services/recordings.service';
 
 import { TableColumnType } from '../types/TableColumnType';
 import { RecordingType } from '../types/RecordingType';
+import CopyTextToClipBoard from './CopyTextToClipBoard';
 
 const { Link } = Typography;
 
@@ -77,7 +75,6 @@ const Recordings = () => {
     const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
     const [modalFormats, setModalFormats] = React.useState<string[]>(null);
     const [modalUrl, setModalUrl] = React.useState<string>(null);
-    const [copied, setCopied] = useState<boolean>(false);
 
     //list
     const getRecordings = () => {
@@ -188,15 +185,6 @@ const Recordings = () => {
         setIsModalVisible(true);
         setModalFormats(formats);
         setModalUrl(url);
-    };
-    const copyClipboard = () => {
-        setCopied(true);
-        setTimeout(
-            function () {
-                setCopied(false);
-            }.bind(this),
-            5000
-        );
     };
     const cancelShare = () => {
         setIsModalVisible(false);
@@ -454,15 +442,7 @@ const Recordings = () => {
                             <Input
                                 readOnly
                                 defaultValue={modalUrl}
-                                suffix={
-                                    copied ? (
-                                        <CheckOutlined className="text-success" />
-                                    ) : (
-                                        <CopyToClipboard text={modalUrl} onCopy={copyClipboard}>
-                                            <CopyOutlined />
-                                        </CopyToClipboard>
-                                    )
-                                }
+                                suffix={<CopyTextToClipBoard textToCopy={modalUrl} />}
                             />
                             <Form.Item className="modal-submit-btn">
                                 <Button type="primary" id="submit-btn" htmlType="submit" block>

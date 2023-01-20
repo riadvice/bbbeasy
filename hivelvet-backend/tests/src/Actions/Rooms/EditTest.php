@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Actions\Rooms;
 
+use Fake\LabelFaker;
 use Fake\PresetFaker;
 use Fake\RoomFaker;
 use Fake\UserFaker;
@@ -49,7 +50,7 @@ final class EditTest extends Scenario
     {
         $test  = $this->newTest();
         $faker = Faker::create();
-        $data  = ['data' => ['name' => '']];
+        $data  = ['data' => ['name' => '', 'short_link' => '', 'preset_id' => '']];
 
         $f3->mock(self::EDIT_ROOM_ROUTE . $nonExistingId = $faker->numberBetween(1000), null, null, $this->postJsonData($data));
         $test->expect($this->compareTemplateToResponse('not_found_error.json'), 'Edit non existing room with id "' . $nonExistingId . '" show an error');
@@ -70,7 +71,7 @@ final class EditTest extends Scenario
         $user   = UserFaker::create();
         $preset = PresetFaker::create($user);
         $room   = RoomFaker::create($user, $preset);
-        $data   = ['data' => ['name' => '']];
+        $data   = ['data' => ['name' => '', 'short_link' => '', 'preset_id' => '']];
 
         $f3->mock(self::EDIT_ROOM_ROUTE . $room->id, null, null, $this->postJsonData($data));
         $test->expect($this->compareTemplateToResponse('room/empty_error.json'), 'Edit existing room with id "' . $room->id . '" using an empty name show an error');
@@ -85,17 +86,26 @@ final class EditTest extends Scenario
      *
      * @throws \ReflectionException
      */
-    public function testExistingName($f3)
+    public function testExistingNameOrShortLinK($f3)
     {
         $test    = $this->newTest();
+        $faker   = Faker::create();
         $user    = UserFaker::create();
         $preset  = PresetFaker::create($user);
         $roomOne = RoomFaker::create($user, $preset);
         $roomTwo = RoomFaker::create($user, $preset);
-        $data    = ['data' => ['name' => $roomTwo->name]];
 
+        $data = ['data' => ['name' => $roomTwo->name, 'short_link' => $faker->text(14), 'preset_id' => $preset->id]];
         $f3->mock(self::EDIT_ROOM_ROUTE . $roomOne->id, null, null, $this->postJsonData($data));
-        $test->expect($this->compareTemplateToResponse('room/exist_error.json'), 'Update existing room with id "' . $roomOne->id . '" using an existing name "' . $roomTwo->name . '" show an error');
+        $test->expect($this->compareTemplateToResponse('room/exist_error.json'), 'Edit existing room with id "' . $roomOne->id . '" using an existing name "' . $roomTwo->name . '" show an error');
+
+        $data = ['data' => ['name' => $faker->name, 'short_link' => $roomTwo->short_link, 'preset_id' => $preset->id]];
+        $f3->mock(self::EDIT_ROOM_ROUTE . $roomOne->id, null, null, $this->postJsonData($data));
+        $test->expect($this->compareTemplateToResponse('room/exist_error.json'), 'Edit existing room with id "' . $roomOne->id . '" using an existing link "' . $roomTwo->name . '" show an error');
+
+        $data = ['data' => ['name' => $roomTwo->name, 'short_link' => $roomTwo->short_link, 'preset_id' => $preset->id]];
+        $f3->mock(self::EDIT_ROOM_ROUTE . $roomOne->id, null, null, $this->postJsonData($data));
+        $test->expect($this->compareTemplateToResponse('room/exist_error.json'), 'Edit existing room with id "' . $roomOne->id . '" using an existing name "' . $roomTwo->name . '" and an existing link "' . $roomTwo->short_link . '" show an error');
 
         return $test->results();
     }
@@ -112,10 +122,11 @@ final class EditTest extends Scenario
         $user   = UserFaker::create();
         $preset = PresetFaker::create($user);
         $room   = RoomFaker::create($user, $preset);
-        $data   = ['data' => ['name' => $faker->name]];
+        $label  = LabelFaker::create();
 
+        $data = ['data' => ['name' => $faker->name, 'short_link' => $room->short_link, 'preset_id' => $preset->id, 'labels' => [$label->color]]];
         $f3->mock(self::EDIT_ROOM_ROUTE . $room->id, null, null, $this->postJsonData($data));
-        $test->expect($this->compareArrayToResponse(['result' => 'success', 'room' => $room->getRoomInfos()]), 'Update existing room with id "' . $room->id . '" using new name "' . $room->name . '" successfully');
+        $test->expect($this->compareArrayToResponse(['result' => 'success', 'room' => $room->getRoomInfos()]), 'Edit existing room with id "' . $room->id . '" using new name "' . $room->name . '" successfully');
 
         return $test->results();
     }

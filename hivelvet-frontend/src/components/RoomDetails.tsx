@@ -23,58 +23,28 @@ import EN_US from '../locale/en-US.json';
 import { t } from 'i18next';
 
 import {
-    CalendarOutlined,
-    CheckOutlined,
-    ClockCircleOutlined,
-    CopyOutlined,
     EditOutlined,
     FacebookOutlined,
     LinkedinOutlined,
     LinkOutlined,
     MailOutlined,
-    MoreOutlined,
-    PlusOutlined,
-    SearchOutlined,
-    ShareAltOutlined,
-    TeamOutlined,
     TwitterOutlined,
 } from '@ant-design/icons';
-import {
-    Avatar,
-    Button,
-    Card,
-    Col,
-    Dropdown,
-    Input,
-    Modal,
-    Row,
-    Space,
-    Tag,
-    Tooltip,
-    Typography,
-    Upload,
-    Empty,
-    Form,
-    Spin,
-    Select,
-    Popconfirm,
-} from 'antd';
+import { Avatar, Button, Card, Col, Input, Row, Space, Tag, Tooltip, Typography, Form, Select, Popconfirm } from 'antd';
 
-import DynamicIcon from './DynamicIcon';
 import Notifications from './Notifications';
-import { MenuProps } from 'antd/lib/menu';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { CustomTagProps } from 'rc-select/lib/BaseSelect';
+import RoomRecordings from './RoomRecordings';
+import RoomPresentations from './RoomPresentations';
+import CopyTextToClipBoard from './CopyTextToClipBoard';
+import LoadingSpinner from './LoadingSpinner';
 
 import RoomsService from 'services/rooms.service';
 import RecordingsService from '../services/recordings.service';
-import LocaleService from '../services/locale.service';
 import LabelsService from 'services/labels.service';
 import PresetsService from 'services/presets.service';
 import AuthService from 'services/auth.service';
 
-import type { RcFile, UploadProps } from 'antd/es/upload';
-import type { UploadFile } from 'antd/es/upload/interface';
 import { RoomType } from '../types/RoomType';
 import { RecordingType } from '../types/RecordingType';
 import { PresetType } from 'types/PresetType';
@@ -85,6 +55,13 @@ const { Option } = Select;
 
 type formType = {
     name: string;
+};
+
+type editFormItemType = {
+    item: string;
+    formItemNode: JSX.Element;
+    isRequired?: boolean;
+    messageItem?: string;
 };
 
 const tagRender = (props: CustomTagProps) => {
@@ -100,23 +77,6 @@ const tagRender = (props: CustomTagProps) => {
     );
 };
 
-const getBase64 = (file: RcFile): Promise<string> =>
-    new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = (error) => reject(error);
-    });
-
-const uploadButton = (
-    <div>
-        <PlusOutlined />
-        <div className="mt-8 upload-file">
-            <Trans i18nKey="upload" />
-        </div>
-    </div>
-);
-
 const RoomDetails = () => {
     const { state } = useLocation();
     const param = useParams();
@@ -125,36 +85,6 @@ const RoomDetails = () => {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [isRunning, setIsRunning] = useState<boolean>(false);
     const [canStart, setCanStart] = useState<boolean>(false);
-
-    const [copied, setCopied] = useState<boolean>(false);
-    const [previewOpen, setPreviewOpen] = useState<boolean>(false);
-    const [previewImage, setPreviewImage] = useState<string>('');
-    const [fileList, setFileList] = useState<UploadFile[]>([
-        {
-            uid: '-1',
-            name: 'image.png',
-            status: 'done',
-            url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-        },
-        {
-            uid: '-2',
-            name: 'image.png',
-            status: 'done',
-            url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-        },
-        {
-            uid: '-3',
-            name: 'image.png',
-            status: 'done',
-            url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-        },
-        {
-            uid: '-4',
-            name: 'image.png',
-            status: 'done',
-            url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-        },
-    ]);
 
     const [errorsEdit, setErrorsEdit] = React.useState({});
     const [isEditing, setIsEditing] = React.useState<boolean>(false);
@@ -221,47 +151,6 @@ const RoomDetails = () => {
         getRoomRecordings();
     }, []);
 
-    //details
-    const actionsItems: MenuProps['items'] = [
-        {
-            key: '1',
-            label: <Trans i18nKey="rename" />,
-        },
-        {
-            key: '2',
-            label: <Trans i18nKey="publish" />,
-        },
-        {
-            type: 'divider',
-        },
-        {
-            key: '3',
-            danger: true,
-            label: <Trans i18nKey="delete" />,
-        },
-    ];
-    const copyClipboard = () => {
-        setCopied(true);
-        setTimeout(
-            function () {
-                setCopied(false);
-            }.bind(this),
-            5000
-        );
-    };
-
-    //ppts
-    const handleCancel = () => setPreviewOpen(false);
-    const handlePreview = async (file: UploadFile) => {
-        if (!file.url && !file.preview) {
-            file.preview = await getBase64(file.originFileObj as RcFile);
-        }
-
-        setPreviewImage(file.url || (file.preview as string));
-        setPreviewOpen(true);
-    };
-    const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) => setFileList(newFileList);
-
     //start
     const startRoom = () => {
         RoomsService.start_room(room.id)
@@ -276,6 +165,56 @@ const RoomDetails = () => {
 
     //edit
     const [editForm] = Form.useForm();
+    const editFormItems: editFormItemType[] = [
+        {
+            item: 'name',
+            formItemNode: <Input />,
+            isRequired: true,
+        },
+        {
+            item: 'preset_id',
+            formItemNode: (
+                <Select
+                    className="select-field"
+                    showSearch
+                    onChange={(val) => editForm.setFieldValue('preset_id', val)}
+                    allowClear
+                    placeholder={t('preset.label')}
+                    defaultValue={room.preset_id}
+                    filterOption={(input, option) =>
+                        option.children.toString().toLowerCase().indexOf(input.toString().toLowerCase()) >= 0
+                    }
+                    filterSort={(optionA, optionB) =>
+                        optionA.children
+                            .toString()
+                            .toLowerCase()
+                            .localeCompare(optionB.children.toString().toLowerCase())
+                    }
+                >
+                    {presets != null &&
+                        presets.map((item) => (
+                            <Option key={item.id} value={item.id} className="text-capitalize">
+                                {item.name}
+                            </Option>
+                        ))}
+                </Select>
+            ),
+            isRequired: true,
+            messageItem: 'preset',
+        },
+        {
+            item: 'labels',
+            formItemNode: (
+                <Select mode="multiple" showArrow tagRender={tagRender} style={{ width: '100%' }} options={labels} />
+            ),
+        },
+        {
+            item: 'short_link',
+            formItemNode: <Input addonBefore={prefixShortLink} defaultValue={room.short_link} />,
+            isRequired: true,
+            messageItem: 'shortlink',
+        },
+    ];
     const toggleEdit = () => {
         setIsEditing(true);
 
@@ -316,13 +255,34 @@ const RoomDetails = () => {
             console.log('Save failed:', errInfo);
         }
     };
+    const customFormItem = (editFormItem: editFormItemType) => {
+        const { item, formItemNode, isRequired, messageItem } = editFormItem;
+
+        return (
+            <Form.Item
+                name={item}
+                {...(item in errorsEdit && {
+                    help: <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errorsEdit[item])} />,
+                    validateStatus: 'error',
+                })}
+                rules={[
+                    {
+                        required: isRequired && true,
+                        message: <Trans i18nKey={(messageItem ?? item) + '.required'} />,
+                    },
+                ]}
+            >
+                {formItemNode}
+            </Form.Item>
+        );
+    };
 
     return (
         <>
             {isLoading ? (
-                <Spin size="large" className="mt-30 content-center" />
+                <LoadingSpinner className="mt-30 content-center" />
             ) : (
-                room != null && (
+                room && (
                     <div className="page-padding">
                         <Row align="bottom" className="mb-40">
                             <Col span={10}>
@@ -382,131 +342,16 @@ const RoomDetails = () => {
                                                             defaultValue={room.short_link}
                                                             prefix={<LinkOutlined />}
                                                             suffix={
-                                                                copied ? (
-                                                                    <Tooltip title={<Trans i18nKey="copied" />}>
-                                                                        <CheckOutlined className="text-success" />
-                                                                    </Tooltip>
-                                                                ) : (
-                                                                    <Tooltip title={<Trans i18nKey="copy_shortlink" />}>
-                                                                        <CopyToClipboard
-                                                                            text={room.short_link}
-                                                                            onCopy={copyClipboard}
-                                                                        >
-                                                                            <CopyOutlined />
-                                                                        </CopyToClipboard>
-                                                                    </Tooltip>
-                                                                )
+                                                                <CopyTextToClipBoard textToCopy={room.short_link} />
                                                             }
                                                         />
                                                     </>
                                                 ) : (
                                                     <Space size="middle" direction="vertical">
                                                         <Form form={editForm}>
-                                                            <Form.Item
-                                                                name="name"
-                                                                className="input-editable"
-                                                                {...('name' in errorsEdit && {
-                                                                    help: (
-                                                                        <Trans
-                                                                            i18nKey={Object.keys(EN_US).filter(
-                                                                                (elem) =>
-                                                                                    EN_US[elem] == errorsEdit['name']
-                                                                            )}
-                                                                        />
-                                                                    ),
-                                                                    validateStatus: 'error',
-                                                                })}
-                                                                rules={[
-                                                                    {
-                                                                        required: true,
-                                                                        message: <Trans i18nKey="name.required" />,
-                                                                    },
-                                                                ]}
-                                                            >
-                                                                <Input className="input" />
-                                                            </Form.Item>
-                                                            <Form.Item
-                                                                name="preset_id"
-                                                                rules={[
-                                                                    {
-                                                                        required: true,
-                                                                        message: <Trans i18nKey="preset.required" />,
-                                                                    },
-                                                                ]}
-                                                            >
-                                                                <Select
-                                                                    className="select-field"
-                                                                    showSearch
-                                                                    onChange={(val) =>
-                                                                        editForm.setFieldValue('preset_id', val)
-                                                                    }
-                                                                    allowClear
-                                                                    placeholder={t('preset.label')}
-                                                                    defaultValue={room.preset_id}
-                                                                    filterOption={(input, option) =>
-                                                                        option.children
-                                                                            .toString()
-                                                                            .toLowerCase()
-                                                                            .indexOf(input.toString().toLowerCase()) >=
-                                                                        0
-                                                                    }
-                                                                    filterSort={(optionA, optionB) =>
-                                                                        optionA.children
-                                                                            .toString()
-                                                                            .toLowerCase()
-                                                                            .localeCompare(
-                                                                                optionB.children
-                                                                                    .toString()
-                                                                                    .toLowerCase()
-                                                                            )
-                                                                    }
-                                                                >
-                                                                    {presets.map((item) => (
-                                                                        <Option
-                                                                            key={item.id}
-                                                                            value={item.id}
-                                                                            className="text-capitalize"
-                                                                        >
-                                                                            {item.name}
-                                                                        </Option>
-                                                                    ))}
-                                                                </Select>
-                                                            </Form.Item>
-                                                            <Form.Item name="labels">
-                                                                <Select
-                                                                    mode="multiple"
-                                                                    showArrow
-                                                                    tagRender={tagRender}
-                                                                    style={{ width: '100%' }}
-                                                                    options={labels}
-                                                                />
-                                                            </Form.Item>
-                                                            <Form.Item
-                                                                name="short_link"
-                                                                {...('short_link' in errorsEdit && {
-                                                                    help: (
-                                                                        <Trans
-                                                                            i18nKey={Object.keys(EN_US).filter(
-                                                                                (elem) =>
-                                                                                    EN_US[elem] ==
-                                                                                    errorsEdit['short_link']
-                                                                            )}
-                                                                        />
-                                                                    ),
-                                                                    validateStatus: 'error',
-                                                                })}
-                                                                rules={[
-                                                                    {
-                                                                        required: true,
-                                                                        message: <Trans i18nKey="shortlink.required" />,
-                                                                    },
-                                                                ]}
-                                                            >
-                                                                <Input
-                                                                    addonBefore={prefixShortLink}
-                                                                    defaultValue={room.short_link}
-                                                                />
-                                                            </Form.Item>
+                                                            {editFormItems.map((editFormItem) => {
+                                                                return customFormItem(editFormItem);
+                                                            })}
                                                         </Form>
                                                     </Space>
                                                 )}
@@ -550,177 +395,10 @@ const RoomDetails = () => {
                                 </Card>
                             </Col>
                             <Col span={8} offset={6}>
-                                <Card bordered={false} size="small" className="room-presentations gray-bg">
-                                    <Title level={5}>
-                                        <Trans i18nKey="room_ppts" />
-                                    </Title>
-                                    <Upload
-                                        action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                                        listType="picture-card"
-                                        fileList={fileList}
-                                        onPreview={handlePreview}
-                                        onChange={handleChange}
-                                    >
-                                        {fileList.length >= 8 ? null : uploadButton}
-                                    </Upload>
-                                </Card>
-                                <Modal open={previewOpen} footer={null} onCancel={handleCancel}>
-                                    <img className="full-width" src={previewImage} />
-                                </Modal>
+                                <RoomPresentations />
                             </Col>
                         </Row>
-
-                        <div className="room-recordings">
-                            <div className="mb-40">
-                                <Space size="middle">
-                                    <Title level={4}>
-                                        <Trans i18nKey="room_recordings" />
-                                    </Title>
-                                    {roomRecordings.length != 0 && (
-                                        <Input
-                                            className="search-input"
-                                            size="middle"
-                                            placeholder={t('search')}
-                                            allowClear
-                                            suffix={<SearchOutlined />}
-                                            bordered={false}
-                                        />
-                                    )}
-                                </Space>
-                            </div>
-                            {loading ? (
-                                <Spin size="large" className="mt-30 content-center" />
-                            ) : roomRecordings.length != 0 ? (
-                                <Row gutter={[16, 20]} className="room-recordings-body">
-                                    {roomRecordings.map((recording) => {
-                                        const addHeight = recording.name.length <= 16 ? '65px' : null;
-                                        const recordingName =
-                                            recording.name.length <= 24
-                                                ? recording.name
-                                                : recording.name.substring(0, 21) + '...';
-
-                                        return (
-                                            <Col span={6} key={recording.key}>
-                                                <Card
-                                                    bordered={false}
-                                                    hoverable
-                                                    cover={
-                                                        <div className="recording-box">
-                                                            <img src="/images/meeting.png" width={281} height={220} />
-                                                            <div className="recording-cover">
-                                                                <div className="recording-header">
-                                                                    <Title level={3} style={{ height: addHeight }}>
-                                                                        {recordingName}
-                                                                    </Title>
-                                                                    <Dropdown
-                                                                        key="more"
-                                                                        menu={{ items: actionsItems }}
-                                                                        placement={
-                                                                            LocaleService.direction == 'rtl'
-                                                                                ? 'bottomLeft'
-                                                                                : 'bottomRight'
-                                                                        }
-                                                                    >
-                                                                        <MoreOutlined />
-                                                                    </Dropdown>
-                                                                </div>
-
-                                                                <Space direction="vertical" className="recording-infos">
-                                                                    <span>
-                                                                        <TeamOutlined /> {recording.users}{' '}
-                                                                        <Trans i18nKey="attendees" />{' '}
-                                                                    </span>
-                                                                    <span>
-                                                                        <CalendarOutlined /> {recording.date}
-                                                                    </span>
-                                                                    <span>
-                                                                        <ClockCircleOutlined /> {recording.duration}
-                                                                    </span>
-                                                                </Space>
-
-                                                                <Button
-                                                                    className="share-icon"
-                                                                    size="middle"
-                                                                    type="primary"
-                                                                    shape="circle"
-                                                                    icon={<ShareAltOutlined />}
-                                                                />
-                                                            </div>
-                                                        </div>
-                                                    }
-                                                >
-                                                    <Space direction="vertical" size="large">
-                                                        <div>
-                                                            <Button
-                                                                size="middle"
-                                                                type="primary"
-                                                                icon={
-                                                                    <DynamicIcon
-                                                                        type="playback-presentation"
-                                                                        className="hv-ppt"
-                                                                    />
-                                                                }
-                                                            >
-                                                                <span>
-                                                                    <Trans i18nKey="replay" />
-                                                                </span>
-                                                            </Button>
-                                                            <span className="file-size">
-                                                                35,6 <Trans i18nKey="mb" />
-                                                            </span>
-                                                        </div>
-                                                        <Space size="large" className="actions">
-                                                            <div>
-                                                                <Button
-                                                                    type="primary"
-                                                                    ghost
-                                                                    icon={<DynamicIcon type="playback-podcast" />}
-                                                                />
-                                                                <span className="file-size">
-                                                                    35,6 <Trans i18nKey="mb" />
-                                                                </span>
-                                                            </div>
-                                                            <div>
-                                                                <Button
-                                                                    type="primary"
-                                                                    ghost
-                                                                    icon={<DynamicIcon type="DesktopOutlined" />}
-                                                                />
-                                                                <span className="file-size">
-                                                                    35,6 <Trans i18nKey="mb" />
-                                                                </span>
-                                                            </div>
-                                                            <div>
-                                                                <Button
-                                                                    type="primary"
-                                                                    ghost
-                                                                    icon={<DynamicIcon type="mp4" className="hv-mp4" />}
-                                                                />
-                                                                <span className="file-size">
-                                                                    35,6 <Trans i18nKey="mb" />
-                                                                </span>
-                                                            </div>
-                                                            <div>
-                                                                <Button
-                                                                    type="primary"
-                                                                    ghost
-                                                                    icon={<DynamicIcon type="activity-reports" />}
-                                                                />
-                                                                <span className="file-size">
-                                                                    35,6 <Trans i18nKey="mb" />
-                                                                </span>
-                                                            </div>
-                                                        </Space>
-                                                    </Space>
-                                                </Card>
-                                            </Col>
-                                        );
-                                    })}
-                                </Row>
-                            ) : (
-                                <Empty className="mt-30" />
-                            )}
-                        </div>
+                        <RoomRecordings loading={loading} roomRecordings={roomRecordings} />
                     </div>
                 )
             )}

@@ -20,13 +20,14 @@ import React, { useEffect, useState } from 'react';
 
 import SettingsService from '../services/settings.service';
 
-import { Button, Col, Form, Row, Spin } from 'antd';
+import { Button, Col, Form, Row } from 'antd';
 import { Trans, withTranslation } from 'react-i18next';
 import { t } from 'i18next';
 
 import { Step2Form } from './Step2Form';
 import Notifications from './Notifications';
 import { CompareRecords } from '../functions/compare.function';
+import LoadingSpinner from './LoadingSpinner';
 
 import axios from 'axios';
 import { apiRoutes } from '../routing/backend-config';
@@ -164,7 +165,7 @@ const Branding = () => {
     return (
         <Row justify="center" className="branding-row">
             {isLoading ? (
-                <Spin size="large" />
+                <LoadingSpinner />
             ) : (
                 <Col span={18}>
                     <fieldset disabled={!AuthService.isAllowedAction(actions, 'edit')}>
