@@ -17,8 +17,9 @@
  */
 
 export type RoleType = {
-    key: number;
-    name: string;
-    users: number;
-    permissions: object;
+    key?: number;
+    id?: number;
+    name?: string;
+    users?: number;
+    permissions?: object;
 };

@@ -62,47 +62,44 @@ class Edit extends BaseAction
 
             if ($dataChecker->allValid()) {
                 $checkUser = new User();
-                $users     = $checkUser->find(['(username = ? and id != ?) or (email = ? and id != ?)', $form['username'], $id, $form['email'], $id]);
-                if ($users) {
-                    $users = $users->castAll();
-                    if (1 === \count($users)) {
-                        $usernameExist = $users[0]['username'] === $form['username'];
-                        $emailExist    = $users[0]['email'] === $form['email'];
-                        if ($usernameExist && $emailExist) {
-                            $message = ['username' => $username_error_message, 'email' => $email_error_message];
-                        } elseif ($usernameExist) {
-                            $message = ['username' => $username_error_message];
-                        } else {
-                            $message = ['email' => $email_error_message];
-                        }
-                    } else {
+
+                $usernameExist = $checkUser->usernameExists($form['username'], $id);
+                $emailExist    = $checkUser->emailExists($form['email'], $id);
+
+                if ($usernameExist || $emailExist) {
+                    if ($usernameExist && $emailExist) {
                         $message = ['username' => $username_error_message, 'email' => $email_error_message];
-                    }
-                    $this->logger->error($errorMessage, ['error' => $message]);
-                    $this->renderJson(['errors' => $message], ResponseCode::HTTP_PRECONDITION_FAILED);
-                } else {
-                    $role = new Role();
-                    $role->load(['id = ?', [$form['role']]]);
-                    if ($role->valid()) {
-                        $user->email    = $form['email'];
-                        $user->username = $form['username'];
-                        $user->status   = $form['status'];
-                        $user->role_id  = $role->id;
-
-                        try {
-                            $user->save();
-                        } catch (\Exception $e) {
-                            $this->logger->error($errorMessage, ['user' => $user->toArray(), 'error' => $e->getMessage()]);
-                            $this->renderJson(['errors' => $errorMessage], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-
-                            return;
-                        }
-
-                        $this->logger->info('User successfully updated', ['user' => $user->toArray()]);
-                        $this->renderJson(['result' => 'success', 'user' => $user->getUserInfos()]);
+                    } elseif ($usernameExist) {
+                        $message = ['username' => $username_error_message];
                     } else {
-                        $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
+                        $message = ['email' => $email_error_message];
                     }
+                    $this->logger->error($errorMessage, ['errors' => $message]);
+                    $this->renderJson(['errors' => $message], ResponseCode::HTTP_PRECONDITION_FAILED);
+
+                    return;
+                }
+                $role = new Role();
+                $role->load(['id = ?', [$form['role']]]);
+                if ($role->valid()) {
+                    $user->email    = $form['email'];
+                    $user->username = $form['username'];
+                    $user->status   = $form['status'];
+                    $user->role_id  = $role->id;
+
+                    try {
+                        $user->save();
+                    } catch (\Exception $e) {
+                        $this->logger->error($errorMessage, ['user' => $user->toArray(), 'error' => $e->getMessage()]);
+                        $this->renderJson(['errors' => $errorMessage], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+
+                        return;
+                    }
+
+                    $this->logger->info('User successfully updated', ['user' => $user->toArray()]);
+                    $this->renderJson(['result' => 'success', 'user' => $user->getUserInfos()]);
+                } else {
+                    $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
                 }
             } else {
                 $this->logger->error($errorMessage, ['errors' => $dataChecker->getErrors()]);

@@ -38,14 +38,11 @@ import RolesService from '../services/roles.service';
 
 import { TableColumnType } from '../types/TableColumnType';
 import { UserType } from '../types/UserType';
+import { RoleType } from '../types/RoleType';
 
 const { Option } = Select;
 const { Link } = Typography;
 
-type roleType = {
-    id?: string;
-    name?: string;
-};
 type formType = {
     username?: string;
     email?: string;
@@ -69,7 +66,7 @@ const Users = () => {
     const [actions, setActions] = React.useState<string[]>([]);
     const [colletRolesAction, setCollectRolesAction] = React.useState<boolean>(false);
     const [allStates, setAllStates] = React.useState<string[]>([]);
-    const [allRoles, setAllRoles] = React.useState<roleType[]>([]);
+    const [allRoles, setAllRoles] = React.useState<RoleType[]>([]);
     const [editingKey, setEditingKey] = React.useState<number>(null);
     const [cancelVisibility, setCancelVisibility] = React.useState<boolean>(false);
     const [errorsAdd, setErrorsAdd] = React.useState<string>('');
@@ -242,7 +239,7 @@ const Users = () => {
     const changeRoleCol = (record: UserType): object => {
         if (typeof record.role == 'string') {
             const res = allRoles.filter((role) => role.name == record.role);
-            record.role = res[0].id;
+            record.role = String(res[0].id);
         }
         return record;
     };
@@ -304,7 +301,7 @@ const Users = () => {
                 err[errorKey] = error['errors'][0];
             });
             console.log(err);
-            setErrorsEdit(err);
+            //setErrorsEdit(err);
         }
     };
 

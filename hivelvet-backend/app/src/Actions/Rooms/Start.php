@@ -33,6 +33,7 @@ use Models\Preset;
 use Models\Room;
 use Utils\BigBlueButtonRequester;
 use Utils\DataUtils;
+use Utils\PresetProcessor;
 
 /**
  * Class Start.
@@ -63,8 +64,6 @@ class Start extends BaseAction
             // call meeting info to check if meeting is running
 
             $getMeetingInfoResponse = $this->getMeetingInfo($meetingId, $bbbRequester);
-            $preset                 = new Preset();
-            $p                      = $preset->findById($room->getPresetID($room->id)['preset_id']);
 
             if (null === $getMeetingInfoResponse) {
                 return;
@@ -74,8 +73,11 @@ class Start extends BaseAction
                 // meeting not found
                 if ('notFound' === $getMeetingInfoResponse->getMessageKey()) {
                     // create new meeting with the same meetingId
-                    $preset = new Preset();
-                    $p      = $preset->findById($room->getPresetID($room->id)['preset_id']);
+                    $preset          = new Preset();
+                    $p               = $preset->findById($room->getPresetID($room->id)['preset_id']);
+                    $presetProcessor = new PresetProcessor();
+                    $params          = $presetprocessor->toCreateMeetingParams($preset);
+
                     if ($room->getRoomInfos()['user_id'] === $this->session->get('user.id') || $p->allowStart($p->getMyPresetInfos($p))) {
                         $createResult = $this->createMeeting($meetingId, $bbbRequester, $room->short_link);
 

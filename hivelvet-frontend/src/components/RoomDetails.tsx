@@ -242,6 +242,11 @@ const RoomDetails = () => {
             RoomsService.edit_room(values, room.id)
                 .then((response) => {
                     setRoom(response.data.room);
+                    const index = dataContext.dataRooms.findIndex((item) => room.id === item.id);
+
+                    if (index !== -1) {
+                        dataContext.dataRooms[index] = response.data.room;
+                    }
                     Notifications.openNotificationWithIcon('success', t('edit_room_success'));
                     cancelEdit();
                 })

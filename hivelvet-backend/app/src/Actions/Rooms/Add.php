@@ -78,7 +78,7 @@ class Add extends BaseAction
 
                     if ($checkRoom->nameExists($room->name, $userId)) {
                         $this->logger->error($errorMessage, ['error' => 'Name already exists']);
-                        $this->renderJson(['errors' => ['name' => 'Room Name already exists']], ResponseCode::HTTP_PRECONDITION_FAILED);
+                        $this->renderJson(['errors' => ['name' => 'Room name already exists']], ResponseCode::HTTP_PRECONDITION_FAILED);
                     } elseif ($checkRoom->shortlinkExists($room->short_link)) {
                         $this->logger->error($errorMessage, ['error' => 'Room Link already exists']);
                         $this->renderJson(['errors' => ['short_link' => 'Room link already exists']], ResponseCode::HTTP_PRECONDITION_FAILED);

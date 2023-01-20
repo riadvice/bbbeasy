@@ -314,5 +314,8 @@
     "share": "شارك",
     "edit_recording_success": "تم تحديث التسجيل بنجاح",
     "delete_recording_confirm": "هل أنت متأكد من حذف هذا التسجيل ؟",
-    "delete_recording_success": "تم حذف التسجيل بنجاح"
+    "delete_recording_success": "تم حذف التسجيل بنجاح",
+
+    "found_results": "العثور على {{count}} من النتائج",
+    "search_all_rooms": "بحث في جميع القاعات"
 }

@@ -317,5 +317,8 @@
     "share": "Share",
     "edit_recording_success": "Recording successfully updated",
     "delete_recording_confirm": "Are you sure to delete this recording ?",
-    "delete_recording_success": "Recording successfully deleted"
+    "delete_recording_success": "Recording successfully deleted",
+
+    "found_results": "Found {{count}} results",
+    "search_all_rooms": "Search all my rooms"
 }

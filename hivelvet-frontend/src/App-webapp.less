@@ -893,7 +893,41 @@
    width: 70%;
    margin-bottom: 24px;
  }
- 
+ .search-modal{
+  &:extend(.presets-modal);
+ }
+ .search-modal .ant-modal-header{
+  background-color: var(--hv-darken-gray) !important;
+ }
+ .search-modal .ant-modal-header .ant-modal-title  {
+  color: white !important;
+  
+ }
+ .icon{
+  font-size: xxx-large;
+  color: var(--hv-darken-gray);
+
+ }
+ .row{
+  padding-left: 2px !important;
+
+ }
+ .search-modal .ant-modal-content .ant-modal-body{
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+ }
+ .antd-space{
+  gap: 4px !important;
+  display: flex;
+ }
+ .element{
+  font-weight: bolder;
+  color: var(--hv-darken-gray);
+  font-size: large;
+ }
+ .search-modal .ant-modal-content .ant-modal-close {
+  color: white !important;
+ }
  .final-step-btn {
    width: 81%;
    display: block;
