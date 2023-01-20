@@ -16,7 +16,7 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Trans } from 'react-i18next';
 import { t } from 'i18next';
 
@@ -26,9 +26,9 @@ import Highlighter from 'react-highlight-words/dist/main';
 
 import { UserType } from '../types/UserType';
 
-export const getColumnSearch = (dataIndex: string) => {
-    const [searchText, setSearchText] = React.useState<string>('');
-    const [searchedColumn, setSearchedColumn] = React.useState<string>('');
+const EditableTableColumnSearch = (dataIndex: string) => {
+    const [searchText, setSearchText] = useState<string>('');
+    const [searchedColumn, setSearchedColumn] = useState<string>('');
 
     const transformText = (text: string): string => {
         if (text != '') {
@@ -96,3 +96,5 @@ export const getColumnSearch = (dataIndex: string) => {
         },
     };
 };
+
+export default EditableTableColumnSearch;

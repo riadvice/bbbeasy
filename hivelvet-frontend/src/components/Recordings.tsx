@@ -21,7 +21,7 @@ import React, { useEffect, useState } from 'react';
 import { Trans, withTranslation } from 'react-i18next';
 import { t } from 'i18next';
 
-import { PageHeader, Button, Typography, Table, Space, Popconfirm, Input, Tooltip, Modal, Avatar, Tag } from 'antd';
+import { PageHeader, Button, Typography, Space, Popconfirm, Input, Tooltip, Modal, Avatar, Tag } from 'antd';
 import {
     DeleteOutlined,
     QuestionCircleOutlined,
@@ -43,17 +43,16 @@ import Form from 'antd/lib/form';
 import DynamicIcon from './DynamicIcon';
 import Notifications from './Notifications';
 import { CompareRecords } from '../functions/compare.function';
-import EditableTableRow from './EditableTableRow';
+import { EditableTable } from './EditableTable';
 import EditableTableCell from './EditableTableCell';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { getColumnSearch } from './EditableTableColumnSearch';
+import EditableTableColumnSearch from './EditableTableColumnSearch';
 
 import LocaleService from '../services/locale.service';
 import AuthService from '../services/auth.service';
 import RecordingsService from '../services/recordings.service';
 
 import { TableColumnType } from '../types/TableColumnType';
-import { PaginationType } from '../types/PaginationType';
 import { RecordingType } from '../types/RecordingType';
 
 const { Link } = Typography;
@@ -70,7 +69,6 @@ const Recordings = () => {
     const [recordingStates, setRecordingStates] = React.useState<string[]>([]);
     const [loading, setLoading] = React.useState<boolean>(false);
     const [actions, setActions] = React.useState<string[]>([]);
-    const [pagination, setPagination] = React.useState<PaginationType>({ current: 1, pageSize: 5 });
 
     const [editingKey, setEditingKey] = React.useState<string>(null);
     const [errorsEdit, setErrorsEdit] = React.useState({});
@@ -236,7 +234,7 @@ const Recordings = () => {
             dataIndex: 'name',
             editable: true,
             //width: '35%',
-            ...getColumnSearch('name'),
+            ...EditableTableColumnSearch('name'),
             sorter: {
                 compare: (a, b) => a.name.localeCompare(b.name),
                 multiple: 2,
@@ -246,7 +244,7 @@ const Recordings = () => {
             title: t('date_col'),
             dataIndex: 'date',
             editable: false,
-            ...getColumnSearch('date'),
+            ...EditableTableColumnSearch('date'),
             sorter: {
                 compare: (a, b) => a.date.localeCompare(b.date),
                 multiple: 2,
@@ -256,7 +254,7 @@ const Recordings = () => {
             title: t('duration_col'),
             dataIndex: 'duration',
             editable: false,
-            ...getColumnSearch('duration'),
+            ...EditableTableColumnSearch('duration'),
             sorter: {
                 compare: (a, b) => a.duration.localeCompare(b.duration),
                 multiple: 2,
@@ -476,21 +474,12 @@ const Recordings = () => {
                 </Modal>
             )}
 
-            <Table
-                className="hivelvet-table"
-                components={{
-                    body: {
-                        cell: EditableCell,
-                        row: ({ ...props }) => {
-                            return <EditableTableRow editForm={editForm} {...props} />;
-                        },
-                    },
-                }}
-                columns={mergedColumns}
+            <EditableTable
+                EditableCell={EditableCell}
+                editForm={editForm}
+                mergedColumns={mergedColumns}
                 dataSource={data}
-                pagination={pagination}
                 loading={loading}
-                onChange={(newPagination: PaginationType) => setPagination(newPagination)}
             />
         </>
     );

@@ -21,7 +21,7 @@ import React, { useEffect } from 'react';
 import { Trans, withTranslation } from 'react-i18next';
 import { t } from 'i18next';
 
-import { Badge, Button, Form, Input, Modal, PageHeader, Popconfirm, Space, Table, Typography } from 'antd';
+import { Badge, Button, Form, Input, Modal, PageHeader, Popconfirm, Space, Typography } from 'antd';
 import { DeleteOutlined, EditOutlined, QuestionCircleOutlined, WarningOutlined } from '@ant-design/icons';
 
 import Notifications from './Notifications';
@@ -29,15 +29,14 @@ import AddLabelForm from './AddLabelForm';
 import InputColor from './layout/InputColor';
 import { DataContext } from 'lib/RoomsContext';
 import { CompareRecords } from '../functions/compare.function';
-import EditableTableRow from './EditableTableRow';
+import { EditableTable } from './EditableTable';
 import EditableTableCell from './EditableTableCell';
-import { getColumnSearch } from './EditableTableColumnSearch';
+import EditableTableColumnSearch from './EditableTableColumnSearch';
 
 import AuthService from '../services/auth.service';
 import LabelsService from '../services/labels.service';
 
 import { TableColumnType } from '../types/TableColumnType';
-import { PaginationType } from '../types/PaginationType';
 import { LabelType } from '../types/LabelType';
 
 const { Link } = Typography;
@@ -58,7 +57,6 @@ const Labels = () => {
     const [editingKey, setEditingKey] = React.useState<number>(null);
     const [errorsEdit, setErrorsEdit] = React.useState({});
     const [cancelVisibility, setCancelVisibility] = React.useState<boolean>(false);
-    const [pagination, setPagination] = React.useState<PaginationType>({ current: 1, pageSize: 5 });
     const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
 
     const getLabels = () => {
@@ -163,7 +161,7 @@ const Labels = () => {
                 }
                 {...restProps}
             >
-                {dataIndex == 'name' ? (
+                {dataIndex == 'name' && record != null ? (
                     <Badge
                         count={record.name}
                         style={{
@@ -239,7 +237,7 @@ const Labels = () => {
             dataIndex: 'name',
             inputType: 'text',
             editable: true,
-            ...getColumnSearch('name'),
+            ...EditableTableColumnSearch('name'),
             width: '20%',
             sorter: {
                 compare: (a, b) => a.name.localeCompare(b.name),
@@ -251,7 +249,7 @@ const Labels = () => {
             dataIndex: 'description',
             inputType: 'text',
             editable: true,
-            ...getColumnSearch('description'),
+            ...EditableTableColumnSearch('description'),
             width: '40%',
             sorter: {
                 compare: (a, b) => a.description.localeCompare(b.description),
@@ -263,7 +261,7 @@ const Labels = () => {
             dataIndex: 'nb_rooms',
             inputType: 'text',
             editable: false,
-            ...getColumnSearch('nb_rooms'),
+            ...EditableTableColumnSearch('nb_rooms'),
             width: '15%',
             sorter: {
                 compare: (a, b) => a.nb_rooms - b.nb_rooms,
@@ -372,21 +370,12 @@ const Labels = () => {
                 />
             )}
 
-            <Table
-                className="hivelvet-table"
-                components={{
-                    body: {
-                        cell: EditableCell,
-                        row: ({ ...props }) => {
-                            return <EditableTableRow editForm={editForm} {...props} />;
-                        },
-                    },
-                }}
-                columns={mergedColumns}
+            <EditableTable
+                EditableCell={EditableCell}
+                editForm={editForm}
+                mergedColumns={mergedColumns}
                 dataSource={data}
-                pagination={pagination}
                 loading={loading}
-                onChange={(newPagination: PaginationType) => setPagination(newPagination)}
             />
         </>
     );

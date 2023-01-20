@@ -21,23 +21,22 @@ import { Trans, withTranslation } from 'react-i18next';
 import EN_US from '../locale/en-US.json';
 import { t } from 'i18next';
 
-import { Alert, Button, Form, Input, Modal, PageHeader, Popconfirm, Select, Space, Table, Tag, Typography } from 'antd';
+import { Alert, Button, Form, Input, Modal, PageHeader, Popconfirm, Select, Space, Tag, Typography } from 'antd';
 import { DeleteOutlined, EditOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 
 import { FormInstance } from 'antd/lib/form';
 import { CompareRecords } from '../functions/compare.function';
-import EditableTableRow from './EditableTableRow';
+import { EditableTable } from './EditableTable';
 import EditableTableCell from './EditableTableCell';
 import Notifications from './Notifications';
 import AddUserForm from './AddUserForm';
-import { getColumnSearch } from './EditableTableColumnSearch';
+import EditableTableColumnSearch from './EditableTableColumnSearch';
 
 import AuthService from '../services/auth.service';
 import UsersService from '../services/users.service';
 import RolesService from '../services/roles.service';
 
 import { TableColumnType } from '../types/TableColumnType';
-import { PaginationType } from '../types/PaginationType';
 import { UserType } from '../types/UserType';
 
 const { Option } = Select;
@@ -73,7 +72,6 @@ const Users = () => {
     const [allRoles, setAllRoles] = React.useState<roleType[]>([]);
     const [editingKey, setEditingKey] = React.useState<number>(null);
     const [cancelVisibility, setCancelVisibility] = React.useState<boolean>(false);
-    const [pagination, setPagination] = React.useState<PaginationType>({ current: 1, pageSize: 5 });
     const [errorsAdd, setErrorsAdd] = React.useState<string>('');
     const [errorsEdit, setErrorsEdit] = React.useState({});
     const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
@@ -340,7 +338,7 @@ const Users = () => {
             title: t('username_col'),
             dataIndex: 'username',
             editable: true,
-            ...getColumnSearch('username'),
+            ...EditableTableColumnSearch('username'),
             width: '20%',
             sorter: {
                 compare: (a, b) => a.username.localeCompare(b.username),
@@ -351,7 +349,7 @@ const Users = () => {
             title: t('email_col'),
             dataIndex: 'email',
             editable: true,
-            ...getColumnSearch('email'),
+            ...EditableTableColumnSearch('email'),
             width: '30%',
             sorter: {
                 compare: (a, b) => a.email.localeCompare(b.email),
@@ -362,7 +360,7 @@ const Users = () => {
             title: t('role_col'),
             dataIndex: 'role',
             editable: true,
-            ...getColumnSearch('role'),
+            ...EditableTableColumnSearch('role'),
             width: '15%',
             sorter: {
                 compare: (a, b) => a.role.localeCompare(b.role),
@@ -409,7 +407,7 @@ const Users = () => {
             dataIndex: 'nb_rooms',
             inputType: 'text',
             editable: false,
-            ...getColumnSearch('nb_rooms'),
+            ...EditableTableColumnSearch('nb_rooms'),
             width: '15%',
             sorter: {
                 compare: (a, b) => a.nb_rooms - b.nb_rooms,
@@ -572,21 +570,12 @@ const Users = () => {
                 </Modal>
             )}
 
-            <Table
-                className="hivelvet-table"
-                components={{
-                    body: {
-                        cell: EditableCell,
-                        row: ({ ...props }) => {
-                            return <EditableTableRow editForm={editForm} {...props} />;
-                        },
-                    },
-                }}
-                columns={mergedColumns}
+            <EditableTable
+                EditableCell={EditableCell}
+                editForm={editForm}
+                mergedColumns={mergedColumns}
                 dataSource={data}
-                pagination={pagination}
                 loading={loading}
-                onChange={(newPagination: PaginationType) => setPagination(newPagination)}
             />
         </>
     );

@@ -279,7 +279,8 @@ class Room extends BaseModel
     public function delete(): array
     {
         // delete associated roomslabels
-        $result = $this->deleteRoomsLabels();
+        $label  = new Label();
+        $result = $label->deleteRoomsLabels($this->id);
 
         if ($result) {
             try {
@@ -295,24 +296,5 @@ class Room extends BaseModel
         }
 
         return [[], ResponseCode::HTTP_FORBIDDEN];
-    }
-
-    public function deleteRoomsLabels(): bool
-    {
-        $this->logger->info('Starting delete rooms labels transaction.');
-        $this->db->begin();
-        $roomId = $this->id;
-
-        $roomlabel    = new RoomLabel();
-        $deleteResult = $roomlabel->erase(['room_id = ?', $roomId]);
-        if ($deleteResult) {
-            $this->logger->info('All Rooms Labels successfully deleted');
-            $this->db->commit();
-            $this->logger->info('Delete rooms and its associations transaction successfully commit.');
-
-            return true;
-        }
-
-        return false;
     }
 }

@@ -83,7 +83,6 @@ final class ChangePasswordTest extends Scenario
     public function testRequestInvalidUserData($f3): array
     {
         $test      = $this->newTest();
-        $faker     = Faker::create();
         $lastToken = new ResetPasswordToken();
         $lastToken->load(['id = ?', $lastToken->lastInsertId()]);
         $data = [

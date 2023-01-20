@@ -21,7 +21,7 @@ import { Trans, withTranslation } from 'react-i18next';
 import { t } from 'i18next';
 import EN_US from '../locale/en-US.json';
 
-import { PageHeader, Button, Row, Col, Typography, Table, Space, Modal, Popconfirm, Card, Checkbox, Input } from 'antd';
+import { PageHeader, Button, Row, Col, Typography, Space, Modal, Popconfirm, Card, Checkbox, Input } from 'antd';
 import {
     DeleteOutlined,
     QuestionCircleOutlined,
@@ -35,17 +35,16 @@ import {
 
 import Form, { FormInstance } from 'antd/lib/form';
 import { CompareRecords } from '../functions/compare.function';
-import EditableTableRow from './EditableTableRow';
+import { EditableTable } from './EditableTable';
 import EditableTableCell from './EditableTableCell';
 import Notifications from './Notifications';
-import { getColumnSearch } from './EditableTableColumnSearch';
+import EditableTableColumnSearch from './EditableTableColumnSearch';
 
 import { AxiosResponse } from 'axios';
 import AuthService from '../services/auth.service';
 import RolesService from '../services/roles.service';
 
 import { TableColumnType } from '../types/TableColumnType';
-import { PaginationType } from '../types/PaginationType';
 import { RoleType } from '../types/RoleType';
 
 const { Link } = Typography;
@@ -71,7 +70,6 @@ const Roles = () => {
     const [actions, setActions] = React.useState<string[]>([]);
     const [expandedKeys, setExpandedKeys] = React.useState<number[]>([]);
     const [changedKeys, setChangedKeys] = React.useState<number[]>([]);
-    const [pagination, setPagination] = React.useState<PaginationType>({ current: 1, pageSize: 5 });
     const [allPrivileges, setAllPrivileges] = React.useState<object>({});
 
     const [errorsAdd, setErrorsAdd] = React.useState<string[]>([]);
@@ -320,6 +318,7 @@ const Roles = () => {
     };
 
     // edit name
+    const [editTableForm] = Form.useForm();
     const EditableCell: React.FC<EditableCellProps> = ({ editable, children, dataIndex, record, ...restProps }) => {
         const [isShown, setIsShown] = useState<boolean>(false);
         const [editing, setEditing] = useState<boolean>(false);
@@ -483,7 +482,7 @@ const Roles = () => {
             dataIndex: 'name',
             editable: true,
             width: '35%',
-            ...getColumnSearch('name'),
+            ...EditableTableColumnSearch('name'),
             sorter: {
                 compare: (a, b) => a.name.localeCompare(b.name),
                 multiple: 2,
@@ -623,23 +622,14 @@ const Roles = () => {
                 </Modal>
             )}
 
-            <Table
-                className="hivelvet-table"
-                components={{
-                    body: {
-                        cell: EditableCell,
-                        row: ({ ...props }) => {
-                            const [editForm] = Form.useForm();
-                            return <EditableTableRow editForm={editForm} editContext={EditableContext} {...props} />;
-                        },
-                    },
-                }}
-                columns={mergedColumns}
+            <EditableTable
+                EditableCell={EditableCell}
+                editForm={editTableForm}
+                EditableContext={EditableContext}
+                mergedColumns={mergedColumns}
                 dataSource={data}
-                pagination={pagination}
                 loading={loading}
-                onChange={(newPagination: PaginationType) => setPagination(newPagination)}
-                expandable={{
+                expandableTable={{
                     expandedRowRender: expandedRowRender,
                     showExpandColumn: false,
                     expandedRowKeys: expandedKeys,
