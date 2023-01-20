@@ -273,7 +273,7 @@
         "required": "The Short Link is required"
     },
     "labels_required": "labels are required",
-    "room-name-already-exist": "Room Name already exists",
+    "room-name-already-exist": "Room name already exists",
     "room-link-already-exist": "Room link already exists",
     "add_room_success": "Room Added Successfully",
 
