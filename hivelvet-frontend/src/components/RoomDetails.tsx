@@ -38,7 +38,6 @@ import {
     ShareAltOutlined,
     TeamOutlined,
     TwitterOutlined,
-    CloseOutlined,
 } from '@ant-design/icons';
 import {
     Avatar,
@@ -57,6 +56,7 @@ import {
     Empty,
     Form,
     Spin,
+    Select,
     Popconfirm,
 } from 'antd';
 
@@ -64,20 +64,58 @@ import DynamicIcon from './DynamicIcon';
 import Notifications from './Notifications';
 import { MenuProps } from 'antd/lib/menu';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { CustomTagProps } from 'rc-select/lib/BaseSelect';
 
 import RoomsService from 'services/rooms.service';
 import RecordingsService from '../services/recordings.service';
 import LocaleService from '../services/locale.service';
+import LabelsService from 'services/labels.service';
+import PresetsService from 'services/presets.service';
+import AuthService from 'services/auth.service';
 
 import type { RcFile, UploadProps } from 'antd/es/upload';
 import type { UploadFile } from 'antd/es/upload/interface';
 import { RoomType } from '../types/RoomType';
 import { RecordingType } from '../types/RecordingType';
+import { PresetType } from 'types/PresetType';
+import { LabelType } from 'types/LabelType';
 
 const { Title } = Typography;
+const { Option } = Select;
+
 type formType = {
     name: string;
 };
+
+const tagRender = (props: CustomTagProps) => {
+    const { label, value, closable, onClose } = props;
+    const onPreventMouseDown = (event: React.MouseEvent<HTMLSpanElement>) => {
+        event.preventDefault();
+        event.stopPropagation();
+    };
+    return (
+        <Tag color={value} onMouseDown={onPreventMouseDown} closable={closable} onClose={onClose}>
+            {label}
+        </Tag>
+    );
+};
+
+const getBase64 = (file: RcFile): Promise<string> =>
+    new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = (error) => reject(error);
+    });
+
+const uploadButton = (
+    <div>
+        <PlusOutlined />
+        <div className="mt-8 upload-file">
+            <Trans i18nKey="upload" />
+        </div>
+    </div>
+);
 
 const RoomDetails = () => {
     const { state } = useLocation();
@@ -88,53 +126,9 @@ const RoomDetails = () => {
     const [isRunning, setIsRunning] = useState<boolean>(false);
     const [canStart, setCanStart] = useState<boolean>(false);
 
-    const [roomRecordings, setRoomRecordings] = React.useState<RecordingType[]>([]);
-    const [loading, setLoading] = React.useState<boolean>(false);
-
-    const checkRoomStarted = () => {
-        RoomsService.getRoomByLink(param.shortlink)
-            .then((response) => {
-                if (response.data.room) {
-                    setRoom(response.data.room);
-                }
-                if (response.data.meeting) {
-                    setCanStart(response.data.meeting.canStart);
-                    setIsRunning(response.data.meeting.running);
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-            })
-            .finally(() => {
-                setIsLoading(false);
-            });
-    };
-    const getRoomRecordings = () => {
-        setLoading(true);
-        RecordingsService.list_recordings(room.id)
-            .then((response) => {
-                setRoomRecordings(response.data);
-            })
-            .catch((error) => {
-                console.log(error);
-            })
-            .finally(() => {
-                setLoading(false);
-            });
-    };
-
-    useEffect(() => {
-        //Runs only on the first render
-        checkRoomStarted();
-        getRoomRecordings();
-    }, []);
-
     const [copied, setCopied] = useState<boolean>(false);
-    const [errorsEdit, setErrorsEdit] = React.useState({});
-
     const [previewOpen, setPreviewOpen] = useState<boolean>(false);
     const [previewImage, setPreviewImage] = useState<string>('');
-    const [isEditing, setIsEditing] = React.useState<boolean>(false);
     const [fileList, setFileList] = useState<UploadFile[]>([
         {
             uid: '-1',
@@ -161,6 +155,71 @@ const RoomDetails = () => {
             url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
         },
     ]);
+
+    const [errorsEdit, setErrorsEdit] = React.useState({});
+    const [isEditing, setIsEditing] = React.useState<boolean>(false);
+    const [labels, setLabels] = React.useState<LabelType[]>();
+    const [presets, setPresets] = React.useState<PresetType[]>();
+    const prefixShortLink = '/hv/';
+
+    const [roomRecordings, setRoomRecordings] = React.useState<RecordingType[]>([]);
+    const [loading, setLoading] = React.useState<boolean>(false);
+
+    const getPresets = () => {
+        PresetsService.list_presets(AuthService.getCurrentUser().id).then((result) => {
+            setPresets(result.data);
+        });
+    };
+    const getLabels = () => {
+        const labels_data = [];
+        LabelsService.list_labels().then((result) => {
+            result.data.forEach((label) => {
+                labels_data.push({ label: label.name, value: label.color });
+            });
+            setLabels(labels_data);
+        });
+    };
+    const checkRoomStarted = () => {
+        RoomsService.getRoomByLink(param.shortlink)
+            .then((response) => {
+                const room: RoomType = response.data.room;
+                const meeting = response.data.meeting;
+                if (room != null) {
+                    setRoom(room);
+                }
+                if (meeting != null) {
+                    setCanStart(meeting.canStart);
+                    setIsRunning(meeting.running);
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+            .finally(() => {
+                setIsLoading(false);
+            });
+    };
+    const getRoomRecordings = () => {
+        setLoading(true);
+        RecordingsService.list_recordings(room.id)
+            .then((response) => {
+                setRoomRecordings(response.data);
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    };
+
+    useEffect(() => {
+        //Runs only on the first render
+        checkRoomStarted();
+        getPresets();
+        getLabels();
+        getRoomRecordings();
+    }, []);
 
     //details
     const actionsItems: MenuProps['items'] = [
@@ -193,13 +252,6 @@ const RoomDetails = () => {
 
     //ppts
     const handleCancel = () => setPreviewOpen(false);
-    const getBase64 = (file: RcFile): Promise<string> =>
-        new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result as string);
-            reader.onerror = (error) => reject(error);
-        });
     const handlePreview = async (file: UploadFile) => {
         if (!file.url && !file.preview) {
             file.preview = await getBase64(file.originFileObj as RcFile);
@@ -208,7 +260,10 @@ const RoomDetails = () => {
         setPreviewImage(file.url || (file.preview as string));
         setPreviewOpen(true);
     };
-    const start = () => {
+    const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) => setFileList(newFileList);
+
+    //start
+    const startRoom = () => {
         RoomsService.start_room(room.id)
             .then((result) => {
                 window.open(result.data, '_blank');
@@ -218,19 +273,23 @@ const RoomDetails = () => {
                 Notifications.openNotificationWithIcon('error', t('meeting_not_started'));
             });
     };
-    const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) => setFileList(newFileList);
-    const uploadButton = (
-        <div>
-            <PlusOutlined />
-            <div className="mt-8 upload-file">
-                <Trans i18nKey="upload" />
-            </div>
-        </div>
-    );
+
+    //edit
     const [editForm] = Form.useForm();
     const toggleEdit = () => {
         setIsEditing(true);
-        editForm.setFieldsValue({ name: room.name });
+
+        const labels_data = [];
+        room.labels.forEach((label) => {
+            labels_data.push(label.color);
+        });
+
+        editForm.setFieldsValue({
+            name: room.name,
+            short_link: room.short_link,
+            labels: labels_data,
+            preset_id: room.preset_id,
+        });
     };
     const cancelEdit = () => {
         setErrorsEdit({});
@@ -245,7 +304,6 @@ const RoomDetails = () => {
                 .then((response) => {
                     setRoom(response.data.room);
                     Notifications.openNotificationWithIcon('success', t('edit_room_success'));
-
                     cancelEdit();
                 })
                 .catch((error) => {
@@ -253,7 +311,6 @@ const RoomDetails = () => {
                     if (responseData.errors) {
                         setErrorsEdit(responseData.errors);
                     }
-                    console.log(error);
                 });
         } catch (errInfo) {
             console.log('Save failed:', errInfo);
@@ -265,21 +322,44 @@ const RoomDetails = () => {
             {isLoading ? (
                 <Spin size="large" className="mt-30 content-center" />
             ) : (
-                room && (
+                room != null && (
                     <div className="page-padding">
                         <Row align="bottom" className="mb-40">
                             <Col span={10}>
                                 <Row justify="end" className="mb-5">
-                                    {!isEditing && (
+                                    {!isEditing ? (
                                         <Button
                                             className="edit-btn"
                                             size="small"
                                             type="link"
                                             icon={<EditOutlined />}
                                             onClick={toggleEdit}
+                                            disabled={room.user_id !== AuthService.getCurrentUser().id}
                                         >
-                                            {t('rename')}
+                                            {t('edit')}
                                         </Button>
+                                    ) : (
+                                        <>
+                                            <Space size={'middle'}>
+                                                <Popconfirm
+                                                    title={t('cancel_edit')}
+                                                    placement="leftTop"
+                                                    onConfirm={() => cancelEdit()}
+                                                >
+                                                    <Button size="middle" className="cell-input-cancel">
+                                                        <Trans i18nKey="cancel" />
+                                                    </Button>
+                                                </Popconfirm>
+                                                <Button
+                                                    size="middle"
+                                                    onClick={handleSaveEdit}
+                                                    type="primary"
+                                                    className="cell-input-save"
+                                                >
+                                                    <Trans i18nKey="save" />
+                                                </Button>
+                                            </Space>
+                                        </>
                                     )}
                                 </Row>
                                 <Card bordered={false} className="room-details gray-bg">
@@ -287,89 +367,149 @@ const RoomDetails = () => {
                                         <Col span={22}>
                                             <Space direction="vertical" size="large">
                                                 {!isEditing && editable ? (
-                                                    <Title level={3}>{room.name}</Title>
-                                                ) : (
-                                                    <Form form={editForm}>
-                                                        <Form.Item
-                                                            name="name"
-                                                            className="input-editable"
-                                                            {...('name' in errorsEdit && {
-                                                                help: (
-                                                                    <Trans
-                                                                        i18nKey={Object.keys(EN_US).filter(
-                                                                            (elem) => EN_US[elem] == errorsEdit['name']
-                                                                        )}
-                                                                    />
-                                                                ),
-                                                                validateStatus: 'error',
-                                                            })}
-                                                            rules={[
-                                                                {
-                                                                    required: true,
-                                                                    message: <Trans i18nKey="name.required" />,
-                                                                },
-                                                            ]}
-                                                        >
-                                                            <Input
-                                                                className="input"
-                                                                onPressEnter={handleSaveEdit}
-                                                                suffix={
-                                                                    <>
-                                                                        <Popconfirm
-                                                                            title={t('cancel_edit')}
-                                                                            placement="leftTop"
-                                                                            onConfirm={() => cancelEdit()}
+                                                    <>
+                                                        <Title level={3}>{room.name}</Title>
+                                                        <div className="room-labels">
+                                                            {room.labels.map((item) => (
+                                                                <Tag key={item.id} color={item.color}>
+                                                                    {item.name}
+                                                                </Tag>
+                                                            ))}
+                                                        </div>
+                                                        <Input
+                                                            id={'room-shortlink'}
+                                                            readOnly
+                                                            defaultValue={room.short_link}
+                                                            prefix={<LinkOutlined />}
+                                                            suffix={
+                                                                copied ? (
+                                                                    <Tooltip title={<Trans i18nKey="copied" />}>
+                                                                        <CheckOutlined className="text-success" />
+                                                                    </Tooltip>
+                                                                ) : (
+                                                                    <Tooltip title={<Trans i18nKey="copy_shortlink" />}>
+                                                                        <CopyToClipboard
+                                                                            text={room.short_link}
+                                                                            onCopy={copyClipboard}
                                                                         >
-                                                                            <Button
-                                                                                icon={<CloseOutlined />}
-                                                                                size="small"
-                                                                                className="cell-input-cancel"
-                                                                            />
-                                                                        </Popconfirm>
-                                                                        <Button
-                                                                            icon={<CheckOutlined />}
-                                                                            size="small"
-                                                                            onClick={handleSaveEdit}
-                                                                            type="primary"
-                                                                            className="cell-input-save"
+                                                                            <CopyOutlined />
+                                                                        </CopyToClipboard>
+                                                                    </Tooltip>
+                                                                )
+                                                            }
+                                                        />
+                                                    </>
+                                                ) : (
+                                                    <Space size="middle" direction="vertical">
+                                                        <Form form={editForm}>
+                                                            <Form.Item
+                                                                name="name"
+                                                                className="input-editable"
+                                                                {...('name' in errorsEdit && {
+                                                                    help: (
+                                                                        <Trans
+                                                                            i18nKey={Object.keys(EN_US).filter(
+                                                                                (elem) =>
+                                                                                    EN_US[elem] == errorsEdit['name']
+                                                                            )}
                                                                         />
-                                                                    </>
-                                                                }
-                                                            />
-                                                        </Form.Item>
-                                                    </Form>
-                                                )}
-
-                                                <div className="room-labels">
-                                                    {room.labels.map((item) => (
-                                                        <Tag key={item.id} color={item.color}>
-                                                            {item.name}
-                                                        </Tag>
-                                                    ))}
-                                                </div>
-                                                <Input
-                                                    id={'room-shortlink'}
-                                                    readOnly
-                                                    defaultValue={room.short_link}
-                                                    prefix={<LinkOutlined />}
-                                                    suffix={
-                                                        copied ? (
-                                                            <Tooltip title={<Trans i18nKey="copied" />}>
-                                                                <CheckOutlined className="text-success" />
-                                                            </Tooltip>
-                                                        ) : (
-                                                            <Tooltip title={<Trans i18nKey="copy_shortlink" />}>
-                                                                <CopyToClipboard
-                                                                    text={room.short_link}
-                                                                    onCopy={copyClipboard}
+                                                                    ),
+                                                                    validateStatus: 'error',
+                                                                })}
+                                                                rules={[
+                                                                    {
+                                                                        required: true,
+                                                                        message: <Trans i18nKey="name.required" />,
+                                                                    },
+                                                                ]}
+                                                            >
+                                                                <Input className="input" />
+                                                            </Form.Item>
+                                                            <Form.Item
+                                                                name="preset_id"
+                                                                rules={[
+                                                                    {
+                                                                        required: true,
+                                                                        message: <Trans i18nKey="preset.required" />,
+                                                                    },
+                                                                ]}
+                                                            >
+                                                                <Select
+                                                                    className="select-field"
+                                                                    showSearch
+                                                                    onChange={(val) =>
+                                                                        editForm.setFieldValue('preset_id', val)
+                                                                    }
+                                                                    allowClear
+                                                                    placeholder={t('preset.label')}
+                                                                    defaultValue={room.preset_id}
+                                                                    filterOption={(input, option) =>
+                                                                        option.children
+                                                                            .toString()
+                                                                            .toLowerCase()
+                                                                            .indexOf(input.toString().toLowerCase()) >=
+                                                                        0
+                                                                    }
+                                                                    filterSort={(optionA, optionB) =>
+                                                                        optionA.children
+                                                                            .toString()
+                                                                            .toLowerCase()
+                                                                            .localeCompare(
+                                                                                optionB.children
+                                                                                    .toString()
+                                                                                    .toLowerCase()
+                                                                            )
+                                                                    }
                                                                 >
-                                                                    <CopyOutlined />
-                                                                </CopyToClipboard>
-                                                            </Tooltip>
-                                                        )
-                                                    }
-                                                />
-
+                                                                    {presets.map((item) => (
+                                                                        <Option
+                                                                            key={item.id}
+                                                                            value={item.id}
+                                                                            className="text-capitalize"
+                                                                        >
+                                                                            {item.name}
+                                                                        </Option>
+                                                                    ))}
+                                                                </Select>
+                                                            </Form.Item>
+                                                            <Form.Item name="labels">
+                                                                <Select
+                                                                    mode="multiple"
+                                                                    showArrow
+                                                                    tagRender={tagRender}
+                                                                    style={{ width: '100%' }}
+                                                                    options={labels}
+                                                                />
+                                                            </Form.Item>
+                                                            <Form.Item
+                                                                name="short_link"
+                                                                {...('short_link' in errorsEdit && {
+                                                                    help: (
+                                                                        <Trans
+                                                                            i18nKey={Object.keys(EN_US).filter(
+                                                                                (elem) =>
+                                                                                    EN_US[elem] ==
+                                                                                    errorsEdit['short_link']
+                                                                            )}
+                                                                        />
+                                                                    ),
+                                                                    validateStatus: 'error',
+                                                                })}
+                                                                rules={[
+                                                                    {
+                                                                        required: true,
+                                                                        message: <Trans i18nKey="shortlink.required" />,
+                                                                    },
+                                                                ]}
+                                                            >
+                                                                <Input
+                                                                    addonBefore={prefixShortLink}
+                                                                    defaultValue={room.short_link}
+                                                                />
+                                                            </Form.Item>
+                                                        </Form>
+                                                    </Space>
+                                                )}
                                                 <div className="medias">
                                                     <Space size="middle" className="social-media">
                                                         <Tooltip
@@ -401,7 +541,7 @@ const RoomDetails = () => {
                                             <Avatar
                                                 size={{ xs: 40, sm: 64, md: 85, lg: 100, xl: 120, xxl: 140 }}
                                                 className="ant-btn-primary hivelvet-btn"
-                                                onClick={start}
+                                                onClick={startRoom}
                                             >
                                                 <Trans i18nKey={canStart ? 'start' : isRunning && 'join'} />
                                             </Avatar>

@@ -195,7 +195,7 @@ export const AddRoomForm = (props: Props) => {
                                     },
                                 ]}
                             >
-                                <Input placeholder={t('name.label')} defaultValue={'ha'} />
+                                <Input placeholder={t('name.label')} />
                             </Form.Item>
 
                             <Form.Item
@@ -308,12 +308,6 @@ export const AddRoomForm = (props: Props) => {
                                 })}
                                 name="labels"
                                 label={<Trans i18nKey="labels" />}
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: <Trans i18nKey="labels_required" />,
-                                    },
-                                ]}
                             >
                                 <Select
                                     mode="multiple"
