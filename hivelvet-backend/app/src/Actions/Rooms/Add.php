@@ -58,7 +58,6 @@ class Add extends BaseAction
         $dataChecker->verify($form['name'], Validator::notEmpty()->setName('name'));
         $dataChecker->verify($form['shortlink'], Validator::notEmpty()->setName('shortlink'));
         $dataChecker->verify($form['preset'], Validator::notEmpty()->setName('preset'));
-        $dataChecker->verify($form['labels'], Validator::notEmpty()->setName('labels'));
 
         $errorMessage = 'Room could not be added';
         if ($dataChecker->allValid()) {
@@ -117,7 +116,8 @@ class Add extends BaseAction
                         $room = $room->getRoomInfos($room->id);
 
                         $r              = new Room();
-                        $room['labels'] = $r->getLabels($room['key']);
+                        $room['labels'] = $r->getLabels($room['id']);
+
                         $this->renderJson(['result' => 'success', 'room' => $room], ResponseCode::HTTP_CREATED);
                     }
                 } else {

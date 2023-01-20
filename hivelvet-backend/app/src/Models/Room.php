@@ -72,9 +72,9 @@ class Room extends BaseModel
         return $this->load(['meeting_id = ?', $meetingId]);
     }
 
-    public function shortlinkExists($shortlink)
+    public function shortlinkExists($shortlink, $id = null)
     {
-        return $this->load(['short_link = ?', $shortlink]);
+        return $this->load(['short_link = ? and id != ?', $shortlink, $id]);
     }
 
     /**
@@ -167,7 +167,8 @@ class Room extends BaseModel
         $roomlabel = new RoomLabel();
 
         $roomlabels = $roomlabel->collectAllByRoomId($room);
-        $lbs        = [];
+
+        $lbs = [];
         if ($roomlabels) {
             foreach ($roomlabels as $rl) {
                 $label = new Label();
