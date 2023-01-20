@@ -38,6 +38,7 @@ import RoomRecordings from './RoomRecordings';
 import RoomPresentations from './RoomPresentations';
 import CopyTextToClipBoard from './CopyTextToClipBoard';
 import LoadingSpinner from './LoadingSpinner';
+import { DataContext } from 'lib/RoomsContext';
 
 import RoomsService from 'services/rooms.service';
 import RecordingsService from '../services/recordings.service';
@@ -85,6 +86,7 @@ const RoomDetails = () => {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [isRunning, setIsRunning] = useState<boolean>(false);
     const [canStart, setCanStart] = useState<boolean>(false);
+    const dataContext = React.useContext(DataContext);
 
     const [errorsEdit, setErrorsEdit] = React.useState({});
     const [isEditing, setIsEditing] = React.useState<boolean>(false);
