@@ -225,7 +225,7 @@ const Recordings = () => {
             ...EditableTableColumnSearch('name'),
             sorter: {
                 compare: (a, b) => a.name.localeCompare(b.name),
-                multiple: 2,
+                multiple: 4,
             },
         },
         {
@@ -235,7 +235,7 @@ const Recordings = () => {
             ...EditableTableColumnSearch('date'),
             sorter: {
                 compare: (a, b) => a.date.localeCompare(b.date),
-                multiple: 2,
+                multiple: 3,
             },
         },
         {
@@ -313,10 +313,6 @@ const Recordings = () => {
                 value: item,
             })),
             onFilter: (value, record) => record.state === value,
-            sorter: {
-                compare: (a, b) => a.state.localeCompare(b.state),
-                multiple: 2,
-            },
         },
         {
             title: t('formats_col'),

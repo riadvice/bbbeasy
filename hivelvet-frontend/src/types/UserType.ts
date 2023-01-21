@@ -21,7 +21,7 @@ export type UserType = {
     key?: number;
     username: string;
     email: string;
-    role: string;
+    role: string | number;
     permissions?: object;
     status?: string;
     nb_rooms?: number;

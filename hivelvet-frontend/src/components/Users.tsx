@@ -239,7 +239,7 @@ const Users = () => {
     const changeRoleCol = (record: UserType): object => {
         if (typeof record.role == 'string') {
             const res = allRoles.filter((role) => role.name == record.role);
-            record.role = String(res[0].id);
+            record.role = res[0].id;
         }
         return record;
     };
@@ -301,7 +301,6 @@ const Users = () => {
                 err[errorKey] = error['errors'][0];
             });
             console.log(err);
-            //setErrorsEdit(err);
         }
     };
 
@@ -339,7 +338,7 @@ const Users = () => {
             width: '20%',
             sorter: {
                 compare: (a, b) => a.username.localeCompare(b.username),
-                multiple: 5,
+                multiple: 4,
             },
         },
         {
@@ -350,7 +349,7 @@ const Users = () => {
             width: '30%',
             sorter: {
                 compare: (a, b) => a.email.localeCompare(b.email),
-                multiple: 4,
+                multiple: 3,
             },
         },
         {
@@ -361,7 +360,7 @@ const Users = () => {
             width: '15%',
             sorter: {
                 compare: (a, b) => a.role.localeCompare(b.role),
-                multiple: 3,
+                multiple: 2,
             },
         },
         {
@@ -394,10 +393,6 @@ const Users = () => {
                 value: item,
             })),
             onFilter: (value, record) => record.status === value,
-            sorter: {
-                compare: (a, b) => a.status.localeCompare(b.status),
-                multiple: 2,
-            },
         },
         {
             title: t('nb_rooms_col'),
