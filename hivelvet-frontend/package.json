@@ -10,7 +10,7 @@
         "@types/lodash": "^4.14.191",
         "antd": "^4.22.8",
         "antd-password-input-strength": "^2.0.1",
-        "axios": "^1.2.2",
+        "axios": "^1.2.3",
         "babel-loader": "^9.1.2",
         "babel-plugin-styled-components": "^2.0.7",
         "circular-dependency-plugin": "^5.2.2",
