@@ -18,7 +18,6 @@
 
 import React, { useEffect } from 'react';
 import UsersService from '../services/users.service';
-import RolesService from '../services/roles.service';
 import Notifications from './Notifications';
 import AddUserForm from './AddUserForm';
 import { PaginationType } from '../types/PaginationType';
@@ -26,14 +25,14 @@ import { PaginationType } from '../types/PaginationType';
 import { Trans, withTranslation } from 'react-i18next';
 import EN_US from '../locale/en-US.json';
 import { t } from 'i18next';
-
+import { TableColumnType } from '../types/TableColumnType';
 import { Alert, Button, Form, Input, Modal, PageHeader, Popconfirm, Select, Space, Table, Tag, Typography } from 'antd';
 import { DeleteOutlined, EditOutlined, QuestionCircleOutlined, SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words/dist/main';
 import { FormInstance } from 'antd/lib/form';
 import _ from 'lodash';
-import AuthService from '../services/auth.service';
-import { TableColumnType } from '../types/TableColumnType';
+import rolesService from 'services/roles.service';
+import authService from 'services/auth.service';
 
 const { Option } = Select;
 const { Link } = Typography;
@@ -47,7 +46,7 @@ type Item = {
     nb_rooms: number;
 };
 type roleType = {
-    id?: string;
+    key?: string;
     name?: string;
 };
 type formType = {
@@ -70,15 +69,16 @@ const EditableContext = React.createContext<FormInstance | null>(null);
 let addForm: FormInstance = null;
 
 const Users = () => {
-    const [data, setData] = React.useState<Item[]>([]);
-    const [loading, setLoading] = React.useState<boolean>(false);
     const [actions, setActions] = React.useState<string[]>([]);
     const [colletRolesAction, setCollectRolesAction] = React.useState<boolean>(false);
+
+    const [data, setData] = React.useState<Item[]>([]);
     const [allStates, setAllStates] = React.useState<string[]>([]);
     const [allRoles, setAllRoles] = React.useState<roleType[]>([]);
     const [editingKey, setEditingKey] = React.useState<number>(null);
     const [cancelVisibility, setCancelVisibility] = React.useState<boolean>(false);
     const [pagination, setPagination] = React.useState<PaginationType>({ current: 1, pageSize: 5 });
+    const [loading, setLoading] = React.useState<boolean>(false);
     const [errorsAdd, setErrorsAdd] = React.useState<string>('');
     const [errorsEdit, setErrorsEdit] = React.useState({});
     const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
@@ -87,7 +87,8 @@ const Users = () => {
 
     //list
     const getRoles = () => {
-        RolesService.collect_roles()
+        rolesService
+            .list_roles()
             .then((response) => {
                 const roles = response.data;
                 if (roles.length > 0) {
@@ -118,8 +119,8 @@ const Users = () => {
     };
     useEffect(() => {
         //Runs only on the first render
-        const rolesActions = AuthService.getActionsPermissionsByGroup('roles');
-        const isCollect = AuthService.isAllowedAction(rolesActions, 'collect');
+        const rolesActions = authService.getActionsPermissionsByGroup('roles');
+        const isCollect = authService.isAllowedAction(rolesActions, 'collect');
         setCollectRolesAction(isCollect);
 
         if (isCollect) {
@@ -127,7 +128,7 @@ const Users = () => {
         }
         getUsers();
 
-        const usersActions = AuthService.getActionsPermissionsByGroup('users');
+        const usersActions = authService.getActionsPermissionsByGroup('users');
         setActions(usersActions);
     }, []);
 
@@ -152,7 +153,7 @@ const Users = () => {
     };
     const getSelectRoles = () => {
         const rolesOptions = allRoles.map((item) => (
-            <Option key={item.id} value={item.id} className="text-capitalize">
+            <Option key={item.key} value={item.key} className="text-capitalize">
                 {item.name}
             </Option>
         ));
@@ -232,7 +233,6 @@ const Users = () => {
                     {t(item)}
                 </Option>
             ));
-
             inputNode = dataIndex == 'role' ? getSelectRoles() : getSelectItems(t('status.placeholder'), statesOptions);
         } else {
             inputNode = <Input onFocus={() => setCancelVisibility(false)} />;
@@ -284,7 +284,8 @@ const Users = () => {
     const changeRoleCol = (record: Item): object => {
         if (typeof record.role == 'string') {
             const res = allRoles.filter((role) => role.name == record.role);
-            record.role = res[0].id;
+
+            record.role = res[0].key;
         }
         return record;
     };
@@ -292,7 +293,9 @@ const Users = () => {
         setCancelVisibility(false);
         setEditingKey(record.key);
         let newRecord: object = { ...record };
+
         newRecord = changeRoleCol(newRecord as Item);
+
         editForm.setFieldsValue(newRecord);
     };
     const cancelEdit = () => {
@@ -307,6 +310,7 @@ const Users = () => {
     const saveEdit = async (record: Item, key: number) => {
         try {
             const formValues: object = await editForm.validateFields();
+
             setErrorsEdit({});
             if (!compareEdit(record, editForm.getFieldsValue(true))) {
                 UsersService.edit_user(formValues, key)
@@ -346,7 +350,7 @@ const Users = () => {
                 err[errorKey] = error['errors'][0];
             });
             console.log(err);
-            setErrorsEdit(err);
+            //setErrorsEdit(err);
         }
     };
 
@@ -454,7 +458,7 @@ const Users = () => {
             ...getColumnSearchProps('email'),
             width: '30%',
             sorter: {
-                compare: (a, b) => a.username.localeCompare(b.username),
+                compare: (a, b) => a.email.localeCompare(b.email),
                 multiple: 4,
             },
         },
@@ -465,7 +469,7 @@ const Users = () => {
             ...getColumnSearchProps('role'),
             width: '15%',
             sorter: {
-                compare: (a, b) => a.username.localeCompare(b.username),
+                compare: (a, b) => a.role.localeCompare(b.role),
                 multiple: 3,
             },
         },
@@ -500,7 +504,7 @@ const Users = () => {
             })),
             onFilter: (value, record) => record.status === value,
             sorter: {
-                compare: (a, b) => a.username.localeCompare(b.username),
+                compare: (a, b) => a.status.localeCompare(b.status),
                 multiple: 2,
             },
         },
@@ -512,15 +516,14 @@ const Users = () => {
             ...getColumnSearchProps('rooms_number'),
             width: '15%',
             sorter: {
-                compare: (a, b) => a.name.localeCompare(b.name),
+                compare: (a, b) => a.nb_rooms - b.nb_rooms,
                 multiple: 1,
             },
         },
     ];
-
     if (
-        (AuthService.isAllowedAction(actions, 'edit') && colletRolesAction) ||
-        AuthService.isAllowedAction(actions, 'delete')
+        (authService.isAllowedAction(actions, 'edit') && colletRolesAction) ||
+        authService.isAllowedAction(actions, 'delete')
     ) {
         columns[0].width = '15%';
         columns[1].width = '25%';
@@ -564,12 +567,12 @@ const Users = () => {
                     </Space>
                 ) : (
                     <Space size="middle" className="table-actions">
-                        {AuthService.isAllowedAction(actions, 'edit') && colletRolesAction && (
+                        {authService.isAllowedAction(actions, 'edit') && colletRolesAction && (
                             <Link disabled={editingKey !== null} onClick={() => toggleEdit(record)}>
                                 <EditOutlined /> <Trans i18nKey="edit" />
                             </Link>
                         )}
-                        {AuthService.isAllowedAction(actions, 'delete') && !deletedRow && (
+                        {authService.isAllowedAction(actions, 'delete') && !deletedRow && (
                             <Popconfirm
                                 title={t('delete_user_confirm')}
                                 icon={<QuestionCircleOutlined className="red-icon" />}
@@ -585,7 +588,6 @@ const Users = () => {
             },
         });
     }
-
     const mergedColumns = columns.map((col) => {
         if (!col.editable) {
             return col;
@@ -608,7 +610,7 @@ const Users = () => {
                 className="site-page-header"
                 title={<Trans i18nKey="users" />}
                 extra={
-                    AuthService.isAllowedAction(actions, 'add') &&
+                    authService.isAllowedAction(actions, 'add') &&
                     colletRolesAction && [
                         <Button key="1" type="primary" id="add-user-btn" onClick={toggleAdd}>
                             <Trans i18nKey="new_user" />
@@ -617,7 +619,7 @@ const Users = () => {
                 }
             />
 
-            {AuthService.isAllowedAction(actions, 'add') && colletRolesAction && (
+            {authService.isAllowedAction(actions, 'add') && colletRolesAction && (
                 <Modal
                     title={<Trans i18nKey="new_user" />}
                     className="add-modal"

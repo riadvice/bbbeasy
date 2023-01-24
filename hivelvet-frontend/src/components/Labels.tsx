@@ -405,7 +405,7 @@ const Labels = () => {
             ...getColumnSearchProps('description'),
             width: '40%',
             sorter: {
-                compare: (a, b) => a.name.localeCompare(b.name),
+                compare: (a, b) => a.description.localeCompare(b.description),
                 multiple: 2,
             },
         },
@@ -417,7 +417,7 @@ const Labels = () => {
             ...getColumnSearchProps('rooms_number'),
             width: '15%',
             sorter: {
-                compare: (a, b) => a.name.localeCompare(b.name),
+                compare: (a, b) => a.nb_rooms - b.nb_rooms,
                 multiple: 1,
             },
         },

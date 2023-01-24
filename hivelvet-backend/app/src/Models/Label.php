@@ -66,6 +66,10 @@ class Label extends BaseModel
      */
     public function getByColor($color): self
     {
+        if ('array' === \gettype($color)) {
+            $color = $color['value'];
+        }
+
         $this->load(['color = ?', $color]);
 
         return $this;

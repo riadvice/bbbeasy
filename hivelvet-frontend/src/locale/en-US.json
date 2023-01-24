@@ -273,7 +273,7 @@
         "required": "The Short Link is required"
     },
     "labels_required": "labels are required",
-    "room-name-already-exist": "Room Name already exists",
+    "room-name-already-exist": "Room name already exists",
     "room-link-already-exist": "Room link already exists",
     "add_room_success": "Room Added Successfully",
 
@@ -305,5 +305,7 @@
     "meeting_not_started": "Meeting has not started yet",
 
     "install_locked_title": "Install Process locked",
-    "install_locked_text": "Sorry, you are not authorized to access this page, application already installed"
+    "install_locked_text": "Sorry, you are not authorized to access this page, application already installed",
+    "found_results": "Found {{count}} results",
+    "search_all_rooms": "Search all my rooms"
 }
