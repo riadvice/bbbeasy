@@ -6802,9 +6802,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cypress@npm:^10.8.0":
-  version: 10.11.0
-  resolution: "cypress@npm:10.11.0"
+"cypress@npm:^12.4.0":
+  version: 12.4.0
+  resolution: "cypress@npm:12.4.0"
   dependencies:
     "@cypress/request": ^2.88.10
     "@cypress/xvfb": ^1.2.4
@@ -6850,7 +6850,7 @@ __metadata:
     yauzl: ^2.10.0
   bin:
     cypress: bin/cypress
-  checksum: 938cc6a20f7eeace5c8e850d234904ee1651cbb36d94666fe600cf17ce964e73d4f7d8d944aab677491702a57364e6aceeb4fe8bcbd96147ff5e2b575a956fb2
+  checksum: 34eeb48547e3bea3312e71147ddc87a08fe90cef92434194621a9bf7747026471b01e41f1ded3a406db4fbb2e70c03d7e5d0df011227f969882550fe64a7d5d1
   languageName: node
   linkType: hard
 
@@ -9550,7 +9550,7 @@ __metadata:
     craco-fast-refresh: ^1.1.0
     craco-less: ^2.0.0
     craco-plugin-react-hot-reload: ^0.1.0
-    cypress: ^10.8.0
+    cypress: ^12.4.0
     dotenv: ^16.0.2
     dotenv-cra: ^3.0.2
     eslint: ^8.32.0
