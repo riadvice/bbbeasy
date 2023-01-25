@@ -45,64 +45,65 @@ class PresetProcessor
         return $data;
     }
 
-    public function toCreateMeetingParams($preset)
+    public function toCreateMeetingParams($preset, $createParams)
     {
         $presetData = $this->preparePresetData($preset);
 
-        return [
-            'muteOnStart'                            => $presetData['Audio'] ? ($presetData['Audio']['users_join_muted'] ? true : false) : null,
-            'allowModsToUnmuteUsers'                 => $presetData['Audio'] ? ($presetData['Audio']['moderators_allowed_to_unmute_users'] ? true : false) : null,
-            // auto_join,listen_only_enabled,skip_echo_test
+        $createParams->setMuteOnStart($presetData['Audio'] ? ($presetData['Audio']['users_join_muted'] ? true : false) : false);
+        $createParams->setAllowModsToUnmuteUsers($presetData['Audio'] ? ($presetData['Audio']['moderators_allowed_to_unmute_users'] ? true : false) : false);
 
-            'logo'                                   => $presetData['Branding'] ? $presetData['Branding']['logo'] : null,
-            'bannerText'                             => $presetData['Branding'] ? $presetData['Branding']['banner_text'] : null,
-            'bannerColor'                            => $presetData['Branding'] ? $presetData['Branding']['banner_color'] : null,
-            // title,use_avatars,custom_css
+        $createParams->setLogo($presetData['Branding'] ? $presetData['Branding']['logo'] : null);
+        $createParams->setBannerText($presetData['Branding'] ? $presetData['Branding']['banner_text'] : null);
+        $createParams->setBannerColor($presetData['Branding'] ? $presetData['Branding']['banner_color'] : null);
 
-            'breakoutRoomsEnabled'                   => $presetData['Breakout Rooms'] ? ($presetData['Breakout Rooms']['configurable'] ? true : false) : null,
-            'breakoutRoomsRecord'                    => $presetData['Breakout Rooms'] ? ($presetData['Breakout Rooms']['recording'] ? true : false) : null,
-            'breakoutRoomsPrivateChatEnabled'        => $presetData['Breakout Rooms'] ? ($presetData['Breakout Rooms']['private_chat'] ? true : false) : null,
+        $createParams->setBreakoutRoomsEnabled($presetData['Breakout Rooms'] ? ($presetData['Breakout Rooms']['configurable'] ? true : false) : false);
+        $createParams->setBreakoutRoomsRecord($presetData['Breakout Rooms'] ? ($presetData['Breakout Rooms']['recording'] ? true : false) : false);
+        $createParams->setBreakoutRoomsPrivateChatEnabled($presetData['Breakout Rooms'] ? ($presetData['Breakout Rooms']['private_chat'] ? true : false) : false);
 
-            'duration'                               => $presetData['General'] ? $presetData['General']['duration'] : null,
-            'maxParticipants'                        => $presetData['General'] ? $presetData['General']['maximum_participants'] : null,
-            // anyone_can_start,open_for_everyone,logged_in_users_only
+        $createParams->setDuration($presetData['General'] ? $presetData['General']['duration'] : null);
+        $createParams->setMaxParticipants($presetData['General'] ? $presetData['General']['maximum_participants'] : null);
+        // anyone_can_start,open_for_everyone,logged_in_users_only
 
-            'guestPolicy'                            => $presetData['Guest Policy'] ? $presetData['Guest Policy']['policy'] : null,
-            // configurable
+        $createParams->setGuestPolicy($presetData['Guest Policy'] ? $presetData['Guest Policy']['policy'] : null);
+        // configurable
 
-            // language:default_language
-            // layout: presentation,participants,chat,navigation_bar,actions_bar
+        // language:default_language
+        // layout: presentation,participants,chat,navigation_bar,actions_bar
 
-            'learningDashboardEnabled'               => $presetData['learning_dashboard'] ? ($presetData['learning_dashboard']['configurable'] ? true : false) : null,
-            'cleeanupDelay'                          => $presetData['learning_dashboard'] ? $presetData['learning_dashboard']['cleanup_delay'] : null,
+        $createParams->setLearningDashboardEnabled($presetData['Learning_dashboard'] ? ($presetData['Learning_dashboard']['configurable'] ? true : false) : false);
+        $createParams->setLearningDashboardCleanupDelayInMinutes($presetData['Learning_dashboard'] ? $presetData['Learning_dashboard']['cleanup_delay'] : null);
 
-            'lockSettingsDisableCam'                 => $presetData['Lock Settings'] ? ($presetData['Lock Settings']['webcams'] ? true : false) : null,
-            'lockSettingsDisableMic'                 => $presetData['Lock Settings'] ? ($presetData['Lock Settings']['microphones'] ? true : false) : null,
-            'lockSettingsDisablePrivateChat'         => $presetData['Lock Settings'] ? ($presetData['Lock Settings']['private_chat'] ? true : false) : null,
-            'lockSettingsDisablePublicChat'          => $presetData['Lock Settings'] ? ($presetData['Lock Settings']['public_chat'] ? true : false) : null,
-            'lockSettingsDisableNote'                => $presetData['Lock Settings'] ? ($presetData['Lock Settings']['shared_notes'] ? true : false) : null,
-            'lockSettingsLockedLayout'               => $presetData['Lock Settings'] ? ($presetData['Lock Settings']['layout'] ? true : false) : null,
+        $createParams->setLockSettingsDisableCam($presetData['Lock Settings'] ? ($presetData['Lock Settings']['webcams'] ? true : false) : false);
+        $createParams->setLockSettingsDisableMic($presetData['Lock Settings'] ? ($presetData['Lock Settings']['microphones'] ? true : false) : false);
+        $createParams->setLockSettingsDisablePrivateChat($presetData['Lock Settings'] ? ($presetData['Lock Settings']['private_chat'] ? true : false) : false);
+        $createParams->setLockSettingsDisablePublicChat($presetData['Lock Settings'] ? ($presetData['Lock Settings']['public_chat'] ? true : false) : false);
+        $createParams->setLockSettingsDisableNote($presetData['Lock Settings'] ? ($presetData['Lock Settings']['shared_notes'] ? true : false) : false);
+        $createParams->setLockSettingsLockedLayout($presetData['Lock Settings'] ? ($presetData['Lock Settings']['layout'] ? true : false) : false);
 
-            'preUploadedPresentationOverrideDefault' => $presetData['presentation'] ? ($presetData['presentation']['pre_upload'] ? true : false) : null,
+        $createParams->setPreUploadedPresentationOverrideDefault($presetData['presentation'] ? ($presetData['presentation']['pre_upload'] ? true : false) : false);
 
-            'autoStartRecording'                     => $presetData['Recording'] ? ($presetData['Recording']['auto_start'] ? true : false) : null,
-            'allowStartStopRecording'                => $presetData['Recording'] ? ($presetData['Recording']['allow_start_stop'] ? true : false) : null,
-            'record'                                 => $presetData['recording'] ? ($presetData['recording']['configurable'] ? true : false) : null,
+        $createParams->setAutoStartRecording($presetData['Recording'] ? ($presetData['Recording']['auto_start'] ? true : false) : false);
+        $createParams->setAllowStartStopRecording($presetData['Recording'] ? ($presetData['Recording']['allow_start_stop'] ? true : false) : false);
+        $createParams->setRecord($presetData['Recording'] ? ($presetData['Recording']['configurable'] ? true : false) : null);
 
-            // Screenshare:configurable
+        // Screenshare:configurable
+        // UserExperience: keyboard_shortcuts,ask_for_feedback
 
-            'attendeePW'                             => $presetData['Security'] ? $presetData['Security']['password_for_attendee'] : null,
-            'moderatorPW'                            => $presetData['Security'] ? $presetData['Security']['password_for_moderator'] : null,
-            // attendeePW & moderatorPW should are boolean or string password in presets
+        $createParams->setWebcamsOnlyForModerator($presetData['Webcams'] ? ($presetData['Webcams']['visible_for_moderator_only'] ? true : false) : false);
+        $createParams->setAllowModsToEjectCameras($presetData['Webcams'] ? ($presetData['Webcams']['moderator_allowed_camera_eject'] ? true : false) : false);
+        // configurable,auto_share,skip_preview
 
-            // UserExperience: keyboard_shortcuts,ask_for_feedback
+        // Whiteboard:multi_user_pen_only,presenter_tools,multi_user_tools
+        // Zcaleright: poolname
 
-            'webcamsOnlyForModerator'                => $presetData['Webcams'] ? ($presetData['Webcams']['visible_for_moderator_only'] ? true : false) : null,
-            'allowModsToEjectCameras'                => $presetData['Webcams'] ? ($presetData['Webcams']['moderator_allowed_camera_eject'] ? true : false) : null,
-            // configurable,auto_share,skip_preview
+        return $createParams;
+    }
 
-            // Whiteboard:multi_user_pen_only,presenter_tools,multi_user_tools
-            // Zcaleright: poolname
-        ];
+    public function toJoinParameters($preset, $joinParams)
+    {
+        $presetData = $this->preparePresetData($preset);
+        $joinParams->setRedirect($presetData['Audio'] ? ($presetData['Audio']['auto_join'] ? true : false) : false);
+
+        return $joinParams;
     }
 }

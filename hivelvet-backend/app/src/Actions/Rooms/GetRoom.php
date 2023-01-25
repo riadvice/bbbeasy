@@ -29,6 +29,7 @@ use Enum\ResponseCode;
 use Models\Preset;
 use Models\Room;
 use Utils\BigBlueButtonRequester;
+use Utils\PresetProcessor;
 
 /**
  * Class GetRoom.
@@ -54,12 +55,16 @@ class GetRoom extends BaseAction
             $getInfosParams      = new GetMeetingInfoParameters($room->meeting_id);
             $meetingInfoResponse = $bbbRequester->getMeetingInfo($getInfosParams);
             $canstart            = false;
+            $preset              = new Preset();
+            $p                   = $preset->findById($room->getPresetID($room->id)['preset_id']);
+            $presetProcessor     = new PresetProcessor();
+            $presetData          = $presetProcessor->preparePresetData($p->getMyPresetInfos($p));
+
             if (!$meetingInfoResponse->success()) {
                 if ('notFound' === $meetingInfoResponse->getMessageKey()) {
                     $anyonestart = false;
-                    $preset      = new Preset();
-                    $p           = $preset->findById($room->getPresetID($room->id)['preset_id']);
-                    if ($room->getRoomInfos($room->id)['user_id'] === $this->session->get('user.id') || $p->allowStart($p->getMyPresetInfos($p))) {
+
+                    if ($room->getRoomInfos($room->id)['user_id'] === $this->session->get('user.id') || $presetData['General']['anyone_can_start']) {
                         $canstart = true;
                     }
                 }
@@ -67,6 +72,8 @@ class GetRoom extends BaseAction
 
             $meeting             = (array) $meetingInfoResponse->getRawXml();
             $meeting['canStart'] = $canstart;
+
+            $meeting['auto_join'] = $presetData['Audio']['auto_join'];
 
             $this->renderJson(['room' => $room->getRoomInfos($room->id), 'meeting' => $meeting]);
         } else {

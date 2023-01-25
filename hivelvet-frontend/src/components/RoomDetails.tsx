@@ -94,7 +94,17 @@ const RoomDetails = () => {
             </Tag>
         );
     };
-
+    const start = () => {
+        roomsService
+            .start_room(room.id)
+            .then((result) => {
+                window.location.replace(result.data);
+            })
+            .catch((error) => {
+                console.log(error);
+                Notifications.openNotificationWithIcon('error', t('meeting_not_started'));
+            });
+    };
     useEffect(() => {
         //Runs only on the first render
 
@@ -102,6 +112,18 @@ const RoomDetails = () => {
             .getRoomByLink(param.shortlink)
             .then((result) => {
                 setRoom(result.data.room);
+
+                if (result.data.meeting.running && result.data.meeting.auto_join) {
+                    roomsService
+                        .start_room(result.data.room.id)
+                        .then((result) => {
+                            window.location.replace(result.data);
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                            Notifications.openNotificationWithIcon('error', t('meeting_not_started'));
+                        });
+                }
                 setCanStart(result.data.meeting.canStart);
 
                 presetsService.list_presets(authService.getCurrentUser().id).then((result) => {
@@ -249,17 +271,7 @@ const RoomDetails = () => {
         setPreviewImage(file.url || (file.preview as string));
         setPreviewOpen(true);
     };
-    const start = () => {
-        roomsService
-            .start_room(room.id)
-            .then((result) => {
-                window.location.replace(result.data);
-            })
-            .catch((error) => {
-                console.log(error);
-                Notifications.openNotificationWithIcon('error', t('meeting_not_started'));
-            });
-    };
+
     const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) => setFileList(newFileList);
     const uploadButton = (
         <div>
@@ -329,7 +341,7 @@ const RoomDetails = () => {
         </Tooltip>
     ) : (
         <Tooltip title={<Trans i18nKey="copy_shortlink" />}>
-            <CopyToClipboard text={room.short_link} onCopy={copyClipboard}>
+            <CopyToClipboard text={room?.short_link} onCopy={copyClipboard}>
                 <CopyOutlined />
             </CopyToClipboard>
         </Tooltip>
@@ -398,7 +410,7 @@ const RoomDetails = () => {
                                                             readOnly
                                                             defaultValue={room.short_link}
                                                             prefix={<LinkOutlined />}
-                                                            suffix={copy_link}
+                                                            //suffix={copy_link}
                                                         />
                                                     </>
                                                 ) : (
