@@ -70,7 +70,7 @@ export const Step3Form = (props: Props) => {
                 <Alert
                     className="settings-info"
                     message={<Trans i18nKey="customize_configuration" />}
-                    type="info"
+                    type="warning"
                     closeText={<Trans i18nKey="understand" />}
                 />
             </Paragraph>
@@ -115,7 +115,7 @@ export const Step3Form = (props: Props) => {
                         title={modalTitle}
                         className="presets-modal"
                         centered
-                        visible={isModalVisible}
+                        open={isModalVisible}
                         onOk={() => setIsModalVisible(false)}
                         onCancel={() => setIsModalVisible(false)}
                         footer={[

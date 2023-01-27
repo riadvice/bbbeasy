@@ -317,12 +317,7 @@ const RoomDetails = () => {
                                                         <Trans i18nKey="cancel" />
                                                     </Button>
                                                 </Popconfirm>
-                                                <Button
-                                                    size="middle"
-                                                    onClick={handleSaveEdit}
-                                                    type="primary"
-                                                    className="cell-input-save"
-                                                >
+                                                <Button size="middle" onClick={handleSaveEdit} type="primary">
                                                     <Trans i18nKey="save" />
                                                 </Button>
                                             </Space>
@@ -336,7 +331,7 @@ const RoomDetails = () => {
                                                 {!isEditing && editable ? (
                                                     <>
                                                         <Title level={3}>{room.name}</Title>
-                                                        <div className="room-labels">
+                                                        <div>
                                                             {room.labels.map((item) => (
                                                                 <Tag key={item.id} color={item.color}>
                                                                     {item.name}
@@ -363,7 +358,7 @@ const RoomDetails = () => {
                                                     </Space>
                                                 )}
                                                 <div className="medias">
-                                                    <Space size="middle" className="social-media">
+                                                    <Space size="middle">
                                                         <Tooltip
                                                             placement="bottom"
                                                             title={<Trans i18nKey="facebook_share" />}
@@ -392,7 +387,7 @@ const RoomDetails = () => {
                                         <Col span={2}>
                                             <Avatar
                                                 size={{ xs: 40, sm: 64, md: 85, lg: 100, xl: 120, xxl: 140 }}
-                                                className="ant-btn-primary hivelvet-btn"
+                                                className="hivelvet-btn"
                                                 onClick={startRoom}
                                             >
                                                 <Trans i18nKey={canStart ? 'start' : isRunning && 'join'} />

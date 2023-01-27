@@ -21,7 +21,9 @@ import React, { useEffect } from 'react';
 import { Trans, withTranslation } from 'react-i18next';
 import { t } from 'i18next';
 
-import { PageHeader, Button, Typography, Space, Popconfirm, Input, Tooltip, Modal, Avatar, Tag } from 'antd';
+import { PageHeader } from '@ant-design/pro-layout';
+
+import { Button, Typography, Space, Popconfirm, Input, Tooltip, Modal, Avatar, Tag } from 'antd';
 import {
     DeleteOutlined,
     QuestionCircleOutlined,
@@ -410,7 +412,7 @@ const Recordings = () => {
                 <Modal
                     className="share-modal"
                     centered
-                    visible={isModalVisible}
+                    open={isModalVisible}
                     onOk={handleShare}
                     onCancel={cancelShare}
                     footer={null}

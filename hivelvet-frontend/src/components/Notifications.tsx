@@ -30,7 +30,7 @@ class Notifications {
                 <>
                     {message}
                     <div className="progress-bar">
-                        <span className={duration ? 'percentage notif-login' : 'percentage'}></span>
+                        <span className={duration ? 'percentage notif-login' : 'percentage'} />
                     </div>
                 </>
             ),

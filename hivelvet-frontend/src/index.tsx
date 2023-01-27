@@ -27,7 +27,7 @@ import { webRoutes } from './routing/config';
 import { installRoutes } from './routing/config-install';
 
 if (!INSTALLER_FEATURE) {
-    require('./App-webapp.less');
+    require('./App-webapp.css');
     ReactDOM.render(
         <BrowserRouter>
             <App routes={webRoutes} isSider={true} logs={'Initialisation Hivelvet Webapp Application'} />
@@ -37,7 +37,7 @@ if (!INSTALLER_FEATURE) {
 }
 
 if (INSTALLER_FEATURE) {
-    require('./App-installer.less');
+    require('./App-installer.css');
     ReactDOM.render(
         <BrowserRouter>
             <App routes={installRoutes} isSider={false} logs={'Initialisation Hivelvet Installer Application'} />

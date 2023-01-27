@@ -21,7 +21,8 @@ import { Trans, withTranslation } from 'react-i18next';
 import EN_US from '../locale/en-US.json';
 import { t } from 'i18next';
 
-import { Alert, Button, Form, Input, Modal, PageHeader, Popconfirm, Select, Space, Tag, Typography } from 'antd';
+import { PageHeader } from '@ant-design/pro-layout';
+import { Alert, Button, Form, Input, Modal, Popconfirm, Select, Space, Tag, Typography } from 'antd';
 import { DeleteOutlined, EditOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 
 import { FormInstance } from 'antd/lib/form';
@@ -443,12 +444,7 @@ const Users = () => {
                                 <Trans i18nKey="cancel" />
                             </Button>
                         </Popconfirm>
-                        <Button
-                            size="middle"
-                            type="primary"
-                            className="cell-input-save"
-                            onClick={() => saveEdit(record, record.key)}
-                        >
+                        <Button size="middle" type="primary" onClick={() => saveEdit(record, record.key)}>
                             <Trans i18nKey="save" />
                         </Button>
                     </Space>
@@ -495,7 +491,6 @@ const Users = () => {
     return (
         <>
             <PageHeader
-                className="site-page-header"
                 title={<Trans i18nKey="users" />}
                 extra={
                     AuthService.isAllowedAction(actions, 'add') &&
@@ -512,7 +507,7 @@ const Users = () => {
                     title={<Trans i18nKey="new_user" />}
                     className="add-modal"
                     centered
-                    visible={isModalVisible}
+                    open={isModalVisible}
                     onOk={handleAdd}
                     onCancel={cancelAdd}
                     footer={null}
@@ -550,7 +545,7 @@ const Users = () => {
                             {getSelectRoles()}
                         </Form.Item>
 
-                        <Form.Item className="modal-submit-btn button-container">
+                        <Form.Item className="button-container">
                             <Button type="text" className="cancel-btn prev" block onClick={cancelAdd}>
                                 <Trans i18nKey="cancel" />
                             </Button>

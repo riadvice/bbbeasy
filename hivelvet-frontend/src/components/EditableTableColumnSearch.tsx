@@ -58,7 +58,7 @@ const EditableTableColumnSearch = (dataIndex: string) => {
                     onChange={(e) => setSelectedKeys([e.target.value])}
                     onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
                 />
-                <Space className="table-search-btn">
+                <Space>
                     <Button
                         type="primary"
                         size="small"

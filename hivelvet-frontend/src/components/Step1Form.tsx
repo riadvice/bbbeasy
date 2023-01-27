@@ -42,7 +42,7 @@ export const Step1Form = (props: Props) => {
             {props.message && !props.success && (
                 <Alert
                     type="error"
-                    className="alert-error-msg text-center"
+                    className="text-center"
                     message={<Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == props.message)} />}
                     showIcon
                 />

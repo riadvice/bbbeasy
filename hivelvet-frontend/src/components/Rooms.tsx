@@ -49,6 +49,7 @@ interface RoomsColProps {
 }
 
 const RoomsCol: React.FC<RoomsColProps> = ({ index, room, editable, deleteClickHandler }) => {
+    const [isShown, setIsShown] = useState<boolean>(false);
     const labels = [];
     const navigate = useNavigate();
     room.labels.map((item) => {
@@ -64,8 +65,8 @@ const RoomsCol: React.FC<RoomsColProps> = ({ index, room, editable, deleteClickH
     const handleDelete = () => {
         Modal.confirm({
             wrapClassName: 'delete-wrap',
-            title: undefined,
-            icon: undefined,
+            title: null,
+            icon: null,
             content: (
                 <>
                     <WarningOutlined className="delete-icon" />
@@ -95,6 +96,8 @@ const RoomsCol: React.FC<RoomsColProps> = ({ index, room, editable, deleteClickH
         <Col key={index} span={5} className="custom-col-5">
             <Card
                 hoverable
+                onMouseOver={() => setIsShown(true)}
+                onMouseLeave={() => setIsShown(false)}
                 onClick={() => showRoomDetails()}
                 bordered={false}
                 title={
@@ -123,10 +126,7 @@ const RoomsCol: React.FC<RoomsColProps> = ({ index, room, editable, deleteClickH
                                     ) : null
                                 }
                             >
-                                <Avatar
-                                    size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 95 }}
-                                    className="hivelvet-btn"
-                                >
+                                <Avatar size={80} className="hivelvet-btn">
                                     {room.name.slice(0, 2).toUpperCase()}
                                 </Avatar>
                             </Badge>
@@ -135,13 +135,15 @@ const RoomsCol: React.FC<RoomsColProps> = ({ index, room, editable, deleteClickH
                     </Space>
                 }
                 extra={
-                    <Dropdown
-                        key="more"
-                        overlay={actions}
-                        placement={LocaleService.direction == 'rtl' ? 'bottomLeft' : 'bottomRight'}
-                    >
-                        <MoreOutlined />
-                    </Dropdown>
+                    isShown && (
+                        <Dropdown
+                            key="more"
+                            overlay={actions}
+                            placement={LocaleService.direction == 'rtl' ? 'bottomLeft' : 'bottomRight'}
+                        >
+                            <MoreOutlined />
+                        </Dropdown>
+                    )
                 }
             >
                 <div className="room-card-body">
@@ -168,6 +170,7 @@ const Rooms = () => {
     const [rooms, setRooms] = React.useState<RoomType[]>(dataContext.dataRooms);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [actions, setActions] = React.useState<string[]>([]);
+    const addSteps = ['give-it-name', 'assign-preset', 'mark-labels'];
 
     useEffect(() => {
         RoomsService.list_rooms(AuthService.getCurrentUser().id)
@@ -221,39 +224,19 @@ const Rooms = () => {
                             <Trans i18nKey="create-easy-room" />
                         </Title>
                         <Row justify="center">
-                            <Col span={5}>
-                                <Avatar
-                                    size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 85, xxl: 100 }}
-                                    className="ant-btn-primary hivelvet-btn"
-                                >
-                                    1
-                                </Avatar>
-                                <Title level={4}>
-                                    <Trans i18nKey="give-it-name" />
-                                </Title>
-                            </Col>
-                            <Col span={5}>
-                                <Avatar
-                                    size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 85, xxl: 100 }}
-                                    className="ant-btn-primary hivelvet-btn"
-                                >
-                                    2
-                                </Avatar>
-                                <Title level={4}>
-                                    <Trans i18nKey="assign-preset" />
-                                </Title>
-                            </Col>
-                            <Col span={5}>
-                                <Avatar
-                                    size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 85, xxl: 100 }}
-                                    className="ant-btn-primary hivelvet-btn"
-                                >
-                                    3
-                                </Avatar>
-                                <Title level={4}>
-                                    <Trans i18nKey="mark-labels" />
-                                </Title>
-                            </Col>
+                            {addSteps.map((addStep, index) => (
+                                <Col key={index} span={5}>
+                                    <Avatar
+                                        size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 85, xxl: 100 }}
+                                        className="hivelvet-btn"
+                                    >
+                                        {index + 1}
+                                    </Avatar>
+                                    <Title level={4}>
+                                        <Trans i18nKey={addStep} />
+                                    </Title>
+                                </Col>
+                            ))}
                         </Row>
                         <Button type="primary" onClick={() => setIsModalVisible(true)}>
                             <Trans i18nKey="create-first-room" />
@@ -271,7 +254,7 @@ const Rooms = () => {
                     <EmptyData />
                 )
             ) : (
-                <Row gutter={10} className="rooms-cards">
+                <Row gutter={[18, 18]} className="rooms-cards">
                     {rooms.map((singleRoom, index) => (
                         <RoomsCol
                             key={index + '-' + singleRoom.name}

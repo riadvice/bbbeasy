@@ -22,7 +22,7 @@ import { t } from 'i18next';
 import EN_US from '../locale/en-US.json';
 
 import { Button, Form, Input, Modal } from 'antd';
-import InputColor from './layout/InputColor';
+import InputColor from './InputColor';
 import { DataContext } from 'lib/RoomsContext';
 import Notifications from './Notifications';
 
@@ -98,7 +98,7 @@ export const AddLabelForm = (props: Props) => {
                 title={<Trans i18nKey="new_label" />}
                 className="add-modal"
                 centered
-                visible={props.isModalShow}
+                open={props.isModalShow}
                 onOk={handleAdd}
                 onCancel={props.close}
                 footer={null}

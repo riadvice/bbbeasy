@@ -19,7 +19,9 @@
 import React from 'react';
 import { Trans, withTranslation } from 'react-i18next';
 
-import { Avatar, Badge, Button, Col, Form, PageHeader, Row, Space, Tooltip } from 'antd';
+import { PageHeader } from '@ant-design/pro-layout';
+
+import { Avatar, Badge, Button, Col, Form, Row, Space, Tooltip } from 'antd';
 import { EditOutlined, UserOutlined } from '@ant-design/icons';
 
 import { AddUserForm } from './AddUserForm';
@@ -43,11 +45,9 @@ const Profile = () => {
 
     return (
         <>
-            <PageHeader className="site-page-header" title={<Trans i18nKey="update_profile" />} />
-
+            <PageHeader title={<Trans i18nKey="update_profile" />} />
             <Form
                 layout="vertical"
-                name="users_form"
                 className="site-page-form profile-form"
                 initialValues={initialAddValues}
                 hideRequiredMark

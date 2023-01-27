@@ -19,11 +19,11 @@
 import enUS from 'antd/lib/locale/en_US';
 import frFR from 'antd/lib/locale/fr_FR';
 import arEG from 'antd/lib/locale/ar_EG';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
-import 'moment/locale/fr';
-import 'moment/locale/ar';
-import 'moment/locale/en-gb';
+import 'dayjs/locale/fr';
+import 'dayjs/locale/ar';
+import 'dayjs/locale/en-gb';
 
 import i18next from 'i18next';
 import { initReactI18next } from 'react-i18next';
@@ -89,7 +89,7 @@ class LocaleService {
     changeLocale(locale: string) {
         const res: object = Languages.filter((item) => item.value == locale);
         i18next.changeLanguage(res[0].key);
-        moment.locale(locale);
+        dayjs.locale(locale);
         this.setLocale(locale);
     }
 }

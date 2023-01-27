@@ -21,12 +21,14 @@ import React, { useEffect } from 'react';
 import { Trans, withTranslation } from 'react-i18next';
 import { t } from 'i18next';
 
-import { Badge, Button, Form, Input, Modal, PageHeader, Popconfirm, Space, Typography } from 'antd';
+import { PageHeader } from '@ant-design/pro-layout';
+
+import { Badge, Button, Form, Input, Modal, Popconfirm, Space, Typography } from 'antd';
 import { DeleteOutlined, EditOutlined, QuestionCircleOutlined, WarningOutlined } from '@ant-design/icons';
 
 import Notifications from './Notifications';
 import AddLabelForm from './AddLabelForm';
-import InputColor from './layout/InputColor';
+import InputColor from './InputColor';
 import { DataContext } from 'lib/RoomsContext';
 import { CompareRecords } from '../functions/compare.function';
 import { EditableTable } from './EditableTable';
@@ -113,8 +115,8 @@ const Labels = () => {
         if (nbRooms > 0) {
             Modal.confirm({
                 wrapClassName: 'delete-wrap',
-                title: undefined,
-                icon: undefined,
+                title: null,
+                icon: null,
                 content: (
                     <>
                         <WarningOutlined className="delete-icon" />
@@ -289,7 +291,7 @@ const Labels = () => {
                             onCancel={() => setCancelVisibility(false)}
                             onVisibleChange={handleCancelVisibilityChange}
                         >
-                            <Button size="middle">
+                            <Button size="middle" className="cell-input-cancel">
                                 <Trans i18nKey="cancel" />
                             </Button>
                         </Popconfirm>
@@ -349,7 +351,6 @@ const Labels = () => {
     return (
         <>
             <PageHeader
-                className="site-page-header"
                 title={<Trans i18nKey="labels" />}
                 extra={
                     AuthService.isAllowedAction(actions, 'add') && [

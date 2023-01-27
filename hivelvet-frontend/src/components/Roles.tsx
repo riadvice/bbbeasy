@@ -21,7 +21,9 @@ import { Trans, withTranslation } from 'react-i18next';
 import { t } from 'i18next';
 import EN_US from '../locale/en-US.json';
 
-import { PageHeader, Button, Row, Col, Typography, Space, Modal, Popconfirm, Card, Checkbox, Input } from 'antd';
+import { PageHeader } from '@ant-design/pro-layout';
+
+import { Button, Row, Col, Typography, Space, Modal, Popconfirm, Card, Checkbox, Input } from 'antd';
 import {
     DeleteOutlined,
     QuestionCircleOutlined,
@@ -306,7 +308,7 @@ const Roles = () => {
                                         <Trans i18nKey="cancel" />
                                     </Button>
                                 )}
-                                <Button size="middle" type="primary" className="cell-input-save" htmlType="submit">
+                                <Button size="middle" type="primary" htmlType="submit">
                                     <Trans i18nKey="save" />
                                 </Button>
                             </Space>
@@ -455,8 +457,8 @@ const Roles = () => {
         if (nbUsers > 0) {
             Modal.confirm({
                 wrapClassName: 'delete-wrap',
-                title: undefined,
-                icon: undefined,
+                title: null,
+                icon: null,
                 content: (
                     <>
                         <WarningOutlined className="delete-icon" />
@@ -552,7 +554,6 @@ const Roles = () => {
     return (
         <>
             <PageHeader
-                className="site-page-header"
                 title={<Trans i18nKey="roles" />}
                 extra={
                     AuthService.isAllowedAction(actions, 'add') && [
@@ -566,9 +567,9 @@ const Roles = () => {
             {AuthService.isAllowedAction(actions, 'add') && (
                 <Modal
                     title={<Trans i18nKey="new_role" />}
-                    className="add-modal"
+                    className="add-modal medium-modal"
                     centered
-                    visible={isModalVisible}
+                    open={isModalVisible}
                     onOk={handleAdd}
                     onCancel={cancelAdd}
                     footer={null}
@@ -609,12 +610,12 @@ const Roles = () => {
                                 <Trans i18nKey="permissions.label" />
                             </label>
                         </div>
-                        {getPermissionsCard()}
-                        <Form.Item className="modal-submit-btn button-container">
+                        <div className="card-parent">{getPermissionsCard()}</div>
+                        <Form.Item className="button-container">
                             <Button type="text" className="cancel-btn prev" block onClick={cancelAdd}>
                                 <Trans i18nKey="cancel" />
                             </Button>
-                            <Button type="primary" className="cell-input-save" htmlType="submit" block>
+                            <Button type="primary" htmlType="submit" block>
                                 <Trans i18nKey="create" />
                             </Button>
                         </Form.Item>
