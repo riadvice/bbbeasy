@@ -17,11 +17,13 @@
  */
 
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Result } from 'antd';
+import { useNavigate } from 'react-router-dom';
+import { Button, Result } from 'antd';
 import { Trans, withTranslation } from 'react-i18next';
 
 const PageNotFound = () => {
+    const navigate = useNavigate();
+
     return (
         <Result
             status="404"
@@ -29,9 +31,9 @@ const PageNotFound = () => {
             subTitle={<Trans i18nKey="not_found" />}
             className="page-not-found"
             extra={
-                <Link className="ant-btn color-blue" to="/rooms">
+                <Button className="color-blue" onClick={() => navigate('/')}>
                     <Trans i18nKey="back-home" />
-                </Link>
+                </Button>
             }
         />
     );
