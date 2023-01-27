@@ -298,7 +298,7 @@
     "delete_room_success": "تم حذف القاعة بنجاح",
     "edit_room_success": "تم تحديث القاعة بنجاح",
 
-    "edit_profile": "تحديث الملف الشخصي",
+    "update_profile": "تحديث الملف الشخصي",
     "current_password": "كلمة المرور الحالية",
     "new_password": "كلمة المرور الجديدة",
     "confirm_new_password": "أعد كتابة كلمة المرور الجديدة",

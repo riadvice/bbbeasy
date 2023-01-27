@@ -298,7 +298,7 @@
     "delete_room_success": "Room successfully deleted",
     "edit_room_success": "Room successfully updated",
 
-    "edit_profile": "Update Profile",
+    "update_profile": "Update Profile",
     "current_password": "Current Password",
     "new_password": "New Password",
     "confirm_new_password": "Re-Type New Password",

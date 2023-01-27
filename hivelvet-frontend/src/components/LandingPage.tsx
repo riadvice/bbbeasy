@@ -36,10 +36,7 @@ const LandingPage = () => {
                     </Title>
                     <p className="mb-30">
                         <Trans i18nKey="create_customizable_rooms" />
-                        <strong>
-                            {' '}
-                            <Trans i18nKey="bigbluebutton" />
-                        </strong>
+                        <strong> <Trans i18nKey="bigbluebutton" /></strong>
                     </p>
                     <Paragraph className="landing-btn">
                         <Link className="ant-btn ant-btn-primary text-white login-btn" to={'/login'}>

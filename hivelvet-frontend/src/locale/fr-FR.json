@@ -298,7 +298,7 @@
     "delete_room_success": "Salle a été supprimée avec succès",
     "edit_room_success": "Salle a été mis a jour avec succès",
 
-    "edit_profile": "Mettre à jour le profil",
+    "update_profile": "Mettre à jour le profil",
     "current_password": "Mot de passe Actuel",
     "new_password": "Nouveau Mot de passe",
     "confirm_new_password": "Retaper le Nouveau Mot de passe",

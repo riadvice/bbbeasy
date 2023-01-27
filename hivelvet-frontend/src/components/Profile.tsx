@@ -97,7 +97,7 @@ const Profile = () => {
 
     return (
         <>
-            <PageHeader className="site-page-header" title={<Trans i18nKey="edit_profile" />} />
+            <PageHeader className="site-page-header" title={<Trans i18nKey="update_profile" />} />
 
             <Form
                 layout="vertical"
@@ -193,7 +193,7 @@ const Profile = () => {
                             </ImageUploading>
                             <Form.Item>
                                 <Button type="primary" id="submit-btn" htmlType="submit" block className="p-50">
-                                    <Trans i18nKey={'edit_profile'} />
+                                    <Trans i18nKey={'update_profile'} />
                                 </Button>
                             </Form.Item>
                         </Space>
