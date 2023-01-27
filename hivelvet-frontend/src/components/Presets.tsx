@@ -19,6 +19,8 @@
 import React, { useEffect, useState } from 'react';
 import Notifications from './Notifications';
 
+import { PageHeader } from '@ant-design/pro-layout';
+
 import {
     Button,
     Card,
@@ -27,7 +29,6 @@ import {
     Form,
     Input,
     Modal,
-    PageHeader,
     Popconfirm,
     Popover,
     Typography,
@@ -147,8 +148,8 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editName, editClick
         if (preset.nb_rooms > 0) {
             Modal.confirm({
                 wrapClassName: 'delete-wrap',
-                title: undefined,
-                icon: undefined,
+                title: null,
+                icon: null,
                 content: (
                     <>
                         <WarningOutlined className="delete-icon" />
@@ -283,7 +284,6 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editName, editClick
                                         ]}
                                     >
                                         <Input
-                                            className="input"
                                             onPressEnter={handleSaveEdit}
                                             suffix={
                                                 <>
@@ -295,7 +295,6 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editName, editClick
                                                         <Button
                                                             icon={<CloseOutlined />}
                                                             size="small"
-                                                            //onClick={cancelEdit}
                                                             className="cell-input-cancel"
                                                         />
                                                     </Popconfirm>
@@ -304,7 +303,6 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editName, editClick
                                                         size="small"
                                                         onClick={handleSaveEdit}
                                                         type="primary"
-                                                        className="cell-input-save"
                                                     />
                                                 </>
                                             }
@@ -383,7 +381,7 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editName, editClick
                         title={modalTitle}
                         className="presets-modal"
                         centered
-                        visible={isModalVisible}
+                        open={isModalVisible}
                         onOk={() => setIsModalVisible(false)}
                         onCancel={() => setIsModalVisible(false)}
                         footer={null}
@@ -404,7 +402,6 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editName, editClick
 
                                             {item.type === 'string' && (
                                                 <Input
-                                                    className="preset-input"
                                                     defaultValue={item.value}
                                                     placeholder={getName(item.name)}
                                                     onChange={(event) => {
@@ -452,7 +449,7 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editName, editClick
                                         </Form.Item>
                                     </div>
                                 ))}
-                                <Form.Item className="modal-submit-btn button-container">
+                                <Form.Item className="button-container">
                                     <Button
                                         type="text"
                                         className="cancel-btn prev"
@@ -540,7 +537,6 @@ const Presets = () => {
     return (
         <>
             <PageHeader
-                className="site-page-header presets-header"
                 title={<Trans i18nKey="presets" />}
                 subTitle={
                     <Input

@@ -26,7 +26,8 @@ import { Trans, withTranslation } from 'react-i18next';
 import EN_US from '../locale/en-US.json';
 import { t } from 'i18next';
 import { TableColumnType } from '../types/TableColumnType';
-import { Alert, Button, Form, Input, Modal, PageHeader, Popconfirm, Select, Space, Table, Tag, Typography } from 'antd';
+import { PageHeader } from '@ant-design/pro-layout';
+import { Alert, Button, Form, Input, Modal, Popconfirm, Select, Space, Table, Tag, Typography } from 'antd';
 import { DeleteOutlined, EditOutlined, QuestionCircleOutlined, SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words/dist/main';
 import { FormInstance } from 'antd/lib/form';
@@ -242,7 +243,7 @@ const Users = () => {
                 {editing ? (
                     <Form.Item
                         name={dataIndex}
-                        className="input-editable editable-row"
+                        className="input-editable"
                         {...(dataIndex in errorsEdit &&
                             record.key == errorsEdit['key'] && {
                                 help: (
@@ -401,7 +402,7 @@ const Users = () => {
                     onChange={(e) => setSelectedKeys([e.target.value])}
                     onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
                 />
-                <Space className="table-search-btn">
+                <Space>
                     <Button
                         type="primary"
                         size="small"
@@ -556,12 +557,7 @@ const Users = () => {
                                 <Trans i18nKey="cancel" />
                             </Button>
                         </Popconfirm>
-                        <Button
-                            size="middle"
-                            type="primary"
-                            className="cell-input-save"
-                            onClick={() => saveEdit(record, record.key)}
-                        >
+                        <Button size="middle" type="primary" onClick={() => saveEdit(record, record.key)}>
                             <Trans i18nKey="save" />
                         </Button>
                     </Space>
@@ -607,7 +603,6 @@ const Users = () => {
     return (
         <>
             <PageHeader
-                className="site-page-header"
                 title={<Trans i18nKey="users" />}
                 extra={
                     authService.isAllowedAction(actions, 'add') &&
@@ -624,7 +619,7 @@ const Users = () => {
                     title={<Trans i18nKey="new_user" />}
                     className="add-modal"
                     centered
-                    visible={isModalVisible}
+                    open={isModalVisible}
                     onOk={handleAdd}
                     onCancel={cancelAdd}
                     footer={null}
@@ -662,7 +657,7 @@ const Users = () => {
                             {getSelectRoles()}
                         </Form.Item>
 
-                        <Form.Item className="modal-submit-btn button-container">
+                        <Form.Item className="button-container">
                             <Button type="text" className="cancel-btn prev" block onClick={cancelAdd}>
                                 <Trans i18nKey="cancel" />
                             </Button>

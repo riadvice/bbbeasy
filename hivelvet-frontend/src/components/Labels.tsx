@@ -22,7 +22,9 @@ import { Trans, withTranslation } from 'react-i18next';
 import EN_US from '../locale/en-US.json';
 import { t } from 'i18next';
 
-import { Badge, Button, Form, Input, Modal, PageHeader, Popconfirm, Space, Table, Typography } from 'antd';
+import { PageHeader } from '@ant-design/pro-layout';
+
+import { Badge, Button, Form, Input, Modal, Popconfirm, Space, Table, Typography } from 'antd';
 import {
     DeleteOutlined,
     EditOutlined,
@@ -37,7 +39,7 @@ import _ from 'lodash';
 import Highlighter from 'react-highlight-words/dist/main';
 import Notifications from './Notifications';
 import AddLabelForm from './AddLabelForm';
-import InputColor from './layout/InputColor';
+import InputColor from './InputColor';
 import { DataContext } from 'lib/RoomsContext';
 
 import AuthService from '../services/auth.service';
@@ -131,8 +133,8 @@ const Labels = () => {
         if (nbRooms > 0) {
             Modal.confirm({
                 wrapClassName: 'delete-wrap',
-                title: undefined,
-                icon: undefined,
+                title: null,
+                icon: null,
                 content: (
                     <>
                         <WarningOutlined className="delete-icon" />
@@ -178,7 +180,7 @@ const Labels = () => {
                     onChange={(e) => setSelectedKeys([e.target.value])}
                     onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
                 />
-                <Space className="table-search-btn">
+                <Space>
                     <Button
                         type="primary"
                         size="small"
@@ -233,7 +235,7 @@ const Labels = () => {
                 {dataIndex != 'description' ? (
                     <Form.Item
                         name={dataIndex}
-                        className="input-editable editable-row"
+                        className="input-editable"
                         {...(dataIndex in errorsEdit &&
                             record.key == errorsEdit['key'] && {
                                 help: (
@@ -262,7 +264,7 @@ const Labels = () => {
                     <>
                         <Form.Item
                             name="description"
-                            className="input-editable editable-row"
+                            className="input-editable"
                             {...('description' in errorsEdit &&
                                 record.key == errorsEdit['key'] && {
                                     help: (
@@ -283,7 +285,7 @@ const Labels = () => {
                         </Form.Item>
                         <Form.Item
                             name="color"
-                            className="input-editable editable-row"
+                            className="input-editable"
                             {...('color' in errorsEdit &&
                                 record.key == errorsEdit['key'] && {
                                     help: (
@@ -442,7 +444,7 @@ const Labels = () => {
                             onCancel={() => setCancelVisibility(false)}
                             onVisibleChange={handleCancelVisibilityChange}
                         >
-                            <Button size="middle">
+                            <Button size="middle" className="cell-input-cancel">
                                 <Trans i18nKey="cancel" />
                             </Button>
                         </Popconfirm>
@@ -502,7 +504,6 @@ const Labels = () => {
     return (
         <>
             <PageHeader
-                className="site-page-header"
                 title={<Trans i18nKey="labels" />}
                 extra={
                     AuthService.isAllowedAction(actions, 'add') && [
