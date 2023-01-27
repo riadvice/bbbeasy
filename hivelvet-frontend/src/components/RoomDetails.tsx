@@ -97,6 +97,16 @@ const RoomDetails = () => {
     const [roomRecordings, setRoomRecordings] = React.useState<RecordingType[]>([]);
     const [loading, setLoading] = React.useState<boolean>(false);
 
+    const startRoom = () => {
+        RoomsService.start_room(room.id)
+            .then((result) => {
+                window.open(result.data, '_blank');
+            })
+            .catch((error) => {
+                console.log(error);
+                Notifications.openNotificationWithIcon('error', t('meeting_not_started'));
+            });
+    };
     const getPresets = () => {
         PresetsService.list_presets(AuthService.getCurrentUser().id).then((result) => {
             setPresets(result.data);
@@ -120,6 +130,9 @@ const RoomDetails = () => {
                     setRoom(room);
                 }
                 if (meeting != null) {
+                    if (meeting.running && meeting.auto_join) {
+                        startRoom();
+                    }
                     setCanStart(meeting.canStart);
                     setIsRunning(meeting.running);
                 }
@@ -152,18 +165,6 @@ const RoomDetails = () => {
         getLabels();
         getRoomRecordings();
     }, []);
-
-    //start
-    const startRoom = () => {
-        RoomsService.start_room(room.id)
-            .then((result) => {
-                window.open(result.data, '_blank');
-            })
-            .catch((error) => {
-                console.log(error);
-                Notifications.openNotificationWithIcon('error', t('meeting_not_started'));
-            });
-    };
 
     //edit
     const [editForm] = Form.useForm();
@@ -344,7 +345,7 @@ const RoomDetails = () => {
                                                             defaultValue={room.short_link}
                                                             prefix={<LinkOutlined />}
                                                             suffix={
-                                                                <CopyTextToClipBoard textToCopy={room.short_link} />
+                                                                <CopyTextToClipBoard textToCopy={room?.short_link} />
                                                             }
                                                         />
                                                     </>
