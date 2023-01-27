@@ -64,6 +64,11 @@ class Start extends BaseAction
             // call meeting info to check if meeting is running
 
             $getMeetingInfoResponse = $this->getMeetingInfo($meetingId, $bbbRequester);
+            $preset                 = new Preset();
+            $p                      = $preset->findById($room->getPresetID($room->id)['preset_id']);
+
+            $presetprocessor = new PresetProcessor();
+            $presetData      = $presetprocessor->preparePresetData($p->getMyPresetInfos($p));
 
             if (null === $getMeetingInfoResponse) {
                 return;
@@ -76,13 +81,9 @@ class Start extends BaseAction
                 // meeting not found
                 if ('notFound' === $getMeetingInfoResponse->getMessageKey()) {
                     // create new meeting with the same meetingId
-                    $preset          = new Preset();
-                    $p               = $preset->findById($room->getPresetID($room->id)['preset_id']);
-                    $presetprocessor = new PresetProcessor();
-                    $params          = $presetprocessor->toCreateMeetingParams($preset);
 
-                    if ($room->getRoomInfos($room->id)['user_id'] === $this->session->get('user.id') || $p->allowStart($p->getMyPresetInfos($p))) {
-                        $createResult = $this->createMeeting($meetingId, $bbbRequester, $room->short_link);
+                    if ($room->getRoomInfos($room->id)['user_id'] === $this->session->get('user.id') || $presetData['General']['anyone_can_start']) {
+                        $createResult = $this->createMeeting($meetingId, $bbbRequester, $room->short_link, $p->getMyPresetInfos($p), $presetprocessor);
 
                         if (null === $createResult) {
                             return;
@@ -101,10 +102,10 @@ class Start extends BaseAction
                 }
             }
 
-            if ($room->getRoomInfos($room->id)['user_id'] === $this->session->get('user.id') || $p->joinAllAsModerator($p->getMyPresetInfos($p))) {
-                $this->joinMeeting($meetingId, Role::MODERATOR, $bbbRequester);
+            if ($room->getRoomInfos($room->id)['user_id'] === $this->session->get('user.id') || $presetData['General']['all_join_as_moderator']) {
+                $this->joinMeeting($meetingId, Role::MODERATOR, $bbbRequester, $p->getMyPresetInfos($p));
             } else {
-                $this->joinMeeting($meetingId, Role::VIEWER, $bbbRequester);
+                $this->joinMeeting($meetingId, Role::VIEWER, $bbbRequester, $p->getMyPresetInfos($p));
             }
         } else {
             $this->logger->error($errorMessage);
@@ -124,13 +125,15 @@ class Start extends BaseAction
         return $meetingInfoResponse;
     }
 
-    public function createMeeting(string $meetingId, BigBlueButtonRequester $bbbRequester, $link)
+    public function createMeeting(string $meetingId, BigBlueButtonRequester $bbbRequester, $link, $p, $preetprocessor)
     {
-        $createParams = new CreateMeetingParameters($meetingId, 'meeting-' . $meetingId);
+        $presetProcessor = new PresetProcessor();
+        $createParams    = new CreateMeetingParameters($meetingId, 'meeting-' . $meetingId);
+        $createParams    = $presetProcessor->toCreateMeetingParams($p, $createParams);
         $createParams->setModeratorPassword(DataUtils::generateRandomString());
         $createParams->setAttendeePassword(DataUtils::generateRandomString());
         // @todo : set later via presets
-        $createParams->setRecord('true');
+
         $createParams->setModeratorOnlyMessage('to invite someone you can use this link http://hivelvet.test:3300/hv/' . $link);
 
         $this->logger->info('Received request to create a new meeting.', ['meetingID' => $meetingId]);
@@ -149,10 +152,11 @@ class Start extends BaseAction
         return $createParams->getModeratorPassword();
     }
 
-    public function joinMeeting(string $meetingId, string $role, BigBlueButtonRequester $bbbRequester): void
+    public function joinMeeting(string $meetingId, string $role, BigBlueButtonRequester $bbbRequester, $p): void
     {
-        $joinParams = new JoinMeetingParameters($meetingId, $this->session->get('user.username'), $role);
-        $joinParams->setRedirect('true');
+        $joinParams      = new JoinMeetingParameters($meetingId, $this->session->get('user.username'), $role);
+        $presetProcessor = new PresetProcessor();
+        $joinParams      = $presetProcessor->toJoinParameters($p, $joinParams);
 
         $this->logger->info(
             'Meeting join request is going to redirect to the web client.',
