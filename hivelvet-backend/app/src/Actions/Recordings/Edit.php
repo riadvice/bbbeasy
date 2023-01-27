@@ -50,7 +50,7 @@ class Edit extends BaseAction
             $bbbRequester = new BigBlueButtonRequester();
             $editParams   = new UpdateRecordingsParameters($recordId);
             $recordName   = $form['name'];
-            $editParams->addMeta('name', $recordName);
+            $editParams->addMeta('HVname', $recordName);
             $this->logger->info('Received request to edit recording', ['recordID' => $recordId]);
             $editResponse = $bbbRequester->updateRecordings($editParams);
             if ($editResponse->success() && $editResponse->isUpdated()) {

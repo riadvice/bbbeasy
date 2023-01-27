@@ -196,11 +196,11 @@ const Recordings = () => {
     };
 
     const getFormatIcons = (formats: string[], showDisabled?: boolean) => {
-        const getFormatIcon = (format: string, icon: string, className?: string) => {
+        const getFormatIcon = (format: string, icon: string, iconClass?: string) => {
             const enabled = formats.includes(format);
             if (enabled || showDisabled) {
                 return (
-                    <div className={className + !enabled && 'disabled'}>
+                    <div className={(!enabled && 'disabled ') + iconClass ?? ''}>
                         <DynamicIcon type={icon} className={!enabled && 'icon-disabled'} />
                     </div>
                 );
@@ -418,7 +418,7 @@ const Recordings = () => {
                     footer={null}
                 >
                     <Form layout="vertical" hideRequiredMark onFinish={handleShare} validateTrigger="onSubmit">
-                        <Space size={38} direction="vertical">
+                        <Space size={38} direction="vertical" className="modal-content">
                             <div className="mt-24">{getFormatIcons(modalFormats, true)}</div>
                             <Space size="middle" className="social-medias">
                                 <Avatar size={75} className="hivelvet-btn">
