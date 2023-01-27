@@ -16,7 +16,7 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import {
     Layout,
@@ -55,7 +55,7 @@ import { RoomType } from 'types/RoomType';
 import DynamicIcon from 'components/DynamicIcon';
 
 const { Header } = Layout;
-const { Text, Paragraph } = Typography;
+const { Title, Text, Paragraph } = Typography;
 
 const AppHeader = () => {
     const { isLogged, setIsLogged, currentUser, setCurrentUser, setCurrentSession } = React.useContext(UserContext);
@@ -159,19 +159,19 @@ const AppHeader = () => {
                             {dropdownLang}
                             {!INSTALLER_FEATURE && (
                                 <>
-                                    <Link className={'ant-btn color-primary'} to={'/login'}>
+                                    <Button className="color-primary" onClick={() => navigate('/login')}>
                                         <Trans i18nKey="login" />
-                                    </Link>
-                                    <Link className={'ant-btn color-primary'} to={'/register'}>
+                                    </Button>
+                                    <Button className="color-primary" onClick={() => navigate('/register')}>
                                         <Trans i18nKey="sign-up" />
-                                    </Link>
+                                    </Button>
                                 </>
                             )}
                         </Space>
                     </Paragraph>
                 ) : (
                     <Row align="middle">
-                        <Col span={14} offset={5} className="text-center">
+                        <Col span={14} offset={5}>
                             <Form form={searchForm}>
                                 <Form.Item name="search" style={{ marginBottom: 0 }}>
                                     <Input
@@ -224,34 +224,28 @@ const AppHeader = () => {
                 }}
                 footer={null}
             >
-                <div className="presets-body">
-                    {rooms.map((singleRoom, index) => (
-                        <>
-                            <Row className="row">
-                                <Col span={1} offset={1}>
-                                    {' '}
-                                    <DynamicIcon type="room" className="icon" />{' '}
-                                </Col>
-                                <Col span={20} offset={2}>
-                                    <Space direction="vertical" className="antd-space">
-                                        <Row>
-                                            <h3 className="element">{singleRoom.name}</h3>
-                                        </Row>
-
-                                        <Row>
-                                            {singleRoom.labels.map((item) => (
-                                                <Tag key={item.id} color={item.color}>
-                                                    {item.name}
-                                                </Tag>
-                                            ))}
-                                        </Row>
-                                    </Space>
-                                </Col>
-                            </Row>
-                            {index < rooms.length - 1 && <Divider />}
-                        </>
-                    ))}
-                </div>
+                {rooms.map((singleRoom, index) => (
+                    <>
+                        <Row align="middle" justify="space-around" className="room-content">
+                            <Col span={1}>
+                                <DynamicIcon type="room" />
+                            </Col>
+                            <Col span={21}>
+                                <Space direction="vertical">
+                                    <Title level={3}>{singleRoom.name}</Title>
+                                    <Row>
+                                        {singleRoom.labels.map((item) => (
+                                            <Tag key={item.id} color={item.color}>
+                                                {item.name}
+                                            </Tag>
+                                        ))}
+                                    </Row>
+                                </Space>
+                            </Col>
+                        </Row>
+                        {index < rooms.length - 1 && <Divider />}
+                    </>
+                ))}
             </Modal>
         </Header>
     );

@@ -111,43 +111,26 @@ const Login = () => {
                         </Title>
                     </Paragraph>
 
-                    {message &&
-                        !successful &&
-                        ((message.startsWith('Wrong password') && (
-                            <Alert
-                                type="error"
-                                className="alert-error-msg"
-                                message={t('wrong_password') + message.substring(31)}
-                                showIcon
-                            />
-                        )) ||
-                            (message.startsWith('Your account has been locked') && (
-                                <Alert
-                                    type="error"
-                                    className="alert-error-msg"
-                                    message={
-                                        <div>
-                                            {t('attempts_exceeded')} <a onClick={handleReset}>{t('click_here')}</a>{' '}
-                                            {t('email_instructions')}
-                                        </div>
-                                    }
-                                    showIcon
-                                />
-                            )) || (
-                                <Alert
-                                    type="error"
-                                    className="alert-error-msg"
-                                    message={
-                                        <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == message)} />
-                                    }
-                                    showIcon
-                                />
-                            ))}
+                    {message && !successful && (
+                        <Alert
+                            type="error"
+                            className="alert-msg"
+                            message={
+                                (message.startsWith('Wrong password') && t('wrong_password') + message.substring(31)) ||
+                                (message.startsWith('Your account has been locked') && (
+                                    <>
+                                        {t('attempts_exceeded')}
+                                        <a onClick={handleReset}>{t('click_here')}</a> {t('email_instructions')}
+                                    </>
+                                )) || <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == message)} />
+                            }
+                            showIcon
+                        />
+                    )}
 
                     <Form
                         layout="vertical"
                         name="login_form"
-                        className="login-form"
                         initialValues={initialValues}
                         requiredMark={false}
                         scrollToFirstError={true}

@@ -183,7 +183,7 @@ const Install = () => {
     const steps: stepType[] = [
         {
             title: t('administrator_account'),
-            content: <Step1Form message={message} success={message != ''} />,
+            content: <Step1Form message={message} success={message == ''} />,
             button: t('create'),
             span: 8,
             offset: 4,
@@ -221,6 +221,7 @@ const Install = () => {
     const onFinish = () => {
         const stepsData: formType = stepForm.getFieldsValue(true);
         if (activeStep == 0) {
+            setMessage('');
             UsersService.collect_users(stepsData)
                 .then(() => {
                     next();
@@ -304,7 +305,7 @@ const Install = () => {
                         <Form
                             layout="vertical"
                             name="install_form"
-                            className="install-form steps-content"
+                            className="install-form"
                             form={stepForm}
                             initialValues={initialValues}
                             requiredMark={false}

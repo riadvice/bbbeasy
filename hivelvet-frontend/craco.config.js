@@ -85,8 +85,6 @@ module.exports = {
         ],
         plugins: [
             'istanbul',
-            //Configure Babel plugin import
-            ['import', { libraryName: 'antd', libraryDirectory: 'es', style: true }, 'antd'],
             //Configure parser
             ['@babel/plugin-proposal-decorators', { 'legacy': true }],
             ['@babel/plugin-proposal-class-properties', { 'loose': true }],
@@ -105,10 +103,6 @@ module.exports = {
             options: {
                 lessLoaderOptions: {
                     lessOptions: {
-                        modifyVars: {
-                            '@primary-color': '#fbbc0b', // primary color for all components
-                            '@border-color-base': '#dddfe1', // major border color
-                        },
                         javascriptEnabled: true,
                     },
                 },
