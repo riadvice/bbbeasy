@@ -191,15 +191,7 @@ class Session extends \Prefab
         if (\is_array($role)) {
             return \in_array($this->getRole(), $role, true);
         }
-        $this->logger->emergency($message = 'Cannot test user role on object typed with ' . \gettype($role));
-    }
-
-    /**
-     * @return string
-     */
-    public function getType()
-    {
-        return $this->get('user.type');
+        $this->logger->emergency('Cannot test user role on object typed with ' . \gettype($role));
     }
 
     /**

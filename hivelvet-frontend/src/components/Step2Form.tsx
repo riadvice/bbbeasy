@@ -197,7 +197,7 @@ export const Step2Form = (props: Props) => {
                             <p className="ant-upload-drag-icon">
                                 <InboxOutlined />
                             </p>
-                            <Text strong className="ant-upload-text">
+                            <Text strong>
                                 <Trans i18nKey="drop-logo-here" />
                             </Text>
                             <p className="ant-upload-hint">.png .jpg .jpeg ...</p>

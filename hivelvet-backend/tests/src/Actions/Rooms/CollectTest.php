@@ -25,7 +25,6 @@ namespace Actions\Rooms;
 use Fake\PresetFaker;
 use Fake\RoomFaker;
 use Fake\UserFaker;
-use Faker\Factory as Faker;
 use Test\Scenario;
 
 /**
@@ -45,24 +44,18 @@ final class CollectTest extends Scenario
      *
      * @throws \ReflectionException
      */
-    public function testShow($f3)
+    public function testCollect($f3)
     {
         $test = $this->newTest();
 
-        $faker = Faker::create();
+        $user   = UserFaker::create();
+        $preset = PresetFaker::create($user);
+        $room   = RoomFaker::create($user, $preset);
+        $test->expect(0 !== $room->id, 'Room mocked & saved to the database');
 
-        $user1  = UserFaker::create();
-        $preset = PresetFaker::create($user1);
-        $room   = RoomFaker::create($user1, $preset);
-        $f3->mock(self::COLLECT_ROOMS_ROUTE . $user1->id);
+        $f3->mock(self::COLLECT_ROOMS_ROUTE . $user->id);
         json_decode($f3->get('RESPONSE'));
-        $test->expect(JSON_ERROR_NONE === json_last_error(), 'Collect rooms of user with id "' . $user1->id . '"');
-
-        $f3->mock(self::COLLECT_ROOMS_ROUTE . 1000);
-        $resp = $f3->get('RESPONSE');
-        json_decode($f3->get('RESPONSE'));
-        $test->expect(JSON_THROW_ON_ERROR !== json_last_error(), 'Collect rooms of user with id "' . 1000 . '"throws an error');
-        // $test->expect(JSON_THROW_ON_ERROR === $resp, 'Collect rooms of user with id "' . $user1->id . '"');
+        $test->expect(JSON_ERROR_NONE === json_last_error(), 'Collect rooms of user with id "' . $user->id . '"');
 
         return $test->results();
     }

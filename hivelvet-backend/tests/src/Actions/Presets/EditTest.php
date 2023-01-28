@@ -151,7 +151,7 @@ final class EditTest extends Scenario
 
         $preset = PresetFaker::create(UserFaker::create());
         $data   = [
-            'data' => [
+            'data'  => [
                 ['name' => 'users_join_muted', 'type' => 'bool', 'value' => true],
                 ['name' => 'moderators_allowed_to_unmute_users', 'type' => 'bool', 'value' => ''],
             ],

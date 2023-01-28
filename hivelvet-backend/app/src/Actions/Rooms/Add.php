@@ -31,6 +31,7 @@ use Models\Room;
 use Models\RoomLabel;
 use Models\User;
 use Respect\Validation\Validator;
+use Utils\DataUtils;
 use Validation\DataChecker;
 
 /**
@@ -57,7 +58,6 @@ class Add extends BaseAction
         $dataChecker->verify($form['name'], Validator::notEmpty()->setName('name'));
         $dataChecker->verify($form['shortlink'], Validator::notEmpty()->setName('shortlink'));
         $dataChecker->verify($form['preset'], Validator::notEmpty()->setName('preset'));
-        $dataChecker->verify($form['labels'], Validator::notEmpty()->setName('labels'));
 
         $errorMessage = 'Room could not be added';
         if ($dataChecker->allValid()) {
@@ -73,18 +73,22 @@ class Add extends BaseAction
                     $room->short_link = $form['shortlink'];
                     $room->user_id    = $userId;
                     $room->preset_id  = $form['preset'];
-
-                    $room->labels = $form['labels'];
+                    $room->labels     = $form['labels'];
+                    $room->meeting_id = DataUtils::generateRandomString();
 
                     if ($checkRoom->nameExists($room->name, $userId)) {
                         $this->logger->error($errorMessage, ['error' => 'Name already exists']);
-                        $this->renderJson(['errors' => ['name' => 'Room Name already exists']], ResponseCode::HTTP_PRECONDITION_FAILED);
+                        $this->renderJson(['errors' => ['name' => 'Room name already exists']], ResponseCode::HTTP_PRECONDITION_FAILED);
                     } elseif ($checkRoom->shortlinkExists($room->short_link)) {
                         $this->logger->error($errorMessage, ['error' => 'Room Link already exists']);
                         $this->renderJson(['errors' => ['short_link' => 'Room link already exists']], ResponseCode::HTTP_PRECONDITION_FAILED);
                     } else {
+                        while ($checkRoom->meetingIdExists($room->meeting_id)) {
+                            $room->meeting_id = DataUtils::generateRandomString();
+                        }
+
                         try {
-                            $result = $room->save();
+                            $room->save();
                         } catch (\Exception $e) {
                             $this->logger->error($errorMessage, ['error' => $e->getMessage()]);
                             $this->renderJson(['errors' => $e->getMessage()], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
@@ -112,7 +116,8 @@ class Add extends BaseAction
                         $room = $room->getRoomInfos($room->id);
 
                         $r              = new Room();
-                        $room['labels'] = $r->getLabels($room['key']);
+                        $room['labels'] = $r->getLabels($room['id']);
+
                         $this->renderJson(['result' => 'success', 'room' => $room], ResponseCode::HTTP_CREATED);
                     }
                 } else {

@@ -170,8 +170,7 @@ const Branding = () => {
                     <fieldset disabled={!AuthService.isAllowedAction(actions, 'edit')}>
                         <Form
                             layout="vertical"
-                            name="install_form"
-                            className="install-form steps-content"
+                            className="install-form"
                             form={settingsForm}
                             requiredMark={false}
                             scrollToFirstError={true}

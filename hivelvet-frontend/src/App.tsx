@@ -22,8 +22,8 @@ import { IRoute } from './routing/IRoute';
 import Router from './routing/Router';
 import { hot } from 'react-hot-loader';
 
-import { Layout, ConfigProvider, BackTop, Button } from 'antd';
-import { CaretUpOutlined } from '@ant-design/icons';
+import { Layout, ConfigProvider, FloatButton } from 'antd';
+import { StyleProvider, legacyLogicalPropertiesTransformer } from '@ant-design/cssinjs';
 
 import AppHeader from './components/layout/AppHeader';
 import AppFooter from './components/layout/AppFooter';
@@ -71,6 +71,22 @@ const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
         () => ({ isLogged, setIsLogged, currentUser, setCurrentUser, currentSession, setCurrentSession }),
         [isLogged, setIsLogged, currentUser, setCurrentUser, currentSession, setCurrentSession]
     );
+
+    const customTheme = {
+        token: {
+            colorPrimary: '#fbbc0b',
+            colorPrimaryHover: '#ffcf33',
+            outlineColor: '#fffce6',
+
+            colorBorder: '#dddfe1',
+
+            colorLink: '#fbbc0b',
+            colorLinkHover: '#ffcf33',
+            colorLinkActive: '#ffcf33',
+
+            borderRadiusLG: 6,
+        },
+    };
 
     const getRooms = (userId: number) => {
         RoomsService.list_rooms(userId)
@@ -128,25 +144,30 @@ const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
     }, []);
 
     return (
-        <Layout className={LocaleService.direction == 'rtl' ? 'page-layout-content-rtl' : 'page-layout-content'}>
-            <ConfigProvider locale={LocaleService.antLocale} direction={LocaleService.direction} componentSize="large">
-                <UserContext.Provider value={userProvider}>
-                    <DataContext.Provider value={dataProvider}>
-                        {isLogged && isSider && <AppSider />}
-                        <Layout className="page-layout-body">
-                            <AppHeader />
-                            <Content className="site-content">
-                                <Router routes={routes} />
-                            </Content>
-                            <AppFooter />
-                        </Layout>
-                    </DataContext.Provider>
-                </UserContext.Provider>
-            </ConfigProvider>
-            <BackTop>
-                <Button type="primary" shape="circle" icon={<CaretUpOutlined />} />
-            </BackTop>
-        </Layout>
+        <StyleProvider hashPriority="high" transformers={[legacyLogicalPropertiesTransformer]}>
+            <Layout className={LocaleService.direction == 'rtl' ? 'page-layout-content-rtl' : 'page-layout-content'}>
+                <ConfigProvider
+                    theme={customTheme}
+                    locale={LocaleService.antLocale}
+                    direction={LocaleService.direction}
+                    componentSize="large"
+                >
+                    <UserContext.Provider value={userProvider}>
+                        <DataContext.Provider value={dataProvider}>
+                            {isLogged && isSider && <AppSider />}
+                            <Layout className="page-layout-body">
+                                <AppHeader />
+                                <Content className="site-content">
+                                    <Router routes={routes} />
+                                </Content>
+                                <AppFooter />
+                            </Layout>
+                        </DataContext.Provider>
+                    </UserContext.Provider>
+                </ConfigProvider>
+                <FloatButton.BackTop />
+            </Layout>
+        </StyleProvider>
     );
 };
 

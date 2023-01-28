@@ -36,7 +36,7 @@ use Models\Base as BaseModel;
 class RoomLabel extends BaseModel
 {
     protected $fieldConf = [
-        'room_id' => [
+        'room_id'  => [
             'belongs-to-one' => Room::class,
         ],
         'label_id' => [
@@ -45,6 +45,21 @@ class RoomLabel extends BaseModel
     ];
 
     protected $table = 'rooms_labels';
+
+    /**
+     * Get label record by Room and label.
+     *
+     * @param mixed $room_id
+     * @param mixed $label_id
+     *
+     * @return $this
+     */
+    public function getByRoomAndLabel($room_id, $label_id): self
+    {
+        $this->load(['room_id = ? and label_id =?', $room_id, $label_id]);
+
+        return $this;
+    }
 
     /**
      * @param mixed $roomId
@@ -60,5 +75,10 @@ class RoomLabel extends BaseModel
     public function collectAllByLabelId($labelId): array
     {
         return $this->db->exec('SELECT id, room_id, label_id FROM rooms_labels where label_id = ? ', $labelId);
+    }
+
+    public function roomAndLabelExists($room, $label, $id = null)
+    {
+        return $this->load(['room_id = ? and label_id=? and id != ?', $room, $label, $id]);
     }
 }

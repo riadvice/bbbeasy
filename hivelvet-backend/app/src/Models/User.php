@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Models;
 
 use Enum\ResponseCode;
+use Enum\UserRole;
 use Enum\UserStatus;
 use Models\Base as BaseModel;
 
@@ -89,11 +90,31 @@ class User extends BaseModel
     }
 
     /**
-     * Check if email already in use.
+     * Check if admin account already exists.
      */
-    public function emailExists(string $email): bool
+    public function adminUserExists(): bool
     {
-        return $this->load(['lower(email) = ?', mb_strtolower($email)]);
+        return $this->load(['role_id = ?', UserRole::ADMINISTRATOR_ID]);
+    }
+
+    /**
+     * Check if email already in use.
+     *
+     * @param null|mixed $id
+     */
+    public function emailExists(string $email, $id = null): bool
+    {
+        return $this->load(['lower(email) = ? and id != ?', mb_strtolower($email), $id]);
+    }
+
+    /**
+     * Check if username already in use.
+     *
+     * @param null|mixed $id
+     */
+    public function usernameExists(string $username, $id = null): bool
+    {
+        return $this->load(['lower(username) = ? and  id != ?', mb_strtolower($username), $id]);
     }
 
     /**
@@ -220,7 +241,7 @@ class User extends BaseModel
         return $this->saveDefaultPreset();
     }
 
-    public function saveDefaultPreset(): bool|string
+    public function saveDefaultPreset($returnPreset = null): bool|string|Preset
     {
         $preset          = new Preset();
         $preset->name    = 'default';
@@ -229,6 +250,10 @@ class User extends BaseModel
         $presetErrorMessage   = 'Default preset could not be added';
         $presetSuccessMessage = 'Default preset successfully added';
         $result               = $preset->addDefaultSettings($presetSuccessMessage, $presetErrorMessage);
+
+        if (true === $returnPreset) {
+            return $preset;
+        }
 
         return $result ? true : $result;
     }

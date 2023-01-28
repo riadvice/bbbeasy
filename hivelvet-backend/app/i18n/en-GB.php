@@ -23,7 +23,7 @@ declare(strict_types=1);
 return [
     'i18n' => [
         'label' => [
-            'core' => [
+            'core'      => [
                 'email'         => 'Email',
                 'password'      => 'Password',
                 'password_hint' => 'Password (8 characters at minimum)',
@@ -35,7 +35,7 @@ return [
                 'cancel'        => 'Cancel',
             ],
 
-            'menu' => [
+            'menu'      => [
                 'users' => 'Users',
             ],
 
@@ -43,14 +43,14 @@ return [
                 'sessions' => 'Sessions',
             ],
 
-            'user' => [
+            'user'      => [
                 'users'  => 'Users',
                 'user'   => 'User',
                 'email'  => 'Email',
                 'role'   => 'Role',
                 'status' => 'Status',
             ],
-            'mail' => [
+            'mail'      => [
                 'hi'               => 'Hi there',
                 'received_request' => 'We\'ve received a request to reset the password for the Hivelvet account  associated with',
                 'no_changes'       => 'No changes have been made to your account yet',

@@ -117,9 +117,6 @@ final class EditTest extends Scenario
         $f3->mock(self::EDIT_ROLE_ROUTE . $role->id, null, null, $this->postJsonData($data));
         $test->expect($this->compareArrayToResponse(['result' => 'success', 'role' => $role->getRoleInfos()]), 'Update existing role with id "' . $role->id . '" using new name "' . $role->name . '" and new permissions successfully');
 
-        $f3->mock(self::EDIT_ROLE_ROUTE . $role->id, null, null, $this->postJsonData($data));
-        $test->expect($this->compareArrayToResponse(['result' => 'success', 'role' => $role->getRoleInfos()]), 'Update existing role with id "' . $role->id . '" using new name "' . $role->name . '" and new permissions successfully');
-
         return $test->results();
     }
 

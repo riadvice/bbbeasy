@@ -58,49 +58,48 @@ final class AddTest extends Scenario
         return $test->results();
     }
 
-  /**
-   * @param mixed $f3
-   *
-   * @return array
-   *
-   * @throws \ReflectionException
-   */
-  public function testNonExistingUser($f3)
-  {
-      $test = $this->newTest();
+    /**
+     * @param mixed $f3
+     *
+     * @return array
+     *
+     * @throws \ReflectionException
+     */
+    public function testNonExistingUser($f3)
+    {
+        $test = $this->newTest();
 
-      $faker  = Faker::create();
-      $user   = UserFaker::create();
-      $preset = PresetFaker::create($user);
-      $label  = LabelFaker::create();
-      $data   = ['data' => ['name' => $faker->name, 'shortlink' => $faker->url, 'preset' => $preset->id, 'labels' => [$label->color]], 'user_id' => 404];
-      $f3->mock(self::ADD_ROOM_ROUTE, null, null, $this->postJsonData($data));
-      $test->expect($this->compareTemplateToResponse('not_found_error.json'), 'Add room with non existing user id "404" shown an error');
+        $faker  = Faker::create();
+        $user   = UserFaker::create();
+        $preset = PresetFaker::create($user);
+        $label  = LabelFaker::create();
+        $data   = ['data' => ['name' => $faker->name, 'shortlink' => $faker->url, 'preset' => $preset->id, 'labels' => [$label->color]], 'user_id' => 404];
+        $f3->mock(self::ADD_ROOM_ROUTE, null, null, $this->postJsonData($data));
+        $test->expect($this->compareTemplateToResponse('not_found_error.json'), 'Add room with non existing user id "404" shown an error');
 
-      return $test->results();
-  }
+        return $test->results();
+    }
 
-     /**
-      * @param mixed $f3
-      *
-      * @return array
-      *
-      * @throws \ReflectionException
-      */
-     public function testNonExistingPreset($f3)
-     {
-         $test = $this->newTest();
+    /**
+     * @param mixed $f3
+     *
+     * @return array
+     *
+     * @throws \ReflectionException
+     */
+    public function testNonExistingPreset($f3)
+    {
+        $test = $this->newTest();
 
-         $faker = Faker::create();
-         $user  = UserFaker::create();
+        $faker = Faker::create();
+        $user  = UserFaker::create();
+        $label = LabelFaker::create();
+        $data  = ['data' => ['name' => $faker->name, 'shortlink' => $faker->url, 'preset' => 404, 'labels' => [$label->color]], 'user_id' => $user->id];
+        $f3->mock(self::ADD_ROOM_ROUTE, null, null, $this->postJsonData($data));
+        $test->expect($this->compareTemplateToResponse('not_found_error.json'), 'Add room with non existing preset id "404" shown an error');
 
-         $label = LabelFaker::create();
-         $data  = ['data' => ['name' => $faker->name, 'shortlink' => $faker->url, 'preset' => 404, 'labels' => [$label->color]], 'user_id' => $user->id];
-         $f3->mock(self::ADD_ROOM_ROUTE, null, null, $this->postJsonData($data));
-         $test->expect($this->compareTemplateToResponse('not_found_error.json'), 'Add room with non existing preset id "404" shown an error');
-
-         return $test->results();
-     }
+        return $test->results();
+    }
 
     /**
      * @param mixed $f3
@@ -115,8 +114,6 @@ final class AddTest extends Scenario
 
         $faker = Faker::create();
         $user  = UserFaker::create();
-
-        $label = LabelFaker::create();
         $data  = ['data' => ['name' => $faker->name, 'shortlink' => $faker->url, 'preset' => 404, 'labels' => ['#fsbbcz%0b']], 'user_id' => $user->id];
         $f3->mock(self::ADD_ROOM_ROUTE, null, null, $this->postJsonData($data));
         $test->expect($this->compareTemplateToResponse('not_found_error.json'), 'Add room with non existing  labels shown an error');
@@ -164,25 +161,25 @@ final class AddTest extends Scenario
         return $test->results();
     }
 
-   /**
-    * @param mixed $f3
-    *
-    * @return array
-    *
-    * @throws \ReflectionException
-    */
-   public function testValidRoom($f3)
-   {
-       $test = $this->newTest();
+    /**
+     * @param mixed $f3
+     *
+     * @return array
+     *
+     * @throws \ReflectionException
+     */
+    public function testValidRoom($f3)
+    {
+        $test = $this->newTest();
 
-       $user   = UserFaker::create(UserRole::LECTURER);
-       $preset = PresetFaker::create($user);
-       $label  = LabelFaker::create();
-       $faker  = Faker::create();
-       $data   = ['data' => ['name' => $faker->name, 'shortlink' => $faker->url, 'preset' => $preset->id, 'labels' => [$label->color]], 'user_id' => $user->id];
-       $f3->mock(self::ADD_ROOM_ROUTE, null, null, $this->postJsonData($data));
-       $test->expect($this->compareArrayToResponse(['result' => 'success']), 'Add room with a valid data');
+        $user   = UserFaker::create(UserRole::LECTURER);
+        $preset = PresetFaker::create($user);
+        $label  = LabelFaker::create();
+        $faker  = Faker::create();
+        $data   = ['data' => ['name' => $faker->name, 'shortlink' => $faker->url, 'preset' => $preset->id, 'labels' => [$label->color]], 'user_id' => $user->id];
+        $f3->mock(self::ADD_ROOM_ROUTE, null, null, $this->postJsonData($data));
+        $test->expect($this->compareArrayToResponse(['result' => 'success']), 'Add room with a valid data');
 
-       return $test->results();
-   }
+        return $test->results();
+    }
 }

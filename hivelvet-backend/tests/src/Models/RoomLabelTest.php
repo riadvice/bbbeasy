@@ -31,6 +31,8 @@ use Faker\Factory as Faker;
 use Test\Scenario;
 
 /**
+ * Class RoomLabelTest.
+ *
  * @internal
  *
  * @coversNothing
@@ -40,11 +42,11 @@ final class RoomLabelTest extends Scenario
     protected $group = 'RoomLabel Model';
 
     /**
-     * @param mixed $f3
-     *
      * @return array
+     *
+     * @throws \ReflectionException
      */
-    public function testRoomLabelCreation($f3)
+    public function testRoomLabelCreation()
     {
         $test                = $this->newTest();
         $faker               = Faker::create();
@@ -64,11 +66,11 @@ final class RoomLabelTest extends Scenario
     }
 
     /**
-     * @param Base $f3
-     *
      * @return array
+     *
+     * @throws \ReflectionException
      */
-    public function testCollectAllByRoomId($f3)
+    public function testCollectAllByRoomId()
     {
         $test = $this->newTest();
 

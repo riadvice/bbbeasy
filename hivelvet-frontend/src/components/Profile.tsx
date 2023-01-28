@@ -21,10 +21,10 @@ import { Trans, withTranslation } from 'react-i18next';
 import { t } from 'i18next';
 import EN_US from '../locale/en-US.json';
 
-import { Avatar, Badge, Button, Col, Form, PageHeader, Row, Space, Tooltip, Image, Alert } from 'antd';
+import { PageHeader } from '@ant-design/pro-layout';
+
+import { Avatar, Badge, Button, Col, Form, Row, Space, Tooltip, Image, Alert } from 'antd';
 import { DeleteOutlined, EditOutlined, UserOutlined } from '@ant-design/icons';
-import AuthService from '../services/auth.service';
-import LocaleService from '../services/locale.service';
 
 import ImageUploading, { ImageListType } from 'react-images-uploading';
 import { PasswordInput } from 'antd-password-input-strength';
@@ -32,11 +32,14 @@ import ConfirmPassword from './ConfirmPassword';
 import Notifications from './Notifications';
 import { AddUserForm } from './AddUserForm';
 
-import { FormInstance } from 'antd/lib/form';
-import { UserType } from '../types/UserType';
+import AuthService from '../services/auth.service';
+import LocaleService from '../services/locale.service';
 
 import axios from 'axios';
 import { apiRoutes } from '../routing/backend-config';
+
+import { FormInstance } from 'antd/lib/form';
+import { UserType } from '../types/UserType';
 
 type formType = {
     username?: string;
@@ -97,11 +100,9 @@ const Profile = () => {
 
     return (
         <>
-            <PageHeader className="site-page-header" title={<Trans i18nKey="update_profile" />} />
-
+            <PageHeader title={<Trans i18nKey="update_profile" />} />
             <Form
                 layout="vertical"
-                name="users_form"
                 className="site-page-form profile-form"
                 ref={(form) => (accountForm = form)}
                 initialValues={initialAddValues}

@@ -26,6 +26,7 @@ use Faker\Factory as Faker;
 use Models\Preset;
 use Models\Room;
 use Models\User;
+use Utils\DataUtils;
 
 class RoomFaker
 {
@@ -39,6 +40,7 @@ class RoomFaker
         $room->short_link = $faker->url;
         $room->preset_id  = $preset->id;
         $room->user_id    = $user->id;
+        $room->meeting_id = DataUtils::generateRandomString();
 
         $room->save();
 

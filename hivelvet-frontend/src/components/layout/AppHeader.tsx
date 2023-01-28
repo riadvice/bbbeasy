@@ -17,8 +17,24 @@
  */
 
 import React from 'react';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
-import { Layout, Typography, Radio, Button, Menu, Dropdown, Space, Input, Row, Col, RadioChangeEvent } from 'antd';
+import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
+import {
+    Layout,
+    Typography,
+    Radio,
+    Button,
+    Menu,
+    Dropdown,
+    Space,
+    Input,
+    Row,
+    Col,
+    RadioChangeEvent,
+    Tag,
+    Modal,
+    Divider,
+    Form,
+} from 'antd';
 import { SearchOutlined, GlobalOutlined, UserOutlined, LogoutOutlined } from '@ant-design/icons';
 
 import { Trans, withTranslation } from 'react-i18next';
@@ -32,15 +48,29 @@ import AuthService from '../../services/auth.service';
 import { LanguageType } from '../../types/LanguageType';
 import { UserContext } from '../../lib/UserContext';
 
+import { DataContext } from 'lib/RoomsContext';
+
+import { RoomType } from 'types/RoomType';
+
+import DynamicIcon from 'components/DynamicIcon';
+
 const { Header } = Layout;
-const { Text, Paragraph } = Typography;
+const { Title, Text, Paragraph } = Typography;
 
 const AppHeader = () => {
     const { isLogged, setIsLogged, currentUser, setCurrentUser, setCurrentSession } = React.useContext(UserContext);
     const currentLocale = LocaleService.language;
     const result: LanguageType[] = Languages.filter((item) => item.value == currentLocale);
     const language: string = result[0].name;
+    const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
     const navigate = useNavigate();
+    const dataContext = React.useContext(DataContext);
+
+    const [rooms, setRooms] = React.useState<RoomType[]>(dataContext.dataRooms);
+
+    const location = useLocation();
+
+    const [searchForm] = Form.useForm();
 
     const logout = () => {
         AuthService.logout()
@@ -60,6 +90,20 @@ const AppHeader = () => {
     const handleChange = (e: RadioChangeEvent) => {
         const selectedLang: string = e.target.value;
         LocaleService.changeLocale(selectedLang);
+    };
+
+    const handleFilter = (e) => {
+        const data = [];
+        dataContext.dataRooms.map((room) => {
+            const lbs = room.labels.filter((item) => item.name.toLowerCase().includes(e.target.value.toLowerCase()));
+
+            if (lbs.length > 0) {
+                data.push(room);
+            }
+        });
+
+        setRooms(data);
+        setIsModalVisible(true);
     };
 
     const menuLang = (
@@ -115,27 +159,38 @@ const AppHeader = () => {
                             {dropdownLang}
                             {!INSTALLER_FEATURE && (
                                 <>
-                                    <Link className={'ant-btn color-primary'} to={'/login'}>
+                                    <Button className="color-primary" onClick={() => navigate('/login')}>
                                         <Trans i18nKey="login" />
-                                    </Link>
-                                    <Link className={'ant-btn color-primary'} to={'/register'}>
+                                    </Button>
+                                    <Button className="color-primary" onClick={() => navigate('/register')}>
                                         <Trans i18nKey="sign-up" />
-                                    </Link>
+                                    </Button>
                                 </>
                             )}
                         </Space>
                     </Paragraph>
                 ) : (
                     <Row align="middle">
-                        <Col span={14} offset={5} className="text-center">
-                            <Input
-                                className="search-input global-search"
-                                size="middle"
-                                placeholder={t('search')}
-                                allowClear
-                                suffix={<SearchOutlined />}
-                                bordered={false}
-                            />
+                        <Col span={14} offset={5}>
+                            <Form form={searchForm}>
+                                <Form.Item name="search" style={{ marginBottom: 0 }}>
+                                    <Input
+                                        onPressEnter={location.pathname.includes('rooms') ? handleFilter : null}
+                                        className="search-input global-search"
+                                        size="middle"
+                                        placeholder={
+                                            location.pathname.includes('rooms') ? t('search_all_rooms') : t('search')
+                                        }
+                                        allowClear
+                                        suffix={
+                                            <SearchOutlined
+                                                onClick={location.pathname.includes('rooms') ? handleFilter : null}
+                                            />
+                                        }
+                                        bordered={false}
+                                    />
+                                </Form.Item>
+                            </Form>
                         </Col>
                         <Col span={5} className="text-end">
                             <Space size="middle">
@@ -154,6 +209,44 @@ const AppHeader = () => {
                     </Row>
                 )}
             </>
+            <Modal
+                title={
+                    <Trans i18nKey="found_results" count={rooms.length}>
+                        Found {{ count: rooms.length }} results
+                    </Trans>
+                }
+                className="search-modal"
+                open={isModalVisible}
+                onCancel={() => {
+                    searchForm.resetFields();
+
+                    setIsModalVisible(false);
+                }}
+                footer={null}
+            >
+                {rooms.map((singleRoom, index) => (
+                    <>
+                        <Row align="middle" justify="space-around" className="room-content">
+                            <Col span={1}>
+                                <DynamicIcon type="room" />
+                            </Col>
+                            <Col span={21}>
+                                <Space direction="vertical">
+                                    <Title level={3}>{singleRoom.name}</Title>
+                                    <Row>
+                                        {singleRoom.labels.map((item) => (
+                                            <Tag key={item.id} color={item.color}>
+                                                {item.name}
+                                            </Tag>
+                                        ))}
+                                    </Row>
+                                </Space>
+                            </Col>
+                        </Row>
+                        {index < rooms.length - 1 && <Divider />}
+                    </>
+                ))}
+            </Modal>
         </Header>
     );
 };

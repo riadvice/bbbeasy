@@ -17,7 +17,7 @@
  */
 
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import AuthService from '../../services/auth.service';
 import AddUserForm from '../AddUserForm';
 import ConfirmPassword from '../ConfirmPassword';
@@ -48,6 +48,8 @@ const Register = () => {
         agreement: false,
     };
 
+    const navigate = useNavigate();
+
     const handleRegistration = (formValue: formType) => {
         AuthService.register(formValue)
             .then(() => {
@@ -69,9 +71,9 @@ const Register = () => {
                         title={<Trans i18nKey="completed_registration" />}
                         subTitle={<Trans i18nKey="user_account_created" />}
                         extra={
-                            <Link to={'/login'} className="ant-btn ant-btn-lg">
+                            <Button onClick={() => navigate('/login')}>
                                 <Trans i18nKey="login-now" />
-                            </Link>
+                            </Button>
                         }
                     />
                 </Col>
@@ -99,7 +101,6 @@ const Register = () => {
                         <Form
                             layout="vertical"
                             name="register_form"
-                            className="register-form"
                             initialValues={initialValues}
                             requiredMark={false}
                             scrollToFirstError={true}

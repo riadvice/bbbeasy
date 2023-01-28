@@ -24,7 +24,7 @@ namespace Mail;
 
 use Log\LogWriterTrait;
 use Nette\Utils\Strings;
-use Template;
+use Utils\DataUtils;
 use Utils\Environment;
 
 /**
@@ -149,7 +149,7 @@ class MailSender extends \Prefab
         return sprintf(
             '<%s.%s@%s>',
             base_convert(microtime(), 10, 36),
-            base_convert(bin2hex(openssl_random_pseudo_bytes(8)), 16, 36),
+            base_convert(DataUtils::generateRandomString(), 16, 36),
             $this->f3->get('HOST')
         );
     }

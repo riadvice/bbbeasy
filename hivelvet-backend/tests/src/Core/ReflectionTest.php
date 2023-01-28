@@ -41,7 +41,7 @@ final class ReflectionTest extends Scenario
         'preset_settings' => ['collect', 'edit'],
         'presets'         => ['add', 'delete', 'edit', 'edit_subcategories', 'index'],
         'roles'           => ['add', 'collect', 'delete', 'edit', 'index'],
-        'rooms'           => ['add', 'delete', 'edit', 'index'],
+        'rooms'           => ['add', 'delete', 'edit', 'index', 'start'],
         'settings'        => ['collect', 'edit'],
         'users'           => ['add', 'delete', 'edit', 'index'],
     ];

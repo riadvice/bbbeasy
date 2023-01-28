@@ -61,16 +61,15 @@ export const AddRoomForm = (props: Props) => {
     const [readOnly, setReadOnly] = React.useState<boolean>(true);
     const [shortLink, setShortLink] = React.useState<string>('');
     const dataContext = React.useContext(DataContext);
+    const prefixShortLink = '/hv/';
 
     const handleAdd = (values) => {
         const formValues: formType = values;
-
         setErrorsAdd([]);
         setLoading(true);
         roomsService
             .add_room(formValues, authService.getCurrentUser().id)
             .then((response) => {
-                console.log(response);
                 Notifications.openNotificationWithIcon('success', t('add_room_success'));
 
                 dataContext.setDataRooms([...dataContext.dataRooms, response.data.room]);
@@ -124,8 +123,8 @@ export const AddRoomForm = (props: Props) => {
 
     const labels_data = [];
     dataContext.dataLabels.forEach((label) => {
-        const newlabel = { label: label.name, value: label.color };
-        labels_data.push(newlabel);
+        const newLabel = { label: label.name, value: label.color };
+        labels_data.push(newLabel);
     });
 
     const tagRender = (props: CustomTagProps) => {
@@ -135,19 +134,11 @@ export const AddRoomForm = (props: Props) => {
             event.stopPropagation();
         };
         return (
-            <Tag
-                color={value}
-                onMouseDown={onPreventMouseDown}
-                closable={closable}
-                onClose={onClose}
-                style={{ marginRight: 3 }}
-            >
+            <Tag color={value} onMouseDown={onPreventMouseDown} closable={closable} onClose={onClose}>
                 {label}
             </Tag>
         );
     };
-
-    const [cancelVisibility, setCancelVisibility] = React.useState<boolean>(true);
 
     const { Option } = Select;
 
@@ -163,7 +154,7 @@ export const AddRoomForm = (props: Props) => {
                 title={<Trans i18nKey="new_room" />}
                 className="add-modal large-modal"
                 centered
-                visible={props.isModalShow}
+                open={props.isModalShow}
                 onOk={handleAdd}
                 onCancel={props.close}
                 footer={null}
@@ -203,7 +194,7 @@ export const AddRoomForm = (props: Props) => {
                                     },
                                 ]}
                             >
-                                <Input placeholder={t('name.label')} defaultValue={'ha'} />
+                                <Input placeholder={t('name.label')} />
                             </Form.Item>
 
                             <Form.Item
@@ -233,7 +224,6 @@ export const AddRoomForm = (props: Props) => {
                                             .toLowerCase()
                                             .localeCompare(optionB.children.toString().toLowerCase())
                                     }
-                                    onFocus={() => setCancelVisibility(false)}
                                 >
                                     {dataContext.dataPresets.map((item) => (
                                         <Option key={item.id} value={item.id} className="text-capitalize">
@@ -244,64 +234,37 @@ export const AddRoomForm = (props: Props) => {
                             </Form.Item>
                         </Col>
                         <Col span={11} offset={2}>
-                            {readOnly ? (
-                                <Form.Item
-                                    label={<Trans i18nKey="shortlink.label" />}
-                                    name="shortlink"
-                                    {...('short_link' in errorsAdd && {
-                                        help: (
-                                            <Trans
-                                                i18nKey={Object.keys(EN_US).filter(
-                                                    (elem) => EN_US[elem] == errorsAdd['short_link']
-                                                )}
-                                            />
-                                        ),
-                                        validateStatus: 'error',
-                                    })}
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message: <Trans i18nKey="shortlink.required" />,
-                                        },
-                                    ]}
-                                >
-                                    <Input.Group compact>
-                                        <Input
-                                            style={{ width: '235px', backgroundColor: '#dddfe1' }}
-                                            readOnly={readOnly}
-                                            value={shortLink != '' ? shortLink : shortlink}
+                            <Form.Item
+                                label={<Trans i18nKey="shortlink.label" />}
+                                name="shortlink"
+                                {...('short_link' in errorsAdd && {
+                                    help: (
+                                        <Trans
+                                            i18nKey={Object.keys(EN_US).filter(
+                                                (elem) => EN_US[elem] == errorsAdd['short_link']
+                                            )}
                                         />
-                                        <Button
-                                            icon={<EditOutlined />}
-                                            style={{ backgroundColor: '#c6c6c6' }}
-                                            onClick={toggleEdit}
-                                        >
-                                            {' '}
-                                        </Button>
+                                    ),
+                                    validateStatus: 'error',
+                                })}
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: <Trans i18nKey="shortlink.required" />,
+                                    },
+                                ]}
+                            >
+                                {readOnly ? (
+                                    <Input.Group compact className="readonly-item">
+                                        <Input
+                                            readOnly={readOnly}
+                                            defaultValue={prefixShortLink + (shortLink != '' ? shortLink : shortlink)}
+                                        />
+                                        <Button icon={<EditOutlined />} onClick={toggleEdit} />
                                     </Input.Group>
-                                </Form.Item>
-                            ) : (
-                                <Form.Item
-                                    name="shortlink"
-                                    label={<Trans i18nKey="shortlink.label" />}
-                                    {...('short_link' in errorsAdd && {
-                                        help: (
-                                            <Trans
-                                                i18nKey={Object.keys(EN_US).filter(
-                                                    (elem) => EN_US[elem] == errorsAdd['short_link']
-                                                )}
-                                            />
-                                        ),
-                                        validateStatus: 'error',
-                                    })}
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message: <Trans i18nKey="shortlink.required" />,
-                                        },
-                                    ]}
-                                >
+                                ) : (
                                     <Input
+                                        addonBefore={prefixShortLink}
                                         onChange={handleChange}
                                         readOnly={readOnly}
                                         defaultValue={shortLink != '' ? shortLink : shortlink}
@@ -311,7 +274,7 @@ export const AddRoomForm = (props: Props) => {
                                                 <Popconfirm
                                                     title={t('cancel_edit')}
                                                     placement="leftTop"
-                                                    onConfirm={() => cancelEdit()}
+                                                    onConfirm={cancelEdit}
                                                 >
                                                     <Button
                                                         icon={<CloseOutlined />}
@@ -329,8 +292,8 @@ export const AddRoomForm = (props: Props) => {
                                             </>
                                         }
                                     />
-                                </Form.Item>
-                            )}
+                                )}
+                            </Form.Item>
                             <Form.Item
                                 {...('labels' in errorsAdd && {
                                     help: (
@@ -344,12 +307,6 @@ export const AddRoomForm = (props: Props) => {
                                 })}
                                 name="labels"
                                 label={<Trans i18nKey="labels" />}
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: <Trans i18nKey="labels_required" />,
-                                    },
-                                ]}
                             >
                                 <Select
                                     mode="multiple"

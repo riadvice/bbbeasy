@@ -24,4 +24,5 @@ export type RoomType = {
     short_link: string;
     preset_id: number;
     labels: LabelType[];
+    user_id: number;
 };

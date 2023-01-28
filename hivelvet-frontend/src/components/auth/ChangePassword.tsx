@@ -17,7 +17,7 @@
  */
 
 import React, { useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import AuthService from '../../services/auth.service';
 
 import { Form, Button, Alert, Col, Row, Typography, Card, Result } from 'antd';
@@ -42,6 +42,7 @@ const ChangePassword = () => {
     const [message, setMessage] = React.useState<string>('');
     const [availableToken, setAvailableToken] = React.useState<boolean>(false);
     const params: _URLSearchParams = new URLSearchParams(window.location.search);
+    const navigate = useNavigate();
 
     useEffect(() => {
         AuthService.get_reset_password(params.get('token'))
@@ -79,9 +80,9 @@ const ChangePassword = () => {
                                 icon={<CheckOutlined className="success-install-icon" />}
                                 title={<Trans i18nKey="success_change_password" />}
                                 extra={
-                                    <Link to={'/login'} className="ant-btn ant-btn-primary ant-btn-lg">
+                                    <Button type="primary" onClick={() => navigate('/login')}>
                                         <Trans i18nKey="login-now" />
-                                    </Link>
+                                    </Button>
                                 }
                             />
                         </Col>
@@ -110,7 +111,6 @@ const ChangePassword = () => {
                                 <Form
                                     layout="vertical"
                                     name="change"
-                                    className="login-form"
                                     requiredMark={false}
                                     scrollToFirstError={true}
                                     validateTrigger="onSubmit"
@@ -135,13 +135,7 @@ const ChangePassword = () => {
                                     <ConfirmPassword />
 
                                     <Form.Item>
-                                        <Button
-                                            type="primary"
-                                            htmlType="submit"
-                                            className="login-form-button"
-                                            size="large"
-                                            block
-                                        >
+                                        <Button type="primary" htmlType="submit" block>
                                             <Trans i18nKey="change-password" />
                                         </Button>
                                     </Form.Item>
@@ -164,9 +158,9 @@ const ChangePassword = () => {
                         subTitle={<Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == message)} />}
                         className="page-not-found"
                         extra={
-                            <Link className="ant-btn color-blue" to="/">
+                            <Button className="color-blue" onClick={() => navigate('/')}>
                                 <Trans i18nKey="back-home" />
-                            </Link>
+                            </Button>
                         }
                     />
                 )

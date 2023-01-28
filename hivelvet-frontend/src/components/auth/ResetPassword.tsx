@@ -76,7 +76,6 @@ const Reset = () => {
                     <Form
                         layout="vertical"
                         name="reset"
-                        className="login-form"
                         initialValues={initialValues}
                         requiredMark={false}
                         scrollToFirstError={true}
@@ -100,7 +99,7 @@ const Reset = () => {
                             <Input placeholder={t('email.label')} />
                         </Form.Item>
                         <Form.Item>
-                            <Button type="primary" htmlType="submit" className="login-form-button" size="large" block>
+                            <Button type="primary" htmlType="submit" block>
                                 <Trans i18nKey="reset-password" />
                             </Button>
                         </Form.Item>

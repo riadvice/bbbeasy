@@ -273,7 +273,7 @@
         "required": "The Short Link is required"
     },
     "labels_required": "labels are required",
-    "room-name-already-exist": "Room Name already exists",
+    "room-name-already-exist": "Room name already exists",
     "room-link-already-exist": "Room link already exists",
     "add_room_success": "Room Added Successfully",
 
@@ -287,6 +287,8 @@
     "linkedin_share": "Share on linkedIn",
     "email_share": "Send by email",
     "start": "Start",
+    "join": "Join",
+    "meeting_not_started": "Meeting has not started yet",
     "room_ppts": "Room presentations",
     "upload": "Upload",
     "room_recordings": "Room recordings",
@@ -297,11 +299,16 @@
     "delete_room_confirm": "Are you sure to delete this room ?",
     "delete_room_success": "Room successfully deleted",
     "edit_room_success": "Room successfully updated",
+    "found_results": "Found {{count}} results",
+    "search_all_rooms": "Search all my rooms",
 
     "update_profile": "Update Profile",
     "current_password": "Current Password",
     "new_password": "New Password",
     "confirm_new_password": "Re-Type New Password",
     "change_avatar": "Change Avatar",
-    "edit_account_success": "Profile successfully updated"
+    "edit_account_success": "Profile successfully updated",
+
+    "install_locked_title": "Install Process locked",
+    "install_locked_text": "Sorry, you are not authorized to access this page, application already installed"
 }

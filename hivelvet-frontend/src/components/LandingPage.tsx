@@ -17,9 +17,9 @@
  */
 
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-import { Row, Col, Typography, Avatar } from 'antd';
+import { Row, Col, Typography, Avatar, Button } from 'antd';
 import { AppstoreAddOutlined, BgColorsOutlined, PlayCircleOutlined, ControlOutlined } from '@ant-design/icons';
 import DynamicIcon from './DynamicIcon';
 import { Trans, withTranslation } from 'react-i18next';
@@ -27,6 +27,8 @@ import { Trans, withTranslation } from 'react-i18next';
 const { Title, Paragraph } = Typography;
 
 const LandingPage = () => {
+    const navigate = useNavigate();
+
     return (
         <>
             <Row justify="center" align="top" className="landing-content">
@@ -36,15 +38,18 @@ const LandingPage = () => {
                     </Title>
                     <p className="mb-30">
                         <Trans i18nKey="create_customizable_rooms" />
-                        <strong> <Trans i18nKey="bigbluebutton" /></strong>
+                        <strong>
+                            {' '}
+                            <Trans i18nKey="bigbluebutton" />
+                        </strong>
                     </p>
-                    <Paragraph className="landing-btn">
-                        <Link className="ant-btn ant-btn-primary text-white login-btn" to={'/login'}>
+                    <Paragraph className="landing-btns">
+                        <Button type="primary" onClick={() => navigate('/login')}>
                             <Trans i18nKey="login" />
-                        </Link>
-                        <Link className="ant-btn color-primary register-btn" to={'/register'}>
+                        </Button>
+                        <Button className="color-primary text-color-primary" onClick={() => navigate('/register')}>
                             <Trans i18nKey="sign-up" />
-                        </Link>
+                        </Button>
                     </Paragraph>
                 </Col>
                 <Col span={12} className="text-end">

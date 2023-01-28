@@ -21,7 +21,7 @@ import { Button, Form, Input, Modal } from 'antd';
 import { Trans, withTranslation } from 'react-i18next';
 import { t } from 'i18next';
 import EN_US from '../locale/en-US.json';
-import InputColor from './layout/InputColor';
+import InputColor from './InputColor';
 import { DataContext } from 'lib/RoomsContext';
 import labelsService from 'services/labels.service';
 import Notifications from './Notifications';
@@ -101,7 +101,7 @@ export const AddLabelForm = (props: Props) => {
                 title={<Trans i18nKey="new_label" />}
                 className="add-modal"
                 centered
-                visible={props.isModalShow}
+                open={props.isModalShow}
                 onOk={handleAdd}
                 onCancel={props.close}
                 footer={null}
