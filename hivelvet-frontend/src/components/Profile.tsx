@@ -170,9 +170,9 @@ const Profile = () => {
                                         <Avatar
                                             src={
                                                 imageList[0] != null ? (
-                                                    <>
-                                                        <Image
-                                                            preview={false}
+                                                    <div className="ant-image">
+                                                        <img
+                                                            className="ant-image-img"
                                                             src={imageList[0].dataURL}
                                                             width={130}
                                                             height={130}
@@ -182,7 +182,7 @@ const Profile = () => {
                                                                 <DeleteOutlined onClick={() => onImageRemove(0)} />
                                                             </div>
                                                         </div>
-                                                    </>
+                                                    </div>
                                                 ) : null
                                             }
                                             icon={imageList[0] == null ? <UserOutlined /> : null}
