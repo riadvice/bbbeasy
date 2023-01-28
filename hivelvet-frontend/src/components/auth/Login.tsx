@@ -73,8 +73,8 @@ const Login = () => {
                         <SmileOutlined className="text-color-primary" />,
                         2.5
                     );
-                    localStorage.setItem('user', JSON.stringify(user_infos));
-                    localStorage.setItem('session', JSON.stringify(session_infos));
+                    AuthService.addCurrentUser(user_infos);
+                    AuthService.addCurrentSession(session_infos);
                     setCurrentUser(user_infos);
                     setCurrentSession(session_infos);
                     setIsLogged(true);

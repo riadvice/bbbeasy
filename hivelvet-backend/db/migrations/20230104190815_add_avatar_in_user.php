@@ -1,4 +1,8 @@
-/**
+<?php
+
+declare(strict_types=1);
+
+/*
  * Hivelvet open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
@@ -16,11 +20,21 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-export type UserType = {
-    id: number;
-    username: string;
-    email: string;
-    role: string;
-    avatar?: string;
-    permissions: object;
-};
+use Phinx\Migration\AbstractMigration;
+
+final class AddAvatarInUser extends AbstractMigration
+{
+    public function up(): void
+    {
+        $table = $this->table('users');
+        $table->addColumn('avatar', 'string', ['limit' => 256, 'null' => true])
+            ->save()
+        ;
+    }
+
+    public function down(): void
+    {
+        $table = $this->table('users');
+        $table->removeColumn('avatar')->save();
+    }
+}

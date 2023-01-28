@@ -31,6 +31,7 @@ use Models\Role;
 use Models\Setting;
 use Models\User;
 use Respect\Validation\Validator;
+use Utils\DataUtils;
 use Utils\PrivilegeUtils;
 use Validation\DataChecker;
 
@@ -64,10 +65,8 @@ class Install extends BaseAction
                     $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
                 } else {
                     if (null !== $form['logo']) {
-                        $logoName     = $form['logo'];
-                        $logoFormat   = mb_substr($logoName, mb_strpos($logoName, '.') + 1);
-                        $validFormats = ['jpg', 'jpeg', 'png'];
-                        if (!\in_array($logoFormat, $validFormats, true)) {
+                        $logoName = $form['logo'];
+                        if (!DataUtils::validateImageFormat($logoName)) {
                             $this->logger->error('Settings could not be updated', ['errors' => 'invalid file format : ' . $logoFormat]);
 
                             $this->renderJson(['message' => 'invalid file format'], ResponseCode::HTTP_PRECONDITION_FAILED);
@@ -130,9 +129,6 @@ class Install extends BaseAction
                                         }
 
                                         $user->saveDefaultPreset();
-
-                                        // disable installer by setting system.installed to true
-                                        exec('hivelvet -di');
 
                                         $this->logger->info('Initial application setup has been successfully done');
                                         $this->renderJson(['result' => 'success']);

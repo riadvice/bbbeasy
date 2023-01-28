@@ -263,36 +263,71 @@ abstract class Base extends \Prefab
         return $credentials;
     }
 
-    protected function credentialsAreValid(array $form, User $user, string $errorMessage): bool
+    protected function credentialsAreValid(string $username, string $email, $password, string $errorMessage, $userId = null): bool
     {
+        $user              = new User();
         $credentials_valid = true;
+        $passwordExist     = null !== $password;
         $responseCode      = ResponseCode::HTTP_PRECONDITION_FAILED;
 
-        $username = $form['username'];
-        $email    = $form['email'];
-        $password = $form['password'];
+        $users = $user->getUsersByUsernameOrEmail($username, $email, $userId);
 
-        $users = $user->getUsersByUsernameOrEmail($username, $email);
+        $found = $user->userExists($username, $email, $users);
+        if ($passwordExist) {
+            $compliant = SecurityUtils::isGdprCompliant($password);
+            $common    = SecurityUtils::credentialsAreCommon($username, $email, $password);
+        }
 
-        $compliant = SecurityUtils::isGdprCompliant($password);
-        $common    = SecurityUtils::credentialsAreCommon($username, $email, $password);
-        $found     = $user->userExists($username, $email, $users);
-
-        if (!$compliant) {
-            $this->logger->error($errorMessage, ['error' => $compliant]);
-            $this->renderJson(['message' => $compliant], $responseCode);
-            $credentials_valid = false;
-        } elseif ($common) {
-            $this->logger->error($errorMessage, ['error' => $common]);
-            $this->renderJson(['message' => $common], $responseCode);
-            $credentials_valid = false;
-        } elseif ($found) {
+        if ($found) {
             $this->logger->error($errorMessage, ['error' => $found]);
             $this->renderJson(['message' => $found], $responseCode);
             $credentials_valid = false;
+        } elseif ($passwordExist) {
+            if (!$compliant) {
+                $this->logger->error($errorMessage, ['error' => $compliant]);
+                $this->renderJson(['message' => $compliant], $responseCode);
+                $credentials_valid = false;
+            } elseif ($common) {
+                $this->logger->error($errorMessage, ['error' => $common]);
+                $this->renderJson(['message' => $common], $responseCode);
+                $credentials_valid = false;
+            }
         }
 
         return $credentials_valid;
+    }
+
+    protected function usernameAndEmailAreValid(string $username, string $email, string $errorMessage, $userId = null): bool
+    {
+        $user         = new User();
+        $responseCode = ResponseCode::HTTP_PRECONDITION_FAILED;
+
+        $users = $user->getUsersByUsernameOrEmail($username, $email, $userId);
+        $found = $user->userExists($username, $email, $users);
+        if ($found) {
+            switch ($found) {
+                case 'Username and Email already exist':
+                    $found = ['username' => 'Username already exists', 'email' => 'Email already exists'];
+
+                    break;
+
+                case 'Username already exists':
+                    $found = ['username' => $found];
+
+                    break;
+
+                case 'Email already exists':
+                    $found = ['email' => $found];
+
+                    break;
+            }
+            $this->logger->error($errorMessage, ['error' => $found]);
+            $this->renderJson(['errors' => $found], $responseCode);
+
+            return false;
+        }
+
+        return true;
     }
 
     private function parseXMLView(string $view = null): string

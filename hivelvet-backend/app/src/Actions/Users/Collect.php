@@ -24,7 +24,6 @@ namespace Actions\Users;
 
 use Actions\Base as BaseAction;
 use Enum\ResponseCode;
-use Models\User;
 use Respect\Validation\Validator;
 use Validation\DataChecker;
 
@@ -39,17 +38,20 @@ class Collect extends BaseAction
         $form        = $body['data'];
         $dataChecker = new DataChecker();
 
-        $dataChecker->verify($form['username'], Validator::length(4)->setName('username'));
-        $dataChecker->verify($form['email'], Validator::email()->setName('email'));
-        $dataChecker->verify($form['password'], Validator::length(8)->setName('password'));
+        $username = $form['username'];
+        $email    = $form['email'];
+        $password = $form['password'];
+
+        $dataChecker->verify($username, Validator::length(4)->setName('username'));
+        $dataChecker->verify($email, Validator::email()->setName('email'));
+        $dataChecker->verify($password, Validator::length(8)->setName('password'));
 
         if (!$dataChecker->allValid()) {
             $this->logger->error('Initial application setup : Add administrator', ['errors' => $dataChecker->getErrors()]);
             $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
         } else {
-            $user         = new User();
             $errorMessage = 'Administrator could not be added';
-            $this->credentialsAreValid($form, $user, $errorMessage);
+            $this->credentialsAreValid($username, $email, $password, $errorMessage);
         }
     }
 }

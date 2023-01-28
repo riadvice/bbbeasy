@@ -47,21 +47,26 @@ class Add extends BaseAction
         $form        = $body['data'];
         $dataChecker = new DataChecker();
 
-        $dataChecker->verify($form['username'], Validator::length(4)->setName('username'));
-        $dataChecker->verify($form['email'], Validator::email()->setName('email'));
-        $dataChecker->verify($form['password'], Validator::length(8)->setName('password'));
-        $dataChecker->verify($form['role'], Validator::notEmpty()->setName('role'));
+        $username = $form['username'];
+        $email    = $form['email'];
+        $password = $form['password'];
+        $roleId   = $form['role'];
+
+        $dataChecker->verify($username, Validator::length(4)->setName('username'));
+        $dataChecker->verify($email, Validator::email()->setName('email'));
+        $dataChecker->verify($password, Validator::length(8)->setName('password'));
+        $dataChecker->verify($roleId, Validator::notEmpty()->setName('role'));
 
         /** @todo : move to locales */
         $errorMessage   = 'User could not be added';
         $successMessage = 'User successfully added';
         if ($dataChecker->allValid()) {
-            $user = new User();
-            if ($this->credentialsAreValid($form, $user, $errorMessage)) {
+            if ($this->credentialsAreValid($username, $email, $password, $errorMessage)) {
                 $role = new Role();
-                $role->load(['id = ?', [$form['role']]]);
+                $role->load(['id = ?', [$roleId]]);
                 if ($role->valid()) {
-                    $result = $user->saveUserWithDefaultPreset($form['username'], $form['email'], $form['password'], $role->id, $successMessage, $errorMessage);
+                    $user   = new User();
+                    $result = $user->saveUserWithDefaultPreset($username, $email, $password, $role->id, $successMessage, $errorMessage);
                     if ($result) {
                         $this->renderJson(['result' => 'success', 'user' => $user->getUserInfos()], ResponseCode::HTTP_CREATED);
                     } else {

@@ -22,27 +22,48 @@ import { Trans, withTranslation } from 'react-i18next';
 import { t } from 'i18next';
 import { PasswordInput } from 'antd-password-input-strength';
 
-export const confirmPassword = () => {
+type Props = {
+    dependOn?: string;
+    confirmText?: string;
+};
+
+const ConfirmPassword = (props: Props) => {
+    const { dependOn, confirmText } = props;
+
+    const confirmField = (dependValue: string, value: string) => {
+        if (!value) {
+            return new Error(t('confirm-password.required'));
+        } else {
+            if (dependValue === value) {
+                return null;
+            }
+            return new Error(t('passwords-not-match'));
+        }
+    };
+
     return (
         <Form.Item
-            label={<Trans i18nKey="confirm-password.label" />}
-            name="confirmPassword"
-            dependencies={['password']}
+            label={<Trans i18nKey={confirmText ?? 'confirm-password.label'} />}
+            name={confirmText ?? 'confirmPassword'}
+            dependencies={[dependOn ?? 'password']}
             rules={[
                 {
                     min: 8,
                     message: <Trans i18nKey="confirm-password.size" />,
                 },
-                {
+                !dependOn && {
                     required: true,
                     message: <Trans i18nKey="confirm-password.required" />,
                 },
                 ({ getFieldValue }) => ({
                     validator(_, value) {
-                        if (!value || getFieldValue('password') === value) {
-                            return Promise.resolve();
+                        if (dependOn && getFieldValue(dependOn)) {
+                            const error = confirmField(getFieldValue(dependOn), value);
+                            if (error) {
+                                return Promise.reject(error);
+                            }
                         }
-                        return Promise.reject(new Error(t('paswords-not-match')));
+                        return Promise.resolve();
                     },
                 }),
             ]}
@@ -52,4 +73,4 @@ export const confirmPassword = () => {
     );
 };
 
-export default withTranslation()(confirmPassword);
+export default withTranslation()(ConfirmPassword);

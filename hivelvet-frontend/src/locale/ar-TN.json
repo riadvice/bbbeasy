@@ -51,7 +51,7 @@
     "register": "سجل الآن",
     "have-already-account": "لديك حساب مسبقاً",
     "login-here": "تسجيل الدخول هنا",
-    "paswords-not-match": "كلمتا المرور غير متطابقتين",
+    "passwords-not-match": "كلمتا المرور غير متطابقتين",
     "user-could-not-logged": "لم يتمكن المستخدم من تسجيل الدخول",
     "success-title": "تم الإجراء بنجاح",
     "error-title": "خطأ",
@@ -287,6 +287,8 @@
     "linkedin_share": "مشاركة على لينكد إن",
     "email_share": "إرسال بالبريد الإلكتروني",
     "start": "ابدأ",
+    "join": "انضم",
+    "meeting_not_started": "لم يبدأ الاجتماع بعد",
     "room_ppts": "عروض الغرفة",
     "upload": "تحميل",
     "room_recordings": "تسجيلات الغرفة",
@@ -297,12 +299,16 @@
     "delete_room_confirm": "هل أنت متأكد من حذف هذه القاعة ؟",
     "delete_room_success": "تم حذف القاعة بنجاح",
     "edit_room_success": "تم تحديث القاعة بنجاح",
-    "update_profile": "تحديث الملف الشخصي",
-    "change_avatar": "تغيير الصورة الرمزية",
-    "join": "انضم",
-    "meeting_not_started": "لم يبدأ الاجتماع بعد",
-    "install_locked_title": "عملية التثبيت مقفلة",
-    "install_locked_text": "عذرًا ، غير مصرح لك بالدخول إلى هذه الصفحة ، التطبيق مثبت بالفعل",
     "found_results": "العثور على {{count}} من النتائج",
-    "search_all_rooms": "بحث في جميع القاعات"
+    "search_all_rooms": "بحث في جميع القاعات",
+
+    "update_profile": "تحديث الملف الشخصي",
+    "current_password": "كلمة المرور الحالية",
+    "new_password": "كلمة المرور الجديدة",
+    "confirm_new_password": "أعد كتابة كلمة المرور الجديدة",
+    "change_avatar": "تغيير الصورة الرمزية",
+    "edit_account_success": "تم تحديث الملف الشخصي بنجاح",
+
+    "install_locked_title": "عملية التثبيت مقفلة",
+    "install_locked_text": "عذرًا ، غير مصرح لك بالدخول إلى هذه الصفحة ، التطبيق مثبت بالفعل"
 }

@@ -26,6 +26,7 @@ use Actions\Base as BaseAction;
 use Actions\RequirePrivilegeTrait;
 use Enum\ResponseCode;
 use Models\Setting;
+use Utils\DataUtils;
 use Validation\DataChecker;
 
 /**
@@ -59,11 +60,9 @@ class Edit extends BaseAction
 
             if ($dataChecker->allValid()) {
                 if (null !== $form['logo']) {
-                    $logoName     = $form['logo'];
-                    $logoFormat   = mb_substr($logoName, mb_strpos($logoName, '.') + 1);
-                    $validFormats = ['jpg', 'jpeg', 'png'];
-                    if (!\in_array($logoFormat, $validFormats, true)) {
-                        $this->logger->error($errorMessage, ['errors' => 'invalid file format : ' . $logoFormat]);
+                    $logoName = $form['logo'];
+                    if (!DataUtils::validateImageFormat($logoName)) {
+                        $this->logger->error($errorMessage, ['errors' => 'invalid file format']);
 
                         $this->renderJson(['message' => 'invalid file format'], ResponseCode::HTTP_PRECONDITION_FAILED);
 
