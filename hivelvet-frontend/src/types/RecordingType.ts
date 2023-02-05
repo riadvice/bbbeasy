@@ -17,9 +17,12 @@
  */
 
 export type RecordingType = {
-    id: number;
+    key: string;
     name: string;
-    attendees: number;
     date: string;
     duration: string;
+    users: number;
+    state: string;
+    formats: string[];
+    url: string;
 };

@@ -17,11 +17,13 @@
  */
 
 import React from 'react';
+import { Trans } from 'react-i18next';
 
 import { Button, Form, Typography, Card, Modal, Switch, Alert, Tooltip } from 'antd';
 import DynamicIcon from './DynamicIcon';
-import { Trans } from 'react-i18next';
+
 import LocaleService from '../services/locale.service';
+
 import { PresetType } from '../types/PresetType';
 import { SubCategoryType } from '../types/SubCategoryType';
 import { getIconName } from '../types/GetIconName';

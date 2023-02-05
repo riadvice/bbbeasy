@@ -19,64 +19,46 @@
 import React, { useEffect } from 'react';
 
 import { Trans, withTranslation } from 'react-i18next';
-import EN_US from '../locale/en-US.json';
 import { t } from 'i18next';
 
 import { PageHeader } from '@ant-design/pro-layout';
 
-import { Badge, Button, Form, Input, Modal, Popconfirm, Space, Table, Typography } from 'antd';
-import {
-    DeleteOutlined,
-    EditOutlined,
-    QuestionCircleOutlined,
-    SearchOutlined,
-    WarningOutlined,
-} from '@ant-design/icons';
+import { Badge, Button, Form, Input, Modal, Popconfirm, Space, Typography } from 'antd';
+import { DeleteOutlined, EditOutlined, QuestionCircleOutlined, WarningOutlined } from '@ant-design/icons';
 
-import { PaginationType } from '../types/PaginationType';
-import { FormInstance } from 'antd/lib/form';
-import _ from 'lodash';
-import Highlighter from 'react-highlight-words/dist/main';
 import Notifications from './Notifications';
 import AddLabelForm from './AddLabelForm';
 import InputColor from './InputColor';
 import { DataContext } from 'lib/RoomsContext';
+import { CompareRecords } from '../functions/compare.function';
+import { EditableTable } from './EditableTable';
+import EditableTableCell from './EditableTableCell';
+import EditableTableColumnSearch from './EditableTableColumnSearch';
 
 import AuthService from '../services/auth.service';
 import LabelsService from '../services/labels.service';
+
 import { TableColumnType } from '../types/TableColumnType';
+import { LabelType } from '../types/LabelType';
 
 const { Link } = Typography;
-
-type Item = {
-    key: number;
-    name: string;
-    description: string;
-    color: string;
-    nb_rooms: number;
-};
 
 interface EditableCellProps {
     editing: boolean;
     children: React.ReactNode;
-    dataIndex: keyof Item;
-    record: Item;
+    dataIndex: keyof LabelType;
+    record: LabelType;
     inputType: 'text';
 }
 
-const EditableContext = React.createContext<FormInstance | null>(null);
-
 const Labels = () => {
     const dataContext = React.useContext(DataContext);
-    const [data, setData] = React.useState<Item[]>([]);
+    const [data, setData] = React.useState<LabelType[]>([]);
     const [loading, setLoading] = React.useState<boolean>(false);
     const [actions, setActions] = React.useState<string[]>([]);
     const [editingKey, setEditingKey] = React.useState<number>(null);
     const [errorsEdit, setErrorsEdit] = React.useState({});
     const [cancelVisibility, setCancelVisibility] = React.useState<boolean>(false);
-    const [pagination, setPagination] = React.useState<PaginationType>({ current: 1, pageSize: 5 });
-    const [searchText, setSearchText] = React.useState<string>('');
-    const [searchedColumn, setSearchedColumn] = React.useState<string>('');
     const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
 
     const getLabels = () => {
@@ -154,182 +136,48 @@ const Labels = () => {
         }
     };
 
-    // search
-    const handleReset = (clearFilters) => {
-        clearFilters();
-        setSearchText('');
-    };
-    const handleSearch = (selectedKeys: string[], confirm, dataIndex: string, closed = false) => {
-        if (closed) {
-            confirm({ closeDropdown: false });
-        } else {
-            confirm();
-        }
-
-        setSearchText(selectedKeys[0]);
-        setSearchedColumn(dataIndex);
-    };
-    const getColumnSearchProps = (dataIndex: string) => ({
-        filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-            <div className="table-search-bloc">
-                <Input
-                    size="middle"
-                    className="table-search-input"
-                    placeholder={t('search') + ' ' + t(dataIndex + '_col')}
-                    value={selectedKeys[0]}
-                    onChange={(e) => setSelectedKeys([e.target.value])}
-                    onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-                />
-                <Space>
-                    <Button
-                        type="primary"
-                        size="small"
-                        icon={<SearchOutlined />}
-                        onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-                    >
-                        {' '}
-                        <Trans i18nKey="search" />
-                    </Button>
-                    <Button size="small" onClick={() => handleReset(clearFilters)}>
-                        <Trans i18nKey="reset" />
-                    </Button>
-                    <Button
-                        type="link"
-                        size="small"
-                        onClick={() => handleSearch(selectedKeys, confirm, dataIndex, true)}
-                    >
-                        <Trans i18nKey="filter" />
-                    </Button>
-                </Space>
-            </div>
-        ),
-        filterIcon: (filtered: boolean) => <SearchOutlined className={filtered && 'search-icon-filtered'} />,
-        onFilter: (value, record: Item) => {
-            return record[dataIndex] ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()) : '';
-        },
-        render: (text) => {
-            if (dataIndex == 'name') {
-                text = text[0].toUpperCase() + text.slice(1);
-            }
-            if (searchedColumn === dataIndex) {
-                return <Highlighter searchWords={[searchText]} autoEscape textToHighlight={text && text.toString()} />;
-            }
-            return text;
-        },
-    });
-
     //edit
     const [editForm] = Form.useForm();
-    const EditableRow: React.FC = ({ ...props }) => {
-        return (
-            <Form size="middle" form={editForm} component={false} validateTrigger="onSubmit">
-                <EditableContext.Provider value={editForm}>
-                    <tr {...props} />
-                </EditableContext.Provider>
-            </Form>
-        );
-    };
     const EditableCell: React.FC<EditableCellProps> = ({ editing, children, dataIndex, record, ...restProps }) => {
-        const EditableCol = (
-            <Space size="middle">
-                {dataIndex != 'description' ? (
-                    <Form.Item
-                        name={dataIndex}
-                        className="input-editable"
-                        {...(dataIndex in errorsEdit &&
-                            record.key == errorsEdit['key'] && {
-                                help: (
-                                    <Trans
-                                        i18nKey={Object.keys(EN_US).filter(
-                                            (elem) => EN_US[elem] == errorsEdit[dataIndex]
-                                        )}
-                                    />
-                                ),
-                                validateStatus: 'error',
-                            })}
-                        rules={[
-                            {
-                                required: true,
-                                message: t('required_' + dataIndex),
-                            },
-                        ]}
-                    >
-                        <Input
-                            onFocus={() => {
-                                setCancelVisibility(false);
-                            }}
-                        />
-                    </Form.Item>
+        return (
+            <EditableTableCell
+                editing={editing}
+                dataIndex={dataIndex}
+                record={record}
+                inputNode={
+                    <Input
+                        onFocus={() => {
+                            setCancelVisibility(false);
+                        }}
+                    />
+                }
+                errorsEdit={errorsEdit}
+                showLabelColor={dataIndex == 'description'}
+                inputColor={
+                    <InputColor
+                        defaultColor={record != undefined && record.color}
+                        onFocus={() => {
+                            setCancelVisibility(false);
+                        }}
+                    />
+                }
+                {...restProps}
+            >
+                {dataIndex == 'name' && record != null ? (
+                    <Badge
+                        count={record.name}
+                        style={{
+                            backgroundColor: record.color,
+                        }}
+                    />
                 ) : (
-                    <>
-                        <Form.Item
-                            name="description"
-                            className="input-editable"
-                            {...('description' in errorsEdit &&
-                                record.key == errorsEdit['key'] && {
-                                    help: (
-                                        <Trans
-                                            i18nKey={Object.keys(EN_US).filter(
-                                                (elem) => EN_US[elem] == errorsEdit['description']
-                                            )}
-                                        />
-                                    ),
-                                    validateStatus: 'error',
-                                })}
-                        >
-                            <Input
-                                onFocus={() => {
-                                    setCancelVisibility(false);
-                                }}
-                            />
-                        </Form.Item>
-                        <Form.Item
-                            name="color"
-                            className="input-editable"
-                            {...('color' in errorsEdit &&
-                                record.key == errorsEdit['key'] && {
-                                    help: (
-                                        <Trans
-                                            i18nKey={Object.keys(EN_US).filter(
-                                                (elem) => EN_US[elem] == errorsEdit['color']
-                                            )}
-                                        />
-                                    ),
-                                    validateStatus: 'error',
-                                })}
-                            rules={[
-                                {
-                                    required: true,
-                                    message: t('required_color'),
-                                },
-                            ]}
-                        >
-                            <InputColor
-                                defaultColor={record.color}
-                                onFocus={() => {
-                                    setCancelVisibility(false);
-                                }}
-                            />
-                        </Form.Item>
-                    </>
+                    children
                 )}
-            </Space>
+            </EditableTableCell>
         );
-        const RegularCol =
-            dataIndex == 'name' ? (
-                <Badge
-                    count={record.name}
-                    style={{
-                        backgroundColor: record.color,
-                    }}
-                />
-            ) : (
-                children
-            );
-        return <td {...restProps}>{editing ? EditableCol : RegularCol}</td>;
     };
-    const isEditing = (record: Item) => record.key == editingKey;
-    const toggleEdit = (record: Item) => {
+    const isEditing = (record: LabelType) => record.key == editingKey;
+    const toggleEdit = (record: LabelType) => {
         setCancelVisibility(false);
         setEditingKey(record.key);
         setErrorsEdit({});
@@ -340,16 +188,15 @@ const Labels = () => {
         setCancelVisibility(false);
         setEditingKey(null);
     };
-    const compareEdit = (oldRecord: Item, newRecord: object): boolean => _.isEqual(oldRecord, newRecord);
-    const saveEdit = async (record: Item, key: number) => {
+    const saveEdit = async (record: LabelType, key: number) => {
         try {
             const formValues: object = await editForm.validateFields();
-            if (!compareEdit(record, editForm.getFieldsValue(true))) {
+            if (!CompareRecords(record, editForm.getFieldsValue(true))) {
                 setLoading(true);
                 setErrorsEdit({});
                 LabelsService.edit_label(formValues, key)
                     .then((response) => {
-                        const newRow: Item = response.data.label;
+                        const newRow: LabelType = response.data.label;
                         const index = data.findIndex((item) => key === item.key);
                         if (index !== -1 && newRow) {
                             setData((data) => {
@@ -388,11 +235,11 @@ const Labels = () => {
 
     const columns: TableColumnType[] = [
         {
-            title: t('labels_cols.name'),
+            title: t('name_col'),
             dataIndex: 'name',
             inputType: 'text',
             editable: true,
-            ...getColumnSearchProps('name'),
+            ...EditableTableColumnSearch('name'),
             width: '20%',
             sorter: {
                 compare: (a, b) => a.name.localeCompare(b.name),
@@ -400,11 +247,11 @@ const Labels = () => {
             },
         },
         {
-            title: t('labels_cols.description'),
+            title: t('description_col'),
             dataIndex: 'description',
             inputType: 'text',
             editable: true,
-            ...getColumnSearchProps('description'),
+            ...EditableTableColumnSearch('description'),
             width: '40%',
             sorter: {
                 compare: (a, b) => a.description.localeCompare(b.description),
@@ -412,11 +259,11 @@ const Labels = () => {
             },
         },
         {
-            title: t('labels_cols.nbrooms'),
+            title: t('nb_rooms_col'),
             dataIndex: 'nb_rooms',
             inputType: 'text',
             editable: false,
-            ...getColumnSearchProps('rooms_number'),
+            ...EditableTableColumnSearch('nb_rooms'),
             width: '15%',
             sorter: {
                 compare: (a, b) => a.nb_rooms - b.nb_rooms,
@@ -431,7 +278,7 @@ const Labels = () => {
             editable: false,
             render: (text, record) => {
                 const handleCancelVisibilityChange = () => {
-                    compareEdit(record, editForm.getFieldsValue(true)) ? cancelEdit() : setCancelVisibility(true);
+                    CompareRecords(record, editForm.getFieldsValue(true)) ? cancelEdit() : setCancelVisibility(true);
                 };
 
                 const EditActions = (
@@ -491,7 +338,7 @@ const Labels = () => {
         }
         return {
             ...col,
-            onCell: (record: Item) => ({
+            onCell: (record: LabelType) => ({
                 record,
                 inputType: 'text',
                 dataIndex: col.dataIndex,
@@ -524,19 +371,12 @@ const Labels = () => {
                 />
             )}
 
-            <Table
-                className="hivelvet-table"
-                components={{
-                    body: {
-                        row: EditableRow,
-                        cell: EditableCell,
-                    },
-                }}
-                columns={mergedColumns}
+            <EditableTable
+                EditableCell={EditableCell}
+                editForm={editForm}
+                mergedColumns={mergedColumns}
                 dataSource={data}
-                pagination={pagination}
                 loading={loading}
-                onChange={(newPagination: PaginationType) => setPagination(newPagination)}
             />
         </>
     );

@@ -38,8 +38,6 @@ import {
     message,
     InputNumber,
     Space,
-    Empty,
-    Spin,
 } from 'antd';
 import {
     CheckOutlined,
@@ -57,21 +55,24 @@ import ColorPicker from 'rc-color-picker/lib/ColorPicker';
 import { Trans, withTranslation } from 'react-i18next';
 import { t } from 'i18next';
 import EN_US from '../locale/en-US.json';
-import LocaleService from '../services/locale.service';
-import DynamicIcon from './DynamicIcon';
 
-import PresetsService from '../services/presets.service';
-import { MyPresetType } from '../types/MyPresetType';
-import { SubCategoryType } from '../types/SubCategoryType';
-import { UploadFile } from 'antd/lib/upload/interface';
+import DynamicIcon from './DynamicIcon';
+import LoadingSpinner from './LoadingSpinner';
+import EmptyData from './EmptyData';
 import { getIconName } from '../types/GetIconName';
+import { DataContext } from 'lib/RoomsContext';
+import AddPresetForm from './AddPresetForm';
 
 import axios from 'axios';
 import { apiRoutes } from '../routing/backend-config';
-import { DataContext } from 'lib/RoomsContext';
-import AddPresetForm from './AddPresetForm';
-import { UserType } from 'types/UserType';
+import PresetsService from '../services/presets.service';
 import AuthService from '../services/auth.service';
+import LocaleService from '../services/locale.service';
+
+import { UserType } from 'types/UserType';
+import { MyPresetType } from '../types/MyPresetType';
+import { SubCategoryType } from '../types/SubCategoryType';
+import { UploadFile } from 'antd/lib/upload/interface';
 
 const { Link, Title } = Typography;
 
@@ -520,8 +521,7 @@ const Presets = () => {
     //delete
     const deletePreset = (id) => {
         PresetsService.delete_preset(id)
-            .then((response) => {
-                console.log(response);
+            .then(() => {
                 setMyPresets(myPresets.filter((p) => p.id != id));
                 const indexPreset = dataContext.dataPresets.findIndex((item) => id === item.id);
                 if (indexPreset !== -1) {
@@ -575,9 +575,9 @@ const Presets = () => {
 
             <Row gutter={[32, 32]} justify="center" className="presets-cards">
                 {isLoading ? (
-                    <Spin size="large" />
+                    <LoadingSpinner />
                 ) : myPresets.length == 0 ? (
-                    <Empty className="empty-presets" />
+                    <EmptyData className="empty-presets" />
                 ) : (
                     myPresets.map((singlePresets) => (
                         <PresetsCol

@@ -18,11 +18,11 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Trans, withTranslation } from 'react-i18next';
 
 import { Row, Col, Typography, Avatar, Button } from 'antd';
 import { AppstoreAddOutlined, BgColorsOutlined, PlayCircleOutlined, ControlOutlined } from '@ant-design/icons';
 import DynamicIcon from './DynamicIcon';
-import { Trans, withTranslation } from 'react-i18next';
 
 const { Title, Paragraph } = Typography;
 

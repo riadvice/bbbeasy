@@ -18,18 +18,19 @@
 
 import React, { useEffect, useState } from 'react';
 
-import PresetSettingsService from '../services/preset.settings.service';
-
-import { Col, Form, Row, Spin } from 'antd';
+import { Col, Form, Row } from 'antd';
 import { withTranslation } from 'react-i18next';
+import { t } from 'i18next';
 
 import { Step3Form } from './Step3Form';
-
 import Notifications from './Notifications';
-import { t } from 'i18next';
+import LoadingSpinner from './LoadingSpinner';
+
+import AuthService from '../services/auth.service';
+import PresetSettingsService from '../services/preset.settings.service';
+
 import { PresetType } from '../types/PresetType';
 import { SubCategoryType } from '../types/SubCategoryType';
-import AuthService from '../services/auth.service';
 
 const PresetSettings = () => {
     const [presets, setPresets] = React.useState<PresetType[]>([]);
@@ -78,7 +79,7 @@ const PresetSettings = () => {
     return (
         <Row justify="center" className="preset-settings-row">
             {isLoading ? (
-                <Spin size="large" />
+                <LoadingSpinner />
             ) : (
                 <Col span={20}>
                     <Form className="install-form">

@@ -19,7 +19,9 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { Location } from 'history';
+
 import AuthService from '../services/auth.service';
+
 import { UserType } from '../types/UserType';
 import { SessionType } from '../types/SessionType';
 

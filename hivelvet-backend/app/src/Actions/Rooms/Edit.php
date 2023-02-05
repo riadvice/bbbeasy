@@ -41,26 +41,23 @@ class Edit extends BaseAction
      */
     public function rename($f3, $params): void
     {
-        $body = $this->getDecodedBody();
-        $form = $body['data'];
-
-        $id          = $params['id'];
-        $dataChecker = new DataChecker();
-
-        $dataChecker->verify($form['name'], Validator::notEmpty()->setName('name'));
-        $dataChecker->verify($form['short_link'], Validator::notEmpty()->setName('short_link'));
-        $dataChecker->verify($form['preset_id'], Validator::notEmpty()->setName('preset_id'));
-
-        $dataChecker->verify($id, Validator::notEmpty()->setName('id'));
-
-        $nameErrorMessage      = 'Room name already exists';
-        $shortlinkErrorMessage = 'Room link already exists';
-
+        $body         = $this->getDecodedBody();
+        $form         = $body['data'];
         $errorMessage = 'Room could not be updated';
 
+        $id   = $params['id'];
         $room = new Room();
         $room = $room->getById($id);
         if ($room->valid()) {
+            $dataChecker = new DataChecker();
+
+            $dataChecker->verify($form['name'], Validator::notEmpty()->setName('name'));
+            $dataChecker->verify($form['short_link'], Validator::notEmpty()->setName('short_link'));
+            $dataChecker->verify($form['preset_id'], Validator::notEmpty()->setName('preset_id'));
+
+            $nameErrorMessage      = 'Room name already exists';
+            $shortlinkErrorMessage = 'Room link already exists';
+
             if ($dataChecker->allValid()) {
                 $checkRoom        = new Room();
                 $room->name       = $form['name'];
@@ -104,12 +101,12 @@ class Edit extends BaseAction
                 }
 
                 foreach ($room->getLabels($room->id) as $label) {
-                    $roomlabel = new RoomLabel();
+                    $roomLabel = new RoomLabel();
 
                     if (!\in_array($label['color'], $form['labels'], true)) {
-                        $roomlabel = $roomlabel->getByRoomAndLabel($room->id, $label['key']);
-                        if (!$roomlabel->dry()) {
-                            $roomlabel->erase();
+                        $roomLabel = $roomLabel->getByRoomAndLabel($room->id, $label['key']);
+                        if (!$roomLabel->dry()) {
+                            $roomLabel->erase();
                         }
                     }
                 }
@@ -124,7 +121,7 @@ class Edit extends BaseAction
                 }
 
                 $this->logger->info('room successfully updated', ['room' => $room->toArray()]);
-                $this->renderJson(['result' => 'success', 'room' => $room->getRoomInfos($room->id)]);
+                $this->renderJson(['result' => 'success', 'room' => $room->getRoomInfos()]);
             } else {
                 $this->logger->error($errorMessage, ['errors' => $dataChecker->getErrors()]);
                 $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);

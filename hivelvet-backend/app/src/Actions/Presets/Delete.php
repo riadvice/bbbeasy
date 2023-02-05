@@ -46,16 +46,16 @@ class Delete extends DeleteAction
                     $room  = new Room();
                     $rooms = $room->collectAllByPresetId($presetId);
                     foreach ($rooms as $r) {
-                        $defaultpreset = $preset->getDefaultOneByUserId($r['user_id']);
-                        if (!$defaultpreset->dry()) {
+                        $defaultPreset = $preset->getDefaultOneByUserId($r['user_id']);
+                        if (!$defaultPreset->dry()) {
                             $room->load(['id = ?', $r['id']]);
-                            $room->preset_id = $defaultpreset->id;
+                            $room->preset_id = $defaultPreset->id;
                             $room->save();
                         }
                     }
                     $preset->erase();
                 } catch (\Exception $e) {
-                    $message = 'preset  could not be deleted';
+                    $message = 'preset could not be deleted';
                     $this->logger->error($message, ['preset' => $preset->toArray(), 'error' => $e->getMessage()]);
                     $this->renderJson(['message' => $e->getMessage()], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
 

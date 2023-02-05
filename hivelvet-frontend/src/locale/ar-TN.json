@@ -167,6 +167,7 @@
 
     "name_col": "الإسم",
     "users_col": "عدد المستخدمين",
+    "nb_rooms_col": "عدد القاعات",
     "actions_col": "الإجراءات",
     "new_role": "دور جديد",
     "name": {
@@ -207,11 +208,7 @@
     "status_col": "الحالة",
     "new_user": "مستخدم جديد",
     "new_label": "علامة جديدة",
-    "labels_cols": {
-        "name": "الإسم",
-        "description": "الوصف",
-        "color": "اللون"
-    },
+    "description_col": "الوصف",
     "role": {
         "label": "الدور",
         "required": "الرجاء اختيار دور",
@@ -277,10 +274,8 @@
     "room-link-already-exist": "رابط القاعة موجود بالفعل",
     "add_room_success": "تمت إضافة القاعة بنجاح",
 
-    "labels_cols.nbrooms": "عدد القاعات",
-
     "view": "عرض",
-    "copy_shortlink": "نسخ الرابط المختصر",
+    "copy_text": "نسخ النص",
     "copied": "منسوخ",
     "facebook_share": "مشاركة على الفيسبوك",
     "twitter_share": "مشاركة على تويتر",
@@ -299,6 +294,11 @@
     "delete_room_confirm": "هل أنت متأكد من حذف هذه القاعة ؟",
     "delete_room_success": "تم حذف القاعة بنجاح",
     "edit_room_success": "تم تحديث القاعة بنجاح",
+    "update_profile": "تحديث الملف الشخصي",
+    "change_avatar": "تغيير الصورة الرمزية",
+    "join": "انضم",
+    "meeting_not_started": "لم يبدأ الاجتماع بعد",
+
     "found_results": "العثور على {{count}} من النتائج",
     "search_all_rooms": "بحث في جميع القاعات",
 
@@ -310,5 +310,22 @@
     "edit_account_success": "تم تحديث الملف الشخصي بنجاح",
 
     "install_locked_title": "عملية التثبيت مقفلة",
-    "install_locked_text": "عذرًا ، غير مصرح لك بالدخول إلى هذه الصفحة ، التطبيق مثبت بالفعل"
+    "install_locked_text": "عذرًا ، غير مصرح لك بالدخول إلى هذه الصفحة ، التطبيق مثبت بالفعل",
+
+    "recordings": "تسجيلات",
+    "date_col": "التاريخ",
+    "duration_col": "المدة",
+    "state_col": "الحالة",
+    "publishing": "جارٍ النشر",
+    "published": "منشور",
+    "processing": "جارٍ المعالجة",
+    "processed": "معالج",
+    "unpublishing": "جارٍ إلغاء النشر",
+    "unpublished": "غير منشور",
+    "deleting": "جارٍ الحذف",
+    "formats_col": "التنسيقات",
+    "share": "شارك",
+    "edit_recording_success": "تم تحديث التسجيل بنجاح",
+    "delete_recording_confirm": "هل أنت متأكد من حذف هذا التسجيل ؟",
+    "delete_recording_success": "تم حذف التسجيل بنجاح"
 }

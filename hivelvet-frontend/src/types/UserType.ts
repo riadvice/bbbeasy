@@ -17,10 +17,13 @@
  */
 
 export type UserType = {
-    id: number;
+    id?: number;
+    key?: number;
     username: string;
     email: string;
-    role: string;
+    role: string | number;
+    permissions?: object;
+    status?: string;
     avatar?: string;
-    permissions: object;
+    nb_rooms?: number;
 };

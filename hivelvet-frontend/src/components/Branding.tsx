@@ -20,21 +20,22 @@ import React, { useEffect, useState } from 'react';
 
 import SettingsService from '../services/settings.service';
 
-import { Button, Col, Form, Row, Spin } from 'antd';
+import { Button, Col, Form, Row } from 'antd';
 import { Trans, withTranslation } from 'react-i18next';
+import { t } from 'i18next';
 
 import { Step2Form } from './Step2Form';
-
-import { UploadFile } from 'antd/lib/upload/interface';
-import { SettingsType } from '../types/SettingsType';
-import { BrandingColorsType } from '../types/BrandingColorsType';
 import Notifications from './Notifications';
-import { t } from 'i18next';
-import _ from 'lodash';
+import { CompareRecords } from '../functions/compare.function';
+import LoadingSpinner from './LoadingSpinner';
 
 import axios from 'axios';
 import { apiRoutes } from '../routing/backend-config';
 import AuthService from '../services/auth.service';
+
+import { UploadFile } from 'antd/lib/upload/interface';
+import { SettingsType } from '../types/SettingsType';
+import { BrandingColorsType } from '../types/BrandingColorsType';
 
 type formType = {
     company_name: string;
@@ -136,7 +137,7 @@ const Branding = () => {
             deleteLogo = true;
         }
 
-        if (!_.isEqual(data, settingsData) || updateLogo || deleteLogo) {
+        if (!CompareRecords(data, settingsData) || updateLogo || deleteLogo) {
             //update logo
             if (updateLogo) {
                 settingsData.logo = file.name;
@@ -164,7 +165,7 @@ const Branding = () => {
     return (
         <Row justify="center" className="branding-row">
             {isLoading ? (
-                <Spin size="large" />
+                <LoadingSpinner />
             ) : (
                 <Col span={18}>
                     <fieldset disabled={!AuthService.isAllowedAction(actions, 'edit')}>

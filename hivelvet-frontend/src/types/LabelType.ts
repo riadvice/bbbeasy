@@ -17,8 +17,10 @@
  */
 
 export type LabelType = {
-    id: number;
+    id?: number;
+    key?: number;
     name: string;
-    color: string;
     description: string;
+    color: string;
+    nb_rooms?: number;
 };

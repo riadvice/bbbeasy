@@ -42,17 +42,16 @@ import { t } from 'i18next';
 
 import { Languages } from '../Languages';
 import { INSTALLER_FEATURE } from '../../constants';
+
+import { UserContext } from '../../lib/UserContext';
+import { DataContext } from 'lib/RoomsContext';
+import DynamicIcon from 'components/DynamicIcon';
+
 import LocaleService from '../../services/locale.service';
 import AuthService from '../../services/auth.service';
 
 import { LanguageType } from '../../types/LanguageType';
-import { UserContext } from '../../lib/UserContext';
-
-import { DataContext } from 'lib/RoomsContext';
-
 import { RoomType } from 'types/RoomType';
-
-import DynamicIcon from 'components/DynamicIcon';
 
 const { Header } = Layout;
 const { Title, Text, Paragraph } = Typography;
@@ -62,15 +61,14 @@ const AppHeader = () => {
     const currentLocale = LocaleService.language;
     const result: LanguageType[] = Languages.filter((item) => item.value == currentLocale);
     const language: string = result[0].name;
-    const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
     const navigate = useNavigate();
+
     const dataContext = React.useContext(DataContext);
-
     const [rooms, setRooms] = React.useState<RoomType[]>(dataContext.dataRooms);
-
+    const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
     const location = useLocation();
-
     const [searchForm] = Form.useForm();
+    const isRoomsSearch = location.pathname.includes('rooms');
 
     const logout = () => {
         AuthService.logout()
@@ -173,20 +171,14 @@ const AppHeader = () => {
                     <Row align="middle">
                         <Col span={14} offset={5}>
                             <Form form={searchForm}>
-                                <Form.Item name="search" style={{ marginBottom: 0 }}>
+                                <Form.Item name="search" className="mb-0">
                                     <Input
-                                        onPressEnter={location.pathname.includes('rooms') ? handleFilter : null}
+                                        onPressEnter={isRoomsSearch ? handleFilter : null}
                                         className="search-input global-search"
                                         size="middle"
-                                        placeholder={
-                                            location.pathname.includes('rooms') ? t('search_all_rooms') : t('search')
-                                        }
+                                        placeholder={isRoomsSearch ? t('search_all_rooms') : t('search')}
                                         allowClear
-                                        suffix={
-                                            <SearchOutlined
-                                                onClick={location.pathname.includes('rooms') ? handleFilter : null}
-                                            />
-                                        }
+                                        suffix={<SearchOutlined onClick={isRoomsSearch ? handleFilter : null} />}
                                         bordered={false}
                                     />
                                 </Form.Item>

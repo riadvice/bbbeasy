@@ -1,7 +1,7 @@
 {
   "errors": {
-    "name":"Room Name already exists",
-    "shortlink": "Room Link already exists"
+    "name":"Room name already exists",
+    "shortlink": "Room link already exists"
   },
   "status" : 412
 }

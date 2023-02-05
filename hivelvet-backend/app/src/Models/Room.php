@@ -22,8 +22,11 @@ declare(strict_types=1);
 
 namespace Models;
 
+use BigBlueButton\Core\Record;
+use BigBlueButton\Parameters\GetRecordingsParameters;
 use Enum\ResponseCode;
 use Models\Base as BaseModel;
+use Utils\BigBlueButtonRequester;
 
 /**
  * Class Room.
@@ -53,6 +56,16 @@ class Room extends BaseModel
         return $this->load(['lower(name) = ? and user_id = ? and id != ?', mb_strtolower($name), $userId, $id]);
     }
 
+    public function meetingIdExists($meetingId)
+    {
+        return $this->load(['meeting_id = ?', $meetingId]);
+    }
+
+    public function shortlinkExists($shortlink, $id = null)
+    {
+        return $this->load(['short_link = ? and id != ?', $shortlink, $id]);
+    }
+
     /**
      * Get room record by link.
      *
@@ -65,16 +78,6 @@ class Room extends BaseModel
         $this->load(['short_link = ?', $link]);
 
         return $this;
-    }
-
-    public function meetingIdExists($meetingId)
-    {
-        return $this->load(['meeting_id = ?', $meetingId]);
-    }
-
-    public function shortlinkExists($shortlink, $id = null)
-    {
-        return $this->load(['short_link = ? and id != ?', $shortlink, $id]);
     }
 
     /**
@@ -107,14 +110,14 @@ class Room extends BaseModel
         $rooms = $this->find([], ['order' => 'id']);
         if ($rooms) {
             foreach ($rooms as $room) {
-                $data[] = $room->getRoomInfos($room->id);
+                $data[] = $room->getRoomInfos();
             }
         }
 
         return $data;
     }
 
-    public function getRoomInfos($id): array
+    public function getRoomInfos(): array
     {
         return [
             'id'         => $this->id,
@@ -183,6 +186,92 @@ class Room extends BaseModel
         return $lbs;
     }
 
+    public function getRecordingsByRoomMeetingId(string $meetingId): ?array
+    {
+        $bbbRequester     = new BigBlueButtonRequester();
+        $recordingsParams = new GetRecordingsParameters();
+        $recordingsParams->setMeetingId($meetingId);
+        $this->logger->info('Received request to fetch recordings', ['meetingID' => $meetingId]);
+
+        $recordingsResponse = $bbbRequester->getRecordings($recordingsParams);
+        if ($recordingsResponse->success() && \count($recordingsResponse->getRecords()) > 0) {
+            $recordingsData = [];
+            $recordings     = $recordingsResponse->getRawXml()->recordings;
+            foreach ($recordings as $recording) {
+                $recording = $recording->recording;
+                $bbbRecord = new Record($recording);
+
+                $recordingsData[] = $this->getRecordingInfo($bbbRecord, (array) $recording->participants);
+            }
+
+            return $recordingsData;
+        }
+
+        return null;
+    }
+
+    public function getRecordingByRecordId(string $recordId, bool $loadRecord = false): bool|array|null
+    {
+        $bbbRequester    = new BigBlueButtonRequester();
+        $recordingParams = new GetRecordingsParameters();
+        $recordingParams->setRecordId($recordId);
+        $this->logger->info('Received request to fetch recording', ['recordID' => $recordingParams]);
+
+        $recordingResponse = $bbbRequester->getRecordings($recordingParams);
+        if ($recordingResponse->success() && \count($recordingResponse->getRecords()) > 0) {
+            if (true === $loadRecord) {
+                $recording = $recordingResponse->getRawXml()->recordings->recording[0];
+                $bbbRecord = $recordingResponse->getRecords()[0];
+
+                return $this->getRecordingInfo($bbbRecord, (array) $recording->participants);
+            }
+
+            return true;
+        }
+
+        return null;
+    }
+
+    public function getRecordingInfo(Record $record, array $attendees): array
+    {
+        $recordingId = $record->getRecordId();
+        if (\array_key_exists('HVname', $record->getMetas())) {
+            $recordingName = $record->getMetas()['HVname'];
+        } else {
+            $recordingName = $record->getName();
+        }
+        $recordingState   = $record->getState();
+        $recordingFormats = [];
+        if (null !== $record->getPlaybackType()) {
+            $recordingFormats[] = $record->getPlaybackType();
+        }
+        $recordingUrl          = trim($record->getPlaybackUrl());
+        $participants          = $attendees;
+        $recordingParticipants = null !== $participants ? (int) $participants[0] : 0;
+        // convert milliseconds to timestamp
+        $startTime = (int) ceil(((int) $record->getStartTime()) / 1000);
+        $endTime   = (int) ceil(((int) $record->getEndTime()) / 1000);
+
+        $recordingDate = date('d/m/Y', $startTime);
+
+        $startDateTime = new \DateTime();
+        $startDateTime->setTimestamp($startTime);
+        $endDateTime = new \DateTime();
+        $endDateTime->setTimestamp($endTime);
+        $recordingDuration = $startDateTime->diff($endDateTime)->format('%H:%I:%S');
+
+        return [
+            'key'      => $recordingId,
+            'name'     => $recordingName,
+            'date'     => $recordingDate,
+            'duration' => $recordingDuration,
+            'users'    => $recordingParticipants,
+            'state'    => $recordingState,
+            'formats'  => $recordingFormats,
+            'url'      => $recordingUrl,
+        ];
+    }
+
     /**
      * Delete a room if it's allowed and  removing its associated roomlabels.
      *
@@ -191,7 +280,8 @@ class Room extends BaseModel
     public function delete(): array
     {
         // delete associated roomslabels
-        $result = $this->deleteRoomsLabels();
+        $label  = new Label();
+        $result = $label->deleteRoomsLabels($this->id);
 
         if ($result) {
             try {
@@ -207,24 +297,5 @@ class Room extends BaseModel
         }
 
         return [[], ResponseCode::HTTP_FORBIDDEN];
-    }
-
-    public function deleteRoomsLabels(): bool
-    {
-        $this->logger->info('Starting delete rooms labels transaction.');
-        $this->db->begin();
-        $roomId = $this->id;
-
-        $roomlabel    = new RoomLabel();
-        $deleteResult = $roomlabel->erase(['room_id = ?', $roomId]);
-        if ($deleteResult) {
-            $this->logger->info('All Rooms Labels successfully deleted');
-            $this->db->commit();
-            $this->logger->info('Delete rooms and its associations transaction successfully commit.');
-
-            return true;
-        }
-
-        return false;
     }
 }

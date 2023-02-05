@@ -24,8 +24,9 @@ import SettingsService from '../services/settings.service';
 import PresetSettingsService from '../services/preset.settings.service';
 import UsersService from '../services/users.service';
 
-import { Steps, Button, Row, Col, Form, Result, Spin } from 'antd';
+import { Steps, Button, Row, Col, Form, Result } from 'antd';
 import DynamicIcon from './DynamicIcon';
+import LoadingSpinner from './LoadingSpinner';
 
 import { Step1Form } from './Step1Form';
 import { Step2Form } from './Step2Form';
@@ -268,7 +269,7 @@ const Install = () => {
                         setSuccessful(true);
                     })
                     .catch((error) => {
-                        console.log(error.response.data);
+                        console.log(error);
                     });
             }
         }
@@ -277,7 +278,7 @@ const Install = () => {
     return (
         <Row justify={isLoading || locked ? 'center' : 'start'}>
             {isLoading ? (
-                <Spin size="large" className="m-5" />
+                <LoadingSpinner className="m-5" />
             ) : locked ? (
                 <Result
                     status="403"

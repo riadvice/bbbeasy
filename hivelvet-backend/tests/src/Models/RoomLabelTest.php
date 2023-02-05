@@ -27,7 +27,6 @@ use Fake\PresetFaker;
 use Fake\RoomFaker;
 use Fake\RoomLabelFaker;
 use Fake\UserFaker;
-use Faker\Factory as Faker;
 use Test\Scenario;
 
 /**
@@ -49,18 +48,38 @@ final class RoomLabelTest extends Scenario
     public function testRoomLabelCreation()
     {
         $test                = $this->newTest();
-        $faker               = Faker::create();
         $user                = UserFaker::create();
         $preset              = PresetFaker::create($user);
         $room                = RoomFaker::create($user, $preset);
         $label               = LabelFaker::create();
-        $roomlabel           = new RoomLabel(\Registry::get('db'));
-        $roomlabel->room_id  = $room->id;
-        $roomlabel->label_id = $label->id;
+        $roomLabel           = new RoomLabel(\Registry::get('db'));
+        $roomLabel->room_id  = $room->id;
+        $roomLabel->label_id = $label->id;
 
-        $roomlabel->save();
+        $roomLabel->save();
 
-        $test->expect(0 !== $roomlabel->id, 'RoomLabel mocked & saved to the database');
+        $test->expect(0 !== $roomLabel->id, 'RoomLabel mocked & saved to the database');
+
+        return $test->results();
+    }
+
+    /**
+     * @return array
+     */
+    public function testGetByRoomAndLabel()
+    {
+        $test      = $this->newTest();
+        $user      = UserFaker::create();
+        $room      = RoomFaker::create($user, PresetFaker::create($user));
+        $label     = LabelFaker::create();
+        $roomLabel = RoomLabelFaker::create($room, $label);
+
+        $test->expect($roomLabel->getByRoomAndLabel($room->id, $label->id)->id === $roomLabel->id, 'getByRoomAndLabel(' . $room->id . ',' . $label->id . ') found room label');
+        $test->expect(!$roomLabel->getByRoomAndLabel(404, 404)->id, 'getByRoomAndLabel(404, 404) did not find room label');
+
+        $test->expect($roomLabel->roomAndLabelExists($room->id, $label->id), 'roomAndLabelExists(' . $room->id . ',' . $label->id . ') exists');
+        $test->expect($roomLabel->roomAndLabelExists($room->id, $label->id, $room->id), 'roomAndLabelExists(' . $room->id . ',' . $label->id . ',' . $room->id . ') exists');
+        $test->expect(!$roomLabel->roomAndLabelExists(404, 404), 'roomAndLabelExists(404, 404) does not exist');
 
         return $test->results();
     }

@@ -140,18 +140,21 @@ class Label extends BaseModel
         return $data;
     }
 
-    public function deleteRoomsLabels(): bool
+    public function deleteRoomsLabels(int $roomId = null): bool
     {
         $this->logger->info('Starting delete rooms labels transaction.');
         $this->db->begin();
         $labelId = $this->id;
 
-        $roomlabel    = new RoomLabel();
-        $deleteResult = $roomlabel->erase(['label_id = ?', $labelId]);
+        $isRoom       = null !== $roomId;
+        $text         = $isRoom ? 'rooms' : 'labels';
+        $roomLabel    = new RoomLabel();
+        $deleteResult = $isRoom ? $roomLabel->erase(['room_id = ?', $roomId]) : $roomLabel->erase(['label_id = ?', $labelId]);
+
         if ($deleteResult) {
             $this->logger->info('All Rooms Labels successfully deleted');
             $this->db->commit();
-            $this->logger->info('Delete labels and its associations transaction successfully commit.');
+            $this->logger->info('Delete ' . $text . ' and its associations transaction successfully commit.');
 
             return true;
         }

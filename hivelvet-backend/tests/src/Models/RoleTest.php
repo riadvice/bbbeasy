@@ -234,7 +234,7 @@ final class RoleTest extends Scenario
         $role->name = 'labels manager';
         $result     = $role->saveRoleAndPermissions($data);
 
-        $test->expect(true === $result, 'saveRoleAndPermissions() add role permissions');
+        $test->expect($result, 'saveRoleAndPermissions() add role permissions');
         $test->expect($data === $role->getRolePermissions(), 'getRolePermissions() returned role permissions');
 
         return $test->results();

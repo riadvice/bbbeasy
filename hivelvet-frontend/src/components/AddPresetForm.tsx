@@ -17,19 +17,20 @@
  */
 
 import React from 'react';
-import { Button, Form, Input, Modal } from 'antd';
 import { Trans, withTranslation } from 'react-i18next';
 import { t } from 'i18next';
 import EN_US from '../locale/en-US.json';
 
+import { Button, Form, Input, Modal } from 'antd';
 import { DataContext } from 'lib/RoomsContext';
-
 import Notifications from './Notifications';
+
+import PresetsService from 'services/presets.service';
+import AuthService from 'services/auth.service';
+
+import { MyPresetType } from 'types/MyPresetType';
 import { FormInstance } from 'antd/lib/form';
 
-import presetsService from 'services/presets.service';
-import { MyPresetType } from 'types/MyPresetType';
-import authService from 'services/auth.service';
 type Props = {
     isLogin?: boolean;
     errors?: string[];
@@ -57,8 +58,7 @@ export const AddPresetForm = (props: Props) => {
         setErrorsAdd([]);
         setLoading(true);
 
-        presetsService
-            .add_preset(formValues, authService.getCurrentUser().id)
+        PresetsService.add_preset(formValues, AuthService.getCurrentUser().id)
             .then((response) => {
                 const newPreset: MyPresetType = response.data.preset;
                 Notifications.openNotificationWithIcon('success', t('add_preset_success'));

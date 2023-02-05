@@ -167,6 +167,7 @@
 
     "name_col": "Name",
     "users_col": "N◦ Users",
+    "nb_rooms_col": "N° of Rooms",
     "actions_col": "Actions",
     "new_role": "New Role",
     "name": {
@@ -207,11 +208,7 @@
     "status_col": "State",
     "new_user": "New User",
     "new_label": "New Label",
-    "labels_cols": {
-        "name": "Name",
-        "description": "Description",
-        "color": "Color"
-    },
+    "description_col": "Description",
     "role": {
         "label": "Role",
         "required": "Please select a role",
@@ -277,10 +274,8 @@
     "room-link-already-exist": "Room link already exists",
     "add_room_success": "Room Added Successfully",
 
-    "labels_cols.nbrooms": "N° of Rooms",
-
     "view": "View",
-    "copy_shortlink": "Copy shortlink",
+    "copy_text": "Copy text",
     "copied": "Copied",
     "facebook_share": "Share on facebook",
     "twitter_share": "Share on twitter",
@@ -310,5 +305,25 @@
     "edit_account_success": "Profile successfully updated",
 
     "install_locked_title": "Install Process locked",
-    "install_locked_text": "Sorry, you are not authorized to access this page, application already installed"
+    "install_locked_text": "Sorry, you are not authorized to access this page, application already installed",
+
+    "recordings": "Recordings",
+    "date_col": "Date",
+    "duration_col": "Duration",
+    "state_col": "Visibility",
+    "publishing": "Publishing",
+    "published": "Published",
+    "processing": "Processing",
+    "processed": "Processed",
+    "unpublishing": "Unpublishing",
+    "unpublished": "Unpublished",
+    "deleting": "Deleting",
+    "formats_col": "Formats",
+    "share": "Share",
+    "edit_recording_success": "Recording successfully updated",
+    "delete_recording_confirm": "Are you sure to delete this recording ?",
+    "delete_recording_success": "Recording successfully deleted",
+
+    "found_results": "Found {{count}} results",
+    "search_all_rooms": "Search all my rooms"
 }

@@ -22,10 +22,9 @@ declare(strict_types=1);
 
 namespace Actions\Rooms;
 
-use Enum\UserRole;
 use Fake\PresetFaker;
 use Fake\RoomFaker;
-use Fake\UserFaker;
+use Models\User;
 use Test\Scenario;
 
 /**
@@ -67,15 +66,11 @@ final class StartTest extends Scenario
     {
         $test = $this->newTest();
 
-        $user = UserFaker::create(UserRole::ADMINISTRATOR);
-        $data = ['email' => $user->email, 'password' => UserRole::ADMINISTRATOR . UserRole::ADMINISTRATOR];
-        $f3->mock(self::LOGIN_ROUTE, null, null, $this->postJsonData($data));
-        $test->expect($f3->exists('SESSION.user'), 'Sessions is aware that the user us logged in');
-
-        $preset = PresetFaker::create($user);
-        $room   = RoomFaker::create($user, $preset);
+        $loggedUser = new User();
+        $loggedUser->load(['id = ?', [$f3->get('SESSION.user.id')]]);
+        $preset = PresetFaker::create($loggedUser);
+        $room   = RoomFaker::create($loggedUser, $preset);
         $f3->mock(self::START_ROOM_ROUTE . $room->id, null, null);
-
         $test->expect(null === json_decode($f3->get('RESPONSE')), 'Start room meeting with id "' . $room->id . '" and meeting_id "' . $room->meeting_id . '"');
 
         return $test->results();

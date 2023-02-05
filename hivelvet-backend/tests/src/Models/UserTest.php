@@ -92,7 +92,7 @@ final class UserTest extends Scenario
             'User could not be added',
         );
 
-        $test->expect(true === $result, 'User mocked & saved to the database with default preset');
+        $test->expect($result, 'User mocked & saved to the database with default preset');
 
         return $test->results();
     }
@@ -133,7 +133,7 @@ final class UserTest extends Scenario
         $test = $this->newTest();
         $user = new User(\Registry::get('db'));
 
-        $test->expect(true === $user->adminUserExists(), 'adminUserExists() check if administrator account exists or not');
+        $test->expect($user->adminUserExists(), 'adminUserExists() check if administrator account exists or not');
 
         return $test->results();
     }
@@ -147,7 +147,23 @@ final class UserTest extends Scenario
         $user = UserFaker::create();
 
         $test->expect($user->emailExists($user->email), 'nameExists(' . $user->email . ') exists');
+        $test->expect(!$user->emailExists($user->email, $user->id), 'nameExists(' . $user->email . ',' . $user->id . ') does not exist');
         $test->expect(!$user->emailExists('404'), 'nameExists("404") does not exist');
+
+        return $test->results();
+    }
+
+    /**
+     * @return array
+     */
+    public function testUsernameExists()
+    {
+        $test = $this->newTest();
+        $user = UserFaker::create();
+
+        $test->expect($user->usernameExists($user->username), 'usernameExists(' . $user->username . ') exists');
+        $test->expect(!$user->usernameExists($user->username, $user->id), 'usernameExists(' . $user->username . ',' . $user->id . ') does not exist');
+        $test->expect(!$user->usernameExists('404'), 'usernameExists("404") does not exist');
 
         return $test->results();
     }

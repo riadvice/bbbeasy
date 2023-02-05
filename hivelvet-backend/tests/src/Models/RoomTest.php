@@ -52,7 +52,7 @@ final class RoomTest extends Scenario
         $preset           = PresetFaker::create($user);
         $room             = new Room(\Registry::get('db'));
         $room->name       = $faker->name;
-        $room->short_link = $faker->url;
+        $room->short_link = $faker->text(14);
         $room->user_id    = $user->id;
         $room->preset_id  = $preset->id;
         $room->meeting_id = $faker->randomNumber();
@@ -114,6 +114,22 @@ final class RoomTest extends Scenario
     /**
      * @return array
      */
+    public function testGetByLink()
+    {
+        $test   = $this->newTest();
+        $user   = UserFaker::create();
+        $preset = PresetFaker::create($user);
+        $room   = RoomFaker::create($user, $preset);
+
+        $test->expect($room->getByLink($room->short_link)->short_link === $room->short_link, 'getByLink(' . $room->short_link . ') found room');
+        $test->expect(!$room->getByLink(404)->short_link, 'getByLink(404) did not find room');
+
+        return $test->results();
+    }
+
+    /**
+     * @return array
+     */
     public function testGetById()
     {
         $test   = $this->newTest();
@@ -138,12 +154,42 @@ final class RoomTest extends Scenario
         $room   = RoomFaker::create($user, $preset);
 
         $data = [
-            'key'        => $room->id,
+            'id'         => $room->id,
             'name'       => $room->name,
+            'preset_id'  => $preset->id,
+            'user_id'    => $user->id,
             'short_link' => $room->short_link,
-            'preset'     => $preset->name,
+            'labels'     => $room->getLabels($room->id),
         ];
-        $test->expect($data === $room->getRoomInfos($room->id), 'getRoomInfos() returned room');
+        $test->expect($data === $room->getRoomInfos(), 'getRoomInfos() returned room');
+
+        return $test->results();
+    }
+
+    /**
+     * @return array
+     */
+    public function testGetRecordings()
+    {
+        $test   = $this->newTest();
+        $user   = UserFaker::create();
+        $preset = PresetFaker::create($user);
+        $room   = RoomFaker::create($user, $preset);
+
+        $test->expect(null === $room->getRecordingsByRoomMeetingId($room->meeting_id), 'getRecordingsByRoomMeetingId(' . $room->meeting_id . ') returned room recordings');
+        $test->expect(null === $room->getRecordingByRecordId('404'), 'getRecordingByRecordId(404) did not found room recordings');
+
+        $recordings = $room->getRecordingsByRoomMeetingId('meeting-1');
+        if (\count($recordings) > 0) {
+            $test->expect(null !== $recordings, 'getRecordingsByRoomMeetingId(meeting-1) returned room recordings');
+
+            $recordId       = $recordings[0]['key'];
+            $recordingExist = $room->getRecordingByRecordId($recordId);
+            $recording      = $room->getRecordingByRecordId($recordId, true);
+
+            $test->expect($recordingExist && empty(array_udiff($recordings[0], $recording, fn ($obj1, $obj2) => $obj1 === $obj2)), 'getRecordingByRecordId(' . $recordId . ') returned recording for the given recordId');
+            $test->expect(null === $room->getRecordingByRecordId('404', true), 'getRecordingByRecordId(404) did not found recording');
+        }
 
         return $test->results();
     }
@@ -190,7 +236,7 @@ final class RoomTest extends Scenario
         $room2 = RoomFaker::create($user1, $preset1);
         $room3 = RoomFaker::create($user2, $preset2);
 
-        $data = [$room1->getRoomInfos($room1->id), $room2->getRoomInfos($room2->id), $room3->getRoomInfos($room3->id)];
+        $data = [$room1->getRoomInfos(), $room2->getRoomInfos(), $room3->getRoomInfos()];
         $test->expect($data === $room->collectAll(), 'collectAll() returned all rooms');
 
         $data1 = ['id' => $room1->id, 'name' => $room1->name, 'short_link' => $room1->short_link];

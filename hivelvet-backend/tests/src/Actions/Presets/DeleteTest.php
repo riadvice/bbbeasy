@@ -24,6 +24,7 @@ namespace Actions\Presets;
 
 use Fake\PresetFaker;
 use Fake\UserFaker;
+use Models\Preset;
 use Test\Scenario;
 
 /**
@@ -49,6 +50,25 @@ final class DeleteTest extends Scenario
 
         $f3->mock(self::DELETE_PRESET_ROUTE . 404);
         $test->expect($this->compareTemplateToResponse('not_found_error.json'), 'Delete non existing preset with id "404" show an error');
+
+        return $test->results();
+    }
+
+    /**
+     * @param mixed $f3
+     *
+     * @return array
+     *
+     * @throws \ReflectionException
+     */
+    public function testDefaultPreset($f3)
+    {
+        $test          = $this->newTest();
+        $defaultPreset = new Preset();
+        $defaultPreset->load(['name = ?', ['default']]);
+
+        $f3->mock(self::DELETE_PRESET_ROUTE . $defaultPreset->id);
+        $test->expect($this->compareTemplateToResponse('preset/default_error.json'), 'Delete default preset with id "' . $defaultPreset->id . '" show an error');
 
         return $test->results();
     }

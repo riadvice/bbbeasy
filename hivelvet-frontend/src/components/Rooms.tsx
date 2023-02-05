@@ -21,35 +21,22 @@ import { Trans, withTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { t } from 'i18next';
 
-import {
-    Avatar,
-    Badge,
-    Card,
-    Col,
-    Dropdown,
-    Row,
-    Space,
-    Tag,
-    Typography,
-    Menu,
-    Spin,
-    Button,
-    Empty,
-    Modal,
-} from 'antd';
+import { Avatar, Badge, Card, Col, Dropdown, Row, Space, Tag, Typography, Menu, Button, Modal } from 'antd';
 import { ClockCircleOutlined, MoreOutlined, TeamOutlined, WarningOutlined } from '@ant-design/icons';
 
-import LocaleService from '../services/locale.service';
-import roomsService from 'services/rooms.service';
-import AuthService from 'services/auth.service';
 import Notifications from './Notifications';
 import AddRoomForm from './AddRoomForm';
 import { DataContext } from 'lib/RoomsContext';
+import LoadingSpinner from './LoadingSpinner';
+import EmptyData from './EmptyData';
+
+import LocaleService from '../services/locale.service';
+import RoomsService from 'services/rooms.service';
+import AuthService from 'services/auth.service';
 
 import { RoomType } from 'types/RoomType';
 import { PresetType } from 'types/PresetType';
 import { LabelType } from 'types/LabelType';
-
 import { getRandomString } from 'types/getRandomString';
 
 const { Title, Paragraph } = Typography;
@@ -186,8 +173,7 @@ const Rooms = () => {
     const addSteps = ['give-it-name', 'assign-preset', 'mark-labels'];
 
     useEffect(() => {
-        roomsService
-            .list_rooms(AuthService.getCurrentUser().id)
+        RoomsService.list_rooms(AuthService.getCurrentUser().id)
             .then((response) => {
                 setRooms(response.data);
             })
@@ -213,8 +199,7 @@ const Rooms = () => {
 
     //delete
     const deleteRoom = (id) => {
-        roomsService
-            .delete_room(id)
+        RoomsService.delete_room(id)
             .then(() => {
                 setRooms(rooms.filter((r) => r.id != id));
                 const indexRoom = dataContext.dataRooms.findIndex((item) => id === item.id);
@@ -231,7 +216,7 @@ const Rooms = () => {
     return (
         <>
             {isLoading ? (
-                <Spin size="large" className="mt-30 content-center" />
+                <LoadingSpinner className="mt-30 content-center" />
             ) : rooms.length == 0 ? (
                 AuthService.isAllowedAction(actions, 'add') ? (
                     <Paragraph className="text-center home-guide">
@@ -266,7 +251,7 @@ const Rooms = () => {
                         />
                     </Paragraph>
                 ) : (
-                    <Empty className="mt-30" />
+                    <EmptyData />
                 )
             ) : (
                 <Row gutter={[18, 18]} className="rooms-cards">

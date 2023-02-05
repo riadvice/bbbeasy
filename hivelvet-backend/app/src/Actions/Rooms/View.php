@@ -32,9 +32,9 @@ use Utils\BigBlueButtonRequester;
 use Utils\PresetProcessor;
 
 /**
- * Class GetRoom.
+ * Class View.
  */
-class GetRoom extends BaseAction
+class View extends BaseAction
 {
     use RequirePrivilegeTrait;
 
@@ -44,8 +44,6 @@ class GetRoom extends BaseAction
      */
     public function show($f3, $params): void
     {
-        $room = new Room();
-        $data = [];
         $link = $params['link'];
         $room = new Room();
         $room = $room->getByLink($link);
@@ -54,7 +52,7 @@ class GetRoom extends BaseAction
             $bbbRequester        = new BigBlueButtonRequester();
             $getInfosParams      = new GetMeetingInfoParameters($room->meeting_id);
             $meetingInfoResponse = $bbbRequester->getMeetingInfo($getInfosParams);
-            $canstart            = false;
+            $canStart            = false;
             $preset              = new Preset();
             $p                   = $preset->findById($room->getPresetID($room->id)['preset_id']);
             $presetProcessor     = new PresetProcessor();
@@ -64,18 +62,18 @@ class GetRoom extends BaseAction
                 if ('notFound' === $meetingInfoResponse->getMessageKey()) {
                     $anyonestart = false;
 
-                    if ($room->getRoomInfos($room->id)['user_id'] === $this->session->get('user.id') || $presetData['General']['anyone_can_start']) {
-                        $canstart = true;
+                    if ($room->getRoomInfos()['user_id'] === $this->session->get('user.id') || $presetData['General']['anyone_can_start']) {
+                        $canStart = true;
                     }
                 }
             }
 
             $meeting             = (array) $meetingInfoResponse->getRawXml();
-            $meeting['canStart'] = $canstart;
+            $meeting['canStart'] = $canStart;
 
             $meeting['auto_join'] = $presetData['Audio']['auto_join'];
 
-            $this->renderJson(['room' => $room->getRoomInfos($room->id), 'meeting' => $meeting]);
+            $this->renderJson(['room' => $room->getRoomInfos(), 'meeting' => $meeting]);
         } else {
             $this->logger->error('Link not found');
             $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);

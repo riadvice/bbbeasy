@@ -67,4 +67,9 @@ export const apiRoutes = {
     DELETE_ROOM_URL: API_URL + '/rooms/',
     START_ROOM_URL: API_URL + '/rooms/',
     GET_ROOM_BY_LINK: API_URL + '/rooms/get/',
+
+    COLLECT_RECORDINGS_URL: API_URL + '/recordings',
+    LIST_RECORDINGS_URL: API_URL + '/recordings/',
+    EDIT_RECORDING_URL: API_URL + '/recordings/',
+    DELETE_RECORDING_URL: API_URL + '/recordings/',
 };

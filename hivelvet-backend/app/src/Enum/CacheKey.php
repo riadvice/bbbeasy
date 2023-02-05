@@ -29,10 +29,6 @@ class CacheKey extends Enum
     final public const ORGANISATION = 'organisation';
     final public const SITE_LOGO    = 'site.logo_';
 
-    final public const API_VERSION = 'api.version_';
-
-    final public const AJAX_USERS = 'ajax.users';
-
     /**
      * Returns cache key for site logo plus size.
      *

@@ -32,12 +32,12 @@ class RoomFaker
 {
     private static array $storage = [];
 
-    public static function create(User $user, Preset $preset, $storageName = null)
+    public static function create(User $user, Preset $preset, string $shortLink = null, $storageName = null)
     {
         $faker            = Faker::create();
         $room             = new Room();
         $room->name       = $faker->name;
-        $room->short_link = $faker->url;
+        $room->short_link = $shortLink ?? $faker->text(14);
         $room->preset_id  = $preset->id;
         $room->user_id    = $user->id;
         $room->meeting_id = DataUtils::generateRandomString();

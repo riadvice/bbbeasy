@@ -18,10 +18,12 @@
 
 import React from 'react';
 import { Navigate } from 'react-router-dom';
+
 import AuthService from '../services/auth.service';
+import MenuService from '../services/menu.service';
+
 import { UserType } from '../types/UserType';
 import { SessionType } from '../types/SessionType';
-import MenuService from '../services/menu.service';
 
 const PublicRoute = ({ children, restricted }) => {
     const currentUser: UserType = AuthService.getCurrentUser();
