@@ -78,6 +78,7 @@ class Login extends BaseAction
                 'username'    => $user->username,
                 'email'       => $user->email,
                 'role'        => $user->role->name,
+                'avatar'      => $user->avatar,
                 'permissions' => $user->role->getRolePermissions(),
             ];
 

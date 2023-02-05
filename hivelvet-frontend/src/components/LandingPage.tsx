@@ -38,7 +38,10 @@ const LandingPage = () => {
                     </Title>
                     <p className="mb-30">
                         <Trans i18nKey="create_customizable_rooms" />
-                        <strong> BigBlueButton</strong>
+                        <strong>
+                            {' '}
+                            <Trans i18nKey="bigbluebutton" />
+                        </strong>
                     </p>
                     <Paragraph className="landing-btns">
                         <Button type="primary" onClick={() => navigate('/login')}>

@@ -40,10 +40,15 @@ class Register extends BaseAction
         $form        = $this->getDecodedBody()['data'];
         $dataChecker = new DataChecker();
 
-        $dataChecker->verify($form['username'], Validator::length(4)->setName('username'));
-        $dataChecker->verify($form['email'], Validator::email()->setName('email'));
-        $dataChecker->verify($form['password'], Validator::length(8)->setName('password'));
-        $dataChecker->verify($form['confirmPassword'], Validator::length(8)->equals($form['password'])->setName('confirmPassword'));
+        $username        = $form['username'];
+        $email           = $form['email'];
+        $password        = $form['password'];
+        $confirmPassword = $form['confirmPassword'];
+
+        $dataChecker->verify($username, Validator::length(4)->setName('username'));
+        $dataChecker->verify($email, Validator::email()->setName('email'));
+        $dataChecker->verify($password, Validator::length(8)->setName('password'));
+        $dataChecker->verify($confirmPassword, Validator::length(8)->equals($password)->setName('confirmPassword'));
 
         $setting = new Setting();
 
@@ -59,9 +64,9 @@ class Register extends BaseAction
         $errorMessage   = 'User could not be added';
         $successMessage = 'User successfully registered';
         if ($dataChecker->allValid()) {
-            $user = new User();
-            if ($this->credentialsAreValid($form, $user, $errorMessage)) {
-                $result = $user->saveUserWithDefaultPreset($form['username'], $form['email'], $form['password'], UserRole::LECTURER_ID, $successMessage, $errorMessage);
+            if ($this->credentialsAreValid($username, $email, $password, $errorMessage)) {
+                $user   = new User();
+                $result = $user->saveUserWithDefaultPreset($username, $email, $password, UserRole::LECTURER_ID, $successMessage, $errorMessage);
                 if ($result) {
                     $this->renderJson(['result' => 'success', ResponseCode::HTTP_CREATED]);
                 } else {

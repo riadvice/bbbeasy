@@ -72,6 +72,14 @@ class DataUtils
         return "'" . implode("','", $array) . "'";
     }
 
+    public static function validateImageFormat(string $fileName, ?array $formats = null)
+    {
+        $validFormats = $formats ?? ['jpg', 'jpeg', 'png'];
+        $imageFormat  = str_contains($fileName, '.') ? mb_substr($fileName, mb_strpos($fileName, '.') + 1) : $fileName;
+
+        return \in_array($imageFormat, $validFormats, true);
+    }
+
     /**
      * @param int $length
      *

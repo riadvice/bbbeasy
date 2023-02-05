@@ -146,6 +146,7 @@ final class LoginTest extends Scenario
                     'username'    => $user->username,
                     'email'       => $user->email,
                     'role'        => $user->role->name,
+                    'avatar'      => $user->avatar,
                     'permissions' => $user->role->getRolePermissions(),
                 ],
                 'session' => [

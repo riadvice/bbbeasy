@@ -39,6 +39,7 @@ use Models\Base as BaseModel;
  * @property string    $last_name
  * @property string    $password
  * @property string    $status
+ * @property string    $avatar
  * @property string    $resetToken
  * @property \DateTime $created_on
  * @property \DateTime $updated_on
@@ -118,11 +119,14 @@ class User extends BaseModel
 
     /**
      * Check if email or username already in use.
+     *
+     * @param null|mixed $id
      */
-    public function getUsersByUsernameOrEmail(string $username, string $email): array
+    public function getUsersByUsernameOrEmail(string $username, string $email, $id = null): array
     {
-        $data  = [];
-        $users = $this->find(['lower(username) = lower(?) or lower(email) = lower(?)', $username, $email]);
+        $data = [];
+
+        $users = $this->find(['(username = lower(?) and id != ?) or (email = lower(?) and id != ?)', $username, $id, $email, $id]);
         if ($users) {
             $data = $users->castAll(['username', 'email']);
         }

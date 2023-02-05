@@ -26,6 +26,7 @@ import { PasswordInput } from 'antd-password-input-strength';
 
 type Props = {
     isLogin?: boolean;
+    passwordText?: string;
 };
 
 export const AddUserForm = (props: Props) => {
@@ -66,8 +67,8 @@ export const AddUserForm = (props: Props) => {
                 <Input placeholder={t('email.label')} />
             </Form.Item>
             <Form.Item
-                label={<Trans i18nKey="password.label" />}
-                name="password"
+                label={<Trans i18nKey={props.passwordText ?? 'password.label'} />}
+                name={props.passwordText ?? 'password'}
                 rules={[
                     {
                         min: 8,

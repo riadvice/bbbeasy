@@ -49,30 +49,35 @@ class Edit extends BaseAction
         $id   = $params['id'];
         $user = $this->loadData($id);
 
-        $username_error_message = 'Username already exists';
-        $email_error_message    = 'Email already exists';
-        $errorMessage           = 'User could not be updated';
+        $usernameErrorMessage = 'Username already exists';
+        $emailErrorMessage    = 'Email already exists';
+        $errorMessage         = 'User could not be updated';
         if ($user->valid()) {
             $dataChecker = new DataChecker();
 
-            $dataChecker->verify($form['username'], Validator::length(4)->setName('username'));
-            $dataChecker->verify($form['email'], Validator::email()->setName('email'));
-            $dataChecker->verify($form['role'], Validator::notEmpty()->setName('role'));
-            $dataChecker->verify($form['status'], Validator::notEmpty()->setName('status'));
+            $username = $form['username'];
+            $email    = $form['email'];
+            $roleId   = $form['role'];
+            $status   = $form['status'];
+
+            $dataChecker->verify($username, Validator::length(4)->setName('username'));
+            $dataChecker->verify($email, Validator::email()->setName('email'));
+            $dataChecker->verify($roleId, Validator::notEmpty()->setName('role'));
+            $dataChecker->verify($status, Validator::notEmpty()->setName('status'));
 
             if ($dataChecker->allValid()) {
                 $checkUser = new User();
 
-                $usernameExist = $checkUser->usernameExists($form['username'], $id);
-                $emailExist    = $checkUser->emailExists($form['email'], $id);
+                $usernameExist = $checkUser->usernameExists($username, $id);
+                $emailExist    = $checkUser->emailExists($email, $id);
 
                 if ($usernameExist || $emailExist) {
                     if ($usernameExist && $emailExist) {
-                        $message = ['username' => $username_error_message, 'email' => $email_error_message];
+                        $message = ['username' => $usernameErrorMessage, 'email' => $emailErrorMessage];
                     } elseif ($usernameExist) {
-                        $message = ['username' => $username_error_message];
+                        $message = ['username' => $usernameErrorMessage];
                     } else {
-                        $message = ['email' => $email_error_message];
+                        $message = ['email' => $emailErrorMessage];
                     }
                     $this->logger->error($errorMessage, ['errors' => $message]);
                     $this->renderJson(['errors' => $message], ResponseCode::HTTP_PRECONDITION_FAILED);
@@ -80,11 +85,11 @@ class Edit extends BaseAction
                     return;
                 }
                 $role = new Role();
-                $role->load(['id = ?', [$form['role']]]);
+                $role->load(['id = ?', [$roleId]]);
                 if ($role->valid()) {
-                    $user->email    = $form['email'];
-                    $user->username = $form['username'];
-                    $user->status   = $form['status'];
+                    $user->email    = $email;
+                    $user->username = $username;
+                    $user->status   = $status;
                     $user->role_id  = $role->id;
 
                     try {

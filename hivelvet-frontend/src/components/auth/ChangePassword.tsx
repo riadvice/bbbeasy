@@ -45,7 +45,7 @@ const ChangePassword = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        AuthService.getResetPasswordByToken(params.get('token'))
+        AuthService.get_reset_password(params.get('token'))
             .then(() => {
                 setAvailableToken(true);
             })

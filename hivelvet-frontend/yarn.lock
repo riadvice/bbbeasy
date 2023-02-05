@@ -11533,6 +11533,11 @@ react-icons@^3.8.0:
   dependencies:
     camelcase "^5.0.0"
 
+react-images-uploading@^3.1.7:
+  version "3.1.7"
+  resolved "https://registry.yarnpkg.com/react-images-uploading/-/react-images-uploading-3.1.7.tgz#a53bf0d08624802dc6b74db4ec5695b0bfaf5a5c"
+  integrity sha512-woET50eCezm645iIeP4gCoN7HjdR3T64UXC5l53yd+2vHFp+pwABH8Z/aAO5IXDeC1aP6doQ+K738L701zswAw==
+
 react-intl@^6.2.2:
   version "6.2.6"
   resolved "https://registry.yarnpkg.com/react-intl/-/react-intl-6.2.6.tgz#d7517e8bf0bdaed164bf58d5e6c14bd4f2d67281"
