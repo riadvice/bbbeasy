@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * Hivelvet open source platform - https://riadvice.tn/
  *
- * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
+ * Copyright (c) 2022-2023 RIADVICE SUARL and by respective authors (see below).
  *
  * This program is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free Software
@@ -68,7 +68,7 @@ final class EditTest extends Scenario
 
         $presetSetting = new PresetSetting();
         $data          = [
-            'data'     => [
+            'data' => [
                 ['name' => 'users_join_muted', 'enabled' => false],
                 ['name' => 'moderators_allowed_to_unmute_users', 'enabled' => false],
                 ['name' => 'auto_join', 'enabled' => false],
@@ -96,7 +96,7 @@ final class EditTest extends Scenario
 
         $presetSetting = new PresetSetting();
         $data          = [
-            'data'     => [
+            'data' => [
                 ['name' => 'users_join_muted', 'enabled' => true],
                 ['name' => 'moderators_allowed_to_unmute_users', 'enabled' => false],
                 ['name' => 'auto_join', 'enabled' => false],

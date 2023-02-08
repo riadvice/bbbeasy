@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * Hivelvet open source platform - https://riadvice.tn/
  *
- * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
+ * Copyright (c) 2022-2023 RIADVICE SUARL and by respective authors (see below).
  *
  * This program is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free Software
@@ -141,7 +141,7 @@ final class LoginTest extends Scenario
         $f3->mock(self::LOGIN_ROUTE, null, null, $this->postJsonData($data));
         $test->expect(
             $this->compareArrayToResponse([
-                'user'    => [
+                'user' => [
                     'id'          => $user->id,
                     'username'    => $user->username,
                     'email'       => $user->email,

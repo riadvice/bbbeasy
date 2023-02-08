@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * Hivelvet open source platform - https://riadvice.tn/
  *
- * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
+ * Copyright (c) 2022-2023 RIADVICE SUARL and by respective authors (see below).
  *
  * This program is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free Software
@@ -151,7 +151,7 @@ final class EditTest extends Scenario
 
         $preset = PresetFaker::create(UserFaker::create());
         $data   = [
-            'data'  => [
+            'data' => [
                 ['name' => 'users_join_muted', 'type' => 'bool', 'value' => true],
                 ['name' => 'moderators_allowed_to_unmute_users', 'type' => 'bool', 'value' => ''],
             ],

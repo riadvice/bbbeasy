@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * Hivelvet open source platform - https://riadvice.tn/
  *
- * Copyright (c) 2022 RIADVICE SUARL and by respective authors (see below).
+ * Copyright (c) 2022-2023 RIADVICE SUARL and by respective authors (see below).
  *
  * This program is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free Software
@@ -72,8 +72,8 @@ class Start extends BaseAction
                 // meeting not found
                 if ('notFound' === $getMeetingInfoResponse->getMessageKey()) {
                     // create new meeting with the same meetingId
-                    $preset                 = new Preset();
-                    $p                      = $preset->findById($room->getPresetID($room->id)['preset_id']);
+                    $preset = new Preset();
+                    $p      = $preset->findById($room->getPresetID($room->id)['preset_id']);
 
                     $presetprocessor = new PresetProcessor();
                     $presetData      = $presetprocessor->preparePresetData($p->getMyPresetInfos($p));
