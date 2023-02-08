@@ -1,4 +1,4 @@
-FROM php:8.1.13-fpm-alpine3.17
+FROM php:8.2.2-fpm-alpine3.17
 
 LABEL authors="ghazi.triki@riadvice.tn,saoussen.boulakbech@riadvice.tn"
 

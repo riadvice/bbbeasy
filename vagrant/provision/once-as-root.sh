@@ -53,6 +53,7 @@ sudo apt-get install -y libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf
 curl -sL https://deb.nodesource.com/setup_18.x -o nodesource_setup.sh
 sudo bash nodesource_setup.sh
 rm nodesource_setup.sh
+sudo apt-get -y install gcc g++ make
 sudo apt-get -y install nodejs
 curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
 echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
@@ -61,18 +62,30 @@ sudo apt update && sudo apt install yarn
 sudo yarn set version berry
 sudo npm install -g pm2
 
-info "Install PHP 8.1 with its dependencies"
-sudo apt-get install -y php8.1-curl php8.1-cli php8.1-intl php8.1-redis php8.1-gd php8.1-fpm php8.1-pgsql php8.1-mbstring php8.1-xml php8.1-bcmath php8.1-xdebug
+info "Install PHP 8.2 with its dependencies"
+sudo apt-get install -y php8.2-curl php8.2-cli php8.2-intl php8.2-redis php8.2-gd php8.2-fpm php8.2-pgsql php8.2-mbstring php8.2-xml php8.2-bcmath php8.2-xdebug
 
 info "Installing PostgreSQL"
-sudo percona-release setup ppg-15.0
-sudo apt-get install -y percona-postgresql-15 percona-postgresql-15-pgaudit percona-pg-stat-monitor15
+sudo percona-release setup ppg-15.1
+sudo apt-get install -y percona-postgresql-15 \
+    percona-postgresql-15-repack \
+    percona-postgresql-15-pgaudit \
+    percona-pg-stat-monitor15 \
+    percona-pgbackrest \
+    percona-patroni \
+    percona-pgbadger \
+    percona-pgaudit15-set-user \
+    percona-pgbadger \
+    percona-postgresql-15-wal2json \
+    percona-pg-stat-monitor15 \
+    percona-postgresql-contrib \
+    percona-haproxy
 
 info "Configure PHP-FPM"
-sudo rm /etc/php/8.1/fpm/pool.d/www.conf
-sudo ln -s /app/vagrant/dev/php-fpm/www.conf /etc/php/8.1/fpm/pool.d/www.conf
-sudo rm /etc/php/8.1/mods-available/xdebug.ini
-sudo ln -s /app/vagrant/dev/php-fpm/xdebug.ini /etc/php/8.1/mods-available/xdebug.ini
+sudo rm /etc/php/8.2/fpm/pool.d/www.conf
+sudo ln -s /app/vagrant/dev/php-fpm/www.conf /etc/php/8.2/fpm/pool.d/www.conf
+sudo rm /etc/php/8.2/mods-available/xdebug.ini
+sudo ln -s /app/vagrant/dev/php-fpm/xdebug.ini /etc/php/8.2/mods-available/xdebug.ini
 echo "Done!"
 
 info "Configure NGINX"

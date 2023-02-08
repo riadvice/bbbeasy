@@ -202,7 +202,7 @@ zip_logs() {
 fix_styles() {
   echo "► Running PHP Code Style Fixer"
   cd "$BASEDIR/../hivelvet-backend/"
-  composer csfix
+  PHP_CS_FIXER_IGNORE_ENV=true composer csfix
   echo "✔ PHP Code Style Fixed"
 }
 
