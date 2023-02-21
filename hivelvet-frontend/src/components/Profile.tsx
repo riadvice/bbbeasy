@@ -23,7 +23,7 @@ import EN_US from '../locale/en-US.json';
 
 import { PageHeader } from '@ant-design/pro-layout';
 
-import { Avatar, Badge, Button, Col, Form, Row, Space, Tooltip, Image, Alert } from 'antd';
+import { Avatar, Badge, Button, Col, Form, Row, Space, Tooltip, Alert } from 'antd';
 import { DeleteOutlined, EditOutlined, UserOutlined } from '@ant-design/icons';
 
 import ImageUploading, { ImageListType } from 'react-images-uploading';
