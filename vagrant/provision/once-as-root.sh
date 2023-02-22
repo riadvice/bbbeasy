@@ -43,7 +43,7 @@ sudo mkdir -p /etc/apt/keyrings
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 echo \
   "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
-  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list >/dev/null
 sudo apt-get update
 sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
 
@@ -63,23 +63,24 @@ sudo yarn set version berry
 sudo npm install -g pm2
 
 info "Install PHP 8.2 with its dependencies"
-sudo apt-get install -y php8.2-curl php8.2-cli php8.2-intl php8.2-redis php8.2-gd php8.2-fpm php8.2-pgsql php8.2-mbstring php8.2-xml php8.2-bcmath php8.2-xdebug
+sudo apt-get install -y php8.2-curl php8.2-cli php8.2-intl php8.2-redis php8.2-gd php8.2-fpm php8.2-pgsql \
+  php8.2-mbstring php8.2-xml php8.2-bcmath php8.2-xdebug
 
 info "Installing PostgreSQL"
 sudo percona-release setup ppg-15.1
 sudo apt-get install -y percona-postgresql-15 \
-    percona-postgresql-15-repack \
-    percona-postgresql-15-pgaudit \
-    percona-pg-stat-monitor15 \
-    percona-pgbackrest \
-    percona-patroni \
-    percona-pgbadger \
-    percona-pgaudit15-set-user \
-    percona-pgbadger \
-    percona-postgresql-15-wal2json \
-    percona-pg-stat-monitor15 \
-    percona-postgresql-contrib \
-    percona-haproxy
+  percona-postgresql-15-repack \
+  percona-postgresql-15-pgaudit \
+  percona-pg-stat-monitor15 \
+  percona-pgbackrest \
+  percona-patroni \
+  percona-pgbadger \
+  percona-pgaudit15-set-user \
+  percona-pgbadger \
+  percona-postgresql-15-wal2json \
+  percona-pg-stat-monitor15 \
+  percona-postgresql-contrib \
+  percona-haproxy
 
 info "Configure PHP-FPM"
 sudo rm /etc/php/8.2/fpm/pool.d/www.conf
