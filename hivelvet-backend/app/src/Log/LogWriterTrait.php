@@ -38,7 +38,7 @@ trait LogWriterTrait
     public function initLogger(): void
     {
         $this->logger = new Logger(static::class);
-        $level        = mb_strtoupper(\Base::instance()->get('log.level'));
+        $level        = mb_strtoupper(\Base::instance()->get('log.level') ?: 'info');
         $class        = new \ReflectionClass('Monolog\Logger');
         $stream       = new StreamHandler(\Base::instance()->get('application.logfile'), $class->getConstants()[$level]);
         $stream->setFormatter(new LineFormatter('[' . (\Base::instance()->ip() ?: 'CLI:PID.' . getmypid()) . '] ' . "[%datetime%] %channel%.%level_name%: %message% %context% %extra%\n", 'Y-m-d G:i:s.u'));
