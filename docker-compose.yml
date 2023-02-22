@@ -34,9 +34,15 @@ services:
         ipv4_address: 172.55.0.20
     volumes:
       - hivelvet-backend-repo:/var/www/hivelvet
+      - hivelvet-installer-repo:/var/www/hivelvet-installer
       - ./docker/php.ini:/usr/local/etc/php/conf.d/custom.ini:ro
       - ./docker/www-hivelvet.conf:/usr/local/etc/php-fpm.d/www-hivelvet.conf:ro
-  #installer:
+  installer:
+    restart: always
+    image: riadvice/hivelvet-installer
+    container_name: hv_installer
+    volumes:
+      - hivelvet-installer-repo:/var/www/hivelvet-installer
   #webapp:
   db:
     restart: always
@@ -59,3 +65,5 @@ services:
 
 volumes:
   hivelvet-backend-repo:
+  hivelvet-installer-repo:
+  hivelvet-webapp-repo:

@@ -13,4 +13,4 @@ RUN apk update && apk upgrade && apk add --no-cache --virtual .persistent-deps \
      bash \
 	 curl
 
-COPY /dist /var/www/hivelvet-installer
+COPY /dist /var/www/hivelvet-webapp

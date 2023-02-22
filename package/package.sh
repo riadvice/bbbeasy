@@ -44,13 +44,42 @@ build_backend() {
   docker build -t riadvice/hivelvet-backend .
 }
 
+build_installer() {
+  cp -r "$BASEDIR/installer.Dockerfile" "$BUILD_WORKSPACE/Dockerfile"
+  cp -r "$BASEDIR/installer.dockerignore" "$BUILD_WORKSPACE/.dockerignore"
+  cd "$BASEDIR/../hivelvet-frontend/"
+  rm -rf dist/
+  NODE_ENV=production yarn install
+  yarn build-installer
+  cp -r "$BASEDIR/../hivelvet-frontend/dist/" "$BUILD_WORKSPACE/dist"
+  open_workspace
+  docker build -t riadvice/hivelvet-installer .
+}
+
+build_webapp() {
+  cp -r "$BASEDIR/webapp.Dockerfile" "$BUILD_WORKSPACE/Dockerfile"
+  cp -r "$BASEDIR/webapp.dockerignore" "$BUILD_WORKSPACE/.dockerignore"
+  cd "$BASEDIR/../hivelvet-frontend/"
+  rm -rf dist/
+  NODE_ENV=production yarn install
+  yarn build
+  cp -r "$BASEDIR/../hivelvet-frontend/dist/" "$BUILD_WORKSPACE/dist"
+  open_workspace
+  docker build -t riadvice/hivelvet-webapp .
+}
+
 open_workspace() {
   cd "$BUILD_WORKSPACE"
 }
 
 run() {
   build_backend
+  clean_workspace
 
+  build_installer
+  clean_workspace
+
+  build_webapp
   # Finally clean workspace
   clean_workspace
 }
