@@ -176,8 +176,8 @@ clean_logs() {
 # Clean sessions from the database
 #
 clean_sessions() {
-  sudo -u postgres psql -d bbb_lb -c "SELECT setval('users_sessions_id_seq'::regclass, 1);"
-  sudo -u postgres psql -d bbb_lb -c "TRUNCATE users_sessions;"
+  sudo -u postgres psql -d hivelvet -c "SELECT setval('users_sessions_id_seq'::regclass, 1);"
+  sudo -u postgres psql -d hivelvet -c "TRUNCATE users_sessions;"
 }
 
 #
