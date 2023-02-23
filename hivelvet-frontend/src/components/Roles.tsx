@@ -29,7 +29,6 @@ import {
     QuestionCircleOutlined,
     UserOutlined,
     EditOutlined,
-    KeyOutlined,
     WarningOutlined,
     CloseOutlined,
     CheckOutlined,
@@ -48,6 +47,7 @@ import RolesService from '../services/roles.service';
 
 import { TableColumnType } from '../types/TableColumnType';
 import { RoleType } from '../types/RoleType';
+import DynamicIcon from './DynamicIcon';
 
 const { Link } = Typography;
 
@@ -518,7 +518,8 @@ const Roles = () => {
                         className={expandedKeys.includes(record.key) ? 'table-actions editable' : 'table-actions'}
                     >
                         <Link onClick={() => toggleEdit(record.key)}>
-                            <KeyOutlined /> <Trans i18nKey="permissions.label" />
+                            <DynamicIcon type="permissions" className="icon-hv-permissions" />{' '}
+                            <Trans i18nKey="permissions.label" />
                         </Link>
                         {AuthService.isAllowedAction(actions, 'delete') && record.key != 1 && record.key != 2 && (
                             <Popconfirm

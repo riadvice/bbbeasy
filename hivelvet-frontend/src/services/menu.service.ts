@@ -43,7 +43,7 @@ const addSettings = (keys: string[], items: MenuType[]) => {
         'settings',
         {
             name: 'company_branding',
-            icon: 'BgColorsOutlined',
+            icon: 'FormatPainterOutlined',
             path: '/settings/branding',
         },
         keys,
@@ -53,7 +53,7 @@ const addSettings = (keys: string[], items: MenuType[]) => {
         'users',
         {
             name: 'users',
-            icon: 'UserOutlined',
+            icon: 'TeamOutlined',
             path: '/settings/users',
         },
         keys,
@@ -130,7 +130,7 @@ class MenuService {
                 'recordings',
                 {
                     name: 'recordings',
-                    icon: 'playback-podcast',
+                    icon: 'playback-presentation',
                     path: '/recordings',
                 },
                 keys,
