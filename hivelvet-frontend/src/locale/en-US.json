@@ -257,6 +257,7 @@
     "delete_preset_success": "Preset successfully deleted",
     "add_preset_success": "Preset Successfully added",
     "edit_preset_success": "Preset Successfully updated",
+    "copy_preset_success": "Preset Successfully copied",
 
     "edit_settings_success": "Company & Branding settings successfully updated",
     "edit_preset_settings_success": "BigBlueButton rooms settings successfully updated",
@@ -275,6 +276,7 @@
     "add_room_success": "Room Added Successfully",
 
     "view": "View",
+    "copy": "Copy",
     "copy_text": "Copy text",
     "copied": "Copied",
     "facebook_share": "Share on facebook",
@@ -322,8 +324,5 @@
     "share": "Share",
     "edit_recording_success": "Recording successfully updated",
     "delete_recording_confirm": "Are you sure to delete this recording ?",
-    "delete_recording_success": "Recording successfully deleted",
-
-    "found_results": "Found {{count}} results",
-    "search_all_rooms": "Search all my rooms"
+    "delete_recording_success": "Recording successfully deleted"
 }
