@@ -43,9 +43,9 @@ The web-application is split in two parts:
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1- Run `cd /app/hivelvet-frontend`.
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2- Run `cp /app/tools/hivelvet /app/hivelvet-frontend/hivelvet`.
-  
+
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3- Run `sed -i -e 's/\r$//' hivelvet`.
-  
+
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4- Run `sed -i -e 's/"hivelvet /".\/hivelvet /g' package.json`.
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 5- Run `yarn start-dev-installer` to enable the **installer** app or `yarn start-dev` to enable the **web** app.
@@ -58,13 +58,13 @@ The web-application is split in two parts:
 
 Backend test:
 
-- From the browser: http://api.hivelvet.test/?statera or http://api.hivelvet.test/?statera=withCoverage
+- From the browser: http://hivelvet.test/api?statera or http://hivelvet.test/api?statera=withCoverage
 
 Frontend test:
 
 - To start testing with Cypress, follow these steps :
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1- Enable the **installer** app as described in `Development` heading. 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1- Enable the **installer** app as described in `Development` heading.
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2- Run `yarn cypress`.
 

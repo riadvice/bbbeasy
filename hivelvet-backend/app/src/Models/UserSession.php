@@ -29,7 +29,7 @@ use Models\Base as BaseModel;
  *
  * @property int       $id
  * @property string    $session_id
- * @property text      $data
+ * @property string    $data
  * @property string    $ip
  * @property string    $agent
  * @property int       $stamp

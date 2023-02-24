@@ -79,8 +79,7 @@ sudo apt-get install -y percona-postgresql-15 \
   percona-pgbadger \
   percona-postgresql-15-wal2json \
   percona-pg-stat-monitor15 \
-  percona-postgresql-contrib \
-  percona-haproxy
+  percona-postgresql-contrib
 
 info "Configure PHP-FPM"
 sudo rm /etc/php/8.2/fpm/pool.d/www.conf
@@ -95,8 +94,7 @@ sudo ln -s /app/vagrant/dev/nginx/nginx.conf /etc/nginx/nginx.conf
 echo "Done!"
 
 info "Enabling site configuration"
-sudo ln -s /app/vagrant/dev/nginx/hivelvelt-backend.conf /etc/nginx/sites-enabled/hivelvelt-backend.conf
-sudo ln -s /app/vagrant/dev/nginx/hivelvelt-frontend.conf /etc/nginx/sites-enabled/hivelvelt-frontend.conf
+sudo ln -s /app/vagrant/dev/nginx/hivelvelt.conf /etc/nginx/sites-enabled/hivelvelt.conf
 echo "Done!"
 
 info "Install composer"
