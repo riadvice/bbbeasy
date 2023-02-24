@@ -44,6 +44,10 @@ class PresetsService {
         });
     }
 
+    copy_preset(id: number) {
+        return axiosInstance.get(apiRoutes.COPY_PRESET_URL + id);
+    }
+
     delete_preset(id: number) {
         return axiosInstance.delete(apiRoutes.DELETE_PRESET_URL + id);
     }

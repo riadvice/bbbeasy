@@ -20,11 +20,10 @@ declare(strict_types=1);
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Actions\Rooms;
+namespace Actions\Presets;
 
 use Fake\PresetFaker;
-use Fake\RoomFaker;
-use Models\User;
+use Fake\UserFaker;
 use Test\Scenario;
 
 /**
@@ -32,10 +31,10 @@ use Test\Scenario;
  *
  * @coversNothing
  */
-final class StartTest extends Scenario
+final class CopyTest extends Scenario
 {
-    final protected const START_ROOM_ROUTE = 'POST /rooms/';
-    protected $group                       = 'Action Room Start';
+    final protected const COPY_PRESET_ROUTE = 'GET /presets/copy/';
+    protected $group                        = 'Action Preset Copy';
 
     /**
      * @param mixed $f3
@@ -44,12 +43,12 @@ final class StartTest extends Scenario
      *
      * @throws \ReflectionException
      */
-    public function testNonExistingRoom($f3)
+    public function testNonExistingPreset($f3)
     {
         $test = $this->newTest();
 
-        $f3->mock(self::START_ROOM_ROUTE . 404, null, null);
-        $test->expect($this->compareTemplateToResponse('not_found_error.json'), 'Start meeting for non existing room with id "404" show an error');
+        $f3->mock(self::COPY_PRESET_ROUTE . 404, null, null);
+        $test->expect($this->compareTemplateToResponse('not_found_error.json'), 'Copy non existing preset with id "404" show an error');
 
         return $test->results();
     }
@@ -61,16 +60,13 @@ final class StartTest extends Scenario
      *
      * @throws \ReflectionException
      */
-    public function testValidRoom($f3)
+    public function testValidPreset($f3)
     {
         $test = $this->newTest();
 
-        $loggedUser = new User();
-        $loggedUser->load(['id = ?', [$f3->get('SESSION.user.id')]]);
-        $preset = PresetFaker::create($loggedUser);
-        $room   = RoomFaker::create($loggedUser, $preset);
-        $f3->mock(self::START_ROOM_ROUTE . $room->id, null, null);
-        $test->expect(null === json_decode($f3->get('RESPONSE')), 'Start room meeting with id "' . $room->id . '" and meeting_id "' . $room->meeting_id . '"');
+        $preset = PresetFaker::create(UserFaker::create());
+        $f3->mock(self::COPY_PRESET_ROUTE . $preset->id, null, null);
+        $test->expect($this->compareArrayToResponse(['result' => 'success']), 'Copy existing preset with id "' . $preset->id . '" pass successfully');
 
         return $test->results();
     }

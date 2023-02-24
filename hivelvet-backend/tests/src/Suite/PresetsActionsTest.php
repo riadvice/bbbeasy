@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Suite;
 
 use Actions\Presets\AddTest;
+use Actions\Presets\CopyTest;
 use Actions\Presets\DeleteTest;
 use Actions\Presets\EditTest;
 use Actions\Presets\IndexTest;
@@ -35,7 +36,7 @@ use Test\TestGroup;
  */
 final class PresetsActionsTest extends TestGroup
 {
-    protected $classes = [AddTest::class, EditTest::class, DeleteTest::class, IndexTest::class];
+    protected $classes = [AddTest::class, EditTest::class, DeleteTest::class, CopyTest::class, IndexTest::class];
 
     protected $quiet = true;
 }

@@ -59,6 +59,7 @@ export const apiRoutes = {
     ADD_PRESET_URL: API_URL + '/presets',
     EDIT_PRESETS_URL: API_URL + '/presets/',
     EDIT_PRESETS_SUBCATEGORIES_URL: API_URL + '/presets/subcategories/',
+    COPY_PRESET_URL: API_URL + '/presets/copy/',
     DELETE_PRESET_URL: API_URL + '/presets/',
 
     LIST_ROOMS_URL: API_URL + '/rooms/',

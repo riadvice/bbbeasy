@@ -17,7 +17,6 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import Notifications from './Notifications';
 
 import { PageHeader } from '@ant-design/pro-layout';
 
@@ -38,12 +37,14 @@ import {
     message,
     InputNumber,
     Space,
+    Dropdown,
+    Menu,
 } from 'antd';
 import {
     CheckOutlined,
     CloseOutlined,
-    DeleteOutlined,
     EditOutlined,
+    MoreOutlined,
     QuestionCircleOutlined,
     SearchOutlined,
     UploadOutlined,
@@ -62,6 +63,7 @@ import EmptyData from './EmptyData';
 import { getIconName } from '../types/GetIconName';
 import { DataContext } from 'lib/RoomsContext';
 import AddPresetForm from './AddPresetForm';
+import Notifications from './Notifications';
 
 import axios from 'axios';
 import { apiRoutes } from '../routing/backend-config';
@@ -74,20 +76,21 @@ import { MyPresetType } from '../types/MyPresetType';
 import { SubCategoryType } from '../types/SubCategoryType';
 import { UploadFile } from 'antd/lib/upload/interface';
 
-const { Link, Title } = Typography;
+const { Title } = Typography;
 
 interface PresetColProps {
     key: number;
     preset: MyPresetType;
     editName: boolean;
     editClickHandler: (newPreset: MyPresetType, oldPreset: MyPresetType) => void;
+    copyClickHandler: () => void;
     deleteClickHandler: () => void;
 }
 type formType = {
     name: string;
 };
 
-const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editName, editClickHandler, deleteClickHandler }) => {
+const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editName, editClickHandler, copyClickHandler, deleteClickHandler }) => {
     const [file, setFile] = React.useState<UploadFile>(null);
     const [fileList, setFileList] = React.useState<UploadFile[]>(null);
     const [isShown, setIsShown] = useState<boolean>(false);
@@ -97,6 +100,8 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editName, editClick
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [errorsEdit, setErrorsEdit] = React.useState({});
     const isDefault = preset['name'] == 'default';
+    const deleteEnabled = deleteClickHandler != null && !isDefault;
+
     const props = {
         beforeUpload: (file) => {
             const isPNG = file.type === 'image/png' || file.type === 'image/jpeg' || file.type === 'image/jpg';
@@ -315,20 +320,34 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editName, editClick
                     </div>
                 }
                 extra={
-                    deleteClickHandler != null &&
-                    !isDefault && (
-                        <div className="table-actions">
-                            <Popconfirm
-                                title={t('delete_preset_confirm')}
-                                icon={<QuestionCircleOutlined className="red-icon" />}
-                                onConfirm={() => handleDelete()}
-                            >
-                                <Link>
-                                    <DeleteOutlined /> <Trans i18nKey="delete" />
-                                </Link>
-                            </Popconfirm>
-                        </div>
-                    )
+                    copyClickHandler != null || deleteEnabled ? (
+                        <Dropdown
+                            key="more"
+                            overlay={
+                                <Menu>
+                                    {copyClickHandler != null && (
+                                        <Menu.Item key="1" onClick={copyClickHandler}>
+                                            <Trans i18nKey={'copy'} />
+                                        </Menu.Item>
+                                    )}
+                                    {deleteEnabled && (
+                                        <Popconfirm
+                                            title={t('delete_preset_confirm')}
+                                            icon={<QuestionCircleOutlined className="red-icon" />}
+                                            onConfirm={() => handleDelete()}
+                                        >
+                                            <Menu.Item key="2" danger>
+                                                <Trans i18nKey={'delete'} />
+                                            </Menu.Item>
+                                        </Popconfirm>
+                                    )}
+                                </Menu>
+                            }
+                            placement={LocaleService.direction == 'rtl' ? 'bottomLeft' : 'bottomRight'}
+                        >
+                            <MoreOutlined />
+                        </Dropdown>
+                    ) : null
                 }
             >
                 {preset.categories.map((item, subIndex) => {
@@ -518,6 +537,22 @@ const Presets = () => {
         }
     };
 
+    //copy
+    const copyPreset = (id) => {
+        PresetsService.copy_preset(id)
+            .then((response) => {
+                //add new preset
+                const newPreset: MyPresetType = response.data.preset;
+                setMyPresets([...myPresets, newPreset]);
+                dataContext.setDataPresets([...dataContext.dataPresets, newPreset]);
+
+                Notifications.openNotificationWithIcon('success', t('copy_preset_success'));
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
+
     //delete
     const deletePreset = (id) => {
         PresetsService.delete_preset(id)
@@ -586,6 +621,11 @@ const Presets = () => {
                             editName={AuthService.isAllowedAction(actions, 'edit')}
                             editClickHandler={
                                 AuthService.isAllowedAction(actions, 'edit_subcategories') ? editPreset : null
+                            }
+                            copyClickHandler={
+                                AuthService.isAllowedAction(actions, 'copy')
+                                    ? copyPreset.bind(this, singlePresets.id)
+                                    : null
                             }
                             deleteClickHandler={
                                 AuthService.isAllowedAction(actions, 'delete')
