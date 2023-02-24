@@ -30,8 +30,8 @@ export const apiRoutes = {
     LOGS_URL: API_URL + '/logs',
 
     COLLECT_USERS_URL: API_URL + '/users/collect',
-    COLLECT_PRESET_SETTINGS_URL: API_URL + '/preset_settings',
-    EDIT_PRESET_SETTINGS_URL: API_URL + '/preset_settings',
+    COLLECT_PRESET_SETTINGS_URL: API_URL + '/preset-settings',
+    EDIT_PRESET_SETTINGS_URL: API_URL + '/preset-settings',
     COLLECT_SETTINGS_URL: API_URL + '/settings',
     EDIT_SETTINGS_URL: API_URL + '/settings',
     SAVE_FILE_URL: API_URL + '/settings',
@@ -43,7 +43,7 @@ export const apiRoutes = {
     DELETE_ROLE_URL: API_URL + '/roles/',
     COLLECT_ROLES_URL: API_URL + '/roles/collect',
 
-    COLLECT_PRIVILEGES_URL: API_URL + '/roles_permissions',
+    COLLECT_PRIVILEGES_URL: API_URL + '/roles-permissions',
 
     LIST_USER_URL: API_URL + '/users',
     ADD_USER_URL: API_URL + '/users',
