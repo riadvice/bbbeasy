@@ -257,6 +257,7 @@
     "delete_preset_success": "Préaglage supprimé avec succès",
     "add_preset_success": "Préaglage ajouté avec succès",
     "edit_preset_success": "Préaglage mis à jour avec succès",
+    "copy_preset_success": "Préaglage copié avec succès",
 
     "edit_settings_success": "Paramètres de compagnie et de branding mis à jour avec succès",
     "edit_preset_settings_success": "Paramètres des salles BigBlueButton mis à jour avec succès",
@@ -275,6 +276,7 @@
     "add_room_success": "Salle ajoutée avec succès",
 
     "view": "Voir",
+    "copy": "Copier",
     "copy_text": "Copier le text",
     "copied": "Copié",
     "facebook_share": "Partager sur facebook",
@@ -322,8 +324,5 @@
     "share": "Partager",
     "edit_recording_success": "Enregistrement mis à jour avec succès",
     "delete_recording_confirm": "Êtes-vous sûr de vouloir supprimer cet enregistrement ?",
-    "delete_recording_success": "Enregistrement supprimé avec succès",
-
-    "found_results": "{{count}} Résultats trouvés",
-    "search_all_rooms": "Rechercher toutes mes salles"
+    "delete_recording_success": "Enregistrement supprimé avec succès"
 }

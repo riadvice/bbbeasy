@@ -257,6 +257,7 @@
     "delete_preset_success": "تم حذف الاعدادات بنجاح",
     "add_preset_success": "تمت إضافة الاعدادات بنجاح",
     "edit_preset_success": "تم تحديث الاعدادات بنجاح",
+    "copy_preset_success": "تم نسخ الاعدادات بنجاح",
 
     "edit_settings_success": "تم تحديث إعدادات الشركة و العلامات التجارية بنجاح",
     "edit_preset_settings_success": "تم تحديث إعدادات غرف BigBlueButton بنجاح",
@@ -275,6 +276,7 @@
     "add_room_success": "تمت إضافة القاعة بنجاح",
 
     "view": "عرض",
+    "copy": "نسخ",
     "copy_text": "نسخ النص",
     "copied": "منسوخ",
     "facebook_share": "مشاركة على الفيسبوك",
@@ -294,11 +296,6 @@
     "delete_room_confirm": "هل أنت متأكد من حذف هذه القاعة ؟",
     "delete_room_success": "تم حذف القاعة بنجاح",
     "edit_room_success": "تم تحديث القاعة بنجاح",
-    "update_profile": "تحديث الملف الشخصي",
-    "change_avatar": "تغيير الصورة الرمزية",
-    "join": "انضم",
-    "meeting_not_started": "لم يبدأ الاجتماع بعد",
-
     "found_results": "العثور على {{count}} من النتائج",
     "search_all_rooms": "بحث في جميع القاعات",
 
