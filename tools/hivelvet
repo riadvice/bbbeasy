@@ -285,7 +285,7 @@ run_tests() {
 
   cd "public"
 
-  php index.php "/?statera$USE_COVERAGE&test=$TEST_NAME" -o="../public/statera/result/index.html"
+  php index.php "/api?statera$USE_COVERAGE&test=$TEST_NAME" -o="../public/statera/result/index.html"
 
   SUCCESS=$(cat "statera/test.result")
   if [[ "$SUCCESS" == "success" ]]; then
