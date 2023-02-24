@@ -31,6 +31,7 @@ import LoadingSpinner from './LoadingSpinner';
 import { Step1Form } from './Step1Form';
 import { Step2Form } from './Step2Form';
 import { Step3Form } from './Step3Form';
+import { UserPasswordForm } from './UserPasswordForm';
 
 import { UploadFile } from 'antd/lib/upload/interface';
 import { BrandingColorsType } from '../types/BrandingColorsType';
@@ -315,6 +316,9 @@ const Install = () => {
                             onFinish={onFinish}
                         >
                             {steps[activeStep].content}
+
+                            <UserPasswordForm isHidden={activeStep != 0} />
+
                             <Form.Item
                                 className={
                                     activeStep === steps.length - 1
