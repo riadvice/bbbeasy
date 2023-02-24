@@ -94,7 +94,8 @@ class AuthService {
 
     getActionsPermissionsByGroup(group: string): string[] {
         const currentUser: UserType = this.getCurrentUser();
-        return currentUser.permissions[group];
+        if (currentUser) return currentUser.permissions[group];
+        return [];
     }
 
     isAllowedGroup = (groups: string[], group: string): boolean => {
