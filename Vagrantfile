@@ -7,9 +7,7 @@ required_plugins.each do |plugin|
 end
 
 domains = {
-  frontend: "hivelvet.test",
-  backend: "api.hivelvet.test",
-  docs: "docs.hivelvet.test",
+  hivelvet: "hivelvet.test",
 }
 
 config = {
@@ -72,5 +70,5 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", path: "./vagrant/provision/always-as-root.sh", run: "always"
 
   # post-install message (vagrant console)
-  config.vm.post_up_message = "Hivelvet Frontend URL: http://#{domains[:frontend]}:3300\nHivelvet Backend API URL: http://#{domains[:backend]}\nHivelvet Docs API URL: http://#{domains[:docs]}"
+  config.vm.post_up_message = "Hivelvet Frontend URL: http://#{domains[:hivelvet]}\nHivelvet Backend API URL: http://#{domains[:hivelvet]}/api\nHivelvet Docs API URL: http://#{domains[:hivelvet]}/docs"
 end

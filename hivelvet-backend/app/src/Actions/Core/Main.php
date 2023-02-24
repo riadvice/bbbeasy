@@ -35,5 +35,6 @@ class Main extends BaseAction
      */
     public function execute($f3, $params): void
     {
+        $this->renderJson(['working']);
     }
 }
