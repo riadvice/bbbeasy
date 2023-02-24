@@ -44,7 +44,7 @@ final class PresetSettingTest extends Scenario
     {
         $test                    = $this->newTest();
         $faker                   = Faker::create();
-        $presetSettings          = new PresetSetting(\Registry::get('db'));
+        $presetSettings          = new PresetSetting();
         $presetSettings->group   = $faker->name;
         $presetSettings->name    = $faker->name;
         $presetSettings->enabled = true;
@@ -89,7 +89,7 @@ final class PresetSettingTest extends Scenario
     public function testGetAllPresets()
     {
         $test          = $this->newTest();
-        $presetSetting = new PresetSetting(\Registry::get('db'));
+        $presetSetting = new PresetSetting();
         $presetSetting->erase(['']); // Cleaning the table for test.
         $presetSetting1 = PresetSettingFaker::create();
         $presetSetting2 = PresetSettingFaker::create();
@@ -118,7 +118,7 @@ final class PresetSettingTest extends Scenario
     public function testCollectAll()
     {
         $test          = $this->newTest();
-        $presetSetting = new PresetSetting(\Registry::get('db'));
+        $presetSetting = new PresetSetting();
         $presetSetting->erase(['']); // Cleaning the table for test.
         $presetSetting1 = PresetSettingFaker::create('group1');
         $presetSetting2 = PresetSettingFaker::create('group1');
@@ -151,7 +151,7 @@ final class PresetSettingTest extends Scenario
     public function testSaveDefaultPresetSettings()
     {
         $test          = $this->newTest();
-        $presetSetting = new PresetSetting(\Registry::get('db'));
+        $presetSetting = new PresetSetting();
         $presetSetting->erase(['']); // Cleaning the table for test.
 
         $settings = $presetSetting->getDefaultPresetSettings(true);
