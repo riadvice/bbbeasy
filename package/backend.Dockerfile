@@ -59,12 +59,12 @@ RUN set -xe \
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Conf PHP
-COPY . /var/www/hivelvet
+COPY . /var/www
 
 # Composer
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
-WORKDIR /var/www/hivelvet
+WORKDIR /var/www/hivelvet-backend
 RUN composer install -o --no-dev
 
 EXPOSE 9000
