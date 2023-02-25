@@ -6,7 +6,7 @@ sidebar_label: 'Welcome'
 slug: '/user-guide/introduction/welcome'
 ---
 
-**Hivelvet** is multi-purpose rooms manager for the open-source web-conferencing platform
+**Hivelvet** is multipurpose rooms manager for the open-source web-conferencing platform
 BigBlueButton. Technically, it is a complete and fully featured integration for BigBlueButton
 developed to handle multiple web-conferencing use cases.
 
