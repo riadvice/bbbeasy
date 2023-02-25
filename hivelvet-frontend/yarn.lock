@@ -4386,15 +4386,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ansi-html@npm:^0.0.7":
-  version: 0.0.7
-  resolution: "ansi-html@npm:0.0.7"
-  bin:
-    ansi-html: ./bin/ansi-html
-  checksum: 9b839ce99650b4c2d83621d67d68622d27e7948b54f7a4386f2218a3997ee4e684e5a6e8d290880c3f3260e8d90c2613c59c7028f04992ad5c8d99d3a0fcc02c
-  languageName: node
-  linkType: hard
-
 "ansi-html@npm:^0.0.9":
   version: 0.0.9
   resolution: "ansi-html@npm:0.0.9"
@@ -5287,7 +5278,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"boolbase@npm:^1.0.0, boolbase@npm:~1.0.0":
+"boolbase@npm:^1.0.0":
   version: 1.0.0
   resolution: "boolbase@npm:1.0.0"
   checksum: 3e25c80ef626c3a3487c73dbfc70ac322ec830666c9ad915d11b701142fab25ec1e63eff2c450c74347acfd2de854ccde865cd79ef4db1683f7c7b046ea43bb0
@@ -9552,7 +9543,6 @@ __metadata:
     "@types/react-dom": ^17.0.19
     "@typescript-eslint/eslint-plugin": ^5.53.0
     "@typescript-eslint/parser": ^5.53.0
-    ansi-html: ^0.0.9
     antd: ^5.2.2
     antd-password-input-strength: ^2.0.1
     axios: ^1.3.4
@@ -9581,7 +9571,6 @@ __metadata:
     lint-staged: ^13.1.2
     lodash: ^4.17.21
     moment: ^2.29.4
-    nth-check: ^2.1.1
     nyc: ^15.1.0
     perfect-scrollbar: ^1.5.5
     pg: ^8.9.0
@@ -12988,16 +12977,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nth-check@npm:^1.0.2":
-  version: 1.0.2
-  resolution: "nth-check@npm:1.0.2"
-  dependencies:
-    boolbase: ~1.0.0
-  checksum: 59e115fdd75b971d0030f42ada3aac23898d4c03aa13371fa8b3339d23461d1badf3fde5aad251fb956aaa75c0a3b9bfcd07c08a34a83b4f9dadfdce1d19337c
-  languageName: node
-  linkType: hard
-
-"nth-check@npm:^2.0.1, nth-check@npm:^2.1.1":
+"nth-check@npm:^2.1.1":
   version: 2.1.1
   resolution: "nth-check@npm:2.1.1"
   dependencies:
