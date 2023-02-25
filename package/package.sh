@@ -14,6 +14,7 @@ BUILD_WORKSPACE="$BASEDIR/workspace"
 BACKEND_WORKSPACE="$BUILD_WORKSPACE/hivelvet-backend"
 INSTALLER_WORKSPACE="$BUILD_WORKSPACE/hivelvet-installer"
 WEBAPP_WORKSPACE="$BUILD_WORKSPACE/hivelvet-webapp"
+DOCS_WORKSPACE="$BUILD_WORKSPACE/hivelvet-docs"
 
 # Formatted current date
 NOW=$(date +"%Y-%m-%d_%H.%M.%S")
@@ -71,6 +72,7 @@ build_docs() {
   yarn clear
   yarn docusaurus clear
   yarn build
+  cp -r "$BASEDIR/../hivelvet-frontend/build/" "$DOCS_WORKSPACE"
 }
 
 open_workspace() {
