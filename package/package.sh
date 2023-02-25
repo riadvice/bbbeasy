@@ -66,6 +66,7 @@ build_webapp() {
 
 build_docs() {
     cd "$BASEDIR/../hivelvet-docs/"
+    yarn build
 }
 
 open_workspace() {

@@ -65,21 +65,21 @@ const config = {
         items: [
           {
             type: 'doc',
-            docId: 'user-guide/introduction/introduction-welcome',
+            docId: 'user-guide/congratulations',
             position: 'left',
             sidebarId: 'user',
             label: 'User Guide',
           },
           {
             type: 'doc',
-            docId: 'administrator-guide/translate-your-site',
+            docId: 'administrator-guide/manage-docs-versions',
             sidebarId: 'administrator',
             position: 'left',
             label: 'Administrator Guide',
           },
           {
             type: 'doc',
-            docId: 'developer-guide/translate-your-site',
+            docId: 'developer-guide/hivelvet-configuration-utility',
             sidebarId: 'developer',
             position: 'left',
             label: 'Developer Guide',
