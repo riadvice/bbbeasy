@@ -18,15 +18,15 @@ services:
       hivelvet-network:
         ipv4_address: 172.55.0.10
     volumes:
-      - hivelvet-backend-repo:/var/www/hivelvet
+      - hivelvet-backend-repo:/var/www/hivelvet-backend
       - ./docker/site_backend.conf:/etc/nginx/conf.d/default.conf:ro
       - ./docker/default.ini:/var/www/hivelvet/app/config/default.ini:ro
       - ./docker/config-production.ini:/var/www/hivelvet/app/config/config-production.ini:ro
       - ./docker/backend-logs:/var/www/hivelvet/logs:rw
-  backend:
+  hivelvet:
     restart: always
-    image: riadvice/hivelvet-backend
-    container_name: hv_backend
+    image: riadvice/hivelvet
+    container_name: hv_app
     ports:
       - "9000:9000"
     networks:
@@ -37,16 +37,11 @@ services:
       - hivelvet-installer-repo:/var/www/hivelvet-installer
       - ./docker/php.ini:/usr/local/etc/php/conf.d/custom.ini:ro
       - ./docker/www-hivelvet.conf:/usr/local/etc/php-fpm.d/www-hivelvet.conf:ro
-  installer:
-    restart: always
-    image: riadvice/hivelvet-installer
-    container_name: hv_installer
-    volumes:
-      - hivelvet-installer-repo:/var/www/hivelvet-installer
   #webapp:
   db:
     restart: always
     image: perconalab/percona-distribution-postgresql:15.1
+    user: "${UID}:${GID}"
     container_name: hv_db
     environment:
       POSTGRES_PASSWORD: hv
@@ -54,7 +49,7 @@ services:
       hivelvet-network:
         ipv4_address: 172.55.0.50
     volumes:
-      - ./docker/postgres-data:/data/db:Z
+      - ./docker/postgres-data:/data/db
   cache:
     restart: always
     image: redis:7.0.5-alpine
