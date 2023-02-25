@@ -35,8 +35,8 @@ clean_workspace() {
 
 build_backend() {
   clean_workspace
-  cp -r "$BASEDIR/backend.Dockerfile" "$BUILD_WORKSPACE/Dockerfile"
-  cp -r "$BASEDIR/backend.dockerignore" "$BUILD_WORKSPACE/.dockerignore"
+  cp -r "$BASEDIR/hivelvet.Dockerfile" "$BUILD_WORKSPACE/Dockerfile"
+  cp -r "$BASEDIR/hivelvet.dockerignore" "$BUILD_WORKSPACE/.dockerignore"
   cp -r "$BASEDIR/../hivelvet-backend/app/" "$BACKEND_WORKSPACE/app"
   cp -r "$BASEDIR/../hivelvet-backend/db/" "$BACKEND_WORKSPACE/db"
   cp -r "$BASEDIR/../hivelvet-backend/logs/" "$BACKEND_WORKSPACE/logs"
