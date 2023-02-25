@@ -38,6 +38,8 @@ const config = {
       /** @type {import('@docusaurus/preset-classic').Options} */
       ({
         docs: {
+          path: "guides",
+          routeBasePath: "/guides",
           sidebarPath: require.resolve('./sidebars.js'),
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
@@ -115,11 +117,11 @@ const config = {
               },
               {
                 label: 'Administrator Guide',
-                to: '/administrator-guide/translate-your-site',
+                to: '/administrator-guide/manage-docs-versions',
               },
               {
                 label: 'Developer Guide',
-                to: '/developer-guide/translate-your-site',
+                to: '/developer-guide/hivelvet-configuration-utility',
               },
               {
                 label: 'API',
