@@ -40,11 +40,9 @@ services:
       - hivelvet-backend-repo:/var/www/hivelvet-docs
       - ./docker/php.ini:/usr/local/etc/php/conf.d/custom.ini:ro
       - ./docker/www-hivelvet.conf:/usr/local/etc/php-fpm.d/www-hivelvet.conf:ro
-  #webapp:
   db:
     restart: always
-    image: perconalab/percona-distribution-postgresql:15.1
-    user: "${UID}:${GID}"
+    image: postgres
     container_name: hv_db
     environment:
       POSTGRES_PASSWORD: hv
@@ -52,7 +50,7 @@ services:
       hivelvet-network:
         ipv4_address: 172.55.0.50
     volumes:
-      - ./docker/postgres-data:/data/db
+      - hivelvet-db-repo:/data/postgres
   cache:
     restart: always
     image: redis:7.0.8-alpine
@@ -65,3 +63,4 @@ volumes:
   hivelvet-backend-repo:
   hivelvet-frontend-repo:
   hivelvet-docs-repo:
+  hivelvet-db-repo:
