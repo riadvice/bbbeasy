@@ -521,7 +521,7 @@ const Users = () => {
                         hideRequiredMark
                         onFinish={handleAdd}
                         validateTrigger="onSubmit"
-                        onValuesChange={()=> setErrorsAdd('')}
+                        onValuesChange={() => setErrorsAdd('')}
                     >
                         {errorsAdd != '' && (
                             <Alert

@@ -112,7 +112,7 @@ const RoomDetails = () => {
             });
     };
     const getPresets = () => {
-        if(currentUser != null) {
+        if (currentUser != null) {
             PresetsService.list_presets(currentUser.id).then((result) => {
                 setPresets(result.data);
             });
@@ -165,7 +165,7 @@ const RoomDetails = () => {
     };
 
     useEffect(() => {
-        if(currentUser != null) {
+        if (currentUser != null) {
             //Runs only on the first render
             checkRoomStarted();
             getPresets();
@@ -395,17 +395,18 @@ const RoomDetails = () => {
                                                 </div>
                                             </Space>
                                         </Col>
-                                        {canStart || isRunning && (
-                                            <Col span={2}>
-                                                <Avatar
-                                                    size={{ xs: 40, sm: 64, md: 85, lg: 100, xl: 120, xxl: 140 }}
-                                                    className="hivelvet-btn"
-                                                    onClick={startRoom}
-                                                >
-                                                    <Trans i18nKey={canStart ? 'start' : 'join'} />
-                                                </Avatar>
-                                            </Col>
-                                        )}
+                                        {canStart ||
+                                            (isRunning && (
+                                                <Col span={2}>
+                                                    <Avatar
+                                                        size={{ xs: 40, sm: 64, md: 85, lg: 100, xl: 120, xxl: 140 }}
+                                                        className="hivelvet-btn"
+                                                        onClick={startRoom}
+                                                    >
+                                                        <Trans i18nKey={canStart ? 'start' : 'join'} />
+                                                    </Avatar>
+                                                </Col>
+                                            ))}
                                     </Row>
                                 </Card>
                             </Col>

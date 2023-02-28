@@ -71,7 +71,7 @@ const AppHeader = () => {
     const isRoomsSearch = location.pathname.includes('rooms');
     const isLoginPage = location.pathname.includes('login');
 
-    if(isLoginPage) {
+    if (isLoginPage) {
         setIsLogged(false);
     }
 

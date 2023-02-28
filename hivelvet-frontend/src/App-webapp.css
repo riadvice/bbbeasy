@@ -420,6 +420,15 @@ fieldset {
     padding: 0;
     margin: 0;
 }
+.ant-card-rtl .ant-card-meta-avatar {
+    padding-left: 16px !important;
+    padding-right: unset !important;
+}
+.ant-btn-rtl > .anticon + span,
+.ant-btn-rtl > span + .anticon {
+    margin-right: 8px !important;
+    margin-left: unset !important;
+}
 .icon-hv-permissions {
     font-size: 16px !important;
     font-weight: bolder !important;
@@ -1110,10 +1119,10 @@ fieldset {
 .button-container {
     margin-top: 24px !important;
 }
-.button-container:not(.ant-row-rtl) .prev {
+.button-container .ant-row:not(.ant-row-rtl) .prev {
     margin-right: 20px;
 }
-.button-container.ant-row-rtl .prev {
+.button-container .ant-row.ant-row-rtl .prev {
     margin-left: 20px;
 }
 .button-container .ant-form-item-control-input-content {

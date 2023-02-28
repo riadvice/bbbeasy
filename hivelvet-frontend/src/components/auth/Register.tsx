@@ -106,7 +106,7 @@ const Register = () => {
                             scrollToFirstError={true}
                             validateTrigger="onSubmit"
                             onFinish={handleRegistration}
-                            onValuesChange={()=> setMessage('')}
+                            onValuesChange={() => setMessage('')}
                         >
                             <AddUserForm />
                             <ConfirmPassword />

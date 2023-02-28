@@ -115,7 +115,7 @@ const ChangePassword = () => {
                                     scrollToFirstError={true}
                                     validateTrigger="onSubmit"
                                     onFinish={handleSubmit}
-                                    onValuesChange={()=> setMessage('')}
+                                    onValuesChange={() => setMessage('')}
                                 >
                                     <Form.Item
                                         label={<Trans i18nKey="password.label" />}

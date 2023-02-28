@@ -81,7 +81,7 @@ const Reset = () => {
                         scrollToFirstError={true}
                         validateTrigger="onSubmit"
                         onFinish={handleReset}
-                        onValuesChange={()=> setMessage('')}
+                        onValuesChange={() => setMessage('')}
                     >
                         <Form.Item
                             label={<Trans i18nKey="email.label" />}
