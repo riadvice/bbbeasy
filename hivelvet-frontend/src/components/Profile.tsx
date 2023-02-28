@@ -110,6 +110,7 @@ const Profile = () => {
                 scrollToFirstError={true}
                 validateTrigger="onSubmit"
                 onFinish={handleUpdate}
+                onValuesChange={()=> setErrors('')}
             >
                 <Row>
                     <Col span={9}>

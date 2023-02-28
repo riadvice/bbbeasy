@@ -405,6 +405,7 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editName, editClick
                         onOk={() => setIsModalVisible(false)}
                         onCancel={() => setIsModalVisible(false)}
                         footer={null}
+                        maskClosable={false}
                     >
                         <div className="presets-body">
                             <Form>

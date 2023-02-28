@@ -123,6 +123,7 @@ export const Step3Form = (props: Props) => {
                                 <Trans i18nKey="confirm" />
                             </Button>,
                         ]}
+                        maskClosable={false}
                     >
                         <div className="presets-body">
                             {modalContent.map((item) => {

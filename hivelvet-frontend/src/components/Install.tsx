@@ -314,6 +314,7 @@ const Install = () => {
                             scrollToFirstError={true}
                             validateTrigger="onSubmit"
                             onFinish={onFinish}
+                            onValuesChange={()=> setMessage('')}
                         >
                             {steps[activeStep].content}
 

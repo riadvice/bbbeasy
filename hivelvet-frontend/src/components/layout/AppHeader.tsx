@@ -17,7 +17,7 @@
  */
 
 import React from 'react';
-import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
     Layout,
     Typography,
@@ -69,16 +69,21 @@ const AppHeader = () => {
     const location = useLocation();
     const [searchForm] = Form.useForm();
     const isRoomsSearch = location.pathname.includes('rooms');
+    const isLoginPage = location.pathname.includes('login');
+
+    if(isLoginPage) {
+        setIsLogged(false);
+    }
 
     const logout = () => {
         AuthService.logout()
             .then(() => {
+                setIsLogged(false);
                 localStorage.removeItem('user');
                 setCurrentUser(null);
                 localStorage.removeItem('session');
                 setCurrentSession(null);
-                setIsLogged(false);
-                return <Navigate to="/login" />;
+                navigate('/login');
             })
             .catch((error) => {
                 console.log(error);
@@ -211,10 +216,10 @@ const AppHeader = () => {
                 open={isModalVisible}
                 onCancel={() => {
                     searchForm.resetFields();
-
                     setIsModalVisible(false);
                 }}
                 footer={null}
+                maskClosable={false}
             >
                 {rooms.map((singleRoom, index) => (
                     <>

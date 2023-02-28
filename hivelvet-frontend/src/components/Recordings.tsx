@@ -416,6 +416,7 @@ const Recordings = () => {
                     onOk={handleShare}
                     onCancel={cancelShare}
                     footer={null}
+                    maskClosable={false}
                 >
                     <Form layout="vertical" hideRequiredMark onFinish={handleShare} validateTrigger="onSubmit">
                         <Space size={38} direction="vertical" className="modal-content">
