@@ -102,6 +102,7 @@ const PresetsCol: React.FC<PresetColProps> = ({
     const [fileList, setFileList] = React.useState<UploadFile[]>(null);
     const [isShown, setIsShown] = useState<boolean>(false);
     const [modalTitle, setModalTitle] = React.useState<string>('');
+    const [modalTitleTrans, setModalTitleTrans] = React.useState<string>('');
     const [modalContent, setModalContent] = React.useState<SubCategoryType[]>([]);
     const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
     const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -137,9 +138,10 @@ const PresetsCol: React.FC<PresetColProps> = ({
         },
     };
 
-    const showModal = (title: string, content: SubCategoryType[]) => {
+    const showModal = (title: string, titleTrans: string, content: SubCategoryType[]) => {
         setIsModalVisible(true);
         setModalTitle(title);
+        setModalTitleTrans(titleTrans);
         setModalContent(content);
         const indexLogo = content.findIndex((item) => item.type === 'file');
         if (indexLogo > -1 && content[indexLogo].value != '') {
@@ -393,7 +395,7 @@ const PresetsCol: React.FC<PresetColProps> = ({
                         >
                             <Button
                                 onClick={() =>
-                                    editClickHandler != null ? showModal(category, item.subcategories) : null
+                                    editClickHandler != null ? showModal(item.name, category, item.subcategories) : null
                                 }
                                 disabled={!item.enabled}
                                 type="link"

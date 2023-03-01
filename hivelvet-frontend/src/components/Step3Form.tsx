@@ -42,12 +42,14 @@ export const Step3Form = (props: Props) => {
     const { presets } = props;
     const enabled = props.enabled ?? true;
     const [modalTitle, setModalTitle] = React.useState<string>('');
+    const [modalTitleTrans, setModalTitleTrans] = React.useState<string>('');
     const [modalContent, setModalContent] = React.useState<SubCategoryType[]>([]);
     const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
 
-    const showModal = (title: string, content: SubCategoryType[]) => {
+    const showModal = (title: string, titleTrans: string, content: SubCategoryType[]) => {
         setIsModalVisible(true);
         setModalTitle(title);
+        setModalTitleTrans(titleTrans);
         setModalContent(content);
     };
     const Confirm = () => {
@@ -101,7 +103,7 @@ export const Step3Form = (props: Props) => {
                             <Grid
                                 key={item.name}
                                 className="presets-grid"
-                                onClick={() => (enabled ? showModal(category, item.subcategories) : null)}
+                                onClick={() => (enabled ? showModal(item.name, category, item.subcategories) : null)}
                             >
                                 <Meta
                                     avatar={<DynamicIcon type={getIconName(item.name)} className="PresetIcon" />}
@@ -114,7 +116,7 @@ export const Step3Form = (props: Props) => {
 
                 {enabled && (
                     <Modal
-                        title={<Trans i18nKey={modalTitle} />}
+                        title={<Trans i18nKey={modalTitleTrans} />}
                         className="presets-modal"
                         centered
                         open={isModalVisible}
