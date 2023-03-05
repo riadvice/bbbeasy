@@ -22,7 +22,7 @@ services:
       - hivelvet-frontend-repo:/var/www/hivelvet-installer
       - hivelvet-docs-repo:/var/www/hivelvet-docs
       - ./docker/hivelvet.conf:/etc/nginx/conf.d/default.conf:rw
-      - ./docker/default.ini:/var/www/hivelvet/app/config/default.ini:rw
+      - ./docker/default.ini:/var/www/hivelvet-backend/app/config/default.ini:rw
       - ./docker/config-production.ini:/var/www/hivelvet/app/config/config-production.ini:rw
       - ./docker/backend-logs:/var/www/hivelvet/logs:rw
   hivelvet:
@@ -40,9 +40,12 @@ services:
       - hivelvet-docs-repo:/var/www/hivelvet-docs
       - ./docker/php.ini:/usr/local/etc/php/conf.d/custom.ini:rw
       - ./docker/www-hivelvet.conf:/usr/local/etc/php-fpm.d/www-hivelvet.conf:rw
+      - ./docker/config-production.ini:/var/www/hivelvet-backend/app/config/config-production.ini:r
+      - ./docker/hvlogs/:/var/www/hivelvet-backend/logs/
+      - ./docker/hvcache/:/var/www/hivelvet-backend/tmp/
   db:
     restart: always
-    image: postgres
+    image: postgres:15.2-alpine3.17
     container_name: hv_db
     environment:
       POSTGRES_PASSWORD: hv

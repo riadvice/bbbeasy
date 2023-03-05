@@ -53,19 +53,19 @@ build_backend() {
 build_installer() {
   cd "$BASEDIR/../hivelvet-frontend/"
   rm -rf dist/
+  yarn cache clean
   NODE_ENV=production yarn install
-  yarn clear
   yarn build-installer
-  cp -r "$BASEDIR/../hivelvet-frontend/dist/" "$INSTALLER_WORKSPACE"
+  cp -r "$BASEDIR/../hivelvet-frontend/dist/." "$INSTALLER_WORKSPACE"
 }
 
 build_webapp() {
   cd "$BASEDIR/../hivelvet-frontend/"
   rm -rf dist/
+  yarn cache clean
   NODE_ENV=production yarn install
-  yarn clear
   yarn build
-  cp -r "$BASEDIR/../hivelvet-frontend/dist/" "$WEBAPP_WORKSPACE"
+  cp -a "$BASEDIR/../hivelvet-frontend/dist/." "$WEBAPP_WORKSPACE"
 }
 
 build_docs() {
