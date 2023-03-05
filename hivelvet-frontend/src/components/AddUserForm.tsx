@@ -21,11 +21,11 @@ import { Trans, withTranslation } from 'react-i18next';
 import { t } from 'i18next';
 
 import { Form, Input } from 'antd';
-
-import { PasswordInput } from 'antd-password-input-strength';
+import { UserPasswordForm } from './UserPasswordForm';
 
 type Props = {
     isLogin?: boolean;
+    isInstall?: boolean;
     passwordText?: string;
 };
 
@@ -66,22 +66,7 @@ export const AddUserForm = (props: Props) => {
             >
                 <Input placeholder={t('email.label')} />
             </Form.Item>
-            <Form.Item
-                label={<Trans i18nKey={props.passwordText ?? 'password.label'} />}
-                name={props.passwordText ?? 'password'}
-                rules={[
-                    {
-                        min: 8,
-                        message: <Trans i18nKey="password.size" />,
-                    },
-                    {
-                        required: true,
-                        message: <Trans i18nKey="password.required" />,
-                    },
-                ]}
-            >
-                <PasswordInput placeholder="**********" />
-            </Form.Item>
+            {!props.isInstall && <UserPasswordForm passwordText={props.passwordText} />}
         </>
     );
 };

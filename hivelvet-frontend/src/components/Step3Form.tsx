@@ -27,6 +27,7 @@ import LocaleService from '../services/locale.service';
 import { PresetType } from '../types/PresetType';
 import { SubCategoryType } from '../types/SubCategoryType';
 import { getIconName } from '../types/GetIconName';
+import EN_US from '../locale/en-US.json';
 
 const { Title, Paragraph } = Typography;
 const { Grid, Meta } = Card;
@@ -41,12 +42,14 @@ export const Step3Form = (props: Props) => {
     const { presets } = props;
     const enabled = props.enabled ?? true;
     const [modalTitle, setModalTitle] = React.useState<string>('');
+    const [modalTitleTrans, setModalTitleTrans] = React.useState<string>('');
     const [modalContent, setModalContent] = React.useState<SubCategoryType[]>([]);
     const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
 
-    const showModal = (title: string, content: SubCategoryType[]) => {
+    const showModal = (title: string, titleTrans: string, content: SubCategoryType[]) => {
         setIsModalVisible(true);
         setModalTitle(title);
+        setModalTitleTrans(titleTrans);
         setModalContent(content);
     };
     const Confirm = () => {
@@ -54,10 +57,6 @@ export const Step3Form = (props: Props) => {
             props.onFinish(modalTitle, modalContent);
         }
         setIsModalVisible(false);
-    };
-
-    const getSubCategoryName = (name: string) => {
-        return name.charAt(0).toUpperCase() + name.replaceAll('_', ' ').slice(1);
     };
 
     return (
@@ -75,44 +74,49 @@ export const Step3Form = (props: Props) => {
                 />
             </Paragraph>
             <Card bordered={false}>
-                {presets.map((item) => (
-                    <Tooltip
-                        key={item.name}
-                        placement={LocaleService.direction == 'rtl' ? 'leftTop' : 'rightTop'}
-                        overlayClassName="install-tooltip"
-                        title={
-                            <ul>
-                                {item.subcategories.map((subItem) => {
-                                    const subcategory = getSubCategoryName(subItem.name);
+                {presets.map((item) => {
+                    const filteredElements = Object.keys(EN_US).filter((elem) => EN_US[elem] == item.name);
+                    const category = filteredElements.length != 0 ? filteredElements[0] : item.name;
 
-                                    return (
-                                        <li
-                                            key={item.name + '_' + subItem.name}
-                                            className={subItem.enabled == true ? 'text-black' : 'text-grey'}
-                                        >
-                                            {subcategory}
-                                        </li>
-                                    );
-                                })}
-                            </ul>
-                        }
-                    >
-                        <Grid
+                    return (
+                        <Tooltip
                             key={item.name}
-                            className="presets-grid"
-                            onClick={() => (enabled ? showModal(item.name, item.subcategories) : null)}
+                            placement={LocaleService.direction == 'rtl' ? 'leftTop' : 'rightTop'}
+                            overlayClassName="install-tooltip"
+                            title={
+                                <ul>
+                                    {item.subcategories.map((subItem) => {
+                                        const subcategory = subItem.name;
+
+                                        return (
+                                            <li
+                                                key={item.name + '_' + subItem.name}
+                                                className={subItem.enabled == true ? 'text-black' : 'text-grey'}
+                                            >
+                                                <Trans i18nKey={subcategory} />
+                                            </li>
+                                        );
+                                    })}
+                                </ul>
+                            }
                         >
-                            <Meta
-                                avatar={<DynamicIcon type={getIconName(item.name)} className="PresetIcon" />}
-                                title={item.name}
-                            />
-                        </Grid>
-                    </Tooltip>
-                ))}
+                            <Grid
+                                key={item.name}
+                                className="presets-grid"
+                                onClick={() => (enabled ? showModal(item.name, category, item.subcategories) : null)}
+                            >
+                                <Meta
+                                    avatar={<DynamicIcon type={getIconName(item.name)} className="PresetIcon" />}
+                                    title={<Trans i18nKey={category} />}
+                                />
+                            </Grid>
+                        </Tooltip>
+                    );
+                })}
 
                 {enabled && (
                     <Modal
-                        title={modalTitle}
+                        title={<Trans i18nKey={modalTitleTrans} />}
                         className="presets-modal"
                         centered
                         open={isModalVisible}
@@ -123,14 +127,15 @@ export const Step3Form = (props: Props) => {
                                 <Trans i18nKey="confirm" />
                             </Button>,
                         ]}
+                        maskClosable={false}
                     >
                         <div className="presets-body">
                             {modalContent.map((item) => {
-                                const subcategory = getSubCategoryName(item.name);
+                                const subcategory = item.name;
 
                                 return (
                                     <div key={modalTitle + '_' + item.name}>
-                                        <Form.Item label={subcategory} valuePropName={item.name}>
+                                        <Form.Item label={<Trans i18nKey={subcategory} />} valuePropName={item.name}>
                                             <Switch
                                                 defaultChecked={item.enabled == true ? true : false}
                                                 onChange={(checked) => {

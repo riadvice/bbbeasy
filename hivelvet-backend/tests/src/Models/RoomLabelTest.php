@@ -52,7 +52,7 @@ final class RoomLabelTest extends Scenario
         $preset              = PresetFaker::create($user);
         $room                = RoomFaker::create($user, $preset);
         $label               = LabelFaker::create();
-        $roomLabel           = new RoomLabel(\Registry::get('db'));
+        $roomLabel           = new RoomLabel();
         $roomLabel->room_id  = $room->id;
         $roomLabel->label_id = $label->id;
 
@@ -95,7 +95,7 @@ final class RoomLabelTest extends Scenario
 
         $user      = UserFaker::create();
         $preset    = PresetFaker::create($user);
-        $roomlabel = new RoomLabel(\Registry::get('db'));
+        $roomlabel = new RoomLabel();
         $roomlabel->erase(['']); // Cleaning the table for test.
         $room       = RoomFaker::create($user, $preset);
         $label      = LabelFaker::create();

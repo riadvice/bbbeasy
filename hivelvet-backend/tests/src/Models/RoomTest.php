@@ -50,7 +50,7 @@ final class RoomTest extends Scenario
         $faker            = Faker::create();
         $user             = UserFaker::create();
         $preset           = PresetFaker::create($user);
-        $room             = new Room(\Registry::get('db'));
+        $room             = new Room();
         $room->name       = $faker->name;
         $room->short_link = $faker->text(14);
         $room->user_id    = $user->id;
@@ -222,8 +222,8 @@ final class RoomTest extends Scenario
     public function testCollectAll()
     {
         $test      = $this->newTest();
-        $room      = new Room(\Registry::get('db'));
-        $roomLabel = new RoomLabel(\Registry::get('db'));
+        $room      = new Room();
+        $roomLabel = new RoomLabel();
         $roomLabel->erase(['']);
         $room->erase(['']); // Cleaning the table for test.
 

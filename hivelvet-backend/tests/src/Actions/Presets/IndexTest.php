@@ -49,7 +49,7 @@ final class IndexTest extends Scenario
         $test = $this->newTest();
 
         $faker  = Faker::create();
-        $user   = new User(\Registry::get('db'));
+        $user   = new User();
         $result = $user->saveUserWithDefaultPreset(
             $faker->userName,
             $faker->email,

@@ -48,7 +48,7 @@ export const Step1Form = (props: Props) => {
                 />
             )}
 
-            <AddUserForm />
+            <AddUserForm isInstall={true} />
         </div>
     );
 };

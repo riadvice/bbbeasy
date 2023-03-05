@@ -136,6 +136,7 @@ const Login = () => {
                         scrollToFirstError={true}
                         validateTrigger="onSubmit"
                         onFinish={handleLogin}
+                        onValuesChange={() => setMessage('')}
                     >
                         <AddUserForm isLogin={true} />
                         <Form.Item>

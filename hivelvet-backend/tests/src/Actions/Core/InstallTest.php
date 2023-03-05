@@ -124,18 +124,18 @@ final class InstallTest extends Scenario
     public function testInstallWithEmptyData($f3)
     {
         $test      = $this->newTest();
-        $roomLabel = new RoomLabel(\Registry::get('db'));
-        $room      = new Room(\Registry::get('db'));
-        $label     = new Label(\Registry::get('db'));
+        $roomLabel = new RoomLabel();
+        $room      = new Room();
+        $label     = new Label();
 
-        $presetSetting = new PresetSetting(\Registry::get('db'));
-        $preset        = new Preset(\Registry::get('db'));
+        $presetSetting = new PresetSetting();
+        $preset        = new Preset();
 
-        $rolePermission = new RolePermission(\Registry::get('db'));
-        $role           = new Role(\Registry::get('db'));
+        $rolePermission = new RolePermission();
+        $role           = new Role();
 
-        $resetToken = new ResetPasswordToken(\Registry::get('db'));
-        $user       = new User(\Registry::get('db'));
+        $resetToken = new ResetPasswordToken();
+        $user       = new User();
 
         // Cleaning tables for test.
         $roomLabel->erase(['']);
