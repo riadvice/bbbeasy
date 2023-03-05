@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Actions\Presets;
 
-use Enum\UserRole;
-use Faker\Factory as Faker;
-use Models\User;
+use Fake\PresetFaker;
+use Fake\UserFaker;
 use Test\Scenario;
 
 /**
@@ -32,10 +31,10 @@ use Test\Scenario;
  *
  * @coversNothing
  */
-final class IndexTest extends Scenario
+final class CopyTest extends Scenario
 {
-    final protected const LIST_PRESETS_ROUTE = 'GET /presets/';
-    protected $group                         = 'Action Preset Index Presets';
+    final protected const COPY_PRESET_ROUTE = 'GET /presets/copy/';
+    protected $group                        = 'Action Preset Copy';
 
     /**
      * @param mixed $f3
@@ -44,25 +43,30 @@ final class IndexTest extends Scenario
      *
      * @throws \ReflectionException
      */
-    public function testCollect($f3)
+    public function testNonExistingPreset($f3)
     {
         $test = $this->newTest();
 
-        $faker  = Faker::create();
-        $user   = new User();
-        $result = $user->saveUserWithDefaultPreset(
-            $faker->userName,
-            $faker->email,
-            $faker->password(8),
-            UserRole::LECTURER_ID,
-            'User successfully added',
-            'User could not be added',
-        );
-        $test->expect($result, 'User with id "' . $user->id . '" saved to the database with default preset');
+        $f3->mock(self::COPY_PRESET_ROUTE . 404, null, null);
+        $test->expect($this->compareTemplateToResponse('not_found_error.json'), 'Copy non existing preset with id "404" show an error');
 
-        $f3->mock(self::LIST_PRESETS_ROUTE . $user->id);
-        json_decode($f3->get('RESPONSE'));
-        $test->expect(JSON_ERROR_NONE === json_last_error(), 'Collect presets of user with id "' . $user->id . '"');
+        return $test->results();
+    }
+
+    /**
+     * @param mixed $f3
+     *
+     * @return array
+     *
+     * @throws \ReflectionException
+     */
+    public function testValidPreset($f3)
+    {
+        $test = $this->newTest();
+
+        $preset = PresetFaker::create(UserFaker::create());
+        $f3->mock(self::COPY_PRESET_ROUTE . $preset->id, null, null);
+        $test->expect($this->compareArrayToResponse(['result' => 'success']), 'Copy existing preset with id "' . $preset->id . '" pass successfully');
 
         return $test->results();
     }

@@ -44,7 +44,7 @@ final class RoleTest extends Scenario
     public function testGetLecturerRole()
     {
         $test = $this->newTest();
-        $role = new Role(\Registry::get('db'));
+        $role = new Role();
         $role->load(['id = ?', 2]);
         $data = [
             'key'         => $role->id,
@@ -64,7 +64,7 @@ final class RoleTest extends Scenario
     public function testGetAdministratorRole()
     {
         $test = $this->newTest();
-        $role = new Role(\Registry::get('db'));
+        $role = new Role();
         $role->load(['id = ?', 1]);
         $data = [
             'key'         => $role->id,
@@ -85,7 +85,7 @@ final class RoleTest extends Scenario
     {
         $test       = $this->newTest();
         $faker      = Faker::create();
-        $role       = new Role(\Registry::get('db'));
+        $role       = new Role();
         $role->name = $faker->name;
         $role->save();
 
@@ -100,7 +100,7 @@ final class RoleTest extends Scenario
     public function testNameFormatting()
     {
         $test       = $this->newTest();
-        $role       = new Role(\Registry::get('db'));
+        $role       = new Role();
         $role->name = 'roleRole';
         $role->save();
 
@@ -136,7 +136,7 @@ final class RoleTest extends Scenario
         $role   = RoleFaker::create();
         $roleId = $role->id;
 
-        $user           = new User(\Registry::get('db'));
+        $user           = new User();
         $user->username = $faker->userName;
         $user->email    = $faker->email;
         $user->password = $faker->password(8);
@@ -156,8 +156,8 @@ final class RoleTest extends Scenario
     {
         $test       = $this->newTest();
         $resetToken = new ResetPasswordToken();
-        $user       = new User(\Registry::get('db'));
-        $role       = new Role(\Registry::get('db'));
+        $user       = new User();
+        $role       = new Role();
         $resetToken->erase(['']); // Cleaning the table for test.
         $user->erase(['']); // Cleaning the table for test.
         $role->erase(['id NOT IN (?,?)', UserRole::ADMINISTRATOR_ID, UserRole::LECTURER_ID]); // Cleaning the table for test.
@@ -211,7 +211,7 @@ final class RoleTest extends Scenario
         $faker = Faker::create();
         $role  = RoleFaker::create();
 
-        $user           = new User(\Registry::get('db'));
+        $user           = new User();
         $user->username = $faker->userName;
         $user->email    = $faker->email;
         $user->password = $faker->password(8);
@@ -230,7 +230,7 @@ final class RoleTest extends Scenario
     {
         $test       = $this->newTest();
         $data       = ['labels' => ['add', 'delete', 'edit']];
-        $role       = new Role(\Registry::get('db'));
+        $role       = new Role();
         $role->name = 'labels manager';
         $result     = $role->saveRoleAndPermissions($data);
 
@@ -250,7 +250,7 @@ final class RoleTest extends Scenario
         $test       = $this->newTest();
         $faker      = Faker::create();
         $data       = ['labels' => ['add', 'delete', 'edit']];
-        $role       = new Role(\Registry::get('db'));
+        $role       = new Role();
         $role->name = $faker->name;
         $role->saveRoleAndPermissions($data);
         $roleId = $role->id;

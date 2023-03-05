@@ -18,7 +18,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Trans, withTranslation } from 'react-i18next';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useParams, useNavigate } from 'react-router-dom';
 import EN_US from '../locale/en-US.json';
 import { t } from 'i18next';
 
@@ -50,6 +50,7 @@ import { RoomType } from '../types/RoomType';
 import { RecordingType } from '../types/RecordingType';
 import { PresetType } from 'types/PresetType';
 import { LabelType } from 'types/LabelType';
+import { UserType } from '../types/UserType';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -97,6 +98,9 @@ const RoomDetails = () => {
     const [roomRecordings, setRoomRecordings] = React.useState<RecordingType[]>([]);
     const [loading, setLoading] = React.useState<boolean>(false);
 
+    const currentUser: UserType = AuthService.getCurrentUser();
+    const navigate = useNavigate();
+
     const startRoom = () => {
         RoomsService.start_room(room.id)
             .then((result) => {
@@ -108,9 +112,11 @@ const RoomDetails = () => {
             });
     };
     const getPresets = () => {
-        PresetsService.list_presets(AuthService.getCurrentUser().id).then((result) => {
-            setPresets(result.data);
-        });
+        if (currentUser != null) {
+            PresetsService.list_presets(currentUser.id).then((result) => {
+                setPresets(result.data);
+            });
+        }
     };
     const getLabels = () => {
         const labels_data = [];
@@ -159,11 +165,15 @@ const RoomDetails = () => {
     };
 
     useEffect(() => {
-        //Runs only on the first render
-        checkRoomStarted();
-        getPresets();
-        getLabels();
-        getRoomRecordings();
+        if (currentUser != null) {
+            //Runs only on the first render
+            checkRoomStarted();
+            getPresets();
+            getLabels();
+            getRoomRecordings();
+        } else {
+            navigate('/login');
+        }
     }, []);
 
     //edit
@@ -302,7 +312,7 @@ const RoomDetails = () => {
                                             type="link"
                                             icon={<EditOutlined />}
                                             onClick={toggleEdit}
-                                            disabled={room.user_id !== AuthService.getCurrentUser().id}
+                                            disabled={room.user_id !== currentUser.id}
                                         >
                                             {t('edit')}
                                         </Button>
@@ -385,15 +395,18 @@ const RoomDetails = () => {
                                                 </div>
                                             </Space>
                                         </Col>
-                                        <Col span={2}>
-                                            <Avatar
-                                                size={{ xs: 40, sm: 64, md: 85, lg: 100, xl: 120, xxl: 140 }}
-                                                className="hivelvet-btn"
-                                                onClick={startRoom}
-                                            >
-                                                <Trans i18nKey={canStart ? 'start' : isRunning && 'join'} />
-                                            </Avatar>
-                                        </Col>
+                                        {canStart ||
+                                            (isRunning && (
+                                                <Col span={2}>
+                                                    <Avatar
+                                                        size={{ xs: 40, sm: 64, md: 85, lg: 100, xl: 120, xxl: 140 }}
+                                                        className="hivelvet-btn"
+                                                        onClick={startRoom}
+                                                    >
+                                                        <Trans i18nKey={canStart ? 'start' : 'join'} />
+                                                    </Avatar>
+                                                </Col>
+                                            ))}
                                     </Row>
                                 </Card>
                             </Col>

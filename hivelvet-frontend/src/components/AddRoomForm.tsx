@@ -159,6 +159,7 @@ export const AddRoomForm = (props: Props) => {
                 onOk={handleAdd}
                 onCancel={props.close}
                 footer={null}
+                maskClosable={false}
             >
                 <Form
                     layout="vertical"

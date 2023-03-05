@@ -17,7 +17,6 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import Notifications from './Notifications';
 
 import { PageHeader } from '@ant-design/pro-layout';
 
@@ -38,12 +37,14 @@ import {
     message,
     InputNumber,
     Space,
+    Dropdown,
+    Menu,
 } from 'antd';
 import {
     CheckOutlined,
     CloseOutlined,
-    DeleteOutlined,
     EditOutlined,
+    MoreOutlined,
     QuestionCircleOutlined,
     SearchOutlined,
     UploadOutlined,
@@ -62,6 +63,7 @@ import EmptyData from './EmptyData';
 import { getIconName } from '../types/GetIconName';
 import { DataContext } from 'lib/RoomsContext';
 import AddPresetForm from './AddPresetForm';
+import Notifications from './Notifications';
 
 import axios from 'axios';
 import { apiRoutes } from '../routing/backend-config';
@@ -74,29 +76,40 @@ import { MyPresetType } from '../types/MyPresetType';
 import { SubCategoryType } from '../types/SubCategoryType';
 import { UploadFile } from 'antd/lib/upload/interface';
 
-const { Link, Title } = Typography;
+const { Title } = Typography;
 
 interface PresetColProps {
     key: number;
     preset: MyPresetType;
     editName: boolean;
     editClickHandler: (newPreset: MyPresetType, oldPreset: MyPresetType) => void;
+    copyClickHandler: () => void;
     deleteClickHandler: () => void;
 }
 type formType = {
     name: string;
 };
 
-const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editName, editClickHandler, deleteClickHandler }) => {
+const PresetsCol: React.FC<PresetColProps> = ({
+    key,
+    preset,
+    editName,
+    editClickHandler,
+    copyClickHandler,
+    deleteClickHandler,
+}) => {
     const [file, setFile] = React.useState<UploadFile>(null);
     const [fileList, setFileList] = React.useState<UploadFile[]>(null);
     const [isShown, setIsShown] = useState<boolean>(false);
     const [modalTitle, setModalTitle] = React.useState<string>('');
+    const [modalTitleTrans, setModalTitleTrans] = React.useState<string>('');
     const [modalContent, setModalContent] = React.useState<SubCategoryType[]>([]);
     const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [errorsEdit, setErrorsEdit] = React.useState({});
     const isDefault = preset['name'] == 'default';
+    const deleteEnabled = deleteClickHandler != null && !isDefault;
+
     const props = {
         beforeUpload: (file) => {
             const isPNG = file.type === 'image/png' || file.type === 'image/jpeg' || file.type === 'image/jpg';
@@ -125,9 +138,10 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editName, editClick
         },
     };
 
-    const showModal = (title: string, content: SubCategoryType[]) => {
+    const showModal = (title: string, titleTrans: string, content: SubCategoryType[]) => {
         setIsModalVisible(true);
         setModalTitle(title);
+        setModalTitleTrans(titleTrans);
         setModalContent(content);
         const indexLogo = content.findIndex((item) => item.type === 'file');
         if (indexLogo > -1 && content[indexLogo].value != '') {
@@ -139,9 +153,6 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editName, editClick
             setFileList([presetLogo]);
             setFile(presetLogo);
         }
-    };
-    const getName = (item) => {
-        return item.replaceAll('_', ' ').charAt(0).toUpperCase() + item.replaceAll('_', ' ').slice(1);
     };
 
     //delete
@@ -315,23 +326,40 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editName, editClick
                     </div>
                 }
                 extra={
-                    deleteClickHandler != null &&
-                    !isDefault && (
-                        <div className="table-actions">
-                            <Popconfirm
-                                title={t('delete_preset_confirm')}
-                                icon={<QuestionCircleOutlined className="red-icon" />}
-                                onConfirm={() => handleDelete()}
-                            >
-                                <Link>
-                                    <DeleteOutlined /> <Trans i18nKey="delete" />
-                                </Link>
-                            </Popconfirm>
-                        </div>
-                    )
+                    copyClickHandler != null || deleteEnabled ? (
+                        <Dropdown
+                            key="more"
+                            overlay={
+                                <Menu>
+                                    {copyClickHandler != null && (
+                                        <Menu.Item key="1" onClick={copyClickHandler}>
+                                            <Trans i18nKey={'copy'} />
+                                        </Menu.Item>
+                                    )}
+                                    {deleteEnabled && (
+                                        <Popconfirm
+                                            title={t('delete_preset_confirm')}
+                                            icon={<QuestionCircleOutlined className="red-icon" />}
+                                            onConfirm={() => handleDelete()}
+                                        >
+                                            <Menu.Item key="2" danger>
+                                                <Trans i18nKey={'delete'} />
+                                            </Menu.Item>
+                                        </Popconfirm>
+                                    )}
+                                </Menu>
+                            }
+                            placement={LocaleService.direction == 'rtl' ? 'bottomLeft' : 'bottomRight'}
+                        >
+                            <MoreOutlined />
+                        </Dropdown>
+                    ) : null
                 }
             >
                 {preset.categories.map((item, subIndex) => {
+                    const filteredElements = Object.keys(EN_US).filter((elem) => EN_US[elem] == item.name);
+                    const category = filteredElements.length != 0 ? filteredElements[0] : item.name;
+
                     return (
                         <Tooltip
                             key={subIndex + '-' + item.name}
@@ -348,26 +376,26 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editName, editClick
                             title={
                                 item.enabled == true ? (
                                     <>
-                                        <Title level={5}>{item.name}</Title>
+                                        <Title level={5}>{t(category)}</Title>
                                         <ul>
                                             {item.subcategories.map((subItem) => (
                                                 <li
                                                     key={item.name + '_' + subItem.name}
                                                     className={subItem.value == '' ? 'text-grey' : 'text-black'}
                                                 >
-                                                    {getName(subItem.name)}
+                                                    {t(subItem.name)}
                                                 </li>
                                             ))}
                                         </ul>
                                     </>
                                 ) : (
-                                    <Title level={5}>{item.name}</Title>
+                                    <Title level={5}>{t(category)}</Title>
                                 )
                             }
                         >
                             <Button
                                 onClick={() =>
-                                    editClickHandler != null ? showModal(item.name, item.subcategories) : null
+                                    editClickHandler != null ? showModal(item.name, category, item.subcategories) : null
                                 }
                                 disabled={!item.enabled}
                                 type="link"
@@ -379,19 +407,20 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editName, editClick
 
                 {editClickHandler != null && (
                     <Modal
-                        title={modalTitle}
+                        title={t(modalTitle)}
                         className="presets-modal"
                         centered
                         open={isModalVisible}
                         onOk={() => setIsModalVisible(false)}
                         onCancel={() => setIsModalVisible(false)}
                         footer={null}
+                        maskClosable={false}
                     >
                         <div className="presets-body">
                             <Form>
                                 {modalContent.map((item) => (
                                     <div key={modalTitle + '_' + item.name}>
-                                        <Form.Item label={getName(item.name)} name={item.name}>
+                                        <Form.Item label={t(item.name)} name={item.name}>
                                             {item.type == 'bool' && (
                                                 <Switch
                                                     defaultChecked={item.value == true ? true : false}
@@ -404,7 +433,7 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editName, editClick
                                             {item.type === 'string' && (
                                                 <Input
                                                     defaultValue={item.value}
-                                                    placeholder={getName(item.name)}
+                                                    placeholder={t(item.name)}
                                                     onChange={(event) => {
                                                         item.value = event.target.value;
                                                     }}
@@ -433,7 +462,7 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editName, editClick
                                                     accept=".png,.jpg,.jpeg"
                                                 >
                                                     <Button icon={<UploadOutlined />}>
-                                                        Upload jpg, jpeg, png only
+                                                        <Trans i18nKey="upload_img" />
                                                     </Button>
                                                 </Upload>
                                             )}
@@ -443,7 +472,7 @@ const PresetsCol: React.FC<PresetColProps> = ({ key, preset, editName, editClick
                                                     min={1}
                                                     max={100}
                                                     defaultValue={item.value}
-                                                    placeholder={item.name}
+                                                    placeholder={t(item.name)}
                                                     onChange={(val) => (item.value = val)}
                                                 />
                                             )}
@@ -518,6 +547,22 @@ const Presets = () => {
         }
     };
 
+    //copy
+    const copyPreset = (id) => {
+        PresetsService.copy_preset(id)
+            .then((response) => {
+                //add new preset
+                const newPreset: MyPresetType = response.data.preset;
+                setMyPresets([...myPresets, newPreset]);
+                dataContext.setDataPresets([...dataContext.dataPresets, newPreset]);
+
+                Notifications.openNotificationWithIcon('success', t('copy_preset_success'));
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
+
     //delete
     const deletePreset = (id) => {
         PresetsService.delete_preset(id)
@@ -586,6 +631,11 @@ const Presets = () => {
                             editName={AuthService.isAllowedAction(actions, 'edit')}
                             editClickHandler={
                                 AuthService.isAllowedAction(actions, 'edit_subcategories') ? editPreset : null
+                            }
+                            copyClickHandler={
+                                AuthService.isAllowedAction(actions, 'copy')
+                                    ? copyPreset.bind(this, singlePresets.id)
+                                    : null
                             }
                             deleteClickHandler={
                                 AuthService.isAllowedAction(actions, 'delete')

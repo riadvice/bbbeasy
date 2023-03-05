@@ -34,7 +34,6 @@ use Test\Scenario;
  */
 final class StartTest extends Scenario
 {
-    final protected const LOGIN_ROUTE      = 'POST /account/login';
     final protected const START_ROOM_ROUTE = 'POST /rooms/';
     protected $group                       = 'Action Room Start';
 

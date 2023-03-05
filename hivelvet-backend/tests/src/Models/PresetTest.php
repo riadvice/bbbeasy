@@ -46,7 +46,7 @@ final class PresetTest extends Scenario
         $test            = $this->newTest();
         $faker           = Faker::create();
         $user            = UserFaker::create();
-        $preset          = new Preset(\Registry::get('db'));
+        $preset          = new Preset();
         $preset->name    = $faker->name;
         $preset->user_id = $user->id;
         $result          = $preset->addDefaultSettings('Default preset successfully added', 'Default preset could not be added');
@@ -91,7 +91,7 @@ final class PresetTest extends Scenario
     {
         $test            = $this->newTest();
         $user            = UserFaker::create();
-        $preset          = new Preset(\Registry::get('db'));
+        $preset          = new Preset();
         $preset->name    = 'presetPreset';
         $preset->user_id = $user->id;
         $result          = $preset->addDefaultSettings('Default preset successfully added', 'Default preset could not be added');
@@ -132,7 +132,7 @@ final class PresetTest extends Scenario
     public function testGetDefaultOneByUserId()
     {
         $test       = $this->newTest();
-        $preset     = new Preset(\Registry::get('db'));
+        $preset     = new Preset();
         $user       = UserFaker::create();
         $userPreset = $user->saveDefaultPreset(true);
 
@@ -149,7 +149,7 @@ final class PresetTest extends Scenario
     public function testCollectAllByUserId()
     {
         $test   = $this->newTest();
-        $preset = new Preset(\Registry::get('db'));
+        $preset = new Preset();
         $user   = UserFaker::create();
 
         $preset->erase(['']); // Cleaning the table for test.

@@ -511,6 +511,7 @@ const Users = () => {
                     onOk={handleAdd}
                     onCancel={cancelAdd}
                     footer={null}
+                    maskClosable={false}
                 >
                     <Form
                         layout="vertical"
@@ -520,6 +521,7 @@ const Users = () => {
                         hideRequiredMark
                         onFinish={handleAdd}
                         validateTrigger="onSubmit"
+                        onValuesChange={() => setErrorsAdd('')}
                     >
                         {errorsAdd != '' && (
                             <Alert

@@ -39,6 +39,7 @@ const DynamicIcon = (props: Props) => {
         'playback-podcast',
         'activity-reports',
         'preset',
+        'permissions',
     ];
 
     if (hivelvetIcons.includes(type.toLowerCase())) {

@@ -42,7 +42,7 @@ final class SettingTest extends Scenario
     public function testGetAllSettings()
     {
         $test    = $this->newTest();
-        $setting = new Setting(\Registry::get('db'));
+        $setting = new Setting();
 
         $test->expect(10 === \count($setting->getAllSettings()), 'getAllSettings() returned all settings');
 
@@ -56,7 +56,7 @@ final class SettingTest extends Scenario
     {
         $test    = $this->newTest();
         $faker   = Faker::create();
-        $setting = new Setting(\Registry::get('db'));
+        $setting = new Setting();
 
         /** @var Setting $settings */
         $settings = $setting->find([], ['limit' => 1])->current();
