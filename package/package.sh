@@ -31,6 +31,7 @@ clean_workspace() {
   mkdir -p "$BACKEND_WORKSPACE"
   mkdir -p "$INSTALLER_WORKSPACE"
   mkdir -p "$WEBAPP_WORKSPACE"
+  mkdir -p "$DOCS_WORKSPACE"
 }
 
 build_backend() {
@@ -72,7 +73,7 @@ build_docs() {
   yarn clear
   yarn docusaurus clear
   yarn build
-  cp -r "$BASEDIR/../hivelvet-frontend/build/" "$DOCS_WORKSPACE"
+  cp -r "$BASEDIR/../hivelvet-docs/build/." "$DOCS_WORKSPACE"
 }
 
 open_workspace() {
@@ -83,6 +84,7 @@ run() {
   build_backend
   build_installer
   build_webapp
+  build_docs
   open_workspace
   docker build -t riadvice/hivelvet .
 

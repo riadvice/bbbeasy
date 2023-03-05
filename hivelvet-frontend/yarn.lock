@@ -6927,7 +6927,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dayjs@npm:^1.10.4, dayjs@npm:^1.11.1, dayjs@npm:^1.11.4, dayjs@npm:~1.11.5":
+"dayjs@npm:^1.10.4, dayjs@npm:^1.11.1, dayjs@npm:^1.11.4, dayjs@npm:^1.11.7, dayjs@npm:~1.11.5":
   version: 1.11.7
   resolution: "dayjs@npm:1.11.7"
   checksum: 5003a7c1dd9ed51385beb658231c3548700b82d3548c0cfbe549d85f2d08e90e972510282b7506941452c58d32136d6362f009c77ca55381a09c704e9f177ebb
@@ -9580,6 +9580,7 @@ __metadata:
     craco-less: ^2.0.0
     craco-plugin-react-hot-reload: ^0.1.0
     cypress: ^10.11.0
+    dayjs: ^1.11.7
     dotenv: ^16.0.3
     dotenv-cra: ^3.0.3
     eslint: ^8.34.0
