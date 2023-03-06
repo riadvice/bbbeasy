@@ -1,2 +1,2 @@
-app/config/config-*.ini
-logs/*.log
+hivelvet-backend/app/config/config-*.ini
+hivelvet-backend/logs/*.log

@@ -56,7 +56,7 @@ build_installer() {
   yarn cache clean
   NODE_ENV=production yarn install
   yarn build-installer
-  cp -r "$BASEDIR/../hivelvet-frontend/dist/." "$INSTALLER_WORKSPACE"
+  cp -a "$BASEDIR/../hivelvet-frontend/dist/." "$INSTALLER_WORKSPACE"
 }
 
 build_webapp() {
@@ -73,7 +73,7 @@ build_docs() {
   yarn clear
   yarn docusaurus clear
   yarn build
-  cp -r "$BASEDIR/../hivelvet-docs/build/." "$DOCS_WORKSPACE"
+  cp -a "$BASEDIR/../hivelvet-docs/build/." "$DOCS_WORKSPACE"
 }
 
 open_workspace() {
