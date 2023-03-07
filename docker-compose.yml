@@ -18,9 +18,7 @@ services:
       hivelvet-network:
         ipv4_address: 172.55.0.10
     volumes:
-      - hivelvet-backend-repo:/var/www/hivelvet-backend/
-      - hivelvet-frontend-repo:/var/www/hivelvet-webapp/
-      - hivelvet-docs-repo:/var/www/hivelvet-docs/
+      - hivelvet-repo:/var/www/html
       - ./docker/hivelvet.conf:/etc/nginx/conf.d/default.conf:r
       - ./docker/default.ini:/var/www/hivelvet-backend/app/config/default.ini:r
       - ./docker/config-production.ini:/var/www/hivelvet/app/config/config-production.ini:r
@@ -36,9 +34,7 @@ services:
       hivelvet-network:
         ipv4_address: 172.55.0.20
     volumes:
-      - hivelvet-backend-repo:/var/www/hivelvet-backend/
-      - hivelvet-frontend-repo:/var/www/hivelvet-webapp/
-      - hivelvet-docs-repo:/var/www/hivelvet-docs/
+      - hivelvet-repo:/var/www/html
       - ./docker/php.ini:/usr/local/etc/php/conf.d/custom.ini:rw
       - ./docker/www-hivelvet.conf:/usr/local/etc/php-fpm.d/www-hivelvet.conf:rw
       - ./docker/config-production.ini:/var/www/hivelvet-backend/app/config/config-production.ini:r
@@ -64,7 +60,5 @@ services:
         ipv4_address: 172.55.0.60
 
 volumes:
-  hivelvet-backend-repo:
-  hivelvet-frontend-repo:
-  hivelvet-docs-repo:
+  hivelvet-repo:
   hivelvet-db-repo:
