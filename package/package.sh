@@ -34,10 +34,12 @@ clean_workspace() {
   mkdir -p "$DOCS_WORKSPACE"
 }
 
-build_backend() {
-  clean_workspace
+prepare_dockerfile() {
   cp -r "$BASEDIR/hivelvet.Dockerfile" "$BUILD_WORKSPACE/Dockerfile"
   cp -r "$BASEDIR/hivelvet.dockerignore" "$BUILD_WORKSPACE/.dockerignore"
+}
+
+build_backend() {
   cp -r "$BASEDIR/../hivelvet-backend/app/" "$BACKEND_WORKSPACE/app"
   cp -r "$BASEDIR/../hivelvet-backend/db/" "$BACKEND_WORKSPACE/db"
   cp -r "$BASEDIR/../hivelvet-backend/logs/" "$BACKEND_WORKSPACE/logs"
@@ -81,6 +83,8 @@ open_workspace() {
 }
 
 run() {
+  prepare_dockerfile
+  clean_workspace
   build_backend
   build_installer
   build_webapp
