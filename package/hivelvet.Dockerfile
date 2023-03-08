@@ -40,6 +40,7 @@ RUN set -xe \
         bcmath \
         intl \
 		pgsql \
+        pdo_pgsql \
         mbstring \
         opcache \
         sockets \
@@ -50,6 +51,7 @@ RUN set -xe \
     && pickle install uploadprogress \
     && docker-php-ext-enable \
 	    pgsql \
+        pdo_pgsql \
         redis \
         xdebug \
         zip \
@@ -70,7 +72,9 @@ WORKDIR /var/www/html/hivelvet-backend
 RUN composer install \
   --optimize-autoloader \
   --no-interaction \
-  --no-progress
+  --no-cache \
+  --no-progress \
+  --quiet
 
 EXPOSE 9000
-CMD ["php-fpm"]
+CMD php vendor/bin/phinx migrate -e production && php-fpm

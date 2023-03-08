@@ -83,8 +83,8 @@ open_workspace() {
 }
 
 run() {
-  prepare_dockerfile
   clean_workspace
+  prepare_dockerfile
   build_backend
   build_installer
   build_webapp

@@ -11,6 +11,8 @@ services:
     restart: always
     image: nginx:1.23.3-alpine
     container_name: hv_nginx
+    depends_on:
+      - hivelvet
     ports:
       - "80:80"
       - "443:443"
@@ -19,15 +21,19 @@ services:
         ipv4_address: 172.55.0.10
     volumes:
       - hivelvet-repo:/var/www/html
-      - ./docker/hivelvet.conf:/etc/nginx/conf.d/default.conf:r
-      - ./docker/default.ini:/var/www/hivelvet-backend/app/config/default.ini:r
-      - ./docker/config-production.ini:/var/www/hivelvet/app/config/config-production.ini:r
-      - ./docker/logs/backend:/var/www/hivelvet/logs/:rw
+      - ./docker/hivelvet.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./docker/phinx.yml:/var/www/html/hivelvet-backend/phinx.yml:ro
+      - ./docker/default.ini:/var/www/html/hivelvet-backend/app/config/default.ini:ro
+      - ./docker/config-production.ini:/var/www/html/hivelvet/app/config/config-production.ini:ro
+      - ./docker/logs/backend:/var/www/html/hivelvet/logs/:rw
       - ./docker/logs/nginx:/var/log/nginx/:rw
   hivelvet:
     restart: always
     image: riadvice/hivelvet
     container_name: hv_app
+    depends_on:
+      - db
+      - cache
     ports:
       - "9000:9000"
     networks:
@@ -35,30 +41,42 @@ services:
         ipv4_address: 172.55.0.20
     volumes:
       - hivelvet-repo:/var/www/html
-      - ./docker/php.ini:/usr/local/etc/php/conf.d/custom.ini:rw
-      - ./docker/www-hivelvet.conf:/usr/local/etc/php-fpm.d/www-hivelvet.conf:rw
-      - ./docker/config-production.ini:/var/www/hivelvet-backend/app/config/config-production.ini:r
-      - ./docker/hvlogs/:/var/www/hivelvet-backend/logs/
-      - ./docker/hvcache/:/var/www/hivelvet-backend/tmp/
+      - ./docker/php.ini:/usr/local/etc/php/conf.d/custom.ini:ro
+      - ./docker/phinx.yml:/var/www/html/hivelvet-backend/phinx.yml:ro
+      - ./docker/www-hivelvet.conf:/usr/local/etc/php-fpm.d/www-hivelvet.conf:ro
+      - ./docker/config-production.ini:/var/www/html/hivelvet-backend/app/config/config-production.ini:ro
+      - ./docker/logs/backend/:/var/www/html/hivelvet-backend/logs/
+      - ./docker/cache/:/var/www/html/hivelvet-backend/tmp/
   db:
     restart: always
     image: postgres:15.2-alpine3.17
     container_name: hv_db
+    ports:
+      - "5432:5432"
     environment:
-      POSTGRES_PASSWORD: hv
+      - POSTGRES_DB=hivelvet
+      - POSTGRES_USER=hivelvet
+      - POSTGRES_PASSWORD=hivelvet
     networks:
       hivelvet-network:
         ipv4_address: 172.55.0.50
     volumes:
-      - hivelvet-db-repo:/data/postgres
+      - postgresdata:/var/lib/postgresql/data
   cache:
     restart: always
     image: redis:7.0.9-alpine3.17
     container_name: hv_cache
+    ports:
+      - "6379:6379"
     networks:
       hivelvet-network:
         ipv4_address: 172.55.0.60
 
 volumes:
   hivelvet-repo:
-  hivelvet-db-repo:
+  postgresdata:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./docker/data/postgres
