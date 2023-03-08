@@ -26,7 +26,7 @@ It is important to understand that Hivelvet installation have 2 stesp:
 Installing Hivelvet happens through a single command line.
 
 ```bash
-wget -qO- https://ubuntu.bigbluebutton.org/bbb-install-2.5.sh | bash -s -- OPTIONS
+wget -qO- https://raw.githubusercontent.com/riadvice/hivelvet/develop/install.sh | bash -s -- OPTIONS
 ```
 
 ### Web browser install
