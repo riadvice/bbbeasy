@@ -40,6 +40,7 @@ RUN set -xe \
         bcmath \
         intl \
 		pgsql \
+        pdo_pgsql \
         mbstring \
         opcache \
         sockets \
@@ -50,6 +51,7 @@ RUN set -xe \
     && pickle install uploadprogress \
     && docker-php-ext-enable \
 	    pgsql \
+        pdo_pgsql \
         redis \
         xdebug \
         zip \
@@ -59,13 +61,20 @@ RUN set -xe \
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Conf PHP
-COPY . /var/www
+COPY . /var/www/html
 
 # Composer
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
-WORKDIR /var/www/hivelvet-backend
-RUN composer install -o --no-dev
+WORKDIR /var/www/html/hivelvet-backend
+
+# run composer install to install the dependencies
+RUN composer install \
+  --optimize-autoloader \
+  --no-interaction \
+  --no-cache \
+  --no-progress \
+  --quiet
 
 EXPOSE 9000
-CMD ["php-fpm"]
+CMD php vendor/bin/phinx migrate -e production && php-fpm

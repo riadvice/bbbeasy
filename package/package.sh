@@ -31,12 +31,15 @@ clean_workspace() {
   mkdir -p "$BACKEND_WORKSPACE"
   mkdir -p "$INSTALLER_WORKSPACE"
   mkdir -p "$WEBAPP_WORKSPACE"
+  mkdir -p "$DOCS_WORKSPACE"
+}
+
+prepare_dockerfile() {
+  cp -r "$BASEDIR/hivelvet.Dockerfile" "$BUILD_WORKSPACE/Dockerfile"
+  cp -r "$BASEDIR/hivelvet.dockerignore" "$BUILD_WORKSPACE/.dockerignore"
 }
 
 build_backend() {
-  clean_workspace
-  cp -r "$BASEDIR/hivelvet.Dockerfile" "$BUILD_WORKSPACE/Dockerfile"
-  cp -r "$BASEDIR/hivelvet.dockerignore" "$BUILD_WORKSPACE/.dockerignore"
   cp -r "$BASEDIR/../hivelvet-backend/app/" "$BACKEND_WORKSPACE/app"
   cp -r "$BASEDIR/../hivelvet-backend/db/" "$BACKEND_WORKSPACE/db"
   cp -r "$BASEDIR/../hivelvet-backend/logs/" "$BACKEND_WORKSPACE/logs"
@@ -52,19 +55,19 @@ build_backend() {
 build_installer() {
   cd "$BASEDIR/../hivelvet-frontend/"
   rm -rf dist/
+  yarn cache clean
   NODE_ENV=production yarn install
-  yarn clear
   yarn build-installer
-  cp -r "$BASEDIR/../hivelvet-frontend/dist/" "$INSTALLER_WORKSPACE"
+  cp -a "$BASEDIR/../hivelvet-frontend/dist/." "$INSTALLER_WORKSPACE"
 }
 
 build_webapp() {
   cd "$BASEDIR/../hivelvet-frontend/"
   rm -rf dist/
+  yarn cache clean
   NODE_ENV=production yarn install
-  yarn clear
   yarn build
-  cp -r "$BASEDIR/../hivelvet-frontend/dist/" "$WEBAPP_WORKSPACE"
+  cp -a "$BASEDIR/../hivelvet-frontend/dist/." "$WEBAPP_WORKSPACE"
 }
 
 build_docs() {
@@ -72,7 +75,7 @@ build_docs() {
   yarn clear
   yarn docusaurus clear
   yarn build
-  cp -r "$BASEDIR/../hivelvet-frontend/build/" "$DOCS_WORKSPACE"
+  cp -a "$BASEDIR/../hivelvet-docs/build/." "$DOCS_WORKSPACE"
 }
 
 open_workspace() {
@@ -80,9 +83,12 @@ open_workspace() {
 }
 
 run() {
+  clean_workspace
+  prepare_dockerfile
   build_backend
   build_installer
   build_webapp
+  build_docs
   open_workspace
   docker build -t riadvice/hivelvet .
 
