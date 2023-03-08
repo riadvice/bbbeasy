@@ -25,6 +25,11 @@
 # Changelog:
 #   2023-02-22 GTR Initial Version
 
+if [ "$(whoami)" != "root" ]; then
+  echo "Error: You must be root to run this script"
+  exit 1
+fi
+
 # The real location of the script
 SCRIPT=$(readlink -f "$0")
 
@@ -41,12 +46,55 @@ NOW=$(date +"%Y-%m-%d_%H.%M.%S")
 APP_DIR=$BASEDIR/../
 
 # Current git branch name transforms '* dev-0.5' to 'dev-0.5'
-GIT_BRANCH=$(git --git-dir="$BASEDIR/../.git" branch | sed -n '/\* /s///p')
+# GIT_BRANCH=$(git --git-dir="$BASEDIR/../.git" branch | sed -n '/\* /s///p')
 
 # Git tag, commits ahead & commit id under format '0.4-160-g3bb256c'
-GIT_VERSION=$(git --git-dir="$BASEDIR/../.git" describe --tags --always HEAD)
+# GIT_VERSION=$(git --git-dir="$BASEDIR/../.git" describe --tags --always HEAD)
 
-INSTALL_DIR=/opt/hivelvet
+echo "HIVELVET - INSTALL SCRIPT"
+
+# Setup default values
+HV_HOST=$(hostname)
+INSTALL_TYPE="docker"
+INSTALL_DIR="/opt/hivelvet"
+
+read_options() {
+  while [[ $# -gt 0 ]]; do
+    case $1 in
+    -h | --host)
+      HV_HOST="$2"
+      shift
+      ;;
+    -t | --type)
+      case "$2" in
+      docker | git)
+        INSTALL_TYPE="$2"
+        shift
+        ;;
+      *)
+        echo "Error: option --type only accepts \"docker\" or \"git\""
+        exit 1
+        ;;
+      esac
+      shift
+      ;;
+    -d | --dir)
+      INSTALL_DIR="$2"
+      shift
+      ;;
+    *)
+      echo "Unknown option: $1"
+      exit 1
+      ;;
+    esac
+    shift
+  done
+  echo "---- INSTALL OPTIONS ----"
+  echo "Hostname  : $HV_HOST"
+  echo "Type      : $INSTALL_TYPE"
+  echo "Directory : $INSTALL_DIR"
+  echo "-------------------------"
+}
 
 install_deps() {
   cd /tmp
@@ -86,6 +134,26 @@ install_deps() {
   sudo npm install -g pm2
 }
 
+install_docker() {
+  sudo mkdir -p "$INSTALL_DIR"
+  cd "$INSTALL_DIR"
+  wget -nc https://raw.githubusercontent.com/riadvice/hivelvet/master/docker-compose.yml
+
+  # Create docker directory
+  mkdir -p "docker"
+  # Create docker data directory
+  mkdir -p "docker/data/postgres"
+
+  cd "docker"
+  # Download docker configuration files
+  wget -nc https://raw.githubusercontent.com/riadvice/hivelvet/master/docker/default.ini
+  wget -nc https://raw.githubusercontent.com/riadvice/hivelvet/master/docker/config-production.ini
+  wget -nc https://raw.githubusercontent.com/riadvice/hivelvet/master/docker/hivelvet.conf
+  wget -nc https://raw.githubusercontent.com/riadvice/hivelvet/master/docker/phinx.yml
+  wget -nc https://raw.githubusercontent.com/riadvice/hivelvet/master/docker/php.ini
+  wget -nc https://raw.githubusercontent.com/riadvice/hivelvet/master/docker/www-hivelvet.conf
+}
+
 clone_repo() {
   sudo mkdir -p "$INSTALL_DIR"
   sudo chown -R "$USER" "$INSTALL_DIR"
@@ -94,8 +162,13 @@ clone_repo() {
 }
 
 install() {
-  install_deps
-  clone_repo
+  read_options "$@"
+  if [[ "$INSTALL_TYPE" == "docker" ]]; then
+    install_docker
+  elif [[ "$INSTALL_TYPE" == "git" ]]; then
+    install_deps
+    clone_repo
+  fi
 }
 
-install "$@" 2>&1 | tee -a "/var/log/logs/hivelvet-install-$NOW.log"
+install "$@" 2>&1 | tee -a "/tmp/hivelvet-install-$NOW.log"
