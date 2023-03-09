@@ -153,17 +153,26 @@ install_docker() {
   wget -nc https://raw.githubusercontent.com/riadvice/hivelvet/master/docker/php.ini
   wget -nc https://raw.githubusercontent.com/riadvice/hivelvet/master/docker/www-hivelvet.conf
 
-  generate_password
+  cd "$INSTALL_DIR"
+
+  generate_passwords
+  setup_host
+  generate_ssl
 }
 
-generate_password() {
-  CURRENT_PASSWORD=$(grep "POSTGRES_PASSWORD=" ../docker-compose.yml | cut -d= -f2)
+generate_passwords() {
+  CURRENT_PASSWORD=$(grep "POSTGRES_PASSWORD=" docker-compose.yml | cut -d= -f2)
+  # If docker-compose.yml has not been configured
   if [[ "$CURRENT_PASSWORD" == "hivelvet" ]]; then
     PG_PASS=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
-    sed -i "s/POSTGRES_PASSWORD=.*/POSTGRES_PASSWORD=$PG_PASS/g" ../docker-compose.yml
-    sed -i "s/db.password =.*/db.password = $PG_PASS/g" config-production.ini
-    sed -i "/\(pass:\).*/{s//pass: $PG_PASS/;:a;n;ba}" phinx.yml
+    sed -i "s/POSTGRES_PASSWORD=.*/POSTGRES_PASSWORD=$PG_PASS/g" docker-compose.yml
+    sed -i "s/db.password =.*/db.password = $PG_PASS/g" docker/config-production.ini
+    sed -i "/\(pass:\).*/{s//pass: $PG_PASS/;:a;n;ba}" docker/phinx.yml
   fi
+}
+
+setup_host() {
+  sed -i "s/server_name.*/server_name $HV_HOST;/g" docker/hivelvet.conf
 }
 
 clone_repo() {
