@@ -74,7 +74,7 @@ const config = {
           },
           {
             type: 'doc',
-            docId: 'administrator-guide/manage-docs-versions',
+            docId: 'administrator-guide/software',
             sidebarId: 'administrator',
             position: 'left',
             label: 'Administrator Guide',
@@ -117,7 +117,7 @@ const config = {
               },
               {
                 label: 'Administrator Guide',
-                to: '/administrator-guide/manage-docs-versions',
+                to: '/administrator-guide/software',
               },
               {
                 label: 'Developer Guide',

@@ -73,6 +73,7 @@ build_webapp() {
 build_docs() {
   cd "$BASEDIR/../hivelvet-docs/"
   yarn clear
+  NODE_ENV=production yarn install
   yarn docusaurus clear
   yarn build
   cp -a "$BASEDIR/../hivelvet-docs/build/." "$DOCS_WORKSPACE"
