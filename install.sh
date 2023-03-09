@@ -193,9 +193,9 @@ setup_host() {
 generate_ssl() {
   sudo certbot certonly --standalone --non-interactive --preferred-challenges http -d $HV_HOST --email $ADMIN_EMAIL --agree-tos -n
   # Create ssl certificates directory
-  mkdir -p "$INSTALL_DIR/docker/ssl"
-  ln -s /etc/letsencrypt/live/meetings.riadvice.ovh/fullchain.pem docker/ssl/fullchain.pem
-  ln -s /etc/letsencrypt/live/meetings.riadvice.ovh/privkey.pem docker/ssl/privkey.pem
+  mkdir -p "$INSTALL_DIR/docker/certs"
+  ln -s /etc/letsencrypt/live/meetings.riadvice.ovh/fullchain.pem docker/certs/fullchain.pem
+  ln -s /etc/letsencrypt/live/meetings.riadvice.ovh/privkey.pem docker/certs/privkey.pem
 }
 
 clone_repo() {
