@@ -27,7 +27,7 @@ final class AddExpiresColumnToSession extends AbstractMigration
     public function up(): void
     {
         $table = $this->table('users_sessions');
-        $table->addColumn('expires', 'datetime', ['timezone' => true, 'null' => false])
+        $table->addColumn('expires', 'datetime', ['timezone' => true, 'null' => true])
             ->save()
         ;
     }

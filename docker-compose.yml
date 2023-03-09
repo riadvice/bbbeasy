@@ -23,8 +23,8 @@ services:
       - ./docker/hivelvet.conf:/etc/nginx/conf.d/default.conf:ro
       - ./docker/phinx.yml:/var/www/html/hivelvet-backend/phinx.yml:ro
       - ./docker/default.ini:/var/www/html/hivelvet-backend/app/config/default.ini:ro
-      - ./docker/config-production.ini:/var/www/html/hivelvet/app/config/config-production.ini:ro
-      - ./docker/logs/backend:/var/www/html/hivelvet/logs/:rw
+      - ./docker/config-production.ini:/var/www/html/hivelvet-backend/app/config/config-production.ini:ro
+      - ./docker/logs/backend:/var/www/html/hivelvet-backend/logs/:rw
       - ./docker/logs/nginx:/var/log/nginx/:rw
   hivelvet:
     restart: always
