@@ -57,7 +57,9 @@ echo "HIVELVET - INSTALL SCRIPT"
 HV_HOST=$(hostname)
 INSTALL_TYPE="docker"
 INSTALL_DIR="/opt/hivelvet"
+ADMIN_EMAIL=$(grep '^root:' /etc/passwd | awk -F'[<>]' '{print $2}')
 
+# Read CLI options
 read_options() {
   while [[ $# -gt 0 ]]; do
     case $1 in
@@ -89,11 +91,24 @@ read_options() {
     esac
     shift
   done
+  # TODO: capture admin email option
   echo "---- INSTALL OPTIONS ----"
   echo "Hostname  : $HV_HOST"
   echo "Type      : $INSTALL_TYPE"
   echo "Directory : $INSTALL_DIR"
+  echo "Email     : $ADMIN_EMAIL"
   echo "-------------------------"
+}
+
+install_docker_deps() {
+  apt install -y certbot
+  mkdir -p /etc/apt/keyrings
+  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+  echo \
+    "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list >/dev/null
+  apt-get update
+  apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
 }
 
 install_deps() {
@@ -175,6 +190,14 @@ setup_host() {
   sed -i "s/server_name.*/server_name $HV_HOST;/g" docker/hivelvet.conf
 }
 
+generate_ssl() {
+  sudo certbot certonly --standalone --non-interactive --preferred-challenges http -d $HV_HOST --email $ADMIN_EMAIL --agree-tos -n
+  # Create ssl certificates directory
+  mkdir -p "$INSTALL_DIR/docker/ssl"
+  ln -s /etc/letsencrypt/live/meetings.riadvice.ovh/fullchain.pem docker/ssl/fullchain.pem
+  ln -s /etc/letsencrypt/live/meetings.riadvice.ovh/privkey.pem docker/ssl/privkey.pem
+}
+
 clone_repo() {
   sudo mkdir -p "$INSTALL_DIR"
   sudo chown -R "$USER" "$INSTALL_DIR"
@@ -185,6 +208,7 @@ clone_repo() {
 install() {
   read_options "$@"
   if [[ "$INSTALL_TYPE" == "docker" ]]; then
+    install_docker_deps
     install_docker
   elif [[ "$INSTALL_TYPE" == "git" ]]; then
     install_deps

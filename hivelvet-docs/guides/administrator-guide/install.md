@@ -14,6 +14,18 @@ We highly recommend installing `Hivelvet` on a clean and separate system with no
 
 ## Good practices
 
+We highly suggest forcing your hostname with the following command.
+
+```bash
+hostnamectl set-hostname thecompany.kom
+```
+
+We also recommend setting the `root` user email
+
+```bash
+usermod -s /bin/bash -c "Your Name <youremail@thecompany.kom>" root
+```
+
 ## Install
 
 It is important to understand that Hivelvet installation have 2 stesp:

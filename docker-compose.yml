@@ -26,6 +26,7 @@ services:
       - ./docker/config-production.ini:/var/www/html/hivelvet-backend/app/config/config-production.ini:ro
       - ./docker/logs/backend:/var/www/html/hivelvet-backend/logs/:rw
       - ./docker/logs/nginx:/var/log/nginx/:rw
+      - ./docker/certs:/etc/nginx/certs:ro
   hivelvet:
     restart: always
     image: riadvice/hivelvet
