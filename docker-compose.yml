@@ -47,8 +47,8 @@ services:
       - ./docker/phinx.yml:/var/www/html/hivelvet-backend/phinx.yml:ro
       - ./docker/www-hivelvet.conf:/usr/local/etc/php-fpm.d/www-hivelvet.conf:ro
       - ./docker/config-production.ini:/var/www/html/hivelvet-backend/app/config/config-production.ini:ro
-      - ./docker/logs/backend/:/var/www/html/hivelvet-backend/logs/
-      - ./docker/cache/:/var/www/html/hivelvet-backend/tmp/
+      - ./docker/logs/backend:/var/www/html/hivelvet-backend/logs/:rw
+      - ./docker/cache:/var/www/html/hivelvet-backend/tmp/:rw
   db:
     restart: always
     image: postgres:15.2-alpine3.17
