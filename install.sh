@@ -188,6 +188,7 @@ generate_passwords() {
 
 setup_host() {
   sed -i "s/server_name.*/server_name $HV_HOST;/g" docker/hivelvet.conf
+  sed -i "s|return 301 https.*|return 301 https://$HV_HOST\$request_uri;|g" docker/hivelvet.conf
 }
 
 generate_ssl() {
