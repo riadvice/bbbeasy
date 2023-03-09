@@ -16,7 +16,7 @@
  * with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
  */
 
-const API_URL: string = process.env.REACT_APP_API_URL;
+const API_URL: string = window.location.origin + process.env.REACT_APP_API_ROUTE;
 
 export const apiRoutes = {
     REGISTER_URL: API_URL + '/account/register',
