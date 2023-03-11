@@ -7,7 +7,7 @@ required_plugins.each do |plugin|
 end
 
 domains = {
-  hivelvet: "hivelvet.test",
+  bbbeasy: "bbbeasy.test",
 }
 
 config = {
@@ -23,7 +23,7 @@ options = YAML.load_file config[:local]
 # vagrant configurate
 Vagrant.configure("2") do |config|
   # select the box
-  config.vm.box = "ubuntu/focal64"
+  config.vm.box = "ubuntu/jammy64"
 
   # should we ask about box updates?
   config.vm.box_check_update = options["box_check_update"]
@@ -49,7 +49,7 @@ Vagrant.configure("2") do |config|
   # network settings
   config.vm.network "private_network", ip: options["ip"]
 
-  # sync: folder "hivelvet" (host machine) -> folder "/app" (guest machine)
+  # sync: folder "bbbeasy" (host machine) -> folder "/app" (guest machine)
   config.vm.synced_folder "./", "/app", owner: "vagrant", group: "vagrant"
   #config.vm.synced_folder "../../riadvice/bigbluebutton-api-php", "/api", owner: "vagrant", group: "vagrant"
 
@@ -70,5 +70,5 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", path: "./vagrant/provision/always-as-root.sh", run: "always"
 
   # post-install message (vagrant console)
-  config.vm.post_up_message = "Hivelvet Frontend URL: http://#{domains[:hivelvet]}\nHivelvet Backend API URL: http://#{domains[:hivelvet]}/api\nHivelvet Docs API URL: http://#{domains[:hivelvet]}/docs"
+  config.vm.post_up_message = "BBBEasy Frontend URL: http://#{domains[:bbbeasy]}\nBBBEasy Backend API URL: http://#{domains[:bbbeasy]}/api\nBBBEasy Docs API URL: http://#{domains[:bbbeasy]}/docs"
 end

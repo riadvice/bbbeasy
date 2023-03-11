@@ -8,7 +8,7 @@ info "Provision-script user: `whoami`"
 
 info "Restart web-stack"
 # TODO: get param from the vagrant provision config
-hostnamectl set-hostname hivelvet.test
+hostnamectl set-hostname bbbeasy.test
 service php8.2-fpm restart
 service nginx restart
 service postgresql restart

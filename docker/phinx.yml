@@ -7,28 +7,28 @@ environments:
     default_database: development
     production:
         adapter: pgsql
-        host: hv_db
-        name: hivelvet
-        user: hivelvet
-        pass: 'hivelvet'
+        host: bbbeasy_db
+        name: bbbeasy
+        user: bbbeasy
+        pass: 'bbbeasy'
         port: 5432
         charset: utf8
 
     development:
         adapter: pgsql
         host: localhost
-        name: hivelvet
-        user: hivelvet
-        pass: 'hivelvet'
+        name: bbbeasy
+        user: bbbeasy
+        pass: 'bbbeasy'
         port: 5432
         charset: utf8
 
     testing:
         adapter: pgsql
         host: localhost
-        name: hivelvet_test
-        user: hivelvet_test
-        pass: 'hivelvet_test'
+        name: bbbeasy_test
+        user: bbbeasy_test
+        pass: 'bbbeasy_test'
         port: 5432
         charset: utf8
 

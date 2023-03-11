@@ -8,11 +8,11 @@ info "Provision-script user: $(whoami)"
 sudo usermod -aG docker $USER
 
 info "Install project dependencies"
-cd /app/hivelvet-backend/
+cd /app/bbbeasy-backend/
 composer --no-progress --prefer-dist install --ignore-platform-req=ext-xdebug
 "vendor/bin/phinx" migrate -vvv
 
-cd /app/hivelvet-frontend/
+cd /app/bbbeasy-frontend/
 yarn set version berry
 sudo chown -R vagrant: /home/vagrant/.yarn/
 yarn install

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #
-# Hivelvet open source platform - https://riadvice.tn/
+# BBBEasy open source platform - https://riadvice.tn/
 #
 # Copyright (c) 2022-2023 RIADVICE SUARL and by respective authors (see below).
 #
@@ -10,12 +10,12 @@
 # Foundation; either version 3.0 of the License, or (at your option) any later
 # version.
 #
-# Hivelvet is distributed in the hope that it will be useful, but WITHOUT ANY
+# BBBEasy is distributed in the hope that it will be useful, but WITHOUT ANY
 # WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 # PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
 #
 # You should have received a copy of the GNU Lesser General Public License along
-# with Hivelvet; if not, see <http://www.gnu.org/licenses/>.
+# with BBBEasy; if not, see <http://www.gnu.org/licenses/>.
 #
 #
 #
@@ -42,7 +42,7 @@ BASEDIR=$(dirname "$SCRIPT")
 # Formatted current date
 NOW=$(date +"%Y-%m-%d_%H.%M.%S")
 
-# Production Hivelvet directory
+# Production BBBEasy directory
 APP_DIR=$BASEDIR/../
 
 # Current git branch name transforms '* dev-0.5' to 'dev-0.5'
@@ -51,12 +51,12 @@ APP_DIR=$BASEDIR/../
 # Git tag, commits ahead & commit id under format '0.4-160-g3bb256c'
 # GIT_VERSION=$(git --git-dir="$BASEDIR/../.git" describe --tags --always HEAD)
 
-echo "HIVELVET - INSTALL SCRIPT"
+echo "BBBEASY - INSTALL SCRIPT"
 
 # Setup default values
 HV_HOST=$(hostname)
 INSTALL_TYPE="docker"
-INSTALL_DIR="/opt/hivelvet"
+INSTALL_DIR="/opt/bbbeasy"
 ADMIN_EMAIL=$(grep '^root:' /etc/passwd | awk -F'[<>]' '{print $2}')
 
 # Read CLI options
@@ -152,7 +152,7 @@ install_deps() {
 install_docker() {
   sudo mkdir -p "$INSTALL_DIR"
   cd "$INSTALL_DIR"
-  wget -nc https://raw.githubusercontent.com/riadvice/hivelvet/master/docker-compose.yml
+  wget -nc https://raw.githubusercontent.com/riadvice/bbbeasy/master/docker-compose.yml
 
   # Create docker directory
   mkdir -p "docker"
@@ -161,12 +161,12 @@ install_docker() {
 
   cd "docker"
   # Download docker configuration files
-  wget -nc https://raw.githubusercontent.com/riadvice/hivelvet/master/docker/default.ini
-  wget -nc https://raw.githubusercontent.com/riadvice/hivelvet/master/docker/config-production.ini
-  wget -nc https://raw.githubusercontent.com/riadvice/hivelvet/master/docker/hivelvet.conf
-  wget -nc https://raw.githubusercontent.com/riadvice/hivelvet/master/docker/phinx.yml
-  wget -nc https://raw.githubusercontent.com/riadvice/hivelvet/master/docker/php.ini
-  wget -nc https://raw.githubusercontent.com/riadvice/hivelvet/master/docker/www-hivelvet.conf
+  wget -nc https://raw.githubusercontent.com/riadvice/bbbeasy/master/docker/default.ini
+  wget -nc https://raw.githubusercontent.com/riadvice/bbbeasy/master/docker/config-production.ini
+  wget -nc https://raw.githubusercontent.com/riadvice/bbbeasy/master/docker/bbbeasy.conf
+  wget -nc https://raw.githubusercontent.com/riadvice/bbbeasy/master/docker/phinx.yml
+  wget -nc https://raw.githubusercontent.com/riadvice/bbbeasy/master/docker/php.ini
+  wget -nc https://raw.githubusercontent.com/riadvice/bbbeasy/master/docker/www-bbbeasy.conf
 
   cd "$INSTALL_DIR"
 
@@ -178,7 +178,7 @@ install_docker() {
 generate_passwords() {
   CURRENT_PASSWORD=$(grep "POSTGRES_PASSWORD=" docker-compose.yml | cut -d= -f2)
   # If docker-compose.yml has not been configured
-  if [[ "$CURRENT_PASSWORD" == "hivelvet" ]]; then
+  if [[ "$CURRENT_PASSWORD" == "bbbeasy" ]]; then
     PG_PASS=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
     sed -i "s/POSTGRES_PASSWORD=.*/POSTGRES_PASSWORD=$PG_PASS/g" docker-compose.yml
     sed -i "s/db.password =.*/db.password = $PG_PASS/g" docker/config-production.ini
@@ -187,8 +187,8 @@ generate_passwords() {
 }
 
 setup_host() {
-  sed -i "s/server_name.*/server_name $HV_HOST;/g" docker/hivelvet.conf
-  sed -i "s|return 301 https.*|return 301 https://$HV_HOST\$request_uri;|g" docker/hivelvet.conf
+  sed -i "s/server_name.*/server_name $HV_HOST;/g" docker/bbbeasy.conf
+  sed -i "s|return 301 https.*|return 301 https://$HV_HOST\$request_uri;|g" docker/bbbeasy.conf
 }
 
 generate_ssl() {
@@ -203,7 +203,7 @@ clone_repo() {
   sudo mkdir -p "$INSTALL_DIR"
   sudo chown -R "$USER" "$INSTALL_DIR"
   cd "$INSTALL_DIR"
-  git clone https://github.com/riadvice/hivelvet.git
+  git clone https://github.com/riadvice/bbbeasy.git
 }
 
 install() {
@@ -217,4 +217,4 @@ install() {
   fi
 }
 
-install "$@" 2>&1 | tee -a "/tmp/hivelvet-install-$NOW.log"
+install "$@" 2>&1 | tee -a "/tmp/bbbeasy-install-$NOW.log"

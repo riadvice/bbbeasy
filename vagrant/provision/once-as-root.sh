@@ -94,7 +94,7 @@ sudo ln -s /app/vagrant/dev/nginx/nginx.conf /etc/nginx/nginx.conf
 echo "Done!"
 
 info "Enabling site configuration"
-sudo ln -s /app/vagrant/dev/nginx/hivelvelt.conf /etc/nginx/sites-enabled/hivelvelt.conf
+sudo ln -s /app/vagrant/dev/nginx/bbbeasy.conf /etc/nginx/sites-enabled/bbbeasy.conf
 echo "Done!"
 
 info "Install composer"
@@ -107,13 +107,13 @@ info "allow any authentication mechanism from any client"
 sudo sed -i "$ a host all all all trust" /etc/postgresql/15/main/pg_hba.conf
 
 info "Initializing dev databases and users for PostgreSQL"
-sudo -u postgres psql -c "CREATE USER hivelvet WITH PASSWORD 'hivelvet'"
-sudo -u postgres psql -c "CREATE DATABASE hivelvet WITH OWNER 'hivelvet'"
-sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE hivelvet TO hivelvet;"
+sudo -u postgres psql -c "CREATE USER bbbeasy WITH PASSWORD 'bbbeasy'"
+sudo -u postgres psql -c "CREATE DATABASE bbbeasy WITH OWNER 'bbbeasy'"
+sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE bbbeasy TO bbbeasy;"
 echo "Done!"
 
 info "Initializing test databases and users for PostgreSQL"
-sudo -u postgres psql -c "CREATE USER hivelvet_test WITH PASSWORD 'hivelvet_test'"
-sudo -u postgres psql -c "CREATE DATABASE hivelvet_test WITH OWNER 'hivelvet_test'"
-sudo -u postgres psql -c "ALTER ROLE hivelvet_test SUPERUSER;"
+sudo -u postgres psql -c "CREATE USER bbbeasy_test WITH PASSWORD 'bbbeasy_test'"
+sudo -u postgres psql -c "CREATE DATABASE bbbeasy_test WITH OWNER 'bbbeasy_test'"
+sudo -u postgres psql -c "ALTER ROLE bbbeasy_test SUPERUSER;"
 echo "Done!"

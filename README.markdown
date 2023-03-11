@@ -1,10 +1,10 @@
 <p align="center">
-  <img src="https://github.com/riadvice/hivelvet/blob/develop/hivelvet-frontend/public/images/logo_02.png" alt="Hivelvet Logo">
+  <img src="https://github.com/riadvice/bbbeasy/blob/develop/bbbeasy-frontend/public/images/logo_02.png" alt="BBBEasy Logo">
 </p>
 
-# Hivelvet
+# BBBEasy
 
-Hivelvet is an open-source  multipurpose meeting rooms manager for BigBlueButton.
+BBBEasy is an open-source  multipurpose meeting rooms manager for BigBlueButton.
 
 ## Features
 
@@ -36,17 +36,17 @@ The web-application is split in two parts:
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3- Run `vagrant up && vagrant ssh` and wait until the end of the process.
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4- Run `cp /app/hivelvet-backend/app/config/config-development.sample.ini /app/hivelvet-backend/app/config/config-development.ini`.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4- Run `cp /app/bbbeasy-backend/app/config/config-development.sample.ini /app/bbbeasy-backend/app/config/config-development.ini`.
 
 - To launch the frontend in the development mode, follow these steps :
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1- Run `cd /app/hivelvet-frontend`.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1- Run `cd /app/bbbeasy-frontend`.
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2- Run `cp /app/tools/hivelvet /app/hivelvet-frontend/hivelvet`.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2- Run `cp /app/tools/bbbeasy /app/bbbeasy-frontend/bbbeasy`.
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3- Run `sed -i -e 's/\r$//' hivelvet`.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3- Run `sed -i -e 's/\r$//' bbbeasy`.
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4- Run `sed -i -e 's/"hivelvet /".\/hivelvet /g' package.json`.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4- Run `sed -i -e 's/"bbbeasy /".\/bbbeasy /g' package.json`.
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 5- Run `yarn start-dev-installer` to enable the **installer** app or `yarn start-dev` to enable the **web** app.
 
@@ -58,7 +58,7 @@ The web-application is split in two parts:
 
 Backend test:
 
-- From the browser: http://hivelvet.test/api?statera or http://hivelvet.test/api?statera=withCoverage
+- From the browser: http://bbbeasy.test/api?statera or http://bbbeasy.test/api?statera=withCoverage
 
 Frontend test:
 

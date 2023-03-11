@@ -5,7 +5,7 @@ timezone: Africa/Tunis
 box_check_update: true
 
 # Virtual machine name
-machine_name: hivelvet
+machine_name: bbbeasy
 
 # Virtual machine IP
 ip: 192.168.55.55

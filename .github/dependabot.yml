@@ -1,14 +1,14 @@
 version: 2
 updates:
   - package-ecosystem: "composer"
-    directory: "/hivelvet-backend"
+    directory: "/bbbeasy-backend"
     schedule:
       interval: "daily"
   - package-ecosystem: "npm"
-    directory: "/hivelvet-docs"
+    directory: "/bbbeasy-docs"
     schedule:
       interval: "daily"
   - package-ecosystem: "npm"
-    directory: "/hivelvet-frontend"
+    directory: "/bbbeasy-frontend"
     schedule:
       interval: "daily"

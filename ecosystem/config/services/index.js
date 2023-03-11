@@ -1,7 +1,7 @@
-const hivelvetFrontendService = require("./hivelvet-webapp-service");
-const hivelvetInstallerService = require("./hivelvet-installer-service");
+const bbbeasyFrontendService = require("./bbbeasy-webapp-service");
+const bbbeasyInstallerService = require("./bbbeasy-installer-service");
 
 module.exports = [
-	hivelvetFrontendService,
-	hivelvetInstallerService,
+	bbbeasyFrontendService,
+	bbbeasyInstallerService,
 ];

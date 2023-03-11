@@ -1,7 +1,7 @@
 version: "3.8"
 
 networks:
-  hivelvet-network:
+  bbbeasy-network:
     ipam:
       config:
         - subnet: 172.55.0.0/24
@@ -10,73 +10,73 @@ services:
   webserver:
     restart: always
     image: nginx:1.23.3-alpine
-    container_name: hv_nginx
+    container_name: bbbeasy_nginx
     depends_on:
-      - hivelvet
+      - bbbeasy
     ports:
       - "80:80"
       - "443:443"
     networks:
-      hivelvet-network:
+      bbbeasy-network:
         ipv4_address: 172.55.0.10
     volumes:
-      - hivelvet-repo:/var/www/html
-      - ./docker/hivelvet.conf:/etc/nginx/conf.d/default.conf:ro
-      - ./docker/phinx.yml:/var/www/html/hivelvet-backend/phinx.yml:ro
-      - ./docker/default.ini:/var/www/html/hivelvet-backend/app/config/default.ini:ro
-      - ./docker/config-production.ini:/var/www/html/hivelvet-backend/app/config/config-production.ini:ro
-      - ./docker/logs/backend:/var/www/html/hivelvet-backend/logs/:rw
+      - bbbeasy-repo:/var/www/html
+      - ./docker/bbbeasy.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./docker/phinx.yml:/var/www/html/bbbeasy-backend/phinx.yml:ro
+      - ./docker/default.ini:/var/www/html/bbbeasy-backend/app/config/default.ini:ro
+      - ./docker/config-production.ini:/var/www/html/bbbeasy-backend/app/config/config-production.ini:ro
+      - ./docker/logs/backend:/var/www/html/bbbeasy-backend/logs/:rw
       - ./docker/logs/nginx:/var/log/nginx/:rw
       - ./docker/certs/fullchain.pem:/etc/nginx/certs/fullchain.pem:ro
       - ./docker/certs/privkey.pem:/etc/nginx/certs/privkey.pem:ro
-  hivelvet:
+  bbbeasy:
     restart: always
-    image: riadvice/hivelvet
-    container_name: hv_app
+    image: riadvice/bbbeasy
+    container_name: bbbeasy_app
     depends_on:
       - db
       - cache
     ports:
       - "9000:9000"
     networks:
-      hivelvet-network:
+      bbbeasy-network:
         ipv4_address: 172.55.0.20
     volumes:
-      - hivelvet-repo:/var/www/html
+      - bbbeasy-repo:/var/www/html
       - ./docker/php.ini:/usr/local/etc/php/conf.d/custom.ini:ro
-      - ./docker/phinx.yml:/var/www/html/hivelvet-backend/phinx.yml:ro
-      - ./docker/www-hivelvet.conf:/usr/local/etc/php-fpm.d/www-hivelvet.conf:ro
-      - ./docker/default.ini:/var/www/html/hivelvet-backend/app/config/default.ini:ro
-      - ./docker/config-production.ini:/var/www/html/hivelvet-backend/app/config/config-production.ini:ro
-      - ./docker/logs/backend:/var/www/html/hivelvet-backend/logs/:rw
-      - ./docker/cache:/var/www/html/hivelvet-backend/tmp/:rw
+      - ./docker/phinx.yml:/var/www/html/bbbeasy-backend/phinx.yml:ro
+      - ./docker/www-bbbeasy.conf:/usr/local/etc/php-fpm.d/www-bbbeasy.conf:ro
+      - ./docker/default.ini:/var/www/html/bbbeasy-backend/app/config/default.ini:ro
+      - ./docker/config-production.ini:/var/www/html/bbbeasy-backend/app/config/config-production.ini:ro
+      - ./docker/logs/backend:/var/www/html/bbbeasy-backend/logs/:rw
+      - ./docker/cache:/var/www/html/bbbeasy-backend/tmp/:rw
   db:
     restart: always
     image: postgres:15.2-alpine3.17
-    container_name: hv_db
+    container_name: bbbeasy_db
     ports:
       - "5432:5432"
     environment:
-      - POSTGRES_DB=hivelvet
-      - POSTGRES_USER=hivelvet
-      - POSTGRES_PASSWORD=hivelvet
+      - POSTGRES_DB=bbbeasy
+      - POSTGRES_USER=bbbeasy
+      - POSTGRES_PASSWORD=bbbeasy
     networks:
-      hivelvet-network:
+      bbbeasy-network:
         ipv4_address: 172.55.0.50
     volumes:
       - postgresdata:/var/lib/postgresql/data
   cache:
     restart: always
     image: redis:7.0.9-alpine3.17
-    container_name: hv_cache
+    container_name: bbbeasy_cache
     ports:
       - "6379:6379"
     networks:
-      hivelvet-network:
+      bbbeasy-network:
         ipv4_address: 172.55.0.60
 
 volumes:
-  hivelvet-repo:
+  bbbeasy-repo:
   postgresdata:
     driver: local
     driver_opts:
