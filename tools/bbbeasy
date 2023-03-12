@@ -299,6 +299,7 @@ run_tests() {
 
 deploy_apps() {
   install_dependencies
+  chown_folders
   chmod_folders
   run_migrations
 }
@@ -315,9 +316,35 @@ update_composer() {
 # Install composer dependencies
 #
 install_dependencies() {
+  # Backend
   cd "$(dirname "$BASEDIR")/bbbeasy-backend/"
   echo "► Updating composer dependencies"
   COMPOSER_ALLOW_SUPERUSER=1 composer install -o --no-dev
+
+  sudo mkdir -p "$(dirname "$BASEDIR")/bbbeasy-frontend/build/"
+
+  # Installer
+  cd "$(dirname "$BASEDIR")/bbbeasy-frontend/"
+  rm -rf dist/
+  yarn cache clean
+  NODE_ENV=production yarn install
+  yarn build-installer
+  cp -a "$BASEDIR/../bbbeasy-frontend/dist/." "$BASEDIR/../bbbeasy-frontend/build/installer/"
+
+  # Installer
+  cd "$(dirname "$BASEDIR")/bbbeasy-frontend/"
+  rm -rf dist/
+  yarn cache clean
+  NODE_ENV=production yarn install
+  yarn build
+  cp -a "$BASEDIR/../bbbeasy-frontend/dist/." "$BASEDIR/../bbbeasy-frontend/build/webapp/"
+
+  # Docs
+  cd "$(dirname "$BASEDIR")/bbbeasy-docs/"
+  yarn clear
+  NODE_ENV=production yarn install
+  yarn docusaurus clear
+  yarn build
 }
 
 #
@@ -334,6 +361,13 @@ run_migrations() {
 #
 generate_metrics() {
   vendor/bin/phpmetrics --report-html="$BASEDIR/../bbbeasy-backend/public/metrics" "$BASEDIR/../bbbeasy-backend/app/src/"
+}
+
+chown_folders() {
+  sudo chown -R www-data: "$BASEDIR/../bbbeasy-frontend/build/installer/"
+  sudo chown -R www-data: "$BASEDIR/../bbbeasy-frontend/build/webapp/"
+  sudo chown -R www-data: "$BASEDIR/../bbbeasy-docs/build/"
+  sudo chown -R www-data: "$BASEDIR/../bbbeasy-backend"
 }
 
 #
