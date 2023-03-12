@@ -269,6 +269,7 @@ build_apps() {
   sed -i "s|return 301 https.*|return 301 https://$HV_HOST\$request_uri;|g" /etc/nginx/sites-available/bbbeasy
   sed -i "s|HV_HOST|$HV_HOST|g" /etc/nginx/sites-available/bbbeasy
   bbbeasy -d
+  bbbeasy -ei
 }
 
 install() {
@@ -285,6 +286,7 @@ install() {
     clone_repo
     generate_passwords
     build_apps
+    service nginx restart
   fi
 }
 

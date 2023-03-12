@@ -211,11 +211,21 @@ fix_styles() {
 #
 enable_installer() {
   echo "► Enabling backend installer app"
-  if [ $(grep -c "config.extension =" "$BASEDIR/../bbbeasy-backend/app/config/config-$ENVIRONMENT.ini") != 0 ]; then
-    #c cmd to replace the matched line in one go
-    sed -i '/config.extension =/ c config.extension = -install' "$BASEDIR/../bbbeasy-backend/app/config/config-$ENVIRONMENT.ini"
-    printf "%s %s [✔ - DONE]\n"
+  if [ "$ENVIRONMENT" == "production" ]; then
+    if grep -q -v "config.extension" "$BASEDIR/../bbbeasy-backend/app/config/config-$ENVIRONMENT.ini"; then
+      echo "config.extension = -install" >>"$BASEDIR/../bbbeasy-backend/app/config/config-$ENVIRONMENT.ini"
+      sudo sed -i 's/webapp/installer/g' /etc/nginx/sites-available/bbbeasy
+      sudo service nginx reload
+      printf "%s %s [✔ - DONE]\n"
+    fi
+  else
+    if [ $(grep -c "config.extension =" "$BASEDIR/../bbbeasy-backend/app/config/config-$ENVIRONMENT.ini") != 0 ]; then
+      #c cmd to replace the matched line in one go
+      sed -i '/config.extension =/ c config.extension = -install' "$BASEDIR/../bbbeasy-backend/app/config/config-$ENVIRONMENT.ini"
+      printf "%s %s [✔ - DONE]\n"
+    fi
   fi
+
   echo "✔ Installer app enabled"
 }
 
@@ -223,11 +233,20 @@ enable_installer() {
 # Enable backend web app
 #
 enable_web() {
-  echo "► Enabling backend web app"
-  if [ $(grep -c "config.extension = -install" "$BASEDIR/../bbbeasy-backend/app/config/config-$ENVIRONMENT.ini") != 0 ]; then
-    sed -i '/config.extension = -install/ c config.extension =' "$BASEDIR/../bbbeasy-backend/app/config/config-$ENVIRONMENT.ini"
+  echo "► Enabling backend webapp"
+  if [ $ENVIRONMENT == "production" ]; then
+    sed -i '/^config\.extension/d' "$BASEDIR/../bbbeasy-backend/app/config/config-$ENVIRONMENT.ini"
+    sudo sed -i 's/installer/webapp/g' /etc/nginx/sites-available/bbbeasy
+    sudo service nginx reload
     printf "%s %s [✔ - DONE]\n"
+  else
+    echo "► Enabling backend web app"
+    if [ $(grep -c "config.extension = -install" "$BASEDIR/../bbbeasy-backend/app/config/config-$ENVIRONMENT.ini") != 0 ]; then
+      sed -i '/config.extension = -install/ c config.extension =' "$BASEDIR/../bbbeasy-backend/app/config/config-$ENVIRONMENT.ini"
+      printf "%s %s [✔ - DONE]\n"
+    fi
   fi
+
   echo "✔ Web app enabled"
 }
 
