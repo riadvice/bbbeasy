@@ -297,6 +297,12 @@ run_tests() {
   fi
 }
 
+deploy_apps() {
+  install_dependencies
+  chmod_folders
+  run_migrations
+}
+
 #
 # Updates composer and reset user home composer ownership
 #
@@ -311,7 +317,7 @@ update_composer() {
 install_dependencies() {
   cd "$(dirname "$BASEDIR")/bbbeasy-backend/"
   echo "► Updating composer dependencies"
-  composer install -o --no-dev
+  COMPOSER_ALLOW_SUPERUSER=1 composer install -o --no-dev
 }
 
 #
@@ -464,6 +470,12 @@ run() {
 
     if [ "$1" = "--cleansessions" -o "$1" = "-cleansessions" -o "$1" = "-cs" ]; then
       clean_sessions
+      shift
+      continue
+    fi
+
+    if [ "$1" = "--deploy" -o "$1" = "-deploy" -o "$1" = "-d" ]; then
+      deploy_apps
       shift
       continue
     fi

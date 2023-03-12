@@ -262,6 +262,12 @@ clone_repo() {
 }
 
 build_apps() {
+  "$INSTALL_DIR/tools/bbbeasy" -si
+  cp package/templates/nginx/bbbeasy.conf /etc/nginx/sites-available/bbbeasy
+  ln -s /etc/nginx/sites-available/bbbeasy /etc/nginx/sites-enabled/bbbeasy
+  sed -i "s/server_name.*/server_name $HV_HOST;/g" /etc/nginx/sites-available/bbbeasy
+  sed -i "s|return 301 https.*|return 301 https://$HV_HOST\$request_uri;|g" /etc/nginx/sites-available/bbbeasy
+  sed -i "s|HV_HOST|$HV_HOST|g" /etc/nginx/sites-available/bbbeasy
   bbbeasy -d
 }
 
