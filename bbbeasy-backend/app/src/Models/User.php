@@ -128,7 +128,7 @@ class User extends BaseModel
 
         $users = $this->find(['(username = lower(?) and id != ?) or (email = lower(?) and id != ?)', $username, $id, $email, $id]);
         if ($users) {
-            $data = $users->castAll(['username', 'email']);
+            $data = $users->castAll( );
         }
 
         return $data;
@@ -230,6 +230,8 @@ class User extends BaseModel
             $this->password_attempts = 3;
 
             $this->save();
+            $userId=$this->getByEmail($email)->id;
+
         } catch (\Exception $e) {
             $this->logger->error($errorMessage, ['user' => $this->toArray(), 'error' => $e->getMessage()]);
 
@@ -238,14 +240,19 @@ class User extends BaseModel
 
         $this->logger->info($successMessage, ['user' => $this->toArray()]);
 
-        return $this->saveDefaultPreset();
+
+
+        return $this->saveDefaultPreset($userId);
     }
 
-    public function saveDefaultPreset($returnPreset = null): bool|string|Preset
+    public function saveDefaultPreset($userId,$returnPreset = null): bool|string|Preset
     {
+
         $preset          = new Preset();
         $preset->name    = 'default';
-        $preset->user_id = $this->id;
+
+       $preset->user_id = $userId;
+
 
         $presetErrorMessage   = 'Default preset could not be added';
         $presetSuccessMessage = 'Default preset successfully added';

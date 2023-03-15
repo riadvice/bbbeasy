@@ -180,6 +180,7 @@ class Preset extends BaseModel
             $this->settings = json_encode($settings);
             $this->save();
         } catch (\Exception $e) {
+
             $this->logger->error($e->getMessage(), ['error' => $e->getMessage()]);
 
             return $errorMessage;
