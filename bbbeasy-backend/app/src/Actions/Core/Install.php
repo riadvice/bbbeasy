@@ -46,7 +46,7 @@ class Install extends BaseAction
     public function execute($f3, $params): void
     {
         $checkUser = new User();
-        if (!$checkUser->adminUserExists()) {
+       if (!$checkUser->adminUserExists()) {
             $body = $this->getDecodedBody();
             $form = $body['data'];
 
@@ -96,7 +96,10 @@ class Install extends BaseAction
 
                             // @fixme: should not have embedded try/catch here
                             try {
-                                $user->save();
+                               $user->save();
+
+                                $userId=$user->getByEmail($form['email'])->id;
+
 
                                 $this->logger->info('Initial application setup : Add administrator with admin role and default preset', ['user' => $user->toArray()]);
 
@@ -114,7 +117,7 @@ class Install extends BaseAction
                                     );
 
                                     // @fixme: should not have embedded try/catch here
-                                    try {
+
                                         $settings->save();
                                         $this->logger->info('Initial application setup : Update settings', ['settings' => $settings->toArray()]);
 
@@ -128,17 +131,11 @@ class Install extends BaseAction
                                             }
                                         }
 
-                                        $user->saveDefaultPreset();
+                                        $user->saveDefaultPreset($userId);
 
                                         $this->logger->info('Initial application setup has been successfully done');
-                                        $this->renderJson(['result' => 'success']);
-                                    } catch (\Exception $e) {
-                                        $message = $e->getMessage();
-                                        $this->logger->error('Initial application setup : Settings could not be updated', ['error' => $message]);
-                                        $this->renderJson(['errors' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+                                     $this->renderJson(['result' => 'success']);
 
-                                        return;
-                                    }
                                 }
                             } catch (\Exception $e) {
                                 $message = $e->getMessage();
@@ -151,7 +148,7 @@ class Install extends BaseAction
                     }
                 }
             }
-        } else {
+    }else {
             // already installed
             $this->logger->error('Initial application setup', ['error' => 'application already installed']);
             $this->renderJson(['locked' => true], ResponseCode::HTTP_LOCKED);
