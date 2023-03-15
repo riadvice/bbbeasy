@@ -128,7 +128,7 @@ class User extends BaseModel
 
         $users = $this->find(['(username = lower(?) and id != ?) or (email = lower(?) and id != ?)', $username, $id, $email, $id]);
         if ($users) {
-            $data = $users->castAll( );
+            $data = $users->castAll(['username', 'email']);
         }
 
         return $data;
