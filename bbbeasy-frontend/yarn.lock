@@ -5130,7 +5130,7 @@ __metadata:
     global: ^4.4.0
     history: ^5.3.0
     husky: ^8.0.3
-    i18next: ^22.4.11
+    i18next: ^22.4.14
     istanbul-lib-coverage: ^3.2.0
     lint-staged: ^13.2.0
     lodash: ^4.17.21
@@ -9589,12 +9589,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"i18next@npm:^22.4.11":
-  version: 22.4.11
-  resolution: "i18next@npm:22.4.11"
+"i18next@npm:^22.4.14":
+  version: 22.4.14
+  resolution: "i18next@npm:22.4.14"
   dependencies:
     "@babel/runtime": ^7.20.6
-  checksum: 7f68c6801eb1eff240953066841d507cb00ce3eb6e2a8a6446f9a16453aab168352a36fdfe62c88e04795b1bc0a47439b2d463ed67e1c6bf19e0fb3a57fa457a
+  checksum: 963b70c7e1fee9666ef4d9ea87a63d0c9483007e2a0ea9520356e43a2cd550f3eb1cab24c57a102f3e84fd737fdff41bafc953dafc3bd6589dc9ea52ddb49905
   languageName: node
   linkType: hard
 
