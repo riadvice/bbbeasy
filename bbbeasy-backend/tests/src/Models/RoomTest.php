@@ -209,7 +209,7 @@ final class RoomTest extends Scenario
 
         RoomLabelFaker::create($room, $label1);
         RoomLabelFaker::create($room, $label2);
-        $labels = [$label1->getLabelInfos(), $label2->getLabelInfos()];
+        $labels = [$label1->getLabelInfos($label1), $label2->getLabelInfos($label2)];
 
         $test->expect($labels === $room->getLabels($room->id), 'getLabels() returned room labels');
 

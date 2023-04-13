@@ -81,7 +81,7 @@ class Add extends BaseAction
 
                 return;
             }
-            $this->renderJson(['result' => 'success', 'label' => $label->getLabelInfos()], ResponseCode::HTTP_CREATED);
+            $this->renderJson(['result' => 'success', 'label' => $label->getLabelInfos($label)], ResponseCode::HTTP_CREATED);
         } else {
             $this->logger->error($errorMessage, ['errors' => $dataChecker->getErrors()]);
             $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);

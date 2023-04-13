@@ -105,6 +105,7 @@ class Preset extends BaseModel
             'id'   => $myPreset['id'],
             'name' => $myPreset['name'],
         ];
+
         $enabledCategories        = json_decode($myPreset['settings']);
         $categoriesData           = $this->getMyPresetCategories($enabledCategories);
         $presetData['categories'] = $categoriesData;
@@ -180,7 +181,6 @@ class Preset extends BaseModel
             $this->settings = json_encode($settings);
             $this->save();
         } catch (\Exception $e) {
-
             $this->logger->error($e->getMessage(), ['error' => $e->getMessage()]);
 
             return $errorMessage;

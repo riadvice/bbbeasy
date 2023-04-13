@@ -89,7 +89,7 @@ class Edit extends BaseAction
                 }
 
                 $this->logger->info('Label successfully updated', ['Label' => $label->toArray()]);
-                $this->renderJson(['result' => 'success', 'label' => $label->getLabelInfos()]);
+                $this->renderJson(['result' => 'success', 'label' => $label->getLabelInfos($label)]);
             } else {
                 $this->logger->error($errorMessage, ['errors' => $dataChecker->getErrors()]);
                 $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);

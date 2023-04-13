@@ -105,21 +105,21 @@ class Label extends BaseModel
         $labels = $this->find([], ['order' => 'id']);
         if ($labels) {
             foreach ($labels as $label) {
-                $data[] = $label->getLabelInfos();
+                $data[] = $label->getLabelInfos($label);
             }
         }
 
         return $data;
     }
 
-    public function getLabelInfos(): array
+    public function getLabelInfos($label): array
     {
         return [
-            'key'         => $this->id,
-            'name'        => $this->name,
-            'description' => $this->description,
-            'color'       => $this->color,
-            'nb_rooms'    => \count($this->getRooms($this->id)),
+            'key'         => $label->id,
+            'name'        => $label->name,
+            'description' => $label->description,
+            'color'       => $label->color,
+            'nb_rooms'    => \count($label->getRooms($label->id)),
         ];
     }
 

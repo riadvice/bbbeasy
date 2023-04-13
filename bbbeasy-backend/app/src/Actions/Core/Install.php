@@ -46,7 +46,7 @@ class Install extends BaseAction
     public function execute($f3, $params): void
     {
         $checkUser = new User();
-       if (!$checkUser->adminUserExists()) {
+        if (!$checkUser->adminUserExists()) {
             $body = $this->getDecodedBody();
             $form = $body['data'];
 
@@ -96,10 +96,9 @@ class Install extends BaseAction
 
                             // @fixme: should not have embedded try/catch here
                             try {
-                               $user->save();
+                                $user->save();
 
-                                $userId=$user->getByEmail($form['email'])->id;
-
+                                $userId = $user->getByEmail($form['email'])->id;
 
                                 $this->logger->info('Initial application setup : Add administrator with admin role and default preset', ['user' => $user->toArray()]);
 
@@ -118,24 +117,23 @@ class Install extends BaseAction
 
                                     // @fixme: should not have embedded try/catch here
 
-                                        $settings->save();
-                                        $this->logger->info('Initial application setup : Update settings', ['settings' => $settings->toArray()]);
+                                    $settings->save();
+                                    $this->logger->info('Initial application setup : Update settings', ['settings' => $settings->toArray()]);
 
-                                        // add configured presets
-                                        $presets = $form['presetsConfig'];
-                                        if ($presets) {
-                                            $presetSettings = new PresetSetting();
-                                            $result         = $presetSettings->savePresetSettings($presets);
-                                            if ('string' === \gettype($result)) {
-                                                $this->renderJson(['errors' => $result], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-                                            }
+                                    // add configured presets
+                                    $presets = $form['presetsConfig'];
+                                    if ($presets) {
+                                        $presetSettings = new PresetSetting();
+                                        $result         = $presetSettings->savePresetSettings($presets);
+                                        if ('string' === \gettype($result)) {
+                                            $this->renderJson(['errors' => $result], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
                                         }
+                                    }
 
-                                        $user->saveDefaultPreset($userId);
+                                    $user->saveDefaultPreset($userId);
 
-                                        $this->logger->info('Initial application setup has been successfully done');
-                                     $this->renderJson(['result' => 'success']);
-
+                                    $this->logger->info('Initial application setup has been successfully done');
+                                    $this->renderJson(['result' => 'success']);
                                 }
                             } catch (\Exception $e) {
                                 $message = $e->getMessage();
@@ -148,7 +146,7 @@ class Install extends BaseAction
                     }
                 }
             }
-    }else {
+        } else {
             // already installed
             $this->logger->error('Initial application setup', ['error' => 'application already installed']);
             $this->renderJson(['locked' => true], ResponseCode::HTTP_LOCKED);
