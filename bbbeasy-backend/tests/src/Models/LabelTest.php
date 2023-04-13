@@ -147,7 +147,7 @@ final class LabelTest extends Scenario
         $label->erase(['']); // Cleaning the table for test.
         $label1 = LabelFaker::create();
         $label2 = LabelFaker::create();
-        $data   = [$label1->getLabelInfos(), $label2->getLabelInfos()];
+        $data   = [$label1->getLabelInfos($label1), $label2->getLabelInfos($label2)];
 
         $test->expect($data === $label->getAllLabels(), 'getAllLabels() returned all labels');
 
@@ -168,7 +168,7 @@ final class LabelTest extends Scenario
             'color'       => $label->color,
             'nb_rooms'    => \count($label->getRooms($label->id)),
         ];
-        $test->expect($data === $label->getLabelInfos(), 'getLabelInfos() returned label');
+        $test->expect($data === $label->getLabelInfos($label), 'getLabelInfos() returned label');
 
         return $test->results();
     }

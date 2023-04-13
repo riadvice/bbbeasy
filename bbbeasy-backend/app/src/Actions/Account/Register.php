@@ -37,8 +37,8 @@ class Register extends BaseAction
 {
     public function signup($f3): void
     {
-        $body     = $this->getDecodedBody();
-        $form=$body['data'];
+        $body = $this->getDecodedBody();
+        $form = $body['data'];
 
         $dataChecker = new DataChecker();
 
@@ -67,7 +67,7 @@ class Register extends BaseAction
         $successMessage = 'User successfully registered';
         if ($dataChecker->allValid()) {
             if ($this->credentialsAreValid($username, $email, $password, $errorMessage)) {
-                $user   = new User();
+                $user = new User();
 
                 $result = $user->saveUserWithDefaultPreset($username, $email, $password, UserRole::LECTURER_ID, $successMessage, $errorMessage);
                 if ($result) {

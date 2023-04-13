@@ -56,6 +56,13 @@ class Room extends BaseModel
         return $this->load(['lower(name) = ? and user_id = ? and id != ?', mb_strtolower($name), $userId, $id]);
     }
 
+    public function getByNameAndLink($name, $link): self
+    {
+        $this->load(['name = ? and short_link = ?', $name, $link]);
+
+        return $this;
+    }
+
     public function meetingIdExists($meetingId)
     {
         return $this->load(['meeting_id = ?', $meetingId]);
@@ -117,15 +124,15 @@ class Room extends BaseModel
         return $data;
     }
 
-    public function getRoomInfos(): array
+    public function getRoomInfos($room): array
     {
         return [
-            'id'         => $this->id,
-            'name'       => $this->name,
-            'preset_id'  => $this->getPresetID($this->id)['preset_id'],
-            'user_id'    => $this->getUserID($this->id)['user_id'],
-            'short_link' => $this->short_link,
-            'labels'     => $this->getLabels($this->id),
+            'id'         => $room->id,
+            'name'       => $room->name,
+            'preset_id'  => $room->getPresetID($this->id)['preset_id'],
+            'user_id'    => $room->getUserID($this->id)['user_id'],
+            'short_link' => $room->short_link,
+            'labels'     => $room->getLabels($room->id),
         ];
     }
 
@@ -178,7 +185,7 @@ class Room extends BaseModel
 
                 $labels = $label->getById($rl['label_id']);
                 if ($labels) {
-                    $lbs[] = $labels->getLabelInfos();
+                    $lbs[] = $labels->getLabelInfos($labels);
                 }
             }
         }
