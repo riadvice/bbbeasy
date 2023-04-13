@@ -558,7 +558,7 @@ fieldset {
 }
 .site-sider {
     background: var(--bbbeasy-bg-layout) !important;
-    text-align: center;
+   /* text-align: center;*/
     flex: 0 0 var(--bbbeasy-sider-width) !important;
     max-width: var(--bbbeasy-sider-width) !important;
     min-width: var(--bbbeasy-sider-width) !important;
