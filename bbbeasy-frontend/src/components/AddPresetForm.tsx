@@ -132,7 +132,7 @@ export const AddPresetForm = (props: Props) => {
                         <Button type="text" className="cancel-btn prev" block onClick={cancelAdd}>
                             <Trans i18nKey="cancel" />
                         </Button>
-                        <Button type="primary" htmlType="submit" block>
+                        <Button type="primary" htmlType="submit" disabled={loading} block>
                             <Trans i18nKey="create" />
                         </Button>
                     </Form.Item>
