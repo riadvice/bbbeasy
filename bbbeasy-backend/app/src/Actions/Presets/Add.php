@@ -67,6 +67,7 @@ class Add extends BaseAction
                 } else {
                     $preset->user_id = $userId;
                     $result          = $preset->addDefaultSettings($successMessage, $errorMessage);
+                    $preset = $preset->getByName($form['name']);
                     if ($result) {
                         $this->renderJson(['result' => 'success', 'preset' => $preset->getMyPresetInfos($preset)], ResponseCode::HTTP_CREATED);
                     } else {
