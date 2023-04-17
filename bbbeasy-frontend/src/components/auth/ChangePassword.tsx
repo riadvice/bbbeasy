@@ -47,11 +47,9 @@ const ChangePassword = () => {
     useEffect(() => {
         AuthService.get_reset_password(params.get('token'))
             .then(() => {
-              
                 setAvailableToken(true);
             })
             .catch((error) => {
-                
                 setAvailableToken(false);
                 setMessage(error.response.data.message);
             });

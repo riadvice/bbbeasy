@@ -60,14 +60,14 @@ class ResetPassword extends BaseAction
                         $resetToken          = new ResetPasswordToken();
                         $resetToken->user_id = $user->id;
                     }
-                    $resetToken->expires_at=date("Y-m-d H:i:s",strtotime("+15 min"));
-                    $resetToken->status=ResetTokenStatus::NEW;
+                    $resetToken->expires_at = date('Y-m-d H:i:s', strtotime('+15 min'));
+                    $resetToken->status     = ResetTokenStatus::NEW;
                     // otherwise, will update the existing row
                     $resetToken->save();
 
-                    $emailTokens['from_name']        = $this->f3->get('from_name');
-                    $emailTokens['expires_at']       = $resetToken->expires_at;
-                    $emailTokens['token']            = $resetToken->token;
+                    $emailTokens['from_name']  = $this->f3->get('from_name');
+                    $emailTokens['expires_at'] = $resetToken->expires_at;
+                    $emailTokens['token']      = $resetToken->token;
 
                     $emailTokens['message_template'] = [
                         $f3->format(
