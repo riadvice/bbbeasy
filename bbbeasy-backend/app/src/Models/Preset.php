@@ -174,6 +174,13 @@ class Preset extends BaseModel
         return $this;
     }
 
+    public function getByName($name): self
+    {
+        $this->load(['name = ? ', $name]);
+
+        return $this;
+    }
+
     public function addDefaultSettings($successMessage, $errorMessage): bool|string
     {
         try {
