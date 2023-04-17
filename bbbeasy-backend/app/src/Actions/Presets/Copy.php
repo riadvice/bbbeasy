@@ -52,6 +52,7 @@ class Copy extends BaseAction
 
             try {
                 $newPreset->save();
+                $newPreset = $preset->findById($presetId);
             } catch (\Exception $e) {
                 $this->logger->error($errorMessage, ['preset' => $newPreset->toArray(), 'error' => $e->getMessage()]);
                 $this->renderJson(['errors' => $e->getMessage()], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
