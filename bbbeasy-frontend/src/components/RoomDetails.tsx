@@ -51,7 +51,9 @@ import { RecordingType } from '../types/RecordingType';
 import { PresetType } from 'types/PresetType';
 import { LabelType } from 'types/LabelType';
 import { UserType } from '../types/UserType';
-
+import XMLParser from 'react-xml-parser';
+import { axiosInstance } from 'lib/AxiosInstance';
+import { apiRoutes } from 'routing/backend-config';
 const { Title } = Typography;
 const { Option } = Select;
 
@@ -88,6 +90,7 @@ const RoomDetails = () => {
     const [isRunning, setIsRunning] = useState<boolean>(false);
     const [canStart, setCanStart] = useState<boolean>(false);
     const dataContext = React.useContext(DataContext);
+   
 
     const [errorsEdit, setErrorsEdit] = React.useState({});
     const [isEditing, setIsEditing] = React.useState<boolean>(false);
@@ -103,8 +106,12 @@ const RoomDetails = () => {
 
     const startRoom = () => {
         RoomsService.start_room(room.id)
-            .then((result) => {
-                window.open(result.data, '_blank');
+            .then( (result) => {
+                console.log(result.data)
+                 
+                window.open(result.data, '_blank')
+                
+             
             })
             .catch((error) => {
                 console.log(error);
@@ -136,10 +143,11 @@ const RoomDetails = () => {
                     setRoom(room);
                 }
                 if (meeting != null) {
-                    if (meeting.running && meeting.auto_join) {
-                        startRoom();
-                    }
+                   
+                   
+                
                     setCanStart(meeting.canStart);
+
                     setIsRunning(meeting.running);
                 }
             })
@@ -296,6 +304,7 @@ const RoomDetails = () => {
     };
 
     return (
+        
         <>
             {isLoading ? (
                 <LoadingSpinner className="mt-30 content-center" />
@@ -395,9 +404,10 @@ const RoomDetails = () => {
                                                 </div>
                                             </Space>
                                         </Col>
-                                        {canStart ||
-                                            (isRunning && (
-                                                <Col span={2}>
+                                       {(canStart || isRunning) && (
+
+                                       
+                                             <Col span={2}>
                                                     <Avatar
                                                         size={{ xs: 40, sm: 64, md: 85, lg: 100, xl: 120, xxl: 140 }}
                                                         className="bbbeasy-btn"
@@ -406,7 +416,7 @@ const RoomDetails = () => {
                                                         <Trans i18nKey={canStart ? 'start' : 'join'} />
                                                     </Avatar>
                                                 </Col>
-                                            ))}
+                                       )}
                                     </Row>
                                 </Card>
                             </Col>
