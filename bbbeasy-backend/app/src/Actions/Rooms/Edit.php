@@ -120,8 +120,9 @@ class Edit extends BaseAction
                     return;
                 }
 
+
                 $this->logger->info('room successfully updated', ['room' => $room->toArray()]);
-                $this->renderJson(['result' => 'success', 'room' => $room->getRoomInfos()]);
+                $this->renderJson(['result' => 'success', 'room' => $room->getRoomInfos($room)]);
             } else {
                 $this->logger->error($errorMessage, ['errors' => $dataChecker->getErrors()]);
                 $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
