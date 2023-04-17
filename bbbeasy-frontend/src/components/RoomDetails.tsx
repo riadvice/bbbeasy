@@ -51,9 +51,7 @@ import { RecordingType } from '../types/RecordingType';
 import { PresetType } from 'types/PresetType';
 import { LabelType } from 'types/LabelType';
 import { UserType } from '../types/UserType';
-import XMLParser from 'react-xml-parser';
-import { axiosInstance } from 'lib/AxiosInstance';
-import { apiRoutes } from 'routing/backend-config';
+
 const { Title } = Typography;
 const { Option } = Select;
 
