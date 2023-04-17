@@ -28,14 +28,14 @@
     "ikkez/f3-mailer": "^v1.2.3",
     "respect/validation": "^2.2.4",
     "nette/utils": "^v3.2.9",
-    "tracy/tracy": "^v2.9.6",
+    "tracy/tracy": "^v2.10.2",
     "monolog/monolog": "^3.3.1",
     "bigbluebutton/bigbluebutton-api-php": "dev-master",
     "robmorgan/phinx": "^0.13.4",
-    "symfony/yaml": "^v6.2.5",
+    "symfony/yaml": "^v6.2.7",
     "linfo/linfo": "^v4.0.7",
-    "roave/better-reflection": "^6.7.0",
-    "haydenpierce/class-finder": "^0.5.0",
+    "roave/better-reflection": "^6.8.0",
+    "haydenpierce/class-finder": "^0.5.1",
     "marc-mabe/php-enum-phpstan": "^v2.0.1",
     "yohang/finite": "^1.3.5",
     "marc-mabe/php-enum": "^v4.7.0"
@@ -43,15 +43,15 @@
   "require-dev": {
     "roave/security-advisories": "dev-latest",
     "ext-xdebug": ">=3.2.0",
-    "kint-php/kint": "^5.0.3",
+    "kint-php/kint": "^5.0.5",
     "fakerphp/faker": "^v1.21.0",
     "friendsofphp/php-cs-fixer": "^v3.14.4",
-    "phpunit/php-code-coverage": "^10.0.0",
+    "phpunit/php-code-coverage": "^10.1.0",
     "kevinlebrun/colors.php": "^1.0.3",
     "gabrielelana/byte-units": "^0.5.0",
-    "phpmetrics/phpmetrics": "^v2.8.1",
+    "phpmetrics/phpmetrics": "^v2.8.2",
     "devster/ubench": "^2.1.0",
-    "rector/rector": "^0.15.13"
+    "rector/rector": "^0.15.24"
   },
   "config": {
     "optimize-autoloader": true,
