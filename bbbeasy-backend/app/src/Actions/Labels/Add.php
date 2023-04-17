@@ -75,6 +75,7 @@ class Add extends BaseAction
 
             try {
                 $label->save();
+                $label = $label->getLabelByNameAndColor($form['name'],$form['color']);
             } catch (\Exception $e) {
                 $this->logger->error($errorMessage, ['error' => $e->getMessage()]);
                 $this->renderJson(['errors' => $e->getMessage()], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
