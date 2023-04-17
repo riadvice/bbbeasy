@@ -98,10 +98,9 @@ const RoomsCol: React.FC<RoomsColProps> = ({ index, room, editable, deleteClickH
                 hoverable
                 onMouseOver={() => setIsShown(true)}
                 onMouseLeave={() => setIsShown(false)}
-                onClick={() => showRoomDetails()}
                 bordered={false}
                 title={
-                    <Space size="middle" direction="vertical" className="room-card-title">
+                    <Space onClick={() => showRoomDetails()} size="middle" direction="vertical" className="room-card-title">
                         <Badge
                             offset={LocaleService.direction == 'rtl' ? [22, 11] : [-22, 11]}
                             count={
