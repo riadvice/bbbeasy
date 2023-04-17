@@ -28,7 +28,6 @@ use BigBlueButton\Enum\Role;
 use BigBlueButton\Parameters\CreateMeetingParameters;
 use BigBlueButton\Parameters\GetMeetingInfoParameters;
 use BigBlueButton\Parameters\JoinMeetingParameters;
-use BigBlueButton\Responses\JoinMeetingResponse;
 use Enum\ResponseCode;
 use Models\Preset;
 use Models\Room;
@@ -72,7 +71,6 @@ class Start extends BaseAction
             $p      = $preset->findById($room->getPresetID($room->id)['preset_id']);
 
             if (!$getMeetingInfoResponse->success()) {
-
                 // meeting not found
                 if ('notFound' === $getMeetingInfoResponse->getMessageKey()) {
                     // create new meeting with the same meetingId
@@ -98,8 +96,6 @@ class Start extends BaseAction
                     return;
                 }
             }
-
-
 
             if ($room->getRoomInfos($room)['user_id'] === $this->session->get('user.id') || $presetData['General']['all_join_as_moderator']) {
                 $this->joinMeeting($meetingId, Role::MODERATOR, $bbbRequester, $p->getMyPresetInfos($p));

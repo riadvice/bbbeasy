@@ -49,8 +49,8 @@ class View extends BaseAction
         $room = $room->getByLink($link);
         if (!$room->dry()) {
             $this->logger->debug('Collecting room by its Link');
-            $bbbRequester        = new BigBlueButtonRequester();
-            $getInfosParams      = new GetMeetingInfoParameters($room->meeting_id);
+            $bbbRequester   = new BigBlueButtonRequester();
+            $getInfosParams = new GetMeetingInfoParameters($room->meeting_id);
 
             $meetingInfoResponse = $bbbRequester->getMeetingInfo($getInfosParams);
             $canStart            = false;

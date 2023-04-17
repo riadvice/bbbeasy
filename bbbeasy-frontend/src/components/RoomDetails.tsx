@@ -90,7 +90,6 @@ const RoomDetails = () => {
     const [isRunning, setIsRunning] = useState<boolean>(false);
     const [canStart, setCanStart] = useState<boolean>(false);
     const dataContext = React.useContext(DataContext);
-   
 
     const [errorsEdit, setErrorsEdit] = React.useState({});
     const [isEditing, setIsEditing] = React.useState<boolean>(false);
@@ -106,12 +105,10 @@ const RoomDetails = () => {
 
     const startRoom = () => {
         RoomsService.start_room(room.id)
-            .then( (result) => {
-                console.log(result.data)
-                 
-                window.open(result.data, '_blank')
-                
-             
+            .then((result) => {
+                console.log(result.data);
+
+                window.open(result.data, '_blank');
             })
             .catch((error) => {
                 console.log(error);
@@ -143,9 +140,6 @@ const RoomDetails = () => {
                     setRoom(room);
                 }
                 if (meeting != null) {
-                   
-                   
-                
                     setCanStart(meeting.canStart);
 
                     setIsRunning(meeting.running);
@@ -304,7 +298,6 @@ const RoomDetails = () => {
     };
 
     return (
-        
         <>
             {isLoading ? (
                 <LoadingSpinner className="mt-30 content-center" />
@@ -404,19 +397,17 @@ const RoomDetails = () => {
                                                 </div>
                                             </Space>
                                         </Col>
-                                       {(canStart || isRunning) && (
-
-                                       
-                                             <Col span={2}>
-                                                    <Avatar
-                                                        size={{ xs: 40, sm: 64, md: 85, lg: 100, xl: 120, xxl: 140 }}
-                                                        className="bbbeasy-btn"
-                                                        onClick={startRoom}
-                                                    >
-                                                        <Trans i18nKey={canStart ? 'start' : 'join'} />
-                                                    </Avatar>
-                                                </Col>
-                                       )}
+                                        {(canStart || isRunning) && (
+                                            <Col span={2}>
+                                                <Avatar
+                                                    size={{ xs: 40, sm: 64, md: 85, lg: 100, xl: 120, xxl: 140 }}
+                                                    className="bbbeasy-btn"
+                                                    onClick={startRoom}
+                                                >
+                                                    <Trans i18nKey={canStart ? 'start' : 'join'} />
+                                                </Avatar>
+                                            </Col>
+                                        )}
                                     </Row>
                                 </Card>
                             </Col>
