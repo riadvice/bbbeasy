@@ -67,18 +67,18 @@ class Start extends BaseAction
             if (null === $getMeetingInfoResponse) {
                 return;
             }
+            $preset = new Preset();
+            $p      = $preset->findById($room->getPresetID($room->id)['preset_id']);
 
             if (!$getMeetingInfoResponse->success()) {
                 // meeting not found
                 if ('notFound' === $getMeetingInfoResponse->getMessageKey()) {
                     // create new meeting with the same meetingId
-                    $preset = new Preset();
-                    $p      = $preset->findById($room->getPresetID($room->id)['preset_id']);
 
                     $presetprocessor = new PresetProcessor();
                     $presetData      = $presetprocessor->preparePresetData($p->getMyPresetInfos($p));
 
-                    if ($room->getRoomInfos()['user_id'] === $this->session->get('user.id') || $presetData['General']['anyone_can_start']) {
+                    if ($room->getRoomInfos($room)['user_id'] === $this->session->get('user.id') || $presetData['General']['anyone_can_start']) {
                         $createResult = $this->createMeeting($meetingId, $bbbRequester, $room->short_link, $p->getMyPresetInfos($p), $presetprocessor);
 
                         if (null === $createResult) {
@@ -97,7 +97,7 @@ class Start extends BaseAction
                 }
             }
 
-            if ($room->getRoomInfos()['user_id'] === $this->session->get('user.id') || $presetData['General']['all_join_as_moderator']) {
+            if ($room->getRoomInfos($room)['user_id'] === $this->session->get('user.id') || $presetData['General']['all_join_as_moderator']) {
                 $this->joinMeeting($meetingId, Role::MODERATOR, $bbbRequester, $p->getMyPresetInfos($p));
             } else {
                 $this->joinMeeting($meetingId, Role::VIEWER, $bbbRequester, $p->getMyPresetInfos($p));
@@ -157,6 +157,7 @@ class Start extends BaseAction
             'Meeting join request is going to redirect to the web client.',
             ['meetingID' => $meetingId]
         );
-        $this->renderJson($bbbRequester->getJoinMeetingURL($joinParams));
+
+        $this->renderJson($bbbRequester->joinMeeting($joinParams)->getUrl());
     }
 }

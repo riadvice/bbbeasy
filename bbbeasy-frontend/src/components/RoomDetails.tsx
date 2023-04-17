@@ -104,6 +104,8 @@ const RoomDetails = () => {
     const startRoom = () => {
         RoomsService.start_room(room.id)
             .then((result) => {
+                console.log(result.data);
+
                 window.open(result.data, '_blank');
             })
             .catch((error) => {
@@ -136,10 +138,8 @@ const RoomDetails = () => {
                     setRoom(room);
                 }
                 if (meeting != null) {
-                    if (meeting.running && meeting.auto_join) {
-                        startRoom();
-                    }
                     setCanStart(meeting.canStart);
+
                     setIsRunning(meeting.running);
                 }
             })
@@ -395,18 +395,17 @@ const RoomDetails = () => {
                                                 </div>
                                             </Space>
                                         </Col>
-                                        {canStart ||
-                                            (isRunning && (
-                                                <Col span={2}>
-                                                    <Avatar
-                                                        size={{ xs: 40, sm: 64, md: 85, lg: 100, xl: 120, xxl: 140 }}
-                                                        className="bbbeasy-btn"
-                                                        onClick={startRoom}
-                                                    >
-                                                        <Trans i18nKey={canStart ? 'start' : 'join'} />
-                                                    </Avatar>
-                                                </Col>
-                                            ))}
+                                        {(canStart || isRunning) && (
+                                            <Col span={2}>
+                                                <Avatar
+                                                    size={{ xs: 40, sm: 64, md: 85, lg: 100, xl: 120, xxl: 140 }}
+                                                    className="bbbeasy-btn"
+                                                    onClick={startRoom}
+                                                >
+                                                    <Trans i18nKey={canStart ? 'start' : 'join'} />
+                                                </Avatar>
+                                            </Col>
+                                        )}
                                     </Row>
                                 </Card>
                             </Col>

@@ -49,8 +49,9 @@ class View extends BaseAction
         $room = $room->getByLink($link);
         if (!$room->dry()) {
             $this->logger->debug('Collecting room by its Link');
-            $bbbRequester        = new BigBlueButtonRequester();
-            $getInfosParams      = new GetMeetingInfoParameters($room->meeting_id);
+            $bbbRequester   = new BigBlueButtonRequester();
+            $getInfosParams = new GetMeetingInfoParameters($room->meeting_id);
+
             $meetingInfoResponse = $bbbRequester->getMeetingInfo($getInfosParams);
             $canStart            = false;
             $preset              = new Preset();
@@ -62,7 +63,7 @@ class View extends BaseAction
                 if ('notFound' === $meetingInfoResponse->getMessageKey()) {
                     $anyonestart = false;
 
-                    if ($room->getRoomInfos()['user_id'] === $this->session->get('user.id') || $presetData['General']['anyone_can_start']) {
+                    if ($room->getRoomInfos($room)['user_id'] === $this->session->get('user.id') || $presetData['General']['anyone_can_start']) {
                         $canStart = true;
                     }
                 }
@@ -73,7 +74,7 @@ class View extends BaseAction
 
             $meeting['auto_join'] = $presetData['Audio']['auto_join'];
 
-            $this->renderJson(['room' => $room->getRoomInfos(), 'meeting' => $meeting]);
+            $this->renderJson(['room' => $room->getRoomInfos($room), 'meeting' => $meeting]);
         } else {
             $this->logger->error('Link not found');
             $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
