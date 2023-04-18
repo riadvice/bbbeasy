@@ -4132,12 +4132,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "9edb62ebe942c2b9bb8416a19fc8655cb78a7a91"
+                "reference": "d6da623259549bc05d08fd5f39d339d75f78a978"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/9edb62ebe942c2b9bb8416a19fc8655cb78a7a91",
-                "reference": "9edb62ebe942c2b9bb8416a19fc8655cb78a7a91",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/d6da623259549bc05d08fd5f39d339d75f78a978",
+                "reference": "d6da623259549bc05d08fd5f39d339d75f78a978",
                 "shasum": ""
             },
             "conflict": {
@@ -4291,7 +4291,7 @@
                 "friendsofsymfony/user-bundle": ">=1.2,<1.3.5",
                 "friendsoftypo3/mediace": ">=7.6.2,<7.6.5",
                 "froala/wysiwyg-editor": "<3.2.7",
-                "froxlor/froxlor": "<2.0.13",
+                "froxlor/froxlor": "<2.0.14",
                 "fuel/core": "<1.8.1",
                 "funadmin/funadmin": "<=3.2",
                 "gaoming13/wechat-php-sdk": "<=1.10.2",
@@ -4499,8 +4499,8 @@
                 "scheb/two-factor-bundle": ">=0,<3.26|>=4,<4.11",
                 "sensiolabs/connect": "<4.2.3",
                 "serluck/phpwhois": "<=4.2.6",
-                "shopware/core": "<=6.4.18",
-                "shopware/platform": "<=6.4.18",
+                "shopware/core": "<=6.4.20",
+                "shopware/platform": "<=6.4.20",
                 "shopware/production": "<=6.3.5.2",
                 "shopware/shopware": "<=5.7.14",
                 "shopware/storefront": "<=6.4.8.1",
@@ -4724,7 +4724,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-04-13T17:04:11+00:00"
+            "time": "2023-04-18T14:04:28+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
