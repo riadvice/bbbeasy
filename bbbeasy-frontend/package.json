@@ -45,7 +45,7 @@
         "react-hot-loader": "^4.13.1",
         "react-i18next": "^12.2.0",
         "react-images-uploading": "^3.1.7",
-        "react-intl": "^6.4.0",
+        "react-intl": "^6.4.1",
         "react-router-dom": "^6.10.0",
         "react-scripts": "^5.0.1",
         "reload": "^3.2.1",
