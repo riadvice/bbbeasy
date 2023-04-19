@@ -31,7 +31,7 @@ import translationEN from '../locale/en-US.json';
 import translationFR from '../locale/fr-FR.json';
 import translationAR from '../locale/ar-TN.json';
 
-import { Locale } from 'antd/lib/locale-provider';
+ 
 import { Languages } from '../components/Languages';
 import { DirectionType } from 'antd/lib/config-provider';
 
@@ -65,7 +65,7 @@ class LocaleService {
     localeMap: object = { 'en': enUS, 'fr': frFR, 'ar': arEG };
     rtlLocales: string[] = ['ar'];
     language: string;
-    antLocale: Locale;
+    antLocale: any;
     direction: DirectionType;
 
     constructor() {
