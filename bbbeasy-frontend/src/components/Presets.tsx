@@ -622,7 +622,7 @@ const Presets = () => {
                 {isLoading ? (
                     <LoadingSpinner />
                 ) : myPresets.length == 0 ? (
-                    <EmptyData className="empty-presets" />
+                    <EmptyData  description={<Trans i18nKey="no_presets"/>} className="empty-presets" />
                 ) : (
                     myPresets.map((singlePresets) => (
                         <PresetsCol

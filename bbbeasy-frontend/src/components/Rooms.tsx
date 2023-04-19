@@ -255,7 +255,7 @@ const Rooms = () => {
                         />
                     </Paragraph>
                 ) : (
-                    <EmptyData />
+                    <EmptyData description={<Trans i18nKey="no_rooms"/>}/>
                 )
             ) : (
                 <Row gutter={[18, 18]} className="rooms-cards">

@@ -209,7 +209,7 @@ const RoomRecordings = (props: Props) => {
                     })}
                 </Row>
             ) : (
-                <EmptyData />
+                <EmptyData  description={<Trans i18nKey="no_recordings"/>}  />
             )}
         </div>
     );

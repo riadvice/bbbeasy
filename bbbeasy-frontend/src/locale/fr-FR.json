@@ -312,5 +312,8 @@
     "share": "Partager",
     "edit_recording_success": "Enregistrement mis à jour avec succès",
     "delete_recording_confirm": "Êtes-vous sûr de vouloir supprimer cet enregistrement ?",
-    "delete_recording_success": "Enregistrement supprimé avec succès"
+    "delete_recording_success": "Enregistrement supprimé avec succès",
+    "no_recordings":"Aucun Enregistrement",
+    "no_rooms":"Aucune Salle",
+    "no_presets":"Aucun Préréglage"
 }
