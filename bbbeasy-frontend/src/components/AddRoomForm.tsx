@@ -62,20 +62,20 @@ export const AddRoomForm = (props: Props) => {
 
     const [loading, setLoading] = React.useState<boolean>(false);
     const [errorsAdd, setErrorsAdd] = React.useState<string[]>([]);
-    const [presets,setPresets] =React.useState<PresetType[]>([]);
+    const [presets, setPresets] = React.useState<PresetType[]>([]);
     const [readOnly, setReadOnly] = React.useState<boolean>(true);
     const [shortLink, setShortLink] = React.useState<string>('');
     const dataContext = React.useContext(DataContext);
-   
+
     const currentUser: UserType = AuthService.getCurrentUser();
-    presetsService.list_presets(currentUser.id)
-    .then((result)=>{
-        
-        setPresets(result.data);
-    })
-    .catch((err)=>{
-        console.log(err)
-    })
+    presetsService
+        .list_presets(currentUser.id)
+        .then((result) => {
+            setPresets(result.data);
+        })
+        .catch((err) => {
+            console.log(err);
+        });
     const prefixShortLink = '/r/';
 
     const handleAdd = (values) => {
