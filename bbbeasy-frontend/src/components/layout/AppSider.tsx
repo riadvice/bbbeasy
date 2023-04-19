@@ -94,7 +94,6 @@ const AppSider = () => {
     const handleClick = (e) => {
         setCurrentPath(e.key);
     };
-
     return (
         <>
             {menuItems.length != 0 && (
@@ -127,6 +126,7 @@ const AppSider = () => {
                                             )}
                                         </Menu>
                                     }
+                                    trigger={['click']}
                                 >
                                     <Button size="middle" className="sider-new-btn">
                                         <PlusOutlined /> {t('new')} <DownOutlined />
