@@ -34,6 +34,9 @@ import AuthService from 'services/auth.service';
 import { FormInstance } from 'antd/es/form/Form';
 import { LabelType } from 'types/LabelType';
 import { PresetType } from 'types/PresetType';
+import presetsService from 'services/presets.service';
+import { UserContext } from 'lib/UserContext';
+import { UserType } from 'types/UserType';
 
 type formType = {
     name?: string;
@@ -59,10 +62,20 @@ export const AddRoomForm = (props: Props) => {
 
     const [loading, setLoading] = React.useState<boolean>(false);
     const [errorsAdd, setErrorsAdd] = React.useState<string[]>([]);
-
+    const [presets, setPresets] = React.useState<PresetType[]>([]);
     const [readOnly, setReadOnly] = React.useState<boolean>(true);
     const [shortLink, setShortLink] = React.useState<string>('');
     const dataContext = React.useContext(DataContext);
+
+    const currentUser: UserType = AuthService.getCurrentUser();
+    presetsService
+        .list_presets(currentUser.id)
+        .then((result) => {
+            setPresets(result.data);
+        })
+        .catch((err) => {
+            console.log(err);
+        });
     const prefixShortLink = '/r/';
 
     const handleAdd = (values) => {
@@ -227,7 +240,7 @@ export const AddRoomForm = (props: Props) => {
                                             .localeCompare(optionB.children.toString().toLowerCase())
                                     }
                                 >
-                                    {dataContext.dataPresets.map((item) => (
+                                    {presets.map((item) => (
                                         <Option key={item.id} value={item.id} className="text-capitalize">
                                             {item.name}
                                         </Option>

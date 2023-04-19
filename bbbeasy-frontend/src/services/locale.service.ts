@@ -86,6 +86,7 @@ class LocaleService {
     }
 
     changeLocale(locale: string) {
+        console.log(enUS, frFR);
         const res: object = Languages.filter((item) => item.value == locale);
         i18next.changeLanguage(res[0].key);
         dayjs.locale(locale);
