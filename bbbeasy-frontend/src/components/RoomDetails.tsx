@@ -82,7 +82,7 @@ const tagRender = (props: CustomTagProps) => {
 const RoomDetails = () => {
     const { state } = useLocation();
     const param = useParams();
-    const editable: boolean = state.editable;
+    const editable: boolean = state?.editable;
     const [room, setRoom] = React.useState<RoomType>(state ? state.room : null);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [isRunning, setIsRunning] = useState<boolean>(false);
@@ -99,13 +99,12 @@ const RoomDetails = () => {
     const [loading, setLoading] = React.useState<boolean>(false);
 
     const currentUser: UserType = AuthService.getCurrentUser();
+
     const navigate = useNavigate();
 
     const startRoom = () => {
         RoomsService.start_room(room.id)
             .then((result) => {
-                console.log(result.data);
-
                 window.open(result.data, '_blank');
             })
             .catch((error) => {
@@ -129,13 +128,30 @@ const RoomDetails = () => {
             setLabels(labels_data);
         });
     };
+    const getRoomRecordings = (id) => {
+        setLoading(true);
+        console.log(id);
+        RecordingsService.list_recordings(id)
+            .then((response) => {
+                console.log(response);
+                setRoomRecordings(response.data);
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    };
     const checkRoomStarted = () => {
         RoomsService.getRoomByLink(param.shortlink)
             .then((response) => {
                 const room: RoomType = response.data.room;
+
                 const meeting = response.data.meeting;
                 if (room != null) {
                     setRoom(room);
+                    getRoomRecordings(room.id);
                 }
                 if (meeting != null) {
                     setCanStart(meeting.canStart);
@@ -150,19 +166,6 @@ const RoomDetails = () => {
                 setIsLoading(false);
             });
     };
-    const getRoomRecordings = () => {
-        setLoading(true);
-        RecordingsService.list_recordings(room.id)
-            .then((response) => {
-                setRoomRecordings(response.data);
-            })
-            .catch((error) => {
-                console.log(error);
-            })
-            .finally(() => {
-                setLoading(false);
-            });
-    };
 
     useEffect(() => {
         if (currentUser != null) {
@@ -170,7 +173,6 @@ const RoomDetails = () => {
             checkRoomStarted();
             getPresets();
             getLabels();
-            getRoomRecordings();
         } else {
             navigate('/login');
         }
@@ -193,7 +195,7 @@ const RoomDetails = () => {
                     onChange={(val) => editForm.setFieldValue('preset_id', val)}
                     allowClear
                     placeholder={t('preset.label')}
-                    defaultValue={room.preset_id}
+                    defaultValue={room?.preset_id}
                     filterOption={(input, option) =>
                         option.children.toString().toLowerCase().indexOf(input.toString().toLowerCase()) >= 0
                     }
@@ -223,7 +225,7 @@ const RoomDetails = () => {
         },
         {
             item: 'short_link',
-            formItemNode: <Input addonBefore={prefixShortLink} defaultValue={room.short_link} />,
+            formItemNode: <Input addonBefore={prefixShortLink} defaultValue={room?.short_link} />,
             isRequired: true,
             messageItem: 'shortlink',
         },
@@ -339,7 +341,7 @@ const RoomDetails = () => {
                                     <Row justify="center" align="middle">
                                         <Col span={22}>
                                             <Space direction="vertical" size="large">
-                                                {!isEditing && editable ? (
+                                                {!isEditing ? (
                                                     <>
                                                         <Title level={3}>{room.name}</Title>
                                                         <div>
@@ -352,10 +354,16 @@ const RoomDetails = () => {
                                                         <Input
                                                             id={'room-shortlink'}
                                                             readOnly
-                                                            defaultValue={room.short_link}
+                                                            defaultValue={prefixShortLink + room.short_link}
                                                             prefix={<LinkOutlined />}
                                                             suffix={
-                                                                <CopyTextToClipBoard textToCopy={room?.short_link} />
+                                                                <CopyTextToClipBoard
+                                                                    textToCopy={
+                                                                        window.location.origin +
+                                                                        prefixShortLink +
+                                                                        room?.short_link
+                                                                    }
+                                                                />
                                                             }
                                                         />
                                                     </>
