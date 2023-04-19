@@ -18,15 +18,18 @@
 
 import { Empty } from 'antd';
 import React from 'react';
- 
+
 type Props = {
     className?: string;
-    description:any;
+    description: any;
 };
 
 const EmptyData = (props: Props) => {
- 
-    return <Empty  description={props.description} className={props.className ?? 'mt-30'} > </Empty>;
+    return (
+        <Empty description={props.description} className={props.className ?? 'mt-30'}>
+            {' '}
+        </Empty>
+    );
 };
 
 export default EmptyData;

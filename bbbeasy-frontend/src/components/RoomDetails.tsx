@@ -99,14 +99,12 @@ const RoomDetails = () => {
     const [loading, setLoading] = React.useState<boolean>(false);
 
     const currentUser: UserType = AuthService.getCurrentUser();
-    
+
     const navigate = useNavigate();
 
     const startRoom = () => {
         RoomsService.start_room(room.id)
             .then((result) => {
-                
-
                 window.open(result.data, '_blank');
             })
             .catch((error) => {
@@ -132,10 +130,10 @@ const RoomDetails = () => {
     };
     const getRoomRecordings = (id) => {
         setLoading(true);
-       console.log(id)
+        console.log(id);
         RecordingsService.list_recordings(id)
             .then((response) => {
-                console.log(response)
+                console.log(response);
                 setRoomRecordings(response.data);
             })
             .catch((error) => {
@@ -148,13 +146,12 @@ const RoomDetails = () => {
     const checkRoomStarted = () => {
         RoomsService.getRoomByLink(param.shortlink)
             .then((response) => {
-                
                 const room: RoomType = response.data.room;
-               
+
                 const meeting = response.data.meeting;
                 if (room != null) {
                     setRoom(room);
-                    getRoomRecordings(room.id)
+                    getRoomRecordings(room.id);
                 }
                 if (meeting != null) {
                     setCanStart(meeting.canStart);
@@ -169,16 +166,13 @@ const RoomDetails = () => {
                 setIsLoading(false);
             });
     };
-   
 
     useEffect(() => {
-         if (currentUser != null) {
-           
+        if (currentUser != null) {
             //Runs only on the first render
             checkRoomStarted();
             getPresets();
             getLabels();
-          
         } else {
             navigate('/login');
         }
@@ -360,17 +354,23 @@ const RoomDetails = () => {
                                                         <Input
                                                             id={'room-shortlink'}
                                                             readOnly
-                                                            defaultValue={prefixShortLink+room.short_link}
+                                                            defaultValue={prefixShortLink + room.short_link}
                                                             prefix={<LinkOutlined />}
                                                             suffix={
-                                                                <CopyTextToClipBoard textToCopy={window.location.origin + prefixShortLink+room?.short_link} />
+                                                                <CopyTextToClipBoard
+                                                                    textToCopy={
+                                                                        window.location.origin +
+                                                                        prefixShortLink +
+                                                                        room?.short_link
+                                                                    }
+                                                                />
                                                             }
                                                         />
                                                     </>
                                                 ) : (
                                                     <Space size="middle" direction="vertical">
                                                         <Form form={editForm}>
-                                                                                              {editFormItems.map((editFormItem) => {
+                                                            {editFormItems.map((editFormItem) => {
                                                                 return customFormItem(editFormItem);
                                                             })}
                                                         </Form>
