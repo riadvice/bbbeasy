@@ -406,11 +406,13 @@ const RoomDetails = () => {
                                         {(canStart || isRunning) && (
                                             <Col span={2}>
                                                 <a onClick={startRoom}>
-                                                <Avatar
-                                                    size={{ xs: 40, sm: 64, md: 85, lg: 100, xl: 120, xxl: 140 }}
-                                                    className="bbbeasy-btn">
-                                                    <Trans i18nKey={canStart ? 'start' : 'join'} />
-                                                </Avatar></a>
+                                                    <Avatar
+                                                        size={{ xs: 40, sm: 64, md: 85, lg: 100, xl: 120, xxl: 140 }}
+                                                        className="bbbeasy-btn"
+                                                    >
+                                                        <Trans i18nKey={canStart ? 'start' : 'join'} />
+                                                    </Avatar>
+                                                </a>
                                             </Col>
                                         )}
                                     </Row>
