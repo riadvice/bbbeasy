@@ -1,13 +1,3 @@
-
----
-name: Bug fix
-about: Fix a bug
-title: ''
-assignees: ''
-
----
-
-
 ## **Description**
 
 Enter a brief description of the bug being fixed.
@@ -20,9 +10,15 @@ Describe the changes made to fix the bug
 
 ## **Related Issue(s)**
 
-## **Contains changes**
+## **Types of changes**
 
+- [ ] Bug fix (non-breaking change which fixes an issue)
+- [ ] New feature (non-breaking change which adds functionality)
 - [ ] Optimization (provides speedup with no functional changes)
 - [ ] Breaking change (fix or feature that would cause existing functionality to change)
+- [ ] Automated testing implementation or update
+- [ ] Dependencies updated to a newer version
+- [ ] Documentation update
+- [ ] Experimental feature that requires further discussion
 
 ## **Screenshots and screen captures**
