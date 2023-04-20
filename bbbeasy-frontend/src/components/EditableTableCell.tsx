@@ -78,26 +78,50 @@ const EditableTableCell: React.FC<Props> = ({
     }
 
     const customFormItem = (index: string, customInputNode: JSX.Element) => {
-        return (
-            <Form.Item
-                name={index}
-                className="input-editable"
-                {...(index in errorsEdit &&
-                    record.key == errorsEdit['key'] && {
-                        help: <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errorsEdit[index])} />,
-                        validateStatus: 'error',
-                    })}
-                rules={[
-                    {
-                        required: true,
-                        message: t('required_' + index),
-                    },
-                    { ...editRules },
-                ]}
-            >
-                {customInputNode}
-            </Form.Item>
-        );
+        if (index != 'description') {
+            return (
+                <Form.Item
+                    name={index}
+                    className="input-editable"
+                    {...(index in errorsEdit &&
+                        record.key == errorsEdit['key'] && {
+                            help: (
+                                <Trans
+                                    i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errorsEdit[index])}
+                                />
+                            ),
+                            validateStatus: 'error',
+                        })}
+                    rules={[
+                        {
+                            required: true,
+                            message: t('required_' + index),
+                        },
+                        { ...editRules },
+                    ]}
+                >
+                    {customInputNode}
+                </Form.Item>
+            );
+        } else {
+            return (
+                <Form.Item
+                    name={index}
+                    className="input-editable"
+                    {...(index in errorsEdit &&
+                        record.key == errorsEdit['key'] && {
+                            help: (
+                                <Trans
+                                    i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errorsEdit[index])}
+                                />
+                            ),
+                            validateStatus: 'error',
+                        })}
+                >
+                    {customInputNode}
+                </Form.Item>
+            );
+        }
     };
 
     return (
