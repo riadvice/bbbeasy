@@ -144,6 +144,7 @@ const RoomsCol: React.FC<RoomsColProps> = ({ index, room, editable, deleteClickH
                             key="more"
                             overlay={actions}
                             placement={LocaleService.direction == 'rtl' ? 'bottomLeft' : 'bottomRight'}
+                            trigger={['click']}
                         >
                             <MoreOutlined />
                         </Dropdown>
