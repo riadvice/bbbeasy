@@ -518,7 +518,7 @@ body.rtl {
     line-height: 1.7715;
 }
 .ant-tooltip-inner ul .text-black {
-    font-weight: bolder !important;
+    font-weight: bold !important;
 }
 /*.PresetIcon img {
   width: 19px;
