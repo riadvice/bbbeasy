@@ -90,6 +90,7 @@ const Install = () => {
     };
 
     const [isLoading, setIsLoading] = React.useState<boolean>(true);
+    const [errorNetwork, setErrorNetwork] = React.useState<string>('');
     const [locked, setLocked] = React.useState<boolean>(null);
     const [activeStep, setActiveStep] = React.useState<number>(0);
     const [successful, setSuccessful] = React.useState<boolean>(false);
@@ -157,13 +158,17 @@ const Install = () => {
         localStorage.removeItem('user');
 
         InstallService.install()
-            .then(() => {
+            .then((response) => {
                 setLocked(false);
 
                 getSettings();
                 getPresetSettings();
             })
             .catch((error) => {
+                if (error.code === 'ERR_NETWORK') {
+                    setErrorNetwork(error.code);
+                }
+
                 if (error.response.data.locked) {
                     setLocked(true);
                 }
@@ -277,7 +282,7 @@ const Install = () => {
     };
 
     return (
-        <Row justify={isLoading || locked ? 'center' : 'start'}>
+        <Row justify={isLoading || locked || errorNetwork ? 'center' : 'start'}>
             {isLoading ? (
                 <LoadingSpinner className="m-5" />
             ) : locked ? (
@@ -285,6 +290,12 @@ const Install = () => {
                     status="403"
                     title={<Trans i18nKey="install_locked_title" />}
                     subTitle={<Trans i18nKey="install_locked_text" />}
+                />
+            ) : errorNetwork ? (
+                <Result
+                    status="404"
+                    title={<Trans i18nKey="install_error_title" />}
+                    subTitle={<Trans i18nKey="install_error_text" />}
                 />
             ) : successful ? (
                 <Col span={10} offset={7} className="section-top">

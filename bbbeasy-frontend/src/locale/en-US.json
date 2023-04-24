@@ -309,6 +309,8 @@
 
     "install_locked_title": "Install Process locked",
     "install_locked_text": "Sorry, you are not authorized to access this page, application already installed",
+    "install_error_title": "Installer disabled",
+    "install_error_text": "Installer must be enabled in the backend configuration. Please reload once updated",
 
     "recordings": "Recordings",
     "date_col": "Date",
