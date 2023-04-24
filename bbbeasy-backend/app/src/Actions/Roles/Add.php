@@ -61,7 +61,7 @@ class Add extends BaseAction
                 $this->renderJson(['errors' => ['name' => 'Name already exists']], ResponseCode::HTTP_PRECONDITION_FAILED);
             } else {
                 try {
-                    $result = $role->saveRoleAndPermissions($form['permissions']);
+                    $result = $role->saveRoleAndPermissions($form['name'], $form['permissions']);
                     if (!$result) {
                         $this->renderJson(['errors' => $errorMessage], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
 
@@ -73,7 +73,7 @@ class Add extends BaseAction
 
                     return;
                 }
-                $this->renderJson(['result' => 'success', 'role' => $role->getRoleInfos()], ResponseCode::HTTP_CREATED);
+                $this->renderJson(['result' => 'success', 'role' => $role->getRoleInfos($result)], ResponseCode::HTTP_CREATED);
             }
         } else {
             $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
