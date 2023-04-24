@@ -297,6 +297,9 @@
     "edit_account_success": "Profil mis à jour avec succès",
     "install_locked_title": "Processus d'installation verrouillé",
     "install_locked_text": "Désolé, vous n'êtes pas autorisé à accéder à cette page, application déjà installée",
+    "install_error_title": "Processus d'installation est désactivé",
+    "install_error_text": "Processus d'installation doit etre activé dans la configuration backend.Veuillez recharger une fois mis à jour",
+
     "recordings": "Enregistrements",
     "date_col": "Date",
     "duration_col": "Durée",
