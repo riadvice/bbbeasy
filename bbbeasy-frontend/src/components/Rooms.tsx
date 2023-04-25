@@ -100,8 +100,8 @@ const RoomsCol: React.FC<RoomsColProps> = ({ index, room, editable, deleteClickH
                 onMouseLeave={() => setIsShown(false)}
                 bordered={false}
                 title={
+                <div onClick={() => showRoomDetails()}>
                     <Space
-                        onClick={() => showRoomDetails()}
                         size="middle"
                         direction="vertical"
                         className="room-card-title"
@@ -137,6 +137,7 @@ const RoomsCol: React.FC<RoomsColProps> = ({ index, room, editable, deleteClickH
                         </Badge>
                         <Title level={4}>{room.name}</Title>
                     </Space>
+                    </div>
                 }
                 extra={
                     isShown && (
