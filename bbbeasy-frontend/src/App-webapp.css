@@ -281,7 +281,7 @@ body.rtl {
     line-height: 1.7715;
 }
 .ant-tooltip-inner ul .text-black {
-    font-weight: bolder !important;
+    font-weight: bold !important;
 }
 .ant-tooltip-inner h5 {
     padding: 0 12px !important;
@@ -726,7 +726,7 @@ fieldset {
     border-radius: 10px !important;
 }
 .rooms-cards .ant-card:not(.ant-card-bordered):not(:hover) {
-    box-shadow: unset !important;
+    filter: drop-shadow(0px 0px 3px #ccc);
 }
 .rooms-cards .ant-card-head {
     border-bottom: none !important;
