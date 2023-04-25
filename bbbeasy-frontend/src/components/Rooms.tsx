@@ -16,6 +16,7 @@
  * with BBBEasy; if not, see <http://www.gnu.org/licenses/>.
  */
 
+import { PageHeader } from '@ant-design/pro-layout';
 import React, { useEffect, useState } from 'react';
 import { Trans, withTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -261,21 +262,42 @@ const Rooms = () => {
                     <EmptyData description={<Trans i18nKey="no_rooms" />} />
                 )
             ) : (
-                <Row gutter={[18, 18]} className="rooms-cards">
-                    {rooms.map((singleRoom, index) => (
-                        <RoomsCol
-                            key={index + '-' + singleRoom.name}
-                            index={index}
-                            room={singleRoom}
-                            editable={AuthService.isAllowedAction(actions, 'edit')}
-                            deleteClickHandler={
-                                AuthService.isAllowedAction(actions, 'delete')
-                                    ? deleteRoom.bind(this, singleRoom.id)
-                                    : null
-                            }
-                        />
-                    ))}
-                </Row>
+                <>
+                    <PageHeader
+                        title={<Trans i18nKey="rooms" />}
+                        extra={
+                            AuthService.isAllowedAction(actions, 'add') && [
+                                <Button key="1" type="primary"  onClick={() => setIsModalVisible(true)}>
+                                    <Trans i18nKey="new_room" />
+                                </Button>,
+                                <AddRoomForm
+                                    key="1"
+                                    isModalShow={isModalVisible}
+                                    close={() => {
+                                        setIsModalVisible(false);
+                                    }}
+                                    shortlink={initialAddValues.shortlink}
+                                    initialAddValues={initialAddValues}
+                                />
+                            ]
+                        }
+                    />
+                    <Row gutter={[18, 18]} className="rooms-cards">
+                        {rooms.map((singleRoom, index) => (
+                            <RoomsCol
+                                key={index + '-' + singleRoom.name}
+                                index={index}
+                                room={singleRoom}
+                                editable={AuthService.isAllowedAction(actions, 'edit')}
+                                deleteClickHandler={
+                                    AuthService.isAllowedAction(actions, 'delete')
+                                        ? deleteRoom.bind(this, singleRoom.id)
+                                        : null
+                                }
+                            />
+                        ))}
+                    </Row>
+                </>
             )}
         </>
     );
