@@ -21,7 +21,7 @@ import { Trans, withTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { t } from 'i18next';
 
-import { Avatar, Badge, Card, Col, Dropdown, Row, Space, Tag, Typography, Menu, Button, Modal } from 'antd';
+import { Avatar, Badge, Card, Col, Dropdown, Row, Space, Tag, Typography, Menu, Button, Modal, Tooltip } from 'antd';
 import { ClockCircleOutlined, MoreOutlined, TeamOutlined, WarningOutlined } from '@ant-design/icons';
 
 import Notifications from './Notifications';
@@ -135,7 +135,9 @@ const RoomsCol: React.FC<RoomsColProps> = ({ index, room, editable, deleteClickH
                                 </Avatar>
                             </Badge>
                         </Badge>
-                        <Title level={4}>{room.name}</Title>
+                        <Tooltip title={room.name} placement="top">
+                            <Title level={4}>{room.name}</Title>
+                        </Tooltip>
                     </Space>
                 }
                 extra={
