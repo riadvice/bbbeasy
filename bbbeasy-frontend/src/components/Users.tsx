@@ -449,9 +449,9 @@ const Users = () => {
                         </Button>
                     </Space>
                 ) : (
-                    <Space size="middle" className="table-actions">
+                    <Space size="middle">
                         {AuthService.isAllowedAction(actions, 'edit') && colletRolesAction && (
-                            <Link disabled={editingKey !== null} onClick={() => toggleEdit(record)}>
+                            <Link className="edit-button-color" disabled={editingKey !== null} onClick={() => toggleEdit(record)}>
                                 <EditOutlined /> <Trans i18nKey="edit" />
                             </Link>
                         )}
@@ -461,7 +461,7 @@ const Users = () => {
                                 icon={<QuestionCircleOutlined className="red-icon" />}
                                 onConfirm={() => handleDelete(record.key)}
                             >
-                                <Link>
+                                <Link className="delete-button-color">
                                     <DeleteOutlined /> <Trans i18nKey="delete" />
                                 </Link>
                             </Popconfirm>
