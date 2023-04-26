@@ -105,7 +105,7 @@ const RoomDetails = () => {
     const startRoom = () => {
         RoomsService.start_room(room.id)
             .then((result) => {
-                window.open(result.data, '_blank');
+                window.open(result.data, '_self');
             })
             .catch((error) => {
                 console.log(error);
