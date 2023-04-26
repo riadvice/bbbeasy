@@ -43,7 +43,7 @@
         "react-highlight-words": "^0.20.0",
         "react-hook-form": "^7.43.9",
         "react-hot-loader": "^4.13.1",
-        "react-i18next": "^12.2.0",
+        "react-i18next": "^12.2.2",
         "react-images-uploading": "^3.1.7",
         "react-intl": "^6.4.1",
         "react-router-dom": "^6.10.0",
