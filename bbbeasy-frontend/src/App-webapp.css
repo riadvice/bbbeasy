@@ -1411,3 +1411,13 @@ fieldset {
 .profile-form .ant-image .ant-image-mask:hover {
     opacity: 1;
 }
+
+.delete-button-color {
+    color: #ff4d4f !important;
+}
+.edit-button-color {
+    color: var(--bbbeasy-medimum-gray) !important;
+}
+.edit-button-color:hover {
+    color: #fbbc0b !important;
+}

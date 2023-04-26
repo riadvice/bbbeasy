@@ -306,9 +306,9 @@ const Labels = () => {
                     </Space>
                 );
                 const Actions = (
-                    <Space size="middle" className="table-actions">
+                    <Space size="middle">
                         {AuthService.isAllowedAction(actions, 'edit') && (
-                            <Link disabled={editingKey !== null} onClick={() => toggleEdit(record)}>
+                            <Link className="edit-button-color" disabled={editingKey !== null} onClick={() => toggleEdit(record)}>
                                 <EditOutlined /> <Trans i18nKey="edit" />
                             </Link>
                         )}
@@ -318,7 +318,7 @@ const Labels = () => {
                                 icon={<QuestionCircleOutlined className="red-icon" />}
                                 onConfirm={() => handleDelete(record.key, record.nb_rooms)}
                             >
-                                <Link>
+                                <Link className="delete-button-color">
                                     <DeleteOutlined /> <Trans i18nKey="delete" />
                                 </Link>
                             </Popconfirm>
