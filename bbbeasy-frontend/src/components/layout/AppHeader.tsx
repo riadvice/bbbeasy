@@ -191,7 +191,6 @@ const AppHeader = () => {
                         </Col>
                         <Col span={5} className="text-end">
                             <Space size="middle">
-                                {dropdownLang}
                                 <Dropdown
                                     overlay={menuProfile}
                                     overlayClassName="profil-btn-dropdown"
@@ -201,6 +200,7 @@ const AppHeader = () => {
                                 >
                                     <Button type="primary" icon={<UserOutlined />} className="profil-btn" />
                                 </Dropdown>
+                                {dropdownLang}
                             </Space>
                         </Col>
                     </Row>
