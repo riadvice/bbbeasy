@@ -95,7 +95,9 @@ class Install extends BaseAction
                             $user->role_id  = $roleAdmin->id;
 
                             // @fixme: should not have embedded try/catch here
-                            try {
+
+                            $errorMessage = 'Administrator could not be added';
+                            if ($this->credentialsAreValid($user->username, $user->email, $user->password, $errorMessage)) {
                                 $user->save();
 
                                 $userId = $user->getByEmail($form['email'])->id;
@@ -135,13 +137,8 @@ class Install extends BaseAction
                                     $this->logger->info('Initial application setup has been successfully done');
                                     $this->renderJson(['result' => 'success']);
                                 }
-                            } catch (\Exception $e) {
-                                $message = $e->getMessage();
-                                $this->logger->error('Initial application setup : Administrator could not be added', ['error' => $message]);
-                                $this->renderJson(['errors' => $message], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-
-                                return;
                             }
+
                         }
                     }
                 }
