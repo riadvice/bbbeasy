@@ -329,6 +329,7 @@ export const AddRoomForm = (props: Props) => {
                                     tagRender={tagRender}
                                     style={{ width: '100%' }}
                                     options={labels_data}
+                                    notFoundContent={<Trans i18nKey="no_labels" />}
                                 />
                             </Form.Item>
                         </Col>

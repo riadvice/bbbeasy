@@ -315,5 +315,8 @@
     "share": "شارك",
     "edit_recording_success": "تم تحديث التسجيل بنجاح",
     "delete_recording_confirm": "هل أنت متأكد من حذف هذا التسجيل ؟",
-    "delete_recording_success": "تم حذف التسجيل بنجاح"
+    "delete_recording_success": "تم حذف التسجيل بنجاح",
+
+    "no_labels": "لا توجد علامات"
+
 }

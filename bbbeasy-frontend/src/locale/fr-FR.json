@@ -318,5 +318,6 @@
     "delete_recording_success": "Enregistrement supprimé avec succès",
     "no_recordings": "Aucun Enregistrement",
     "no_rooms": "Aucune Salle",
-    "no_presets": "Aucun Préréglage"
+    "no_presets": "Aucun Préréglage",
+    "no_labels": "Aucun Label"
 }

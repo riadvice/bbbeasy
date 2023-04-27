@@ -220,7 +220,7 @@ const RoomDetails = () => {
         {
             item: 'labels',
             formItemNode: (
-                <Select mode="multiple" showArrow tagRender={tagRender} style={{ width: '100%' }} options={labels} />
+                <Select mode="multiple" showArrow tagRender={tagRender} style={{ width: '100%' }} options={labels} notFoundContent={<Trans i18nKey="no_labels" />}/>
             ),
         },
         {
