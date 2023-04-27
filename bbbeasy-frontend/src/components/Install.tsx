@@ -191,7 +191,7 @@ const Install = () => {
         {
             title: t('administrator_account'),
             content: <Step1Form message={message} success={message == ''} />,
-            button: t('create'),
+            button: t('next'),
             span: 8,
             offset: 4,
         },
