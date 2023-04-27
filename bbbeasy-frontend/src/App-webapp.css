@@ -1106,6 +1106,10 @@ fieldset {
 .empty-presets {
     height: 200px !important;
 }
+.empty-labels {
+    height: 40px !important;
+    margin-top: 10px !important;
+}
 /********************INSTALL********************/
 .success-install-icon {
     font-size: 40px !important;

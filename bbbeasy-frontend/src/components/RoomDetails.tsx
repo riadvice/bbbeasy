@@ -51,6 +51,7 @@ import { RecordingType } from '../types/RecordingType';
 import { PresetType } from 'types/PresetType';
 import { LabelType } from 'types/LabelType';
 import { UserType } from '../types/UserType';
+import NoData from "./NoData";
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -220,7 +221,7 @@ const RoomDetails = () => {
         {
             item: 'labels',
             formItemNode: (
-                <Select mode="multiple" showArrow tagRender={tagRender} style={{ width: '100%' }} options={labels} notFoundContent={<Trans i18nKey="no_labels" />}/>
+                <Select mode="multiple" showArrow tagRender={tagRender} style={{ width: '100%' }} options={labels} notFoundContent={<NoData description={<Trans i18nKey="no_labels" />} className="empty-labels" />}/>
             ),
         },
         {
