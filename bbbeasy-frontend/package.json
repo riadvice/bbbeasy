@@ -118,7 +118,7 @@
         "eslint-plugin-react": "^7.32.2",
         "eslint-webpack-plugin": "^4.0.1",
         "husky": "^8.0.3",
-        "lint-staged": "^13.2.1",
+        "lint-staged": "^13.2.2",
         "nyc": "^15.1.0",
         "pg": "^8.10.0",
         "prettier": "^2.8.8",
