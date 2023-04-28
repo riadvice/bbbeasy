@@ -191,7 +191,7 @@ const Install = () => {
         {
             title: t('administrator_account'),
             content: <Step1Form message={message} success={message == ''} />,
-            button: t('create'),
+            button: t('next'),
             span: 8,
             offset: 4,
         },
@@ -227,58 +227,50 @@ const Install = () => {
 
     const onFinish = () => {
         const stepsData: formType = stepForm.getFieldsValue(true);
-        if (activeStep == 0) {
-            setMessage('');
-            UsersService.collect_users(stepsData)
-                .then(() => {
-                    next();
-                })
-                .catch((error) => {
-                    setMessage(error.response.data.message);
-                });
+        
+        if (activeStep < steps.length - 1) {
+            next();
         } else {
-            if (activeStep < steps.length - 1) {
-                next();
-            } else {
-                //edit file
-                if (file != undefined && file.originFileObj != null) {
-                    const formData: FormData = new FormData();
-                    formData.append('logo', file.originFileObj, file.originFileObj.name);
-                    formData.append('logo_name', file.originFileObj.name);
+            //edit file
+            if (file != undefined && file.originFileObj != null) {
+                const formData: FormData = new FormData();
+                formData.append('logo', file.originFileObj, file.originFileObj.name);
+                formData.append('logo_name', file.originFileObj.name);
 
-                    axios
-                        .post(apiRoutes.SAVE_FILE_URL, formData)
-                        .then((response) => {
-                            console.log(response);
-                        })
-                        .catch((error) => {
-                            console.log(error);
-                        });
-                }
-
-                stepsData.branding_colors = {
-                    primary_color: primaryColor,
-                    secondary_color: secondaryColor,
-                    accent_color: accentColor,
-                    add_color: addColor,
-                };
-                stepsData.presetsConfig = presets;
-
-                if (file != undefined && file.originFileObj != null) {
-                    stepsData.logo = file.name;
-                } else if (file == undefined && stepsData.logo != null) {
-                    stepsData.logo = null;
-                }
-
-                InstallService.install(stepsData)
-                    .then(() => {
-                        setSuccessful(true);
+                axios
+                    .post(apiRoutes.SAVE_FILE_URL, formData)
+                    .then((response) => {
+                        console.log(response);
                     })
                     .catch((error) => {
                         console.log(error);
                     });
             }
+
+            stepsData.branding_colors = {
+                primary_color: primaryColor,
+                secondary_color: secondaryColor,
+                accent_color: accentColor,
+                add_color: addColor,
+            };
+            stepsData.presetsConfig = presets;
+
+            if (file != undefined && file.originFileObj != null) {
+                stepsData.logo = file.name;
+            } else if (file == undefined && stepsData.logo != null) {
+                stepsData.logo = null;
+            }
+
+            InstallService.install(stepsData)
+                .then(() => {
+                    setSuccessful(true);
+                })
+                .catch((error) => {
+                    setMessage(error.response.data.message);
+                    console.log(error.response.data.message);
+                });
         }
+       
     };
 
     return (
@@ -328,10 +320,8 @@ const Install = () => {
                             onValuesChange={() => setMessage('')}
                         >
                             {steps[activeStep].content}
-
                             <UserPasswordForm isHidden={activeStep != 0} />
-
-                            <Form.Item
+                            <Row
                                 className={
                                     activeStep === steps.length - 1
                                         ? 'button-container final-step-btn'
@@ -339,16 +329,21 @@ const Install = () => {
                                 }
                             >
                                 {activeStep > 0 && (
-                                    <Button className="prev" onClick={() => prev()} block>
+                                    <Button onClick={() => prev()} className="btn-installer prev">
                                         <Trans i18nKey="previous" />
                                     </Button>
                                 )}
                                 {activeStep <= steps.length - 1 && (
-                                    <Button type="primary" id="submit-btn" htmlType="submit" block>
+                                    <Button
+                                        type="primary"
+                                        className="btn-installer"
+                                        htmlType="submit"
+                                        style={activeStep == 0 ? { 'width': '100%' } : { 'width': '50%' }}
+                                    >
                                         {steps[activeStep].button}
                                     </Button>
                                 )}
-                            </Form.Item>
+                            </Row>
                         </Form>
                     </Col>
                 </>

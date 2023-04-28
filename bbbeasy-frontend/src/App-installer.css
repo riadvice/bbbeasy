@@ -387,6 +387,12 @@ body.rtl {
 .button-container {
     margin-top: 24px !important;
 }
+.btn-installer {
+    margin-top: 20px;
+    width: 50%;
+    font-weight: bold;
+    display: inline-block;
+}
 .button-container .ant-row:not(.ant-row-rtl) .prev {
     margin-right: 20px;
 }
