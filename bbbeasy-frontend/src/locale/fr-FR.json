@@ -319,5 +319,7 @@
     "no_recordings": "Aucun Enregistrement",
     "no_rooms": "Aucune Salle",
     "no_presets": "Aucun Préréglage",
-    "no_labels": "Aucun Label"
+    "no_labels": "Aucun Label",
+    "no_data": "Aucune donnée"
+
 }

@@ -377,6 +377,7 @@ const Labels = () => {
                 mergedColumns={mergedColumns}
                 dataSource={data}
                 loading={loading}
+                notFoundContent="no_labels"
             />
         </>
     );

@@ -459,6 +459,7 @@ const Recordings = () => {
                 mergedColumns={mergedColumns}
                 dataSource={data}
                 loading={loading}
+                notFoundContent="no_data"
             />
         </>
     );

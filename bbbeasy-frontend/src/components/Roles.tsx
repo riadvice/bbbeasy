@@ -637,6 +637,7 @@ const Roles = () => {
                     showExpandColumn: false,
                     expandedRowKeys: expandedKeys,
                 }}
+                notFoundContent="no_data"
             />
         </>
     );
