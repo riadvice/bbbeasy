@@ -206,7 +206,11 @@ export const AddRoomForm = (props: Props) => {
                                     },
                                     {
                                         min: 4,
-                                        message: <Trans i18nKey="room_name.size" />,
+                                        message: <Trans i18nKey="room_name.minSize" />,
+                                    },
+                                    {
+                                        max: 256,
+                                        message: <Trans i18nKey="room_name.maxSize" />,
                                     },
                                 ]}
                             >
