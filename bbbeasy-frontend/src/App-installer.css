@@ -555,6 +555,9 @@ body.rtl {
     text-align: center !important;
     border-top: unset;
 }
+.ant-modal-footer {
+    display: flex;
+}
 .presets-modal .ant-modal-footer button {
     width: 70%;
 }

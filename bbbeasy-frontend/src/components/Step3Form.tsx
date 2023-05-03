@@ -28,7 +28,7 @@ import { PresetType } from '../types/PresetType';
 import { SubCategoryType } from '../types/SubCategoryType';
 import { getIconName } from '../types/GetIconName';
 import EN_US from '../locale/en-US.json';
-
+import { FormInstance } from 'antd/lib/form';
 const { Title, Paragraph } = Typography;
 const { Grid, Meta } = Card;
 
@@ -37,7 +37,7 @@ type Props = {
     onFinish?: (category: string, subCategories: SubCategoryType[]) => void;
     enabled?: boolean;
 };
-
+let step3Form: FormInstance = null;
 export const Step3Form = (props: Props) => {
     const { presets } = props;
     const enabled = props.enabled ?? true;
@@ -50,15 +50,23 @@ export const Step3Form = (props: Props) => {
         setIsModalVisible(true);
         setModalTitle(title);
         setModalTitleTrans(titleTrans);
+
         setModalContent(content);
     };
     const Confirm = () => {
-        if (props.onFinish) {
-            props.onFinish(modalTitle, modalContent);
-        }
+        modalContent.map((item) => {
+            item.enabled = step3Form.getFieldValue(item.name);
+        });
         setIsModalVisible(false);
     };
+    const Cancel = () => {
+        modalContent.map((item) => {
+            step3Form.getFieldValue(item.name);
+            step3Form.setFieldValue(item.name, item.enabled);
+        });
 
+        setIsModalVisible(false);
+    };
     return (
         <>
             <Paragraph className="final-form-header">
@@ -121,32 +129,36 @@ export const Step3Form = (props: Props) => {
                         centered
                         open={isModalVisible}
                         onOk={() => setIsModalVisible(false)}
-                        onCancel={() => setIsModalVisible(false)}
+                        onCancel={() => Cancel()}
                         footer={[
-                            <Button key="submit" type="primary" onClick={Confirm}>
+                            <Button key="reset" onClick={Cancel}>
+                                <Trans i18nKey="cancel" />
+                            </Button>,
+                            <Button key="submit" type="primary" htmlType="submit" onClick={Confirm}>
                                 <Trans i18nKey="confirm" />
                             </Button>,
                         ]}
                         maskClosable={true}
                     >
-                        <div className="presets-body">
-                            {modalContent.map((item) => {
-                                const subcategory = item.name;
+                        <Form initialValues={modalContent} ref={(form) => (step3Form = form)}>
+                            <div className="presets-body">
+                                {modalContent.map((item) => {
+                                    const subcategory = item.name;
 
-                                return (
-                                    <div key={modalTitle + '_' + item.name}>
-                                        <Form.Item label={<Trans i18nKey={subcategory} />} valuePropName={item.name}>
-                                            <Switch
-                                                defaultChecked={item.enabled == true ? true : false}
-                                                onChange={(checked) => {
-                                                    item.enabled = checked;
-                                                }}
-                                            />
-                                        </Form.Item>
-                                    </div>
-                                );
-                            })}
-                        </div>
+                                    return (
+                                        <div key={modalTitle + '_' + item.name}>
+                                            <Form.Item
+                                                label={<Trans i18nKey={subcategory} />}
+                                                valuePropName="checked"
+                                                name={item.name}
+                                            >
+                                                <Switch defaultChecked={item.enabled} />
+                                            </Form.Item>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </Form>
                     </Modal>
                 )}
             </Card>
