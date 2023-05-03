@@ -62,6 +62,7 @@ type formType = {
 
 type editFormItemType = {
     item: string;
+    label: JSX.Element;
     formItemNode: JSX.Element;
     isRequired?: boolean;
     messageItem?: string;
@@ -91,6 +92,7 @@ const RoomDetails = () => {
     const dataContext = React.useContext(DataContext);
 
     const [errorsEdit, setErrorsEdit] = React.useState({});
+    const [showSocialMedia, setShowSocialMedia] = useState(true);
     const [isEditing, setIsEditing] = React.useState<boolean>(false);
     const [labels, setLabels] = React.useState<LabelType[]>();
     const [presets, setPresets] = React.useState<PresetType[]>();
@@ -199,11 +201,13 @@ const RoomDetails = () => {
     const editFormItems: editFormItemType[] = [
         {
             item: 'name',
+            label: <Trans i18nKey="name.label" />,
             formItemNode: <Input />,
             isRequired: true,
         },
         {
             item: 'preset_id',
+            label: <Trans i18nKey="preset.label" />,
             formItemNode: (
                 <Select
                     className="select-field"
@@ -235,12 +239,14 @@ const RoomDetails = () => {
         },
         {
             item: 'labels',
+            label: <Trans i18nKey="labels" />,
             formItemNode: (
                 <Select mode="multiple" showArrow tagRender={tagRender} style={{ width: '100%' }} options={labels} notFoundContent={<NoData description={<Trans i18nKey="no_labels" />} className="empty-labels" />}/>
             ),
         },
         {
             item: 'short_link',
+            label: <Trans i18nKey="shortlink.label" />,
             formItemNode: <Input addonBefore={prefixShortLink} defaultValue={room?.short_link} />,
             isRequired: true,
             messageItem: 'shortlink',
@@ -248,6 +254,7 @@ const RoomDetails = () => {
     ];
     const toggleEdit = () => {
         setIsEditing(true);
+        setShowSocialMedia(false);
 
         const labels_data = [];
         room.labels.forEach((label) => {
@@ -264,9 +271,11 @@ const RoomDetails = () => {
     const cancelEdit = () => {
         setErrorsEdit({});
         setIsEditing(false);
+        setShowSocialMedia(true);
     };
     const handleSaveEdit = async () => {
         setErrorsEdit({});
+        setShowSocialMedia(true);
         try {
             const values = (await editForm.validateFields()) as formType;
 
@@ -292,7 +301,7 @@ const RoomDetails = () => {
         }
     };
     const customFormItem = (editFormItem: editFormItemType) => {
-        const { item, formItemNode, isRequired, messageItem } = editFormItem;
+        const { item, formItemNode, isRequired, messageItem, label } = editFormItem;
 
         return (
             <Form.Item
@@ -301,6 +310,7 @@ const RoomDetails = () => {
                     help: <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errorsEdit[item])} />,
                     validateStatus: 'error',
                 })}
+                label={label}
                 rules={[
                     {
                         required: isRequired && true,
@@ -388,14 +398,14 @@ const RoomDetails = () => {
                                                     </>
                                                 ) : (
                                                     <Space size="middle" direction="vertical">
-                                                        <Form form={editForm}>
+                                                        <Form form={editForm} layout="vertical">
                                                             {editFormItems.map((editFormItem) => {
                                                                 return customFormItem(editFormItem);
                                                             })}
                                                         </Form>
                                                     </Space>
                                                 )}
-                                                <div className="medias">
+                                                {showSocialMedia && ( <div className="medias">
                                                     <Space size="middle">
                                                         <Tooltip
                                                             placement="bottom"
@@ -420,6 +430,7 @@ const RoomDetails = () => {
                                                         <MailOutlined />
                                                     </Tooltip>
                                                 </div>
+                                                )}
                                             </Space>
                                         </Col>
                                         {(canStart || isRunning) && (
