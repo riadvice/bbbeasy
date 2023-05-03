@@ -98,7 +98,7 @@ const RoomPresentations = () => {
                     {fileList.length >= 8 ? null : uploadButton}
                 </Upload>
             </Card>
-            <Modal open={previewOpen} footer={null} onCancel={handleCancel} maskClosable={false}>
+            <Modal open={previewOpen} footer={null} onCancel={handleCancel} maskClosable={true}>
                 <img className="full-width" src={previewImage} />
             </Modal>
         </>

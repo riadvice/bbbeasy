@@ -97,7 +97,7 @@ export const AddPresetForm = (props: Props) => {
                 onOk={handleAdd}
                 onCancel={props.close}
                 footer={null}
-                maskClosable={false}
+                maskClosable={true}
             >
                 <Form
                     layout="vertical"
