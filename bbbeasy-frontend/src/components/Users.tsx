@@ -455,7 +455,7 @@ const Users = () => {
                                 <EditOutlined /> <Trans i18nKey="edit" />
                             </Link>
                         )}
-                        {AuthService.isAllowedAction(actions, 'delete') && !deletedRow && (
+                        {AuthService.isAllowedAction(actions, 'delete') && !deletedRow && record.key != 1 && (
                             <Popconfirm
                                 title={t('delete_user_confirm')}
                                 icon={<QuestionCircleOutlined className="red-icon" />}
