@@ -50,26 +50,23 @@ export const Step3Form = (props: Props) => {
         setIsModalVisible(true);
         setModalTitle(title);
         setModalTitleTrans(titleTrans);
-    
-       setModalContent(content);
+
+        setModalContent(content);
     };
     const Confirm = () => {
-         
-        modalContent.map((item)=>{
-            item.enabled=step3Form.getFieldValue(item.name);
-        })
-       setModalContent(modalContent)
+        modalContent.map((item) => {
+            item.enabled = step3Form.getFieldValue(item.name);
+        });
+        setModalContent(modalContent);
         setIsModalVisible(false);
     };
     const Cancel = () => {
-      modalContent.map((item)=>{
-        step3Form.getFieldValue(item.name);
-         step3Form.setFieldValue(item.name,item.enabled);
-           })
-      
+        modalContent.map((item) => {
+            step3Form.getFieldValue(item.name);
+            step3Form.setFieldValue(item.name, item.enabled);
+        });
+
         setIsModalVisible(false);
-       
-  
     };
     return (
         <>
@@ -135,34 +132,33 @@ export const Step3Form = (props: Props) => {
                         onOk={() => setIsModalVisible(false)}
                         onCancel={() => Cancel()}
                         footer={[
-                            <Button key="reset"   onClick={Cancel}>
-                            <Trans i18nKey="cancel" />
-                        </Button>,
-                            <Button key="submit" type="primary"  htmlType="submit" onClick={Confirm}>
+                            <Button key="reset" onClick={Cancel}>
+                                <Trans i18nKey="cancel" />
+                            </Button>,
+                            <Button key="submit" type="primary" htmlType="submit" onClick={Confirm}>
                                 <Trans i18nKey="confirm" />
                             </Button>,
-                            
                         ]}
                         maskClosable={false}
                     >
-                          <Form
-                  initialValues={modalContent}
-                    ref={(form) => (step3Form = form)}
-                  
-                > 
-                        <div className="presets-body">
-                            {modalContent.map((item) => {
-                                const subcategory = item.name;
-                                     
-                                return (
-                                    <div key={modalTitle + '_' + item.name}>
-                                        <Form.Item label={<Trans i18nKey={subcategory} />} valuePropName="checked"  name={item.name} >
-                                        <Switch defaultChecked={item.enabled} />
-                                        </Form.Item>
-                                    </div>
-                                );
-                            })}
-                        </div>
+                        <Form initialValues={modalContent} ref={(form) => (step3Form = form)}>
+                            <div className="presets-body">
+                                {modalContent.map((item) => {
+                                    const subcategory = item.name;
+
+                                    return (
+                                        <div key={modalTitle + '_' + item.name}>
+                                            <Form.Item
+                                                label={<Trans i18nKey={subcategory} />}
+                                                valuePropName="checked"
+                                                name={item.name}
+                                            >
+                                                <Switch defaultChecked={item.enabled} />
+                                            </Form.Item>
+                                        </div>
+                                    );
+                                })}
+                            </div>
                         </Form>
                     </Modal>
                 )}
