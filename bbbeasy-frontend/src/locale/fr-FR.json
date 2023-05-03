@@ -257,7 +257,8 @@
     "edit_preset_settings_success": "Paramètres des salles BigBlueButton mis à jour avec succès",
     "new_room": "Nouvelle Salle",
     "room_name": {
-        "size": "Le nom de la salle doit comporter au moins 4 caractères"
+        "minSize": "Le nom de la salle doit comporter au moins 4 caractères",
+        "maxSize": "Le nom de la salle ne peut pas dépasser 256 caractères"
     },
     "shortlink": {
         "label": "Lien",

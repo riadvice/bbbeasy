@@ -265,7 +265,8 @@
 
     "new_room": "New Room",
     "room_name": {
-        "size": "Room Name must have at least 4 characters"
+        "minSize": "Room Name must have at least 4 characters",
+        "maxSize": "Room Name cannot be longer than 256 characters"
     },
     "shortlink": {
         "label": "Short Link",
