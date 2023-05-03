@@ -55,31 +55,16 @@ class Edit extends BaseAction
             $dataChecker->verify($form['short_link'], Validator::notEmpty()->setName('short_link'));
             $dataChecker->verify($form['preset_id'], Validator::notEmpty()->setName('preset_id'));
 
-            $nameErrorMessage      = 'Room name already exists';
-            $shortlinkErrorMessage = 'Room link already exists';
-
             if ($dataChecker->allValid()) {
                 $checkRoom        = new Room();
                 $room->name       = $form['name'];
                 $room->short_link = $form['short_link'];
+                $room->preset_id  = $form['preset_id'];
 
-                $room->preset_id = $form['preset_id'];
-                $nameExist       = $checkRoom->nameExists($room->name, $room->user_id, $id);
-                $shortlinkExist  = $checkRoom->shortlinkExists($room->short_link, $id);
-
-                if ($nameExist || $shortlinkExist) {
-                    if ($nameExist && $shortlinkExist) {
-                        $message = ['name' => $nameErrorMessage, 'shortlink' => $shortlinkErrorMessage];
-                    } elseif ($nameExist) {
-                        $message = ['name' => $nameErrorMessage];
-                    } else {
-                        $message = ['short_link' => $shortlinkErrorMessage];
-                    }
-                    $this->logger->error($errorMessage, ['errors' => $message]);
-                    $this->renderJson(['errors' => $message], ResponseCode::HTTP_PRECONDITION_FAILED);
-
-                    return;
-                }
+                $nameExist       = $checkRoom->nameExists($room->name, $room->user_id);
+                $shortlinkExist  = $checkRoom->shortlinkExists($room->short_link);
+                $presetExist     = $checkRoom->presetExists($form['preset_id'],$form['name']);
+                $labelUpdated    = $this->labelUpdated($room->getLabels($room->id), $form['labels']);
 
                 if ($form['labels']) {
                     foreach ($form['labels'] as $label) {
@@ -102,8 +87,8 @@ class Edit extends BaseAction
 
                 foreach ($room->getLabels($room->id) as $label) {
                     $roomLabel = new RoomLabel();
-
                     if (!\in_array($label['color'], $form['labels'], true)) {
+                        $labelUpdated = true;
                         $roomLabel = $roomLabel->getByRoomAndLabel($room->id, $label['key']);
                         if (!$roomLabel->dry()) {
                             $roomLabel->erase();
@@ -112,14 +97,17 @@ class Edit extends BaseAction
                 }
 
                 try {
+                    if(!$labelUpdated && $nameExist && $shortlinkExist && $presetExist){
+                        $this->logger->info('The room is not updated', ['room' => $room->toArray()]);
+                        $this->renderJson(['result' => "FAILED", 'room' => $room->getRoomInfos($room)]);
+                        return;
+                    }
                     $room->save();
                 } catch (\Exception $e) {
                     $this->logger->error($errorMessage, ['error' => $e->getMessage()]);
                     $this->renderJson(['errors' => $e->getMessage()], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-
                     return;
                 }
-
 
                 $this->logger->info('room successfully updated', ['room' => $room->toArray()]);
                 $this->renderJson(['result' => 'success', 'room' => $room->getRoomInfos($room)]);
@@ -131,5 +119,24 @@ class Edit extends BaseAction
             $this->logger->error($errorMessage);
             $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
         }
+    }
+    public function labelUpdated($labels,$newLabels){
+        /*
+         * Get old label.
+         */
+        $oldLabel = [];
+        foreach ($labels as $label) {
+            $oldLabel[] = $label['color'];
+        }
+
+        /*
+         * Test whether the label has been updated or not.
+         */
+        foreach ($newLabels as $label) {
+            if (!in_array($label, $oldLabel, true)) {
+                 return true;
+            }
+        }
+        return false;
     }
 }

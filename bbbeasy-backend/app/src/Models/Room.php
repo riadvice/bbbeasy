@@ -73,6 +73,11 @@ class Room extends BaseModel
         return $this->load(['short_link = ? and id != ?', $shortlink, $id]);
     }
 
+    public function presetExists($presetId, $name)
+    {
+        return $this->load(['preset_id = ? and name = ?', $presetId, $name]);
+    }
+
     /**
      * Get room record by link.
      *

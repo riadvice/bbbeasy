@@ -273,22 +273,55 @@ const RoomDetails = () => {
         setIsEditing(false);
         setShowSocialMedia(true);
     };
+
+    const labelUpdated = (labels_data,new_labels) => {
+        if(labels_data.length != new_labels.length ){
+            return true;
+        }else{
+            for (const label of new_label) {
+                if(!labels_data.includes(label)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    const cancelEditRoom = () => {
+        const labels_data = [];
+        room.labels.forEach((label) => {
+            labels_data.push(label.color);
+        });
+
+        const name = editForm.getFieldValue('name')
+        const short_link = editForm.getFieldValue('short_link')
+        const presetId = editForm.getFieldValue('preset_id')
+        const labels = editForm.getFieldValue('labels')
+        if(!labelUpdated(labels_data,labels) && name == room.name && short_link == room.short_link && presetId == room.preset_id ){
+            cancelEdit();
+        }
+    };
+
     const handleSaveEdit = async () => {
         setErrorsEdit({});
         setShowSocialMedia(true);
         try {
             const values = (await editForm.validateFields()) as formType;
-
             RoomsService.edit_room(values, room.id)
                 .then((response) => {
-                    setRoom(response.data.room);
-                    const index = dataContext.dataRooms.findIndex((item) => room.id === item.id);
+                    if(response.data.result === 'FAILED'){
+                        Notifications.openNotificationWithIcon('info', t('no_changes'));
+                        cancelEdit();
+                    }else{
+                        setRoom(response.data.room);
+                        const index = dataContext.dataRooms.findIndex((item) => room.id === item.id);
 
-                    if (index !== -1) {
-                        dataContext.dataRooms[index] = response.data.room;
+                        if (index !== -1) {
+                            dataContext.dataRooms[index] = response.data.room;
+                        }
+                        Notifications.openNotificationWithIcon('success', t('edit_room_success'));
+                        cancelEdit();
                     }
-                    Notifications.openNotificationWithIcon('success', t('edit_room_success'));
-                    cancelEdit();
                 })
                 .catch((error) => {
                     const responseData = error.response.data;
@@ -355,7 +388,7 @@ const RoomDetails = () => {
                                                     placement="leftTop"
                                                     onConfirm={() => cancelEdit()}
                                                 >
-                                                    <Button size="middle" className="cell-input-cancel">
+                                                    <Button size="middle" onClick={() => cancelEditRoom()}  className="cell-input-cancel">
                                                         <Trans i18nKey="cancel" />
                                                     </Button>
                                                 </Popconfirm>
