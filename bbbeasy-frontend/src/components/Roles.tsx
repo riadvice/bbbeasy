@@ -575,7 +575,7 @@ const Roles = () => {
                     onCancel={cancelAdd}
                     footer={null}
                     width={600}
-                    maskClosable={false}
+                    maskClosable={true}
                 >
                     <Form
                         layout="vertical"

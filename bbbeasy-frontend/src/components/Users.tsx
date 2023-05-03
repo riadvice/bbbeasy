@@ -511,7 +511,7 @@ const Users = () => {
                     onOk={handleAdd}
                     onCancel={cancelAdd}
                     footer={null}
-                    maskClosable={false}
+                    maskClosable={true}
                 >
                     <Form
                         layout="vertical"
