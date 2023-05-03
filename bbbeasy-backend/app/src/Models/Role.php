@@ -66,7 +66,7 @@ class Role extends BaseModel
         $roles = $this->find([], ['order' => 'id']);
         if ($roles) {
             foreach ($roles as $role) {
-                $data[] = $role->getRoleInfos();
+                $data[] = $role->getRoleInfos($role);
             }
         }
 
@@ -78,14 +78,26 @@ class Role extends BaseModel
         return $this->db->exec('SELECT id, name FROM roles');
     }
 
-    public function getRoleInfos(): array
+    public function getRoleInfos($role): array
     {
         return [
-            'key'         => $this->id,
-            'name'        => $this->name,
+            'key'         => $role->id,
+            'name'        => $role->name,
             'users'       => $this->getRoleUsers(),
             'permissions' => $this->getRolePermissions(),
         ];
+    }
+
+    public function getRoleByName($name)
+    {
+        $this->load(['name = ? ', $name ]);
+        return $this;
+    }
+
+    public function getIdRoleByName($name): array
+    {
+       $id = $this->db->exec('SELECT id FROM roles where name= ?', $name);
+       return $id[0];
     }
 
     public function getLecturerRole(): array
@@ -133,13 +145,16 @@ class Role extends BaseModel
         return $permissionsRole;
     }
 
-    public function saveRoleAndPermissions($permissions): bool
+    public function saveRoleAndPermissions($name,$permissions): bool | Role
     {
         $this->logger->info('Starting save role and permissions transaction.');
         $this->db->begin();
         $this->save();
         $this->logger->info('Role successfully added', ['role' => $this->toArray()]);
+        $this->db->commit();
+        $roleId=$this->getIdRoleByName($name);
 
+        $this->db->begin();
         if (isset($permissions)) {
             // add permissions
             foreach ($permissions as $group => $actions) {
@@ -148,7 +163,7 @@ class Role extends BaseModel
                         $rolePermission          = new RolePermission();
                         $rolePermission->group   = $group;
                         $rolePermission->name    = $action;
-                        $rolePermission->role_id = $this->id;
+                        $rolePermission->role_id = $roleId["id"];
 
                         try {
                             $rolePermission->save();
@@ -166,7 +181,7 @@ class Role extends BaseModel
         $this->db->commit();
         $this->logger->info('Save role and permissions transaction successfully commit.');
 
-        return true;
+        return $this->getRoleByName($name);
     }
 
     public function switchAllRoleUsers(): bool
