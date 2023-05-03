@@ -318,6 +318,8 @@
     "delete_recording_confirm": "هل أنت متأكد من حذف هذا التسجيل ؟",
     "delete_recording_success": "تم حذف التسجيل بنجاح",
 
-    "no_labels": "لا توجد علامات"
+    "no_labels": "لا توجد علامات",
+    "no_data": "لا توجد بيانات"
+
 
 }
