@@ -278,7 +278,7 @@ const RoomDetails = () => {
         if(labels_data.length != new_labels.length ){
             return true;
         }else{
-            for (const label of new_label) {
+            for (const label of new_labels) {
                 if(!labels_data.includes(label)){
                     return true;
                 }
