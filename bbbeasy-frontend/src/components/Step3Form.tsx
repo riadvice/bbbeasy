@@ -57,7 +57,6 @@ export const Step3Form = (props: Props) => {
         modalContent.map((item) => {
             item.enabled = step3Form.getFieldValue(item.name);
         });
-        setModalContent(modalContent);
         setIsModalVisible(false);
     };
     const Cancel = () => {
