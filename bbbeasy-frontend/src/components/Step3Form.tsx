@@ -131,12 +131,14 @@ export const Step3Form = (props: Props) => {
                         onOk={() => setIsModalVisible(false)}
                         onCancel={() => Cancel()}
                         footer={[
-                            <Button key="reset" onClick={Cancel}>
-                                <Trans i18nKey="cancel" />
-                            </Button>,
-                            <Button key="submit" type="primary" htmlType="submit" onClick={Confirm}>
-                                <Trans i18nKey="confirm" />
-                            </Button>,
+                            <Form.Item key="footer" className="button-container">
+                                <Button className="cancel-btn prev" key="reset" onClick={Cancel}>
+                                    <Trans i18nKey="cancel" />
+                                </Button>
+                                <Button key="submit" type="primary" htmlType="submit" onClick={Confirm}>
+                                    <Trans i18nKey="confirm" />
+                                </Button>
+                            </Form.Item>
                         ]}
                         maskClosable={true}
                     >
