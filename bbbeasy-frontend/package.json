@@ -46,7 +46,7 @@
         "react-i18next": "^12.2.2",
         "react-images-uploading": "^3.1.7",
         "react-intl": "^6.4.1",
-        "react-router-dom": "^6.10.0",
+        "react-router-dom": "^6.11.1",
         "react-scripts": "^5.0.1",
         "reload": "^3.2.1",
         "serve": "^14.2.0",
