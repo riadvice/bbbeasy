@@ -245,6 +245,9 @@
     "required_status": "Veuillez sélectionner une status",
     "no_changes": "Aucune modification n'a été effectuée",
     "new_preset": "Nouveau préréglage",
+    "preset_name": {
+        "maxSize": "Le nom du préréglage ne peut pas dépasser 64 caractères"
+    },
     "search_preset": "Chercher préréglage",
     "rename": "Renommer",
     "delete_preset_confirm": "Êtes-vous sûr de vouloir supprimer ce préréglage ?",
