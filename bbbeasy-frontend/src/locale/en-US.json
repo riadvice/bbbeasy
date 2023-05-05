@@ -246,8 +246,10 @@
     "required_role": "Please select a role",
     "required_status": "Please select a state",
     "no_changes": "No changes made",
-
     "new_preset": "New Preset",
+    "preset_name": {
+        "maxSize": "Preset Name cannot be longer than 64 characters"
+    },
     "upload_img": "Upload jpg, jpeg, png only",
     "search_preset": "Search all my presets",
     "rename": "Rename",

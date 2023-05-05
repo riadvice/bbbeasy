@@ -245,6 +245,9 @@
     "required_status": "Veuillez sélectionner une status",
     "no_changes": "Aucune modification n'a été effectuée",
     "new_preset": "Nouveau préréglage",
+    "preset_name": {
+        "maxSize": "Le nom du préréglage ne peut pas dépasser 64 caractères"
+    },
     "upload_img": "Télécharger jpg, jpeg, png uniquement",
     "search_preset": "Chercher préréglage",
     "rename": "Renommer",
