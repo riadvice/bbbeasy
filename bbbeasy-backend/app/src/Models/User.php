@@ -187,6 +187,11 @@ class User extends BaseModel
         return (int) $result[0]['total'];
     }
 
+    public function getPasswordAttemptsById($userId)
+    {
+        return $this->db->exec('UPDATE users SET password_attempts = 3 WHERE id = ?', $userId);
+    }
+
     public function verifyPassword($password): bool
     {
         return password_verify(trim($password), $this->password);

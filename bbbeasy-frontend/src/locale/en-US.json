@@ -33,7 +33,8 @@
         "label": "Password",
         "required": "Password is required",
         "size": "Password must have at least 8 characters",
-        "invalid": "Invalid password"
+        "invalid": "Invalid password",
+        "resetAttempts": "Password attempts have been reset"
     },
     "join-us": "Join us",
     "register-now": "Register now and join our community ",
@@ -186,6 +187,7 @@
     "permissions": {
         "label": "Permissions"
     },
+    "reset_password_attempts": "Reset password attempts",
     "search": "Search",
     "reset": "Reset",
     "filter": "Filter",

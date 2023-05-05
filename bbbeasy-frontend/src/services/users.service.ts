@@ -36,6 +36,10 @@ class UsersService {
         });
     }
 
+    reset_password_attempts(id: number) {
+        return axiosInstance.post(apiRoutes.RESET_PASSWORD_ATTEMPTS_URL + id);
+    }
+
     edit_user(data: object, id: number) {
         return axiosInstance.put(apiRoutes.EDIT_USER_URL + id, {
             data,
