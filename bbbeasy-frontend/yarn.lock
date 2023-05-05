@@ -1989,9 +1989,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@crowdin/cli@npm:^3.10.1":
-  version: 3.10.1
-  resolution: "@crowdin/cli@npm:3.10.1"
+"@crowdin/cli@npm:^3.11.0":
+  version: 3.11.0
+  resolution: "@crowdin/cli@npm:3.11.0"
   dependencies:
     command-exists-promise: ^2.0.2
     node-fetch: 2.6.7
@@ -2000,7 +2000,7 @@ __metadata:
     yauzl: ^2.10.0
   bin:
     crowdin: jdeploy-bundle/jdeploy.js
-  checksum: 1dd2aa33de5a18f5f7a1fe57023fc549b0b893948dc0a4d7b5cd6d3ca0236f950029f9b731fcc0186f90bcb9cb8755949d104669014c12b7e8cd03dd0f3eb81c
+  checksum: c79819e6ab2b505915ec2d66074308a50cd7d3c3c3836e5fe74b06e0cbe5d42d7db5d26b8ae853cd58d06d6b78e6bc4eb896695c3403fa2aa46094c2640f7696
   languageName: node
   linkType: hard
 
@@ -5453,7 +5453,7 @@ __metadata:
     "@babel/plugin-proposal-private-property-in-object": ^7.21.0
     "@babel/preset-env": ^7.21.5
     "@craco/craco": ^7.1.0
-    "@crowdin/cli": ^3.10.1
+    "@crowdin/cli": ^3.11.0
     "@cypress/code-coverage": ^3.10.4
     "@hot-loader/react-dom": ^17.0.2
     "@testing-library/jest-dom": ^5.16.5
