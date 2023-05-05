@@ -226,7 +226,8 @@
     "delete_user_success": "User successfully deleted",
 
     "label_name": {
-        "size": "Label Name must be at least one character"
+        "size": "Label Name must be at least one character",
+        "maxSize": "Label name cannot be longer than 32 characters"
     },
     "label-name-already-exist": "Label name already exists",
     "label-color-already-exist": "Label color already exists",

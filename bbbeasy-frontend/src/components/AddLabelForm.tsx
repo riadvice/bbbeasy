@@ -134,6 +134,10 @@ export const AddLabelForm = (props: Props) => {
                                     min: 1,
                                     message: <Trans i18nKey="label_name.size" />,
                                 },
+                                {
+                                    max: 32,
+                                    message: <Trans i18nKey="label_name.maxSize" />,
+                                },
                             ]}
                         >
                             <Input placeholder={t('name.label')} />
