@@ -90,14 +90,16 @@ class Role extends BaseModel
 
     public function getRoleByName($name)
     {
-        $this->load(['name = ? ', $name ]);
+        $this->load(['name = ? ', $name]);
+
         return $this;
     }
 
     public function getIdRoleByName($name): array
     {
-       $id = $this->db->exec('SELECT id FROM roles where name= ?', $name);
-       return $id[0];
+        $id = $this->db->exec('SELECT id FROM roles where name= ?', $name);
+
+        return $id[0];
     }
 
     public function getLecturerRole(): array
@@ -145,14 +147,14 @@ class Role extends BaseModel
         return $permissionsRole;
     }
 
-    public function saveRoleAndPermissions($name,$permissions): bool | Role
+    public function saveRoleAndPermissions($name, $permissions): bool|Role
     {
         $this->logger->info('Starting save role and permissions transaction.');
         $this->db->begin();
         $this->save();
         $this->logger->info('Role successfully added', ['role' => $this->toArray()]);
         $this->db->commit();
-        $roleId=$this->getIdRoleByName($name);
+        $roleId = $this->getIdRoleByName($name);
 
         $this->db->begin();
         if (isset($permissions)) {
@@ -163,7 +165,7 @@ class Role extends BaseModel
                         $rolePermission          = new RolePermission();
                         $rolePermission->group   = $group;
                         $rolePermission->name    = $action;
-                        $rolePermission->role_id = $roleId["id"];
+                        $rolePermission->role_id = $roleId['id'];
 
                         try {
                             $rolePermission->save();

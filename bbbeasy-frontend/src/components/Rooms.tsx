@@ -101,45 +101,41 @@ const RoomsCol: React.FC<RoomsColProps> = ({ index, room, editable, deleteClickH
                 onMouseLeave={() => setIsShown(false)}
                 bordered={false}
                 title={
-                <div onClick={() => showRoomDetails()}>
-                    <Space
-                        size="middle"
-                        direction="vertical"
-                        className="room-card-title"
-                    >
-                        <Badge
-                            offset={LocaleService.direction == 'rtl' ? [22, 11] : [-22, 11]}
-                            count={
-                                room.id % 2 == 0 ? (
-                                    <div className="custom-badge-bg">
-                                        <div className="custom-badge">
-                                            <ClockCircleOutlined />
-                                        </div>
-                                    </div>
-                                ) : null
-                            }
-                        >
+                    <div onClick={() => showRoomDetails()}>
+                        <Space size="middle" direction="vertical" className="room-card-title">
                             <Badge
-                                offset={LocaleService.direction == 'rtl' ? [22, 69] : [-22, 69]}
+                                offset={LocaleService.direction == 'rtl' ? [22, 11] : [-22, 11]}
                                 count={
-                                    room.id % 2 != 0 ? (
+                                    room.id % 2 == 0 ? (
                                         <div className="custom-badge-bg">
                                             <div className="custom-badge">
-                                                <TeamOutlined />
+                                                <ClockCircleOutlined />
                                             </div>
                                         </div>
                                     ) : null
                                 }
                             >
-                                <Avatar size={80} className="bbbeasy-btn">
-                                    {room.name.slice(0, 2).toUpperCase()}
-                                </Avatar>
+                                <Badge
+                                    offset={LocaleService.direction == 'rtl' ? [22, 69] : [-22, 69]}
+                                    count={
+                                        room.id % 2 != 0 ? (
+                                            <div className="custom-badge-bg">
+                                                <div className="custom-badge">
+                                                    <TeamOutlined />
+                                                </div>
+                                            </div>
+                                        ) : null
+                                    }
+                                >
+                                    <Avatar size={80} className="bbbeasy-btn">
+                                        {room.name.slice(0, 2).toUpperCase()}
+                                    </Avatar>
+                                </Badge>
                             </Badge>
-                        </Badge>
-                        <Tooltip title={room.name} placement="top">
-                            <Title level={4}>{room.name}</Title>
-                        </Tooltip>
-                    </Space>
+                            <Tooltip title={room.name} placement="top">
+                                <Title level={4}>{room.name}</Title>
+                            </Tooltip>
+                        </Space>
                     </div>
                 }
                 extra={
@@ -268,7 +264,7 @@ const Rooms = () => {
                         title={<Trans i18nKey="rooms" />}
                         extra={
                             AuthService.isAllowedAction(actions, 'add') && [
-                                <Button key="1" type="primary"  onClick={() => setIsModalVisible(true)}>
+                                <Button key="1" type="primary" onClick={() => setIsModalVisible(true)}>
                                     <Trans i18nKey="new_room" />
                                 </Button>,
                                 <AddRoomForm
@@ -279,7 +275,7 @@ const Rooms = () => {
                                     }}
                                     shortlink={initialAddValues.shortlink}
                                     initialAddValues={initialAddValues}
-                                />
+                                />,
                             ]
                         }
                     />

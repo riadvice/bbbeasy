@@ -227,7 +227,7 @@ const Install = () => {
 
     const onFinish = () => {
         const stepsData: formType = stepForm.getFieldsValue(true);
-        
+
         if (activeStep < steps.length - 1) {
             next();
         } else {
@@ -270,7 +270,6 @@ const Install = () => {
                     console.log(error.response.data.message);
                 });
         }
-       
     };
 
     return (

@@ -51,7 +51,7 @@ import { RecordingType } from '../types/RecordingType';
 import { PresetType } from 'types/PresetType';
 import { LabelType } from 'types/LabelType';
 import { UserType } from '../types/UserType';
-import NoData from "./NoData";
+import NoData from './NoData';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -241,7 +241,14 @@ const RoomDetails = () => {
             item: 'labels',
             label: <Trans i18nKey="labels" />,
             formItemNode: (
-                <Select mode="multiple" showArrow tagRender={tagRender} style={{ width: '100%' }} options={labels} notFoundContent={<NoData description={<Trans i18nKey="no_labels" />} className="empty-labels" />}/>
+                <Select
+                    mode="multiple"
+                    showArrow
+                    tagRender={tagRender}
+                    style={{ width: '100%' }}
+                    options={labels}
+                    notFoundContent={<NoData description={<Trans i18nKey="no_labels" />} className="empty-labels" />}
+                />
             ),
         },
         {
@@ -274,30 +281,35 @@ const RoomDetails = () => {
         setShowSocialMedia(true);
     };
 
-    const labelUpdated = (labels_data,new_labels) => {
-        if(labels_data.length != new_labels.length ){
+    const labelUpdated = (labels_data, new_labels) => {
+        if (labels_data.length != new_labels.length) {
             return true;
-        }else{
+        } else {
             for (const label of new_labels) {
-                if(!labels_data.includes(label)){
+                if (!labels_data.includes(label)) {
                     return true;
                 }
             }
         }
         return false;
-    }
-    
+    };
+
     const cancelEditRoom = () => {
         const labels_data = [];
         room.labels.forEach((label) => {
             labels_data.push(label.color);
         });
 
-        const name = editForm.getFieldValue('name')
-        const short_link = editForm.getFieldValue('short_link')
-        const presetId = editForm.getFieldValue('preset_id')
-        const labels = editForm.getFieldValue('labels')
-        if(!labelUpdated(labels_data,labels) && name == room.name && short_link == room.short_link && presetId == room.preset_id ){
+        const name = editForm.getFieldValue('name');
+        const short_link = editForm.getFieldValue('short_link');
+        const presetId = editForm.getFieldValue('preset_id');
+        const labels = editForm.getFieldValue('labels');
+        if (
+            !labelUpdated(labels_data, labels) &&
+            name == room.name &&
+            short_link == room.short_link &&
+            presetId == room.preset_id
+        ) {
             cancelEdit();
         }
     };
@@ -309,10 +321,10 @@ const RoomDetails = () => {
             const values = (await editForm.validateFields()) as formType;
             RoomsService.edit_room(values, room.id)
                 .then((response) => {
-                    if(response.data.result === 'FAILED'){
+                    if (response.data.result === 'FAILED') {
                         Notifications.openNotificationWithIcon('info', t('no_changes'));
                         cancelEdit();
-                    }else{
+                    } else {
                         setRoom(response.data.room);
                         const index = dataContext.dataRooms.findIndex((item) => room.id === item.id);
 
@@ -350,8 +362,7 @@ const RoomDetails = () => {
                         message: <Trans i18nKey={(messageItem ?? item) + '.required'} />,
                     },
                     // Add a custom rule for the 'name' field only
-                    {      validator: item === 'name' ? validateInput : validInput,
-                    },
+                    { validator: item === 'name' ? validateInput : validInput },
                 ]}
             >
                 {formItemNode}
@@ -388,7 +399,11 @@ const RoomDetails = () => {
                                                     placement="leftTop"
                                                     onConfirm={() => cancelEdit()}
                                                 >
-                                                    <Button size="middle" onClick={() => cancelEditRoom()}  className="cell-input-cancel">
+                                                    <Button
+                                                        size="middle"
+                                                        onClick={() => cancelEditRoom()}
+                                                        className="cell-input-cancel"
+                                                    >
                                                         <Trans i18nKey="cancel" />
                                                     </Button>
                                                 </Popconfirm>
@@ -438,31 +453,35 @@ const RoomDetails = () => {
                                                         </Form>
                                                     </Space>
                                                 )}
-                                                {showSocialMedia && ( <div className="medias">
-                                                    <Space size="middle">
+                                                {showSocialMedia && (
+                                                    <div className="medias">
+                                                        <Space size="middle">
+                                                            <Tooltip
+                                                                placement="bottom"
+                                                                title={<Trans i18nKey="facebook_share" />}
+                                                            >
+                                                                <FacebookOutlined />
+                                                            </Tooltip>
+                                                            <Tooltip
+                                                                placement="bottom"
+                                                                title={<Trans i18nKey="twitter_share" />}
+                                                            >
+                                                                <TwitterOutlined />
+                                                            </Tooltip>
+                                                            <Tooltip
+                                                                placement="bottom"
+                                                                title={<Trans i18nKey="linkedin_share" />}
+                                                            >
+                                                                <LinkedinOutlined />
+                                                            </Tooltip>
+                                                        </Space>
                                                         <Tooltip
                                                             placement="bottom"
-                                                            title={<Trans i18nKey="facebook_share" />}
+                                                            title={<Trans i18nKey="email_share" />}
                                                         >
-                                                            <FacebookOutlined />
+                                                            <MailOutlined />
                                                         </Tooltip>
-                                                        <Tooltip
-                                                            placement="bottom"
-                                                            title={<Trans i18nKey="twitter_share" />}
-                                                        >
-                                                            <TwitterOutlined />
-                                                        </Tooltip>
-                                                        <Tooltip
-                                                            placement="bottom"
-                                                            title={<Trans i18nKey="linkedin_share" />}
-                                                        >
-                                                            <LinkedinOutlined />
-                                                        </Tooltip>
-                                                    </Space>
-                                                    <Tooltip placement="bottom" title={<Trans i18nKey="email_share" />}>
-                                                        <MailOutlined />
-                                                    </Tooltip>
-                                                </div>
+                                                    </div>
                                                 )}
                                             </Space>
                                         </Col>

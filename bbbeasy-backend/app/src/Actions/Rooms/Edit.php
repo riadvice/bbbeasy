@@ -61,10 +61,10 @@ class Edit extends BaseAction
                 $room->short_link = $form['short_link'];
                 $room->preset_id  = $form['preset_id'];
 
-                $nameExist       = $checkRoom->nameExists($room->name, $room->user_id);
-                $shortlinkExist  = $checkRoom->shortlinkExists($room->short_link);
-                $presetExist     = $checkRoom->presetExists($form['preset_id'],$form['name']);
-                $labelUpdated    = $this->labelUpdated($room->getLabels($room->id), $form['labels']);
+                $nameExist      = $checkRoom->nameExists($room->name, $room->user_id);
+                $shortlinkExist = $checkRoom->shortlinkExists($room->short_link);
+                $presetExist    = $checkRoom->presetExists($form['preset_id'], $form['name']);
+                $labelUpdated   = $this->labelUpdated($room->getLabels($room->id), $form['labels']);
 
                 if ($form['labels']) {
                     foreach ($form['labels'] as $label) {
@@ -89,7 +89,7 @@ class Edit extends BaseAction
                     $roomLabel = new RoomLabel();
                     if (!\in_array($label['color'], $form['labels'], true)) {
                         $labelUpdated = true;
-                        $roomLabel = $roomLabel->getByRoomAndLabel($room->id, $label['key']);
+                        $roomLabel    = $roomLabel->getByRoomAndLabel($room->id, $label['key']);
                         if (!$roomLabel->dry()) {
                             $roomLabel->erase();
                         }
@@ -97,15 +97,17 @@ class Edit extends BaseAction
                 }
 
                 try {
-                    if(!$labelUpdated && $nameExist && $shortlinkExist && $presetExist){
+                    if (!$labelUpdated && $nameExist && $shortlinkExist && $presetExist) {
                         $this->logger->info('The room is not updated', ['room' => $room->toArray()]);
-                        $this->renderJson(['result' => "FAILED", 'room' => $room->getRoomInfos($room)]);
+                        $this->renderJson(['result' => 'FAILED', 'room' => $room->getRoomInfos($room)]);
+
                         return;
                     }
                     $room->save();
                 } catch (\Exception $e) {
                     $this->logger->error($errorMessage, ['error' => $e->getMessage()]);
                     $this->renderJson(['errors' => $e->getMessage()], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+
                     return;
                 }
 
@@ -120,23 +122,22 @@ class Edit extends BaseAction
             $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
         }
     }
-    public function labelUpdated($labels,$newLabels){
-        /*
-         * Get old label.
-         */
+
+    public function labelUpdated($labels, $newLabels)
+    {
+        // Get old label.
         $oldLabel = [];
         foreach ($labels as $label) {
             $oldLabel[] = $label['color'];
         }
 
-        /*
-         * Test whether the label has been updated or not.
-         */
+        // Test whether the label has been updated or not.
         foreach ($newLabels as $label) {
-            if (!in_array($label, $oldLabel, true)) {
-                 return true;
+            if (!\in_array($label, $oldLabel, true)) {
+                return true;
             }
         }
+
         return false;
     }
 }

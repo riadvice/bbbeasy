@@ -138,7 +138,7 @@ export const Step3Form = (props: Props) => {
                                 <Button key="submit" type="primary" htmlType="submit" onClick={Confirm}>
                                     <Trans i18nKey="confirm" />
                                 </Button>
-                            </Form.Item>
+                            </Form.Item>,
                         ]}
                         maskClosable={true}
                     >

@@ -26,12 +26,13 @@ type Props = {
 
 const NoData = (props: Props) => {
     return (
-
-            <Empty  image={Empty.PRESENTED_IMAGE_SIMPLE}  description={props.description} className={props.className ?? 'mt-30'}>
-                {' '}
-            </Empty>
-
-
+        <Empty
+            image={Empty.PRESENTED_IMAGE_SIMPLE}
+            description={props.description}
+            className={props.className ?? 'mt-30'}
+        >
+            {' '}
+        </Empty>
     );
 };
 

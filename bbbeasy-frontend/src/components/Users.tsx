@@ -451,7 +451,11 @@ const Users = () => {
                 ) : (
                     <Space size="middle">
                         {AuthService.isAllowedAction(actions, 'edit') && colletRolesAction && record.key != 1 && (
-                            <Link className="edit-button-color" disabled={editingKey !== null} onClick={() => toggleEdit(record)}>
+                            <Link
+                                className="edit-button-color"
+                                disabled={editingKey !== null}
+                                onClick={() => toggleEdit(record)}
+                            >
                                 <EditOutlined /> <Trans i18nKey="edit" />
                             </Link>
                         )}

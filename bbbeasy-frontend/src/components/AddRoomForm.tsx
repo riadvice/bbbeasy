@@ -37,7 +37,7 @@ import { PresetType } from 'types/PresetType';
 import presetsService from 'services/presets.service';
 import { UserContext } from 'lib/UserContext';
 import { UserType } from 'types/UserType';
-import NoData from "./NoData";
+import NoData from './NoData';
 
 type formType = {
     name?: string;
@@ -334,7 +334,9 @@ export const AddRoomForm = (props: Props) => {
                                     tagRender={tagRender}
                                     style={{ width: '100%' }}
                                     options={labels_data}
-                                    notFoundContent={<NoData description={<Trans i18nKey="no_labels" />} className="empty-labels" />}
+                                    notFoundContent={
+                                        <NoData description={<Trans i18nKey="no_labels" />} className="empty-labels" />
+                                    }
                                 />
                             </Form.Item>
                         </Col>

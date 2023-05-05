@@ -82,7 +82,7 @@ class Install extends BaseAction
                     if ($roleAdmin->valid()) {
                         // allow all privileges to admin role
                         $allPrivileges = PrivilegeUtils::listSystemPrivileges();
-                        $result        = $roleAdmin->saveRoleAndPermissions($roleAdmin->name,$allPrivileges);
+                        $result        = $roleAdmin->saveRoleAndPermissions($roleAdmin->name, $allPrivileges);
                         if ($result) {
                             $this->logger->info('Initial application setup : Allow all privileges to administrator role');
 
@@ -138,7 +138,6 @@ class Install extends BaseAction
                                     $this->renderJson(['result' => 'success']);
                                 }
                             }
-
                         }
                     }
                 }

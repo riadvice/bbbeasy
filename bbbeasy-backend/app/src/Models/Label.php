@@ -123,11 +123,13 @@ class Label extends BaseModel
         ];
     }
 
-    public function getLabelByNameAndColor($name,$color)
+    public function getLabelByNameAndColor($name, $color)
     {
         $this->load(['name = ? and color = ?', $name, $color]);
+
         return $this;
     }
+
     public function getRooms($labelId): array
     {
         $roomlabel  = new RoomLabel();

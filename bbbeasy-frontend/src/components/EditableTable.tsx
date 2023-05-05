@@ -28,8 +28,8 @@ import { UserType } from '../types/UserType';
 import { RecordingType } from '../types/RecordingType';
 import { LabelType } from '../types/LabelType';
 import { RoleType } from '../types/RoleType';
-import NoData from "./NoData";
-import {Trans} from "react-i18next";
+import NoData from './NoData';
+import { Trans } from 'react-i18next';
 
 type Props = {
     EditableCell: React.FC;
@@ -40,16 +40,23 @@ type Props = {
 
     loading: boolean;
     expandableTable?: object;
-    notFoundContent:string;
+    notFoundContent: string;
 };
 
 export const EditableTable = (props: Props) => {
-    const { EditableCell, editForm, EditableContext, mergedColumns, dataSource, loading, expandableTable, notFoundContent } = props;
+    const {
+        EditableCell,
+        editForm,
+        EditableContext,
+        mergedColumns,
+        dataSource,
+        loading,
+        expandableTable,
+        notFoundContent,
+    } = props;
     const [pagination, setPagination] = React.useState<PaginationType>({ current: 1, pageSize: 5 });
     const locale = {
-        emptyText: (
-            <NoData description={<Trans i18nKey={notFoundContent} />}/>
-        )
+        emptyText: <NoData description={<Trans i18nKey={notFoundContent} />} />,
     };
     return (
         <Table
