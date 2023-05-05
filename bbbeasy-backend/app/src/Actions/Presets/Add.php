@@ -50,6 +50,7 @@ class Add extends BaseAction
         $dataChecker = new DataChecker();
 
         $dataChecker->verify($form['name'], Validator::notEmpty()->setName('name'));
+        $dataChecker->verify($form['name'], Validator::length(1, 64)->setName('name'));
         $dataChecker->verify($userId, Validator::notEmpty()->setName('user_id'));
 
         $errorMessage   = 'Preset could not be added';
