@@ -159,7 +159,6 @@ const AppHeader = () => {
                             <img className="header-logo-image" src="/images/logo_01.png" alt="Logo" />
                         </Link>
                         <Space size="large">
-                            {dropdownLang}
                             {!INSTALLER_FEATURE && (
                                 <>
                                     <Button className="color-primary" onClick={() => navigate('/login')}>
@@ -170,6 +169,7 @@ const AppHeader = () => {
                                     </Button>
                                 </>
                             )}
+                            {dropdownLang}
                         </Space>
                     </Paragraph>
                 ) : (
