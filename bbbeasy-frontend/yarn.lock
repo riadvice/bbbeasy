@@ -98,13 +98,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ant-design/pro-layout@npm:^7.13.0":
-  version: 7.13.1
-  resolution: "@ant-design/pro-layout@npm:7.13.1"
+"@ant-design/pro-layout@npm:^7.13.2":
+  version: 7.13.2
+  resolution: "@ant-design/pro-layout@npm:7.13.2"
   dependencies:
     "@ant-design/icons": ^5.0.0
-    "@ant-design/pro-provider": ^2.8.5
-    "@ant-design/pro-utils": ^2.8.6
+    "@ant-design/pro-provider": ^2.8.6
+    "@ant-design/pro-utils": ^2.8.7
     "@babel/runtime": ^7.18.0
     "@umijs/route-utils": ^4.0.0
     "@umijs/use-params": ^1.0.9
@@ -122,13 +122,13 @@ __metadata:
     antd: ">=4.23.0"
     react: ">=17.0.0"
     react-dom: ">=17.0.0"
-  checksum: 9b9edca3e41ccb9773f7edd1e9747ee4e71032b033591a4a973a67415ccb0191052aa645fb0f18b8c1025aad9f38fa4bd7a794ce884cbb25fb9689806418b341
+  checksum: 14a72958a2def9e8adfeb7f5a29a2038f662167b938916b17fc3a2f0d6b9caf800188a66e0caa35e273ab33a07a8d7f6c9bcf6783ed29e3794a47ca7dbaea0ed
   languageName: node
   linkType: hard
 
-"@ant-design/pro-provider@npm:^2.8.5":
-  version: 2.8.5
-  resolution: "@ant-design/pro-provider@npm:2.8.5"
+"@ant-design/pro-provider@npm:^2.8.6":
+  version: 2.8.6
+  resolution: "@ant-design/pro-provider@npm:2.8.6"
   dependencies:
     "@ant-design/cssinjs": ^1.9.1
     "@babel/runtime": ^7.18.0
@@ -139,16 +139,16 @@ __metadata:
     antd: ">=4.23.0"
     react: ">=17.0.0"
     react-dom: ">=17.0.0"
-  checksum: d22342b13783373f09227d7f7a37e0a4e2e27702e5c089a887596174589284989dc90c858e300b89da6f042be784a5f5a9d61c3d45840318e5eb5bbf8a3a3c5e
+  checksum: d4c5039244277f2211894354a7960f5524f91c1fbe1c5259bac378ebe8de93198d33ac496dae389dce20bb8369aa849bb9e9df0152726f17e162b5d08b6f5bce
   languageName: node
   linkType: hard
 
-"@ant-design/pro-utils@npm:^2.8.6":
-  version: 2.8.6
-  resolution: "@ant-design/pro-utils@npm:2.8.6"
+"@ant-design/pro-utils@npm:^2.8.7":
+  version: 2.8.7
+  resolution: "@ant-design/pro-utils@npm:2.8.7"
   dependencies:
     "@ant-design/icons": ^5.0.0
-    "@ant-design/pro-provider": ^2.8.5
+    "@ant-design/pro-provider": ^2.8.6
     "@babel/runtime": ^7.18.0
     classnames: ^2.2.6
     dayjs: ^1.11.4
@@ -159,7 +159,7 @@ __metadata:
     antd: ">=4.23.0"
     react: ">=17.0.0"
     react-dom: ">=17.0.0"
-  checksum: 18cf99f7a036d17686f3216e5d45519ee82fdca5dc6e3226465b31578936e1d60eecc17864c8062c7d2493e4d6b974abba49370536b2de1adb825708a12172b1
+  checksum: 722bbb5e79ebdb006e3dc4c2929d2a9470b8889328bd7de4ce9a08506347cc7d9d2e20f7c4a2b84e216888b9c5b1853e0265de68b0cb5c4db2d50b53fdef47b3
   languageName: node
   linkType: hard
 
@@ -5446,7 +5446,7 @@ __metadata:
     "@ant-design/compatible": ^5.1.1
     "@ant-design/cssinjs": ^1.8.1
     "@ant-design/icons": ^5.0.1
-    "@ant-design/pro-layout": ^7.13.0
+    "@ant-design/pro-layout": ^7.13.2
     "@babel/plugin-proposal-class-properties": ^7.18.6
     "@babel/plugin-proposal-decorators": ^7.21.0
     "@babel/plugin-proposal-private-methods": ^7.18.6
