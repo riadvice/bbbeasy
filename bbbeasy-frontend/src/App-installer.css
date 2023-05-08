@@ -530,7 +530,7 @@ body.rtl {
   width: 19px;
 }*/
 .presets-modal {
-    width: 35%;
+    width: 45% !important;
 }
 .presets-modal .ant-modal-content {
     margin: 0 30px;
@@ -554,9 +554,6 @@ body.rtl {
 .presets-modal .ant-modal-footer {
     text-align: center !important;
     border-top: unset;
-}
-.ant-modal-footer {
-    display: flex;
 }
 .presets-modal .ant-modal-footer button {
     width: 70%;
