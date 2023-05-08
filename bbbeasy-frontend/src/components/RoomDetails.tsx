@@ -93,6 +93,7 @@ const RoomDetails = () => {
 
     const [errorsEdit, setErrorsEdit] = React.useState({});
     const [showSocialMedia, setShowSocialMedia] = useState(true);
+    const [showStartButton, setShowStartButton] = useState(true);
     const [isEditing, setIsEditing] = React.useState<boolean>(false);
     const [labels, setLabels] = React.useState<LabelType[]>();
     const [presets, setPresets] = React.useState<PresetType[]>();
@@ -262,6 +263,7 @@ const RoomDetails = () => {
     const toggleEdit = () => {
         setIsEditing(true);
         setShowSocialMedia(false);
+        setShowStartButton(false);
 
         const labels_data = [];
         room.labels.forEach((label) => {
@@ -279,6 +281,7 @@ const RoomDetails = () => {
         setErrorsEdit({});
         setIsEditing(false);
         setShowSocialMedia(true);
+        setShowStartButton(true);
     };
 
     const labelUpdated = (labels_data, new_labels) => {
@@ -317,6 +320,7 @@ const RoomDetails = () => {
     const handleSaveEdit = async () => {
         setErrorsEdit({});
         setShowSocialMedia(true);
+        setShowStartButton(true);
         try {
             const values = (await editForm.validateFields()) as formType;
             RoomsService.edit_room(values, room.id)
@@ -445,8 +449,8 @@ const RoomDetails = () => {
                                                         />
                                                     </>
                                                 ) : (
-                                                    <Space size="middle" direction="vertical">
-                                                        <Form form={editForm} layout="vertical">
+                                                    <Space size="middle">
+                                                        <Form form={editForm}  labelCol={{ span: 8, }}>
                                                             {editFormItems.map((editFormItem) => {
                                                                 return customFormItem(editFormItem);
                                                             })}
@@ -485,7 +489,7 @@ const RoomDetails = () => {
                                                 )}
                                             </Space>
                                         </Col>
-                                        {(canStart || isRunning) && (
+                                        {(canStart || isRunning) && showStartButton && (
                                             <Col span={2}>
                                                 <a onClick={startRoom}>
                                                     <Avatar
