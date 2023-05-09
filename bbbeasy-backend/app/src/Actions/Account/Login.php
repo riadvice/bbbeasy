@@ -94,7 +94,7 @@ class Login extends BaseAction
             --$user->password_attempts;
             $user->save();
             $this->logger->error($errorMessage, ['email' => $email]);
-            $this->renderJson(['message' => "Invalid credentials provided, try again", ResponseCode::HTTP_BAD_REQUEST);
+            $this->renderJson(['message' => "Invalid credentials provided, try again"], ResponseCode::HTTP_BAD_REQUEST);
         } elseif ($user->valid() && 0 === $user->password_attempts || 1 === $user->password_attempts) {
             $user->password_attempts = 0;
             $user->status            = UserStatus::INACTIVE;

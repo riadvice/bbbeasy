@@ -116,7 +116,7 @@ const Login = () => {
                             type="error"
                             className="alert-msg"
                             message={
-                                (message.startsWith('Wrong password') && t('wrong_password') + message.substring(31)) ||
+                                (message.startsWith('Invalid credentials') && t('invalid_credentials')) ||
                                 (message.startsWith('Your account has been locked') && (
                                     <>
                                         {t('attempts_exceeded')}
