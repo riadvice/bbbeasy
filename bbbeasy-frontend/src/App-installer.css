@@ -558,3 +558,13 @@ body.rtl {
 .presets-modal .ant-modal-footer button {
     width: 70%;
 }
+.ant-modal-header {
+    margin: 0 20px;
+}
+.ant-modal-close {
+    margin-top: 5px;
+}
+.cancel-btn {
+    background: var(--bbbeasy-medimum-gray) !important;
+    color: white !important;
+}
