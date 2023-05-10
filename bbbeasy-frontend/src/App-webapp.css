@@ -529,6 +529,9 @@ fieldset {
 .search-modal .ant-modal-content .ant-modal-close {
     color: white !important;
 }
+.ant-modal-close {
+    margin-top: 5px;
+}
 .search-modal .ant-modal-content {
     padding: 0 !important;
 }
@@ -901,8 +904,11 @@ fieldset {
     margin: 0;
 }
 /******************ADD MODAL*********************/
-.add-modal .ant-modal-header {
+.add-modal .ant-modal-header{
     text-align: center;
+}
+.ant-modal-header {
+    margin: 0 20px;
 }
 .add-modal .ant-form {
     padding: 0 15px;
@@ -1231,7 +1237,7 @@ fieldset {
   width: 19px;
 }*/
 .presets-modal {
-    width: 35%;
+    width: 47% !important;
 }
 .presets-modal .ant-modal-content {
     margin: 0 30px;

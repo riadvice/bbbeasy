@@ -530,7 +530,7 @@ body.rtl {
   width: 19px;
 }*/
 .presets-modal {
-    width: 35%;
+    width: 45% !important;
 }
 .presets-modal .ant-modal-content {
     margin: 0 30px;
@@ -555,9 +555,16 @@ body.rtl {
     text-align: center !important;
     border-top: unset;
 }
-.ant-modal-footer {
-    display: flex;
-}
 .presets-modal .ant-modal-footer button {
     width: 70%;
+}
+.ant-modal-header {
+    margin: 0 20px;
+}
+.ant-modal-close {
+    margin-top: 5px;
+}
+.cancel-btn {
+    background: var(--bbbeasy-medimum-gray) !important;
+    color: white !important;
 }
