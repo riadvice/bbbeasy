@@ -165,8 +165,8 @@ const Install = () => {
                 getPresetSettings();
             })
             .catch((error) => {
-                if (error.code === 'ERR_NETWORK') {
-                    setErrorNetwork(error.code);
+                if (error.response.status !== 200) {
+                    setErrorNetwork(error.response.status);
                 }
 
                 if (error.response.data.locked) {
