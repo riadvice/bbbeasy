@@ -789,6 +789,9 @@ fieldset {
 .room-details {
     border-radius: 10px !important;
 }
+.RoomPresentation{
+    margin: auto !important;
+}
 .room-details #room-shortlink.ant-input-rtl {
     font-family: 'Poppins', sans-serif !important;
 }
