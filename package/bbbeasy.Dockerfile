@@ -45,7 +45,7 @@ RUN set -xe \
         opcache \
         sockets \
         zip \
-    && wget https://github.com/FriendsOfPHP/pickle/releases/latest/download/pickle.phar \
+    && curl --proto https://github.com/FriendsOfPHP/pickle/releases/latest/download/pickle.phar \
     && mv pickle.phar /usr/local/bin/pickle \
     && chmod +x /usr/local/bin/pickle \
     && pickle install uploadprogress \
