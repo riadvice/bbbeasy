@@ -18,11 +18,13 @@
 
 import React, { useState } from 'react';
 import { Trans } from 'react-i18next';
+import { t } from 'i18next';
 
 import { Card, Modal, Typography, Upload } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { UploadFile } from 'antd/es/upload/interface';
 import { RcFile, UploadProps } from 'antd/es/upload';
+import Notifications from "./Notifications";
 
 const { Title } = Typography;
 
@@ -72,7 +74,26 @@ const RoomPresentations = () => {
         setPreviewImage(file.url || (file.preview as string));
         setPreviewOpen(true);
     };
-    const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) => setFileList(newFileList);
+    const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) =>
+    {
+        const validFormats =
+            [
+            'xls','xlsx','doc','docx','ppt',
+            'pptx','odt','rtf','txt','ods',
+            'odp','avi','mpg','mp3','pdf',
+            'jpg','jpeg','png','svg'
+            ];
+        const lastFile= newFileList[(newFileList.length)-1];
+        const filename = lastFile.name;
+        if(filename.includes(".")){
+            const fileFormat = filename.substring(filename.indexOf('.')+1);
+            if(validFormats.includes(fileFormat)){
+                setFileList(newFileList);
+                return;
+            }
+        }
+        Notifications.openNotificationWithIcon('error', t('invalid_format'));
+    }
 
     const uploadButton = (
         <div>
