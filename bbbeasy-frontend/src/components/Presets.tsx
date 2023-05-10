@@ -361,6 +361,10 @@ const PresetsCol: React.FC<PresetColProps> = ({
                     const category = filteredElements.length != 0 ? filteredElements[0] : item.name;
 
                     return (
+                        <> 
+                        {item.enabled && (
+
+                        
                         <Tooltip
                             key={subIndex + '-' + item.name}
                             placement={
@@ -402,6 +406,8 @@ const PresetsCol: React.FC<PresetColProps> = ({
                                 icon={<DynamicIcon type={getIconName(item.name)} className={'PresetIcon'} />}
                             />
                         </Tooltip>
+                    )}
+                    </>
                     );
                 })}
 
@@ -517,6 +523,7 @@ const Presets = () => {
         const currentUser: UserType = AuthService.getCurrentUser();
         PresetsService.list_presets(currentUser.id)
             .then((response) => {
+                console.log(response.data)
                 setMyPresets(response.data);
             })
             .catch((error) => {
