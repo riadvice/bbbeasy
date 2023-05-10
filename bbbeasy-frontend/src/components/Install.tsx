@@ -165,7 +165,7 @@ const Install = () => {
                 getPresetSettings();
             })
             .catch((error) => {
-                if (error.response.status === 404) {
+                if (error.response.status !== 200) {
                     setErrorNetwork(error.response.status);
                 }
 
