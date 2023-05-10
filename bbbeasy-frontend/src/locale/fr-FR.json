@@ -146,7 +146,7 @@
     "finish": "Terminer",
     "customize_configuration": "Cliquez sur chaque bouton pour personnaliser le groupe de configuration et le survolez pour obtenir son résumé",
     "understand": "Je comprends, merci !",
-    "welcome_hivelvet": "Bienvenue à Hivelvet",
+    "welcome_platformname": "Bienvenue à {{platformName}}",
     "create_customizable_rooms": "Créer des salles entièrement personnalisables pour",
     "log-into-account": "Connectez-vous à votre compte",
     "completed_registration": "Inscription terminée avec succès",

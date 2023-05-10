@@ -146,7 +146,7 @@
     "finish": "Finish",
     "customize_configuration": "Click on each button to customise the configuration group and hover it to get its summary",
     "understand": "I understand, thank you!",
-    "welcome_bbbeasy": "Welcome to BBBEasy",
+    "welcome_platformname": "Welcome to {{platformName}}",
     "create_customizable_rooms": "Create fully customizable rooms for",
     "log-into-account": "Log into Your Account",
     "completed_registration": "Registration completed successfully",
