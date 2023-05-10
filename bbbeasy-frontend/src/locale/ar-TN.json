@@ -146,7 +146,7 @@
     "finish": "إنهاء",
     "customize_configuration": "انقر على كل زر لتخصيص مجموعة الاعدادات و الحصول على ملخصها",
     "understand": "فهمت، شكراً لك !",
-    "welcome_hivelvet": "مرحباً بك في Hivelvet",
+    "welcome_platformname": "مرحباً بك في {{platformName}}",
     "create_customizable_rooms": "إنشاء غرف قابلة للتخصيص بالكامل لـ",
     "log-into-account": "تسجيل الدخول إلى حسابك",
     "completed_registration": "تم التسجيل بنجاح",

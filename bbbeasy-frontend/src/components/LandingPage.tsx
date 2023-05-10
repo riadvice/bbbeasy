@@ -23,18 +23,23 @@ import { Trans, withTranslation } from 'react-i18next';
 import { Row, Col, Typography, Avatar, Button } from 'antd';
 import { AppstoreAddOutlined, BgColorsOutlined, PlayCircleOutlined, ControlOutlined } from '@ant-design/icons';
 import DynamicIcon from './DynamicIcon';
+import settingsService from 'services/settings.service';
 
 const { Title, Paragraph } = Typography;
 
 const LandingPage = () => {
+    const [platformName, setPlatformName] = React.useState<string>('');
     const navigate = useNavigate();
+    settingsService.collect_settings().then((result) => {
+        setPlatformName(result.data.platform_name);
+    });
 
     return (
         <>
             <Row justify="center" align="top" className="landing-content">
                 <Col span={12}>
                     <Title>
-                        <Trans i18nKey="welcome_bbbeasy" />
+                        <Trans i18nKey="welcome_platformname"> Welcome to {{ platformName: platformName }}</Trans>
                     </Title>
                     <p className="mb-30">
                         <Trans i18nKey="create_customizable_rooms" />
