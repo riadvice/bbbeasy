@@ -1425,3 +1425,6 @@ fieldset {
 .edit-button-color:hover {
     color: #fbbc0b !important;
 }
+.ant-alert-content{
+    margin-right: 5px;
+}
