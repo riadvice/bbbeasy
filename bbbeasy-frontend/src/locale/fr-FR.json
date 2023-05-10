@@ -33,7 +33,8 @@
         "label": "Mot de passe",
         "required": "Le mot de passe est obligatoire",
         "size": "Le mot de passe doit contenir au moins 8 caractères",
-        "invalid": "Mot de passe incorrect"
+        "invalid": "Mot de passe incorrect",
+        "resetAttempts": "Les tentatives de mot de passe ont été réinitialisées"
     },
     "join-us": "Rejoignez-nous",
     "register-now": "Inscrivez-vous dès maintenant et rejoignez notre communauté ",
@@ -185,6 +186,7 @@
     "permissions": {
         "label": "Permissions"
     },
+    "reset_password_attempts": "réinitialiser les tentatives de mot de passe",
     "search": "Chercher",
     "reset": "Réinitialiser",
     "filter": "Filtrer",

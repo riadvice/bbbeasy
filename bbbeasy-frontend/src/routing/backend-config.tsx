@@ -49,6 +49,7 @@ export const apiRoutes = {
     ADD_USER_URL: API_URL + '/users',
     EDIT_USER_URL: API_URL + '/users/',
     DELETE_USER_URL: API_URL + '/users/',
+    RESET_PASSWORD_ATTEMPTS_URL: API_URL + '/users/reset-attempts/',
 
     LIST_LABEL_URL: API_URL + '/labels',
     ADD_LABEL_URL: API_URL + '/labels',

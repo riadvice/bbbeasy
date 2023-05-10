@@ -22,8 +22,8 @@ import EN_US from '../locale/en-US.json';
 import { t } from 'i18next';
 
 import { PageHeader } from '@ant-design/pro-layout';
-import { Alert, Button, Form, Input, Modal, Popconfirm, Select, Space, Tag, Typography } from 'antd';
-import { DeleteOutlined, EditOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import { Alert, Button, Form, Input, Modal, Popconfirm, Select, Space, Tag, Typography, Dropdown, Menu } from 'antd';
+import { DeleteOutlined, EditOutlined, QuestionCircleOutlined, MoreOutlined } from '@ant-design/icons';
 
 import { FormInstance } from 'antd/lib/form';
 import { CompareRecords } from '../functions/compare.function';
@@ -36,6 +36,7 @@ import EditableTableColumnSearch from './EditableTableColumnSearch';
 import AuthService from '../services/auth.service';
 import UsersService from '../services/users.service';
 import RolesService from '../services/roles.service';
+import LocaleService from "../services/locale.service";
 
 import { TableColumnType } from '../types/TableColumnType';
 import { UserType } from '../types/UserType';
@@ -305,6 +306,17 @@ const Users = () => {
         }
     };
 
+    // Reset password attempts
+    const handleResetPasswordAttemptsClick = (key: number) => {
+        UsersService.reset_password_attempts(key)
+            .then(() => {
+                Notifications.openNotificationWithIcon('success', t('password.resetAttempts'));
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
     // delete
     const handleDelete = (key: number) => {
         UsersService.delete_user(key)
@@ -470,6 +482,21 @@ const Users = () => {
                                 </Link>
                             </Popconfirm>
                         )}
+                       <Dropdown
+                            key="more"
+                            overlay={
+                                <Menu>
+                                    <Menu.Item key="1" onClick={() => handleResetPasswordAttemptsClick(record.key)}>
+                                        <Trans i18nKey={'reset_password_attempts'} />
+                                    </Menu.Item>
+                                </Menu>
+                            }
+                            placement={LocaleService.direction == 'rtl' ? 'topRight' : 'topLeft'}
+                            trigger={['click']}
+                            arrow
+                        >
+                            <MoreOutlined />
+                        </Dropdown>
                     </Space>
                 );
             },
