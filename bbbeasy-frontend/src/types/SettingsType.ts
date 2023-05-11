@@ -25,8 +25,8 @@ export type SettingsType = {
     privacy_policy: string;
     logo: string;
 
-    primary_color: string;
-    secondary_color: string;
-    accent_color: string;
-    additional_color: string;
+    brand_color: string;
+    default_font_size: number;
+    border_radius: number;
+    wireframe_style: boolean;
 };

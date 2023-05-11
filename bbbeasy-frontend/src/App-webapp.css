@@ -904,7 +904,7 @@ fieldset {
     margin: 0;
 }
 /******************ADD MODAL*********************/
-.add-modal .ant-modal-header{
+.add-modal .ant-modal-header {
     text-align: center;
 }
 .ant-modal-header {
@@ -1431,6 +1431,6 @@ fieldset {
 .edit-button-color:hover {
     color: #fbbc0b !important;
 }
-.ant-alert-content{
+.ant-alert-content {
     margin-right: 5px;
 }

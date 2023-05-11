@@ -35,7 +35,7 @@ import AuthService from '../services/auth.service';
 
 import { UploadFile } from 'antd/lib/upload/interface';
 import { SettingsType } from '../types/SettingsType';
-import { BrandingColorsType } from '../types/BrandingColorsType';
+import { ThemeType } from '../types/ThemeType';
 
 type formType = {
     company_name: string;
@@ -43,7 +43,7 @@ type formType = {
     platform_name: string;
     term_url: string;
     policy_url: string;
-    branding_colors: BrandingColorsType;
+    theme: ThemeType;
     logo: string;
 };
 
@@ -52,18 +52,18 @@ const Branding = () => {
     const [data, setData] = React.useState<formType>(null);
     const [actions, setActions] = React.useState<string[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
-    const [primaryColor, setPrimaryColor] = React.useState<string>('');
-    const [secondaryColor, setSecondaryColor] = React.useState<string>('');
-    const [accentColor, setAccentColor] = React.useState<string>('');
-    const [addColor, setAddColor] = React.useState<string>('');
+    const [brandColor, setBrandColor] = React.useState<string>('');
+    const [defaultFontSize, setDefaultFontSize] = React.useState<number>(0);
+    const [borderRadius, setBorderRadius] = React.useState<number>(0);
+    const [wireframeStyle, setWireframeStyle] = React.useState<boolean>(false);
     const [file, setFile] = React.useState<UploadFile>(null);
     const [fileList, setFileList] = React.useState<UploadFile[]>(null);
 
     const setSettings = (settings: SettingsType) => {
-        setPrimaryColor(settings.primary_color);
-        setSecondaryColor(settings.secondary_color);
-        setAccentColor(settings.accent_color);
-        setAddColor(settings.additional_color);
+        setBrandColor(settings.brand_color);
+        setDefaultFontSize(settings.default_font_size);
+        setBorderRadius(settings.border_radius);
+        setWireframeStyle(settings.wireframe_style);
         settingsForm.setFieldsValue({
             company_name: settings.company_name,
             company_url: settings.company_website,
@@ -71,11 +71,11 @@ const Branding = () => {
             term_url: settings.terms_use,
             policy_url: settings.privacy_policy,
             logo: settings.logo,
-            branding_colors: {
-                primary_color: settings.primary_color,
-                secondary_color: settings.secondary_color,
-                accent_color: settings.accent_color,
-                add_color: settings.additional_color,
+            theme: {
+                brand_color: settings.brand_color,
+                default_font_size: settings.default_font_size,
+                border_radius: settings.border_radius,
+                wireframe_style: settings.wireframe_style,
             },
         });
         if (settings.logo != null) {
@@ -110,11 +110,11 @@ const Branding = () => {
     const onFinish = () => {
         const settingsData: formType = settingsForm.getFieldsValue(true);
         //update branding colors
-        settingsData.branding_colors = {
-            primary_color: primaryColor,
-            secondary_color: secondaryColor,
-            accent_color: accentColor,
-            add_color: addColor,
+        settingsData.theme = {
+            brand_color: brandColor,
+            default_font_size: defaultFontSize,
+            border_radius: borderRadius,
+            wireframe_style: wireframeStyle,
         };
         let updateLogo = false;
         let deleteLogo = false;
@@ -179,14 +179,14 @@ const Branding = () => {
                             onFinish={onFinish}
                         >
                             <Step2Form
-                                primaryColor={primaryColor}
-                                secondaryColor={secondaryColor}
-                                accentColor={accentColor}
-                                addColor={addColor}
-                                setPrimaryColor={setPrimaryColor}
-                                setSecondaryColor={setSecondaryColor}
-                                setAccentColor={setAccentColor}
-                                setAddColor={setAddColor}
+                                brandColor={brandColor}
+                                defaultFontSize={defaultFontSize}
+                                borderRadius={borderRadius}
+                                wireframeStyle={wireframeStyle}
+                                setBrandColor={setBrandColor}
+                                setDefaultFontSize={setDefaultFontSize}
+                                setBorderRadius={setBorderRadius}
+                                setWireframeStyle={setWireframeStyle}
                                 setFile={setFile}
                                 fileList={fileList}
                                 setFileList={setFileList}

@@ -16,9 +16,9 @@
  * with BBBEasy; if not, see <http://www.gnu.org/licenses/>.
  */
 
-export type BrandingColorsType = {
-    primary_color: string;
-    secondary_color: string;
-    accent_color: string;
-    add_color: string;
+export type ThemeType = {
+    brand_color: string;
+    default_font_size: number;
+    border_radius: number;
+    wireframe_style: boolean;
 };

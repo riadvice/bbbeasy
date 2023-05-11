@@ -30,14 +30,14 @@ final class AddDefaultSettingsRecord extends AbstractMigration
         $defaultColor = '#fbbc0b';
         $data         = [
             [
-                'company_name'     => 'RIADVICE',
-                'company_website'  => 'https://riadvice.tn',
-                'platform_name'    => 'BBBEasy',
-                'primary_color'    => $defaultColor,
-                'secondary_color'  => $defaultColor,
-                'accent_color'     => $defaultColor,
-                'additional_color' => $defaultColor,
-                'created_on'       => date('Y-m-d H:i:s'),
+                'company_name'      => 'RIADVICE',
+                'company_website'   => 'https://riadvice.tn',
+                'platform_name'     => 'BBBEasy',
+                'brand_color'       => $defaultColor,
+                'default_font_size' => 16,
+                'border_radius'     => 6,
+                'wireframe_style'   => false,
+                'created_on'        => date('Y-m-d H:i:s'),
             ],
         ];
 
