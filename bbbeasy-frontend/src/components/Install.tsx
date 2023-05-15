@@ -22,7 +22,6 @@ import { Trans, useTranslation, withTranslation } from 'react-i18next';
 import InstallService from '../services/install.service';
 import SettingsService from '../services/settings.service';
 import PresetSettingsService from '../services/preset.settings.service';
-import UsersService from '../services/users.service';
 
 import { Steps, Button, Row, Col, Form, Result } from 'antd';
 import DynamicIcon from './DynamicIcon';
@@ -34,7 +33,7 @@ import { Step3Form } from './Step3Form';
 import { UserPasswordForm } from './UserPasswordForm';
 
 import { UploadFile } from 'antd/lib/upload/interface';
-import { BrandingColorsType } from '../types/BrandingColorsType';
+import { ThemeType } from '../types/ThemeType';
 import { SettingsType } from '../types/SettingsType';
 import { PresetType } from '../types/PresetType';
 
@@ -60,7 +59,7 @@ type formType = {
     term_url: string;
     policy_url: string;
     logo: string;
-    branding_colors: BrandingColorsType;
+    theme: ThemeType;
     presetsConfig: PresetType[];
 };
 
@@ -79,11 +78,11 @@ const Install = () => {
         term_url: '',
         policy_url: '',
         logo: '',
-        branding_colors: {
-            primary_color: '',
-            secondary_color: '',
-            accent_color: '',
-            add_color: '',
+        theme: {
+            brand_color: '',
+            default_font_size: 0,
+            border_radius: 0,
+            wireframe_style: false,
         },
 
         presetsConfig: [],
@@ -96,10 +95,10 @@ const Install = () => {
     const [successful, setSuccessful] = React.useState<boolean>(false);
     const [message, setMessage] = React.useState<string>('');
 
-    const [primaryColor, setPrimaryColor] = React.useState<string>('');
-    const [secondaryColor, setSecondaryColor] = React.useState<string>('');
-    const [accentColor, setAccentColor] = React.useState<string>('');
-    const [addColor, setAddColor] = React.useState<string>('');
+    const [brandColor, setBrandColor] = React.useState<string>('');
+    const [defaultFontSize, setDefaultFontSize] = React.useState<number>(0);
+    const [borderRadius, setBorderRadius] = React.useState<number>(0);
+    const [wireframeStyle, setWireframeStyle] = React.useState<boolean>(false);
     const [file, setFile] = React.useState<UploadFile>(null);
     const [fileList, setFileList] = React.useState<UploadFile[]>(null);
 
@@ -108,7 +107,9 @@ const Install = () => {
     const getSettings = () => {
         SettingsService.collect_settings()
             .then((response) => {
+                console.log(response.data);
                 const settings: SettingsType = response.data;
+
                 if (settings) {
                     stepForm.setFieldsValue({
                         company_name: settings.company_name,
@@ -117,17 +118,17 @@ const Install = () => {
                         term_url: settings.terms_use,
                         policy_url: settings.privacy_policy,
                         logo: settings.logo,
-                        branding_colors: {
-                            primary_color: settings.primary_color,
-                            secondary_color: settings.secondary_color,
-                            accent_color: settings.accent_color,
-                            add_color: settings.additional_color,
+                        theme: {
+                            brand_color: settings.brand_color,
+                            default_font_size: settings.default_font_size,
+                            border_radius: settings.border_radius,
+                            wireframe_style: settings.wireframe_style,
                         },
                     });
-                    setPrimaryColor(settings.primary_color);
-                    setSecondaryColor(settings.secondary_color);
-                    setAccentColor(settings.accent_color);
-                    setAddColor(settings.additional_color);
+                    setBrandColor(settings.brand_color);
+                    setDefaultFontSize(settings.default_font_size);
+                    setBorderRadius(settings.border_radius);
+                    setWireframeStyle(settings.wireframe_style);
                     if (settings.logo != null) {
                         const settingLogo: UploadFile = {
                             uid: '1',
@@ -199,14 +200,14 @@ const Install = () => {
             title: t('company.label') + ' & ' + t('branding'),
             content: (
                 <Step2Form
-                    primaryColor={primaryColor}
-                    secondaryColor={secondaryColor}
-                    accentColor={accentColor}
-                    addColor={addColor}
-                    setPrimaryColor={setPrimaryColor}
-                    setSecondaryColor={setSecondaryColor}
-                    setAccentColor={setAccentColor}
-                    setAddColor={setAddColor}
+                    brandColor={brandColor}
+                    defaultFontSize={defaultFontSize}
+                    borderRadius={borderRadius}
+                    wireframeStyle={wireframeStyle}
+                    setBrandColor={setBrandColor}
+                    setDefaultFontSize={setDefaultFontSize}
+                    setBorderRadius={setBorderRadius}
+                    setWireframeStyle={setWireframeStyle}
                     setFile={setFile}
                     fileList={fileList}
                     setFileList={setFileList}
@@ -247,11 +248,11 @@ const Install = () => {
                     });
             }
 
-            stepsData.branding_colors = {
-                primary_color: primaryColor,
-                secondary_color: secondaryColor,
-                accent_color: accentColor,
-                add_color: addColor,
+            stepsData.theme = {
+                brand_color: brandColor,
+                default_font_size: defaultFontSize,
+                border_radius: borderRadius,
+                wireframe_style: wireframeStyle,
             };
             stepsData.presetsConfig = presets;
 

@@ -56,10 +56,10 @@ class Setting extends BaseModel
         $this->privacy_policy  = $policy;
         $this->logo            = $logo;
         if ($colors) {
-            $this->primary_color    = $colors['primary_color'];
-            $this->secondary_color  = $colors['secondary_color'];
-            $this->accent_color     = $colors['accent_color'];
-            $this->additional_color = $colors['add_color'];
+            $this->brand_color       = $colors['brand_color'];
+            $this->default_font_size = $colors['default_font_size'];
+            $this->border_radius     = $colors['border_radius'];
+            $this->wireframe_style   = $colors['wireframe_style'];
         }
     }
 
@@ -80,10 +80,10 @@ class Setting extends BaseModel
                 'privacy_policy' => $defaultSettings->privacy_policy,
                 'logo'           => $defaultSettings->logo,
 
-                'primary_color'    => $defaultSettings->primary_color,
-                'secondary_color'  => $defaultSettings->secondary_color,
-                'accent_color'     => $defaultSettings->accent_color,
-                'additional_color' => $defaultSettings->additional_color,
+                'brand_color'       => $defaultSettings->brand_color,
+                'default_font_size' => $defaultSettings->default_font_size,
+                'border_radius'     => $defaultSettings->border_radius,
+                'wireframe_style'   => $defaultSettings->wireframe_style,
             ];
         }
 
@@ -102,11 +102,12 @@ class Setting extends BaseModel
         if (null !== $form['policy_url']) {
             $dataChecker->verify($form['policy_url'], Validator::url()->setName('policy_url'));
         }
-        $dataChecker->verify($form['branding_colors'], Validator::notEmpty()->setName('color'));
-        $dataChecker->verify($form['branding_colors']['primary_color'], Validator::hexRgbColor()->setName('primary_color'));
-        $dataChecker->verify($form['branding_colors']['secondary_color'], Validator::hexRgbColor()->setName('secondary_color'));
-        $dataChecker->verify($form['branding_colors']['accent_color'], Validator::hexRgbColor()->setName('accent_color'));
-        $dataChecker->verify($form['branding_colors']['add_color'], Validator::hexRgbColor()->setName('additional_color'));
+
+        $dataChecker->verify($form['theme'], Validator::notEmpty()->setName('color'));
+        $dataChecker->verify($form['theme']['brand_color'], Validator::hexRgbColor()->setName('brand_color'));
+        $dataChecker->verify($form['theme']['default_font_size'], Validator::notEmpty()->setName('default_font_size'));
+        $dataChecker->verify($form['theme']['border_radius'], Validator::notEmpty()->setName('border_radius'));
+        $dataChecker->verify($form['theme']['wireframe_style'], Validator::notEmpty()->setName('wireframe_style'));
 
         return $dataChecker;
     }

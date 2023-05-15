@@ -35,10 +35,10 @@ class CreateSettingsTables extends AbstractMigration
             ->addColumn('privacy_policy', 'string', ['limit' => 256, 'null' => true])
 
             ->addColumn('logo', 'string', ['limit' => 256, 'null' => true])
-            ->addColumn('primary_color', 'string', ['limit' => 256, 'null' => false])
-            ->addColumn('secondary_color', 'string', ['limit' => 256, 'null' => false])
-            ->addColumn('accent_color', 'string', ['limit' => 256, 'null' => false])
-            ->addColumn('additional_color', 'string', ['limit' => 256, 'null' => false])
+            ->addColumn('brand_color', 'string', ['limit' => 256, 'null' => false])
+            ->addColumn('default_font_size', 'integer', ['null' => false])
+            ->addColumn('border_radius', 'integer', ['null' => false])
+            ->addColumn('wireframe_style', 'boolean', ['null' => false])
 
             ->addColumn('created_on', 'datetime', ['default' => '0001-01-01 00:00:00', 'timezone' => true])
             ->addColumn('updated_on', 'datetime', ['default' => '0001-01-01 00:00:00', 'timezone' => true])

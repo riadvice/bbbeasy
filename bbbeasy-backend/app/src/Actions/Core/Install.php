@@ -114,7 +114,7 @@ class Install extends BaseAction
                                         $form['term_url'],
                                         $form['policy_url'],
                                         $form['logo'],
-                                        $form['branding_colors'],
+                                        $form['theme'],
                                     );
 
                                     // @fixme: should not have embedded try/catch here
@@ -143,7 +143,7 @@ class Install extends BaseAction
                 }
             }
         } else {
-            // already installed
+            //  already installed
             $this->logger->error('Initial application setup', ['error' => 'application already installed']);
             $this->renderJson(['locked' => true], ResponseCode::HTTP_LOCKED);
         }

@@ -19,7 +19,7 @@
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
-import { message, Form, Input, Typography, Upload } from 'antd';
+import { message, Form, Input, Typography, Upload, InputNumber } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 
 import ColorPicker from 'rc-color-picker/lib/ColorPicker';
@@ -28,23 +28,23 @@ import { UploadFile } from 'antd/lib/upload/interface';
 
 const { Title, Text, Paragraph } = Typography;
 const { Dragger } = Upload;
-
-type primaryColorFunction = (primary_color: string) => void;
-type secondaryColorFunction = (secondary_color: string) => void;
-type accentColorFunction = (accent_color: string) => void;
-type addColorFunction = (add_color: string) => void;
+import { Switch } from 'antd';
+type brandColorFunction = (brand_color: string) => void;
+type defaultFontSizeFunction = (default_font_size: number) => void;
+type borderRadiusFunction = (border_radius: number) => void;
+type wireframeFunction = (wireframe_style: boolean) => void;
 type fileFunction = (file: UploadFile) => void;
 type fileListFunction = (fileList: UploadFile[]) => void;
 
 type Props = {
-    primaryColor: string;
-    secondaryColor: string;
-    accentColor: string;
-    addColor: string;
-    setPrimaryColor: primaryColorFunction;
-    setSecondaryColor: secondaryColorFunction;
-    setAccentColor: accentColorFunction;
-    setAddColor: addColorFunction;
+    brandColor: string;
+    defaultFontSize: number;
+    borderRadius: number;
+    wireframeStyle: boolean;
+    setBrandColor: brandColorFunction;
+    setDefaultFontSize: defaultFontSizeFunction;
+    setBorderRadius: borderRadiusFunction;
+    setWireframeStyle: wireframeFunction;
     setFile: fileFunction;
     fileList: UploadFile[];
     setFileList: fileListFunction;
@@ -53,14 +53,14 @@ type Props = {
 export const Step2Form = (props: Props) => {
     const { t } = useTranslation();
     const {
-        primaryColor,
-        secondaryColor,
-        accentColor,
-        addColor,
-        setPrimaryColor,
-        setSecondaryColor,
-        setAccentColor,
-        setAddColor,
+        brandColor,
+        defaultFontSize,
+        borderRadius,
+        wireframeStyle,
+        setBrandColor,
+        setDefaultFontSize,
+        setBorderRadius,
+        setWireframeStyle,
         setFile,
         fileList,
         setFileList,
@@ -86,7 +86,15 @@ export const Step2Form = (props: Props) => {
             }
         }
     };
-
+    const onChangeDefaultSize = (value) => {
+        setDefaultFontSize(value);
+    };
+    const onChangeBorderRadius = (value) => {
+        setBorderRadius(value);
+    };
+    const onChangeWireframeStyle = (checked: boolean) => {
+        setWireframeStyle(checked);
+    };
     return (
         <div className="company-container">
             <div className="box">
@@ -205,61 +213,28 @@ export const Step2Form = (props: Props) => {
                     </Form.Item>
                 </Form.Item>
                 <div className="colors-container">
-                    <Form.Item label={<Trans i18nKey="primary_color" />}>
+                    <Form.Item label={<Trans i18nKey="brand_color" />}>
                         <ColorPicker
                             animation="slide-up"
-                            defaultColor={primaryColor}
+                            defaultColor={brandColor}
                             onClose={(color) => {
-                                setPrimaryColor(color.color);
+                                setBrandColor(color.color);
                             }}
                             placement="bottomLeft"
                         >
                             <span className="rc-color-picker-trigger" />
                         </ColorPicker>
 
-                        <span className="color-palette-picker-value">{primaryColor}</span>
+                        <span className="color-palette-picker-value">{brandColor}</span>
                     </Form.Item>
-                    <Form.Item label={<Trans i18nKey="secondary_color" />}>
-                        <ColorPicker
-                            animation="slide-up"
-                            defaultColor={secondaryColor}
-                            onClose={(color) => {
-                                setSecondaryColor(color.color);
-                            }}
-                            placement="bottomLeft"
-                        >
-                            <span className="rc-color-picker-trigger" />
-                        </ColorPicker>
-
-                        <span className="color-palette-picker-value">{secondaryColor}</span>
+                    <Form.Item label={<Trans i18nKey="default_font_size" />}>
+                        <InputNumber min={1} max={10} defaultValue={defaultFontSize} onChange={onChangeDefaultSize} />
                     </Form.Item>
-                    <Form.Item label={<Trans i18nKey="accent_color" />}>
-                        <ColorPicker
-                            animation="slide-up"
-                            defaultColor={accentColor}
-                            onClose={(color) => {
-                                setAccentColor(color.color);
-                            }}
-                            placement="bottomLeft"
-                        >
-                            <span className="rc-color-picker-trigger" />
-                        </ColorPicker>
-
-                        <span className="color-palette-picker-value">{accentColor}</span>
+                    <Form.Item label={<Trans i18nKey="border_radius" />}>
+                        <InputNumber min={1} max={10} defaultValue={borderRadius} onChange={onChangeBorderRadius} />
                     </Form.Item>
-                    <Form.Item label={<Trans i18nKey="additional_color" />}>
-                        <ColorPicker
-                            animation="slide-up"
-                            defaultColor={addColor}
-                            onClose={(color) => {
-                                setAddColor(color.color);
-                            }}
-                            placement="bottomLeft"
-                        >
-                            <span className="rc-color-picker-trigger" />
-                        </ColorPicker>
-
-                        <span className="color-palette-picker-value">{addColor}</span>
+                    <Form.Item label={<Trans i18nKey="wireframe_style" />}>
+                        <Switch defaultChecked={wireframeStyle} onChange={onChangeWireframeStyle} />
                     </Form.Item>
                 </div>
             </div>
