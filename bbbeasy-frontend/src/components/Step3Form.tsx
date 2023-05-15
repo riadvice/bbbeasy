@@ -31,7 +31,8 @@ import EN_US from '../locale/en-US.json';
 import { FormInstance } from 'antd/lib/form';
 const { Title, Paragraph } = Typography;
 const { Grid, Meta } = Card;
-
+import { useLocation } from 'react-router-dom';
+import presetSettingsService from 'services/preset.settings.service';
 type Props = {
     presets: PresetType[];
     onFinish?: (category: string, subCategories: SubCategoryType[]) => void;
@@ -39,6 +40,7 @@ type Props = {
 };
 let step3Form: FormInstance = null;
 export const Step3Form = (props: Props) => {
+    const location = useLocation();
     const { presets } = props;
     const enabled = props.enabled ?? true;
     const [modalTitle, setModalTitle] = React.useState<string>('');
@@ -57,6 +59,9 @@ export const Step3Form = (props: Props) => {
         modalContent.map((item) => {
             item.enabled = step3Form.getFieldValue(item.name);
         });
+        if (location.pathname.includes('settings')) {
+            props.onFinish(modalTitle, modalContent);
+        }
         setIsModalVisible(false);
     };
     const Cancel = () => {
@@ -150,6 +155,7 @@ export const Step3Form = (props: Props) => {
                                     return (
                                         <div key={modalTitle + '_' + item.name}>
                                             <Form.Item
+                                                initialValue={item.enabled}
                                                 label={<Trans i18nKey={subcategory} />}
                                                 valuePropName="checked"
                                                 name={item.name}
