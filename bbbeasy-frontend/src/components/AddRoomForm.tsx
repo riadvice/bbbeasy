@@ -16,7 +16,7 @@
  * with BBBEasy; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Trans, withTranslation } from 'react-i18next';
 import { t } from 'i18next';
 import EN_US from '../locale/en-US.json';
@@ -34,10 +34,9 @@ import AuthService from 'services/auth.service';
 import { FormInstance } from 'antd/es/form/Form';
 import { LabelType } from 'types/LabelType';
 import { PresetType } from 'types/PresetType';
-import presetsService from 'services/presets.service';
-import { UserContext } from 'lib/UserContext';
 import { UserType } from 'types/UserType';
 import NoData from './NoData';
+import PresetsService from "../services/presets.service";
 
 type formType = {
     name?: string;
@@ -69,14 +68,22 @@ export const AddRoomForm = (props: Props) => {
     const dataContext = React.useContext(DataContext);
 
     const currentUser: UserType = AuthService.getCurrentUser();
-    presetsService
-        .list_presets(currentUser.id)
-        .then((result) => {
-            setPresets(result.data);
-        })
-        .catch((err) => {
-            console.log(err);
-        });
+
+    const getPresets = () => {
+        if (currentUser != null) {
+            PresetsService.list_presets(currentUser.id).then((result) => {
+                setPresets(result.data);
+            });
+        }
+    };
+
+    useEffect(() => {
+        if (currentUser != null) {
+            //Runs only on the first render
+            getPresets();
+        }
+    }, []);
+
     const prefixShortLink = '/r/';
 
     const handleAdd = (values) => {
@@ -245,11 +252,13 @@ export const AddRoomForm = (props: Props) => {
                                             .localeCompare(optionB.children.toString().toLowerCase())
                                     }
                                 >
-                                    {presets.map((item) => (
-                                        <Option key={item.id} value={item.id} className="text-capitalize">
-                                            {item.name}
-                                        </Option>
-                                    ))}
+                                    {presets != null &&
+                                        presets.map((item) => (
+                                            <Option key={item.id} value={item.id} className="text-capitalize">
+                                                {item.name}
+                                            </Option>
+                                        ))}
+
                                 </Select>
                             </Form.Item>
                         </Col>
