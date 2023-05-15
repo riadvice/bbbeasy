@@ -54,26 +54,13 @@ export const Step3Form = (props: Props) => {
         setModalTitleTrans(titleTrans);
 
         setModalContent(content);
-        /*  content.map((item)=>{
-            console.log(item.enabled)
-            console.log(item.value)
-            step3Form.setFieldValue(item.name,item.enabled)
-        })
-        console.log(step3Form.getFieldsValue())*/
     };
     const Confirm = () => {
         modalContent.map((item) => {
             item.enabled = step3Form.getFieldValue(item.name);
         });
         if (location.pathname.includes('settings')) {
-            console.log(step3Form.getFieldsValue());
-            console.log(modalContent);
-            /*  presetSettingsService.edit_preset_settings(modalTitle,modalContent)
-            .then((result)=>{
-                console.log(result)
-            })*/
             props.onFinish(modalTitle, modalContent);
-            console.log('bigbluebuttonsettings page');
         }
         setIsModalVisible(false);
     };
