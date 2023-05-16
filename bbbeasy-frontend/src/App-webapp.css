@@ -1437,3 +1437,6 @@ fieldset {
 .ant-alert-content {
     margin-right: 5px;
 }
+.ant-input-number-rtl {
+    padding-right: 20px !important;
+}
