@@ -49,7 +49,7 @@ type formType = {
 
 const Branding = () => {
     const [settingsForm] = Form.useForm();
-    const [data, setData] = React.useState<formType>(null);
+    const [data, setData] = React.useState<SettingsType>(null);
     const [actions, setActions] = React.useState<string[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [brandColor, setBrandColor] = React.useState<string>('');
@@ -88,7 +88,7 @@ const Branding = () => {
             setFile(settingLogo);
         }
         setIsLoading(false);
-        setData(settingsForm.getFieldsValue(true));
+       
     };
 
     useEffect(() => {
@@ -96,6 +96,7 @@ const Branding = () => {
             .then((response) => {
                 const settings: SettingsType = response.data;
                 if (settings) {
+                    setData(settings)
                     setSettings(settings);
                 }
             })
@@ -108,7 +109,9 @@ const Branding = () => {
     }, []);
 
     const onFinish = () => {
+        console.log("finish");
         const settingsData: formType = settingsForm.getFieldsValue(true);
+        console.log(settingsData)
         //update branding colors
         settingsData.theme = {
             brand_color: brandColor,
@@ -136,7 +139,7 @@ const Branding = () => {
         } else if (file == undefined && settingsData.logo != null) {
             deleteLogo = true;
         }
-
+     
         if (!CompareRecords(data, settingsData) || updateLogo || deleteLogo) {
             //update logo
             if (updateLogo) {
@@ -148,6 +151,7 @@ const Branding = () => {
             //edit settings
             SettingsService.edit_settings(settingsData)
                 .then((response) => {
+                    console.log(response);
                     const newData: SettingsType = response.data.settings;
                     if (newData) {
                         Notifications.openNotificationWithIcon('success', t('edit_settings_success'));
@@ -194,7 +198,7 @@ const Branding = () => {
 
                             {AuthService.isAllowedAction(actions, 'edit') && (
                                 <Form.Item className="button-container button-padding">
-                                    <Button type="primary" id="submit-btn" htmlType="submit" block>
+                                    <Button type="primary" id="submit-btn" htmlType="submit" block >
                                         <Trans i18nKey={'edit'} />
                                     </Button>
                                 </Form.Item>

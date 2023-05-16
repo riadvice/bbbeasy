@@ -76,7 +76,7 @@ class Edit extends BaseAction
                     $form['term_url'],
                     $form['policy_url'],
                     $form['logo'],
-                    $form['branding_colors'],
+                    $form['theme'],
                 );
             } else {
                 $this->logger->error($errorMessage, ['errors' => $dataChecker->getErrors()]);

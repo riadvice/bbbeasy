@@ -228,10 +228,10 @@ export const Step2Form = (props: Props) => {
                         <span className="color-palette-picker-value">{brandColor}</span>
                     </Form.Item>
                     <Form.Item label={<Trans i18nKey="default_font_size" />}>
-                        <InputNumber min={1} max={10} defaultValue={defaultFontSize} onChange={onChangeDefaultSize} />
+                        <InputNumber min={1} max={30} defaultValue={defaultFontSize} onChange={onChangeDefaultSize} />
                     </Form.Item>
                     <Form.Item label={<Trans i18nKey="border_radius" />}>
-                        <InputNumber min={1} max={10} defaultValue={borderRadius} onChange={onChangeBorderRadius} />
+                        <InputNumber min={1} max={20} defaultValue={borderRadius} onChange={onChangeBorderRadius} />
                     </Form.Item>
                     <Form.Item label={<Trans i18nKey="wireframe_style" />}>
                         <Switch defaultChecked={wireframeStyle} onChange={onChangeWireframeStyle} />
