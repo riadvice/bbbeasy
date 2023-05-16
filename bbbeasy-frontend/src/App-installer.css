@@ -568,3 +568,6 @@ body.rtl {
     background: var(--bbbeasy-medimum-gray) !important;
     color: white !important;
 }
+.ant-input-number-rtl {
+    padding-right: 20px !important;
+}
