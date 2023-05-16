@@ -792,7 +792,7 @@ fieldset {
 .room-details {
     border-radius: 10px !important;
 }
-.RoomPresentation{
+.RoomPresentation {
     margin: auto !important;
 }
 .room-details #room-shortlink.ant-input-rtl {

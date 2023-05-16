@@ -77,7 +77,7 @@ export const AddPresetForm = (props: Props) => {
             .finally(() => {
                 setLoading(false);
             });
-       window.location.reload();
+        window.location.reload();
     };
     const cancelAdd = () => {
         props.close();

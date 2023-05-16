@@ -88,7 +88,6 @@ const Branding = () => {
             setFile(settingLogo);
         }
         setIsLoading(false);
-       
     };
 
     useEffect(() => {
@@ -96,7 +95,7 @@ const Branding = () => {
             .then((response) => {
                 const settings: SettingsType = response.data;
                 if (settings) {
-                    setData(settings)
+                    setData(settings);
                     setSettings(settings);
                 }
             })
@@ -109,9 +108,8 @@ const Branding = () => {
     }, []);
 
     const onFinish = () => {
-        console.log("finish");
         const settingsData: formType = settingsForm.getFieldsValue(true);
-        console.log(settingsData)
+
         //update branding colors
         settingsData.theme = {
             brand_color: brandColor,
@@ -139,31 +137,31 @@ const Branding = () => {
         } else if (file == undefined && settingsData.logo != null) {
             deleteLogo = true;
         }
-     
-        if (!CompareRecords(data, settingsData) || updateLogo || deleteLogo) {
-            //update logo
-            if (updateLogo) {
-                settingsData.logo = file.name;
-            } else if (deleteLogo) {
-                settingsData.logo = null;
-            }
 
-            //edit settings
-            SettingsService.edit_settings(settingsData)
-                .then((response) => {
-                    console.log(response);
-                    const newData: SettingsType = response.data.settings;
-                    if (newData) {
-                        Notifications.openNotificationWithIcon('success', t('edit_settings_success'));
-                        setSettings(newData);
-                    }
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
-        } else {
-            Notifications.openNotificationWithIcon('info', t('no_changes'));
+        //update logo
+        if (updateLogo) {
+            settingsData.logo = file.name;
+        } else if (deleteLogo) {
+            settingsData.logo = null;
         }
+
+        //edit settings
+        SettingsService.edit_settings(settingsData)
+            .then((response) => {
+                console.log(response);
+
+                const newData: SettingsType = response.data.settings;
+
+                if (!CompareRecords(data, newData)) {
+                    Notifications.openNotificationWithIcon('success', t('edit_settings_success'));
+                    setSettings(newData);
+                } else {
+                    Notifications.openNotificationWithIcon('info', t('no_changes'));
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     };
 
     return (
@@ -198,7 +196,7 @@ const Branding = () => {
 
                             {AuthService.isAllowedAction(actions, 'edit') && (
                                 <Form.Item className="button-container button-padding">
-                                    <Button type="primary" id="submit-btn" htmlType="submit" block >
+                                    <Button type="primary" id="submit-btn" htmlType="submit" block>
                                         <Trans i18nKey={'edit'} />
                                     </Button>
                                 </Form.Item>
