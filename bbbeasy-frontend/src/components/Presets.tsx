@@ -420,7 +420,7 @@ const PresetsCol: React.FC<PresetColProps> = ({
                         onOk={() => setIsModalVisible(false)}
                         onCancel={() => setIsModalVisible(false)}
                         footer={null}
-                        maskClosable={false}
+                        maskClosable={true}
                     >
                         <div className="presets-body">
                             <Form>
