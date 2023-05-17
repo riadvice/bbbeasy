@@ -118,6 +118,18 @@ const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
 
     //loading page and user already logged => set current user
     useEffect(() => {
+        window.addEventListener('error', (e) => {
+            if (e.message === 'ResizeObserver loop limit exceeded') {
+                const resizeObserverErrDiv = document.getElementById('webpack-dev-server-client-overlay-div');
+                const resizeObserverErr = document.getElementById('webpack-dev-server-client-overlay');
+                if (resizeObserverErr) {
+                    resizeObserverErr.setAttribute('style', 'display: none');
+                }
+                if (resizeObserverErrDiv) {
+                    resizeObserverErrDiv.setAttribute('style', 'display: none');
+                }
+            }
+        });
         const user: UserType = AuthService.getCurrentUser();
         const session: SessionType = AuthService.getCurrentSession();
         if (user != null && session != null) {
