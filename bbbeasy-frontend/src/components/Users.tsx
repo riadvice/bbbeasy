@@ -425,7 +425,7 @@ const Users = () => {
                 const clickCancel = (record) => {
                     const oldData = record;
                     const newData = editForm.getFieldsValue(true);
-                    compareEdit(oldData, newData) ? cancelEdit() : setCancelVisibility(true);
+                    compareEdit(oldData, newData) ? cancelEdit() : null;
                 };
                 const editable = isEditing(record);
                 const deletedRow = record.status == 'deleted';
@@ -438,7 +438,6 @@ const Users = () => {
                             visible={cancelVisibility}
                             onVisibleChange={() => clickCancel(record)}
                             onConfirm={() => cancelEdit()}
-                            onCancel={() => setCancelVisibility(false)}
                         >
                             <Button size="middle" className="cell-input-cancel">
                                 <Trans i18nKey="cancel" />

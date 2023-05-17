@@ -278,7 +278,7 @@ const Labels = () => {
             editable: false,
             render: (text, record) => {
                 const handleCancelVisibilityChange = () => {
-                    CompareRecords(record, editForm.getFieldsValue(true)) ? cancelEdit() : setCancelVisibility(true);
+                    CompareRecords(record, editForm.getFieldsValue(true)) ? cancelEdit() : null;
                 };
 
                 const EditActions = (
@@ -288,7 +288,6 @@ const Labels = () => {
                             placement="leftTop"
                             visible={cancelVisibility}
                             onConfirm={() => cancelEdit()}
-                            onCancel={() => setCancelVisibility(false)}
                             onVisibleChange={handleCancelVisibilityChange}
                         >
                             <Button size="middle" className="cell-input-cancel">
