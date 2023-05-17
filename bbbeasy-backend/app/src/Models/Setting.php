@@ -47,7 +47,7 @@ class Setting extends BaseModel
 {
     protected $table = 'settings';
 
-    public function saveSettings(string $name, string $website, string $plaform, ?string $terms, ?string $policy, ?string $logo, ?array $colors): void
+    public function saveSettings(string $name, string $website, string $plaform, ?string $terms, ?string $policy, ?string $logo, ?array $theme): void
     {
         $this->company_name    = $name;
         $this->company_website = $website;
@@ -55,11 +55,12 @@ class Setting extends BaseModel
         $this->terms_use       = $terms;
         $this->privacy_policy  = $policy;
         $this->logo            = $logo;
-        if ($colors) {
-            $this->brand_color       = $colors['brand_color'];
-            $this->default_font_size = $colors['default_font_size'];
-            $this->border_radius     = $colors['border_radius'];
-            $this->wireframe_style   = $colors['wireframe_style'];
+
+        if ($theme) {
+            $this->brand_color       = $theme['brand_color'];
+            $this->default_font_size = $theme['default_font_size'];
+            $this->border_radius     = $theme['border_radius'];
+            $this->wireframe_style   = $theme['wireframe_style'];
         }
     }
 
@@ -107,7 +108,7 @@ class Setting extends BaseModel
         $dataChecker->verify($form['theme']['brand_color'], Validator::hexRgbColor()->setName('brand_color'));
         $dataChecker->verify($form['theme']['default_font_size'], Validator::notEmpty()->setName('default_font_size'));
         $dataChecker->verify($form['theme']['border_radius'], Validator::notEmpty()->setName('border_radius'));
-        $dataChecker->verify($form['theme']['wireframe_style'], Validator::notEmpty()->setName('wireframe_style'));
+
 
         return $dataChecker;
     }

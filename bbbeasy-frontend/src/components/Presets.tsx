@@ -361,53 +361,53 @@ const PresetsCol: React.FC<PresetColProps> = ({
                     const category = filteredElements.length != 0 ? filteredElements[0] : item.name;
 
                     return (
-                        <> 
-                        {item.enabled && (
-
-                        
-                        <Tooltip
-                            key={subIndex + '-' + item.name}
-                            placement={
-                                LocaleService.direction == 'rtl'
-                                    ? item.enabled == true
-                                        ? 'leftTop'
-                                        : 'left'
-                                    : item.enabled
-                                    ? 'rightTop'
-                                    : 'right'
-                            }
-                            overlayClassName={item.enabled ? 'install-tooltip' : 'title-tooltip'}
-                            title={
-                                item.enabled == true ? (
-                                    <>
-                                        <Title level={5}>{t(category)}</Title>
-                                        <ul>
-                                            {item.subcategories.map((subItem) => (
-                                                <li
-                                                    key={item.name + '_' + subItem.name}
-                                                    className={subItem.value == '' ? 'text-grey' : 'text-black'}
-                                                >
-                                                    {t(subItem.name)}
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </>
-                                ) : (
-                                    <Title level={5}>{t(category)}</Title>
-                                )
-                            }
-                        >
-                            <Button
-                                onClick={() =>
-                                    editClickHandler != null ? showModal(item.name, category, item.subcategories) : null
-                                }
-                                disabled={!item.enabled}
-                                type="link"
-                                icon={<DynamicIcon type={getIconName(item.name)} className={'PresetIcon'} />}
-                            />
-                        </Tooltip>
-                    )}
-                    </>
+                        <>
+                            {item.enabled && (
+                                <Tooltip
+                                    key={subIndex + '-' + item.name}
+                                    placement={
+                                        LocaleService.direction == 'rtl'
+                                            ? item.enabled == true
+                                                ? 'leftTop'
+                                                : 'left'
+                                            : item.enabled
+                                            ? 'rightTop'
+                                            : 'right'
+                                    }
+                                    overlayClassName={item.enabled ? 'install-tooltip' : 'title-tooltip'}
+                                    title={
+                                        item.enabled == true ? (
+                                            <>
+                                                <Title level={5}>{t(category)}</Title>
+                                                <ul>
+                                                    {item.subcategories.map((subItem) => (
+                                                        <li
+                                                            key={item.name + '_' + subItem.name}
+                                                            className={subItem.value == '' ? 'text-grey' : 'text-black'}
+                                                        >
+                                                            {t(subItem.name)}
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </>
+                                        ) : (
+                                            <Title level={5}>{t(category)}</Title>
+                                        )
+                                    }
+                                >
+                                    <Button
+                                        onClick={() =>
+                                            editClickHandler != null
+                                                ? showModal(item.name, category, item.subcategories)
+                                                : null
+                                        }
+                                        disabled={!item.enabled}
+                                        type="link"
+                                        icon={<DynamicIcon type={getIconName(item.name)} className={'PresetIcon'} />}
+                                    />
+                                </Tooltip>
+                            )}
+                        </>
                     );
                 })}
 
@@ -523,7 +523,7 @@ const Presets = () => {
         const currentUser: UserType = AuthService.getCurrentUser();
         PresetsService.list_presets(currentUser.id)
             .then((response) => {
-                console.log(response.data)
+                console.log(response.data);
                 setMyPresets(response.data);
             })
             .catch((error) => {

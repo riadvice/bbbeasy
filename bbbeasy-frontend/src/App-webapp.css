@@ -792,7 +792,7 @@ fieldset {
 .room-details {
     border-radius: 10px !important;
 }
-.RoomPresentation{
+.RoomPresentation {
     margin: auto !important;
 }
 .room-details #room-shortlink.ant-input-rtl {
@@ -1436,4 +1436,7 @@ fieldset {
 }
 .ant-alert-content {
     margin-right: 5px;
+}
+.ant-input-number-rtl {
+    padding-right: 20px !important;
 }
