@@ -36,7 +36,7 @@ import { LabelType } from 'types/LabelType';
 import { PresetType } from 'types/PresetType';
 import { UserType } from 'types/UserType';
 import NoData from './NoData';
-import PresetsService from "../services/presets.service";
+import PresetsService from '../services/presets.service';
 
 type formType = {
     name?: string;
@@ -258,7 +258,6 @@ export const AddRoomForm = (props: Props) => {
                                                 {item.name}
                                             </Option>
                                         ))}
-
                                 </Select>
                             </Form.Item>
                         </Col>
