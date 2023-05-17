@@ -49,7 +49,11 @@ type formType = {
     labels?: LabelType[];
 };
 
-const AppSider = () => {
+type Props = {
+    presets?: PresetType[];
+};
+
+const AppSider = (props: Props) => {
     const initialAddValues: formType = {
         name: '',
         shortlink: getRandomString(),
@@ -140,6 +144,7 @@ const AppSider = () => {
                                             close={() => setIsModalVisibleRoom(false)}
                                             shortlink={initialAddValues.shortlink}
                                             initialAddValues={initialAddValues}
+                                            presets={props.presets}
                                         />
                                     )}
                                     {newMenuItems.includes('labels') && (

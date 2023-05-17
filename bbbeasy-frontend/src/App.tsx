@@ -166,7 +166,7 @@ const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
                 >
                     <UserContext.Provider value={userProvider}>
                         <DataContext.Provider value={dataProvider}>
-                            {isLogged && isSider && <AppSider />}
+                            {isLogged && isSider && <AppSider presets={dataPresets} />}
                             <Layout className="page-layout-body">
                                 <AppHeader />
                                 <Content className="site-content">

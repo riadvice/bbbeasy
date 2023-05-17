@@ -53,6 +53,7 @@ type Props = {
     isModalShow: boolean;
     close: () => void;
     shortlink: string;
+    presets?: PresetType[];
 
     initialAddValues: formType;
 };
@@ -69,20 +70,15 @@ export const AddRoomForm = (props: Props) => {
 
     const currentUser: UserType = AuthService.getCurrentUser();
 
-    const getPresets = () => {
-        if (currentUser != null) {
-            PresetsService.list_presets(currentUser.id).then((result) => {
-                setPresets(result.data);
-            });
-        }
-    };
-
     useEffect(() => {
-        if (currentUser != null) {
-            //Runs only on the first render
-            getPresets();
-        }
-    }, []);
+            PresetsService.list_presets(currentUser.id)
+                .then((result) => {
+                setPresets(result.data);
+            })
+                .catch((err) => {
+                    console.log(err);
+                });
+    }, [props.presets]);
 
     const prefixShortLink = '/r/';
 
