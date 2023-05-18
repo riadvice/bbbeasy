@@ -144,7 +144,7 @@ install_deps() {
   apt-get install -y redis-server
 
   echo "Install node.js"
-  curl -sL https://deb.nodesource.com/setup_18.x -o nodesource_setup.sh
+  curl -sL https://deb.nodesource.com/setup_20.x -o nodesource_setup.sh
   bash nodesource_setup.sh
   rm nodesource_setup.sh
   apt-get install -y nodejs
@@ -154,7 +154,7 @@ install_deps() {
     php8.2-mbstring php8.2-xml php8.2-bcmath php8.2-xdebug
 
   echo "Installing PostgreSQL"
-  percona-release setup ppg-15.1
+  percona-release setup ppg-15.2
   apt-get install -y percona-postgresql-15 \
     percona-postgresql-15-repack \
     percona-postgresql-15-pgaudit \
