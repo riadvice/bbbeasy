@@ -71,13 +71,13 @@ export const AddRoomForm = (props: Props) => {
     const currentUser: UserType = AuthService.getCurrentUser();
 
     useEffect(() => {
-            PresetsService.list_presets(currentUser.id)
-                .then((result) => {
+        PresetsService.list_presets(currentUser.id)
+            .then((result) => {
                 setPresets(result.data);
             })
-                .catch((err) => {
-                    console.log(err);
-                });
+            .catch((err) => {
+                console.log(err);
+            });
     }, [props.presets]);
 
     const prefixShortLink = '/r/';

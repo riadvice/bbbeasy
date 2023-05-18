@@ -23,6 +23,7 @@ import { PageHeader } from '@ant-design/pro-layout';
 import {
     Button,
     Card,
+    ColorPicker,
     Row,
     Col,
     Form,
@@ -50,8 +51,6 @@ import {
     UploadOutlined,
     WarningOutlined,
 } from '@ant-design/icons';
-
-import ColorPicker from 'rc-color-picker/lib/ColorPicker';
 
 import { Trans, withTranslation } from 'react-i18next';
 import { t } from 'i18next';
