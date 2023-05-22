@@ -1472,13 +1472,12 @@ fieldset {
     border-color: #d9d9d9;
     border-radius: 6px;
     transition: all 0.2s;
-    color: rgba(0, 0, 0, 0.25);
     opacity: 1;
 }
 
 .space-presets-border {
     border: 1px solid #999;
-    border: 1px solid #999;
+
     display: inline-block;
 
     border-radius: 2px;
