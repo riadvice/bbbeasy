@@ -5182,7 +5182,7 @@ __metadata:
     pino-pretty: ^10.0.0
     pino-transmit-http: ^1.0.1
     prettier: ^2.8.8
-    rc-select: ^14.4.3
+    rc-select: ^14.5.0
     rc-util: ^5.30.0
     react: ^17.0.2
     react-color: ^2.19.3
@@ -15075,7 +15075,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rc-select@npm:^14.4.3, rc-select@npm:~14.4.0, rc-select@npm:~14.4.3":
+"rc-select@npm:^14.5.0":
+  version: 14.5.0
+  resolution: "rc-select@npm:14.5.0"
+  dependencies:
+    "@babel/runtime": ^7.10.1
+    "@rc-component/trigger": ^1.5.0
+    classnames: 2.x
+    rc-motion: ^2.0.1
+    rc-overflow: ^1.0.0
+    rc-util: ^5.16.1
+    rc-virtual-list: ^3.5.2
+  peerDependencies:
+    react: "*"
+    react-dom: "*"
+  checksum: 9e10ebf84eac1fc224e9fcc17ea0cec8d07db13cd760749a3b0e798ebcf85ed457a795bf37b157c7a60de4fb3139543fec96e80e5c1524938e2e840e551ea693
+  languageName: node
+  linkType: hard
+
+"rc-select@npm:~14.4.0, rc-select@npm:~14.4.3":
   version: 14.4.3
   resolution: "rc-select@npm:14.4.3"
   dependencies:
@@ -15287,7 +15305,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rc-virtual-list@npm:^3.4.13, rc-virtual-list@npm:^3.4.8":
+"rc-virtual-list@npm:^3.4.13, rc-virtual-list@npm:^3.4.8, rc-virtual-list@npm:^3.5.2":
   version: 3.5.2
   resolution: "rc-virtual-list@npm:3.5.2"
   dependencies:
@@ -18166,11 +18184,11 @@ __metadata:
 
 "typescript@patch:typescript@^4.9.5#~builtin<compat/typescript>":
   version: 4.9.5
-  resolution: "typescript@patch:typescript@npm%3A4.9.5#~builtin<compat/typescript>::version=4.9.5&hash=23ec76"
+  resolution: "typescript@patch:typescript@npm%3A4.9.5#~builtin<compat/typescript>::version=4.9.5&hash=289587"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: ab417a2f398380c90a6cf5a5f74badd17866adf57f1165617d6a551f059c3ba0a3e4da0d147b3ac5681db9ac76a303c5876394b13b3de75fdd5b1eaa06181c9d
+  checksum: 1f8f3b6aaea19f0f67cba79057674ba580438a7db55057eb89cc06950483c5d632115c14077f6663ea76fd09fce3c190e6414bb98582ec80aa5a4eaf345d5b68
   languageName: node
   linkType: hard
 
