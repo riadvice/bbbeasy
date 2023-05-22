@@ -23,6 +23,7 @@ import { PageHeader } from '@ant-design/pro-layout';
 import {
     Button,
     Card,
+    theme,
     ColorPicker,
     Row,
     Col,
@@ -74,7 +75,7 @@ import { UserType } from 'types/UserType';
 import { MyPresetType } from '../types/MyPresetType';
 import { SubCategoryType } from '../types/SubCategoryType';
 import { UploadFile } from 'antd/lib/upload/interface';
-
+import type { Color } from 'antd/es/color-picker';
 const { Title } = Typography;
 
 interface PresetColProps {
@@ -108,6 +109,8 @@ const PresetsCol: React.FC<PresetColProps> = ({
     const [errorsEdit, setErrorsEdit] = React.useState({});
     const isDefault = preset['name'] == 'default';
     const deleteEnabled = deleteClickHandler != null && !isDefault;
+    const { token } = theme.useToken();
+    const [color, setColor] = useState<Color | string>(token.colorPrimary);
 
     const props = {
         beforeUpload: (file) => {
@@ -194,6 +197,7 @@ const PresetsCol: React.FC<PresetColProps> = ({
         setErrorsEdit({});
         try {
             const values = (await editForm.validateFields()) as formType;
+
             PresetsService.edit_preset(values, preset.id)
                 .then((response) => {
                     editClickHandler(response.data.preset, preset);
@@ -447,14 +451,23 @@ const PresetsCol: React.FC<PresetColProps> = ({
 
                                             {item.type === 'color' && (
                                                 <ColorPicker
-                                                    animation="slide-up"
-                                                    defaultColor={item.value}
-                                                    onClose={(color) => {
-                                                        item.value = color.color;
+                                                    value={item.value ? item.value : '#fbbc0b'}
+                                                    onChange={(color1: Color) => {
+                                                        setColor(color1);
+                                                        item.value =
+                                                            typeof color1 === 'string' ? color1 : color1.toHexString();
                                                     }}
-                                                    placement="bottomLeft"
                                                 >
-                                                    <span className="rc-color-picker-trigger" />
+                                                    <Space className="space-presets-border">
+                                                        <div
+                                                            style={{
+                                                                width: token.sizeMD,
+                                                                height: token.sizeMD,
+
+                                                                backgroundColor: item.value ? item.value : '#fbbc0b',
+                                                            }}
+                                                        />
+                                                    </Space>
                                                 </ColorPicker>
                                             )}
 
@@ -522,7 +535,6 @@ const Presets = () => {
         const currentUser: UserType = AuthService.getCurrentUser();
         PresetsService.list_presets(currentUser.id)
             .then((response) => {
-                console.log(response.data);
                 setMyPresets(response.data);
             })
             .catch((error) => {

@@ -19,13 +19,12 @@
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
-import { message, Form, Input, Typography, Upload, InputNumber } from 'antd';
+import { message, Form, Input, Typography, Upload, InputNumber, theme, ColorPicker, Space } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 
-import ColorPicker from 'rc-color-picker/lib/ColorPicker';
 import { RcFile, UploadChangeParam } from 'antd/lib/upload';
 import { UploadFile } from 'antd/lib/upload/interface';
-
+import type { Color } from 'antd/es/color-picker';
 const { Title, Text, Paragraph } = Typography;
 const { Dragger } = Upload;
 import { Switch } from 'antd';
@@ -65,7 +64,7 @@ export const Step2Form = (props: Props) => {
         fileList,
         setFileList,
     } = props;
-
+    const { token } = theme.useToken();
     const normFile = (e: UploadChangeParam<UploadFile<string>>) => {
         if (Array.isArray(e)) {
             return e;
@@ -215,17 +214,27 @@ export const Step2Form = (props: Props) => {
                 <div className="colors-container">
                     <Form.Item label={<Trans i18nKey="brand_color" />}>
                         <ColorPicker
-                            animation="slide-up"
-                            defaultColor={brandColor}
-                            onClose={(color) => {
-                                setBrandColor(color.color);
+                            value={brandColor}
+                            onChange={(color1: Color) => {
+                                if (typeof color1 === 'string') {
+                                    setBrandColor(color1);
+                                } else {
+                                    setBrandColor(color1.toHexString());
+                                }
                             }}
-                            placement="bottomLeft"
                         >
-                            <span className="rc-color-picker-trigger" />
+                            <Space>
+                                <div
+                                    style={{
+                                        width: token.sizeMD,
+                                        height: token.sizeMD,
+                                        borderRadius: token.borderRadiusSM,
+                                        backgroundColor: brandColor,
+                                    }}
+                                />
+                                <span>{brandColor}</span>
+                            </Space>
                         </ColorPicker>
-
-                        <span className="color-palette-picker-value">{brandColor}</span>
                     </Form.Item>
                     <Form.Item label={<Trans i18nKey="default_font_size" />}>
                         <InputNumber min={1} max={30} defaultValue={defaultFontSize} onChange={onChangeDefaultSize} />
