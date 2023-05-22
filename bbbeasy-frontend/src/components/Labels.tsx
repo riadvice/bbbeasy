@@ -23,18 +23,18 @@ import { t } from 'i18next';
 
 import { PageHeader } from '@ant-design/pro-layout';
 
-import { Badge, Button, Form, Input, Modal, Popconfirm, Space, Typography } from 'antd';
+import { Badge, Button, Form, Input, Modal, Popconfirm, Space, Typography, ColorPicker, theme } from 'antd';
 import { DeleteOutlined, EditOutlined, QuestionCircleOutlined, WarningOutlined } from '@ant-design/icons';
 
 import Notifications from './Notifications';
 import AddLabelForm from './AddLabelForm';
-import InputColor from './InputColor';
+
 import { DataContext } from 'lib/RoomsContext';
 import { CompareRecords } from '../functions/compare.function';
 import { EditableTable } from './EditableTable';
 import EditableTableCell from './EditableTableCell';
 import EditableTableColumnSearch from './EditableTableColumnSearch';
-
+import type { Color } from 'antd/es/color-picker';
 import AuthService from '../services/auth.service';
 import LabelsService from '../services/labels.service';
 
@@ -60,7 +60,8 @@ const Labels = () => {
     const [errorsEdit, setErrorsEdit] = React.useState({});
     const [cancelVisibility, setCancelVisibility] = React.useState<boolean>(false);
     const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
-
+    const [color, setColor] = React.useState<string>('');
+    const { token } = theme.useToken();
     const getLabels = () => {
         setLoading(true);
         LabelsService.list_labels()
@@ -154,12 +155,33 @@ const Labels = () => {
                 errorsEdit={errorsEdit}
                 showLabelColor={dataIndex == 'description'}
                 inputColor={
-                    <InputColor
-                        defaultColor={record != undefined && record.color}
-                        onFocus={() => {
-                            setCancelVisibility(false);
-                        }}
-                    />
+                    record && (
+                        <>
+                            <ColorPicker
+                                value={record.color}
+                                onChange={(color1: Color) => {
+                                    editForm.setFieldValue('color', color1.toHexString());
+
+                                    setColor(color1.toHexString());
+
+                                    setCancelVisibility(false);
+                                }}
+                            >
+                                <Space className="space-color-picker">
+                                    <div
+                                        style={{
+                                            //border:"2px",
+                                            width: token.sizeMD,
+                                            height: token.sizeMD,
+                                            borderRadius: token.borderRadiusSM,
+                                            backgroundColor: color ? color : record.color,
+                                        }}
+                                    />
+                                    <span> {color ? color : record.color}</span>
+                                </Space>
+                            </ColorPicker>
+                        </>
+                    )
                 }
                 {...restProps}
             >
@@ -191,6 +213,7 @@ const Labels = () => {
     const saveEdit = async (record: LabelType, key: number) => {
         try {
             const formValues: object = await editForm.validateFields();
+
             if (!CompareRecords(record, editForm.getFieldsValue(true))) {
                 setLoading(true);
                 setErrorsEdit({});

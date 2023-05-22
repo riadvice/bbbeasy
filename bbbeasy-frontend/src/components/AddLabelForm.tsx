@@ -20,9 +20,9 @@ import React from 'react';
 import { Trans, withTranslation } from 'react-i18next';
 import { t } from 'i18next';
 import EN_US from '../locale/en-US.json';
+import type { Color } from 'antd/es/color-picker';
+import { Button, Form, Input, Modal, ColorPicker, Space, theme } from 'antd';
 
-import { Button, Form, Input, Modal } from 'antd';
-import InputColor from './InputColor';
 import { DataContext } from 'lib/RoomsContext';
 import Notifications from './Notifications';
 
@@ -46,19 +46,21 @@ type formType = {
 let addForm: FormInstance = null;
 
 export const AddLabelForm = (props: Props) => {
+    const { defaultColor } = props;
     const initialAddValues: formType = {
         name: '',
         description: '',
         color: '#fbbc0b',
     };
-    const { defaultColor } = props;
+    const [color, setColor] = React.useState<string>(defaultColor ? defaultColor : '#fbbc0b');
     const dataContext = React.useContext(DataContext);
     const [data, setData] = React.useState<LabelType[]>([]);
     const [loading, setLoading] = React.useState<boolean>(false);
     const [errorsAdd, setErrorsAdd] = React.useState<string[]>([]);
-
+    const { token } = theme.useToken();
     const handleAdd = (values) => {
         const formValues: formType = values;
+
         setErrorsAdd([]);
         setLoading(true);
         LabelsService.add_label(formValues)
@@ -158,7 +160,26 @@ export const AddLabelForm = (props: Props) => {
                             validateStatus: 'error',
                         })}
                     >
-                        <InputColor defaultColor={defaultColor} />
+                        <ColorPicker
+                            value={color}
+                            onChange={(color1: Color) => {
+                                addForm.setFieldValue('color', color1.toHexString());
+
+                                setColor(color1.toHexString());
+                            }}
+                        >
+                            <Space className="space-color-picker-add-label">
+                                <div
+                                    style={{
+                                        width: token.sizeMD,
+                                        height: token.sizeMD,
+                                        borderRadius: token.borderRadiusSM,
+                                        backgroundColor: color,
+                                    }}
+                                />
+                                <span>{color}</span>
+                            </Space>
+                        </ColorPicker>
                     </Form.Item>
                     <Form.Item className="modal-submit-btn button-container">
                         <Button type="text" className="cancel-btn prev" block onClick={cancelAdd}>

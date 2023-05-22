@@ -84,7 +84,7 @@ const tagRender = (props: CustomTagProps) => {
 const RoomDetails = () => {
     const { state } = useLocation();
     const param = useParams();
-    const editable: boolean = state?.editable;
+
     const [room, setRoom] = React.useState<RoomType>(state ? state.room : null);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [isRunning, setIsRunning] = useState<boolean>(false);
@@ -149,7 +149,7 @@ const RoomDetails = () => {
     };
     const getRoomRecordings = (id) => {
         setLoading(true);
-        console.log(id);
+
         RecordingsService.list_recordings(id)
             .then((response) => {
                 console.log(response);

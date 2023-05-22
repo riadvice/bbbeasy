@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Lesser General Public License along
  * with BBBEasy; if not, see <http://www.gnu.org/licenses/>.
  */
-@import '~rc-color-picker/assets/index.css';
+
 @import '~perfect-scrollbar/css/perfect-scrollbar.css';
 
 @font-face {
@@ -1439,4 +1439,53 @@ fieldset {
 }
 .ant-input-number-rtl {
     padding-right: 20px !important;
+}
+.space-color-picker {
+    color: rgba(0, 0, 0, 0.25);
+
+    opacity: 1;
+
+    width: 200px;
+
+    background-color: #ffffff;
+    background-image: none;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #dddfe1;
+    border-radius: 6px;
+    padding: 4px 11px;
+}
+
+.space-color-picker-add-label {
+    position: relative;
+    display: inline-flex;
+    width: 100% !important;
+    min-width: 0;
+    padding: 4px 11px !important;
+    color: rgba(0, 0, 0, 0.88);
+    font-size: 14px;
+    line-height: 1.8714285714285714;
+    background-color: #ffffff;
+    background-image: none;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #d9d9d9;
+    border-radius: 6px;
+    transition: all 0.2s;
+    opacity: 1;
+}
+
+.space-presets-border {
+    border: 1px solid #999;
+
+    display: inline-block;
+
+    border-radius: 2px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    box-shadow: 0 0 0 2px #fff inset;
 }

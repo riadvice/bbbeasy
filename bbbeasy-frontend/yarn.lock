@@ -5044,7 +5044,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"babel-runtime@npm:6.x, babel-runtime@npm:^6.26.0":
+"babel-runtime@npm:6.x":
   version: 6.26.0
   resolution: "babel-runtime@npm:6.26.0"
   dependencies:
@@ -5146,8 +5146,8 @@ __metadata:
     pino-pretty: ^10.0.0
     pino-transmit-http: ^1.0.1
     prettier: ^2.8.8
-    rc-color-picker: ^1.2.6
     rc-select: ^14.4.3
+    rc-util: ^5.30.0
     react: ^17.0.2
     react-color: ^2.19.3
     react-copy-to-clipboard: ^5.1.0
@@ -6126,22 +6126,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"component-classes@npm:^1.2.5":
-  version: 1.2.6
-  resolution: "component-classes@npm:1.2.6"
-  dependencies:
-    component-indexof: 0.0.3
-  checksum: e488bbd0f67bd1b97934ce4f15c8b1f7294cfb232fac5f61c379ddef559b409340a0c51a438ec6105d9b5c1fa50ce0dfc37064fabf3ad12d92849e84b59ceaaf
-  languageName: node
-  linkType: hard
-
-"component-indexof@npm:0.0.3":
-  version: 0.0.3
-  resolution: "component-indexof@npm:0.0.3"
-  checksum: 1fcf1954c7b39a064181ac013fed7f38bccb585e89075a0b5d83e7c371c2ac55d067c5dd04e62df05b04ca1b59b4fde3470f5be74287c94f6dc6142aa4f9c5fd
-  languageName: node
-  linkType: hard
-
 "compressible@npm:~2.0.16":
   version: 2.0.18
   resolution: "compressible@npm:2.0.18"
@@ -6406,7 +6390,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"create-react-class@npm:15.x, create-react-class@npm:^15.5.3":
+"create-react-class@npm:^15.5.3":
   version: 15.7.0
   resolution: "create-react-class@npm:15.7.0"
   dependencies:
@@ -6438,16 +6422,6 @@ __metadata:
   version: 2.0.0
   resolution: "crypto-random-string@npm:2.0.0"
   checksum: 0283879f55e7c16fdceacc181f87a0a65c53bc16ffe1d58b9d19a6277adcd71900d02bb2c4843dd55e78c51e30e89b0fec618a7f170ebcc95b33182c28f05fd6
-  languageName: node
-  linkType: hard
-
-"css-animation@npm:^1.3.2":
-  version: 1.6.1
-  resolution: "css-animation@npm:1.6.1"
-  dependencies:
-    babel-runtime: 6.x
-    component-classes: ^1.2.5
-  checksum: 5aea8fd333300c6b15f523ac741dd2ed367489485c7a9a43647f7779fef9e5f338c405e3ad9ed8db338503b4aefea86108112a01bf78651b623f8bd2e146e0e0
   languageName: node
   linkType: hard
 
@@ -14490,7 +14464,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prop-types@npm:15.x, prop-types@npm:^15.5.10, prop-types@npm:^15.5.7, prop-types@npm:^15.5.8, prop-types@npm:^15.6.1, prop-types@npm:^15.6.2, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
+"prop-types@npm:^15.5.10, prop-types@npm:^15.5.7, prop-types@npm:^15.5.8, prop-types@npm:^15.6.1, prop-types@npm:^15.6.2, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
   version: 15.8.1
   resolution: "prop-types@npm:15.8.1"
   dependencies:
@@ -14687,18 +14661,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rc-align@npm:2.x":
-  version: 2.4.5
-  resolution: "rc-align@npm:2.4.5"
-  dependencies:
-    babel-runtime: ^6.26.0
-    dom-align: ^1.7.0
-    prop-types: ^15.5.8
-    rc-util: ^4.0.4
-  checksum: ae11babbdd6e2d964ad588db0b34077bb1c2b837096161ccd2f5b3a6338234117639d5354e2d66d1dd6e1dbc78eea87b0b248ee7024b1f6fdc08a7d0c69f390a
-  languageName: node
-  linkType: hard
-
 "rc-align@npm:^4.0.0":
   version: 4.0.15
   resolution: "rc-align@npm:4.0.15"
@@ -14712,21 +14674,6 @@ __metadata:
     react: ">=16.9.0"
     react-dom: ">=16.9.0"
   checksum: dfb7d3bfaa8d4b9ead4dbd8d84d4033fbd7a3f2232e7797ab1f86545c043cbe3952575fcfa63361045e2d1fa3a07c54545e442d60b08e753f4d581dcd5da186e
-  languageName: node
-  linkType: hard
-
-"rc-animate@npm:2.x":
-  version: 2.11.1
-  resolution: "rc-animate@npm:2.11.1"
-  dependencies:
-    babel-runtime: 6.x
-    classnames: ^2.2.6
-    css-animation: ^1.3.2
-    prop-types: 15.x
-    raf: ^3.4.0
-    rc-util: ^4.15.3
-    react-lifecycles-compat: ^3.0.4
-  checksum: e8148483d9e87046b3f047a345de6ef3c93e5ec425413a7c5055d41430bf036276c032894381afa2eadee5eb2cd8c48bb5132f35e0974da957d5a2aa12978aaa
   languageName: node
   linkType: hard
 
@@ -14785,22 +14732,6 @@ __metadata:
     react: ">=16.9.0"
     react-dom: ">=16.9.0"
   checksum: 38a47d96c09520f11ab324a390f0be6c8e73bb169f8c636c71f88a8d66a70a1a1a12fbc7c754c2ffc973b0bec90d223dfaf637ef474da0a4c9c63fa05d8cc71d
-  languageName: node
-  linkType: hard
-
-"rc-color-picker@npm:^1.2.6":
-  version: 1.2.6
-  resolution: "rc-color-picker@npm:1.2.6"
-  dependencies:
-    classnames: ^2.2.5
-    prop-types: ^15.5.8
-    rc-trigger: 1.x
-    rc-util: ^4.0.2
-    tinycolor2: ^1.4.1
-  peerDependencies:
-    react: 16.x
-    react-dom: 16.x
-  checksum: 93f3e792cbd6c42d1da3046ea3bc929049366349edce8c10bc3c980c5fcf6801c5239b68ba8a2479a1ab1e66ec954bf573e45bd0e258fa69108f31c65340cfe3
   languageName: node
   linkType: hard
 
@@ -15264,20 +15195,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rc-trigger@npm:1.x":
-  version: 1.11.5
-  resolution: "rc-trigger@npm:1.11.5"
-  dependencies:
-    babel-runtime: 6.x
-    create-react-class: 15.x
-    prop-types: 15.x
-    rc-align: 2.x
-    rc-animate: 2.x
-    rc-util: 4.x
-  checksum: 3dc6c33b1da479238cb283c44660357e87dc295cebd5eac26a1a31d96d9820d98bde7be714aedf13ed6f11512b5ad7ea1b48bc19aa0eac388ec9ba4dc2f72816
-  languageName: node
-  linkType: hard
-
 "rc-trigger@npm:^5.1.2":
   version: 5.3.4
   resolution: "rc-trigger@npm:5.3.4"
@@ -15308,7 +15225,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rc-util@npm:4.x, rc-util@npm:^4.0.2, rc-util@npm:^4.0.4, rc-util@npm:^4.15.3":
+"rc-util@npm:^4.15.3":
   version: 4.21.1
   resolution: "rc-util@npm:4.21.1"
   dependencies:
@@ -18213,11 +18130,11 @@ __metadata:
 
 "typescript@patch:typescript@^4.9.5#~builtin<compat/typescript>":
   version: 4.9.5
-  resolution: "typescript@patch:typescript@npm%3A4.9.5#~builtin<compat/typescript>::version=4.9.5&hash=289587"
+  resolution: "typescript@patch:typescript@npm%3A4.9.5#~builtin<compat/typescript>::version=4.9.5&hash=23ec76"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 1f8f3b6aaea19f0f67cba79057674ba580438a7db55057eb89cc06950483c5d632115c14077f6663ea76fd09fce3c190e6414bb98582ec80aa5a4eaf345d5b68
+  checksum: ab417a2f398380c90a6cf5a5f74badd17866adf57f1165617d6a551f059c3ba0a3e4da0d147b3ac5681db9ac76a303c5876394b13b3de75fdd5b1eaa06181c9d
   languageName: node
   linkType: hard
 
