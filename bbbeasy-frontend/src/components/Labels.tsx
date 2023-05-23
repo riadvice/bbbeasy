@@ -301,7 +301,7 @@ const Labels = () => {
             editable: false,
             render: (text, record) => {
                 const handleCancelVisibilityChange = () => {
-                    CompareRecords(record, editForm.getFieldsValue(true)) ? cancelEdit() : setCancelVisibility(true);
+                    CompareRecords(record, editForm.getFieldsValue(true)) ? cancelEdit() : null;
                 };
 
                 const EditActions = (
