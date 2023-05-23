@@ -83,9 +83,9 @@
         "consumed": "Token was consumed"
     },
     "create-first-room": "Create my first room",
-    "mark-labels": "Mark it with labels",
-    "assign-preset": "Assign it a preset",
-    "give-it-name": "Give it a name",
+    "mark-labels": "Organise with labels",
+    "assign-preset": "Apply a preset",
+    "give-it-name": "Name your room",
     "create-easy-room": "How easy is it to create a room ?",
     "previous": "Previous",
     "success_install": "Application installed !<br/> Kindly update your backend configuration to start using the application",
