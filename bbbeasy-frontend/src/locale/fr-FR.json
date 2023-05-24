@@ -83,9 +83,9 @@
         "consumed": "Le jeton a été utilisé"
     },
     "create-first-room": "Créer ma première salle",
-    "mark-labels": "Marquer avec des labels",
-    "assign-preset": "Assigner un préréglage",
-    "give-it-name": "Donnez-lui un nom",
+    "mark-labels": "Organiser avec des labels",
+    "assign-preset": "Appliquer un préréglage",
+    "give-it-name": "Nommez votre salles",
     "create-easy-room": "Est-il facile de créer une salle ?",
     "previous": "Précédent",
     "success_install": "Application installée ! <br/> Veuillez mettre à jour votre configuration backend pour commencer à utiliser l'application",
