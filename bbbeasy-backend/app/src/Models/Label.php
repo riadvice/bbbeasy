@@ -42,7 +42,7 @@ class Label extends BaseModel
     public function __construct($db = null, $table = null, $fluid = null, $ttl = 0)
     {
         parent::__construct($db, $table, $fluid, $ttl);
-        $this->onset('name', fn ($self, $value) => $self->f3->snakecase($value));
+
     }
 
     /**
@@ -75,17 +75,6 @@ class Label extends BaseModel
         return $this;
     }
 
-    /**
-     *check if name is already in use .
-     *
-     * @param null $id
-     *
-     * @return bool
-     */
-    public function nameExists(string $name, $id = null)
-    {
-        return $this->load(['lower(name) = ? and id != ?', mb_strtolower($this->f3->snakecase($name)), $id]);
-    }
 
     /**
      *check if color is already in use .
@@ -114,7 +103,8 @@ class Label extends BaseModel
 
     public function getLabelInfos($label): array
     {
-        return [
+
+         return [
             'key'         => $label->id,
             'name'        => $label->name,
             'description' => $label->description,
@@ -133,6 +123,7 @@ class Label extends BaseModel
     public function getRooms($labelId): array
     {
         $roomlabel  = new RoomLabel();
+
         $roomlabels = $roomlabel->collectAllByLabelId($labelId);
 
         $data = [];

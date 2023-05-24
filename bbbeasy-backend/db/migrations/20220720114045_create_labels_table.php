@@ -33,7 +33,6 @@ final class CreateLabelsTable extends AbstractMigration
             ->addColumn('color', 'string', ['limit' => 7, 'default' => '#fbbc0b'])
             ->addColumn('created_on', 'datetime', ['default' => '0001-01-01 00:00:00', 'timezone' => true])
             ->addColumn('updated_on', 'datetime', ['default' => '0001-01-01 00:00:00', 'timezone' => true])
-            ->addIndex('name', ['unique' => true, 'name' => 'idx_labels_name'])
             ->save()
         ;
     }
