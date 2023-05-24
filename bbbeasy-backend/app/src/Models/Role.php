@@ -52,7 +52,6 @@ class Role extends BaseModel
     public function __construct($db = null, $table = null, $fluid = null, $ttl = 0)
     {
         parent::__construct($db, $table, $fluid, $ttl);
-
     }
 
     public function nameExists($name, $id = null): bool

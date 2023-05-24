@@ -53,11 +53,10 @@ class Add extends BaseAction
 
         if ($dataChecker->allValid()) {
             $label      = new Label();
-            $colorExist  = $label->colorExists($form['color']);
+            $colorExist = $label->colorExists($form['color']);
 
-               if ($colorExist) {
-                    $message = ['color' => $colorErrorMessage];
-
+            if ($colorExist) {
+                $message = ['color' => $colorErrorMessage];
 
                 $this->logger->error($errorMessage, ['errors' => $message]);
                 $this->renderJson(['errors' => $message], ResponseCode::HTTP_PRECONDITION_FAILED);
@@ -73,7 +72,6 @@ class Add extends BaseAction
                 $label->save();
                 $label = $label->getLabelByNameAndColor($form['name'], $form['color']);
             } catch (\Exception $e) {
-
                 $this->logger->error($errorMessage, ['error' => $e->getMessage()]);
                 $this->renderJson(['errors' => $e->getMessage()], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
 

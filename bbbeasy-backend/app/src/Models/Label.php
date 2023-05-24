@@ -42,7 +42,6 @@ class Label extends BaseModel
     public function __construct($db = null, $table = null, $fluid = null, $ttl = 0)
     {
         parent::__construct($db, $table, $fluid, $ttl);
-
     }
 
     /**
@@ -75,7 +74,6 @@ class Label extends BaseModel
         return $this;
     }
 
-
     /**
      *check if color is already in use .
      *
@@ -103,8 +101,7 @@ class Label extends BaseModel
 
     public function getLabelInfos($label): array
     {
-
-         return [
+        return [
             'key'         => $label->id,
             'name'        => $label->name,
             'description' => $label->description,
@@ -122,7 +119,7 @@ class Label extends BaseModel
 
     public function getRooms($labelId): array
     {
-        $roomlabel  = new RoomLabel();
+        $roomlabel = new RoomLabel();
 
         $roomlabels = $roomlabel->collectAllByLabelId($labelId);
 
