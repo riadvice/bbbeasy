@@ -425,7 +425,7 @@ const Users = () => {
                 const clickCancel = (record) => {
                     const oldData = record;
                     const newData = editForm.getFieldsValue(true);
-                    compareEdit(oldData, newData) ? cancelEdit() : setCancelVisibility(true);
+                    compareEdit(oldData, newData) ? cancelEdit() : null;
                 };
                 const editable = isEditing(record);
                 const deletedRow = record.status == 'deleted';
