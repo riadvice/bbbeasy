@@ -131,6 +131,9 @@ class Start extends BaseAction
 
         $createParams->setModeratorOnlyMessage('to invite someone you can use this link http://bbbeasy.test:3300/bbbeasy/' . $link);
 
+        // @fixme: delete after fixing the PHP library
+        $createParams->setAllowRequestsWithoutSession(true);
+
         $this->logger->info('Received request to create a new meeting.', ['meetingID' => $meetingId]);
         $createMeetingResponse = $bbbRequester->createMeeting($createParams);
         if ($createMeetingResponse->failed()) {
