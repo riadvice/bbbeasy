@@ -17,7 +17,7 @@
  */
 
 import React from 'react';
-import { Trans, useTranslation } from 'react-i18next';
+import { Trans, useTranslation, withTranslation } from 'react-i18next';
 
 import { message, Form, Input, Typography, Upload, InputNumber, theme, ColorPicker, Space } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
@@ -183,15 +183,17 @@ export const Step2Form = (props: Props) => {
                             accept=".png,.jpg,.jpeg"
                             beforeUpload={(file: RcFile) => {
                                 if (
-                                    file.type === 'image/jpg' ||
-                                    file.type === 'image/png' ||
-                                    file.type === 'image/jpeg'
+                                    !(
+                                        file.type === 'image/jpg' ||
+                                        file.type === 'image/png' ||
+                                        file.type === 'image/jpeg'
+                                    )
                                 ) {
-                                    message.success(t('success_upload'));
-                                    return false;
+                                    message.error(t('wrong_file'));
+                                    return null;
                                 }
-                                message.error(t('wrong_file'));
-                                return null;
+
+                                return false;
                             }}
                             onChange={(info) => {
                                 handleChangeFile(info);
