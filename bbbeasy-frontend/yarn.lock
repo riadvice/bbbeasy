@@ -133,23 +133,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ant-design/pro-provider@npm:^2.8.7":
-  version: 2.8.7
-  resolution: "@ant-design/pro-provider@npm:2.8.7"
-  dependencies:
-    "@ant-design/cssinjs": ^1.9.1
-    "@babel/runtime": ^7.18.0
-    "@ctrl/tinycolor": ^3.4.0
-    rc-util: ^5.0.1
-    swr: ^2.0.0
-  peerDependencies:
-    antd: ">=4.23.0"
-    react: ">=17.0.0"
-    react-dom: ">=17.0.0"
-  checksum: 5c8fcfc375ec0101c5c2859d8c64d003d11955b36776f4f022b8f54f55041dcae5634d8f0ddb175ff679b97802ba722d1f0b41056a431f6c60d960bead513bf9
-  languageName: node
-  linkType: hard
-
 "@ant-design/pro-provider@npm:^2.9.0":
   version: 2.9.0
   resolution: "@ant-design/pro-provider@npm:2.9.0"
@@ -183,26 +166,6 @@ __metadata:
     react: ">=17.0.0"
     react-dom: ">=17.0.0"
   checksum: 6a77297f02fb9b2cee01d2a5e5a327d3a5bed5bb98ec1372b3934d3e529728c310c18278ab775382a9576c414b1bfe4e3ba79f8f837765aef1028830d0857574
-  languageName: node
-  linkType: hard
-
-"@ant-design/pro-utils@npm:^2.9.0":
-  version: 2.9.0
-  resolution: "@ant-design/pro-utils@npm:2.9.0"
-  dependencies:
-    "@ant-design/icons": ^5.0.0
-    "@ant-design/pro-provider": ^2.8.7
-    "@babel/runtime": ^7.18.0
-    classnames: ^2.2.6
-    dayjs: ^1.11.4
-    rc-util: ^5.0.6
-    react-sortable-hoc: ^2.0.0
-    swr: ^2.0.0
-  peerDependencies:
-    antd: ">=4.23.0"
-    react: ">=17.0.0"
-    react-dom: ">=17.0.0"
-  checksum: a27b195cc2c7dd93df133badd58511e44d8016eb59dae9c76781ce570c6d88a42f78de0a56367438a0b3d6f028979942b0e4d6a1cda5923fc74c4392f2d53fc8
   languageName: node
   linkType: hard
 
@@ -1654,7 +1617,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.10.1, @babel/runtime@npm:^7.10.4, @babel/runtime@npm:^7.11.1, @babel/runtime@npm:^7.11.2, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.16.3, @babel/runtime@npm:^7.16.7, @babel/runtime@npm:^7.18.0, @babel/runtime@npm:^7.18.3, @babel/runtime@npm:^7.2.0, @babel/runtime@npm:^7.20.0, @babel/runtime@npm:^7.20.6, @babel/runtime@npm:^7.20.7, @babel/runtime@npm:^7.21.0, @babel/runtime@npm:^7.3.1, @babel/runtime@npm:^7.7.6, @babel/runtime@npm:^7.8.4, @babel/runtime@npm:^7.9.2":
+"@babel/runtime@npm:^7.10.1, @babel/runtime@npm:^7.10.4, @babel/runtime@npm:^7.11.1, @babel/runtime@npm:^7.11.2, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.16.3, @babel/runtime@npm:^7.16.7, @babel/runtime@npm:^7.18.0, @babel/runtime@npm:^7.18.3, @babel/runtime@npm:^7.20.0, @babel/runtime@npm:^7.20.6, @babel/runtime@npm:^7.20.7, @babel/runtime@npm:^7.21.0, @babel/runtime@npm:^7.3.1, @babel/runtime@npm:^7.7.6, @babel/runtime@npm:^7.8.4, @babel/runtime@npm:^7.9.2":
   version: 7.21.5
   resolution: "@babel/runtime@npm:7.21.5"
   dependencies:
@@ -5150,7 +5113,7 @@ __metadata:
     "@ant-design/cssinjs": ^1.9.1
     "@ant-design/icons": ^5.1.0
     "@ant-design/pro-layout": ^7.13.5
-    "@ant-design/pro-utils": ^2.9.0
+    "@ant-design/pro-utils": ^2.10.0
     "@babel/plugin-proposal-class-properties": ^7.18.6
     "@babel/plugin-proposal-decorators": ^7.21.0
     "@babel/plugin-proposal-private-methods": ^7.18.6
@@ -9886,15 +9849,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"invariant@npm:^2.2.4":
-  version: 2.2.4
-  resolution: "invariant@npm:2.2.4"
-  dependencies:
-    loose-envify: ^1.0.0
-  checksum: cc3182d793aad82a8d1f0af697b462939cb46066ec48bbf1707c150ad5fad6406137e91a262022c269702e01621f35ef60269f6c0d7fd178487959809acdfb14
-  languageName: node
-  linkType: hard
-
 "ip@npm:^2.0.0":
   version: 2.0.0
   resolution: "ip@npm:2.0.0"
@@ -14580,7 +14534,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prop-types@npm:^15.5.10, prop-types@npm:^15.5.7, prop-types@npm:^15.5.8, prop-types@npm:^15.6.1, prop-types@npm:^15.6.2, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
+"prop-types@npm:^15.5.10, prop-types@npm:^15.5.8, prop-types@npm:^15.6.1, prop-types@npm:^15.6.2, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
   version: 15.8.1
   resolution: "prop-types@npm:15.8.1"
   dependencies:
@@ -15788,21 +15742,6 @@ __metadata:
     react: "*"
     react-dom: "*"
   checksum: 1d223e34ccac5d7f91318f28d5edab6ccb13c51b1afb502094b8475214321263bb44258d355978e1714e9360c9081fb9f38d3ae89071a06628407627c362cc45
-  languageName: node
-  linkType: hard
-
-"react-sortable-hoc@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "react-sortable-hoc@npm:2.0.0"
-  dependencies:
-    "@babel/runtime": ^7.2.0
-    invariant: ^2.2.4
-    prop-types: ^15.5.7
-  peerDependencies:
-    prop-types: ^15.5.7
-    react: ^16.3.0 || ^17.0.0
-    react-dom: ^16.3.0 || ^17.0.0
-  checksum: c4930856eb8e9be638220423d452ddaab834aa43ff76069eeb057c6a5f1d0538f9e43c17bedd34bfd2a66ff4aa1e289557821d792db73a42ebf061bd1c92a423
   languageName: node
   linkType: hard
 
