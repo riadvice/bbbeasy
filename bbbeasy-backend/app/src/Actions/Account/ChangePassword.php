@@ -85,7 +85,6 @@ class ChangePassword extends BaseAction
     }
 
     /**
-     * @param $responseCode
      * @param mixed $user
      * @param mixed $password
      * @param mixed $resetToken
@@ -97,7 +96,24 @@ class ChangePassword extends BaseAction
     {
         try {
             $user->password = $password;
-            $user->status   = UserStatus::ACTIVE;
+            $compliant      = SecurityUtils::isGdprCompliant($password);
+
+            $common = SecurityUtils::credentialsAreCommon($user->username, $user->email, $password);
+
+            if (true !== $compliant) {
+                $this->logger->error($errorMessage, ['error' => $compliant]);
+                $this->renderJson(['message' => $compliant], ResponseCode::HTTP_PRECONDITION_FAILED);
+
+                return;
+            }
+            if ($common) {
+                $this->logger->error($errorMessage, ['error' => $common]);
+                $this->renderJson(['message' => $common], ResponseCode::HTTP_PRECONDITION_FAILED);
+
+                return;
+            }
+
+            $user->status = UserStatus::ACTIVE;
             $resetToken->save();
             $user->save();
         } catch (\Exception $e) {
