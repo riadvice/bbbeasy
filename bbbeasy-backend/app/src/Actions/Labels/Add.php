@@ -53,16 +53,10 @@ class Add extends BaseAction
 
         if ($dataChecker->allValid()) {
             $label      = new Label();
-            $nameExist  = $label->nameExists($form['name']);
             $colorExist = $label->colorExists($form['color']);
-            if ($nameExist || $colorExist) {
-                if ($nameExist && $colorExist) {
-                    $message = ['name' => $nameErrorMessage, 'color' => $colorErrorMessage];
-                } elseif ($nameExist) {
-                    $message = ['name' => $nameErrorMessage];
-                } else {
-                    $message = ['color' => $colorErrorMessage];
-                }
+
+            if ($colorExist) {
+                $message = ['color' => $colorErrorMessage];
 
                 $this->logger->error($errorMessage, ['errors' => $message]);
                 $this->renderJson(['errors' => $message], ResponseCode::HTTP_PRECONDITION_FAILED);
