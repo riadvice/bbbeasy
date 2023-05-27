@@ -19,6 +19,8 @@
 import React, { useEffect, useState } from 'react';
 import { Trans, withTranslation } from 'react-i18next';
 import { useLocation, useParams, useNavigate } from 'react-router-dom';
+import { FacebookShareButton, LinkedinShareButton, TwitterShareButton } from 'react-share';
+
 import EN_US from '../locale/en-US.json';
 import { t } from 'i18next';
 
@@ -470,27 +472,35 @@ const RoomDetails = () => {
                                                                 placement="bottom"
                                                                 title={<Trans i18nKey="facebook_share" />}
                                                             >
-                                                                <FacebookOutlined />
+                                                                <FacebookShareButton
+                                                                    url={window.location.origin + prefixShortLink + room?.short_link}
+                                                                    quote={'Join us!'}
+                                                                >
+                                                                    <FacebookOutlined />
+                                                                </FacebookShareButton>
                                                             </Tooltip>
                                                             <Tooltip
                                                                 placement="bottom"
                                                                 title={<Trans i18nKey="twitter_share" />}
                                                             >
-                                                                <TwitterOutlined />
+                                                                <TwitterShareButton
+                                                                    url={window.location.origin + prefixShortLink + room?.short_link}
+                                                                >
+                                                                    <TwitterOutlined />
+                                                                </TwitterShareButton>
+
                                                             </Tooltip>
                                                             <Tooltip
                                                                 placement="bottom"
                                                                 title={<Trans i18nKey="linkedin_share" />}
                                                             >
-                                                                <LinkedinOutlined />
+                                                                <LinkedinShareButton
+                                                                    url={window.location.origin + prefixShortLink + room?.short_link}
+                                                                >
+                                                                    <LinkedinOutlined />
+                                                                </LinkedinShareButton>
                                                             </Tooltip>
                                                         </Space>
-                                                        <Tooltip
-                                                            placement="bottom"
-                                                            title={<Trans i18nKey="email_share" />}
-                                                        >
-                                                            <MailOutlined />
-                                                        </Tooltip>
                                                     </div>
                                                 )}
                                             </Space>
