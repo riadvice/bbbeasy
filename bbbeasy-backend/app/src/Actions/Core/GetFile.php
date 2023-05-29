@@ -35,9 +35,10 @@ class GetFile extends BaseAction
      */
     public function execute($f3, $params)
     {
+
         $file = $f3->get('PARAMS.filename');
 
-        // readfile("../uploads/cv-ingenieur-lcfr-4.jpg");
-        return \Web::instance()->send('../uploads/' . $file, $format);
+
+        return \Web::instance()->send('../uploads/'. $file );
     }
 }
