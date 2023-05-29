@@ -1918,9 +1918,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cypress/code-coverage@npm:^3.10.4":
-  version: 3.10.4
-  resolution: "@cypress/code-coverage@npm:3.10.4"
+"@cypress/code-coverage@npm:^3.10.6":
+  version: 3.10.6
+  resolution: "@cypress/code-coverage@npm:3.10.6"
   dependencies:
     "@cypress/webpack-preprocessor": ^5.11.0
     chalk: 4.1.2
@@ -1933,7 +1933,7 @@ __metadata:
     nyc: 15.1.0
   peerDependencies:
     cypress: "*"
-  checksum: a758f06770e880c40f100fc42509db27b677066cd8520c3eb350b0016d32ac9a3df80da899f750a58f45957eeb4057b6fff5fa8d88fac1c5e41829454862dac6
+  checksum: 4c9b630acfa28b487ac5d5688d88225c1fb43641a1268d9a74300dfde3b7a3a08490a7478487990f513d5e77f451bb8bc0f4d9e9072115983fc8dba9c84ba2c4
   languageName: node
   linkType: hard
 
@@ -5128,7 +5128,7 @@ __metadata:
     "@babel/preset-env": ^7.21.5
     "@craco/craco": ^7.1.0
     "@crowdin/cli": ^3.11.1
-    "@cypress/code-coverage": ^3.10.4
+    "@cypress/code-coverage": ^3.10.6
     "@hot-loader/react-dom": ^17.0.2
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": ^12.1.5
