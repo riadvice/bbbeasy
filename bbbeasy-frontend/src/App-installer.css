@@ -310,7 +310,7 @@ body.rtl {
     transform: translateY(-50%);
 }
 .header-logo-image {
-    width: 90px !important;
+    width: 10% !important;
 }
 .site-header-inner button {
     background: transparent !important;

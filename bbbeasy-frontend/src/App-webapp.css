@@ -465,7 +465,7 @@ fieldset {
     transform: translateY(-50%);
 }
 .header-logo-image {
-    width: 90px !important;
+    width: 10% !important;
 }
 .site-header-inner button {
     background: transparent !important;
@@ -585,7 +585,7 @@ fieldset {
     right: unset !important;
 }
 .site-sider .logo {
-    position: fixed;
+    position: relative;
     z-index: 1;
     background: var(--bbbeasy-bg-layout);
     width: 240px;
@@ -603,9 +603,7 @@ fieldset {
   margin-right: 20px;
 }
 */
-.site-sider .menu-sider {
-    margin-top: 65px;
-}
+ 
 .site-sider .ant-menu-item-icon {
     font-size: 16px !important;
 }
