@@ -48,6 +48,7 @@ type formType = {
 };
 
 const Branding = () => {
+    const logoname = 'logo-' + Date.now();
     const [settingsForm] = Form.useForm();
     const [data, setData] = React.useState<SettingsType>(null);
     const [actions, setActions] = React.useState<string[]>([]);
@@ -122,8 +123,8 @@ const Branding = () => {
         //edit file
         if (file != undefined && file.originFileObj != null) {
             const formData: FormData = new FormData();
-            formData.append('logo', file.originFileObj, file.originFileObj.name);
-            formData.append('logo_name', file.originFileObj.name);
+            formData.append('logo', file.originFileObj, logoname + '.' + file.type.substring(6));
+            formData.append('logo_name', logoname + '.' + file.type.substring(6));
             updateLogo = true;
 
             axios
@@ -140,7 +141,7 @@ const Branding = () => {
 
         //update logo
         if (updateLogo) {
-            settingsData.logo = file.name;
+            settingsData.logo = logoname + '.' + file.type.substring(6);
         } else if (deleteLogo) {
             settingsData.logo = null;
         }
