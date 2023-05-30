@@ -235,8 +235,8 @@ const Install = () => {
             //edit file
             if (file != undefined && file.originFileObj != null) {
                 const formData: FormData = new FormData();
-                formData.append('logo', file.originFileObj, logoname);
-                formData.append('logo_name', logoname);
+                formData.append('logo', file.originFileObj, logoname  +"."+file.type.substring(6));
+                formData.append('logo_name', logoname +"."+file.type.substring(6));
 
                 axios
                     .post(apiRoutes.SAVE_FILE_URL, formData)
@@ -257,7 +257,8 @@ const Install = () => {
             stepsData.presetsConfig = presets;
 
             if (file != undefined && file.originFileObj != null) {
-                stepsData.logo = logoname;
+                console.log(file.type)
+                stepsData.logo = logoname+"."+file.type.substring(6);
             } else if (file == undefined && stepsData.logo != null) {
                 stepsData.logo = null;
             }
