@@ -171,7 +171,7 @@ const AppHeader = () => {
                         <Link to={'/'}>
                             <img
                                 className="header-logo-image"
-                                src={logo ? 'http://bbbeasy.test/api/' + logo : '/images/logo_01.png'}
+                                src={logo ? process.env.REACT_APP_API_URL +"/"+ logo : '/images/logo_01.png'}
                                 alt="Logo"
                             />
                         </Link>
