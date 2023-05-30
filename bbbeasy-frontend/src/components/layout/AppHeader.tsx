@@ -55,6 +55,7 @@ import { RoomType } from 'types/RoomType';
 
 import settingsService from 'services/settings.service';
 import { SettingsType } from 'types/SettingsType';
+import { apiRoutes } from 'routing/backend-config';
 
 const { Header } = Layout;
 const { Title, Text, Paragraph } = Typography;
@@ -80,7 +81,6 @@ const AppHeader = () => {
     settingsService
         .collect_settings()
         .then((response) => {
-            console.log(response.data);
             const settings: SettingsType = response.data;
             setLogo(settings.logo);
         })
@@ -171,7 +171,7 @@ const AppHeader = () => {
                         <Link to={'/'}>
                             <img
                                 className="header-logo-image"
-                                src={logo ? process.env.REACT_APP_API_URL + '/' + logo : '/images/logo_01.png'}
+                                src={logo ? 'http://bbbeasy.test/api/' + logo : '/images/logo_01.png'}
                                 alt="Logo"
                             />
                         </Link>

@@ -235,8 +235,8 @@ const Install = () => {
             //edit file
             if (file != undefined && file.originFileObj != null) {
                 const formData: FormData = new FormData();
-                formData.append('logo', file.originFileObj, file.originFileObj.name);
-                formData.append('logo_name', file.originFileObj.name);
+                formData.append('logo', file.originFileObj, 'logo_' + Date.now());
+                formData.append('logo_name', 'logo_' + Date.now());
 
                 axios
                     .post(apiRoutes.SAVE_FILE_URL, formData)
