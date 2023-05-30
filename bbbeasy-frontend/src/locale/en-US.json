@@ -397,5 +397,7 @@
     "no_rooms": "No Rooms",
     "no_presets": "No Presets",
     "no_labels": "No labels",
-    "no_data": "No Data"
+    "no_data": "No Data",
+    "wrong_file_name":"Wrong file name : File name must not contain special characters",
+    "email_not_exist":"User does not exist with this email"
 }

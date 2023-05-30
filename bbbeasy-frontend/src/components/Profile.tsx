@@ -91,9 +91,12 @@ const Profile = () => {
                 }
             })
             .catch((error) => {
-                console.log(error);
+                console.log(error.response.data.message);
                 if (error.response.data.errors) {
                     setErrors(error.response.data.errors);
+                }
+                if (error.response.data.message) {
+                    setErrors(error.response.data.message);
                 }
             });
     };
