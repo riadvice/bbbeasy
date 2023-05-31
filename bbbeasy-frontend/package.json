@@ -22,7 +22,7 @@
         "craco-less": "^2.0.0",
         "craco-plugin-react-hot-reload": "^0.1.0",
         "dayjs": "^1.11.7",
-        "dotenv": "^16.0.3",
+        "dotenv": "^16.1.1",
         "dotenv-cra": "^3.0.3",
         "eslint-plugin-react-hooks": "^4.6.0",
         "global": "^4.4.0",
