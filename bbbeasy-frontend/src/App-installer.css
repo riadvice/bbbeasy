@@ -309,8 +309,11 @@ body.rtl {
     -ms-transform: translateY(-50%);
     transform: translateY(-50%);
 }
+ 
+ 
 .header-logo-image {
-    width: 10% !important;
+    width: 80px !important;
+    height: 60px;
 }
 .site-header-inner button {
     background: transparent !important;
