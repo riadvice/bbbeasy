@@ -48,7 +48,7 @@ type formType = {
 };
 
 const Branding = () => {
-    const logoname = 'logo-' + Date.now();
+    
     const [settingsForm] = Form.useForm();
     const [data, setData] = React.useState<SettingsType>(null);
     const [actions, setActions] = React.useState<string[]>([]);
@@ -87,6 +87,8 @@ const Branding = () => {
             };
             setFileList([settingLogo]);
             setFile(settingLogo);
+            console.log(settingLogo)
+            
         }
         setIsLoading(false);
     };
@@ -121,11 +123,12 @@ const Branding = () => {
         let updateLogo = false;
         let deleteLogo = false;
         //edit file
-        if (file != undefined && file.originFileObj != null) {
+        
+        if (file != undefined && file.originFileObj != null  ) {
             const formData: FormData = new FormData();
-            formData.append('logo', file.originFileObj, logoname + '.' + file.type.substring(6));
-            formData.append('logo_name', logoname + '.' + file.type.substring(6));
-            updateLogo = true;
+            formData.append('logo', file.originFileObj, file.name);
+            formData.append('logo_name', file.name);
+           updateLogo = true;
 
             axios
                 .post(apiRoutes.SAVE_FILE_URL, formData)
@@ -141,7 +144,8 @@ const Branding = () => {
 
         //update logo
         if (updateLogo) {
-            settingsData.logo = logoname + '.' + file.type.substring(6);
+            console.log(updateLogo)
+            settingsData.logo =  file.name;
         } else if (deleteLogo) {
             settingsData.logo = null;
         }

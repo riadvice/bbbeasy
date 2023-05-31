@@ -72,7 +72,9 @@ export const Step2Form = (props: Props) => {
         return e && e.fileList;
     };
     const handleChangeFile = (info: UploadChangeParam<UploadFile<string>>) => {
+       
         let fileList: UploadFile[] = [...info.fileList];
+        
         fileList = fileList.slice(-1);
         if (fileList[0] != undefined) {
             const img: boolean =
@@ -81,6 +83,9 @@ export const Step2Form = (props: Props) => {
                 fileList[0].type === 'image/png';
             if (img) {
                 setFileList(fileList);
+                
+                fileList[0].name= 'logo-' + Date.now()+"."+fileList[0].type.substring(6);
+                
                 setFile(fileList[0]);
             }
         }
@@ -177,6 +182,7 @@ export const Step2Form = (props: Props) => {
                     <Form.Item valuePropName="fileList" getValueFromEvent={normFile} noStyle>
                         <Dragger
                         className="dragger"
+                         
                             name="logo"
                             multiple={false}
                             showUploadList={{ showRemoveIcon: true }}

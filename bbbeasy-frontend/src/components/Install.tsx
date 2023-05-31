@@ -232,11 +232,11 @@ const Install = () => {
         if (activeStep < steps.length - 1) {
             next();
         } else {
-            //edit file
+              //edit file
             if (file != undefined && file.originFileObj != null) {
                 const formData: FormData = new FormData();
-                formData.append('logo', file.originFileObj, logoname + '.' + file.type.substring(6));
-                formData.append('logo_name', logoname + '.' + file.type.substring(6));
+                formData.append('logo', file.originFileObj, file.name);
+                formData.append('logo_name', file.name);
 
                 axios
                     .post(apiRoutes.SAVE_FILE_URL, formData)
@@ -257,7 +257,7 @@ const Install = () => {
             stepsData.presetsConfig = presets;
 
             if (file != undefined && file.originFileObj != null) {
-                stepsData.logo = logoname + '.' + file.type.substring(6);
+                stepsData.logo = file.name;
             } else if (file == undefined && stepsData.logo != null) {
                 stepsData.logo = null;
             }
