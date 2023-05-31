@@ -465,8 +465,9 @@ fieldset {
     transform: translateY(-50%);
 }
 .header-logo-image {
-    width: 80px !important;
-    height: 60px;
+    height: auto;
+    max-height: 64px;
+    max-width: 64px;
 }
 .site-header-inner button {
     background: transparent !important;
@@ -591,6 +592,7 @@ fieldset {
     background: var(--bbbeasy-bg-layout);
     width: 240px;
     margin: 10px;
+    margin-left: 24px;;
 }
 .site-sider .logo .sider-logo-image {
     width: 110px !important;

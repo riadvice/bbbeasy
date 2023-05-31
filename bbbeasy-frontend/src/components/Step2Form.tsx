@@ -176,6 +176,7 @@ export const Step2Form = (props: Props) => {
                 <Form.Item>
                     <Form.Item valuePropName="fileList" getValueFromEvent={normFile} noStyle>
                         <Dragger
+                        className="dragger"
                             name="logo"
                             multiple={false}
                             showUploadList={{ showRemoveIcon: true }}
@@ -225,7 +226,7 @@ export const Step2Form = (props: Props) => {
                                 }
                             }}
                         >
-                            <Space>
+                            <Space   className="space-color-picker">
                                 <div
                                     style={{
                                         width: token.sizeMD,
