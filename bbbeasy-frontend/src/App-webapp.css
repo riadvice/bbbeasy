@@ -1474,7 +1474,10 @@ fieldset {
     transition: all 0.2s;
     opacity: 1;
 }
-
+.ant-upload-list-item{
+    width: 80% !important;
+}
+ 
 .space-presets-border {
     border: 1px solid #999;
 

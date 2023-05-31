@@ -309,6 +309,23 @@ body.rtl {
     -ms-transform: translateY(-50%);
     transform: translateY(-50%);
 }
+.ant-upload-list-item{
+    width: 80% !important;
+}
+ 
+.space-color-picker {
+    color: rgba(0, 0, 0, 0.25);
+    opacity: 1;
+    width: 150px;
+    background-color: #ffffff;
+    background-image: none;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #dddfe1;
+    border-radius: 6px;
+    padding: 4px 11px;
+}
+
 .header-logo-image {
     width: 90px !important;
 }
