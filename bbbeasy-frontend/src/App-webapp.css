@@ -898,6 +898,9 @@ fieldset {
 .room-recordings-body .ant-card-body {
     padding: 20px !important;
 }
+.room-box{
+    display: grid !important;
+}
 .file-size {
     color: var(--bbbeasy-medimum-gray);
     font-size: 13px;
