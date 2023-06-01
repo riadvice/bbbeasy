@@ -1455,11 +1455,10 @@ fieldset {
     border-radius: 6px;
     padding: 4px 11px;
 }
-.ant-upload-list-item{
+.ant-upload-list-item {
     width: 80% !important;
 }
-.ant-upload-drag
-{
+.ant-upload-drag {
     width: 80% !important;
 }
 .space-color-picker-branding {

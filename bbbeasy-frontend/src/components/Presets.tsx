@@ -530,17 +530,15 @@ const Presets = () => {
     const [actions, setActions] = React.useState<string[]>([]);
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
     const dataContext = React.useContext(DataContext);
-    const [searchTerm, setSearchTerm] = React.useState("");
+    const [searchTerm, setSearchTerm] = React.useState('');
 
-    const handleChange = event => {
+    const handleChange = (event) => {
         setSearchTerm(event.target.value);
     };
 
     const results = !searchTerm
         ? myPresets
-        : myPresets.filter(preset =>
-            preset.name.toLowerCase().includes(searchTerm.toLocaleLowerCase())
-        );
+        : myPresets.filter((preset) => preset.name.toLowerCase().includes(searchTerm.toLocaleLowerCase()));
 
     useEffect(() => {
         const currentUser: UserType = AuthService.getCurrentUser();
@@ -653,7 +651,8 @@ const Presets = () => {
                     <LoadingSpinner />
                 ) : myPresets.length == 0 ? (
                     <EmptyData description={<Trans i18nKey="no_presets" />} className="empty-presets" />
-                ) : results.map((singlePresets) => (
+                ) : (
+                    results.map((singlePresets) => (
                         <PresetsCol
                             key={singlePresets.id}
                             preset={singlePresets}
@@ -672,8 +671,7 @@ const Presets = () => {
                                     : null
                             }
                         />
-
-                    )
+                    ))
                 )}
             </Row>
         </>

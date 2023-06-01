@@ -331,11 +331,10 @@ body.rtl {
 .site-footer .ant-typography {
     color: #989898 !important;
 }
-.ant-upload-list-item{
+.ant-upload-list-item {
     width: 80% !important;
 }
-.ant-upload-drag
-{
+.ant-upload-drag {
     width: 80% !important;
 }
 .space-color-picker-branding {

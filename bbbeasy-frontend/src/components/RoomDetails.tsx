@@ -437,7 +437,11 @@ const RoomDetails = () => {
                                                         <Input
                                                             id={'room-shortlink'}
                                                             readOnly
-                                                            defaultValue={window.location.origin + prefixShortLink + room.short_link}
+                                                            defaultValue={
+                                                                window.location.origin +
+                                                                prefixShortLink +
+                                                                room.short_link
+                                                            }
                                                             prefix={<LinkOutlined />}
                                                             suffix={
                                                                 <CopyTextToClipBoard
@@ -473,7 +477,11 @@ const RoomDetails = () => {
                                                                 title={<Trans i18nKey="facebook_share" />}
                                                             >
                                                                 <FacebookShareButton
-                                                                    url={window.location.origin + prefixShortLink + room?.short_link}
+                                                                    url={
+                                                                        window.location.origin +
+                                                                        prefixShortLink +
+                                                                        room?.short_link
+                                                                    }
                                                                     quote={'Join us!'}
                                                                 >
                                                                     <FacebookOutlined />
@@ -484,18 +492,25 @@ const RoomDetails = () => {
                                                                 title={<Trans i18nKey="twitter_share" />}
                                                             >
                                                                 <TwitterShareButton
-                                                                    url={window.location.origin + prefixShortLink + room?.short_link}
+                                                                    url={
+                                                                        window.location.origin +
+                                                                        prefixShortLink +
+                                                                        room?.short_link
+                                                                    }
                                                                 >
                                                                     <TwitterOutlined />
                                                                 </TwitterShareButton>
-
                                                             </Tooltip>
                                                             <Tooltip
                                                                 placement="bottom"
                                                                 title={<Trans i18nKey="linkedin_share" />}
                                                             >
                                                                 <LinkedinShareButton
-                                                                    url={window.location.origin + prefixShortLink + room?.short_link}
+                                                                    url={
+                                                                        window.location.origin +
+                                                                        prefixShortLink +
+                                                                        room?.short_link
+                                                                    }
                                                                 >
                                                                     <LinkedinOutlined />
                                                                 </LinkedinShareButton>
