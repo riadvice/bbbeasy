@@ -1455,11 +1455,32 @@ fieldset {
     border-radius: 6px;
     padding: 4px 11px;
 }
+.ant-upload-list-item{
+    width: 80% !important;
+}
+.ant-upload-drag
+{
+    width: 80% !important;
+}
+.space-color-picker-branding {
+    color: rgba(0, 0, 0, 0.25);
 
+    opacity: 1;
+
+    width: 150px;
+
+    background-color: #ffffff;
+    background-image: none;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #dddfe1;
+    border-radius: 6px;
+    padding: 4px 11px;
+}
 .space-color-picker-add-label {
     position: relative;
     display: inline-flex;
-    width: 100% !important;
+    width: 95% !important;
     min-width: 0;
     padding: 4px 11px !important;
     color: rgba(0, 0, 0, 0.88);
