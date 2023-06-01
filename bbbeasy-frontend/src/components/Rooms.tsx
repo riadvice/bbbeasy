@@ -94,7 +94,7 @@ const RoomsCol: React.FC<RoomsColProps> = ({ index, room, editable, deleteClickH
     );
 
     return (
-        <Col key={index} span={5} className="custom-col-5">
+        <Col key={index} span={5} className="custom-col-5 room-box">
             <Card
                 hoverable
                 onMouseOver={() => setIsShown(true)}
