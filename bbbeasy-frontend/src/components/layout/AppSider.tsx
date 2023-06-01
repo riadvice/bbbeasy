@@ -38,6 +38,8 @@ import AuthService from '../../services/auth.service';
 import MenuService from '../../services/menu.service';
 import { UserType } from '../../types/UserType';
 import { MenuType } from '../../types/MenuType';
+import settingsService from 'services/settings.service';
+import { SettingsType } from 'types/SettingsType';
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
@@ -72,13 +74,23 @@ const AppSider = (props: Props) => {
     const location: Location = useLocation();
     const [currentPath, setCurrentPath] = React.useState<string>(location.pathname);
     const { t } = useTranslation();
+    const [logo, setLogo] = React.useState<string>('');
 
     useEffect(() => {
         const user: UserType = AuthService.getCurrentUser();
         const menuSider = MenuService.getMenuSider(user.permissions);
         setMenuItems(menuSider.items);
         setNewMenuItems(menuSider.news);
-
+        settingsService
+            .collect_settings()
+            .then((response) => {
+                console.log(response.data);
+                const settings: SettingsType = response.data;
+                setLogo(settings.logo);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
         if (currentPath.startsWith('/r/')) {
             const index = menuSider.items.findIndex((item) => item.name === 'recordings');
             if (index !== -1) {
@@ -104,7 +116,11 @@ const AppSider = (props: Props) => {
                 <Sider className="site-sider">
                     <div className="logo">
                         <Link to={'/'}>
-                            <img className="sider-logo-image" src="/images/logo_01.png" alt="Logo" />
+                            <img
+                                className="sider-logo-image"
+                                src={logo ? process.env.REACT_APP_API_URL + '/' + logo : '/images/logo_01.png'}
+                                alt="Logo"
+                            />
                         </Link>
                     </div>
                     <div className="menu-sider">

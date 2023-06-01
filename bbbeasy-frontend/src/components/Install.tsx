@@ -65,7 +65,7 @@ type formType = {
 
 const Install = () => {
     const { t } = useTranslation();
-
+    const logoname = 'logo-' + Date.now();
     const [stepForm] = Form.useForm();
     const initialValues: formType = {
         username: '',
@@ -132,7 +132,7 @@ const Install = () => {
                     if (settings.logo != null) {
                         const settingLogo: UploadFile = {
                             uid: '1',
-                            name: settings.logo,
+                            name: logoname,
                             status: 'done',
                         };
                         setFileList([settingLogo]);
@@ -232,11 +232,11 @@ const Install = () => {
         if (activeStep < steps.length - 1) {
             next();
         } else {
-            //edit file
+              //edit file
             if (file != undefined && file.originFileObj != null) {
                 const formData: FormData = new FormData();
-                formData.append('logo', file.originFileObj, file.originFileObj.name);
-                formData.append('logo_name', file.originFileObj.name);
+                formData.append('logo', file.originFileObj, file.name);
+                formData.append('logo_name', file.name);
 
                 axios
                     .post(apiRoutes.SAVE_FILE_URL, formData)

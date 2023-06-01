@@ -31,6 +31,8 @@ import { UserType } from '../../types/UserType';
 import { SessionType } from '../../types/SessionType';
 import { UserContext } from '../../lib/UserContext';
 import { t } from 'i18next';
+import settingsService from 'services/settings.service';
+import { SettingsType } from 'types/SettingsType';
 
 const { Text, Title, Paragraph } = Typography;
 
@@ -44,11 +46,22 @@ const Login = () => {
     const [successful, setSuccessful] = React.useState<boolean>(false);
     const [message, setMessage] = React.useState<string>('');
     const [email, setEmail] = React.useState<string>('');
+    const [logo, setLogo] = React.useState<string>('');
+
     const initialValues: formType = {
         email: '',
         password: '',
     };
-
+    settingsService
+        .collect_settings()
+        .then((response) => {
+            console.log(response.data);
+            const settings: SettingsType = response.data;
+            setLogo(settings.logo);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
     const handleLogin = (formValue: formType) => {
         const { email, password } = formValue;
         setEmail(email);
@@ -105,7 +118,11 @@ const Login = () => {
             <Col span={8} offset={8} className="section-top">
                 <Card className="form-content">
                     <Paragraph className="form-header text-center">
-                        <img className="form-img" src="/images/logo_02.png" alt="Logo" />
+                        <img
+                            className="form-img"
+                            src={logo ? process.env.REACT_APP_API_URL + '/' + logo : '/images/logo_02.png'}
+                            alt="Logo"
+                        />
                         <Title level={4}>
                             <Trans i18nKey="log-into-account" />
                         </Title>

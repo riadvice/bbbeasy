@@ -24,6 +24,8 @@ import { Form, Input, Button, Alert, Col, Row, Typography, Card } from 'antd';
 import { Trans, withTranslation } from 'react-i18next';
 import EN_US from '../../locale/en-US.json';
 import { t } from 'i18next';
+import settingsService from 'services/settings.service';
+import { SettingsType } from 'types/SettingsType';
 
 const { Text, Title, Paragraph } = Typography;
 
@@ -34,10 +36,21 @@ type formType = {
 const Reset = () => {
     const [successful, setSuccessful] = React.useState<boolean>(false);
     const [message, setMessage] = React.useState<string>('');
+    const [logo, setLogo] = React.useState<string>('');
+
     const initialValues: formType = {
         email: '',
     };
-
+    settingsService
+        .collect_settings()
+        .then((response) => {
+            console.log(response.data);
+            const settings: SettingsType = response.data;
+            setLogo(settings.logo);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
     const handleReset = (formValue: formType) => {
         const { email } = formValue;
         AuthService.reset_password(email)
@@ -60,7 +73,11 @@ const Reset = () => {
             <Col span={8} offset={8} className="section-top">
                 <Card className="form-content">
                     <Paragraph className="form-header text-center">
-                        <img className="form-img" src="/images/logo_02.png" alt="Logo" />
+                        <img
+                            className="form-img"
+                            src={logo ? process.env.REACT_APP_API_URL + '/' + logo : '/images/logo_02.png'}
+                            alt="Logo"
+                        />
                         <Title level={4}>
                             <Trans i18nKey="reset-password" />
                         </Title>

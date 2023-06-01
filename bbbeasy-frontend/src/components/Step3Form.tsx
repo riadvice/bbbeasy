@@ -73,7 +73,7 @@ export const Step3Form = (props: Props) => {
         setIsModalVisible(false);
     };
     return (
-        <>
+        <div className="step3">
             <Paragraph className="final-form-header">
                 <Title level={4} className="final-form-header">
                     <Trans i18nKey="bigbluebutton_rooms_settings" />
@@ -170,6 +170,6 @@ export const Step3Form = (props: Props) => {
                     </Modal>
                 )}
             </Card>
-        </>
+        </div>
     );
 };

@@ -437,7 +437,11 @@ const RoomDetails = () => {
                                                         <Input
                                                             id={'room-shortlink'}
                                                             readOnly
-                                                            defaultValue={window.location.origin + prefixShortLink + room.short_link}
+                                                            defaultValue={
+                                                                window.location.origin +
+                                                                prefixShortLink +
+                                                                room.short_link
+                                                            }
                                                             prefix={<LinkOutlined />}
                                                             suffix={
                                                                 <CopyTextToClipBoard
