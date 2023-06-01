@@ -518,6 +518,9 @@ fieldset {
 .profil-btn-dropdown .username-item:hover {
     color: gray !important;
 }
+.warning-btn-dropdown{
+    max-width: 330px !important;
+}
 .search-modal .ant-modal-header {
     background-color: var(--bbbeasy-darken-gray) !important;
     height: 56px;
@@ -1488,4 +1491,12 @@ fieldset {
     height: 20px;
     cursor: pointer;
     box-shadow: 0 0 0 2px #fff inset;
+}
+.room-details .disableStart {
+    font-size: 20px !important;
+    font-weight: 600;
+    clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%);
+    border-radius: 50%;
+    background-color: #d4d4d4 !important;
+    cursor: not-allowed;
 }

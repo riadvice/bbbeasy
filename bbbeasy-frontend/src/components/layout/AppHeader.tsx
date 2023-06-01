@@ -16,7 +16,7 @@
  * with BBBEasy; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
     Layout,
@@ -34,8 +34,15 @@ import {
     Modal,
     Divider,
     Form,
+    Badge,
 } from 'antd';
-import { SearchOutlined, GlobalOutlined, UserOutlined, LogoutOutlined } from '@ant-design/icons';
+import {
+    SearchOutlined,
+    GlobalOutlined,
+    UserOutlined,
+    LogoutOutlined,
+    WarningOutlined,
+} from '@ant-design/icons';
 
 import { Trans, withTranslation } from 'react-i18next';
 import { t } from 'i18next';
@@ -52,6 +59,7 @@ import AuthService from '../../services/auth.service';
 
 import { LanguageType } from '../../types/LanguageType';
 import { RoomType } from 'types/RoomType';
+import notificationService from "../../services/notification.service";
 
 const { Header } = Layout;
 const { Title, Text, Paragraph } = Typography;
@@ -65,6 +73,7 @@ const AppHeader = () => {
 
     const dataContext = React.useContext(DataContext);
     const [rooms, setRooms] = React.useState<RoomType[]>(dataContext.dataRooms);
+    const [warningNotification, setWarningNotification] = useState<boolean>(false);
     const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
     const location = useLocation();
     const [searchForm] = Form.useForm();
@@ -109,6 +118,17 @@ const AppHeader = () => {
         setIsModalVisible(true);
     };
 
+    useEffect(() => {
+            notificationService.collect_notification()
+                .then(response => {
+                    setWarningNotification(true);
+                    console.log(response.data);
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+    }, []);
+
     const menuLang = (
         <Menu>
             <Radio.Group value={currentLocale} onChange={handleChange}>
@@ -130,6 +150,31 @@ const AppHeader = () => {
             <Button type="link" size="middle" className="lang-btn">
                 <GlobalOutlined /> {language}
             </Button>
+        </Dropdown>
+    );
+    const dropdownWarning = (
+        <Dropdown
+            overlay={
+                <Menu>
+                    <Menu.Item key="1" className="username-item">
+                        <Text>
+                            <Trans i18nKey="user_dropdown.warning_notification" />
+                        </Text>
+                    </Menu.Item>
+                </Menu>
+            }
+            overlayClassName="profil-btn-dropdown warning-btn-dropdown"
+            disabled={!(warningNotification)}
+            placement={LocaleService.direction == 'rtl' ? 'bottomLeft' : 'bottomRight'}
+            arrow
+            trigger={['click']}
+        >
+            <Badge
+                offset={LocaleService.direction == 'rtl' ? [34, 5] : [-34, 5]}
+                count={warningNotification ? 1 : 0}
+            >
+                <Button type="primary" icon={<WarningOutlined />} className="profil-btn" />
+            </Badge>
         </Dropdown>
     );
 
@@ -191,6 +236,7 @@ const AppHeader = () => {
                         </Col>
                         <Col span={5} className="text-end">
                             <Space size="middle">
+                                {dropdownWarning}
                                 <Dropdown
                                     overlay={menuProfile}
                                     overlayClassName="profil-btn-dropdown"
