@@ -392,5 +392,7 @@
     "no_rooms": "Aucune Salle",
     "no_presets": "Aucun Préréglage",
     "no_labels": "Aucun Label",
-    "no_data": "Aucune donnée"
+    "no_data": "Aucune donnée",
+    "email_not_exist":"L'utilisateur n'existe pas avec cet e-mail"
+
 }

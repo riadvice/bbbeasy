@@ -465,7 +465,9 @@ fieldset {
     transform: translateY(-50%);
 }
 .header-logo-image {
-    width: 90px !important;
+    height: auto;
+    max-height: 64px;
+    max-width: 64px;
 }
 .site-header-inner button {
     background: transparent !important;
@@ -588,11 +590,12 @@ fieldset {
     right: unset !important;
 }
 .site-sider .logo {
-    position: fixed;
+    position: relative;
     z-index: 1;
     background: var(--bbbeasy-bg-layout);
     width: 240px;
     margin: 10px;
+    margin-left: 24px;;
 }
 .site-sider .logo .sider-logo-image {
     width: 110px !important;
@@ -606,9 +609,7 @@ fieldset {
   margin-right: 20px;
 }
 */
-.site-sider .menu-sider {
-    margin-top: 65px;
-}
+ 
 .site-sider .ant-menu-item-icon {
     font-size: 16px !important;
 }
@@ -899,6 +900,9 @@ fieldset {
 }
 .room-recordings-body .ant-card-body {
     padding: 20px !important;
+}
+.room-box{
+    display: grid !important;
 }
 .file-size {
     color: var(--bbbeasy-medimum-gray);

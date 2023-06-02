@@ -283,7 +283,7 @@ abstract class Base extends \Prefab
             $this->renderJson(['message' => $found], $responseCode);
             $credentials_valid = false;
         } elseif ($passwordExist) {
-            if (!$compliant) {
+            if (true !== $compliant) {
                 $this->logger->error($errorMessage, ['error' => $compliant]);
                 $this->renderJson(['message' => $compliant], $responseCode);
                 $credentials_valid = false;

@@ -61,6 +61,10 @@ import { LanguageType } from '../../types/LanguageType';
 import { RoomType } from 'types/RoomType';
 import notificationService from "../../services/notification.service";
 
+import settingsService from 'services/settings.service';
+import { SettingsType } from 'types/SettingsType';
+import { apiRoutes } from 'routing/backend-config';
+
 const { Header } = Layout;
 const { Title, Text, Paragraph } = Typography;
 
@@ -78,12 +82,20 @@ const AppHeader = () => {
     const location = useLocation();
     const [searchForm] = Form.useForm();
     const isRoomsSearch = location.pathname.includes('rooms');
+    const [logo, setLogo] = React.useState<string>('');
     const isLoginPage = location.pathname.includes('login');
-
     if (isLoginPage) {
         setIsLogged(false);
     }
-
+    settingsService
+        .collect_settings()
+        .then((response) => {
+            const settings: SettingsType = response.data;
+            setLogo(settings.logo);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
     const logout = () => {
         AuthService.logout()
             .then(() => {
@@ -101,6 +113,7 @@ const AppHeader = () => {
 
     const handleChange = (e: RadioChangeEvent) => {
         const selectedLang: string = e.target.value;
+
         LocaleService.changeLocale(selectedLang);
     };
 
@@ -201,7 +214,11 @@ const AppHeader = () => {
                 {!isLogged ? (
                     <Paragraph className="site-header-inner">
                         <Link to={'/'}>
-                            <img className="header-logo-image" src="/images/logo_01.png" alt="Logo" />
+                            <img
+                                className="header-logo-image"
+                                src={logo ? process.env.REACT_APP_API_URL +"/"+ logo : '/images/logo_01.png'}
+                                alt="Logo"
+                            />
                         </Link>
                         <Space size="large">
                             {!INSTALLER_FEATURE && (

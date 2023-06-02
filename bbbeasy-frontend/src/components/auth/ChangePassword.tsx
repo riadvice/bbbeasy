@@ -29,6 +29,8 @@ import EN_US from '../../locale/en-US.json';
 
 import { URLSearchParams as _URLSearchParams } from 'url';
 import { PasswordInput } from 'antd-password-input-strength';
+import settingsService from 'services/settings.service';
+import { SettingsType } from 'types/SettingsType';
 
 const { Title, Paragraph } = Typography;
 
@@ -38,6 +40,7 @@ type formType = {
 };
 
 const ChangePassword = () => {
+    const [logo, setLogo] = React.useState<string>('');
     const [successful, setSuccessful] = React.useState<boolean>(false);
     const [message, setMessage] = React.useState<string>('');
     const [availableToken, setAvailableToken] = React.useState<boolean>(false);
@@ -45,6 +48,16 @@ const ChangePassword = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
+        settingsService
+            .collect_settings()
+            .then((response) => {
+                console.log(response.data);
+                const settings: SettingsType = response.data;
+                setLogo(settings.logo);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
         AuthService.get_reset_password(params.get('token'))
             .then(() => {
                 setAvailableToken(true);
@@ -90,7 +103,11 @@ const ChangePassword = () => {
                         <Col span={8} offset={8} className="section-top">
                             <Card className="form-content">
                                 <Paragraph className="form-header text-center">
-                                    <img className="form-img" src="/images/logo_02.png" alt="Logo" />
+                                    <img
+                                        className="form-img"
+                                        src={logo ? process.env.REACT_APP_API_URL + '/' + logo : '/images/logo_02.png'}
+                                        alt="Logo"
+                                    />
                                     <Title level={4}>
                                         <Trans i18nKey="change-password" />
                                     </Title>

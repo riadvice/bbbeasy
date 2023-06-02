@@ -29,6 +29,7 @@ type Props = {
 export const UserPasswordForm = (props: Props) => {
     return (
         <Form.Item
+        className={!props.isHidden?"password-install":""}
             hidden={props.isHidden}
             label={<Trans i18nKey={props.passwordText ?? 'password.label'} />}
             name={props.passwordText ?? 'password'}

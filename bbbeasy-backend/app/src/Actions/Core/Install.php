@@ -97,7 +97,7 @@ class Install extends BaseAction
                             // @fixme: should not have embedded try/catch here
 
                             $errorMessage = 'Administrator could not be added';
-                            if ($this->credentialsAreValid($user->username, $user->email, $user->password, $errorMessage)) {
+                            if ($this->credentialsAreValid($user->username, $user->email, $form['password'], $errorMessage)) {
                                 $user->save();
 
                                 $userId = $user->getByEmail($form['email'])->id;

@@ -32,7 +32,7 @@ type Props = {
 
 export const Step1Form = (props: Props) => {
     return (
-        <div>
+        <div className="step1">
             <Paragraph className="form-header text-center">
                 <Title level={4}>
                     <Trans i18nKey="create-administrator-account" />

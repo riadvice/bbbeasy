@@ -309,8 +309,12 @@ body.rtl {
     -ms-transform: translateY(-50%);
     transform: translateY(-50%);
 }
+ 
+ 
 .header-logo-image {
-    width: 90px !important;
+    height: auto;
+    max-height: 64px;
+    max-width: 64px;
 }
 .site-header-inner button {
     background: transparent !important;
@@ -381,17 +385,26 @@ body.rtl {
 .install-steps {
     margin-top: 20px !important;
 }
-.install-form {
-    padding: 50px 54px !important;
-}
+
 .button-container {
     margin-top: 24px !important;
+}
+.dragger{
+    width:90% !important;
+}
+.button-container{
+    padding-left: 50px !important;
+    padding-right:50px !important;
 }
 .btn-installer {
     margin-top: 20px;
     width: 50%;
     font-weight: bold;
+  
     display: inline-block;
+}
+.ant-upload-wrapper .ant-upload-drag{
+    width: 80% !important;
 }
 .button-container .ant-row:not(.ant-row-rtl) .prev {
     margin-right: 20px;
@@ -427,6 +440,7 @@ body.rtl {
 .install-form:not(.ant-form-rtl) .box:not(.last),
 .install-form:not(.ant-form-rtl) .colors-container .ant-form-item {
     padding-right: 20px;
+    padding-left: 30px;
 }
 .install-form.ant-form-rtl .box:not(.last),
 .install-form.ant-form-rtl .colors-container .ant-form-item {
@@ -434,6 +448,8 @@ body.rtl {
 }
 .install-form:not(.ant-form-rtl) .box.last {
     padding-left: 20px;
+    /* padding-right: 10px; */
+    border-left: 1px solid #dddfe1;
     border-left: 1px solid var(--bbbeasy-border-gray);
 }
 .install-form.ant-form-rtl .box.last {
@@ -493,6 +509,10 @@ body.rtl {
   width: 38px !important;
   height: 38px !important;
 }*/
+.step3{
+    padding-left: 50px !important;
+    padding-right: 50px !important;
+}
 .presets-grid .ant-card-meta .ant-card-meta-title {
     white-space: unset;
     text-overflow: unset;
@@ -529,6 +549,14 @@ body.rtl {
 /*.PresetIcon img {
   width: 19px;
 }*/
+.password-install{
+    padding-left: 50px !important;
+    padding-right: 50px !important;
+}
+.step1{
+    padding-left: 50px;
+    padding-right: 50px;
+}
 .presets-modal {
     width: 45% !important;
 }

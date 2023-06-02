@@ -26,6 +26,8 @@ import { Form, Button, Checkbox, Alert, Col, Row, Typography, Card, Result } fro
 import { Trans, withTranslation } from 'react-i18next';
 import EN_US from '../../locale/en-US.json';
 import { t } from 'i18next';
+import settingsService from 'services/settings.service';
+import { SettingsType } from 'types/SettingsType';
 
 const { Title, Paragraph } = Typography;
 
@@ -40,6 +42,7 @@ type formType = {
 const Register = () => {
     const [successful, setSuccessful] = React.useState<boolean>(false);
     const [message, setMessage] = React.useState<string>('');
+    const [logo, setLogo] = React.useState<string>('');
     const initialValues: formType = {
         username: '',
         email: '',
@@ -47,7 +50,16 @@ const Register = () => {
         confirmPassword: '',
         agreement: false,
     };
-
+    settingsService
+        .collect_settings()
+        .then((response) => {
+            console.log(response.data);
+            const settings: SettingsType = response.data;
+            setLogo(settings.logo);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
     const navigate = useNavigate();
 
     const handleRegistration = (formValue: formType) => {
@@ -81,7 +93,11 @@ const Register = () => {
                 <Col span={8} offset={8} className="section-top">
                     <Card className="form-content">
                         <Paragraph className="form-header text-center">
-                            <img className="form-img" src="/images/logo_02.png" alt="Logo" />
+                            <img
+                                className="form-img"
+                                src={logo ? process.env.REACT_APP_API_URL + '/' + logo : '/images/logo_02.png'}
+                                alt="Logo"
+                            />
                             <Title level={4}>
                                 <Trans i18nKey="sign-up" />
                             </Title>
