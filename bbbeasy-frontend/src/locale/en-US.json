@@ -162,7 +162,8 @@
     "signed_as": "Signed in as ",
     "user_dropdown": {
         "profile": "Profile",
-        "logout": "Sign Out"
+        "logout": "Sign Out",
+        "warning_notification": "BigBlueButton API is not configured on this instance. Please contact your administrator."
     },
 
     "name_col": "Name",

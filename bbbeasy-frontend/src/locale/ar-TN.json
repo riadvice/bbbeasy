@@ -162,7 +162,8 @@
     "signed_as": "تم تسجيل الدخول باعتبارك ",
     "user_dropdown": {
         "profile": "الملف الشخصي",
-        "logout": "تسجيل الخروج"
+        "logout": "تسجيل الخروج",
+        "warning_notification": "BigBlueButton API لم يتم تكوينه في هذه الحالة. يرجى الاتصال بالمسؤول"
     },
     "name_col": "الإسم",
     "users_col": "عدد المستخدمين",
