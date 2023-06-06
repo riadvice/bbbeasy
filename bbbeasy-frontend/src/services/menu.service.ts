@@ -38,13 +38,23 @@ const addItemIfExist = (
 
 const addSettings = (keys: string[], items: MenuType[]) => {
     const subItems: MenuType[] = [];
-
+   
     addItemIfExist(
         'settings',
         {
             name: 'company_branding',
             icon: 'FormatPainterOutlined',
             path: '/settings/branding',
+        },
+        keys,
+        subItems
+    );
+    addItemIfExist(
+        'preset_settings',
+        {
+            name: 'bigbluebutton',
+            icon: 'Bigbluebutton',
+            path: '/settings/bigbluebutton',
         },
         keys,
         subItems
@@ -70,6 +80,16 @@ const addSettings = (keys: string[], items: MenuType[]) => {
         subItems
     );
     addItemIfExist(
+        'settings',
+        {
+            name: 'Administration',
+            icon: 'Role',
+            path: '/settings/administration',
+        },
+        keys,
+        subItems
+    );
+    addItemIfExist(
         'notifications',
         {
             name: 'notifications',
@@ -79,16 +99,7 @@ const addSettings = (keys: string[], items: MenuType[]) => {
         keys,
         subItems
     );
-    addItemIfExist(
-        'preset_settings',
-        {
-            name: 'bigbluebutton',
-            icon: 'Bigbluebutton',
-            path: '/settings/bigbluebutton',
-        },
-        keys,
-        subItems
-    );
+   
 
     if (subItems.length != 0) {
         items.push({
@@ -105,10 +116,12 @@ class MenuService {
         const items: MenuType[] = [];
         const news: string[] = [];
         let defaultRoute = '';
-
+   
         if (Object.keys(userPermissions).length != 0) {
             const keys = Object.keys(userPermissions);
+         
             const addActionExist = (key: string) => {
+               
                 if (userPermissions[key].includes('add')) {
                     news.push(key);
                 }
@@ -158,7 +171,7 @@ class MenuService {
                 items,
                 addActionExist
             );
-
+          
             addSettings(keys, items);
         }
 
@@ -179,7 +192,7 @@ class MenuService {
                 defaultRoute = items[0].children[0].path;
             }
         }
-
+       
         return { items: items, news: news, defaultRoute: defaultRoute };
     }
 }

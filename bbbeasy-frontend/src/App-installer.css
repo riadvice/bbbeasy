@@ -309,8 +309,7 @@ body.rtl {
     -ms-transform: translateY(-50%);
     transform: translateY(-50%);
 }
- 
- 
+
 .header-logo-image {
     height: auto;
     max-height: 64px;
@@ -389,21 +388,21 @@ body.rtl {
 .button-container {
     margin-top: 24px !important;
 }
-.dragger{
-    width:90% !important;
+.dragger {
+    width: 90% !important;
 }
-.button-container{
+.button-container {
     padding-left: 50px !important;
-    padding-right:50px !important;
+    padding-right: 50px !important;
 }
 .btn-installer {
     margin-top: 20px;
     width: 50%;
     font-weight: bold;
-  
+
     display: inline-block;
 }
-.ant-upload-wrapper .ant-upload-drag{
+.ant-upload-wrapper .ant-upload-drag {
     width: 80% !important;
 }
 .button-container .ant-row:not(.ant-row-rtl) .prev {
@@ -509,7 +508,7 @@ body.rtl {
   width: 38px !important;
   height: 38px !important;
 }*/
-.step3{
+.step3 {
     padding-left: 50px !important;
     padding-right: 50px !important;
 }
@@ -549,11 +548,11 @@ body.rtl {
 /*.PresetIcon img {
   width: 19px;
 }*/
-.password-install{
+.password-install {
     padding-left: 50px !important;
     padding-right: 50px !important;
 }
-.step1{
+.step1 {
     padding-left: 50px;
     padding-right: 50px;
 }

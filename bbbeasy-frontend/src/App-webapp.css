@@ -592,7 +592,7 @@ fieldset {
     background: var(--bbbeasy-bg-layout);
     width: 240px;
     margin: 10px;
-    margin-left: 24px;;
+    margin-left: 24px;
 }
 .site-sider .logo .sider-logo-image {
     width: 110px !important;
@@ -606,7 +606,7 @@ fieldset {
   margin-right: 20px;
 }
 */
- 
+
 .site-sider .ant-menu-item-icon {
     font-size: 16px !important;
 }
@@ -898,7 +898,7 @@ fieldset {
 .room-recordings-body .ant-card-body {
     padding: 20px !important;
 }
-.room-box{
+.room-box {
     display: grid !important;
 }
 .file-size {
@@ -1459,7 +1459,18 @@ fieldset {
     border-radius: 6px;
     padding: 4px 11px;
 }
-
+#administration_form {
+    padding: 50px 50px !important;
+}
+#administration_form .ant-form-item-control {
+    text-align: right;
+}
+.loading {
+    margin-left: 50% !important;
+}
+#administration_form #submit-btn {
+    margin-top: 25px;
+}
 .space-color-picker-add-label {
     position: relative;
     display: inline-flex;
