@@ -127,5 +127,5 @@
         "source-map-explorer": "^2.5.3",
         "ts-loader": "^9.4.2"
     },
-    "packageManager": "yarn@3.4.1"
+    "packageManager": "yarn@3.6.0"
 }
