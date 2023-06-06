@@ -1460,10 +1460,13 @@ fieldset {
     padding: 4px 11px;
 }
 #administration_form {
-    padding: 50px 50px !important;
+    padding: 50px 30px !important;
 }
-#administration_form .ant-form-item-control {
+#administration_form .ant-col {
     text-align: right;
+}
+#administration_form .ant-col-rtl{
+    text-align: left !important;
 }
 .loading {
     margin-left: 50% !important;

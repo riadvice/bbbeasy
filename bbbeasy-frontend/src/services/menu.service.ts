@@ -82,8 +82,8 @@ const addSettings = (keys: string[], items: MenuType[]) => {
     addItemIfExist(
         'settings',
         {
-            name: 'Administration',
-            icon: 'Role',
+            name: 'administration',
+            icon: 'SettingOutlined',
             path: '/settings/administration',
         },
         keys,
