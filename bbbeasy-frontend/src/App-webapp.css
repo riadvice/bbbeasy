@@ -1475,6 +1475,7 @@ fieldset {
 
     width: 150px;
 
+ 
     background-color: #ffffff;
     background-image: none;
     border-width: 1px;
@@ -1483,6 +1484,15 @@ fieldset {
     border-radius: 6px;
     padding: 4px 11px;
 }
+ 
+
+.code-color-picker-edit-label {
+    background: transparent;
+    border-radius: 3px;
+    width: 90px;
+}
+
+ 
 .space-color-picker-add-label {
     position: relative;
     display: inline-flex;
