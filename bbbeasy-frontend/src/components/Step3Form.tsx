@@ -156,7 +156,7 @@ export const Step3Form = (props: Props) => {
                                         <div key={modalTitle + '_' + item.name}>
                                             <Form.Item
                                                 initialValue={item.enabled}
-                                                label={<Trans i18nKey={subcategory} />}
+                                                label={<div className="white-space"><Trans i18nKey={subcategory} /></div>}
                                                 valuePropName="checked"
                                                 name={item.name}
                                             >
