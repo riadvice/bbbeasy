@@ -17,7 +17,7 @@
  */
 
 import React from 'react';
-import { Trans, useTranslation } from 'react-i18next';
+import { Trans, useTranslation, withTranslation } from 'react-i18next';
 
 import { message, Form, Input, Typography, Upload, InputNumber, theme, ColorPicker, Space } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
@@ -72,7 +72,9 @@ export const Step2Form = (props: Props) => {
         return e && e.fileList;
     };
     const handleChangeFile = (info: UploadChangeParam<UploadFile<string>>) => {
+       
         let fileList: UploadFile[] = [...info.fileList];
+        
         fileList = fileList.slice(-1);
         if (fileList[0] != undefined) {
             const img: boolean =
@@ -81,6 +83,9 @@ export const Step2Form = (props: Props) => {
                 fileList[0].type === 'image/png';
             if (img) {
                 setFileList(fileList);
+                
+                fileList[0].name= 'logo-' + Date.now()+"."+fileList[0].type.substring(6);
+                
                 setFile(fileList[0]);
             }
         }
@@ -176,6 +181,8 @@ export const Step2Form = (props: Props) => {
                 <Form.Item>
                     <Form.Item valuePropName="fileList" getValueFromEvent={normFile} noStyle>
                         <Dragger
+                        className="dragger"
+                         
                             name="logo"
                             multiple={false}
                             showUploadList={{ showRemoveIcon: true }}
@@ -183,15 +190,17 @@ export const Step2Form = (props: Props) => {
                             accept=".png,.jpg,.jpeg"
                             beforeUpload={(file: RcFile) => {
                                 if (
-                                    file.type === 'image/jpg' ||
-                                    file.type === 'image/png' ||
-                                    file.type === 'image/jpeg'
+                                    !(
+                                        file.type === 'image/jpg' ||
+                                        file.type === 'image/png' ||
+                                        file.type === 'image/jpeg'
+                                    )
                                 ) {
-                                    message.success(t('success_upload'));
-                                    return false;
+                                    message.error(t('wrong_file'));
+                                    return null;
                                 }
-                                message.error(t('wrong_file'));
-                                return null;
+
+                                return false;
                             }}
                             onChange={(info) => {
                                 handleChangeFile(info);
@@ -223,7 +232,9 @@ export const Step2Form = (props: Props) => {
                                 }
                             }}
                         >
-                            <Space className="space-color-picker-branding">
+
+                            <Space   className="space-color-picker-branding">
+
                                 <div
                                     style={{
                                         width: token.sizeMD,
