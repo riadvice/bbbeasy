@@ -29,6 +29,8 @@ export const apiRoutes = {
 
     LOGS_URL: API_URL + '/logs',
 
+    NOTIFICATION_URL: API_URL + '/notification',
+
     COLLECT_USERS_URL: API_URL + '/users/collect',
     COLLECT_PRESET_SETTINGS_URL: API_URL + '/preset-settings',
     EDIT_PRESET_SETTINGS_URL: API_URL + '/preset-settings',

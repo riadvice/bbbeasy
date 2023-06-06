@@ -162,7 +162,8 @@
     "signed_as": "Connecté en tant que ",
     "user_dropdown": {
         "profile": "Profil",
-        "logout": "Déconnexion"
+        "logout": "Déconnexion",
+        "warning_notification": "BigBlueButton API n'est pas configurée sur cette instance. Veuillez contacter votre administrateur."
     },
     "name_col": "Nom",
     "users_col": "N◦ Utilisateurs",
