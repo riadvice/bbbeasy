@@ -77,7 +77,7 @@ const Profile = () => {
 
             formValues.avatar = images[0].file.name;
         }
-
+        
         //edit account
         AuthService.edit_account(formValues)
             .then((response) => {
@@ -173,22 +173,31 @@ const Profile = () => {
                                     >
                                         <Avatar
                                             src={
-                                                imageList[0] != null ? (
+                                            imageList[0] != null ? (
+                                                <div className="ant-image">
+
+                                                    <img
+                                                        className="ant-image-img"
+                                                        src={imageList[0].dataURL}
+                                                        width={130}
+                                                        height={130}
+                                                    />
+                                                    <div className="ant-image-mask">
+                                                        <div className="ant-image-mask-info">
+                                                            <DeleteOutlined onClick={() => onImageRemove(0)} />
+                                                        </div>
+                                                    </div>
+                                                </div>)
+                                                : (
                                                     <div className="ant-image">
                                                         <img
                                                             className="ant-image-img"
-                                                            src={imageList[0].dataURL}
+                                                            src={ process.env.REACT_APP_API_URL +"/"+ currentUser.avatar}
                                                             width={130}
                                                             height={130}
                                                         />
-                                                        <div className="ant-image-mask">
-                                                            <div className="ant-image-mask-info">
-                                                                <DeleteOutlined onClick={() => onImageRemove(0)} />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                ) : null
-                                            }
+                                                </div>
+                                                )}
                                             icon={imageList[0] == null ? <UserOutlined /> : null}
                                             size={{ xs: 32, sm: 40, md: 64, lg: 80, xl: 125, xxl: 135 }}
                                             className="bbbeasy-btn"
