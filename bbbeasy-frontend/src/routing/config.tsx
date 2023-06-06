@@ -36,7 +36,7 @@ import PresetSettings from '../components/PresetSettings';
 import RoomDetails from '../components/RoomDetails';
 import Profile from '../components/Profile';
 import Recordings from '../components/Recordings';
-import Administration from 'components/Administration';
+ 
 
 export const webRoutes: IRoute[] = [
     {
