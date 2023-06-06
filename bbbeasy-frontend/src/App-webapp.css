@@ -1247,7 +1247,12 @@ fieldset {
   width: 19px;
 }*/
 .presets-modal {
-    width: 47% !important;
+    width: 35% !important;
+}
+.white-space{
+    white-space:pre-wrap;
+    text-align: left;
+    width: 300px;
 }
 .presets-modal .ant-modal-content {
     margin: 0 30px;

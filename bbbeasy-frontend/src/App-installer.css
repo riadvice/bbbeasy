@@ -558,7 +558,12 @@ body.rtl {
     padding-right: 50px;
 }
 .presets-modal {
-    width: 45% !important;
+    width: 35% !important;
+}
+.white-space{
+    white-space:pre-wrap;
+    text-align: left;
+    width: 300px;
 }
 .presets-modal .ant-modal-content {
     margin: 0 30px;
