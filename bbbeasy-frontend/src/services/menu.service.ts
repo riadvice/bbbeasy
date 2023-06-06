@@ -38,7 +38,7 @@ const addItemIfExist = (
 
 const addSettings = (keys: string[], items: MenuType[]) => {
     const subItems: MenuType[] = [];
-   
+
     addItemIfExist(
         'settings',
         {
@@ -99,7 +99,6 @@ const addSettings = (keys: string[], items: MenuType[]) => {
         keys,
         subItems
     );
-   
 
     if (subItems.length != 0) {
         items.push({
@@ -116,12 +115,11 @@ class MenuService {
         const items: MenuType[] = [];
         const news: string[] = [];
         let defaultRoute = '';
-   
+
         if (Object.keys(userPermissions).length != 0) {
             const keys = Object.keys(userPermissions);
-         
+
             const addActionExist = (key: string) => {
-               
                 if (userPermissions[key].includes('add')) {
                     news.push(key);
                 }
@@ -171,7 +169,7 @@ class MenuService {
                 items,
                 addActionExist
             );
-          
+
             addSettings(keys, items);
         }
 
@@ -192,7 +190,7 @@ class MenuService {
                 defaultRoute = items[0].children[0].path;
             }
         }
-       
+
         return { items: items, news: news, defaultRoute: defaultRoute };
     }
 }

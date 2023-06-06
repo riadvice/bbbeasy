@@ -79,13 +79,12 @@ const AppSider = (props: Props) => {
     useEffect(() => {
         const user: UserType = AuthService.getCurrentUser();
         const menuSider = MenuService.getMenuSider(user.permissions);
-      
+
         setMenuItems(menuSider.items);
         setNewMenuItems(menuSider.news);
         settingsService
             .collect_settings()
             .then((response) => {
-              
                 const settings: SettingsType = response.data;
                 setLogo(settings.logo);
             })
