@@ -12,7 +12,7 @@
         "@babel/preset-env": "^7.21.5",
         "@hot-loader/react-dom": "^17.0.2",
         "@types/lodash": "^4.14.194",
-        "antd": "^5.5.2",
+        "antd": "5.5.1",
         "antd-password-input-strength": "^2.0.1",
         "axios": "^1.4.0",
         "babel-loader": "^9.1.2",
