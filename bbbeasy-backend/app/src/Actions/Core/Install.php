@@ -115,6 +115,7 @@ class Install extends BaseAction
                                         $form['policy_url'],
                                         $form['logo'],
                                         $form['theme'],
+                                        false,false
                                     );
 
                                     // @fixme: should not have embedded try/catch here
