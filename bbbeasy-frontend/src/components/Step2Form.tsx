@@ -230,7 +230,11 @@ export const Step2Form = (props: Props) => {
                                 }
                             }}
                         >
-                            <Space className="space-color-picker">
+
+
+                            <Space   className="space-color-picker-branding">
+
+
                                 <div
                                     style={{
                                         width: token.sizeMD,
