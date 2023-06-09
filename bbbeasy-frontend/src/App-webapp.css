@@ -595,7 +595,7 @@ fieldset {
     background: var(--bbbeasy-bg-layout);
     width: 240px;
     margin: 10px;
-    margin-left: 24px;;
+    margin-left: 24px;
 }
 .site-sider .logo .sider-logo-image {
     width: 110px !important;
@@ -609,7 +609,7 @@ fieldset {
   margin-right: 20px;
 }
 */
- 
+
 .site-sider .ant-menu-item-icon {
     font-size: 16px !important;
 }
@@ -901,7 +901,7 @@ fieldset {
 .room-recordings-body .ant-card-body {
     padding: 20px !important;
 }
-.room-box{
+.room-box {
     display: grid !important;
 }
 .file-size {
@@ -1467,6 +1467,25 @@ fieldset {
     border-radius: 6px;
     padding: 4px 11px;
 }
+
+ 
+#administration_form {
+    padding: 50px 30px !important;
+}
+#administration_form .ant-col {
+    text-align: right;
+}
+#administration_form .ant-col-rtl{
+    text-align: left !important;
+}
+.loading {
+    margin-left: 50% !important;
+}
+#administration_form #submit-btn {
+    margin-top: 25px;
+}
+ 
+
 .ant-upload-list-item {
     width: 80% !important;
 }
@@ -1475,6 +1494,7 @@ fieldset {
 }
 .space-color-picker-branding {
     color: rgba(0, 0, 0, 0.25);
+
 
     opacity: 1;
 
@@ -1497,7 +1517,7 @@ fieldset {
     width: 90px;
 }
 
- 
+
 .space-color-picker-add-label {
     position: relative;
     display: inline-flex;

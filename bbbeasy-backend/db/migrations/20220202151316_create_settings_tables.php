@@ -39,6 +39,8 @@ class CreateSettingsTables extends AbstractMigration
             ->addColumn('default_font_size', 'integer', ['null' => false])
             ->addColumn('border_radius', 'integer', ['null' => false])
             ->addColumn('wireframe_style', 'boolean', ['null' => false])
+            ->addColumn('self_registration', 'boolean', ['null' => false ])
+            ->addColumn('send_registration', 'boolean', ['null' => false ])
 
             ->addColumn('created_on', 'datetime', ['default' => '0001-01-01 00:00:00', 'timezone' => true])
             ->addColumn('updated_on', 'datetime', ['default' => '0001-01-01 00:00:00', 'timezone' => true])

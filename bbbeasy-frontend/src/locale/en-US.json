@@ -400,5 +400,11 @@
     "no_labels": "No labels",
     "no_data": "No Data",
     "wrong_file_name": "Wrong file name : File name must not contain special characters",
-    "email_not_exist": "User does not exist with this email"
+
+    "email_not_exist": "User does not exist with this email",
+    "send_invitation.label": "Send registration invitation to users",
+    "self_registration.label": "Allow self-registration",
+    "administration": "Administration",
+    "edit_administration_settings_success": "Administration settings successfully updated"
+
 }

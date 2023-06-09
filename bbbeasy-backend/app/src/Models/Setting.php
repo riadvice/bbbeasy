@@ -47,7 +47,7 @@ class Setting extends BaseModel
 {
     protected $table = 'settings';
 
-    public function saveSettings(string $name, string $website, string $plaform, ?string $terms, ?string $policy, ?string $logo, ?array $theme): void
+    public function saveSettings(string $name, string $website, string $plaform, ?string $terms, ?string $policy, ?string $logo, ?array $theme,bool $self_registration,bool $send_registration): void
     {
         $this->company_name    = $name;
         $this->company_website = $website;
@@ -55,6 +55,8 @@ class Setting extends BaseModel
         $this->terms_use       = $terms;
         $this->privacy_policy  = $policy;
         $this->logo            = $logo;
+        $this->self_registration =$self_registration;
+        $this->send_registration =$send_registration;
 
         if ($theme) {
             $this->brand_color       = $theme['brand_color'];
@@ -85,6 +87,8 @@ class Setting extends BaseModel
                 'default_font_size' => $defaultSettings->default_font_size,
                 'border_radius'     => $defaultSettings->border_radius,
                 'wireframe_style'   => $defaultSettings->wireframe_style,
+                'self_registration' =>$defaultSettings->self_registration,
+                'send_registration' =>$defaultSettings->send_registration
             ];
         }
 

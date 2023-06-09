@@ -29,4 +29,6 @@ export type SettingsType = {
     default_font_size: number;
     border_radius: number;
     wireframe_style: boolean;
+    self_registration: boolean;
+    send_registration: boolean;
 };

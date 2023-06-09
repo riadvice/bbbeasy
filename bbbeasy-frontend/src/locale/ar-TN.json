@@ -393,5 +393,11 @@
 
     "no_labels": "لا توجد علامات",
     "no_data": "لا توجد بيانات",
-    "email_not_exist": "المستخدم غير موجود مع هذا البريد الإلكتروني"
+
+    "email_not_exist": "المستخدم غير موجود مع هذا البريد الإلكتروني",
+    "send_invitation.label": "إرسال دعوة تسجيل للمستخدمين",
+    "self_registration.label": "السماح بالتسجيل الذاتي",
+    "administration": "الإدارة",
+    "edit_administration_settings_success": "تم تحديث إعدادات  الإدارة التجارية بنجاح"
+
 }
