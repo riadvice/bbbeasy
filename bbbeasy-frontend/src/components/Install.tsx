@@ -232,7 +232,7 @@ const Install = () => {
         if (activeStep < steps.length - 1) {
             next();
         } else {
-              //edit file
+            //edit file
             if (file != undefined && file.originFileObj != null) {
                 const formData: FormData = new FormData();
                 formData.append('logo', file.originFileObj, file.name);

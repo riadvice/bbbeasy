@@ -63,13 +63,10 @@ class Edit extends BaseAction
                 $label->description = $form['description'];
                 $label->color       = $form['color'];
 
-                $nameExist  = $checkLabel->nameExists($form['name'], $id);
                 $colorExist = $checkLabel->colorExists($form['color'], $id);
-                if ($nameExist || $colorExist) {
-                    if ($nameExist && $colorExist) {
+                if ($colorExist) {
+                    if ($colorExist) {
                         $message = ['name' => $nameErrorMessage, 'color' => $colorErrorMessage];
-                    } elseif ($nameExist) {
-                        $message = ['name' => $nameErrorMessage];
                     } else {
                         $message = ['color' => $colorErrorMessage];
                     }

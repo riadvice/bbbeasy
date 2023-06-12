@@ -158,26 +158,33 @@ const Labels = () => {
                     record && (
                         <>
                             <ColorPicker
-                                value={record.color}
                                 onChange={(color1: Color) => {
                                     editForm.setFieldValue('color', color1.toHexString());
-
-                                    setColor(color1.toHexString());
-
-                                    setCancelVisibility(false);
+                                    (document.getElementById('newColor') as HTMLInputElement).value =
+                                        editForm.getFieldValue('color');
+                                    (document.getElementById('myNewColor') as HTMLInputElement).style.backgroundColor =
+                                        editForm.getFieldValue('color');
                                 }}
                             >
                                 <Space className="space-color-picker">
                                     <div
+                                        id="myNewColor"
                                         style={{
-                                            //border:"2px",
                                             width: token.sizeMD,
                                             height: token.sizeMD,
                                             borderRadius: token.borderRadiusSM,
-                                            backgroundColor: color ? color : record.color,
+                                            backgroundColor: record.color,
                                         }}
                                     />
-                                    <span> {color ? color : record.color}</span>
+                                    <span>
+                                        <input
+                                            className="code-color-picker-edit-label"
+                                            disabled
+                                            type="text"
+                                            id="newColor"
+                                            value={editForm.getFieldValue('color')}
+                                        />
+                                    </span>
                                 </Space>
                             </ColorPicker>
                         </>

@@ -50,6 +50,16 @@ const addSettings = (keys: string[], items: MenuType[]) => {
         subItems
     );
     addItemIfExist(
+        'preset_settings',
+        {
+            name: 'bigbluebutton',
+            icon: 'Bigbluebutton',
+            path: '/settings/bigbluebutton',
+        },
+        keys,
+        subItems
+    );
+    addItemIfExist(
         'users',
         {
             name: 'users',
@@ -70,21 +80,21 @@ const addSettings = (keys: string[], items: MenuType[]) => {
         subItems
     );
     addItemIfExist(
-        'notifications',
+        'settings',
         {
-            name: 'notifications',
-            icon: 'BellOutlined',
-            path: '/settings/notifications',
+            name: 'administration',
+            icon: 'SettingOutlined',
+            path: '/settings/administration',
         },
         keys,
         subItems
     );
     addItemIfExist(
-        'preset_settings',
+        'notifications',
         {
-            name: 'bigbluebutton',
-            icon: 'Bigbluebutton',
-            path: '/settings/bigbluebutton',
+            name: 'notifications',
+            icon: 'BellOutlined',
+            path: '/settings/notifications',
         },
         keys,
         subItems
@@ -108,6 +118,7 @@ class MenuService {
 
         if (Object.keys(userPermissions).length != 0) {
             const keys = Object.keys(userPermissions);
+
             const addActionExist = (key: string) => {
                 if (userPermissions[key].includes('add')) {
                     news.push(key);

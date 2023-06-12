@@ -520,7 +520,7 @@ fieldset {
 .profil-btn-dropdown .username-item:hover {
     color: gray !important;
 }
-.warning-btn-dropdown{
+.warning-btn-dropdown {
     max-width: 330px !important;
 }
 .search-modal .ant-modal-header {
@@ -595,7 +595,7 @@ fieldset {
     background: var(--bbbeasy-bg-layout);
     width: 240px;
     margin: 10px;
-    margin-left: 24px;;
+    margin-left: 24px;
 }
 .site-sider .logo .sider-logo-image {
     width: 110px !important;
@@ -609,7 +609,7 @@ fieldset {
   margin-right: 20px;
 }
 */
- 
+
 .site-sider .ant-menu-item-icon {
     font-size: 16px !important;
 }
@@ -901,7 +901,7 @@ fieldset {
 .room-recordings-body .ant-card-body {
     padding: 20px !important;
 }
-.room-box{
+.room-box {
     display: grid !important;
 }
 .file-size {
@@ -1247,7 +1247,12 @@ fieldset {
   width: 19px;
 }*/
 .presets-modal {
-    width: 47% !important;
+    width: 35% !important;
+}
+.white-space {
+    white-space: pre-wrap;
+    text-align: left;
+    width: 300px;
 }
 .presets-modal .ant-modal-content {
     margin: 0 30px;
@@ -1463,10 +1468,54 @@ fieldset {
     padding: 4px 11px;
 }
 
+#administration_form {
+    padding: 50px 30px !important;
+}
+#administration_form .ant-col {
+    text-align: right;
+}
+#administration_form .ant-col-rtl {
+    text-align: left !important;
+}
+.loading {
+    margin-left: 50% !important;
+}
+#administration_form #submit-btn {
+    margin-top: 25px;
+}
+
+.ant-upload-list-item {
+    width: 80% !important;
+}
+.ant-upload-drag {
+    width: 80% !important;
+}
+.space-color-picker-branding {
+    color: rgba(0, 0, 0, 0.25);
+
+    opacity: 1;
+
+    width: 150px;
+
+    background-color: #ffffff;
+    background-image: none;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #dddfe1;
+    border-radius: 6px;
+    padding: 4px 11px;
+}
+
+.code-color-picker-edit-label {
+    background: transparent;
+    border-radius: 3px;
+    width: 90px;
+}
+
 .space-color-picker-add-label {
     position: relative;
     display: inline-flex;
-    width: 100% !important;
+    width: 95% !important;
     min-width: 0;
     padding: 4px 11px !important;
     color: rgba(0, 0, 0, 0.88);

@@ -48,7 +48,6 @@ type formType = {
 };
 
 const Branding = () => {
-    
     const [settingsForm] = Form.useForm();
     const [data, setData] = React.useState<SettingsType>(null);
     const [actions, setActions] = React.useState<string[]>([]);
@@ -72,6 +71,9 @@ const Branding = () => {
             term_url: settings.terms_use,
             policy_url: settings.privacy_policy,
             logo: settings.logo,
+            send_registration: settings.send_registration,
+            self_registration: settings.self_registration,
+
             theme: {
                 brand_color: settings.brand_color,
                 default_font_size: settings.default_font_size,
@@ -87,8 +89,7 @@ const Branding = () => {
             };
             setFileList([settingLogo]);
             setFile(settingLogo);
-            console.log(settingLogo)
-            
+            console.log(settingLogo);
         }
         setIsLoading(false);
     };
@@ -123,12 +124,12 @@ const Branding = () => {
         let updateLogo = false;
         let deleteLogo = false;
         //edit file
-        
-        if (file != undefined && file.originFileObj != null  ) {
+
+        if (file != undefined && file.originFileObj != null) {
             const formData: FormData = new FormData();
             formData.append('logo', file.originFileObj, file.name);
             formData.append('logo_name', file.name);
-           updateLogo = true;
+            updateLogo = true;
 
             axios
                 .post(apiRoutes.SAVE_FILE_URL, formData)
@@ -144,8 +145,8 @@ const Branding = () => {
 
         //update logo
         if (updateLogo) {
-            console.log(updateLogo)
-            settingsData.logo =  file.name;
+            console.log(updateLogo);
+            settingsData.logo = file.name;
         } else if (deleteLogo) {
             settingsData.logo = null;
         }

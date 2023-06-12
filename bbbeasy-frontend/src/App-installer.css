@@ -309,8 +309,7 @@ body.rtl {
     -ms-transform: translateY(-50%);
     transform: translateY(-50%);
 }
- 
- 
+
 .header-logo-image {
     height: auto;
     max-height: 64px;
@@ -334,6 +333,27 @@ body.rtl {
 }
 .site-footer .ant-typography {
     color: #989898 !important;
+}
+.ant-upload-list-item {
+    width: 80% !important;
+}
+.ant-upload-drag {
+    width: 80% !important;
+}
+.space-color-picker-branding {
+    color: rgba(0, 0, 0, 0.25);
+
+    opacity: 1;
+
+    width: 150px;
+
+    background-color: #ffffff;
+    background-image: none;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #dddfe1;
+    border-radius: 6px;
+    padding: 4px 11px;
 }
 .site-footer button {
     padding: 0 5px !important;
@@ -389,21 +409,21 @@ body.rtl {
 .button-container {
     margin-top: 24px !important;
 }
-.dragger{
-    width:90% !important;
+.dragger {
+    width: 90% !important;
 }
-.button-container{
+.button-container {
     padding-left: 50px !important;
-    padding-right:50px !important;
+    padding-right: 50px !important;
 }
 .btn-installer {
     margin-top: 20px;
     width: 50%;
     font-weight: bold;
-  
+
     display: inline-block;
 }
-.ant-upload-wrapper .ant-upload-drag{
+.ant-upload-wrapper .ant-upload-drag {
     width: 80% !important;
 }
 .button-container .ant-row:not(.ant-row-rtl) .prev {
@@ -509,7 +529,7 @@ body.rtl {
   width: 38px !important;
   height: 38px !important;
 }*/
-.step3{
+.step3 {
     padding-left: 50px !important;
     padding-right: 50px !important;
 }
@@ -549,16 +569,21 @@ body.rtl {
 /*.PresetIcon img {
   width: 19px;
 }*/
-.password-install{
+.password-install {
     padding-left: 50px !important;
     padding-right: 50px !important;
 }
-.step1{
+.step1 {
     padding-left: 50px;
     padding-right: 50px;
 }
 .presets-modal {
-    width: 45% !important;
+    width: 35% !important;
+}
+.white-space {
+    white-space: pre-wrap;
+    text-align: left;
+    width: 300px;
 }
 .presets-modal .ant-modal-content {
     margin: 0 30px;

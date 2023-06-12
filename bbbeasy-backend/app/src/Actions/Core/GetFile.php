@@ -35,10 +35,8 @@ class GetFile extends BaseAction
      */
     public function execute($f3, $params)
     {
-
         $file = $f3->get('PARAMS.filename');
 
-
-        return \Web::instance()->send('../uploads/'. $file );
+        return \Web::instance()->send('../uploads/' . $file);
     }
 }
