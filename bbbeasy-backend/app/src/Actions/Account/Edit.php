@@ -53,7 +53,7 @@ class Edit extends BaseAction
             $current_password     = $form['current_password'];
             $new_password         = $form['new_password'];
             $confirm_new_password = $form['confirm_new_password'];
-            $avatar               = trim($form['avatar']);
+            $avatar               = $form['avatar'];
 
             $updatePassword = null !== $new_password && null !== $confirm_new_password;
             $updateAvatar   = null !== $avatar;
@@ -82,11 +82,7 @@ class Edit extends BaseAction
                         }
                         $user->username = $username;
                         $user->email    = $email;
-                        $avatar = strtolower($avatar);
-
-                        $avatar = preg_replace('/[^a-z0-9 .-]+/', '', $avatar);
-                        $avatar = str_replace(' ', '-', $avatar);
-                        $user->avatar   = trim($avatar, '-');;
+                        $user->avatar   = $avatar;
                         if ($updatePassword) {
                             $user->password = $new_password;
                         }
