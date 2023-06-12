@@ -50,9 +50,10 @@ sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plu
 info "Install Node.js"
 sudo apt-get install -y gcc g++ make
 sudo apt-get install -y libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
-curl -sL https://deb.nodesource.com/setup_20.x -o nodesource_setup.sh
+curl -sL https://deb.nodesource.com/setup_18.x -o nodesource_setup.sh
 sudo bash nodesource_setup.sh
 rm nodesource_setup.sh
+sudo apt remove libnode72
 sudo apt-get -y install gcc g++ make
 sudo apt-get -y install nodejs
 curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
@@ -65,7 +66,7 @@ sudo npm install -g pm2
 
 info "Install PHP 8.2 with its dependencies"
 sudo apt-get install -y php8.2-curl php8.2-cli php8.2-intl php8.2-redis php8.2-gd php8.2-fpm php8.2-pgsql \
-  php8.2-mbstring php8.2-xml php8.2-bcmath php8.2-xdebug
+  php8.2-mbstring php8.2-xml php8.2-bcmath php8.2-zip php8.2-xdebug
 
 info "Installing PostgreSQL"
 sudo percona-release setup ppg-15.1
