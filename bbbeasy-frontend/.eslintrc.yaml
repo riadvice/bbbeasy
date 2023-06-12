@@ -8,16 +8,13 @@ parserOptions:
 env:
   browser: true
   node: true
-  jest/globals: true
 plugins:
   - react
   - prettier
-  - jest
 extends:
   - eslint:recommended
   - plugin:@typescript-eslint/recommended
   - plugin:react/recommended
-  - plugin:jest/recommended
   - prettier
 
 rules:
