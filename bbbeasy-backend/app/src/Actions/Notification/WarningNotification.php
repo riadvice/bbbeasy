@@ -25,13 +25,14 @@ namespace Actions\Notification;
 use Actions\Base as BaseAction;
 use Enum\ResponseCode;
 use Log\LogWriterTrait;
-use Utils\BigBlueButtonRequester;
+
 /**
  * Class Start.
  */
 class WarningNotification extends BaseAction
 {
     use LogWriterTrait;
+
     /**
      * @param \Base $f3
      * @param array $params
@@ -40,19 +41,17 @@ class WarningNotification extends BaseAction
      */
     public function execute($f3, $params): void
     {
-        $default_shared_secret = "unsecure_shared_secret_to_change_immediately";
-        $default_server = "unsecure_server_to_change_immediately";
-        $bbbServer       = $this->f3->get('bbb.server');
-        $bbbSharedSecret = $this->f3->get('bbb.shared_secret');
-        $errorMessage = "BigBlueButton API configured";
-        if($default_server == $bbbServer && $default_shared_secret == $bbbSharedSecret){
+        $default_shared_secret = 'unsecure_shared_secret_to_change_immediately';
+        $default_server        = 'unsecure_server_to_change_immediately';
+        $bbbServer             = $this->f3->get('bbb.server');
+        $bbbSharedSecret       = $this->f3->get('bbb.shared_secret');
+        $errorMessage          = 'BigBlueButton API configured';
+        if ($default_server === $bbbServer && $default_shared_secret === $bbbSharedSecret) {
             $this->logger->info('BigBlueButton API is not configured');
             $this->renderJson(['result' => 'configuration warning']);
-        }else {
+        } else {
             $this->logger->error($errorMessage);
             $this->renderJson([$errorMessage], ResponseCode::HTTP_BAD_REQUEST);
         }
-
-
     }
 }

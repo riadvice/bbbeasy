@@ -54,7 +54,7 @@ let accountForm: FormInstance = null;
 
 const Profile = () => {
     const currentUser: UserType = AuthService.getCurrentUser();
-    console.log(currentUser.avatar)
+    console.log(currentUser.avatar);
     const initialAddValues: formType = {
         username: currentUser.username,
         email: currentUser.email,
@@ -83,7 +83,7 @@ const Profile = () => {
         AuthService.edit_account(formValues)
             .then((response) => {
                 const user = response.data.user;
-                console.log(user)
+                console.log(user);
                 if (user) {
                     //remove passwords from form
                     accountForm.resetFields(['current_password', 'new_password', 'confirm_new_password']);
@@ -179,9 +179,15 @@ const Profile = () => {
                                                     <div className="ant-image">
                                                         <img
                                                             className="ant-image-img"
-                                                         //   src={  src={logo ? process.env.REACT_APP_API_URL +"/"+ logo : '/images/logo_01.png'}}
-                                                         src={currentUser.avatar ? process.env.REACT_APP_API_URL +"/"+ currentUser.avatar : '/images/logo_01.png'}  
-                                                         width={130}
+                                                            //   src={  src={logo ? process.env.REACT_APP_API_URL +"/"+ logo : '/images/logo_01.png'}}
+                                                            src={
+                                                                currentUser.avatar
+                                                                    ? process.env.REACT_APP_API_URL +
+                                                                      '/' +
+                                                                      currentUser.avatar
+                                                                    : '/images/logo_01.png'
+                                                            }
+                                                            width={130}
                                                             height={130}
                                                         />
                                                         <div className="ant-image-mask">

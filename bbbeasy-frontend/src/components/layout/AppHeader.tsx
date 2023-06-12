@@ -36,13 +36,7 @@ import {
     Form,
     Badge,
 } from 'antd';
-import {
-    SearchOutlined,
-    GlobalOutlined,
-    UserOutlined,
-    LogoutOutlined,
-    WarningOutlined,
-} from '@ant-design/icons';
+import { SearchOutlined, GlobalOutlined, UserOutlined, LogoutOutlined, WarningOutlined } from '@ant-design/icons';
 
 import { Trans, withTranslation } from 'react-i18next';
 import { t } from 'i18next';
@@ -59,7 +53,7 @@ import AuthService from '../../services/auth.service';
 
 import { LanguageType } from '../../types/LanguageType';
 import { RoomType } from 'types/RoomType';
-import notificationService from "../../services/notification.service";
+import notificationService from '../../services/notification.service';
 
 import settingsService from 'services/settings.service';
 import { SettingsType } from 'types/SettingsType';
@@ -132,14 +126,15 @@ const AppHeader = () => {
     };
 
     useEffect(() => {
-            notificationService.collect_notification()
-                .then(response => {
-                    setWarningNotification(true);
-                    console.log(response.data);
-                })
-                .catch(error => {
-                    console.error(error);
-                });
+        notificationService
+            .collect_notification()
+            .then((response) => {
+                setWarningNotification(true);
+                console.log(response.data);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
     }, []);
 
     const menuLang = (
@@ -177,15 +172,12 @@ const AppHeader = () => {
                 </Menu>
             }
             overlayClassName="profil-btn-dropdown warning-btn-dropdown"
-            disabled={!(warningNotification)}
+            disabled={!warningNotification}
             placement={LocaleService.direction == 'rtl' ? 'bottomLeft' : 'bottomRight'}
             arrow
             trigger={['click']}
         >
-            <Badge
-                offset={LocaleService.direction == 'rtl' ? [34, 5] : [-34, 5]}
-                count={warningNotification ? 1 : 0}
-            >
+            <Badge offset={LocaleService.direction == 'rtl' ? [34, 5] : [-34, 5]} count={warningNotification ? 1 : 0}>
                 <Button type="primary" icon={<WarningOutlined />} className="profil-btn" />
             </Badge>
         </Dropdown>
@@ -216,7 +208,7 @@ const AppHeader = () => {
                         <Link to={'/'}>
                             <img
                                 className="header-logo-image"
-                                src={logo ? process.env.REACT_APP_API_URL +"/"+ logo : '/images/logo_01.png'}
+                                src={logo ? process.env.REACT_APP_API_URL + '/' + logo : '/images/logo_01.png'}
                                 alt="Logo"
                             />
                         </Link>

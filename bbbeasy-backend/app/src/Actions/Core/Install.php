@@ -46,7 +46,7 @@ class Install extends BaseAction
     public function execute($f3, $params): void
     {
         $checkUser = new User();
-       if (!$checkUser->adminUserExists()) {
+        if (!$checkUser->adminUserExists()) {
             $body = $this->getDecodedBody();
             $form = $body['data'];
 
@@ -115,7 +115,8 @@ class Install extends BaseAction
                                         $form['policy_url'],
                                         $form['logo'],
                                         $form['theme'],
-                                        false,false
+                                        false,
+                                        false
                                     );
 
                                     // @fixme: should not have embedded try/catch here
@@ -143,7 +144,7 @@ class Install extends BaseAction
                     }
                 }
             }
-       } else {
+        } else {
             //  already installed
             $this->logger->error('Initial application setup', ['error' => 'application already installed']);
             $this->renderJson(['locked' => true], ResponseCode::HTTP_LOCKED);

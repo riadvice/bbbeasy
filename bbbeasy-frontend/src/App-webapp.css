@@ -520,7 +520,7 @@ fieldset {
 .profil-btn-dropdown .username-item:hover {
     color: gray !important;
 }
-.warning-btn-dropdown{
+.warning-btn-dropdown {
     max-width: 330px !important;
 }
 .search-modal .ant-modal-header {
@@ -1249,8 +1249,8 @@ fieldset {
 .presets-modal {
     width: 35% !important;
 }
-.white-space{
-    white-space:pre-wrap;
+.white-space {
+    white-space: pre-wrap;
     text-align: left;
     width: 300px;
 }
@@ -1468,14 +1468,13 @@ fieldset {
     padding: 4px 11px;
 }
 
- 
 #administration_form {
     padding: 50px 30px !important;
 }
 #administration_form .ant-col {
     text-align: right;
 }
-#administration_form .ant-col-rtl{
+#administration_form .ant-col-rtl {
     text-align: left !important;
 }
 .loading {
@@ -1484,7 +1483,6 @@ fieldset {
 #administration_form #submit-btn {
     margin-top: 25px;
 }
- 
 
 .ant-upload-list-item {
     width: 80% !important;
@@ -1495,12 +1493,10 @@ fieldset {
 .space-color-picker-branding {
     color: rgba(0, 0, 0, 0.25);
 
-
     opacity: 1;
 
     width: 150px;
 
- 
     background-color: #ffffff;
     background-image: none;
     border-width: 1px;
@@ -1509,14 +1505,12 @@ fieldset {
     border-radius: 6px;
     padding: 4px 11px;
 }
- 
 
 .code-color-picker-edit-label {
     background: transparent;
     border-radius: 3px;
     width: 90px;
 }
-
 
 .space-color-picker-add-label {
     position: relative;

@@ -456,11 +456,7 @@ const RoomDetails = () => {
                                                     </>
                                                 ) : (
                                                     <Space size="middle">
-                                                        <Form
-                                                            form={editForm}
-                                                            labelAlign="left"
-                                                            labelCol={{ span: 11 }}
-                                                        >
+                                                        <Form form={editForm} labelAlign="left" labelCol={{ span: 11 }}>
                                                             {editFormItems.map((editFormItem) => {
                                                                 return customFormItem(editFormItem);
                                                             })}
@@ -520,10 +516,12 @@ const RoomDetails = () => {
                                         </Col>
                                         {showStartButton && (
                                             <Col span={2}>
-                                                <a onClick={(canStart || isRunning) ? startRoom : null}>
+                                                <a onClick={canStart || isRunning ? startRoom : null}>
                                                     <Avatar
                                                         size={{ xs: 40, sm: 64, md: 85, lg: 100, xl: 120, xxl: 140 }}
-                                                        className={(canStart || isRunning) ? "bbbeasy-btn" : "disableStart"}
+                                                        className={
+                                                            canStart || isRunning ? 'bbbeasy-btn' : 'disableStart'
+                                                        }
                                                     >
                                                         <Trans i18nKey={canStart ? 'start' : 'join'} />
                                                     </Avatar>

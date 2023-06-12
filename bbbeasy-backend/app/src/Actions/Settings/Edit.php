@@ -77,9 +77,8 @@ class Edit extends BaseAction
                     $form['policy_url'],
                     $form['logo'],
                     $form['theme'],
-                    $form['self_registration'] ,
-                   $form['send_registration']
-
+                    $form['self_registration'],
+                    $form['send_registration']
                 );
             } else {
                 $this->logger->error($errorMessage, ['errors' => $dataChecker->getErrors()]);

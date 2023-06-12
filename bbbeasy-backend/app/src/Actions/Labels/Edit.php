@@ -67,7 +67,7 @@ class Edit extends BaseAction
                 if ($colorExist) {
                     if ($colorExist) {
                         $message = ['name' => $nameErrorMessage, 'color' => $colorErrorMessage];
-                    }else {
+                    } else {
                         $message = ['color' => $colorErrorMessage];
                     }
                     $this->logger->error($errorMessage, ['errors' => $message]);

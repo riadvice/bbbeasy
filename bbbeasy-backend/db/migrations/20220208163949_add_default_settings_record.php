@@ -37,7 +37,7 @@ final class AddDefaultSettingsRecord extends AbstractMigration
                 'default_font_size' => 16,
                 'border_radius'     => 6,
                 'wireframe_style'   => false,
-                'self_registration'=>  false,
+                'self_registration' => false,
                 'send_registration' => false,
                 'created_on'        => date('Y-m-d H:i:s'),
             ],

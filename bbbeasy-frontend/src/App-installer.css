@@ -580,8 +580,8 @@ body.rtl {
 .presets-modal {
     width: 35% !important;
 }
-.white-space{
-    white-space:pre-wrap;
+.white-space {
+    white-space: pre-wrap;
     text-align: left;
     width: 300px;
 }

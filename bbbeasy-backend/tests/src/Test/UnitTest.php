@@ -38,9 +38,6 @@ final class UnitTest extends \Test
      */
     protected $group = '';
 
-    /**
-     * {@inheritdoc}
-     */
     public function expect($cond, $text = null)
     {
         $result = parent::expect($cond, $text);

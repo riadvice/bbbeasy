@@ -30,9 +30,6 @@ class Server
 {
     use LogWriterTrait;
 
-    /**
-     * @param WS $ws
-     */
     public function __construct()
     {
         $this->initLogger();
