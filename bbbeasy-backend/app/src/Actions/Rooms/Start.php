@@ -108,6 +108,9 @@ class Start extends BaseAction
         }
     }
 
+    /**
+     * @return \BigBlueButton\Responses\GetMeetingInfoResponse
+     */
     public function getMeetingInfo(string $meetingId, BigBlueButtonRequester $bbbRequester)
     {
         $getInfosParams = new GetMeetingInfoParameters($meetingId);

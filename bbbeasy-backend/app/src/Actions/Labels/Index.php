@@ -34,8 +34,7 @@ class Index extends BaseAction
     use RequirePrivilegeTrait;
 
     /**
-     * @param \Base $f3
-     * @param array $params
+     * @throws \JsonException
      */
     public function show($f3, $params): void
     {

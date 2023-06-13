@@ -20,23 +20,23 @@ declare(strict_types=1);
  * with BBBEasy; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Enum\Presets;
+namespace Data;
 
-use MabeEnum\Enum;
-
-class Branding extends Enum
+class PresetData
 {
-    public const GROUP_NAME = 'Branding';
+    private array $data = [];
 
-    public const TITLE        = 'title';
-    public const LOGO         = 'logo';
-    public const BANNER_TEXT  = 'banner_text';
-    public const BANNER_COLOR = 'banner_color';
-    public const USE_AVATARS  = 'use_avatars';
+    public function setData($category, $subCategory, $value): void
+    {
+        $this->data[$category][$subCategory] = $value;
+    }
 
-    public const TITLE_TYPE        = 'string';
-    public const LOGO_TYPE         = 'file';
-    public const BANNER_TEXT_TYPE  = 'string';
-    public const BANNER_COLOR_TYPE = 'color';
-    public const USE_AVATARS_TYPE  = 'bool';
+    public function getData($category, $subCategory)
+    {
+        if (\array_key_exists($category, $this->data) && \array_key_exists($category, $this->data[$category])) {
+            return $this->data[$category][$subCategory];
+        }
+
+        return null;
+    }
 }

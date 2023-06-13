@@ -26,6 +26,7 @@ use MabeEnum\Enum;
 
 class GuestPolicy extends Enum
 {
+    public const GROUP_NAME   = 'GuestPolicy';
     public const CONFIGURABLE = 'configurable';
     public const POLICY       = 'policy';
 

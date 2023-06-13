@@ -26,6 +26,7 @@ use MabeEnum\Enum;
 
 class Security extends Enum
 {
+    public const GROUP_NAME             = 'Security';
     public const PASSWORD_FOR_MODERATOR = 'password_for_moderator';
     public const PASSWORD_FOR_ATTENDEE  = 'password_for_attendee';
 

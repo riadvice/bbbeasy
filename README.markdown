@@ -8,7 +8,7 @@ BBBEasy is an open-source  multipurpose meeting rooms manager for BigBlueButton.
 
 ## Features
 
-- Smooth install experience.
+- Smooth installation experience.
 
 - User friendly UI.
 

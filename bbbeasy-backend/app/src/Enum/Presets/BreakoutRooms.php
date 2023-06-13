@@ -26,6 +26,8 @@ use MabeEnum\Enum;
 
 class BreakoutRooms extends Enum
 {
+    public const GROUP_NAME = 'BreakoutRooms';
+
     public const CONFIGURABLE = 'configurable';
     public const PRIVATE_CHAT = 'private_chat';
     public const RECORDING    = 'recording';

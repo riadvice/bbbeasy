@@ -26,6 +26,7 @@ use MabeEnum\Enum;
 
 class Recording extends Enum
 {
+    public const GROUP_NAME       = 'Recording';
     public const CONFIGURABLE     = 'configurable';
     public const AUTO_START       = 'auto_start';
     public const ALLOW_START_STOP = 'allow_start_stop';

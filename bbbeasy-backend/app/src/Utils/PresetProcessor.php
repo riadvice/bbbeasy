@@ -24,10 +24,6 @@ namespace Utils;
 
 class PresetProcessor
 {
-    public function __construct()
-    {
-    }
-
     public function preparePresetData($preset)
     {
         $data = [];

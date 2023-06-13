@@ -71,7 +71,7 @@ class ChangePassword extends BaseAction
                     $this->logger->error($errorMessage, ['error' => $common]);
                     $this->renderJson(['message' => $common], $responseCode);
                 } elseif ($user->verifyPassword($password)) {
-                    $message = 'New password cannot be the same as your old password';
+                    $message = 'New password old password must be different';
                     $this->logger->error($errorMessage, ['error' => $message]);
                     $this->renderJson(['message' => $message], $responseCode);
                 } else {
