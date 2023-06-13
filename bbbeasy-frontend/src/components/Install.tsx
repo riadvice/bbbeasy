@@ -329,7 +329,7 @@ const Install = () => {
                                 }
                             >
                                 {activeStep > 0 && (
-                                    <Button onClick={() => prev()} className="btn-installer prev">
+                                    <Button onClick={() => prev()} className="btn-installer prev" style={{ 'width': '47%' }}>
                                         <Trans i18nKey="previous" />
                                     </Button>
                                 )}
@@ -338,7 +338,7 @@ const Install = () => {
                                         type="primary"
                                         className="btn-installer"
                                         htmlType="submit"
-                                        style={activeStep == 0 ? { 'width': '100%' } : { 'width': '50%' }}
+                                        style={activeStep == 0 ? { 'width': '100%' } : { 'width': '47%' }}
                                     >
                                         {steps[activeStep].button}
                                     </Button>
