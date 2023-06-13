@@ -418,6 +418,7 @@ body.rtl {
 }
 .btn-installer {
     margin-top: 20px;
+    margin-right: auto;
     width: 50%;
     font-weight: bold;
 
