@@ -2,6 +2,11 @@
   <img src="https://github.com/riadvice/bbbeasy/blob/develop/bbbeasy-frontend/public/images/logo_02.png" alt="BBBEasy Logo">
 </p>
 
+<p align="center">
+<a href="https://github.com/riadvice/bbbeasy" target="__blank"><img alt="GitHub forks" src="https://img.shields.io/github/forks/riadvice/bbbeasy?style=social"></a>
+<a href="https://github.com/riadvice/bbbeasy" target="__blank"><img alt="GitHub stars" src="https://img.shields.io/github/stars/riadvice/bbbeasy?style=social"></a>
+</p>
+
 # BBBEasy
 
 BBBEasy is an open-source  multipurpose meeting rooms manager for BigBlueButton.
@@ -25,6 +30,10 @@ The web-application is split in two parts:
 - A server API.
 
 - A modern front-end.
+
+## 🪴 Project Activity
+
+![Alt](https://repobeats.axiom.co/api/embed/22737fcd7e97f3c37ff740f195ece60264185796.svg "Repobeats analytics image")
 
 ## Development
 
