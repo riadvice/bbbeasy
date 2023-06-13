@@ -418,6 +418,7 @@ body.rtl {
 }
 .btn-installer {
     margin-top: 20px;
+    margin-right: auto;
     width: 50%;
     font-weight: bold;
 
@@ -427,7 +428,7 @@ body.rtl {
     width: 80% !important;
 }
 .button-container .ant-row:not(.ant-row-rtl) .prev {
-    margin-right: 20px;
+    margin-right: 20px !important;
 }
 .button-container .ant-row.ant-row-rtl .prev {
     margin-left: 20px;
