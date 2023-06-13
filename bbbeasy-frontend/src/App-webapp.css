@@ -523,6 +523,9 @@ fieldset {
 .warning-btn-dropdown {
     max-width: 330px !important;
 }
+.dropdownWarning{
+    display: none !important;
+}
 .search-modal .ant-modal-header {
     background-color: var(--bbbeasy-darken-gray) !important;
     height: 56px;
