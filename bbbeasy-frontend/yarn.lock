@@ -5437,7 +5437,7 @@ __metadata:
     pm2: ^5.3.0
     prettier: ^2.8.8
     rc-select: ^14.5.2
-    rc-util: ^5.33.0
+    rc-util: ^5.33.1
     react: ^17.0.2
     react-color: ^2.19.3
     react-copy-to-clipboard: ^5.1.0
@@ -15973,6 +15973,19 @@ __metadata:
     react: ">=16.9.0"
     react-dom: ">=16.9.0"
   checksum: 1a5b4f2ded3ca8a874e3a0797158fb1be60987711145346ba4b9ae8e84fb91462dd030ff06850644d93a46c9d53eaccb978c703a1f3841e55ac2af0117c35745
+  languageName: node
+  linkType: hard
+
+"rc-util@npm:^5.33.1":
+  version: 5.33.1
+  resolution: "rc-util@npm:5.33.1"
+  dependencies:
+    "@babel/runtime": ^7.18.3
+    react-is: ^16.12.0
+  peerDependencies:
+    react: ">=16.9.0"
+    react-dom: ">=16.9.0"
+  checksum: 5b99edb25e9348be33976c2b83bf1d9b52558824c25f36b5e88ba23a215df3bdeb51a79ca196bcf68f8f05cd9165f6b7fd24cf2d052efb47d4bb02a48b54db89
   languageName: node
   linkType: hard
 
