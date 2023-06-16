@@ -23,7 +23,7 @@ import { t } from 'i18next';
 
 import { PageHeader } from '@ant-design/pro-layout';
 import { Alert, Button, Form, Input, Modal, Popconfirm, Select, Space, Tag, Typography} from 'antd';
-import { DeleteOutlined, EditOutlined, QuestionCircleOutlined,StarTwoTone } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, QuestionCircleOutlined, StarFilled,} from '@ant-design/icons';
 
 import { FormInstance } from 'antd/lib/form';
 import { CompareRecords } from '../functions/compare.function';
@@ -40,6 +40,7 @@ import RolesService from '../services/roles.service';
 import { TableColumnType } from '../types/TableColumnType';
 import { UserType } from '../types/UserType';
 import { RoleType } from '../types/RoleType';
+import settingsService from "../services/settings.service";
 
 const { Option } = Select;
 const { Link } = Typography;
@@ -73,6 +74,15 @@ const Users = () => {
     const [errorsAdd, setErrorsAdd] = React.useState<string>('');
     const [errorsEdit, setErrorsEdit] = React.useState({});
     const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
+    const [brandColor, setBrandColor] = React.useState<string>('');
+
+    const getBrandColor = () => {
+        settingsService.collect_settings()
+            .then((response) => {
+
+                setBrandColor(response.data.brand_color);
+            })
+    };
 
     //list
     const getRoles = () => {
@@ -116,6 +126,7 @@ const Users = () => {
             getRoles();
         }
         getUsers();
+        getBrandColor();
 
         const usersActions = AuthService.getActionsPermissionsByGroup('users');
         setActions(usersActions);
@@ -342,9 +353,8 @@ const Users = () => {
                 multiple: 4,
             },
             render: (username,record) => {
-                console.log(record)
                 if(record.key ==1){
-                    return  <> {username} <StarTwoTone twoToneColor="#fbbc0b" /></>
+                    return  <> <StarFilled style={{ color: brandColor}} /> {username}  </>
                 }else {
                     return <>{username}</>
                 }
