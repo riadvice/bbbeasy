@@ -22,8 +22,8 @@ import EN_US from '../locale/en-US.json';
 import { t } from 'i18next';
 
 import { PageHeader } from '@ant-design/pro-layout';
-import { Alert, Button, Form, Input, Modal, Popconfirm, Select, Space, Tag, Typography } from 'antd';
-import { DeleteOutlined, EditOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import { Alert, Button, Form, Input, Modal, Popconfirm, Select, Space, Tag, Typography} from 'antd';
+import { DeleteOutlined, EditOutlined, QuestionCircleOutlined,StarTwoTone } from '@ant-design/icons';
 
 import { FormInstance } from 'antd/lib/form';
 import { CompareRecords } from '../functions/compare.function';
@@ -341,6 +341,14 @@ const Users = () => {
                 compare: (a, b) => a.username.localeCompare(b.username),
                 multiple: 4,
             },
+            render: (username,record) => {
+                console.log(record)
+                if(record.key ==1){
+                    return  <> {username} <StarTwoTone twoToneColor="#fbbc0b" /></>
+                }else {
+                    return <>{username}</>
+                }
+            }
         },
         {
             title: t('email_col'),
