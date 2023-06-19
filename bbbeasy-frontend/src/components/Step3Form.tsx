@@ -54,7 +54,7 @@ export const Step3Form = (props: Props) => {
 
         setModalContent(content);
         const formvalues = [];
-        content.map((item) => {
+        content.forEach((item) => {
             formvalues[item.name] = item.enabled;
         });
         setValues(formvalues);
