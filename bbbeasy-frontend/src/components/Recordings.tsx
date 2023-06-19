@@ -200,7 +200,7 @@ const Recordings = () => {
             const enabled = formats.includes(format);
             if (enabled || showDisabled) {
                 return (
-                    <div className={((!enabled && 'disabled ') + iconClass) ?? ''}>
+                    <div className={(!enabled && 'disabled ') + (iconClass  ?? '')}>
                         <DynamicIcon type={icon} className={!enabled && 'icon-disabled'} />
                     </div>
                 );
