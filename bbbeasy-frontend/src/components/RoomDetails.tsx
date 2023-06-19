@@ -423,7 +423,7 @@ const RoomDetails = () => {
                                 <Card bordered={false} className="room-details gray-bg">
                                     <Row justify="center" align="middle">
                                         <Col span={22}>
-                                            <Space direction="vertical" size="large">
+                                            <Space direction="vertical" size="large" className={isEditing ? "edit-room-form" : null}>
                                                 {!isEditing ? (
                                                     <>
                                                         <Title level={3}>{room.name}</Title>
@@ -455,7 +455,7 @@ const RoomDetails = () => {
                                                         />
                                                     </>
                                                 ) : (
-                                                    <Space size="middle">
+                                                    <Space size="middle" className="edit-room-form">
                                                         <Form form={editForm} labelAlign="left" labelCol={{ span: 11 }}>
                                                             {editFormItems.map((editFormItem) => {
                                                                 return customFormItem(editFormItem);
