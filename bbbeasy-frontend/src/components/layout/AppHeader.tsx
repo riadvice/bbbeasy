@@ -176,7 +176,7 @@ const AppHeader = () => {
             placement={LocaleService.direction == 'rtl' ? 'bottomLeft' : 'bottomRight'}
             arrow
             trigger={['click']}
-            className={!warningNotification ? "dropdownWarning" : null}
+            className={!warningNotification ? 'dropdownWarning' : null}
         >
             <Badge offset={LocaleService.direction == 'rtl' ? [34, 5] : [-34, 5]} count={warningNotification ? 1 : 0}>
                 <Button type="primary" icon={<WarningOutlined />} className="profil-btn" />
