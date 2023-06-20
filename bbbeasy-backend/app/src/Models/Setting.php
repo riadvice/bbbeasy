@@ -109,7 +109,7 @@ class Setting extends BaseModel
         }
 
         $dataChecker->verify($form['theme'], Validator::notEmpty()->setName('color'));
-        $dataChecker->verify($form['theme']['brand_color'], Validator::hexRgbColor()->setName('brand_color'));
+        $dataChecker->verify($form['theme']['brand_color'], Validator::notEmpty()->setName('brand_color'));
         $dataChecker->verify($form['theme']['default_font_size'], Validator::notEmpty()->setName('default_font_size'));
         $dataChecker->verify($form['theme']['border_radius'], Validator::notEmpty()->setName('border_radius'));
 
