@@ -30,6 +30,7 @@ import LoadingSpinner from './LoadingSpinner';
 import { Step1Form } from './Step1Form';
 import { Step2Form } from './Step2Form';
 import { Step3Form } from './Step3Form';
+
 import { UserPasswordForm } from './UserPasswordForm';
 
 import { UploadFile } from 'antd/lib/upload/interface';
@@ -329,7 +330,11 @@ const Install = () => {
                                 }
                             >
                                 {activeStep > 0 && (
-                                    <Button onClick={() => prev()} className="btn-installer prev" style={{ 'width': '47%' }}>
+                                    <Button
+                                        onClick={() => prev()}
+                                        className="btn-installer prev"
+                                        style={{ 'width': '47%' }}
+                                    >
                                         <Trans i18nKey="previous" />
                                     </Button>
                                 )}

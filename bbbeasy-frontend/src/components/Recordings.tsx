@@ -200,7 +200,7 @@ const Recordings = () => {
             const enabled = formats.includes(format);
             if (enabled || showDisabled) {
                 return (
-                    <div className={(!enabled && 'disabled ') + iconClass ?? ''}>
+                    <div className={(!enabled && 'disabled ') + (iconClass  ?? '')}>
                         <DynamicIcon type={icon} className={!enabled && 'icon-disabled'} />
                     </div>
                 );
@@ -285,7 +285,7 @@ const Recordings = () => {
                     case 'processing':
                     case 'processed':
                         stateColor = 'blue';
-                        stateIcon = <SyncOutlined spin={'processing' && true} />;
+                        stateIcon = <SyncOutlined spin={stateText === "processing" && true} />;
                         break;
 
                     case 'unpublishing':
