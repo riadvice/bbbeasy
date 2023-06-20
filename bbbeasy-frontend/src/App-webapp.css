@@ -523,7 +523,7 @@ fieldset {
 .warning-btn-dropdown {
     max-width: 330px !important;
 }
-.dropdownWarning{
+.dropdownWarning {
     display: none !important;
 }
 .search-modal .ant-modal-header {

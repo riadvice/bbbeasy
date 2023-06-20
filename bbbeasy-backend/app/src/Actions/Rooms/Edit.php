@@ -66,10 +66,10 @@ class Edit extends BaseAction
                 $labelUpdated   = $this->labelUpdated($room->getLabels($room->id), $form['labels']);
 
                 if ($form['labels']) {
-                    foreach ($form['labels'] as $label) {
+                    foreach ($form['labels'] as $labelForm) {
                         // test if element has been added to room labels list
                         $label = new Label();
-                        $label = $label->getByColor($label);
+                        $label = $label->getByColor($labelForm);
 
                         if (!$label->dry()) {
                             $room_label = new RoomLabel();
