@@ -2934,6 +2934,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/prismjs@npm:^1.26.0":
+  version: 1.26.0
+  resolution: "@types/prismjs@npm:1.26.0"
+  checksum: cd5e7a6214c1f4213ec512a5fcf6d8fe37a56b813fc57ac95b5ff5ee074742bfdbd2f2730d9fd985205bf4586728e09baa97023f739e5aa1c9735a7c1ecbd11a
+  languageName: node
+  linkType: hard
+
 "@types/prop-types@npm:*":
   version: 15.7.5
   resolution: "@types/prop-types@npm:15.7.5"
@@ -3714,7 +3721,7 @@ __metadata:
     "@mdx-js/react": ^1.6.22
     "@tsconfig/docusaurus": ^1.0.7
     clsx: ^1.2.1
-    prism-react-renderer: ^1.3.5
+    prism-react-renderer: ^2.0.6
     react: ^17.0.2
     react-dom: ^17.0.2
     typescript: ^4.9.5
@@ -8474,6 +8481,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"prism-react-renderer@npm:^2.0.6":
+  version: 2.0.6
+  resolution: "prism-react-renderer@npm:2.0.6"
+  dependencies:
+    "@types/prismjs": ^1.26.0
+    clsx: ^1.2.1
+  peerDependencies:
+    react: ">=16.0.0"
+  checksum: d2202b79ddf01d308da3ba2f7f31a852fb0fb2e0290575d44e719af4c1d91fa913d04eb480fa3ba03e2d35d745ae806904270ffad00770511ec8bd80db67cb24
+  languageName: node
+  linkType: hard
+
 "prismjs@npm:^1.28.0":
   version: 1.29.0
   resolution: "prismjs@npm:1.29.0"
@@ -10145,11 +10164,11 @@ __metadata:
 
 "typescript@patch:typescript@^4.9.5#~builtin<compat/typescript>":
   version: 4.9.5
-  resolution: "typescript@patch:typescript@npm%3A4.9.5#~builtin<compat/typescript>::version=4.9.5&hash=289587"
+  resolution: "typescript@patch:typescript@npm%3A4.9.5#~builtin<compat/typescript>::version=4.9.5&hash=23ec76"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 1f8f3b6aaea19f0f67cba79057674ba580438a7db55057eb89cc06950483c5d632115c14077f6663ea76fd09fce3c190e6414bb98582ec80aa5a4eaf345d5b68
+  checksum: ab417a2f398380c90a6cf5a5f74badd17866adf57f1165617d6a551f059c3ba0a3e4da0d147b3ac5681db9ac76a303c5876394b13b3de75fdd5b1eaa06181c9d
   languageName: node
   linkType: hard
 
