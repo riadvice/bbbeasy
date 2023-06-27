@@ -49,7 +49,7 @@ class Add extends BaseAction
         $dataChecker = new DataChecker();
         $dataChecker->verify($form['name'], Validator::notEmpty()->setName('name'));
         $dataChecker->verify($form['name'], Validator::length(1, 32)->setName('name'));
-        $dataChecker->verify($form['color'], Validator::hexRgbColor()->setName('color'));
+        $dataChecker->verify($form['color'], Validator::notEmpty()->setName('color'));
 
         if ($dataChecker->allValid()) {
             $label      = new Label();
