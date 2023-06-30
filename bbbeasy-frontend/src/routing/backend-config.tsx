@@ -75,4 +75,9 @@ export const apiRoutes = {
     LIST_RECORDINGS_URL: API_URL + '/recordings/',
     EDIT_RECORDING_URL: API_URL + '/recordings/',
     DELETE_RECORDING_URL: API_URL + '/recordings/',
+
+    LIST_ROOM_PRESENTATIONS_URL: API_URL + '/presentations/',
+    ADD_ROOM_PRESENTATIONS_URL: API_URL + '/presentations',
+    DELETE_ROOM_PRESENTATIONS_URL: API_URL + '/presentations/',
+
 };

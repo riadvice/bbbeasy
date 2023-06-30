@@ -20,35 +20,43 @@ declare(strict_types=1);
  * with BBBEasy; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Actions\Rooms;
+namespace Actions\RoomPresentations;
 
-use Actions\Delete as DeleteAction;
+use Actions\Base as BaseAction;
 use Actions\RequirePrivilegeTrait;
 use Enum\ResponseCode;
-use Models\Room;
 use Models\RoomPresentations;
 
 /**
- * Class Delete.
+ * Class Index.
  */
-class Delete extends DeleteAction
+class Index extends BaseAction
 {
     use RequirePrivilegeTrait;
 
+    /**
+     * @param \Base $f3
+     * @param array $params
+     */
     public function execute($f3, $params): void
     {
-        $room   = new Room();
-        $roomId = $params['id'];
-        $room->load(['id = ?', $roomId]);
-        if ($room->valid()) {
-                $roomPresentations = new RoomPresentations();
-                $roomPresentations->DeleteAllRoomPresentation($roomId);
-                $room->erase();
-                $this->logger->info('Room Presentations successfully deleted', ['preset' => $roomId]);
-                $this->renderJson(['result' => 'success']);
-
+        $room_presentations   = new RoomPresentations();
+        $data   = [];
+        $roomId = $f3->get('PARAMS.room_id');
+        $roomPresentations   = new RoomPresentations();
+        $roomPresentations  = $roomPresentations->getById($roomId);
+        if (!$roomPresentations->dry()) {
+            $roomPresentations = $room_presentations->collectAllByUserId($roomId);
+            if ($roomPresentations) {
+                foreach ($roomPresentations as $presentation) {
+                    $data[]         = $presentation;
+                }
+            }
         } else {
+            $this->logger->error('Presentation not found');
             $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
         }
+        $this->logger->debug('Collecting room presentations');
+        $this->renderJson($data);
     }
 }

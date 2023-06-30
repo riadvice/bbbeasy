@@ -532,7 +532,7 @@ const RoomDetails = () => {
                                 </Card>
                             </Col>
                             <Col span={8} offset={6} className="RoomPresentation">
-                                <RoomPresentations />
+                                <RoomPresentations room_id={room.id} />
                             </Col>
                         </Row>
                         <RoomRecordings loading={loading} roomRecordings={roomRecordings} />

@@ -398,5 +398,9 @@
     "send_invitation.label": "إرسال دعوة تسجيل للمستخدمين",
     "self_registration.label": "السماح بالتسجيل الذاتي",
     "administration": "الإدارة",
-    "edit_administration_settings_success": "تم تحديث إعدادات  الإدارة التجارية بنجاح"
+    "edit_administration_settings_success": "تم تحديث إعدادات  الإدارة التجارية بنجاح",
+
+    "add_room_presentation_success": "تمت إضافة ملف القاعة بنجاح",
+    "delete_room_presentation_success": "تم حذف ملف الغرفة بنجاح",
+    "invalid_format": "تنسيق الملف غير مقبول"
 }

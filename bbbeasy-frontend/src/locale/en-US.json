@@ -405,5 +405,9 @@
     "send_invitation.label": "Send registration invitation to users",
     "self_registration.label": "Allow self-registration",
     "administration": "Administration",
-    "edit_administration_settings_success": "Administration settings successfully updated"
+    "edit_administration_settings_success": "Administration settings successfully updated",
+
+    "add_room_presentation_success": "Room presentation Added Successfully",
+    "delete_room_presentation_success": "Room presentation successfully deleted",
+    "invalid_format": "The file format is not acceptable"
 }

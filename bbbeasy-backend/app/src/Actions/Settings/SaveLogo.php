@@ -49,14 +49,15 @@ class SaveLogo extends BaseAction
         $dataChecker = new DataChecker();
         $dataChecker->verify($form['logo_name'], Validator::notEmpty()->setName('logo_name'));
         $errorMessage = 'File could not be saved';
-
         if (!$dataChecker->allValid()) {
             $this->logger->error($errorMessage, ['errors' => $dataChecker->getErrors()]);
             $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
         } else {
             $format       = $f3->get('FILES')['logo']['type'];
             $validFormats = ['image/jpg', 'image/jpeg', 'image/png'];
-            if (DataUtils::validateImageFormat($format, $validFormats)) {
+            $validFormatsRoomPresentations = ['application/vnd.ms-excel','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','application/msword','application/vnd.openxmlformats-officedocument.wordprocessingml.document','application/vnd.ms-powerpoint','application/vnd.openxmlformats-officedocument.presentationml.presentation','application/vnd.oasis.opendocument.text','application/rtf','text/plain','application/vnd.oasis.opendocument.spreadsheet','application/vnd.oasis.opendocument.presentation','application/pdf','image/jpeg','image/png','image/svg+xml'];
+
+            if (DataUtils::validateFormat($format, $validFormats) || DataUtils::validateFormat($format, $validFormatsRoomPresentations) ) {
                 // correct
                 \Web::instance()->receive();
             } else {

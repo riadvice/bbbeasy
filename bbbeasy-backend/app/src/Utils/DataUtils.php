@@ -80,6 +80,10 @@ class DataUtils
         return \in_array($imageFormat, $validFormats, true);
     }
 
+    public static function validateFormat(string $type, array $formats)
+    {
+        return \in_array($type, $formats, true);
+    }
     /**
      * @param int $length
      *

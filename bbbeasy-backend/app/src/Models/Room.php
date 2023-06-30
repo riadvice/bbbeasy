@@ -310,4 +310,9 @@ class Room extends BaseModel
 
         return [[], ResponseCode::HTTP_FORBIDDEN];
     }
+
+    public function DeleteRoom($roomId): array
+    {
+        return $this->db->exec('DELETE FROM rooms where id =?', $roomId);
+    }
 }

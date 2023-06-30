@@ -917,6 +917,9 @@ fieldset {
     margin: 0;
 }
 /******************ADD MODAL*********************/
+.align-text{
+    margin-right: 20px;
+}
 .add-modal .ant-modal-header {
     text-align: center;
 }
