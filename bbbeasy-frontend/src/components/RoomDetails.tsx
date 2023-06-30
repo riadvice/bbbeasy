@@ -170,6 +170,7 @@ const RoomDetails = () => {
                 const room: RoomType = response.data.room;
 
                 const meeting = response.data.meeting;
+
                 if (room != null) {
                     setRoom(room);
                     getRoomRecordings(room.id);
@@ -189,7 +190,8 @@ const RoomDetails = () => {
     };
 
     useEffect(() => {
-        if (currentUser != null) {
+        if (currentUser != null || canStart) {
+            console.log(canStart);
             //Runs only on the first render
             checkRoomStarted();
             getPresets();
