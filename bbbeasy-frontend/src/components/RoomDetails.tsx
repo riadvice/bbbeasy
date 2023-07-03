@@ -423,7 +423,11 @@ const RoomDetails = () => {
                                 <Card bordered={false} className="room-details gray-bg">
                                     <Row justify="center" align="middle">
                                         <Col span={22}>
-                                            <Space direction="vertical" size="large" className={isEditing ? "edit-room-form" : null}>
+                                            <Space
+                                                direction="vertical"
+                                                size="large"
+                                                className={isEditing ? 'edit-room-form' : null}
+                                            >
                                                 {!isEditing ? (
                                                     <>
                                                         <Title level={3}>{room.name}</Title>
