@@ -398,5 +398,9 @@
     "send_invitation.label": "Envoyer une invitation d'inscription aux utilisateurs",
     "self_registration.label": "Autoriser l'auto-inscription",
     "administration": "Administration",
-    "edit_administration_settings_success": "Paramètres de l'administration mis à jour avec succès"
+    "edit_administration_settings_success": "Paramètres de l'administration mis à jour avec succès",
+
+    "add_room_presentation_success": "Présentation de la salle ajoutée avec succès",
+    "delete_room_presentation_success": "Présentation de la salle a été supprimée avec succès",
+    "invalid_format": "Le format de fichier n'est pas accepté"
 }

@@ -20,7 +20,7 @@ declare(strict_types=1);
  * with BBBEasy; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Actions\Rooms;
+namespace Actions\RoomPresentations;
 
 use Actions\Delete as DeleteAction;
 use Actions\RequirePrivilegeTrait;
@@ -37,18 +37,15 @@ class Delete extends DeleteAction
 
     public function execute($f3, $params): void
     {
-        $room   = new Room();
-        $roomId = $params['id'];
-        $room->load(['id = ?', $roomId]);
-        if ($room->valid()) {
-                $roomPresentations = new RoomPresentations();
-                $roomPresentations->DeleteAllRoomPresentation($roomId);
-                $room->erase();
-                $this->logger->info('Room Presentations successfully deleted', ['preset' => $roomId]);
-                $this->renderJson(['result' => 'success']);
+        $room_presentations   = new RoomPresentations();
+        $Id = $params['id'];
 
-        } else {
-            $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
-        }
+        $roomPresentations = new RoomPresentations();
+        $roomPresentations->DeleteRoomPresentation($Id);
+
+        $room_presentations->erase();
+        $this->logger->info('preset successfully deleted', ['roomPresentation-id' => $Id]);
+        $this->renderJson(['result' => 'success']);
+
     }
 }
