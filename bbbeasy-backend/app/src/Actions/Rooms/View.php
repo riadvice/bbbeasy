@@ -38,6 +38,22 @@ class View extends BaseAction
 {
     use RequirePrivilegeTrait;
 
+    public function beforeroute(): void
+    {
+        $link            = $this->f3->get('PARAMS.link');
+        $room            = new Room();
+        $room            = $room->getByLink($link);
+        $preset          = new Preset();
+        $p               = $preset->findById($room->getPresetID($room->id)['preset_id']);
+        $presetProcessor = new PresetProcessor();
+        $presetData      = $presetProcessor->preparePresetData($p->getMyPresetInfos($p));
+        // var_dump($presetData['General']['open_for_everyone']);
+        if (!$presetData['General']['open_for_everyone']) {
+            $this->logger->warning('Access denied to route ' . $route . ' for subject ' . ($subject ?: 'unknown'));
+            $this->f3->error(404);
+        }
+    }
+
     /**
      * @param \Base $f3
      * @param array $params
@@ -65,6 +81,9 @@ class View extends BaseAction
 
                     if ($room->getRoomInfos($room)['user_id'] === $this->session->get('user.id') || $presetData['General']['anyone_can_start']) {
                         $canStart = true;
+                    }
+                    if ($presetData['General']['anyone_can_start']) {
+                        //  $this->f3->route('GET /rooms/get/'.$link,$this->show($f3,$params));
                     }
                 }
             }
