@@ -37,8 +37,6 @@ type Props = {
 
 const RoomPresentations = (props: Props) => {
     const room = props;
-    const [previewOpen, setPreviewOpen] = useState<boolean>(false);
-    const [previewImage, setPreviewImage] = useState<string>('');
     const [fileList, setFileList] = useState<UploadFile[]>([]);
     const getRoomPresentationsByRoom = () => {
         console.log(room.room_id);
@@ -67,22 +65,12 @@ const RoomPresentations = (props: Props) => {
             reader.onload = () => resolve(reader.result as string);
             reader.onerror = (error) => reject(error);
         });
-    const handleCancel = () => setPreviewOpen(false);
-    const handlePreview = async (file: UploadFile) => {
-        if (!file.url && !file.preview) {
-            file.preview = await getBase64(file.originFileObj as RcFile);
-        }
-
-        setPreviewImage(file.url || (file.preview as string));
-        setPreviewOpen(true);
-    };
 
     //delete
     const deleteRoomPresentation = async (file: UploadFile) => {
         RoomPresentationsService.delete_roomPresentations(Number(file.uid))
             .then(() => {
                 Notifications.openNotificationWithIcon('success', t('delete_room_presentation_success'));
-                setFileList(fileList);
                 getRoomPresentationsByRoom();
             })
             .catch((error) => {
@@ -194,11 +182,11 @@ const RoomPresentations = (props: Props) => {
                     .catch((error) => {
                         console.log(error);
                     });
+                
             } else {
                 Notifications.openNotificationWithIcon('error', t('invalid_format'));
             }
         }
-
         }
     }
 
@@ -219,16 +207,13 @@ const RoomPresentations = (props: Props) => {
                 <Upload
                     listType="picture-card"
                     fileList={fileList}
-                    onPreview={handlePreview}
                     onChange={handleChange}
                     onRemove={deleteRoomPresentation}
                 >
+
                     {fileList.length >= 8 ? null : uploadButton}
                 </Upload>
             </Card>
-            <Modal open={previewOpen} footer={null} onCancel={handleCancel} maskClosable={true}>
-                <img className="full-width" src={previewImage} />
-            </Modal>
         </>
     );
 };

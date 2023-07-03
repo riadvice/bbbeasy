@@ -820,6 +820,9 @@ fieldset {
     border-radius: 50%;
     background-color: #fbbc0b !important;
 }
+.anticon-eye{
+    display:none;
+}
 .room-presentations {
     border-radius: 5px !important;
 }
