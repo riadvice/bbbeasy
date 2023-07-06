@@ -161,13 +161,15 @@ final class RoomTest extends Scenario
             'short_link' => $room->short_link,
             'labels'     => $room->getLabels($room->id),
         ];
-        $test->expect($data === $room->getRoomInfos(), 'getRoomInfos() returned room');
+        $test->expect($data === $room->getRoomInfos($room), 'getRoomInfos() returned room');
 
         return $test->results();
     }
 
     /**
      * @return array
+     *
+     * @throws \ReflectionException
      */
     public function testGetRecordings()
     {
@@ -180,7 +182,12 @@ final class RoomTest extends Scenario
         $test->expect(null === $room->getRecordingByRecordId('404'), 'getRecordingByRecordId(404) did not found room recordings');
 
         $recordings = $room->getRecordingsByRoomMeetingId('meeting-1');
-        if (\count($recordings) > 0) {
+        // $recordings = $room->getRecordingsByRoomMeetingId($room->meeting_id);
+
+        /*var_dump($recordings);
+
+        exit;*/
+        if (null !== $recordings && \count($recordings) > 0) {
             $test->expect(null !== $recordings, 'getRecordingsByRoomMeetingId(meeting-1) returned room recordings');
 
             $recordId       = $recordings[0]['key'];
@@ -236,7 +243,7 @@ final class RoomTest extends Scenario
         $room2 = RoomFaker::create($user1, $preset1);
         $room3 = RoomFaker::create($user2, $preset2);
 
-        $data = [$room1->getRoomInfos(), $room2->getRoomInfos(), $room3->getRoomInfos()];
+        $data = [$room1->getRoomInfos($room1), $room2->getRoomInfos($room2), $room3->getRoomInfos($room3)];
         $test->expect($data === $room->collectAll(), 'collectAll() returned all rooms');
 
         $data1 = ['id' => $room1->id, 'name' => $room1->name, 'short_link' => $room1->short_link];

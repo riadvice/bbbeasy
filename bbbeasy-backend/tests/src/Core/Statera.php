@@ -27,7 +27,7 @@ use ByteUnits\Metric as ByteFormatter;
 use Helpers\Time;
 use Nette\Utils\Strings;
 use SebastianBergmann\CodeCoverage\CodeCoverage;
-use SebastianBergmann\CodeCoverage\Driver\Xdebug3Driver;
+use SebastianBergmann\CodeCoverage\Driver\XdebugDriver;
 use SebastianBergmann\CodeCoverage\Filter;
 use SebastianBergmann\CodeCoverage\Report\Clover;
 use SebastianBergmann\CodeCoverage\Report\Html\Facade;
@@ -242,7 +242,7 @@ class Statera
             if (self::$coverageEnabled && null === self::$coverage) {
                 $filter = new Filter();
                 $filter->includeDirectory(getcwd() . \DIRECTORY_SEPARATOR . 'src');
-                self::$coverage = new CodeCoverage(new Xdebug3Driver($filter), $filter);
+                self::$coverage = new CodeCoverage(new XdebugDriver($filter), $filter);
             }
         }
 

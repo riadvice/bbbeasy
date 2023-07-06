@@ -106,7 +106,7 @@ class Role extends BaseModel
         $data = [];
         $this->load(['id = ?', [UserRole::LECTURER_ID]]);
         if ($this->valid()) {
-            $data = $this->getRoleInfos();
+            $data = $this->getRoleInfos($this);
         }
 
         return $data;
@@ -117,7 +117,7 @@ class Role extends BaseModel
         $data = [];
         $this->load(['id = ?', [UserRole::ADMINISTRATOR_ID]]);
         if ($this->valid()) {
-            $data = $this->getRoleInfos();
+            $data = $this->getRoleInfos($this);
         }
 
         return $data;
@@ -146,7 +146,7 @@ class Role extends BaseModel
         return $permissionsRole;
     }
 
-    public function saveRoleAndPermissions($name, $permissions): bool|Role
+    public function saveRoleAndPermissions($name, $permissions): bool|self
     {
         $this->logger->info('Starting save role and permissions transaction.');
         $this->db->begin();

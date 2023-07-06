@@ -30,17 +30,41 @@ class ResetPasswordTokenFaker
 {
     private static array $storage = [];
 
-    public static function create(User $user, string $status = ResetTokenStatus::NEW, $storageName = null)
+    /**
+     * @param null|mixed $storageName
+     *
+     * @throws \Exception
+     */
+    public static function create(User $user, string $status = ResetTokenStatus::NEW, $storageName = null): ResetPasswordToken
     {
         // To make testing easier, the user is password is the same as its role
         $token          = new ResetPasswordToken();
         $token->status  = $status;
         $token->user_id = $user->id;
-
+        $id             = $token->user_id;
         $token->save();
+        $token->userExists($id);
         if (null !== $storageName) {
             self::$storage[$storageName] = $user;
         }
+
+        // return self::getToken($user, $status, $mytoken)->save();
+        return $token;
+    }
+
+    /**
+     * @param mixed $user
+     * @param mixed $status
+     * @param mixed $mytoken
+     *
+     * @throws \Exception
+     */
+    public static function getToken($user, $status, $mytoken)
+    {
+        $token          = new ResetPasswordToken();
+        $token->status  = $status;
+        $token->user_id = $user->id;
+        $token->token   = $mytoken;
 
         return $token;
     }

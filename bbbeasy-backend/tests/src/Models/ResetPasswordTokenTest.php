@@ -45,14 +45,16 @@ final class ResetPasswordTokenTest extends Scenario
      */
     public function testTokenCreation()
     {
-        $test                = $this->newTest();
-        $user                = UserFaker::create(UserRole::ADMINISTRATOR);
-        $resetToken          = new ResetPasswordToken();
+        $test       = $this->newTest();
+        $user       = UserFaker::create(UserRole::ADMINISTRATOR);
+        $resetToken = new ResetPasswordToken();
+
         $resetToken->user_id = $user->id;
+        $userId              = $resetToken->user_id;
         $resetToken->insert();
 
-        $test->expect($resetToken->isUsable(), 'Newly inserted password reset token is usable with user id = ' . $resetToken->user_id);
-        $test->expect($resetToken->userExists($resetToken->user_id), 'userExists(' . $resetToken->user_id . ') exists');
+        $test->expect($resetToken->isUsable(), 'Newly inserted password reset token is usable with user id = ' . $userId);
+        $test->expect($resetToken->userExists($userId), 'userExists(' . $userId . ') exists');
 
         return $test->results();
     }

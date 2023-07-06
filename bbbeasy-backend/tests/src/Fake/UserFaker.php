@@ -44,8 +44,10 @@ class UserFaker
         // To make testing easier, the user is password is the same as its role
         $faker          = Faker::create();
         $user           = new User();
-        $user->email    = $faker->email;
+        $userEmail      = $faker->email;
+        $user->email    = $userEmail;
         $user->username = $faker->userName;
+
         // pick a random role if not provided
         if (null === $role) {
             $roles = UserRole::values();
@@ -71,7 +73,7 @@ class UserFaker
             self::$storage[$storageName] = $user;
         }
 
-        return $user;
+        return $user->getByEmail($userEmail);
     }
 
     /**

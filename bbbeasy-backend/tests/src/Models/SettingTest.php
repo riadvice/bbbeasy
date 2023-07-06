@@ -68,7 +68,9 @@ final class SettingTest extends Scenario
             $faker->url,
             'policy updated',
             'logo-1.png',
-            ['primary_color' => '#006644']
+            ['primary_color' => '#006644'],
+            true,
+            true
         );
         $settings->save();
 

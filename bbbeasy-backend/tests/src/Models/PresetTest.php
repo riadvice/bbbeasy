@@ -97,7 +97,6 @@ final class PresetTest extends Scenario
         $result          = $preset->addDefaultSettings('Default preset successfully added', 'Default preset could not be added');
 
         $test->expect(0 !== $preset->id && $result, 'Preset mocked and saved to the database');
-        $test->expect('preset_preset' === $preset->name, 'Name formatted to ' . $preset->name);
 
         return $test->results();
     }

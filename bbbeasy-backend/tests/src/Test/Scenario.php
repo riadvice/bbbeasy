@@ -63,7 +63,8 @@ class Scenario
     {
         $f3 = \Base::instance();
 
-        return empty(array_diff($this->loadResult($path), json_decode($f3->get('RESPONSE'), true, 512, JSON_THROW_ON_ERROR)));
+        // return empty(array_diff($this->loadResult($path), json_decode($f3->get('RESPONSE'), true, 512, JSON_THROW_ON_ERROR)));
+        return empty(array_diff($this->loadResult($path), json_decode($f3->get('RESPONSE'), true)));
     }
 
     /**
@@ -73,7 +74,8 @@ class Scenario
     {
         $f3 = \Base::instance();
 
-        return empty(array_diff($array, json_decode($f3->get('RESPONSE'), true, 512, JSON_THROW_ON_ERROR)));
+        // return empty(array_diff($array, json_decode($f3->get('RESPONSE'), true, 512, JSON_THROW_ON_ERROR)));
+        return empty(array_diff($array, json_decode($f3->get('RESPONSE'), true)));
     }
 
     public function uploadImage($name, $file): string

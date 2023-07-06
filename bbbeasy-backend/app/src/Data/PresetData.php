@@ -33,10 +33,10 @@ class PresetData
 
     public function getData($category, $subCategory)
     {
-       // if (\array_key_exists($category, $this->data) && \array_key_exists($category, $this->data[$category])) {
-            return $this->data[$category][$subCategory];
-       // }
+        // if (\array_key_exists($category, $this->data) && \array_key_exists($category, $this->data[$category])) {
+        return $this->data[$category][$subCategory];
+        // }
 
-       // return null;
+        // return null;
     }
 }
