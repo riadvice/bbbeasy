@@ -167,10 +167,10 @@
     },
 
     "name_col": "Name",
-    "users_col": "N◦ Users",
-    "nb_rooms_col": "N° of Rooms",
+    "users_col": "No. of users",
+    "nb_rooms_col": "No. of Rooms",
     "actions_col": "Actions",
-    "new_role": "New Role",
+    "new_role": "New role",
     "name": {
         "label": "Name",
         "required": "Name is required"
