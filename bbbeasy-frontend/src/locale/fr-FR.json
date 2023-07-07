@@ -392,5 +392,7 @@
     "send_invitation.label": "Envoyer l'invitation à l'inscription aux utilisateurs",
     "self_registration.label": "Auto-inscription autorisée",
     "administration": "Administration",
-    "edit_administration_settings_success": "Paramètres d'administration mis à jour avec succès"
+    "edit_administration_settings_success": "Paramètres d'administration mis à jour avec succès",
+    "status_presets_active": "Actif",
+    "status_presets_inactive": "Inactif"
 }

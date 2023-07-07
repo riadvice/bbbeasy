@@ -584,7 +584,7 @@ body.rtl {
 .white-space {
     white-space: pre-wrap;
     text-align: left;
-    width: 300px;
+    width: 260px;
 }
 .presets-modal .ant-modal-content {
     margin: 0 30px;

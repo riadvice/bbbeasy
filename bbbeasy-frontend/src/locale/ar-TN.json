@@ -392,5 +392,8 @@
     "send_invitation.label": "إرسال دعوة تسجيل للمستخدمين",
     "self_registration.label": "السماح بالتسجيل الذاتي",
     "administration": "الإدارة",
-    "edit_administration_settings_success": "تم تحديث إعدادات الإدارة بنجاح"
+    "edit_administration_settings_success": "تم تحديث إعدادات الإدارة بنجاح",
+
+    "status_presets_active": "نشيط",
+    "status_presets_inactive": "عاطل"
 }

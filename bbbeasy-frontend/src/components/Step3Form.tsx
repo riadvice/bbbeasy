@@ -32,6 +32,7 @@ import { FormInstance } from 'antd/lib/form';
 const { Title, Paragraph } = Typography;
 const { Grid, Meta } = Card;
 import { useLocation } from 'react-router-dom';
+import ReactDomServer from 'react-dom/server';
 type Props = {
     presets: PresetType[];
     onFinish?: (category: string, subCategories: SubCategoryType[]) => void;
@@ -168,15 +169,28 @@ export const Step3Form = (props: Props) => {
                                                     valuePropName="checked"
                                                     name={item.name}
                                                 >
-                                                    <Switch
-                                                        defaultChecked={item.enabled}
-                                                        onChange={(checked) => {
-                                                            const formValues = values;
-                                                            formValues[item.name] = checked;
+                                                    <>
+                                                        <input className="input-status-presets" disabled type='text' id={item.name} value={
+                                                            item.enabled  == true ?
+                                                                ReactDomServer.renderToString(<Trans i18nKey="status_presets_active" />)
+                                                                :
+                                                                ReactDomServer.renderToString(<Trans i18nKey="status_presets_inactive" />)
+                                                        } />
+                                                        <Switch
+                                                            defaultChecked={item.enabled}
+                                                            onChange={(checked) => {
+                                                                const formValues = values;
+                                                                formValues[item.name] = checked;
 
-                                                            setValues(formValues);
-                                                        }}
-                                                    />
+                                                                setValues(formValues);
+                                                                if(checked){
+                                                                    (document.getElementById(item.name) as HTMLInputElement).value = ReactDomServer.renderToString(<Trans i18nKey="status_presets_active" />);
+                                                                }else{
+                                                                    (document.getElementById(item.name) as HTMLInputElement).value = ReactDomServer.renderToString(<Trans i18nKey="status_presets_inactive" />);
+                                                                }
+                                                            }}
+                                                        />
+                                                    </>
                                                 </Form.Item>
                                             )}
                                         </div>
