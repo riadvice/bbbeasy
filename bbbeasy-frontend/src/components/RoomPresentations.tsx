@@ -25,8 +25,10 @@ import { UploadFile } from 'antd/es/upload/interface';
 import { RcFile, UploadProps } from 'antd/es/upload';
 
 const { Title } = Typography;
-
-const RoomPresentations = () => {
+type Props = {
+    open: boolean;
+};
+const RoomPresentations = (props: Props) => {
     const [previewOpen, setPreviewOpen] = useState<boolean>(false);
     const [previewImage, setPreviewImage] = useState<string>('');
     const [fileList, setFileList] = useState<UploadFile[]>([
@@ -84,23 +86,27 @@ const RoomPresentations = () => {
     );
     return (
         <>
-            <Card bordered={false} size="small" className="room-presentations gray-bg">
-                <Title level={5}>
-                    <Trans i18nKey="room_ppts" />
-                </Title>
-                <Upload
-                    action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                    listType="picture-card"
-                    fileList={fileList}
-                    onPreview={handlePreview}
-                    onChange={handleChange}
-                >
-                    {fileList.length >= 8 ? null : uploadButton}
-                </Upload>
-            </Card>
-            <Modal open={previewOpen} footer={null} onCancel={handleCancel} maskClosable={true}>
-                <img className="full-width" src={previewImage} />
-            </Modal>
+            {props.open && (
+                <>
+                    <Card bordered={false} size="small" className="room-presentations gray-bg">
+                        <Title level={5}>
+                            <Trans i18nKey="room_ppts" />
+                        </Title>
+                        <Upload
+                            action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                            listType="picture-card"
+                            fileList={fileList}
+                            onPreview={handlePreview}
+                            onChange={handleChange}
+                        >
+                            {fileList.length >= 8 ? null : uploadButton}
+                        </Upload>
+                    </Card>
+                    <Modal open={previewOpen} footer={null} onCancel={handleCancel} maskClosable={true}>
+                        <img className="full-width" src={previewImage} />
+                    </Modal>
+                </>
+            )}
         </>
     );
 };

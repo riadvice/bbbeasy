@@ -22,8 +22,8 @@ import EN_US from '../locale/en-US.json';
 import { t } from 'i18next';
 
 import { PageHeader } from '@ant-design/pro-layout';
-import { Alert, Button, Form, Input, Modal, Popconfirm, Select, Space, Tag, Typography} from 'antd';
-import { DeleteOutlined, EditOutlined, QuestionCircleOutlined, StarFilled,} from '@ant-design/icons';
+import { Alert, Button, Form, Input, Modal, Popconfirm, Select, Space, Tag, Typography } from 'antd';
+import { DeleteOutlined, EditOutlined, QuestionCircleOutlined, StarFilled } from '@ant-design/icons';
 
 import { FormInstance } from 'antd/lib/form';
 import { CompareRecords } from '../functions/compare.function';
@@ -40,7 +40,7 @@ import RolesService from '../services/roles.service';
 import { TableColumnType } from '../types/TableColumnType';
 import { UserType } from '../types/UserType';
 import { RoleType } from '../types/RoleType';
-import settingsService from "../services/settings.service";
+import settingsService from '../services/settings.service';
 
 const { Option } = Select;
 const { Link } = Typography;
@@ -77,11 +77,9 @@ const Users = () => {
     const [brandColor, setBrandColor] = React.useState<string>('');
 
     const getBrandColor = () => {
-        settingsService.collect_settings()
-            .then((response) => {
-
-                setBrandColor(response.data.brand_color);
-            })
+        settingsService.collect_settings().then((response) => {
+            setBrandColor(response.data.brand_color);
+        });
     };
 
     //list
@@ -352,13 +350,18 @@ const Users = () => {
                 compare: (a, b) => a.username.localeCompare(b.username),
                 multiple: 4,
             },
-            render: (username,record) => {
-                if(record.key ==1){
-                    return  <> <StarFilled style={{ color: brandColor}} /> {username}  </>
-                }else {
-                    return <>{username}</>
+            render: (username, record) => {
+                if (record.key == 1) {
+                    return (
+                        <>
+                            {' '}
+                            <StarFilled style={{ color: brandColor }} /> {username}{' '}
+                        </>
+                    );
+                } else {
+                    return <>{username}</>;
                 }
-            }
+            },
         },
         {
             title: t('email_col'),

@@ -42,6 +42,12 @@
         "required": "Le nom d'utilisateur est obligatoire",
         "size": "Le nom d'utilisateur doit contenir au moins 4 caractères"
     },
+    "fullname": {
+        "label": "Nom Complet",
+        "required": "Le Nom complet est obligatoire"
+    },
+
+    "empty-fullname": "Veuillez entrer le Nom complet pour rejoindre la réunion",
     "confirm-password": {
         "label": "Confirmation du mot de passe",
         "required": "La confirmation du mot de passe est obligatoire ",

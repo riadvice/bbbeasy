@@ -28,8 +28,7 @@ interface IProps {
 
 const Router: React.FC<IProps> = ({ routes }) => {
     const checkAccess = (route: IRoute) => {
-        console.log(route)
-        
+       
         if (route.private) return <PrivateRoute>{route.element}</PrivateRoute>;
         else return <PublicRoute restricted={route.restricted}>{route.element}</PublicRoute>;
     };

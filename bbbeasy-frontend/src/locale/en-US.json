@@ -42,6 +42,11 @@
         "required": "Username is required",
         "size": "Username must have at least 4 characters"
     },
+    "fullname": {
+        "label": "Full name",
+        "required": "Full name is required"
+    },
+    "empty-fullname": "Could not join a meeting with an empty fullname",
     "confirm-password": {
         "label": "Confirm password",
         "required": "Confirm password is required ",
