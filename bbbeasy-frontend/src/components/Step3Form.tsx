@@ -170,12 +170,21 @@ export const Step3Form = (props: Props) => {
                                                     name={item.name}
                                                 >
                                                     <>
-                                                        <input className="input-status-presets" disabled type='text' id={item.name} value={
-                                                            item.enabled  == true ?
-                                                                ReactDomServer.renderToString(<Trans i18nKey="status_presets_active" />)
-                                                                :
-                                                                ReactDomServer.renderToString(<Trans i18nKey="status_presets_inactive" />)
-                                                        } />
+                                                        <input
+                                                            className="input-status-presets"
+                                                            disabled
+                                                            type="text"
+                                                            id={item.name}
+                                                            value={
+                                                                item.enabled == true
+                                                                    ? ReactDomServer.renderToString(
+                                                                          <Trans i18nKey="status_presets_active" />
+                                                                      )
+                                                                    : ReactDomServer.renderToString(
+                                                                          <Trans i18nKey="status_presets_inactive" />
+                                                                      )
+                                                            }
+                                                        />
                                                         <Switch
                                                             defaultChecked={item.enabled}
                                                             onChange={(checked) => {
@@ -183,10 +192,22 @@ export const Step3Form = (props: Props) => {
                                                                 formValues[item.name] = checked;
 
                                                                 setValues(formValues);
-                                                                if(checked){
-                                                                    (document.getElementById(item.name) as HTMLInputElement).value = ReactDomServer.renderToString(<Trans i18nKey="status_presets_active" />);
-                                                                }else{
-                                                                    (document.getElementById(item.name) as HTMLInputElement).value = ReactDomServer.renderToString(<Trans i18nKey="status_presets_inactive" />);
+                                                                if (checked) {
+                                                                    (
+                                                                        document.getElementById(
+                                                                            item.name
+                                                                        ) as HTMLInputElement
+                                                                    ).value = ReactDomServer.renderToString(
+                                                                        <Trans i18nKey="status_presets_active" />
+                                                                    );
+                                                                } else {
+                                                                    (
+                                                                        document.getElementById(
+                                                                            item.name
+                                                                        ) as HTMLInputElement
+                                                                    ).value = ReactDomServer.renderToString(
+                                                                        <Trans i18nKey="status_presets_inactive" />
+                                                                    );
                                                                 }
                                                             }}
                                                         />
