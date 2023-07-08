@@ -405,5 +405,8 @@
     "send_invitation.label": "Send registration invitation to users",
     "self_registration.label": "Allow self-registration",
     "administration": "Administration",
-    "edit_administration_settings_success": "Administration settings successfully updated"
+    "edit_administration_settings_success": "Administration settings successfully updated",
+
+    "status_presets_active": "Active",
+    "status_presets_inactive": "Inactive"
 }
