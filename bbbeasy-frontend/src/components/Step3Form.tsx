@@ -161,11 +161,12 @@ export const Step3Form = (props: Props) => {
                                         <div key={modalTitle + '_' + item.name}>
                                             {item.name != modalTitle && (
                                                 <Form.Item
-                                                    label={
-                                                        <div className="white-space">
-                                                            <Trans i18nKey={item.name} />
-                                                        </div>
-                                                    }
+                                                    label=
+                                                        { item.name.length > 30 ?
+                                                            <div className="white-space">
+                                                                <Trans i18nKey={item.name} />
+                                                            </div> : <Trans i18nKey={item.name} />
+                                                        }
                                                     valuePropName="checked"
                                                     name={item.name}
                                                 >
