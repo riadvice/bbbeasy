@@ -33,6 +33,8 @@ It is important to understand that BBBEasy installation have 2 stesp:
 1. Install in the server: install of the packages by the system administrator.
 2. Install from the web browser: configuration settings meant for creating the administrator account, branding and configuration of the presets.
 
+**[Install](./Install step.md)**
+
 ### Server install
 
 Installing BBBEasy happens through a single command line.
