@@ -408,5 +408,6 @@
     "edit_administration_settings_success": "Administration settings successfully updated",
 
     "status_presets_active": "Active",
-    "status_presets_inactive": "Inactive"
+    "status_presets_inactive": "Inactive",
+    "availability": "Availability"
 }
