@@ -395,5 +395,6 @@
     "edit_administration_settings_success": "تم تحديث إعدادات الإدارة بنجاح",
 
     "status_presets_active": "نشيط",
-    "status_presets_inactive": "عاطل"
+    "status_presets_inactive": "عاطل",
+    "record": "سجل"
 }
