@@ -355,6 +355,13 @@ body.rtl {
     border-radius: 6px;
     padding: 4px 11px;
 }
+
+.input-status-presets {
+    background: transparent;
+    border: transparent;
+    width: 50px;
+}
+
 .site-footer button {
     padding: 0 5px !important;
 }
