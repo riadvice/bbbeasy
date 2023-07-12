@@ -50,7 +50,7 @@ class View extends BaseAction
         $presetData      = $presetProcessor->preparePresetData($p->getMyPresetInfos($p));
         
         if (!$presetData[General::GROUP_NAME][General::OPEN_FOR_EVERYONE] && null === $this->session->get('user')) {
-            $this->logger->warning('Access denied to route ' ));
+            $this->logger->warning('Access denied to route ');
             $this->f3->error(404);
         }
     }
