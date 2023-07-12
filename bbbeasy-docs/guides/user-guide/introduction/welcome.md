@@ -54,7 +54,7 @@ to BigBlueButton.
 - [Branding](./Branding.md)
 - [Recording](./Recordings.md)
 - [Administration](./Administration.md)
-- [Room details](./Details rooms.md)
+- [Room details](./Rooms Details.md)
 - [Login](./Login.md)
 - [Register](./Register.md)
 - [Profile](Profile.md)

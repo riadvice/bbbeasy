@@ -1,11 +1,13 @@
 
-## Rooms Details
+## Rooms Details page
 
-Room details on contains  the entire room details (room informations , room presentations , room recordings)
+Room details contains  the entire room details (room informations , room presentations , room recordings)
 
 
 
 ___Room details___
+
+`In order to access to the room details page , you must follow these steps `
 
 1. Go to the Rooms page
 2. Choose a room and click on it to access to the room details page

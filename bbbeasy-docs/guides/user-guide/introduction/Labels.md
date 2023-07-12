@@ -1,9 +1,10 @@
 ## labels
 Labels are used to distinguish the rooms and facilitate rooms identification by using different labels 
 
-___New Labels___
+___New Label___
 
-`To create a new label , click on Create a new label and populate the fileds`
+`To create a new label , you must follow the following steps`
+
 1. Go on labels  page
 2. Click on the New label button
 3. Fill the Create Label form and submit the form 
@@ -13,7 +14,7 @@ ___New Labels___
 
 ___Edit Label___
 
-`To Edit labels , you must follow the following steps`
+`To Edit labels ,you must follow the following steps `
 
 1. Go to the labels page
 2. Choose a label from the list and click on the edit button

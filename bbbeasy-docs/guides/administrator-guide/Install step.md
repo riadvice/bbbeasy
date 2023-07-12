@@ -1,6 +1,7 @@
 # Install steps 
 
-`Tip` : If this is your first time using BBBeasy , it's primordially that you create an administrator account first in order to be able to use the application 
+`Tip` : If this is your first time using BBBeasy , it's primordially that you create an administrator account first in order to be able to use the application .
+
 The BBBeasy project work great in the browser .
 
 # Administrator account 
@@ -30,7 +31,7 @@ To create an administrator account , Please follow these steps
 
 ## Step 2: Organization and branding
 
-___Organization and branding are the best things for creating , design, and general look-and-feel of a company's branding___
+**Organization and branding are the best things for creating , design, and general look-and-feel of a company's branding**
 
 `To identify the Organisation  , you must fill in these fields `
 
@@ -40,8 +41,8 @@ ___Organization and branding are the best things for creating , design, and gene
  4. Terms of use URL
  5. Privacy Policy URL
 
-` Branding is very distinctive in that it defines  logo,Brand color,Default font size,Border radius and Wireframe style  to create organization and branding these fields must be filled out`
-1. Upload  the logo in the filed designated for the logo 
+**Branding is very distinctive in that it defines  logo,Brand color,Default font size,Border radius and Wireframe style  to create organization and branding these fields must be filled out**
+1. Upload  the logo in the field designated for the logo 
 2. Brand color 
 3. Default font size (increase or decrease the default font size)
 4. Border radius 
@@ -82,7 +83,9 @@ ___Organization and branding are the best things for creating , design, and gene
  5. Allow only logged users: Only the logged in  users will be able to join the room
 >You can easily join a BigBlueButton meeting  by opening the room link and click on the join button via a browser on your laptop or mobile phone.
 ## Finish
-After enable/ disable the BigBlueButton room settings  , Click on the' Finish' button .the application  will  be installed and you will be able to use the application  
+After enable/ disable the BigBlueButton room settings  , Click on the ` Finish` button .
+
+The application  will  be installed and you will be able to use the application  
 
 ![Bigbluebutton room setting](/img/BigBlueButton_room_setting.png)
 ![Install](/img/Finish.png)

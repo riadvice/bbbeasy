@@ -1,11 +1,11 @@
 ## Rooms
 
-The room is a communication tool between different users and through which it moves to web conference
+The room is a communication tool between different users and through it moves to web conference.
 A room is identified by name , unique link ,labels(optional) and assigned to one preset .
 
 ___New Room___
 
-`To create New room ,click on Create a new room and populate the fileds`
+`To create a New room ,you must follow the following steps`
 
 1. Go to the Rooms page
 2. Click on the New room button
@@ -35,7 +35,7 @@ ___Start Room___
 1. Go to the Rooms page
 2. Choose a room and click on it to access to the room details page
 3. Click on the start or join button
-4. The start  will start and join the meeting its own room settings
+4. The meeting will be started with its own setting 
 
 ![Rooms](/img/start.png)
 

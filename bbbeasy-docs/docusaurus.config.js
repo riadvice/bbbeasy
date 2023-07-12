@@ -113,7 +113,7 @@ const config = {
             items: [
               {
                 label: 'User Guide',
-                to: '/user-guide/introduction/welcome',
+                to: '/user-guide/congratulations',
               },
               {
                 label: 'Administrator Guide',

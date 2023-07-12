@@ -28,10 +28,12 @@ usermod -s /bin/bash -c "Your Name <youremail@thecompany.kom>" root
 
 ## Install
 
-It is important to understand that BBBEasy installation have 2 stesp:
+It is important to understand that BBBEasy installation have 2 steps:
 
 1. Install in the server: install of the packages by the system administrator.
 2. Install from the web browser: configuration settings meant for creating the administrator account, branding and configuration of the presets.
+
+**Please check the link below to understand the installation steps**
 
 **[Install](./Install step.md)**
 

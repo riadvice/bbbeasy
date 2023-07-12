@@ -11,6 +11,7 @@ ___New Presets___
 2. Click on the New preset button
 3. Enter the preset name then click on the Create button
 4. A new preset will be created with the default preset settings
+
    ![presets](/img/new_preset.png)
 
 ![presets](/img/presets.png)
@@ -31,7 +32,7 @@ ___Edit the Preset settings___
 `To Edit the  preset settings   , you must follow the following steps`
 
 1. Go to the Presets page
-2. Choose a preset from the preset cards and choose a preset configuration group (Audio,Branding)
+2. Choose a preset from the preset cards and choose a preset configuration group (Audio,Branding,.......)
 3. Edit the preset settings details then click on the save button
 4. The preset settings will be changed successfully
 

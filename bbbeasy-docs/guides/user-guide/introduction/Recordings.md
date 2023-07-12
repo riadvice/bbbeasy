@@ -2,7 +2,7 @@
 
 The recording section represents all the meeting recordings and all the sharing options.
 
-___Recordings page ___
+___Recordings page___
 
 ` To Go the recordings page , you must follow the following steps`
 
@@ -11,7 +11,7 @@ ___Recordings page ___
 
    ![Recordings](/img/save_recordings.png)
 
-___ Edit Recording___
+___Edit Recording___
 
 `To Edit Recording Name  , you must follow the following steps`
 
