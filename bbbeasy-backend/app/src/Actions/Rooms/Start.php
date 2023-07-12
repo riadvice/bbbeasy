@@ -58,8 +58,8 @@ class Start extends BaseAction
         $presetProcessor = new PresetProcessor();
         $presetData      = $presetProcessor->preparePresetData($p->getMyPresetInfos($p));
 
-        if (!$presetData['General']['open_for_everyone'] && null === $this->session->get('user')) {
-            $this->logger->warning('Access denied to route ' . $route . ' for subject ' . ($subject ?: 'unknown'));
+        if (!$presetData[General::GROUP_NAME][General::OPEN_FOR_EVERYONE] && null === $this->session->get('user')) {
+            $this->logger->warning('Access denied to route ' ));
             $this->f3->error(404);
         }
     }

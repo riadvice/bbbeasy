@@ -426,7 +426,7 @@ const RoomDetails = () => {
                         <Row align="bottom" className="mb-40">
                             <Col span={10}>
                                 <Row justify="end" className="mb-5">
-                                    {!isEditing ? (
+                                    {!isEditing && showRecodingAndPresenttaions ? (
                                         <Button
                                             className="edit-btn"
                                             size="small"
@@ -439,24 +439,26 @@ const RoomDetails = () => {
                                         </Button>
                                     ) : (
                                         <>
-                                            <Space size={'middle'}>
-                                                <Popconfirm
-                                                    title={t('cancel_edit')}
-                                                    placement="leftTop"
-                                                    onConfirm={() => cancelEdit()}
-                                                >
-                                                    <Button
-                                                        size="middle"
-                                                        onClick={() => cancelEditRoom()}
-                                                        className="cell-input-cancel"
+                                            {isEditing && (
+                                                <Space size={'middle'}>
+                                                    <Popconfirm
+                                                        title={t('cancel_edit')}
+                                                        placement="leftTop"
+                                                        onConfirm={() => cancelEdit()}
                                                     >
-                                                        <Trans i18nKey="cancel" />
+                                                        <Button
+                                                            size="middle"
+                                                            onClick={() => cancelEditRoom()}
+                                                            className="cell-input-cancel"
+                                                        >
+                                                            <Trans i18nKey="cancel" />
+                                                        </Button>
+                                                    </Popconfirm>
+                                                    <Button size="middle" onClick={handleSaveEdit} type="primary">
+                                                        <Trans i18nKey="save" />
                                                     </Button>
-                                                </Popconfirm>
-                                                <Button size="middle" onClick={handleSaveEdit} type="primary">
-                                                    <Trans i18nKey="save" />
-                                                </Button>
-                                            </Space>
+                                                </Space>
+                                            )}
                                         </>
                                     )}
                                 </Row>

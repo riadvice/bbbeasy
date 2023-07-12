@@ -48,10 +48,9 @@ class View extends BaseAction
         $p               = $preset->findById($room->getPresetID($room->id)['preset_id']);
         $presetProcessor = new PresetProcessor();
         $presetData      = $presetProcessor->preparePresetData($p->getMyPresetInfos($p));
-        // var_dump($presetData['General']['open_for_everyone']);
-
+        
         if (!$presetData[General::GROUP_NAME][General::OPEN_FOR_EVERYONE] && null === $this->session->get('user')) {
-            $this->logger->warning('Access denied to route ' . $route . ' for subject ' . ($subject ?: 'unknown'));
+            $this->logger->warning('Access denied to route ' ));
             $this->f3->error(404);
         }
     }
