@@ -395,5 +395,7 @@
     "edit_administration_settings_success": "Paramètres d'administration mis à jour avec succès",
     "status_presets_active": "Actif",
     "status_presets_inactive": "Inactif",
+    "availability": "Disponibilité",
     "record": "Enregistrer"
+
 }

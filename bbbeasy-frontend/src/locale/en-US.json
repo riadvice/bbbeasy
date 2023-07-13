@@ -409,5 +409,6 @@
 
     "status_presets_active": "Active",
     "status_presets_inactive": "Inactive",
+    "availability": "Availability",
     "record": "Record"
 }
