@@ -27,11 +27,11 @@ use MabeEnum\Enum;
 class Recording extends Enum
 {
     public const GROUP_NAME       = 'Recording';
-    public const CONFIGURABLE     = 'configurable';
-    public const AUTO_START       = 'auto_start';
+    public const RECORD           = 'record';
     public const ALLOW_START_STOP = 'allow_start_stop';
+    public const AUTO_START       = 'auto_start';
 
-    public const CONFIGURABLE_TYPE     = 'bool';
+    public const RECORD_TYPE           = 'bool';
     public const AUTO_START_TYPE       = 'bool';
     public const ALLOW_START_STOP_TYPE = 'bool';
 }
