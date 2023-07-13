@@ -1,35 +1,40 @@
-## labels
+---
+sidebar_position: 7
+---
+
+# Labels Management
+
 Labels are used to distinguish the rooms and facilitate rooms identification by using different labels 
 
-___New Label___
+## New Label
 
-`To create a new label , you must follow the following steps`
+`To create a new label , follow the following steps`
 
 1. Go on labels  page
 2. Click on the New label button
 3. Fill the Create Label form and submit the form 
 
-   ![labels](/img/new_labels.png)
-   ![labels](/img/labels.png)
+   ![labels](/label/new_labels.png)
+   ![labels](/label/labels.png)
 
-___Edit Label___
+## Edit Label
 
-`To Edit labels ,you must follow the following steps `
+`To Edit labels , follow the following steps `
 
 1. Go to the labels page
 2. Choose a label from the list and click on the edit button
 3. Edit the label details then click on save button
 4. The changes will be saved successfully
 
-   ![labels](/img/Edit_labels.png)
+   ![labels](/label/edit_labels.png)
 
-___Delete labels___
+## Delete labels
 
-`To delete  labels , you must follow the following steps`
+`To delete  labels , follow the following steps`
 
 1. Go to the labels page
 2. Choose a label from the list and click on the delete button
 3. Confirm deletion
 4. The label will be deleted .
 
-   ![labels](/img/delete_label.png)
+   ![labels](/label/delete_label.png)

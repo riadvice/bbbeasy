@@ -1,11 +1,15 @@
-## Roles
+---
+sidebar_position: 11
+---
+
+# Roles configuration
 
 Through the Roles page, Administrators are able to add,edit,delete the roles of the  application.
 We have basically two roles Administrator and Lecturer but we can add another ones .
 
-![Roles](/img/roles.png)
+![Roles](/role/roles.png)
 
-___Creating a New Role___
+## Creating a New Role
 
 `To create a new role click on the new role button. This will open the modal where you can specify the role details`
 
@@ -14,26 +18,26 @@ ___Creating a New Role___
 3. Fill the form and check the role permissions needed then submit the form
 4. A new role will be created with its permissions
 
-   ![Roles](/img/New_roles.png)
+   ![Roles](/role/new_roles.png)
 
-___Rename the  Role name___
+### Rename the  Role name
 
-`To Edit the role  , you must follow the following steps`
+`To Edit the role  ,follow the following steps`
 
 1. Go to the Roles page 
 2. Choose a role from the list then click on the rename button 
 3. Enter the new role name then save the changes 
 4. The role name will be changed successfully
 
-![Rename role](/img/role_rname.png)
+![Rename role](/role/role_rname.png)
 
-___Edit the role permissions___
+### Edit the role permissions
 
-`To Edit the role permissions , you must follow the following steps`
+`To Edit the role permissions , follow the following steps`
 
 1. Go to the Roles page 
 2. Choose a role from the list then click on permissions
 3. Edit the role permissions then click on save button 
 4. The role permissions will be changed
 
-![Rename role](/img/edit_permissions.png)
+![Rename role](/role/edit_permissions.png)

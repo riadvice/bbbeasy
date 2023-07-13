@@ -106,48 +106,48 @@ const config = {
           ],
         },
         footer: {
-          style: 'dark',
+          style: "dark",
           links: [
             {
-              title: 'Docs',
+              title: "Docs",
               items: [
                 {
-                  label: 'User Guide',
-                  to: '/user-guide/introduction/welcome',
+                  label: "User Guide",
+                  to: "/guides/user-guide/introduction/welcome",
                 },
                 {
-                  label: 'Administrator Guide',
-                  to: '/administrator-guide/software',
+                  label: "Administrator Guide",
+                  to: "/guides/administrator-guide/software",
                 },
                 {
-                  label: 'Developer Guide',
-                  to: '/developer-guide/bbbeasy-configuration-utility',
+                  label: "Developer Guide",
+                  to: "/guides/developer-guide/bbbeasy-configuration-utility",
                 },
                 {
-                  label: 'API',
-                  to: '/api-reference/overview',
+                  label: "API",
+                  to: "/guides/api-reference/overview",
                 },
               ],
             },
             {
-              title: 'Community',
+              title: "Community",
               items: [
                 {
-                  label: 'Discussions',
-                  href: 'https://github.com/riadvice/bbbeasy/discussions',
+                  label: "Discussions",
+                  href: "https://github.com/riadvice/bbbeasy/discussions",
                 },
                 {
-                  label: 'GitHub',
-                  href: 'https://github.com/riadvice/bbbeasy',
+                  label: "GitHub",
+                  href: "https://github.com/riadvice/bbbeasy",
                 },
               ],
             },
             {
-              title: 'Commercial Support',
+              title: "Commercial Support",
               items: [
                 {
-                  label: 'RIADVICE',
-                  href: 'https://riadvice.tn/',
+                  label: "RIADVICE",
+                  href: "https://riadvice.tn/",
                 },
               ],
             },

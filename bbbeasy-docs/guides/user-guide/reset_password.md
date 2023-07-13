@@ -1,11 +1,15 @@
+---
+sidebar_position: 3
+---
+
 # Reset password 
 
 This feature allows you to change your password if you forget it before login 
 
-___Reset password___
+## Reset password
 
 
-`To reset your password , just follow these steps`
+`To reset your password , follow these steps`
 
 1. Go to the login page
 2. Click on `reset here ` link
@@ -15,8 +19,8 @@ ___Reset password___
 6. Enter your new password and submit the form
 7. The password will be changed successfully
 
-![Reset password](/img/reset_password.png)
+![Reset password](/change_password/reset_password.png)
 
-![changepassword](/img/change_password.png)
+![changepassword](/change_password/change_password.png)
 
 
