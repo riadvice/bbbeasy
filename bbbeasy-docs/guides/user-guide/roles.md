@@ -20,7 +20,7 @@ We have basically two roles Administrator and Lecturer but we can add another on
 
    ![Roles](/role/new_roles.png)
 
-### Rename the  Role name
+## Rename the  Role name
 
 `To Edit the role  ,follow the following steps`
 
@@ -31,7 +31,7 @@ We have basically two roles Administrator and Lecturer but we can add another on
 
 ![Rename role](/role/role_rname.png)
 
-### Edit the role permissions
+## Edit the role permissions
 
 `To Edit the role permissions , follow the following steps`
 

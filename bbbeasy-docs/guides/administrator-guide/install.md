@@ -54,7 +54,7 @@ __The third step__
 
 * Configure the BigBlueButton settings
 
-### Step 1 :  Administrator Account
+## Step 1 :  Administrator Account
 To create an administrator account , Please follow these steps
 
 >1. Enter the Username(The username is used only once )
@@ -86,7 +86,7 @@ To create an administrator account , Please follow these steps
    ![Organisation & Branding](/branding/organisation_branding_step2.png)
 
 
-### Step3 BigBlueButton settings :
+## Step3 BigBlueButton settings :
 
 BigBlueButton settings is the console to enable or disable the settings .
 Some of the key features of BBBeasy include :

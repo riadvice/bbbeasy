@@ -22,7 +22,7 @@ This means that if you create a rooms and give it a particular configuration, it
 
 ![presets](/preset/presets.png)
 
-### Rename Preset
+## Rename Preset
 
 `To Rename presets , follow the following steps`
 
@@ -44,7 +44,7 @@ This means that if you create a rooms and give it a particular configuration, it
 
 ![edit preset settings](/preset/edit_preset_settings.png)
 
-### Copy the Preset
+## Copy the Preset
 
 `To Copy the  preset  , follow the following steps`
 
@@ -54,7 +54,7 @@ This means that if you create a rooms and give it a particular configuration, it
 
 ![copy preset](/preset/copy_preset.png)
  
-   ## Delete Presets
+## Delete Presets
 
 `To delete  Presets , follow the following steps`
 

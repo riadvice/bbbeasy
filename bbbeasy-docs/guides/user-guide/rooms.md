@@ -21,7 +21,7 @@ A room is identified by name , unique link ,labels(optional) and assigned to one
 
 ![Rooms](/room/rooms.png)
 
-### Edit Room
+## Edit Room
 
 `To Edit rooms , follow the following steps`
 
@@ -32,7 +32,7 @@ A room is identified by name , unique link ,labels(optional) and assigned to one
 
 ![Rooms](/room/edit_room.png)
 
-### Start Room
+## Start Room
 
 `To start  rooms , follow the following steps`
 
@@ -45,7 +45,7 @@ A room is identified by name , unique link ,labels(optional) and assigned to one
 
 ![BigBlueButton](/room/join_bbb.png)
 
-### Delete Room 
+## Delete Room 
 
 `To delete  rooms , follow the following steps`
 

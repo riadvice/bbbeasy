@@ -67,7 +67,7 @@ const config = {
           items: [
             {
               type: 'doc',
-              docId: 'user-guide/congratulations',
+              docId: 'user-guide/introduction-welcome',
               position: 'left',
               sidebarId: 'user',
               label: 'User Guide',
@@ -113,7 +113,7 @@ const config = {
               items: [
                 {
                   label: "User Guide",
-                  to: "/guides/user-guide/introduction/welcome",
+                  to: "/guides/user-guide/welcome",
                 },
                 {
                   label: "Administrator Guide",

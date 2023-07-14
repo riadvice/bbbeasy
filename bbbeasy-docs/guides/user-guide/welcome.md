@@ -3,7 +3,7 @@ sidebar_position: 0
 id: introduction-welcome
 title: "Welcome to BBBEasy 👋"
 sidebar_label: "Introduction"
-slug: "/user-guide/introduction/welcome"
+slug: "/user-guide/welcome"
 ---
 
 **BBBEasy** is multipurpose rooms manager for the open-source web-conferencing platform

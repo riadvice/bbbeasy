@@ -16,7 +16,7 @@ The recording section represents all the meeting recordings and all the sharing 
 
    ![Recordings](/recording/save_recordings.png)
 
-### Edit Recording
+## Edit Recording
 
 `To Edit Recording Name  , follow the following steps`
 
@@ -27,7 +27,7 @@ The recording section represents all the meeting recordings and all the sharing 
 
  ![Recordings](/recording/edit_recordings.png)
 
-### Delete Recording
+## Delete Recording
 
 `To delete  Recording , follow the following steps`
 
