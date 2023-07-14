@@ -89,7 +89,7 @@ class PresetProcessor
 
         $presetsData->setData(Recording::GROUP_NAME, Recording::AUTO_START, $preparePresetData[Recording::GROUP_NAME][Recording::AUTO_START]);
         $presetsData->setData(Recording::GROUP_NAME, Recording::ALLOW_START_STOP, $preparePresetData[Recording::GROUP_NAME][Recording::ALLOW_START_STOP]);
-        $presetsData->setData(Recording::GROUP_NAME, Recording::CONFIGURABLE, $preparePresetData[Recording::GROUP_NAME][Recording::CONFIGURABLE]);
+        $presetsData->setData(Recording::GROUP_NAME, Recording::RECORD, $preparePresetData[Recording::GROUP_NAME][Recording::RECORD]);
 
         $presetsData->setData(Webcams::GROUP_NAME, Webcams::VISIBLE_FOR_MODERATOR_ONLY, $preparePresetData[Webcams::GROUP_NAME][Webcams::VISIBLE_FOR_MODERATOR_ONLY]);
         $presetsData->setData(Webcams::GROUP_NAME, Webcams::MODERATOR_ALLOWED_CAMERA_EJECT, $preparePresetData[Webcams::GROUP_NAME][Webcams::MODERATOR_ALLOWED_CAMERA_EJECT]);
@@ -135,7 +135,7 @@ class PresetProcessor
 
         $createParams->setAutoStartRecording($presetsData->getData(Recording::GROUP_NAME, Recording::AUTO_START));
         $createParams->setAllowStartStopRecording($presetsData->getData(Recording::GROUP_NAME, Recording::ALLOW_START_STOP));
-        $createParams->setRecord($presetsData->getData(Recording::GROUP_NAME, Recording::CONFIGURABLE));
+        $createParams->setRecord($presetsData->getData(Recording::GROUP_NAME, Recording::RECORD));
 
         // Screenshare:configurable
         // UserExperience: keyboard_shortcuts,ask_for_feedback

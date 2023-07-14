@@ -53,7 +53,7 @@ import {
     WarningOutlined,
 } from '@ant-design/icons';
 
-import { Trans, withTranslation } from 'react-i18next';
+import { initReactI18next, Trans, withTranslation } from 'react-i18next';
 import { t } from 'i18next';
 import EN_US from '../locale/en-US.json';
 
@@ -76,6 +76,8 @@ import { MyPresetType } from '../types/MyPresetType';
 import { SubCategoryType } from '../types/SubCategoryType';
 import { UploadFile } from 'antd/lib/upload/interface';
 import type { Color } from 'antd/es/color-picker';
+import ReactDomServer from 'react-dom/server';
+import { getType } from 'react-styleguidist/lib/client/rsg-components/Props/util';
 const { Title } = Typography;
 
 interface PresetColProps {
@@ -429,14 +431,56 @@ const PresetsCol: React.FC<PresetColProps> = ({
                             <Form>
                                 {modalContent.map((item) => (
                                     <div key={modalTitle + '_' + item.name}>
-                                        <Form.Item label={t(item.name)} name={item.name}>
+                                        <Form.Item
+                                            label={ item.name.length > 30 ?
+                                                <div className="white-space">
+                                                    {t(item.name)}
+                                                </div> : t(item.name)
+                                            }
+                                            name={item.name}
+                                        >
                                             {item.type == 'bool' && (
-                                                <Switch
-                                                    defaultChecked={item.value == true ? true : false}
-                                                    onChange={(checked) => {
-                                                        item.value = checked;
-                                                    }}
-                                                />
+                                                <>
+                                                    <input
+                                                        className="input-status-presets"
+                                                        disabled
+                                                        type="text"
+                                                        id={item.name}
+                                                        value={
+                                                            item.value == true
+                                                                ? ReactDomServer.renderToString(
+                                                                      <Trans i18nKey="status_presets_active" />
+                                                                  )
+                                                                : ReactDomServer.renderToString(
+                                                                      <Trans i18nKey="status_presets_inactive" />
+                                                                  )
+                                                        }
+                                                    />
+
+                                                    <Switch
+                                                        defaultChecked={item.value == true ? true : false}
+                                                        onChange={(checked) => {
+                                                            item.value = checked;
+                                                            if (item.value) {
+                                                                (
+                                                                    document.getElementById(
+                                                                        item.name
+                                                                    ) as HTMLInputElement
+                                                                ).value = ReactDomServer.renderToString(
+                                                                    <Trans i18nKey="status_presets_active" />
+                                                                );
+                                                            } else {
+                                                                (
+                                                                    document.getElementById(
+                                                                        item.name
+                                                                    ) as HTMLInputElement
+                                                                ).value = ReactDomServer.renderToString(
+                                                                    <Trans i18nKey="status_presets_inactive" />
+                                                                );
+                                                            }
+                                                        }}
+                                                    />
+                                                </>
                                             )}
 
                                             {item.type === 'string' && (
