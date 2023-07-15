@@ -83,9 +83,7 @@ Frontend test:
 
 ## Technologies
 
-<p align="center">
-  <img src="https://github.com/bcosca/fatfree/raw/master/ui/images/logo.png" href="https://fatfreeframework.com" alt="Fat-Free Framework">
-</p>
+[![Fat-Free Framework](https://github.com/bcosca/fatfree/raw/master/ui/images/logo.png)](https://fatfreeframework.com)
 
 [Node.js](https://nodejs.org/en/)
 
