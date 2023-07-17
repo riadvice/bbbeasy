@@ -29,5 +29,5 @@ class Language extends Enum
     public const GROUP_NAME       = 'Language';
     public const DEFAULT_LANGUAGE = 'default_language';
 
-    public const DEFAULT_LANGUAGE_TYPE = 'string';
+    public const DEFAULT_LANGUAGE_TYPE = 'select';
 }
