@@ -106,8 +106,7 @@ class Bootstrap extends Boot
         if (!$this->f3->get(CacheKey::CONFIG_LOADED)) {
             $this->f3->set(CacheKey::CONFIG_LOADED, true, 3590);
             // Load global settings
-            foreach ([]
-                     as $entry => $cacheKey) {
+            foreach ([] as $entry => $cacheKey) {
                 $exists = 'locale' === $entry ? $this->session->get($entry) : $this->f3->exists($entry);
                 if (!$exists) {
                     $setting = new Setting();

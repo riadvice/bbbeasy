@@ -55,11 +55,10 @@ class PresetProcessor
 
     public function toCreateMeetingParams($preset, $createParams)
     {
-
-        $presetsData = new PresetData();
+        $presetsData       = new PresetData();
         $preparePresetData = $this->preparePresetData($preset);
 
-        //Set the preset data
+        // Set the preset data
         $presetsData->setData(Audio::GROUP_NAME, Audio::USERS_JOIN_MUTED, $preparePresetData[Audio::GROUP_NAME][Audio::USERS_JOIN_MUTED]);
         $presetsData->setData(Audio::GROUP_NAME, Audio::MODERATORS_ALLOWED_TO_UNMUTE_USERS, $preparePresetData[Audio::GROUP_NAME][Audio::MODERATORS_ALLOWED_TO_UNMUTE_USERS]);
 
@@ -95,22 +94,21 @@ class PresetProcessor
         $presetsData->setData(Webcams::GROUP_NAME, Webcams::VISIBLE_FOR_MODERATOR_ONLY, $preparePresetData[Webcams::GROUP_NAME][Webcams::VISIBLE_FOR_MODERATOR_ONLY]);
         $presetsData->setData(Webcams::GROUP_NAME, Webcams::MODERATOR_ALLOWED_CAMERA_EJECT, $preparePresetData[Webcams::GROUP_NAME][Webcams::MODERATOR_ALLOWED_CAMERA_EJECT]);
 
-        //Get preset data to create meeting parameters
+        // Get preset data to create meeting parameters
         $createParams->setMuteOnStart($presetsData->getData(Audio::GROUP_NAME, Audio::USERS_JOIN_MUTED));
         $createParams->setAllowModsToUnmuteUsers($presetsData->getData(Audio::GROUP_NAME, Audio::MODERATORS_ALLOWED_TO_UNMUTE_USERS));
-        //$createParams->setListenOnlyEnabled($presetData->getData(Audio::GROUP_NAME, Audio::LISTEN_ONLY_ENABLED));
-        //$createParams->setSkipEchoTest($presetData->getData(Audio::GROUP_NAME, Audio::SKIP_ECHO_TEST));
-
+        // $createParams->setListenOnlyEnabled($presetData->getData(Audio::GROUP_NAME, Audio::LISTEN_ONLY_ENABLED));
+        // $createParams->setSkipEchoTest($presetData->getData(Audio::GROUP_NAME, Audio::SKIP_ECHO_TEST));
 
         $createParams->setLogo($presetsData->getData(Branding::GROUP_NAME, Branding::LOGO));
         $createParams->setBannerText($presetsData->getData(Branding::GROUP_NAME, Branding::BANNER_TEXT));
         $createParams->setBannerColor($presetsData->getData(Branding::GROUP_NAME, Branding::BANNER_COLOR));
-        //$createParams->setUseAvatars($presetsData->getData(Branding::GROUP_NAME, Branding::USE_AVATARS));
+        // $createParams->setUseAvatars($presetsData->getData(Branding::GROUP_NAME, Branding::USE_AVATARS));
 
         $createParams->setBreakoutRoomsEnabled($presetsData->getData(BreakoutRooms::GROUP_NAME, BreakoutRooms::CONFIGURABLE));
         $createParams->setBreakoutRoomsRecord($presetsData->getData(BreakoutRooms::GROUP_NAME, BreakoutRooms::RECORDING));
 
-        //$createParams->setBreakoutRoomsPrivateChatEnabled($presetsData->getData(BreakoutRooms::GROUP_NAME, BreakoutRooms::PRIVATE_CHAT));
+        // $createParams->setBreakoutRoomsPrivateChatEnabled($presetsData->getData(BreakoutRooms::GROUP_NAME, BreakoutRooms::PRIVATE_CHAT));
 
         $createParams->setDuration($presetsData->getData(General::GROUP_NAME, General::DURATION));
         $createParams->setMaxParticipants($presetsData->getData(General::GROUP_NAME, General::MAXIMUM_PARTICIPANTS));
@@ -143,7 +141,7 @@ class PresetProcessor
         // UserExperience: keyboard_shortcuts,ask_for_feedback
 
         $createParams->setWebcamsOnlyForModerator($presetsData->getData(Webcams::GROUP_NAME, Webcams::VISIBLE_FOR_MODERATOR_ONLY));
-        //$createParams->setAllowModsToEjectCameras($presetsData->getData(Webcams::GROUP_NAME, Webcams::MODERATOR_ALLOWED_CAMERA_EJECT));
+        // $createParams->setAllowModsToEjectCameras($presetsData->getData(Webcams::GROUP_NAME, Webcams::MODERATOR_ALLOWED_CAMERA_EJECT));
         // configurable,auto_share,skip_preview
 
         // Whiteboard:multi_user_pen_only,presenter_tools,multi_user_tools
@@ -155,7 +153,9 @@ class PresetProcessor
     public function toJoinParameters($preset, $joinParams)
     {
         $presetData = $this->preparePresetData($preset);
-        $joinParams->setRedirect($presetData[Audio::GROUP_NAME][Audio::AUTO_JOIN]);
+
+        $joinParams->setRedirect(false);
+
 
         return $joinParams;
     }
