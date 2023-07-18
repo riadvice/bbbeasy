@@ -26,7 +26,7 @@ use MabeEnum\Enum;
 
 class Screenshare extends Enum
 {
-    public const GROUP_NAME   = 'BScreenshareranding';
+    public const GROUP_NAME   = 'Screenshare';
     public const CONFIGURABLE = 'availability';
 
     public const CONFIGURABLE_TYPE = 'bool';

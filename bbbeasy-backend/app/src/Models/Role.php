@@ -146,7 +146,7 @@ class Role extends BaseModel
         return $permissionsRole;
     }
 
-    public function saveRoleAndPermissions($name, $permissions): bool|Role
+    public function saveRoleAndPermissions($name, $permissions): bool|self
     {
         $this->logger->info('Starting save role and permissions transaction.');
         $this->db->begin();
