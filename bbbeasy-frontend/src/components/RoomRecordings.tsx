@@ -43,10 +43,11 @@ const { Title } = Typography;
 type Props = {
     loading: boolean;
     roomRecordings: RecordingType[];
+    open: boolean;
 };
 
 const RoomRecordings = (props: Props) => {
-    const { loading, roomRecordings } = props;
+    const { loading, roomRecordings, open } = props;
     const actionsItems: MenuProps['items'] = [
         {
             key: '1',
@@ -67,151 +68,161 @@ const RoomRecordings = (props: Props) => {
     ];
 
     return (
-        <div className="room-recordings">
-            <div className="mb-40">
-                <Space size="middle">
-                    <Title level={4}>
-                        <Trans i18nKey="room_recordings" />
-                    </Title>
-                    {roomRecordings.length != 0 && (
-                        <Input
-                            className="search-input"
-                            size="middle"
-                            placeholder={t('search')}
-                            allowClear
-                            suffix={<SearchOutlined />}
-                            bordered={false}
-                        />
-                    )}
-                </Space>
-            </div>
-            {loading ? (
-                <LoadingSpinner className="mt-30 content-center" />
-            ) : roomRecordings.length != 0 ? (
-                <Row gutter={[16, 20]} className="room-recordings-body">
-                    {roomRecordings.map((recording) => {
-                        const addHeight = recording.name.length <= 16 ? '65px' : null;
-                        const recordingName =
-                            recording.name.length <= 24 ? recording.name : recording.name.substring(0, 21) + '...';
-
-                        return (
-                            <Col span={6} key={recording.key}>
-                                <Card
+        <>
+            {open && (
+                <div className="room-recordings">
+                    <div className="mb-40">
+                        <Space size="middle">
+                            <Title level={4}>
+                                <Trans i18nKey="room_recordings" />
+                            </Title>
+                            {roomRecordings.length != 0 && (
+                                <Input
+                                    className="search-input"
+                                    size="middle"
+                                    placeholder={t('search')}
+                                    allowClear
+                                    suffix={<SearchOutlined />}
                                     bordered={false}
-                                    hoverable
-                                    cover={
-                                        <div className="recording-box">
-                                            <img src="/images/meeting.png" width={281} height={220} />
-                                            <div className="recording-cover">
-                                                <div className="recording-header">
-                                                    <Title level={3} style={{ height: addHeight }}>
-                                                        {recordingName}
-                                                    </Title>
-                                                    <Dropdown
-                                                        key="more"
-                                                        menu={{ items: actionsItems }}
-                                                        placement={
-                                                            LocaleService.direction == 'rtl'
-                                                                ? 'bottomLeft'
-                                                                : 'bottomRight'
+                                />
+                            )}
+                        </Space>
+                    </div>
+                    {loading ? (
+                        <LoadingSpinner className="mt-30 content-center" />
+                    ) : roomRecordings.length != 0 ? (
+                        <Row gutter={[16, 20]} className="room-recordings-body">
+                            {roomRecordings.map((recording) => {
+                                const addHeight = recording.name.length <= 16 ? '65px' : null;
+                                const recordingName =
+                                    recording.name.length <= 24
+                                        ? recording.name
+                                        : recording.name.substring(0, 21) + '...';
+
+                                return (
+                                    <Col span={6} key={recording.key}>
+                                        <Card
+                                            bordered={false}
+                                            hoverable
+                                            cover={
+                                                <div className="recording-box">
+                                                    <img src="/images/meeting.png" width={281} height={220} />
+                                                    <div className="recording-cover">
+                                                        <div className="recording-header">
+                                                            <Title level={3} style={{ height: addHeight }}>
+                                                                {recordingName}
+                                                            </Title>
+                                                            <Dropdown
+                                                                key="more"
+                                                                menu={{ items: actionsItems }}
+                                                                placement={
+                                                                    LocaleService.direction == 'rtl'
+                                                                        ? 'bottomLeft'
+                                                                        : 'bottomRight'
+                                                                }
+                                                            >
+                                                                <MoreOutlined />
+                                                            </Dropdown>
+                                                        </div>
+
+                                                        <Space direction="vertical" className="recording-infos">
+                                                            <span>
+                                                                <TeamOutlined /> {recording.users}{' '}
+                                                                <Trans i18nKey="attendees" />{' '}
+                                                            </span>
+                                                            <span>
+                                                                <CalendarOutlined /> {recording.date}
+                                                            </span>
+                                                            <span>
+                                                                <ClockCircleOutlined /> {recording.duration}
+                                                            </span>
+                                                        </Space>
+
+                                                        <Button
+                                                            className="share-icon"
+                                                            size="middle"
+                                                            type="primary"
+                                                            shape="circle"
+                                                            icon={<ShareAltOutlined />}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            }
+                                        >
+                                            <Space direction="vertical" size="large">
+                                                <div>
+                                                    <Button
+                                                        size="middle"
+                                                        type="primary"
+                                                        icon={
+                                                            <DynamicIcon
+                                                                type="playback-presentation"
+                                                                className="bbbeasy-ppt"
+                                                            />
                                                         }
                                                     >
-                                                        <MoreOutlined />
-                                                    </Dropdown>
+                                                        <span>
+                                                            <Trans i18nKey="replay" />
+                                                        </span>
+                                                    </Button>
+                                                    <span className="file-size">
+                                                        35,6 <Trans i18nKey="mb" />
+                                                    </span>
                                                 </div>
-
-                                                <Space direction="vertical" className="recording-infos">
-                                                    <span>
-                                                        <TeamOutlined /> {recording.users} <Trans i18nKey="attendees" />{' '}
-                                                    </span>
-                                                    <span>
-                                                        <CalendarOutlined /> {recording.date}
-                                                    </span>
-                                                    <span>
-                                                        <ClockCircleOutlined /> {recording.duration}
-                                                    </span>
+                                                <Space size="large" className="actions">
+                                                    <div>
+                                                        <Button
+                                                            type="primary"
+                                                            ghost
+                                                            icon={<DynamicIcon type="playback-podcast" />}
+                                                        />
+                                                        <span className="file-size">
+                                                            35,6 <Trans i18nKey="mb" />
+                                                        </span>
+                                                    </div>
+                                                    <div>
+                                                        <Button
+                                                            type="primary"
+                                                            ghost
+                                                            icon={<DynamicIcon type="DesktopOutlined" />}
+                                                        />
+                                                        <span className="file-size">
+                                                            35,6 <Trans i18nKey="mb" />
+                                                        </span>
+                                                    </div>
+                                                    <div>
+                                                        <Button
+                                                            type="primary"
+                                                            ghost
+                                                            icon={<DynamicIcon type="mp4" className="bbbeasy-mp4" />}
+                                                        />
+                                                        <span className="file-size">
+                                                            35,6 <Trans i18nKey="mb" />
+                                                        </span>
+                                                    </div>
+                                                    <div>
+                                                        <Button
+                                                            type="primary"
+                                                            ghost
+                                                            icon={<DynamicIcon type="activity-reports" />}
+                                                        />
+                                                        <span className="file-size">
+                                                            35,6 <Trans i18nKey="mb" />
+                                                        </span>
+                                                    </div>
                                                 </Space>
-
-                                                <Button
-                                                    className="share-icon"
-                                                    size="middle"
-                                                    type="primary"
-                                                    shape="circle"
-                                                    icon={<ShareAltOutlined />}
-                                                />
-                                            </div>
-                                        </div>
-                                    }
-                                >
-                                    <Space direction="vertical" size="large">
-                                        <div>
-                                            <Button
-                                                size="middle"
-                                                type="primary"
-                                                icon={
-                                                    <DynamicIcon type="playback-presentation" className="bbbeasy-ppt" />
-                                                }
-                                            >
-                                                <span>
-                                                    <Trans i18nKey="replay" />
-                                                </span>
-                                            </Button>
-                                            <span className="file-size">
-                                                35,6 <Trans i18nKey="mb" />
-                                            </span>
-                                        </div>
-                                        <Space size="large" className="actions">
-                                            <div>
-                                                <Button
-                                                    type="primary"
-                                                    ghost
-                                                    icon={<DynamicIcon type="playback-podcast" />}
-                                                />
-                                                <span className="file-size">
-                                                    35,6 <Trans i18nKey="mb" />
-                                                </span>
-                                            </div>
-                                            <div>
-                                                <Button
-                                                    type="primary"
-                                                    ghost
-                                                    icon={<DynamicIcon type="DesktopOutlined" />}
-                                                />
-                                                <span className="file-size">
-                                                    35,6 <Trans i18nKey="mb" />
-                                                </span>
-                                            </div>
-                                            <div>
-                                                <Button
-                                                    type="primary"
-                                                    ghost
-                                                    icon={<DynamicIcon type="mp4" className="bbbeasy-mp4" />}
-                                                />
-                                                <span className="file-size">
-                                                    35,6 <Trans i18nKey="mb" />
-                                                </span>
-                                            </div>
-                                            <div>
-                                                <Button
-                                                    type="primary"
-                                                    ghost
-                                                    icon={<DynamicIcon type="activity-reports" />}
-                                                />
-                                                <span className="file-size">
-                                                    35,6 <Trans i18nKey="mb" />
-                                                </span>
-                                            </div>
-                                        </Space>
-                                    </Space>
-                                </Card>
-                            </Col>
-                        );
-                    })}
-                </Row>
-            ) : (
-                <EmptyData description={<Trans i18nKey="no_recordings" />} />
+                                            </Space>
+                                        </Card>
+                                    </Col>
+                                );
+                            })}
+                        </Row>
+                    ) : (
+                        <EmptyData description={<Trans i18nKey="no_recordings" />} />
+                    )}
+                </div>
             )}
-        </div>
+        </>
     );
 };
 
