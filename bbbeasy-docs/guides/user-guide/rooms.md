@@ -43,8 +43,6 @@ A room is identified by name , unique link ,labels(optional) and assigned to one
 
 ![Rooms](/room/start.png)
 
-![BigBlueButton](/room/join_bbb.png)
-
 ## Delete Room 
 
 `To delete  rooms , follow the following steps`

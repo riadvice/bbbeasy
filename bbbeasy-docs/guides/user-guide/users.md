@@ -42,3 +42,11 @@ Each user is identified by username,email, role and state
 4. The user will be deleted .
 
    ![Users](/user/delete_user.png)
+
+## Restore user after deletion
+
+`To restore  user , follow the following steps`
+
+1. Go to the Users page
+2. Choose a user from the list and click on the Edit button
+3. Go to Status and select Active, the previously revoked user will be activated, then click on Edit button
