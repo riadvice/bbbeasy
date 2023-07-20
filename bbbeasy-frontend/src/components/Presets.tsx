@@ -41,6 +41,7 @@ import {
     Space,
     Dropdown,
     Menu,
+    Select,
 } from 'antd';
 import {
     CheckOutlined,
@@ -78,6 +79,7 @@ import { UploadFile } from 'antd/lib/upload/interface';
 import type { Color } from 'antd/es/color-picker';
 import ReactDomServer from 'react-dom/server';
 import { getType } from 'react-styleguidist/lib/client/rsg-components/Props/util';
+import { LanguagesBBB } from './LanguagesBBB';
 const { Title } = Typography;
 
 interface PresetColProps {
@@ -545,6 +547,20 @@ const PresetsCol: React.FC<PresetColProps> = ({
                                                             defaultValue={item.value}
                                                             placeholder={t(item.name)}
                                                             onChange={(val) => (item.value = val)}
+                                                        />
+                                                    )}
+
+                                                    {item.type === 'select' && (
+                                                        <Select
+                                                            defaultValue={item.value}
+                                                            options={LanguagesBBB.map((language) => ({
+                                                                label: language.name,
+                                                                value: language.value,
+                                                            }))}
+                                                            onChange={(event) => {
+                                                                item.value = event;
+                                                                console.log(event);
+                                                            }}
                                                         />
                                                     )}
                                                 </Form.Item>

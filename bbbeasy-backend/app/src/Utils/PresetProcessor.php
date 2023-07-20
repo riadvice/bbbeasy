@@ -153,7 +153,9 @@ class PresetProcessor
     public function toJoinParameters($preset, $joinParams)
     {
         $presetData = $this->preparePresetData($preset);
-        $joinParams->setRedirect($presetData[Audio::GROUP_NAME][Audio::AUTO_JOIN]);
+
+        $joinParams->setRedirect(false);
+
 
         return $joinParams;
     }
