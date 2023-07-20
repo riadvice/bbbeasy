@@ -1,8 +1,4 @@
-<?php
-
-declare(strict_types=1);
-
-/*
+/**
  * BBBEasy open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022-2023 RIADVICE SUARL and by respective authors (see below).
@@ -20,16 +16,11 @@ declare(strict_types=1);
  * with BBBEasy; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Enum\Presets;
+import { GuestPolicyType } from '../types/GuestPolicyType';
 
-use MabeEnum\Enum;
+export const GuestPolicy: GuestPolicyType[] = [
+    { name: 'ALWAYS_ACCEPT', key: 'alwaysAccept', value: 'ALWAYS_ACCEPT' },
+    { name: 'ALWAYS_DENY', key: 'alwaysDeny', value: 'ALWAYS_DENY' },
+    { name: 'ASK_MODERATOR', key: 'askModerator', value: 'ASK_MODERATOR' },
+];
 
-class GuestPolicy extends Enum
-{
-    public const GROUP_NAME   = 'GuestPolicy';
-    public const CONFIGURABLE = 'configurable';
-    public const POLICY       = 'policy';
-
-    public const CONFIGURABLE_TYPE = 'bool';
-    public const POLICY_TYPE       = 'select';
-}

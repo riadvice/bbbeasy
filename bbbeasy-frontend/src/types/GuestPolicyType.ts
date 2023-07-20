@@ -1,8 +1,4 @@
-<?php
-
-declare(strict_types=1);
-
-/*
+/**
  * BBBEasy open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022-2023 RIADVICE SUARL and by respective authors (see below).
@@ -20,16 +16,8 @@ declare(strict_types=1);
  * with BBBEasy; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Enum\Presets;
-
-use MabeEnum\Enum;
-
-class GuestPolicy extends Enum
-{
-    public const GROUP_NAME   = 'GuestPolicy';
-    public const CONFIGURABLE = 'configurable';
-    public const POLICY       = 'policy';
-
-    public const CONFIGURABLE_TYPE = 'bool';
-    public const POLICY_TYPE       = 'select';
-}
+export type GuestPolicyType = {
+    name: string;
+    key: string;
+    value: string;
+};

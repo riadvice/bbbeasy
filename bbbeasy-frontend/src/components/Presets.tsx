@@ -79,6 +79,8 @@ import type { Color } from 'antd/es/color-picker';
 import ReactDomServer from 'react-dom/server';
 import { getType } from 'react-styleguidist/lib/client/rsg-components/Props/util';
 import {LanguagesBBB} from "./LanguagesBBB";
+import {GuestPolicy} from "./GuestPolicy";
+import {isEmpty} from "lodash";
 const { Title } = Typography;
 
 interface PresetColProps {
@@ -540,15 +542,20 @@ const PresetsCol: React.FC<PresetColProps> = ({
                                                 />
                                             )}
 
-
                                             {item.type === 'select' && (
                                                 <Select
-                                                    defaultValue={item.value}
+                                                    defaultValue={"Guest Policy" == modalTitle && isEmpty(item.value) ? GuestPolicy.find(policy => policy.key === "alwaysAccept").value : item.value}
                                                     options={
-                                                        LanguagesBBB.map((language) => ({
-                                                            label: language.name,
-                                                            value: language.value,
-                                                        }))}
+                                                        "Guest Policy" == modalTitle ?
+                                                            GuestPolicy.map((policy) => ({
+                                                            label: policy.name,
+                                                            value: policy.value,
+                                                        }))
+                                                         : LanguagesBBB.map((language) => ({
+                                                                label: language.name,
+                                                                value: language.value,
+                                                            }))
+                                                }
                                                     onChange={(event) => {
                                                         item.value = event;
                                                         console.log(event);
