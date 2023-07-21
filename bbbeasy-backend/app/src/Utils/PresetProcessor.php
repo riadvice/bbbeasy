@@ -71,6 +71,7 @@ class PresetProcessor
         $presetsData->setData(BreakoutRooms::GROUP_NAME, BreakoutRooms::PRIVATE_CHAT, $preparePresetData[BreakoutRooms::GROUP_NAME][BreakoutRooms::PRIVATE_CHAT]);
 
         $presetsData->setData(General::GROUP_NAME, General::DURATION, $preparePresetData[General::GROUP_NAME][General::DURATION]);
+
         $presetsData->setData(General::GROUP_NAME, General::MAXIMUM_PARTICIPANTS, $preparePresetData[General::GROUP_NAME][General::MAXIMUM_PARTICIPANTS]);
 
         $presetsData->setData(GuestPolicy::GROUP_NAME, GuestPolicy::POLICY, $preparePresetData[GuestPolicy::GROUP_NAME][GuestPolicy::POLICY]);
@@ -96,6 +97,7 @@ class PresetProcessor
 
         // Get preset data to create meeting parameters
         $createParams->setMuteOnStart($presetsData->getData(Audio::GROUP_NAME, Audio::USERS_JOIN_MUTED));
+
         $createParams->setAllowModsToUnmuteUsers($presetsData->getData(Audio::GROUP_NAME, Audio::MODERATORS_ALLOWED_TO_UNMUTE_USERS));
         // $createParams->setListenOnlyEnabled($presetData->getData(Audio::GROUP_NAME, Audio::LISTEN_ONLY_ENABLED));
         // $createParams->setSkipEchoTest($presetData->getData(Audio::GROUP_NAME, Audio::SKIP_ECHO_TEST));
@@ -108,7 +110,7 @@ class PresetProcessor
         $createParams->setBreakoutRoomsEnabled($presetsData->getData(BreakoutRooms::GROUP_NAME, BreakoutRooms::CONFIGURABLE));
         $createParams->setBreakoutRoomsRecord($presetsData->getData(BreakoutRooms::GROUP_NAME, BreakoutRooms::RECORDING));
 
-        // $createParams->setBreakoutRoomsPrivateChatEnabled($presetsData->getData(BreakoutRooms::GROUP_NAME, BreakoutRooms::PRIVATE_CHAT));
+        $createParams->setBreakoutRoomsPrivateChatEnabled(null !== $presetsData->getData(BreakoutRooms::GROUP_NAME, BreakoutRooms::PRIVATE_CHAT) ? $presetsData->getData(BreakoutRooms::GROUP_NAME, BreakoutRooms::PRIVATE_CHAT) : true);
 
         $createParams->setDuration($presetsData->getData(General::GROUP_NAME, General::DURATION));
         $createParams->setMaxParticipants($presetsData->getData(General::GROUP_NAME, General::MAXIMUM_PARTICIPANTS));
@@ -152,10 +154,17 @@ class PresetProcessor
 
     public function toJoinParameters($preset, $joinParams)
     {
-        $presetData = $this->preparePresetData($preset);
+        $presetsData       = new PresetData();
+        $preparePresetData = $this->preparePresetData($preset);
 
+        // Set the preset data
+        $presetsData->setData(Audio::GROUP_NAME, Audio::LISTEN_ONLY_ENABLED, $preparePresetData[Audio::GROUP_NAME][Audio::LISTEN_ONLY_ENABLED]);
+        $presetsData->setData(Audio::GROUP_NAME, Audio::SKIP_ECHO_TEST, $preparePresetData[Audio::GROUP_NAME][Audio::SKIP_ECHO_TEST_TYPE]);
+
+        $joinParams->addUserData('bbb_force_listen_only', $presetsData->getData(Audio::GROUP_NAME, Audio::LISTEN_ONLY_ENABLED));
+
+        $joinParams->addUserData('bbb_skip_check_audio', $presetsData->getData(Audio::GROUP_NAME, Audio::SKIP_ECHO_TEST));
         $joinParams->setRedirect(false);
-
 
         return $joinParams;
     }

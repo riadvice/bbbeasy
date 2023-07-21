@@ -40,7 +40,8 @@ import {
     InputNumber,
     Space,
     Dropdown,
-    Menu, Select,
+    Menu,
+    Select,
 } from 'antd';
 import {
     CheckOutlined,
@@ -78,7 +79,7 @@ import { UploadFile } from 'antd/lib/upload/interface';
 import type { Color } from 'antd/es/color-picker';
 import ReactDomServer from 'react-dom/server';
 import { getType } from 'react-styleguidist/lib/client/rsg-components/Props/util';
-import {LanguagesBBB} from "./LanguagesBBB";
+import { LanguagesBBB } from './LanguagesBBB';
 const { Title } = Typography;
 
 interface PresetColProps {
@@ -516,7 +517,6 @@ const PresetsCol: React.FC<PresetColProps> = ({
                                                                         width: token.sizeMD,
                                                                         height: token.sizeMD,
 
- 
                                                                         backgroundColor: item.value
                                                                             ? item.value
                                                                             : '#fbbc0b',
@@ -540,41 +540,32 @@ const PresetsCol: React.FC<PresetColProps> = ({
                                                         </Upload>
                                                     )}
 
-{item.type === 'integer' && (
-                                                <InputNumber
-                                                    min={1}
-                                                    max={100}
-                                                    defaultValue={item.value}
-                                                    placeholder={t(item.name)}
-                                                    onChange={(val) => (item.value = val)}
-                                                />
-                                            )}
-                                             {item.type === 'select' && (
-                                                <Select
-                                                    defaultValue={item.value}
-                                                    options={
-                                                        LanguagesBBB.map((language) => ({
-                                                            label: language.name,
-                                                            value: language.value,
-                                                        }))}
-                                                    onChange={(event) => {
-                                                        item.value = event;
-                                                        console.log(event);
-                                                    }}
-                                                />
-                                            )}
+                                                    {item.type === 'integer' && (
+                                                        <InputNumber
+                                                            min={1}
+                                                            max={100}
+                                                            defaultValue={item.value}
+                                                            placeholder={t(item.name)}
+                                                            onChange={(val) => (item.value = val)}
+                                                        />
+                                                    )}
+                                                    {item.type === 'select' && (
+                                                        <Select
+                                                            defaultValue={item.value}
+                                                            options={LanguagesBBB.map((language) => ({
+                                                                label: language.name,
+                                                                value: language.value,
+                                                            }))}
+                                                            onChange={(event) => {
+                                                                item.value = event;
+                                                                console.log(event);
+                                                            }}
+                                                        />
+                                                    )}
                                                 </Form.Item>
                                             </div>
                                         )}
                                     </>
- 
-                                            
-
-
-                                           
-                                         
-                                    
- 
                                 ))}
                                 <Form.Item className="button-container">
                                     <Button
