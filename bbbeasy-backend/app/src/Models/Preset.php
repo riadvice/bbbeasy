@@ -217,7 +217,9 @@ class Preset extends BaseModel
                 $presetSett = new PresetSetting();
 
                 foreach ($attributes as $attribute) {
-                    $presetSettings = $presetSett->getByName($attribute);
+
+                    $presetSettings = $presetSett->getByNameAndGroup($attribute,$categoryName);
+
                     if (!$presetSettings->dry() && $presetSettings->enabled) {
                         if (!$settings[$categoryName]) {
                             $settings += [$categoryName => [$presetSettings->name => '']];
