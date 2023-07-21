@@ -159,7 +159,7 @@ class PresetProcessor
 
         // Set the preset data
         $presetsData->setData(Audio::GROUP_NAME, Audio::LISTEN_ONLY_ENABLED, $preparePresetData[Audio::GROUP_NAME][Audio::LISTEN_ONLY_ENABLED]);
-        $presetsData->setData(Audio::GROUP_NAME, Audio::SKIP_ECHO_TEST, $preparePresetData[Audio::GROUP_NAME][Audio::SKIP_ECHO_TEST_TYPE]);
+        $presetsData->setData(Audio::GROUP_NAME, Audio::SKIP_ECHO_TEST, $preparePresetData[Audio::GROUP_NAME][Audio::SKIP_ECHO_TEST]);
 
         $joinParams->addUserData('bbb_force_listen_only', $presetsData->getData(Audio::GROUP_NAME, Audio::LISTEN_ONLY_ENABLED));
 

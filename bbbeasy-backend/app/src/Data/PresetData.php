@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace Data;
 
-use Enum\Presets\BreakoutRooms;
-
 class PresetData
 {
     private array $data = [];
@@ -32,7 +30,6 @@ class PresetData
     {
         if (null !== $value || (\is_string($value) && !empty($value))) {
             $this->data[$category][$subCategory] = $value;
-            //   $this->data[BreakoutRooms::GROUP_NAME][BreakoutRooms::PRIVATE_CHAT]=$value;
         }
     }
 
