@@ -40,7 +40,8 @@ import {
     InputNumber,
     Space,
     Dropdown,
-    Menu, Select,
+    Menu,
+    Select,
 } from 'antd';
 import {
     CheckOutlined,
@@ -78,7 +79,7 @@ import { UploadFile } from 'antd/lib/upload/interface';
 import type { Color } from 'antd/es/color-picker';
 import ReactDomServer from 'react-dom/server';
 import { getType } from 'react-styleguidist/lib/client/rsg-components/Props/util';
-import {LanguagesBBB} from "./LanguagesBBB";
+import { LanguagesBBB } from './LanguagesBBB';
 const { Title } = Typography;
 
 interface PresetColProps {
@@ -433,10 +434,12 @@ const PresetsCol: React.FC<PresetColProps> = ({
                                 {modalContent.map((item) => (
                                     <div key={modalTitle + '_' + item.name}>
                                         <Form.Item
-                                            label={ item.name.length > 30 ?
-                                                <div className="white-space">
-                                                    {t(item.name)}
-                                                </div> : t(item.name)
+                                            label={
+                                                item.name.length > 30 ? (
+                                                    <div className="white-space">{t(item.name)}</div>
+                                                ) : (
+                                                    t(item.name)
+                                                )
                                             }
                                             name={item.name}
                                         >
@@ -540,15 +543,13 @@ const PresetsCol: React.FC<PresetColProps> = ({
                                                 />
                                             )}
 
-
                                             {item.type === 'select' && (
                                                 <Select
                                                     defaultValue={item.value}
-                                                    options={
-                                                        LanguagesBBB.map((language) => ({
-                                                            label: language.name,
-                                                            value: language.value,
-                                                        }))}
+                                                    options={LanguagesBBB.map((language) => ({
+                                                        label: language.name,
+                                                        value: language.value,
+                                                    }))}
                                                     onChange={(event) => {
                                                         item.value = event;
                                                         console.log(event);
