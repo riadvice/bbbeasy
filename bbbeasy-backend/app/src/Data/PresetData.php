@@ -35,6 +35,7 @@ class PresetData
 
     public function getData($category, $subCategory)
     {
+        // @fixme: should return null if not found
         // if (\array_key_exists($category, $this->data) && \array_key_exists($category, $this->data[$category])) {
         return $this->data[$category][$subCategory];
         // }
