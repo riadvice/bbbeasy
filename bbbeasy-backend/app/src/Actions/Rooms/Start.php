@@ -156,14 +156,16 @@ class Start extends BaseAction
         $createParams->setModeratorPassword(DataUtils::generateRandomString());
         $createParams->setAttendeePassword(DataUtils::generateRandomString());
         // @todo : set later via presets
-
+ 
         $createParams->setModeratorOnlyMessage('to invite someone you can use this link '.$this->f3->get('SERVER.HTTP_ORIGIN') .'/r/'. $link);
+ 
 
         // @fixme: delete after fixing the PHP library
         $createParams->setAllowRequestsWithoutSession(true);
 
         $this->logger->info('Received request to create a new meeting.', ['meetingID' => $meetingId]);
         $createMeetingResponse = $bbbRequester->createMeeting($createParams);
+
         if ($createMeetingResponse->failed()) {
             $this->logger->warning('Meeting could not be created.');
             $this->renderXmlString($createMeetingResponse->getRawXml());
@@ -182,7 +184,8 @@ class Start extends BaseAction
     {
         $joinParams      = new JoinMeetingParameters($meetingId, $fullname, $role);
         $presetProcessor = new PresetProcessor();
-        $joinParams      = $presetProcessor->toJoinParameters($p, $joinParams);
+
+        $joinParams = $presetProcessor->toJoinParameters($p, $joinParams);
 
         $this->logger->info(
             'Meeting join request is going to redirect to the web client.',

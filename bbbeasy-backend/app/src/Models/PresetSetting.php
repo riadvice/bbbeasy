@@ -36,7 +36,8 @@ use Models\Base as BaseModel;
  */
 class PresetSetting extends BaseModel
 {
-    protected $table = 'preset_settings';
+    protected const GROUP_NAME = 'GROUP_NAME';
+    protected $table           = 'preset_settings';
 
     public function getDefaultPresetSettings($enabled = false): array
     {
@@ -55,15 +56,15 @@ class PresetSetting extends BaseModel
                 $attributes = $class->getReflectionConstants();
                 foreach ($attributes as $attribute) {
                     $attributeName = $attribute->name;
-                    if ('GROUP_NAME' !== $attributeName) {
-                        if (!str_ends_with($attributeName, '_TYPE')) {
-                            $subCategory     = $class->getConstant($attributeName);
-                            $subCategoryData = [
-                                'name'    => $subCategory,
-                                'enabled' => 'Layout' === $categoryName ? true : $enabled,
-                            ];
-                            $categoryData['subcategories'][] = $subCategoryData;
-                        }
+ 
+                    if (self::GROUP_NAME !== $attributeName && !str_ends_with($attributeName, '_TYPE')) {
+                        $subCategory     = $class->getConstant($attributeName);
+                        $subCategoryData = [
+                            'name'    => $subCategory,
+                            'enabled' => 'Layout' === $categoryName ? true : $enabled,
+                        ];
+                        $categoryData['subcategories'][] = $subCategoryData;
+ 
                     }
                 }
 
@@ -126,6 +127,14 @@ class PresetSetting extends BaseModel
 
         return $this;
     }
+
+    public function getByNameAndGroup(string $name,string $group): self
+    {
+        $this->load(['name = ? and group = ? ', $name,$group]);
+
+        return $this;
+    }
+
 
     public function savePresetSettings(array $presets): bool|string
     {
