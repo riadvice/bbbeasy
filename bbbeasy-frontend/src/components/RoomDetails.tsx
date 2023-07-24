@@ -409,7 +409,7 @@ const RoomDetails = () => {
             return (
                 <Form form={startForm}>
                     {' '}
-                    <Form.Item name="fullname" label="fullname">
+                    <Form.Item name="fullname" label={t('fullname.label')}>
                         <Input placeholder={t('fullname.label')} />
                     </Form.Item>
                 </Form>

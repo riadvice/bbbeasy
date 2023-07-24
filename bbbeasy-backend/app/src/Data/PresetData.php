@@ -28,14 +28,14 @@ class PresetData
 
     public function setData($category, $subCategory, $value): void
     {
-        if(!is_null($value) && !empty(($value))){
+        if (null !== $value || (\is_string($value) && !empty($value))) {
             $this->data[$category][$subCategory] = $value;
         }
-
     }
 
     public function getData($category, $subCategory)
     {
+        // @fixme: should return null if not found
         // if (\array_key_exists($category, $this->data) && \array_key_exists($category, $this->data[$category])) {
         return $this->data[$category][$subCategory];
         // }

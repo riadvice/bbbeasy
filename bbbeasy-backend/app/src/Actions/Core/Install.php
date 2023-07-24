@@ -126,9 +126,11 @@ class Install extends BaseAction
 
                                     // add configured presets
                                     $presets = $form['presetsConfig'];
+
                                     if ($presets) {
                                         $presetSettings = new PresetSetting();
                                         $result         = $presetSettings->savePresetSettings($presets);
+
                                         if ('string' === \gettype($result)) {
                                             $this->renderJson(['errors' => $result], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
                                         }
