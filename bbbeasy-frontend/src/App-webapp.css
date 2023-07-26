@@ -1565,3 +1565,7 @@ fieldset {
 .edit-room-form {
     display: block !important;
 }
+
+.title-room {
+    max-width: 20px !important;
+}
