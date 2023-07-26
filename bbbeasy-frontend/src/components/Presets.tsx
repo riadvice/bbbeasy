@@ -147,16 +147,12 @@ const PresetsCol: React.FC<PresetColProps> = ({
         },
     };
 
-    const getDefaultValue=(modalTitle,item)=>{
-         if("Guest Policy" === modalTitle) {
-            if(isEmpty(item.value)){
-                return ReactDomServer.renderToString(<Trans i18nKey="alwaysAccept" />);
-            }else{
-                return ReactDomServer.renderToString(<Trans i18nKey={GuestPolicy.find(policy => policy.value === item.value).key} />);
-            }
-         }else{
-            return item.value;
-         }
+    const getData=()=>{
+        if("Guest Policy" === modalTitle) {
+            return GuestPolicy;
+        }else{
+            return LanguagesBBB;
+        }
     }
     const showModal = (title: string, titleTrans: string, content: SubCategoryType[]) => {
         setIsModalVisible(true);
@@ -565,17 +561,13 @@ const PresetsCol: React.FC<PresetColProps> = ({
                                                     )}
                                                     {item.type === 'select' && (
                                                         <Select
-                                                            defaultValue={getDefaultValue(modalTitle,item)}
+                                                            defaultValue={"Guest Policy" == modalTitle && isEmpty(item.value) ? GuestPolicy.find(policy => policy.key === "alwaysAccept").value : item.value}
                                                             options={
-                                                                "Guest Policy" == modalTitle ?
-                                                                    GuestPolicy.map((policy) => ({
-                                                                        label: ReactDomServer.renderToString(<Trans i18nKey={policy.key} />),
-                                                                        value: policy.value,
-                                                                    }))
-                                                                    : LanguagesBBB.map((language) => ({
-                                                                        label: language.name,
-                                                                        value: language.value,
-                                                                    }))
+                                                                getData().map((data) => ({
+                                                                    label: "Guest Policy" == modalTitle ? ReactDomServer.renderToString(<Trans i18nKey={data.key} />): data.name,
+                                                                    value: data.value,
+                                                                }))
+
                                                             }
                                                             onChange={(event) => {
                                                                 item.value = event;
