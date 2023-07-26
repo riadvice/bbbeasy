@@ -80,6 +80,9 @@ import type { Color } from 'antd/es/color-picker';
 import ReactDomServer from 'react-dom/server';
 import { getType } from 'react-styleguidist/lib/client/rsg-components/Props/util';
 import { LanguagesBBB } from './LanguagesBBB';
+import {GuestPolicy} from "./GuestPolicy";
+import {isEmpty} from "lodash";
+
 const { Title } = Typography;
 
 interface PresetColProps {
@@ -144,6 +147,17 @@ const PresetsCol: React.FC<PresetColProps> = ({
         },
     };
 
+    const getDefaultValue=(modalTitle,item)=>{
+         if("Guest Policy" === modalTitle) {
+            if(isEmpty(item.value)){
+                return ReactDomServer.renderToString(<Trans i18nKey="alwaysAccept" />);
+            }else{
+                return ReactDomServer.renderToString(<Trans i18nKey={GuestPolicy.find(policy => policy.value === item.value).key} />);
+            }
+         }else{
+            return item.value;
+         }
+    }
     const showModal = (title: string, titleTrans: string, content: SubCategoryType[]) => {
         setIsModalVisible(true);
         setModalTitle(title);
@@ -551,11 +565,18 @@ const PresetsCol: React.FC<PresetColProps> = ({
                                                     )}
                                                     {item.type === 'select' && (
                                                         <Select
-                                                            defaultValue={item.value}
-                                                            options={LanguagesBBB.map((language) => ({
-                                                                label: language.name,
-                                                                value: language.value,
-                                                            }))}
+                                                            defaultValue={getDefaultValue(modalTitle,item)}
+                                                            options={
+                                                                "Guest Policy" == modalTitle ?
+                                                                    GuestPolicy.map((policy) => ({
+                                                                        label: ReactDomServer.renderToString(<Trans i18nKey={policy.key} />),
+                                                                        value: policy.value,
+                                                                    }))
+                                                                    : LanguagesBBB.map((language) => ({
+                                                                        label: language.name,
+                                                                        value: language.value,
+                                                                    }))
+                                                            }
                                                             onChange={(event) => {
                                                                 item.value = event;
                                                                 console.log(event);
