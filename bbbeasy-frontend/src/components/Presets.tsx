@@ -561,7 +561,7 @@ const PresetsCol: React.FC<PresetColProps> = ({
                                                     )}
                                                     {item.type === 'select' && (
                                                         <Select
-                                                            defaultValue={"Guest Policy" == modalTitle && isEmpty(item.value) ? GuestPolicy.find(policy => policy.key === "alwaysAccept").value : item.value}
+                                                            defaultValue={item.value}
                                                             options={
                                                                 getData().map((data) => ({
                                                                     label: "Guest Policy" == modalTitle ? ReactDomServer.renderToString(<Trans i18nKey={data.key} />): data.name,
