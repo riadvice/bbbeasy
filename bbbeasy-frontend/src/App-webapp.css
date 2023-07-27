@@ -1567,9 +1567,8 @@ fieldset {
 }
 
 .room-title {
-    max-width: 300px !important;
-    word-wrap: break-word;
-    white-space: pre-line;
-    word-break: break-word;
+    max-width: 150px !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
