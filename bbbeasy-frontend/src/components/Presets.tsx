@@ -301,6 +301,10 @@ const PresetsCol: React.FC<PresetColProps> = ({
                                                 required: true,
                                                 message: <Trans i18nKey="name.required" />,
                                             },
+                                            {
+                                                max: 64,
+                                                message: <Trans i18nKey="preset_name.maxSize" />,
+                                            },
                                         ]}
                                     >
                                         <Input
