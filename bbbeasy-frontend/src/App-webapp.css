@@ -1566,6 +1566,10 @@ fieldset {
     display: block !important;
 }
 
-.title-room {
-    max-width: 20px !important;
+.room-title {
+    max-width: 300px !important;
+    word-wrap: break-word;
+    white-space: pre-line;
+    word-break: break-word;
 }
+
