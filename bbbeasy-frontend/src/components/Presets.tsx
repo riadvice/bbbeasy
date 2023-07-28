@@ -134,6 +134,9 @@ const PresetsCol: React.FC<PresetColProps> = ({
                     fileList[0].type === 'image/png';
                 if (img) {
                     setFileList(fileList);
+                    fileList[0].name = 'logo-branding-' + Date.now() + '.' + fileList[0].type.substring(6);
+
+                    
                     setFile(fileList[0]);
                 }
             }
@@ -227,8 +230,9 @@ const PresetsCol: React.FC<PresetColProps> = ({
         //edit file
         if (indexLogo > -1 && file != undefined && file.originFileObj != null) {
             const formData: FormData = new FormData();
-            formData.append('logo', file.originFileObj, file.originFileObj.name);
-            formData.append('logo_name', file.originFileObj.name);
+            console.log(file)
+            formData.append('logo', file.originFileObj, file.name);
+            formData.append('logo_name', file.name);
 
             axios
                 .post(apiRoutes.SAVE_FILE_URL, formData)
@@ -554,9 +558,10 @@ const PresetsCol: React.FC<PresetColProps> = ({
                                                             defaultValue={item.value}
                                                             options={LanguagesBBB.map((language) => ({
                                                                 label: language.name,
-                                                                value: language.value,
+                                                                value: language.key,
                                                             }))}
                                                             onChange={(event) => {
+                                                                console.log(event)
                                                                 item.value = event;
                                                                 console.log(event);
                                                             }}
