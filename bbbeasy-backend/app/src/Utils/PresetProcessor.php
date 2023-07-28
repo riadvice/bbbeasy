@@ -34,9 +34,20 @@ use Enum\Presets\LockSettings;
 use Enum\Presets\Presentation;
 use Enum\Presets\Recording;
 use Enum\Presets\Webcams;
+use Models\User;
 
 class PresetProcessor
 {
+    /**
+     * f3 instance.
+     *
+     * @var \Base f3
+     */
+    protected $f3;
+    public function __construct($f3){
+        $this->f3=$f3;
+
+    }
     public function preparePresetData($preset)
     {
         $data = [];
@@ -101,8 +112,8 @@ class PresetProcessor
         $createParams->setAllowModsToUnmuteUsers($presetsData->getData(Audio::GROUP_NAME, Audio::MODERATORS_ALLOWED_TO_UNMUTE_USERS));
         // $createParams->setListenOnlyEnabled($presetData->getData(Audio::GROUP_NAME, Audio::LISTEN_ONLY_ENABLED));
         // $createParams->setSkipEchoTest($presetData->getData(Audio::GROUP_NAME, Audio::SKIP_ECHO_TEST));
-          $createParams->setLogo('http://bbbeasy.test/uploads/logo-1690538193087.png');
-       // $createParams->setLogo("http://bbbeasy.test/uploads/logo-branding-1690468590132.png");
+
+        $createParams->setLogo($presetsData->getData(Branding::GROUP_NAME, Branding::LOGO));
         $createParams->setBannerText($presetsData->getData(Branding::GROUP_NAME, Branding::BANNER_TEXT));
         $createParams->setBannerColor($presetsData->getData(Branding::GROUP_NAME, Branding::BANNER_COLOR));
         // $createParams->setUseAvatars($presetsData->getData(Branding::GROUP_NAME, Branding::USE_AVATARS));
@@ -173,15 +184,17 @@ class PresetProcessor
 
         $joinParams->addUserData('bbb_auto_join_audio', $presetsData->getData(Audio::GROUP_NAME, Audio::AUTO_JOIN));
         $joinParams->addUserData('bbb_force_listen_only', $presetsData->getData(Audio::GROUP_NAME, Audio::LISTEN_ONLY_ENABLED));
+$user=new User();
+$user=$user->getById($preset['user_id']);
 
+ 
         $joinParams->addUserData('bbb_skip_check_audio', $presetsData->getData(Audio::GROUP_NAME, Audio::SKIP_ECHO_TEST));
-     $joinParams->setAvatarURL('http://bbbeasy.test/uploads/logo-1690538193087.png');
+     $joinParams->setAvatarURL( $presetsData->getData(Branding::GROUP_NAME,Branding::USE_AVATARS)?$this->f3->get('SERVER.HTTP_ORIGIN') .'/uploads/'. $user->avatar:null);
         //  $joinParams->setAvatarURL("https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/BigBlueButton_icon.svg/1200px-BigBlueButton_icon.svg.png");
         $joinParams->addUserData('bbb_client_title',$presetsData->getData(Branding::GROUP_NAME, Branding::TITLE));
        $joinParams->addUserData('bbb_display_branding_area',true);
        $joinParams->addUserData('bbb_override_default_locale',$presetsData->getData(Language::GROUP_NAME,Language::DEFAULT_LANGUAGE));
-       // $joinParams->addUserData('bbb_override_default_locale',"http://bbbeasy.test/uploads/logo-branding-1690468590132.png");
-        $joinParams->setRedirect(false);
+         $joinParams->setRedirect(false);
 
         return $joinParams;
     }

@@ -103,6 +103,7 @@ class Preset extends BaseModel
         $presetData = [
             'id'   => $myPreset['id'],
             'name' => $myPreset['name'],
+            'user_id'=> $myPreset['user_id']
         ];
 
         $enabledCategories        = json_decode($myPreset['settings']);

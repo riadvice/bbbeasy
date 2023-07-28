@@ -55,7 +55,7 @@ class Start extends BaseAction
         $preset = new Preset();
         $p      = $preset->findById($room->getPresetID($room->id)['preset_id']);
 
-        $presetProcessor = new PresetProcessor();
+        $presetProcessor = new PresetProcessor($this->f3);
         $presetData      = $presetProcessor->preparePresetData($p->getMyPresetInfos($p));
 
         if (!$presetData[General::GROUP_NAME][General::OPEN_FOR_EVERYONE] && null === $this->session->get('user')) {
@@ -94,7 +94,7 @@ class Start extends BaseAction
                     if ('notFound' === $getMeetingInfoResponse->getMessageKey()) {
                         // create new meeting with the same meetingId
 
-                        $presetprocessor = new PresetProcessor();
+                        $presetprocessor = new PresetProcessor($this->f3);
                         $presetData      = $presetprocessor->preparePresetData($p->getMyPresetInfos($p));
 
                         if ($room->getRoomInfos($room)['user_id'] === $this->session->get('user.id') || $presetData[General::GROUP_NAME][General::ANYONE_CAN_START]) {
@@ -150,7 +150,7 @@ class Start extends BaseAction
 
     public function createMeeting(string $meetingId, BigBlueButtonRequester $bbbRequester, $link, $p, $preetprocessor)
     {
-        $presetProcessor = new PresetProcessor();
+        $presetProcessor = new PresetProcessor($this->f3);
         $createParams    = new CreateMeetingParameters($meetingId, 'meeting-' . $meetingId);
         $createParams    = $presetProcessor->toCreateMeetingParams($p, $createParams);
         $createParams->setModeratorPassword(DataUtils::generateRandomString());
@@ -182,9 +182,10 @@ class Start extends BaseAction
     public function joinMeeting(string $meetingId, string $role, BigBlueButtonRequester $bbbRequester, $p, $fullname): void
     {
         $joinParams      = new JoinMeetingParameters($meetingId, $fullname, $role);
-        $presetProcessor = new PresetProcessor();
+        $presetProcessor = new PresetProcessor($this->f3);
 
-        $joinParams = $presetProcessor->toJoinParameters($p, $joinParams);
+
+        $joinParams = $presetProcessor->toJoinParameters($p, $joinParams );
 
         $this->logger->info(
             'Meeting join request is going to redirect to the web client.',
