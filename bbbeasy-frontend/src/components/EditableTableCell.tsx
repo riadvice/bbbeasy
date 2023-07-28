@@ -82,7 +82,7 @@ const EditableTableCell: React.FC<Props> = ({
             return (
                 <Form.Item
                     name={index}
-                    className="input-editable"
+                    className="input-editable text-box-Label"
                     {...(index in errorsEdit &&
                         record.key == errorsEdit['key'] && {
                             help: (
@@ -96,6 +96,14 @@ const EditableTableCell: React.FC<Props> = ({
                         {
                             required: true,
                             message: t('required_' + index),
+                        },
+                        {
+                            min: 1,
+                            message: <Trans i18nKey="label_name.size" />,
+                        },
+                        {
+                            max: 32,
+                            message: <Trans i18nKey="label_name.maxSize" />,
                         },
                         { ...editRules },
                     ]}
