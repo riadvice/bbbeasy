@@ -45,6 +45,7 @@ class Edit extends BaseAction
         $dataChecker = new DataChecker();
 
         $dataChecker->verify($form['name'], Validator::notEmpty()->setName('name'));
+        $dataChecker->verify($form['name'], Validator::length(1, 64)->setName('name'));
         $dataChecker->verify($id, Validator::notEmpty()->setName('id'));
 
         $errorMessage = 'Preset could not be updated';
