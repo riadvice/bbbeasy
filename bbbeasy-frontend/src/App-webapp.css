@@ -1568,4 +1568,5 @@ fieldset {
 div.edit-preset-name{
     margin-top: 10px;
     width: 250px;
+    white-space: pre-line;
 }
