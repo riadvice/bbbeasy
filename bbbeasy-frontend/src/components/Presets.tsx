@@ -282,57 +282,62 @@ const PresetsCol: React.FC<PresetColProps> = ({
                                     )}
                                 </>
                             ) : (
-                                <Form form={editForm}>
-                                    <Form.Item
-                                        name="name"
-                                        className="input-editable"
-                                        {...('name' in errorsEdit && {
-                                            help: (
-                                                <Trans
-                                                    i18nKey={Object.keys(EN_US).filter(
-                                                        (elem) => EN_US[elem] == errorsEdit['name']
-                                                    )}
-                                                />
-                                            ),
-                                            validateStatus: 'error',
-                                        })}
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message: <Trans i18nKey="name.required" />,
-                                            },
-                                            {
-                                                max: 64,
-                                                message: <Trans i18nKey="preset_name.maxSize" />,
-                                            },
-                                        ]}
+                                <div className="edit-preset-name">
+                                    <Form
+                                        form={editForm}
+                                        validateTrigger="onSubmit"
                                     >
-                                        <Input
-                                            onPressEnter={handleSaveEdit}
-                                            suffix={
-                                                <>
-                                                    <Popconfirm
-                                                        title={t('cancel_edit')}
-                                                        placement="leftTop"
-                                                        onConfirm={() => cancelEdit()}
-                                                    >
-                                                        <Button
-                                                            icon={<CloseOutlined />}
-                                                            size="small"
-                                                            className="cell-input-cancel"
-                                                        />
-                                                    </Popconfirm>
-                                                    <Button
-                                                        icon={<CheckOutlined />}
-                                                        size="small"
-                                                        onClick={handleSaveEdit}
-                                                        type="primary"
+                                        <Form.Item
+                                            name="name"
+                                            className="input-editable"
+                                            {...('name' in errorsEdit && {
+                                                help: (
+                                                    <Trans
+                                                        i18nKey={Object.keys(EN_US).filter(
+                                                            (elem) => EN_US[elem] == errorsEdit['name']
+                                                        )}
                                                     />
-                                                </>
-                                            }
-                                        />
-                                    </Form.Item>
-                                </Form>
+                                                ),
+                                                validateStatus: 'error',
+                                            })}
+                                            rules={[
+                                                {
+                                                    required: true,
+                                                    message: <Trans i18nKey="name.required" />,
+                                                },
+                                                {
+                                                    max: 64,
+                                                    message: <Trans i18nKey="preset_name.maxSize" />,
+                                                },
+                                            ]}
+                                        >
+                                            <Input
+                                                onPressEnter={handleSaveEdit}
+                                                suffix={
+                                                    <>
+                                                        <Popconfirm
+                                                            title={t('cancel_edit')}
+                                                            placement="leftTop"
+                                                            onConfirm={() => cancelEdit()}
+                                                        >
+                                                            <Button
+                                                                icon={<CloseOutlined />}
+                                                                size="small"
+                                                                className="cell-input-cancel"
+                                                            />
+                                                        </Popconfirm>
+                                                        <Button
+                                                            icon={<CheckOutlined />}
+                                                            size="small"
+                                                            onClick={handleSaveEdit}
+                                                            type="primary"
+                                                        />
+                                                    </>
+                                                }
+                                            />
+                                        </Form.Item>
+                                    </Form>
+                                </div>
                             )}
                         </Space>
                     </div>
