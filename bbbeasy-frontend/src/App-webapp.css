@@ -1565,3 +1565,10 @@ fieldset {
 .edit-room-form {
     display: block !important;
 }
+
+.room-title {
+    max-width: 150px !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+

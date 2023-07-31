@@ -80,6 +80,9 @@ import type { Color } from 'antd/es/color-picker';
 import ReactDomServer from 'react-dom/server';
 import { getType } from 'react-styleguidist/lib/client/rsg-components/Props/util';
 import { LanguagesBBB } from './LanguagesBBB';
+import {GuestPolicy} from "./GuestPolicy";
+import {isEmpty} from "lodash";
+
 const { Title } = Typography;
 
 interface PresetColProps {
@@ -147,6 +150,13 @@ const PresetsCol: React.FC<PresetColProps> = ({
         },
     };
 
+    const getData=()=>{
+        if("Guest Policy" === modalTitle) {
+            return GuestPolicy;
+        }else{
+            return LanguagesBBB;
+        }
+    }
     const showModal = (title: string, titleTrans: string, content: SubCategoryType[]) => {
         setIsModalVisible(true);
         setModalTitle(title);
@@ -556,11 +566,12 @@ const PresetsCol: React.FC<PresetColProps> = ({
                                                     {item.type === 'select' && (
                                                         <Select
                                                             defaultValue={item.value}
+
                                                             options={LanguagesBBB.map((language) => ({
                                                                 label: language.name,
                                                                 value: language.key,
                                                             }))}
-                                                            onChange={(event) => {
+                                                   onChange={(event) => {
                                                                 console.log(event)
                                                                 item.value = event;
                                                                 console.log(event);

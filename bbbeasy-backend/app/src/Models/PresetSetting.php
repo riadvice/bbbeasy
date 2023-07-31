@@ -126,13 +126,12 @@ class PresetSetting extends BaseModel
         return $this;
     }
 
-    public function getByNameAndGroup(string $name,string $group): self
+    public function getByNameAndGroup(string $name, string $group): self
     {
-        $this->load(['name = ? and group = ? ', $name,$group]);
+        $this->load(['name = ? and group = ? ', $name, $group]);
 
         return $this;
     }
-
 
     public function savePresetSettings(array $presets): bool|string
     {
