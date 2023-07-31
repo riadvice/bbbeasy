@@ -402,5 +402,10 @@
     "status_presets_active": "Actif",
     "status_presets_inactive": "Inactif",
     "availability": "Disponibilité",
-    "record": "Enregistrer"
+    "record": "Enregistrer",
+
+    "askModerator": "Demander au modérateur",
+    "alwaysAccept": "Toujours accepter",
+    "alwaysDeny": "Toujours refuser"
+
 }
