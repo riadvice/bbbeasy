@@ -46,7 +46,7 @@ class View extends BaseAction
         $room            = $room->getByLink($link);
         $preset          = new Preset();
         $p               = $preset->findById($room->getPresetID($room->id)['preset_id']);
-        $presetProcessor = new PresetProcessor();
+        $presetProcessor = new PresetProcessor($this->f3);
         $presetData      = $presetProcessor->preparePresetData($p->getMyPresetInfos($p));
 
         if (!$presetData[General::GROUP_NAME][General::OPEN_FOR_EVERYONE] && null === $this->session->get('user')) {
@@ -73,7 +73,7 @@ class View extends BaseAction
             $canStart            = false;
             $preset              = new Preset();
             $p                   = $preset->findById($room->getPresetID($room->id)['preset_id']);
-            $presetProcessor     = new PresetProcessor();
+            $presetProcessor     = new PresetProcessor($this->f3);
             $presetData          = $presetProcessor->preparePresetData($p->getMyPresetInfos($p));
 
             if (!$meetingInfoResponse->success()) {
