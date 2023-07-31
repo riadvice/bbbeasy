@@ -156,8 +156,8 @@ class Start extends BaseAction
         $createParams->setModeratorPassword(DataUtils::generateRandomString());
         $createParams->setAttendeePassword(DataUtils::generateRandomString());
         // @todo : set later via presets
- 
-        $createParams->setModeratorOnlyMessage('to invite someone you can use this link '.$this->f3->get('SERVER.HTTP_ORIGIN') .'/r/'. $link);
+
+        $createParams->setModeratorOnlyMessage('to invite someone you can use this link '.$this->f3->get('SERVER.HTTP_ORIGIN') .$this->f3->get('client.room_url_prefix'). $link);
  
 
         // @fixme: delete after fixing the PHP library
