@@ -56,7 +56,7 @@ class PresetSetting extends BaseModel
                 $attributes = $class->getReflectionConstants();
                 foreach ($attributes as $attribute) {
                     $attributeName = $attribute->name;
- 
+
                     if (self::GROUP_NAME !== $attributeName && !str_ends_with($attributeName, '_TYPE')) {
                         $subCategory     = $class->getConstant($attributeName);
                         $subCategoryData = [
@@ -64,7 +64,6 @@ class PresetSetting extends BaseModel
                             'enabled' => 'Layout' === $categoryName ? true : $enabled,
                         ];
                         $categoryData['subcategories'][] = $subCategoryData;
- 
                     }
                 }
 
@@ -128,13 +127,12 @@ class PresetSetting extends BaseModel
         return $this;
     }
 
-    public function getByNameAndGroup(string $name,string $group): self
+    public function getByNameAndGroup(string $name, string $group): self
     {
-        $this->load(['name = ? and group = ? ', $name,$group]);
+        $this->load(['name = ? and group = ? ', $name, $group]);
 
         return $this;
     }
-
 
     public function savePresetSettings(array $presets): bool|string
     {
