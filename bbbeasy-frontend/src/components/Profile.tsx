@@ -70,7 +70,7 @@ const Profile = () => {
 
     const handleFileName = (imageList) => {
 
-        imageList[0].name = 'avatar1-' + Date.now()+"."+imageList[0].file.type.substring(6);
+        imageList[0].name = 'avatar-' + Date.now()+"."+imageList[0].file.type.substring(6);
 
         setImages(imageList);
     }
