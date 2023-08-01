@@ -82,7 +82,7 @@ const EditableTableCell: React.FC<Props> = ({
             return (
                 <Form.Item
                     name={index}
-                    className="input-editable text-box-Label"
+                    className="input-editable"
                     {...(index in errorsEdit &&
                         record.key == errorsEdit['key'] && {
                             help: (
