@@ -1570,3 +1570,8 @@ div.error-message-Label{
     margin-bottom: 10px;
     margin-left: 10px;
 }
+.room-title {
+    max-width: 150px !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
