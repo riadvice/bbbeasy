@@ -97,6 +97,14 @@ const EditableTableCell: React.FC<Props> = ({
                             required: true,
                             message: t('required_' + index),
                         },
+                        {
+                            min: 1,
+                            message: <Trans i18nKey="label_name.size" />,
+                        },
+                        {
+                            max: 32,
+                            message: <Trans i18nKey="label_name.maxSize" />,
+                        },
                         { ...editRules },
                     ]}
                 >
