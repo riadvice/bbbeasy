@@ -1565,6 +1565,8 @@ fieldset {
 .edit-room-form {
     display: block !important;
 }
-.text-box-Label{
-    width: 200px;
+div.error-message-Label{
+    max-width: max-content;
+    margin-bottom: 10px;
+    margin-left: 10px;
 }

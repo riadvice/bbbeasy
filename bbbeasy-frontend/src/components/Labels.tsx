@@ -23,7 +23,7 @@ import { t } from 'i18next';
 
 import { PageHeader } from '@ant-design/pro-layout';
 
-import { Badge, Button, Form, Input, Modal, Popconfirm, Space, Typography, ColorPicker, theme } from 'antd';
+import {Badge, Button, Form, Input, Modal, Popconfirm, Space, Typography, ColorPicker, theme, Alert} from 'antd';
 import { DeleteOutlined, EditOutlined, QuestionCircleOutlined, WarningOutlined } from '@ant-design/icons';
 
 import Notifications from './Notifications';
@@ -40,6 +40,8 @@ import LabelsService from '../services/labels.service';
 
 import { TableColumnType } from '../types/TableColumnType';
 import { LabelType } from '../types/LabelType';
+import EN_US from "../locale/en-US.json";
+import {isEmpty} from "lodash";
 
 const { Link } = Typography;
 
@@ -61,6 +63,8 @@ const Labels = () => {
     const [cancelVisibility, setCancelVisibility] = React.useState<boolean>(false);
     const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
     const [color, setColor] = React.useState<string>('');
+    const [isErrorValidation , setIsErrorValidation] = React.useState<boolean>(false);
+    const [errorMsg, setErrorMsg] = React.useState<string>('');
     const { token } = theme.useToken();
     const getLabels = () => {
         setLoading(true);
@@ -150,6 +154,9 @@ const Labels = () => {
                         onFocus={() => {
                             setCancelVisibility(false);
                         }}
+                        style={{
+                            borderColor: dataIndex == "name" && isErrorValidation  ? "red" : null,
+                        }}
                     />
                 }
                 errorsEdit={errorsEdit}
@@ -220,8 +227,8 @@ const Labels = () => {
     const saveEdit = async (record: LabelType, key: number) => {
         try {
             const formValues: object = await editForm.validateFields();
-
             if (!CompareRecords(record, editForm.getFieldsValue(true))) {
+                setIsErrorValidation(false);
                 setLoading(true);
                 setErrorsEdit({});
                 LabelsService.edit_label(formValues, key)
@@ -261,6 +268,26 @@ const Labels = () => {
         } catch (errInfo) {
             console.error('Save failed:', errInfo);
         }
+    };
+
+
+    const dataValidation = (record: LabelType, key: number) => {
+
+        const newLabel = editForm.getFieldsValue(true);
+        if(isEmpty(newLabel.name)){
+            setIsErrorValidation(true);
+            setErrorMsg("name.required");
+            return;
+        }
+
+        if(newLabel.name.length > 32){
+            setIsErrorValidation(true);
+            setErrorMsg("label_name.maxSize");
+            return;
+        }
+        
+            saveEdit(record,key);
+    
     };
 
     const columns: TableColumnType[] = [
@@ -329,7 +356,7 @@ const Labels = () => {
                             disabled={loading}
                             size="middle"
                             type="primary"
-                            onClick={() => saveEdit(record, record.key)}
+                            onClick={() => dataValidation(record, record.key)}
                         >
                             <Trans i18nKey="save" />
                         </Button>
@@ -405,15 +432,22 @@ const Labels = () => {
                 />
             )}
 
-            <EditableTable
-                EditableCell={EditableCell}
-                editForm={editForm}
-                mergedColumns={mergedColumns}
-                dataSource={data}
-                loading={loading}
-                notFoundContent="no_labels"
-            />
-        </>
+                    {isErrorValidation  ?
+                            <div className="error-message-Label">
+                                <Alert type="error"  message={<Trans i18nKey={errorMsg} />} showIcon/>
+                            </div>
+                            : null}
+                    <EditableTable
+                        EditableCell={EditableCell}
+                        editForm={editForm}
+                        mergedColumns={mergedColumns}
+                        dataSource={data}
+                        loading={loading}
+                        notFoundContent="no_labels"
+                    />
+
+            </>
+
     );
 };
 
