@@ -1565,7 +1565,6 @@ fieldset {
 .edit-room-form {
     display: block !important;
 }
-
 .room-title {
     max-width: 150px !important;
     overflow: hidden;
@@ -1576,3 +1575,4 @@ div.error-message-Label{
     margin-bottom: 10px;
     margin-left: 10px;
 }
+
