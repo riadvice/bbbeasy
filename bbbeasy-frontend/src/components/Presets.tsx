@@ -559,6 +559,7 @@ const PresetsCol: React.FC<PresetColProps> = ({
                                                             onChange={(val) => (item.value = val)}
                                                         />
                                                     )}
+
                                                     {item.type === 'select' && (
                                                         <Select
                                                             defaultValue={item.value}

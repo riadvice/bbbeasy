@@ -56,6 +56,7 @@ class PresetSetting extends BaseModel
                 $attributes = $class->getReflectionConstants();
                 foreach ($attributes as $attribute) {
                     $attributeName = $attribute->name;
+
                     if (self::GROUP_NAME !== $attributeName && !str_ends_with($attributeName, '_TYPE')) {
                         $subCategory     = $class->getConstant($attributeName);
                         $subCategoryData = [
