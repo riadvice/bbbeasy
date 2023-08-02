@@ -406,5 +406,10 @@
 
     "askModerator": "Demander au modérateur",
     "alwaysAccept": "Toujours accepter",
+
     "alwaysDeny": "Toujours refuser"
+
+    "alwaysDeny": "Toujours refuser",
+    "email-not-exist": "L'utilisateur n'existe pas avec cette adresse email"
+
 }

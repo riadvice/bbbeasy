@@ -405,5 +405,10 @@
     "record": "سجل",
     "askModerator": "اسأل المشرف",
     "alwaysAccept": "تقبل دائما",
+ 
     "alwaysDeny": "ينفي دائما"
+ 
+    "alwaysDeny": "ينفي دائما",
+    "email-not-exist": "المستخدم غير موجود مع هذا البريد الإلكتروني"
+ 
 }
