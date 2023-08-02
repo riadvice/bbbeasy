@@ -51,7 +51,15 @@ APP_DIR=$BASEDIR/../
 # Git tag, commits ahead & commit id under format '0.4-160-g3bb256c'
 # GIT_VERSION=$(git --git-dir="$BASEDIR/../.git" describe --tags --always HEAD)
 
-echo "BBBEASY - INSTALL SCRIPT"
+echo "BBBeasy - INSTALL SCRIPT"
+
+# Check for the OS
+source /etc/lsb-release
+
+if [[ "$DISTRIB_ID" != "Ubuntu" && "$DISTRIB_RELEASE" != "22.04" ]]; then
+  echo "Ubuntu 22.04 LTS (jammy) is required to install BBBeasy - https://releases.ubuntu.com/jammy/"
+  exit
+fi
 
 # Setup default values
 HV_HOST=$(hostname)
@@ -114,11 +122,13 @@ install_docker_deps() {
   apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
 }
 
-install_deps() {
-  cd /tmp
-
+install_common_deps() {
   echo "Install basic dependencies"
   apt-get install -y git gcc g++ make curl software-properties-common
+}
+
+install_deps() {
+  cd /tmp
 
   echo "adding ondrej/php repository"
   add-apt-repository -y ppa:ondrej/php
@@ -278,10 +288,12 @@ install() {
   read_options "$@"
   if [[ "$INSTALL_TYPE" == "docker" ]]; then
     echo "-- Installing docker version --"
+    install_common_deps
     install_docker_deps
     install_docker
   elif [[ "$INSTALL_TYPE" == "git" ]]; then
     echo "-- Installing git version --"
+    install_common_deps
     install_deps
     service nginx stop
     generate_ssl
