@@ -24,6 +24,7 @@ namespace Actions\PresetSettings;
 
 use Actions\Base as BaseAction;
 use Actions\RequirePrivilegeTrait;
+use Enum\GuestPolicy;
 use Enum\ResponseCode;
 use Models\Preset;
 use Models\PresetSetting;
@@ -75,7 +76,11 @@ class Edit extends BaseAction
                             }
                             // add enabled category from userSubCategories
                             if ($editedSubCategory['enabled'] && !property_exists($userSubCategories, $subCategoryName)) {
-                                $userSubCategories->{$subCategoryName} = '';
+                                if (\Enum\Presets\GuestPolicy::POLICY === $subCategoryName) {
+                                    $userSubCategories->{$subCategoryName} = GuestPolicy::ALWAYS_ACCEPT;
+                                } else {
+                                    $userSubCategories->{$subCategoryName} = '';
+                                }
                             }
                         }
                     }

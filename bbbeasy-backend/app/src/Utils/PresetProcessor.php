@@ -28,6 +28,7 @@ use Enum\Presets\Branding;
 use Enum\Presets\BreakoutRooms;
 use Enum\Presets\General;
 use Enum\Presets\GuestPolicy;
+use Enum\Presets\Layout;
 use Enum\Presets\LearningDashboard;
 use Enum\Presets\LockSettings;
 use Enum\Presets\Presentation;
@@ -158,12 +159,27 @@ class PresetProcessor
         $preparePresetData = $this->preparePresetData($preset);
 
         // Set the preset data
+        $presetsData->setData(Audio::GROUP_NAME, Audio::AUTO_JOIN, $preparePresetData[Audio::GROUP_NAME][Audio::AUTO_JOIN]);
         $presetsData->setData(Audio::GROUP_NAME, Audio::LISTEN_ONLY_ENABLED, $preparePresetData[Audio::GROUP_NAME][Audio::LISTEN_ONLY_ENABLED]);
         $presetsData->setData(Audio::GROUP_NAME, Audio::SKIP_ECHO_TEST, $preparePresetData[Audio::GROUP_NAME][Audio::SKIP_ECHO_TEST]);
 
+        $presetsData->setData(Layout::GROUP_NAME, Layout::PRESENTATION, $preparePresetData[Layout::GROUP_NAME][Layout::PRESENTATION]);
+        $presetsData->setData(Layout::GROUP_NAME, Layout::PARTICIPANTS, $preparePresetData[Layout::GROUP_NAME][Layout::PARTICIPANTS]);
+        $presetsData->setData(Layout::GROUP_NAME, Layout::CHAT, $preparePresetData[Layout::GROUP_NAME][Layout::CHAT]);
+        $presetsData->setData(Layout::GROUP_NAME, Layout::NAVIGATION_BAR, $preparePresetData[Layout::GROUP_NAME][Layout::NAVIGATION_BAR]);
+        $presetsData->setData(Layout::GROUP_NAME, Layout::ACTIONS_BAR, $preparePresetData[Layout::GROUP_NAME][Layout::ACTIONS_BAR]);
+
+        $joinParams->addUserData('bbb_listen_only_mode', !$presetsData->getData(Audio::GROUP_NAME, Audio::AUTO_JOIN));
         $joinParams->addUserData('bbb_force_listen_only', $presetsData->getData(Audio::GROUP_NAME, Audio::LISTEN_ONLY_ENABLED));
 
-        $joinParams->addUserData('bbb_skip_check_audio', $presetsData->getData(Audio::GROUP_NAME, Audio::SKIP_ECHO_TEST));
+        $joinParams->addUserData('bbb_skip_check_audio', $presetsData->getData(Audio::GROUP_NAME, Audio::SKIP_ECHO_TEST) || $presetsData->getData(Audio::GROUP_NAME, Audio::AUTO_JOIN));
+
+        $joinParams->addUserData('bbb_hide_presentation_on_join', !$presetsData->getData(Layout::GROUP_NAME, Layout::PRESENTATION));
+        $joinParams->addUserData('bbb_show_participants_on_login', $presetsData->getData(Layout::GROUP_NAME, Layout::PARTICIPANTS));
+        $joinParams->addUserData('bbb_show_public_chat_on_login', $presetsData->getData(Layout::GROUP_NAME, Layout::CHAT));
+        $joinParams->addUserData('bbb_hide_nav_bar', !$presetsData->getData(Layout::GROUP_NAME, Layout::NAVIGATION_BAR));
+        $joinParams->addUserData('bbb_hide_actions_bar', !$presetsData->getData(Layout::GROUP_NAME, Layout::ACTIONS_BAR));
+
         $joinParams->setRedirect(false);
 
         return $joinParams;

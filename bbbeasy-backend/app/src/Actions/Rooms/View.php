@@ -41,7 +41,8 @@ class View extends BaseAction
 
     public function beforeroute(): void
     {
-        $link            = $this->f3->get('PARAMS.link');
+        $link = $this->f3->get('PARAMS.link');
+
         $room            = new Room();
         $room            = $room->getByLink($link);
         $preset          = new Preset();
