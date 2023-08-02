@@ -116,6 +116,10 @@ install_docker_deps() {
 
 install_deps() {
   cd /tmp
+
+  echo "Install basic dependencies"
+  apt-get install -y git gcc g++ make curl software-properties-common
+
   echo "adding ondrej/php repository"
   add-apt-repository -y ppa:ondrej/php
 
@@ -130,9 +134,6 @@ install_deps() {
   echo "Update OS software"
   apt-get update
   apt-get upgrade -y
-
-  echo "Install basic dependencies"
-  apt-get install -y git gcc g++ make
 
   echo "Install ubuntu tools"
   apt-get install -y wget gnupg2 lsb-release curl zip unzip bc ntp
