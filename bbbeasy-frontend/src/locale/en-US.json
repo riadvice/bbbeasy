@@ -419,6 +419,8 @@
 
     "askModerator": "Ask moderator",
     "alwaysAccept": "Always accept",
+
     "alwaysDeny": "Always deny",
+
     "email-not-exist": "User does not exist with this email"
 }

@@ -20,16 +20,11 @@ declare(strict_types=1);
  * with BBBEasy; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Enum\Presets;
-
-use MabeEnum\Enum;
+namespace Enum;
 
 class GuestPolicy extends Enum
 {
-    public const GROUP_NAME   = 'Guest Policy';
-    public const CONFIGURABLE = 'configurable';
-    public const POLICY       = 'policy';
-
-    public const CONFIGURABLE_TYPE = 'bool';
-    public const POLICY_TYPE       = 'select';
+    public const ALWAYS_ACCEPT = 'ALWAYS_ACCEPT';
+    public const ALWAYS_DENY   = 'ALWAYS_DENY';
+    public const ASK_MODERATOR = 'ASK_MODERATOR';
 }
