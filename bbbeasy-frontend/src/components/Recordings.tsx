@@ -54,6 +54,14 @@ import RecordingsService from '../services/recordings.service';
 import { TableColumnType } from '../types/TableColumnType';
 import { RecordingType } from '../types/RecordingType';
 import CopyTextToClipBoard from './CopyTextToClipBoard';
+import {
+    FacebookIcon,
+    FacebookShareButton,
+    LinkedinIcon,
+    LinkedinShareButton,
+    TwitterIcon,
+    TwitterShareButton
+} from "react-share";
 
 const { Link } = Typography;
 
@@ -422,21 +430,32 @@ const Recordings = () => {
                         <Space size={38} direction="vertical" className="modal-content">
                             <div className="mt-24">{getFormatIcons(modalFormats, true)}</div>
                             <Space size="middle" className="social-medias">
-                                <Avatar size={75} className="bbbeasy-btn">
                                     <div className="bbbeasy-white-btn">
-                                        <FacebookOutlined />
+                                        <FacebookShareButton
+                                            url={modalUrl}
+
+                                            quote={'Join us!'}
+                                        >
+                                            <FacebookIcon size={75} round />
+                                        </FacebookShareButton>
                                     </div>
-                                </Avatar>
-                                <Avatar size={75} className="bbbeasy-btn">
                                     <div className="bbbeasy-white-btn">
-                                        <TwitterOutlined />
+                                        <TwitterShareButton
+                                            url={modalUrl}
+                                        >
+                                            <TwitterIcon size={75} round />
+                                        </TwitterShareButton>
                                     </div>
-                                </Avatar>
-                                <Avatar size={75} className="bbbeasy-btn">
+
                                     <div className="bbbeasy-white-btn">
-                                        <LinkedinOutlined />
+                                        <LinkedinShareButton
+                                            url={modalUrl}
+                                            title="Create LinkedIn Share button on Website Webpages"
+                                        >
+                                            <LinkedinIcon size={75} round />
+                                        </LinkedinShareButton>
+
                                     </div>
-                                </Avatar>
                             </Space>
                             <Input
                                 readOnly
@@ -444,8 +463,17 @@ const Recordings = () => {
                                 suffix={<CopyTextToClipBoard textToCopy={modalUrl} />}
                             />
                             <Form.Item className="modal-submit-btn">
-                                <Button type="primary" id="submit-btn" htmlType="submit" block>
-                                    <Trans i18nKey="share" />
+                                <Button type="primary" id="submit-btn"
+                                        icon={
+                                            <DynamicIcon
+                                                type="playback-presentation"
+                                                className="bbbeasy-ppt"
+                                            />
+                                        }
+                                        onClick={() => {window.open(modalUrl)}} htmlType="submit" block>
+                                    <span>
+                                        <Trans i18nKey="replay" />
+                                    </span>
                                 </Button>
                             </Form.Item>
                         </Space>
