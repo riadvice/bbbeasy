@@ -24,6 +24,7 @@ namespace Models;
 
 use Enum\Presets\GuestPolicy;
 use Enum\Presets\Layout;
+use Enum\Presets\Screenshare;
 use Models\Base as BaseModel;
 
 /**
@@ -227,7 +228,7 @@ class Preset extends BaseModel
                         if (!$settings[$categoryName]) {
                             if (GuestPolicy::GROUP_NAME === $categoryName && GuestPolicy::POLICY === $presetSettings->name) {
                                 $settings += [$categoryName => [$presetSettings->name => \Enum\GuestPolicy::ALWAYS_ACCEPT]];
-                            } elseif (Layout::GROUP_NAME === $categoryName) {
+                            } elseif (Layout::GROUP_NAME === $categoryName || Screenshare::GROUP_NAME === $categoryName) {
                                 $settings += [$categoryName => [$presetSettings->name => true]];
                             } else {
                                 $settings += [$categoryName => [$presetSettings->name => '']];

@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Models;
 
+use Enum\Presets\Layout;
 use Models\Base as BaseModel;
 
 /**
@@ -60,7 +61,7 @@ class PresetSetting extends BaseModel
                         $subCategory     = $class->getConstant($attributeName);
                         $subCategoryData = [
                             'name'    => $subCategory,
-                            'enabled' => 'Layout' === $categoryName ? true : $enabled,
+                            'enabled' => (Layout::GROUP_NAME === $categoryName) ? true : $enabled,
                         ];
                         $categoryData['subcategories'][] = $subCategoryData;
                     }
