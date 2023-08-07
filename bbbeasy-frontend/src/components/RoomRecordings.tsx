@@ -20,10 +20,10 @@ import React from 'react';
 import { Trans } from 'react-i18next';
 import { t } from 'i18next';
 
-import { Button, Card, Col, Dropdown, Input, Row, Space, Typography } from 'antd';
+import {Button, Card, Col, Dropdown, Form, Input, Modal, Popconfirm, Row, Space, Typography} from 'antd';
 import {
-    CalendarOutlined,
-    ClockCircleOutlined,
+    CalendarOutlined, CheckOutlined,
+    ClockCircleOutlined, CloseOutlined,
     MoreOutlined,
     SearchOutlined,
     ShareAltOutlined,
@@ -37,6 +37,7 @@ import LocaleService from '../services/locale.service';
 
 import { RecordingType } from '../types/RecordingType';
 import { MenuProps } from 'antd/lib/menu';
+import ModalSocialLinks from "./ModalSocialLinks";
 
 const { Title } = Typography;
 
@@ -100,8 +101,9 @@ const RoomRecordings = (props: Props) => {
                                         : recording.name.substring(0, 21) + '...';
 
                                 return (
-                                    <Col span={6} key={recording.key}>
+                                    <Col style={{maxWidth:"300px"}} key={recording.key}>
                                         <Card
+                                            style={{maxWidth:"300px"}}
                                             bordered={false}
                                             hoverable
                                             cover={
@@ -137,14 +139,7 @@ const RoomRecordings = (props: Props) => {
                                                                 <ClockCircleOutlined /> {recording.duration}
                                                             </span>
                                                         </Space>
-
-                                                        <Button
-                                                            className="share-icon"
-                                                            size="middle"
-                                                            type="primary"
-                                                            shape="circle"
-                                                            icon={<ShareAltOutlined />}
-                                                        />
+                                                        <ModalSocialLinks recording={recording} from="RoomRecordings"/>
                                                     </div>
                                                 </div>
                                             }
@@ -154,6 +149,7 @@ const RoomRecordings = (props: Props) => {
                                                     <Button
                                                         size="middle"
                                                         type="primary"
+                                                        onClick={() => {window.open(recording.url)}}
                                                         icon={
                                                             <DynamicIcon
                                                                 type="playback-presentation"
