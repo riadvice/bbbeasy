@@ -53,7 +53,8 @@ import RecordingsService from '../services/recordings.service';
 
 import { TableColumnType } from '../types/TableColumnType';
 import { RecordingType } from '../types/RecordingType';
-import CopyTextToClipBoard from './CopyTextToClipBoard';
+
+import ModalSocialLinks from "./ModalSocialLinks";
 
 const { Link } = Typography;
 
@@ -73,10 +74,6 @@ const Recordings = () => {
     const [editingKey, setEditingKey] = React.useState<string>(null);
     const [errorsEdit, setErrorsEdit] = React.useState({});
     const [cancelVisibility, setCancelVisibility] = React.useState<boolean>(false);
-
-    const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
-    const [modalFormats, setModalFormats] = React.useState<string[]>(null);
-    const [modalUrl, setModalUrl] = React.useState<string>(null);
 
     //list
     const getRecordings = () => {
@@ -180,19 +177,6 @@ const Recordings = () => {
             .finally(() => {
                 setLoading(false);
             });
-    };
-
-    // share
-    const showModal = (formats: string[], url: string) => {
-        setIsModalVisible(true);
-        setModalFormats(formats);
-        setModalUrl(url);
-    };
-    const cancelShare = () => {
-        setIsModalVisible(false);
-    };
-    const handleShare = () => {
-        console.log(modalUrl);
     };
 
     const getFormatIcons = (formats: string[], showDisabled?: boolean) => {
@@ -379,9 +363,7 @@ const Recordings = () => {
                                 placement={LocaleService.direction == 'rtl' ? 'right' : 'left'}
                                 title={getFormatIcons(record.formats, true)}
                             >
-                                <Link onClick={() => showModal(record.formats, record.url)}>
-                                    <ShareAltOutlined />
-                                </Link>
+                                <ModalSocialLinks recording={record} from="Recordings"/>
                             </Tooltip>
                         )}
                     </Space>
@@ -407,52 +389,6 @@ const Recordings = () => {
     return (
         <>
             <PageHeader className="site-page-header" title={<Trans i18nKey="recordings" />} />
-
-            {isModalVisible && (
-                <Modal
-                    className="share-modal"
-                    centered
-                    open={isModalVisible}
-                    onOk={handleShare}
-                    onCancel={cancelShare}
-                    footer={null}
-                    maskClosable={false}
-                >
-                    <Form layout="vertical" hideRequiredMark onFinish={handleShare} validateTrigger="onSubmit">
-                        <Space size={38} direction="vertical" className="modal-content">
-                            <div className="mt-24">{getFormatIcons(modalFormats, true)}</div>
-                            <Space size="middle" className="social-medias">
-                                <Avatar size={75} className="bbbeasy-btn">
-                                    <div className="bbbeasy-white-btn">
-                                        <FacebookOutlined />
-                                    </div>
-                                </Avatar>
-                                <Avatar size={75} className="bbbeasy-btn">
-                                    <div className="bbbeasy-white-btn">
-                                        <TwitterOutlined />
-                                    </div>
-                                </Avatar>
-                                <Avatar size={75} className="bbbeasy-btn">
-                                    <div className="bbbeasy-white-btn">
-                                        <LinkedinOutlined />
-                                    </div>
-                                </Avatar>
-                            </Space>
-                            <Input
-                                readOnly
-                                defaultValue={modalUrl}
-                                suffix={<CopyTextToClipBoard textToCopy={modalUrl} />}
-                            />
-                            <Form.Item className="modal-submit-btn">
-                                <Button type="primary" id="submit-btn" htmlType="submit" block>
-                                    <Trans i18nKey="share" />
-                                </Button>
-                            </Form.Item>
-                        </Space>
-                    </Form>
-                </Modal>
-            )}
-
             <EditableTable
                 EditableCell={EditableCell}
                 editForm={editForm}
