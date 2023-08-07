@@ -26,6 +26,7 @@ export const apiRoutes = {
     CHANGE_PASSWORD_URL: API_URL + '/account/change-password',
     RESET_TOKEN_URL: API_URL + '/account/reset-token/',
     EDIT_ACCOUNT_URL: API_URL + '/account/edit',
+    REMOVE_AVATAR_URL: API_URL + '/account/remove',
 
     LOGS_URL: API_URL + '/logs',
 

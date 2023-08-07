@@ -57,7 +57,6 @@ import notificationService from '../../services/notification.service';
 
 import settingsService from 'services/settings.service';
 import { SettingsType } from 'types/SettingsType';
-import { apiRoutes } from 'routing/backend-config';
 
 const { Header } = Layout;
 const { Title, Text, Paragraph } = Typography;

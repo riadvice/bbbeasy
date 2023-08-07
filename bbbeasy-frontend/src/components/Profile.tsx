@@ -40,6 +40,11 @@ import { apiRoutes } from '../routing/backend-config';
 
 import { FormInstance } from 'antd/lib/form';
 import { UserType } from '../types/UserType';
+import { UploadFile } from 'antd/lib/upload/interface';
+
+import authService from "../services/auth.service";
+
+
 
 type formType = {
     username?: string;
@@ -60,26 +65,43 @@ const Profile = () => {
         email: currentUser.email,
         avatar: currentUser.avatar,
     };
-    const [images, setImages] = React.useState([]);
+    const [images, setImages] =  React.useState<UploadFile[]>(null);
     const [errors, setErrors] = React.useState<string>('');
+
+    const handleFileName = (imageList) => {
+
+        imageList[0].name = 'avatar1-' + Date.now()+"."+imageList[0].file.type.substring(6);
+
+        setImages(imageList);
+    }
+
+    const handleRemoveAvatar = () => {
+        authService.remove_avatar(currentUser.avatar)
+            .then(response => {
+                setImages(response.data);
+                console.log(response.data);
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    }
 
     const handleUpdate = (formValues: formType) => {
         setErrors('');
 
-        // save avatar
-        if (images.length != 0 && images[0].file != null) {
+        if (images[0] != null && images) {
             const formData: FormData = new FormData();
-            formData.append('logo', images[0].file, images[0].file.name);
-            formData.append('logo_name', images[0].file.name);
+            formData.append('logo', images[0]['file'], images[0].name);
+            formData.append('logo_name', images[0].name);
 
             axios.post(apiRoutes.SAVE_FILE_URL, formData).catch((error) => {
                 console.log(error);
             });
-
-            formValues.avatar = images[0].file.name;
+                    formValues.avatar = images[0].name;
+        }else{
+            formValues.avatar = null;
         }
-
-        //edit account
+        //edit account;
         AuthService.edit_account(formValues)
             .then((response) => {
                 const user = response.data.user;
@@ -148,10 +170,11 @@ const Profile = () => {
                             <ImageUploading
                                 multiple={false}
                                 value={images}
-                                onChange={(imageList: ImageListType) => setImages(imageList as never[])}
+                                onChange={(imageList: ImageListType) => handleFileName(imageList)}
                                 maxNumber={1}
+                                acceptType={["jpg", "jpeg", "png"]}
                             >
-                                {({ imageList, onImageUpload, onImageUpdate, onImageRemove }) => (
+                                {({ imageList, onImageUpload, onImageUpdate }) => (
                                     <Badge
                                         count={
                                             <Tooltip
@@ -175,29 +198,20 @@ const Profile = () => {
                                     >
                                         <Avatar
                                             src={
-                                                imageList[0] != null ? (
-                                                    <div className="ant-image">
-                                                        <img
-                                                            className="ant-image-img"
-                                                            //   src={  src={logo ? process.env.REACT_APP_API_URL +"/"+ logo : '/images/logo_01.png'}}
-                                                            src={
-                                                                currentUser.avatar
-                                                                    ? process.env.REACT_APP_API_URL +
-                                                                      '/' +
-                                                                      currentUser.avatar
-                                                                    : '/images/logo_01.png'
-                                                            }
-                                                            width={130}
-                                                            height={130}
-                                                        />
-                                                        <div className="ant-image-mask">
-                                                            <div className="ant-image-mask-info">
-                                                                <DeleteOutlined onClick={() => onImageRemove(0)} />
-                                                            </div>
+                                                <div className="ant-image">
+                                                    <img
+                                                        className="ant-image-img"
+                                                        src={imageList[0] != null ? imageList[0].dataURL :  process.env.REACT_APP_API_URL +"/"+ currentUser.avatar}
+                                                        width={130}
+                                                        height={130}
+                                                    />
+                                                    <div className="ant-image-mask">
+                                                        <div className="ant-image-mask-info" >
+                                                            <DeleteOutlined onClick={() => handleRemoveAvatar()} />
                                                         </div>
                                                     </div>
-                                                ) : null
-                                            }
+                                                </div>
+                                        }
                                             icon={imageList[0] == null ? <UserOutlined /> : null}
                                             size={{ xs: 32, sm: 40, md: 64, lg: 80, xl: 125, xxl: 135 }}
                                             className="bbbeasy-btn"
