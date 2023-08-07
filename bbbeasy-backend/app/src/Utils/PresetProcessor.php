@@ -156,7 +156,7 @@ class PresetProcessor
         // UserExperience: keyboard_shortcuts,ask_for_feedback
 
         $createParams->setWebcamsOnlyForModerator($presetsData->getData(Webcams::GROUP_NAME, Webcams::VISIBLE_FOR_MODERATOR_ONLY));
-        $createParams->setAllowModsToEjectCameras($presetsData->getData(Webcams::GROUP_NAME, Webcams::MODERATOR_ALLOWED_CAMERA_EJECT));
+        $createParams->setAllowModsToEjectCameras( $presetsData->getData(Webcams::GROUP_NAME, Webcams::MODERATOR_ALLOWED_CAMERA_EJECT)?true:false);
         // configurable,auto_share,skip_preview
 
         // Whiteboard:multi_user_pen_only,presenter_tools,multi_user_tools
