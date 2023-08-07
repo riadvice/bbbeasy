@@ -59,6 +59,7 @@ class PresetProcessor
 
     public function toCreateMeetingParams($preset, $createParams)
     {
+        $disabledFeatures=[];
         $presetsData       = new PresetData();
         $preparePresetData = $this->preparePresetData($preset);
 
@@ -135,16 +136,21 @@ class PresetProcessor
         $createParams->setLockSettingsDisablePrivateChat($presetsData->getData(LockSettings::GROUP_NAME, LockSettings::PRIVATE_CHAT));
         $createParams->setLockSettingsDisablePublicChat($presetsData->getData(LockSettings::GROUP_NAME, LockSettings::PUBLIC_CHAT));
         $createParams->setLockSettingsDisableNote($presetsData->getData(LockSettings::GROUP_NAME, LockSettings::SHARED_NOTES));
-        $createParams->setLockSettingsLockedLayout(false);
-       
+       if($presetsData->getData(LockSettings::GROUP_NAME,LockSettings::LAYOUT)){
+           array_push($disabledFeatures,'layouts');
+       }
+
+
 
         // $createParams->setPreUploadedPresentationOverrideDefault($presetsData->getData(Presentation::GROUP_NAME, Presentation::PRE_UPLOAD));
 
         $createParams->setAutoStartRecording($presetsData->getData(Recording::GROUP_NAME, Recording::AUTO_START));
         $createParams->setAllowStartStopRecording($presetsData->getData(Recording::GROUP_NAME, Recording::ALLOW_START_STOP));
         $createParams->setRecord($presetsData->getData(Recording::GROUP_NAME, Recording::RECORD));
-
-        $createParams->setDisabledFeatures(!$presetsData->getData(Screenshare::GROUP_NAME, Screenshare::CONFIGURABLE) ? ['screenshare'] : []);
+        if(!$presetsData->getData(Screenshare::GROUP_NAME,Screenshare::CONFIGURABLE)){
+            array_push($disabledFeatures,'screenshare');
+        }
+        $createParams->setDisabledFeatures($disabledFeatures);
 
         // Screenshare:configurable
         // UserExperience: keyboard_shortcuts,ask_for_feedback
