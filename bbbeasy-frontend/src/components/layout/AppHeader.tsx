@@ -175,6 +175,7 @@ const AppHeader = () => {
             placement={LocaleService.direction == 'rtl' ? 'bottomLeft' : 'bottomRight'}
             arrow
             trigger={['click']}
+            className={!warningNotification ? 'dropdownWarning' : null}
         >
             <Badge offset={LocaleService.direction == 'rtl' ? [34, 5] : [-34, 5]} count={warningNotification ? 1 : 0}>
                 <Button type="primary" icon={<WarningOutlined />} className="profil-btn" />
@@ -252,7 +253,31 @@ const AppHeader = () => {
                                     arrow
                                     trigger={['click']}
                                 >
-                                    <Button type="primary" icon={<UserOutlined />} className="profil-btn" />
+                                    {currentUser.avatar == null ? (
+                                        <Button type="primary" className="profil-btn" icon={<UserOutlined />}>
+                                            {' '}
+                                        </Button>
+                                    ) : (
+                                        <>
+                                            <Button
+                                                type="primary"
+                                                className="profil-btn"
+                                                style={{
+                                                    backgroundPosition: 'center',
+                                                    backgroundSize: 'cover',
+                                                    width: '40px',
+                                                    height: '40px',
+                                                    maxWidth: '40px',
+                                                    maxHeight: '40px',
+                                                    backgroundImage: `url( ${
+                                                        process.env.REACT_APP_API_URL + '/' + currentUser.avatar
+                                                    })`,
+                                                }}
+                                            >
+                                                {' '}
+                                            </Button>
+                                        </>
+                                    )}
                                 </Dropdown>
                                 {dropdownLang}
                             </Space>

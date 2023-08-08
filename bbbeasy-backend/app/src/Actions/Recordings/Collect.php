@@ -40,11 +40,7 @@ class Collect extends BaseAction
     public function execute($f3, $params): void
     {
         $data            = [];
-        $recordingStates = [
-            'publishing', 'published',
-            'processing', 'processed',
-            'unpublishing', 'unpublished',
-            'deleting', 'deleted',
+        $recordingStates = ['published', 'unpublished', 'deleted',
         ];
         $room  = new Room();
         $rooms = $room->find();

@@ -82,7 +82,7 @@ export const webRoutes: IRoute[] = [
     {
         path: '/r/:shortlink',
         element: <RoomDetails />,
-        private: true,
+        private: false,
     },
     {
         path: '/recordings',

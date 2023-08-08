@@ -26,6 +26,7 @@ use MabeEnum\Enum;
 
 class LockSettings extends Enum
 {
+    public const GROUP_NAME   = 'LockSettings';
     public const WEBCAMS      = 'webcams';
     public const MICROPHONES  = 'microphones';
     public const PRIVATE_CHAT = 'private_chat';

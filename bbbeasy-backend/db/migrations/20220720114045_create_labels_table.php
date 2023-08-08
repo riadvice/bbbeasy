@@ -30,7 +30,7 @@ final class CreateLabelsTable extends AbstractMigration
         $table
             ->addColumn('name', 'string', ['limit' => 32, 'null' => false])
             ->addColumn('description', 'text', ['null' => true])
-            ->addColumn('color', 'string', ['limit' => 7, 'default' => '#fbbc0b'])
+            ->addColumn('color', 'string', ['limit' => 10, 'default' => '#fbbc0b'])
             ->addColumn('created_on', 'datetime', ['default' => '0001-01-01 00:00:00', 'timezone' => true])
             ->addColumn('updated_on', 'datetime', ['default' => '0001-01-01 00:00:00', 'timezone' => true])
             ->save()

@@ -26,6 +26,8 @@ use MabeEnum\Enum;
 
 class Audio extends Enum
 {
+    public const GROUP_NAME = 'Audio';
+
     public const USERS_JOIN_MUTED                   = 'users_join_muted';
     public const MODERATORS_ALLOWED_TO_UNMUTE_USERS = 'moderators_allowed_to_unmute_users';
     public const AUTO_JOIN                          = 'auto_join';

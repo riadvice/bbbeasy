@@ -1,8 +1,4 @@
-<?php
-
-declare(strict_types=1);
-
-/*
+/**
  * BBBEasy open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022-2023 RIADVICE SUARL and by respective authors (see below).
@@ -20,30 +16,10 @@ declare(strict_types=1);
  * with BBBEasy; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Actions\Labels;
+import { GuestPolicyType } from '../types/GuestPolicyType';
 
-use Actions\Base as BaseAction;
-use Actions\RequirePrivilegeTrait;
-use Models\Label;
-
-/**
- *Class Index.
- */
-class Index extends BaseAction
-{
-    use RequirePrivilegeTrait;
-
-    /**
-     * @param mixed $f3
-     * @param mixed $params
-     *
-     * @throws \JsonException
-     */
-    public function show($f3, $params): void
-    {
-        $label  = new Label();
-        $labels = $label->getAllLabels();
-        $this->logger->debug('collecting labels', ['labels' => json_encode($labels)]);
-        $this->renderJson($labels);
-    }
-}
+export const GuestPolicy: GuestPolicyType[] = [
+    { name: 'Ask moderator', key: 'askModerator', value: 'ASK_MODERATOR' },
+    { name: 'Always accept', key: 'alwaysAccept', value: 'ALWAYS_ACCEPT' },
+    { name: 'Always deny', key: 'alwaysDeny', value: 'ALWAYS_DENY' },
+];

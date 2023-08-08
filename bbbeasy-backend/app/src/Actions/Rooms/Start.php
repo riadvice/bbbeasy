@@ -28,6 +28,7 @@ use BigBlueButton\Enum\Role;
 use BigBlueButton\Parameters\CreateMeetingParameters;
 use BigBlueButton\Parameters\GetMeetingInfoParameters;
 use BigBlueButton\Parameters\JoinMeetingParameters;
+use Enum\Presets\General;
 use Enum\ResponseCode;
 use Models\Preset;
 use Models\Room;
@@ -43,71 +44,98 @@ class Start extends BaseAction
     use RequirePrivilegeTrait;
 
     /**
-     * @param \Base $f3
-     * @param array $params
-     *
      * @throws \Exception
      */
+    public function beforeroute(): void
+    {
+        $id = $this->f3->get('PARAMS.id');
+
+        $room   = new Room();
+        $room   = $room->getById($id);
+        $preset = new Preset();
+        $p      = $preset->findById($room->getPresetID($room->id)['preset_id']);
+
+        $presetProcessor = new PresetProcessor();
+        $presetData      = $presetProcessor->preparePresetData($p->getMyPresetInfos($p));
+
+        if (!$presetData[General::GROUP_NAME][General::OPEN_FOR_EVERYONE] && null === $this->session->get('user')) {
+            $this->logger->warning('Access denied to route ');
+            $this->f3->error(404);
+        }
+    }
+
     public function execute($f3, $params): void
     {
         $id           = $params['id'];
         $errorMessage = 'Room Meeting could not be started';
+        $form         = $this->getDecodedBody();
 
-        $room = new Room();
-        $room = $room->getById($id);
-        if ($room->valid()) {
-            $bbbRequester = new BigBlueButtonRequester();
+        $fullname = (null !== $this->session->get('user') ? $this->session->get('user.username') : $form['fullname']);
+        if (null !== $fullname) {
+            $room = new Room();
+            $room = $room->getById($id);
+            if ($room->valid()) {
+                $bbbRequester = new BigBlueButtonRequester();
 
-            // get room meeting id
-            $meetingId = $room->meeting_id;
+                // get room meeting id
+                $meetingId = $room->meeting_id;
 
-            // call meeting info to check if meeting is running
-            $getMeetingInfoResponse = $this->getMeetingInfo($meetingId, $bbbRequester);
+                // call meeting info to check if meeting is running
+                $getMeetingInfoResponse = $this->getMeetingInfo($meetingId, $bbbRequester);
 
-            if (null === $getMeetingInfoResponse) {
-                return;
-            }
-            $preset = new Preset();
-            $p      = $preset->findById($room->getPresetID($room->id)['preset_id']);
+                if (null === $getMeetingInfoResponse) {
+                    return;
+                }
+                $preset = new Preset();
+                $p      = $preset->findById($room->getPresetID($room->id)['preset_id']);
 
-            if (!$getMeetingInfoResponse->success()) {
-                // meeting not found
-                if ('notFound' === $getMeetingInfoResponse->getMessageKey()) {
-                    // create new meeting with the same meetingId
+                if (!$getMeetingInfoResponse->success()) {
+                    // meeting not found
+                    if ('notFound' === $getMeetingInfoResponse->getMessageKey()) {
+                        // create new meeting with the same meetingId
 
-                    $presetprocessor = new PresetProcessor();
-                    $presetData      = $presetprocessor->preparePresetData($p->getMyPresetInfos($p));
+                        $presetprocessor = new PresetProcessor();
+                        $presetData      = $presetprocessor->preparePresetData($p->getMyPresetInfos($p));
 
-                    if ($room->getRoomInfos($room)['user_id'] === $this->session->get('user.id') || $presetData['General']['anyone_can_start']) {
-                        $createResult = $this->createMeeting($meetingId, $bbbRequester, $room->short_link, $p->getMyPresetInfos($p), $presetprocessor);
+                        if ($room->getRoomInfos($room)['user_id'] === $this->session->get('user.id') || $presetData[General::GROUP_NAME][General::ANYONE_CAN_START]) {
+                            $createResult = $this->createMeeting($meetingId, $bbbRequester, $room->short_link, $p->getMyPresetInfos($p), $presetprocessor);
 
-                        if (null === $createResult) {
+                            if (null === $createResult) {
+                                return;
+                            }
+                        } else {
+                            $this->renderJson(['meeting' => 'Meeting has not started yet'], ResponseCode::HTTP_NOT_FOUND);
+
                             return;
                         }
                     } else {
-                        $this->renderJson(['meeting' => 'Meeting has not started yet'], ResponseCode::HTTP_NOT_FOUND);
+                        $this->logger->error('Could not fetch a meeting due to an error.');
+                        $this->renderJson(['meeting' => 'Could not start or join the meeting'], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
 
                         return;
                     }
-                } else {
-                    $this->logger->error('Could not fetch a meeting due to an error.');
-                    $this->renderJson(['meeting' => 'Could not start or join the meeting'], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-
-                    return;
                 }
-            }
 
-            if ($room->getRoomInfos($room)['user_id'] === $this->session->get('user.id') || $presetData['General']['all_join_as_moderator']) {
-                $this->joinMeeting($meetingId, Role::MODERATOR, $bbbRequester, $p->getMyPresetInfos($p));
+                if ($room->getRoomInfos($room)['user_id'] === $this->session->get('user.id') || $presetData[General::GROUP_NAME][General::ALL_JOIN_AS_MODERATOR]) {
+                    $this->joinMeeting($meetingId, Role::MODERATOR, $bbbRequester, $p->getMyPresetInfos($p), $fullname);
+                } else {
+                    $this->joinMeeting($meetingId, Role::VIEWER, $bbbRequester, $p->getMyPresetInfos($p), $fullname);
+                }
             } else {
-                $this->joinMeeting($meetingId, Role::VIEWER, $bbbRequester, $p->getMyPresetInfos($p));
+                $this->logger->error($errorMessage);
+                $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
             }
         } else {
-            $this->logger->error($errorMessage);
-            $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
+            $this->logger->error('Fullname should not be empty');
+            $this->renderJson(['meeting' => 'Could not join a meeting with an empty fullname'], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+
+            return;
         }
     }
 
+    /**
+     * @return \BigBlueButton\Responses\GetMeetingInfoResponse
+     */
     public function getMeetingInfo(string $meetingId, BigBlueButtonRequester $bbbRequester)
     {
         $getInfosParams = new GetMeetingInfoParameters($meetingId);
@@ -129,13 +157,14 @@ class Start extends BaseAction
         $createParams->setAttendeePassword(DataUtils::generateRandomString());
         // @todo : set later via presets
 
-        $createParams->setModeratorOnlyMessage('to invite someone you can use this link http://bbbeasy.test:3300/bbbeasy/' . $link);
+        $createParams->setModeratorOnlyMessage('to invite someone you can use this link ' . $this->f3->get('SERVER.HTTP_ORIGIN') . $this->f3->get('client.room_url_prefix') . $link);
 
         // @fixme: delete after fixing the PHP library
         $createParams->setAllowRequestsWithoutSession(true);
 
         $this->logger->info('Received request to create a new meeting.', ['meetingID' => $meetingId]);
         $createMeetingResponse = $bbbRequester->createMeeting($createParams);
+
         if ($createMeetingResponse->failed()) {
             $this->logger->warning('Meeting could not be created.');
             $this->renderXmlString($createMeetingResponse->getRawXml());
@@ -150,11 +179,12 @@ class Start extends BaseAction
         return $createParams->getModeratorPassword();
     }
 
-    public function joinMeeting(string $meetingId, string $role, BigBlueButtonRequester $bbbRequester, $p): void
+    public function joinMeeting(string $meetingId, string $role, BigBlueButtonRequester $bbbRequester, $p, $fullname): void
     {
-        $joinParams      = new JoinMeetingParameters($meetingId, $this->session->get('user.username'), $role);
+        $joinParams      = new JoinMeetingParameters($meetingId, $fullname, $role);
         $presetProcessor = new PresetProcessor();
-        $joinParams      = $presetProcessor->toJoinParameters($p, $joinParams);
+
+        $joinParams = $presetProcessor->toJoinParameters($p, $joinParams);
 
         $this->logger->info(
             'Meeting join request is going to redirect to the web client.',

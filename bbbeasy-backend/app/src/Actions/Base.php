@@ -207,7 +207,7 @@ abstract class Base extends \Prefab
     /**
      * @return mixed
      */
-    public function getDecodedBody(): array
+    public function getDecodedBody()
     {
         return json_decode($this->f3->get('BODY'), true);
     }
