@@ -60,7 +60,6 @@ const Labels = () => {
     const [errorsEdit, setErrorsEdit] = React.useState({});
     const [cancelVisibility, setCancelVisibility] = React.useState<boolean>(false);
     const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
-    const [color, setColor] = React.useState<string>('');
     const { token } = theme.useToken();
     const getLabels = () => {
         setLoading(true);

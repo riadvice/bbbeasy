@@ -253,7 +253,31 @@ const AppHeader = () => {
                                     arrow
                                     trigger={['click']}
                                 >
-                                    <Button type="primary" icon={<UserOutlined />} className="profil-btn" />
+                                    {currentUser.avatar == null ? (
+                                        <Button type="primary" className="profil-btn" icon={<UserOutlined />}>
+                                            {' '}
+                                        </Button>
+                                    ) : (
+                                        <>
+                                            <Button
+                                                type="primary"
+                                                className="profil-btn"
+                                                style={{
+                                                    backgroundPosition: 'center',
+                                                    backgroundSize: 'cover',
+                                                    width: '40px',
+                                                    height: '40px',
+                                                    maxWidth: '40px',
+                                                    maxHeight: '40px',
+                                                    backgroundImage: `url( ${
+                                                        process.env.REACT_APP_API_URL + '/' + currentUser.avatar
+                                                    })`,
+                                                }}
+                                            >
+                                                {' '}
+                                            </Button>
+                                        </>
+                                    )}
                                 </Dropdown>
                                 {dropdownLang}
                             </Space>

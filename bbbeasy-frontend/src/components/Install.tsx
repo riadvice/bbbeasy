@@ -161,7 +161,7 @@ const Install = () => {
         localStorage.removeItem('user');
 
         InstallService.install()
-            .then((response) => {
+            .then(() => {
                 setLocked(false);
 
                 getSettings();

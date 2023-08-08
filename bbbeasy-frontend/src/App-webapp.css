@@ -507,6 +507,9 @@ fieldset {
     color: #fbbc0b !important;
     background-color: transparent !important;
 }
+.profil-btn .ant-btn-icon {
+    margin-right: auto !important;
+}
 .profil-btn-dropdown .ant-dropdown-menu-item-icon {
     min-width: 25px !important;
     font-size: 13px !important;
@@ -1322,7 +1325,8 @@ fieldset {
 }
 .profile-form .bbbeasy-btn {
     clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%);
-  /* background-color: #fbbc0b;*/
+    /* background-color: #fbbc0b;*/
+
     color: black;
 }
 .profile-form .custom-badge-bg {

@@ -26,7 +26,6 @@ use Actions\Base as BaseAction;
 use Enum\ResponseCode;
 use Models\User;
 
-
 /**
  * Class SaveLogo.
  */
@@ -54,7 +53,7 @@ class RemoveLogo extends BaseAction
 
             // Return a success response
             $this->logger->info('Avatar successfully updated', ['user' => $user->toArray()]);
-            $this->renderJson(['result' => 'success', 'user' => $user->toArray(['avatar'])]);
+            $this->renderJson(['result' => 'success', 'user' => $user->toArray()]);
         }
     }
 }
