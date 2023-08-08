@@ -54,9 +54,6 @@ class Install extends BaseAction
                 $setting     = new Setting();
                 $dataChecker = new DataChecker();
 
-                $dataChecker->verify($form['username'], Validator::length(4)->setName('username'));
-                $dataChecker->verify($form['email'], Validator::email()->setName('email'));
-                $dataChecker->verify($form['password'], Validator::length(8)->setName('password'));
                 $dataChecker = $setting->checkSettingsData($dataChecker, $form);
                 $dataChecker->verify($form['presetsConfig'], Validator::notEmpty()->setName('presetsConfig'));
 
@@ -126,9 +123,11 @@ class Install extends BaseAction
 
                                     // add configured presets
                                     $presets = $form['presetsConfig'];
+
                                     if ($presets) {
                                         $presetSettings = new PresetSetting();
                                         $result         = $presetSettings->savePresetSettings($presets);
+
                                         if ('string' === \gettype($result)) {
                                             $this->renderJson(['errors' => $result], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
                                         }

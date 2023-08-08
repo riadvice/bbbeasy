@@ -523,6 +523,9 @@ fieldset {
 .warning-btn-dropdown {
     max-width: 330px !important;
 }
+.dropdownWarning {
+    display: none !important;
+}
 .search-modal .ant-modal-header {
     background-color: var(--bbbeasy-darken-gray) !important;
     height: 56px;
@@ -1252,7 +1255,7 @@ fieldset {
 .white-space {
     white-space: pre-wrap;
     text-align: left;
-    width: 300px;
+    width: 260px;
 }
 .presets-modal .ant-modal-content {
     margin: 0 30px;
@@ -1512,6 +1515,12 @@ fieldset {
     width: 90px;
 }
 
+.input-status-presets {
+    background: transparent;
+    border: transparent;
+    width: 50px;
+}
+
 .space-color-picker-add-label {
     position: relative;
     display: inline-flex;
@@ -1552,4 +1561,15 @@ fieldset {
     border-radius: 50%;
     background-color: #d4d4d4 !important;
     cursor: not-allowed;
+}
+.edit-room-form {
+    display: block !important;
+}
+.room-title {
+    max-width: 150px !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.ant-table-cell {
+    max-width: 150px !important;
 }

@@ -25,6 +25,7 @@ namespace Actions\Rooms;
 use Actions\Base as BaseAction;
 use Actions\RequirePrivilegeTrait;
 use BigBlueButton\Parameters\GetMeetingInfoParameters;
+use Enum\Presets\General;
 use Enum\ResponseCode;
 use Models\Preset;
 use Models\Room;
@@ -37,6 +38,23 @@ use Utils\PresetProcessor;
 class View extends BaseAction
 {
     use RequirePrivilegeTrait;
+
+    public function beforeroute(): void
+    {
+        $link = $this->f3->get('PARAMS.link');
+
+        $room            = new Room();
+        $room            = $room->getByLink($link);
+        $preset          = new Preset();
+        $p               = $preset->findById($room->getPresetID($room->id)['preset_id']);
+        $presetProcessor = new PresetProcessor();
+        $presetData      = $presetProcessor->preparePresetData($p->getMyPresetInfos($p));
+
+        if (!$presetData[General::GROUP_NAME][General::OPEN_FOR_EVERYONE] && null === $this->session->get('user')) {
+            $this->logger->warning('Access denied to route ');
+            $this->f3->error(404);
+        }
+    }
 
     /**
      * @param \Base $f3
@@ -63,7 +81,7 @@ class View extends BaseAction
                 if ('notFound' === $meetingInfoResponse->getMessageKey()) {
                     $anyonestart = false;
 
-                    if ($room->getRoomInfos($room)['user_id'] === $this->session->get('user.id') || $presetData['General']['anyone_can_start']) {
+                    if ($room->getRoomInfos($room)['user_id'] === $this->session->get('user.id') || $presetData[General::GROUP_NAME][General::ANYONE_CAN_START]) {
                         $canStart = true;
                     }
                 }
@@ -71,8 +89,6 @@ class View extends BaseAction
 
             $meeting             = (array) $meetingInfoResponse->getRawXml();
             $meeting['canStart'] = $canStart;
-
-            $meeting['auto_join'] = $presetData['Audio']['auto_join'];
 
             $this->renderJson(['room' => $room->getRoomInfos($room), 'meeting' => $meeting]);
         } else {

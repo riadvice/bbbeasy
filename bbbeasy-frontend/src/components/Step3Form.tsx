@@ -32,42 +32,49 @@ import { FormInstance } from 'antd/lib/form';
 const { Title, Paragraph } = Typography;
 const { Grid, Meta } = Card;
 import { useLocation } from 'react-router-dom';
-import presetSettingsService from 'services/preset.settings.service';
+import ReactDomServer from 'react-dom/server';
 type Props = {
     presets: PresetType[];
     onFinish?: (category: string, subCategories: SubCategoryType[]) => void;
     enabled?: boolean;
 };
-let step3Form: FormInstance = null;
+let step3: FormInstance = null;
 export const Step3Form = (props: Props) => {
     const location = useLocation();
     const { presets } = props;
+    const [values, setValues] = React.useState<any>();
     const enabled = props.enabled ?? true;
     const [modalTitle, setModalTitle] = React.useState<string>('');
     const [modalTitleTrans, setModalTitleTrans] = React.useState<string>('');
     const [modalContent, setModalContent] = React.useState<SubCategoryType[]>([]);
     const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
-
     const showModal = (title: string, titleTrans: string, content: SubCategoryType[]) => {
         setIsModalVisible(true);
         setModalTitle(title);
         setModalTitleTrans(titleTrans);
 
         setModalContent(content);
+        const formvalues = [];
+        content.forEach((item) => {
+            formvalues[item.name] = item.enabled;
+        });
+        setValues(formvalues);
     };
+
     const Confirm = () => {
         modalContent.map((item) => {
-            item.enabled = step3Form.getFieldValue(item.name);
+            item.enabled = values[item.name];
         });
+
         if (location.pathname.includes('settings')) {
             props.onFinish(modalTitle, modalContent);
         }
         setIsModalVisible(false);
     };
+
     const Cancel = () => {
         modalContent.map((item) => {
-            step3Form.getFieldValue(item.name);
-            step3Form.setFieldValue(item.name, item.enabled);
+            step3.setFieldValue(item.name, item.enabled);
         });
 
         setIsModalVisible(false);
@@ -147,24 +154,67 @@ export const Step3Form = (props: Props) => {
                         ]}
                         maskClosable={true}
                     >
-                        <Form initialValues={modalContent} ref={(form) => (step3Form = form)}>
+                        <Form ref={(form) => (step3 = form)}>
                             <div className="presets-body">
                                 {modalContent.map((item) => {
-                                    const subcategory = item.name;
-
                                     return (
                                         <div key={modalTitle + '_' + item.name}>
                                             <Form.Item
-                                                initialValue={item.enabled}
                                                 label={
-                                                    <div className="white-space">
-                                                        <Trans i18nKey={subcategory} />
-                                                    </div>
+                                                    item.name.length > 30 ? (
+                                                        <div className="white-space">
+                                                            <Trans i18nKey={item.name} />
+                                                        </div>
+                                                    ) : (
+                                                        <Trans i18nKey={item.name} />
+                                                    )
                                                 }
                                                 valuePropName="checked"
                                                 name={item.name}
                                             >
-                                                <Switch defaultChecked={item.enabled} />
+                                                <>
+                                                    <input
+                                                        className="input-status-presets"
+                                                        disabled
+                                                        type="text"
+                                                        id={item.name}
+                                                        value={
+                                                            item.enabled == true
+                                                                ? ReactDomServer.renderToString(
+                                                                      <Trans i18nKey="status_presets_active" />
+                                                                  )
+                                                                : ReactDomServer.renderToString(
+                                                                      <Trans i18nKey="status_presets_inactive" />
+                                                                  )
+                                                        }
+                                                    />
+                                                    <Switch
+                                                        defaultChecked={item.enabled}
+                                                        onChange={(checked) => {
+                                                            const formValues = values;
+                                                            formValues[item.name] = checked;
+
+                                                            setValues(formValues);
+                                                            if (checked) {
+                                                                (
+                                                                    document.getElementById(
+                                                                        item.name
+                                                                    ) as HTMLInputElement
+                                                                ).value = ReactDomServer.renderToString(
+                                                                    <Trans i18nKey="status_presets_active" />
+                                                                );
+                                                            } else {
+                                                                (
+                                                                    document.getElementById(
+                                                                        item.name
+                                                                    ) as HTMLInputElement
+                                                                ).value = ReactDomServer.renderToString(
+                                                                    <Trans i18nKey="status_presets_inactive" />
+                                                                );
+                                                            }
+                                                        }}
+                                                    />
+                                                </>
                                             </Form.Item>
                                         </div>
                                     );

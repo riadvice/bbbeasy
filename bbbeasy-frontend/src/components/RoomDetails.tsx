@@ -86,6 +86,7 @@ const tagRender = (props: CustomTagProps) => {
 const RoomDetails = () => {
     const { state } = useLocation();
     const param = useParams();
+    const [startForm] = Form.useForm();
 
     const [room, setRoom] = React.useState<RoomType>(state ? state.room : null);
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -94,13 +95,14 @@ const RoomDetails = () => {
     const dataContext = React.useContext(DataContext);
 
     const [errorsEdit, setErrorsEdit] = React.useState({});
-    const [showSocialMedia, setShowSocialMedia] = useState(true);
+    const [showSocialMedia, setShowSocialMedia] = useState(false);
     const [showStartButton, setShowStartButton] = useState(true);
     const [isEditing, setIsEditing] = React.useState<boolean>(false);
     const [labels, setLabels] = React.useState<LabelType[]>();
     const [presets, setPresets] = React.useState<PresetType[]>();
     const prefixShortLink = '/r/';
-
+    const [showRecodingAndPresenttaions, setShowRecodingAndPresenttaions] = React.useState<boolean>(false);
+    const [open, setOpen] = React.useState<boolean>(false);
     const [roomRecordings, setRoomRecordings] = React.useState<RecordingType[]>([]);
     const [loading, setLoading] = React.useState<boolean>(false);
 
@@ -123,15 +125,25 @@ const RoomDetails = () => {
         return Promise.resolve();
     };
 
-    const startRoom = () => {
-        RoomsService.start_room(room.id)
-            .then((result) => {
-                window.open(result.data, '_self');
-            })
-            .catch((error) => {
-                console.log(error);
-                Notifications.openNotificationWithIcon('error', t('meeting_not_started'));
-            });
+    const startRoom = async () => {
+        try {
+            const values = await startForm.validateFields();
+            console.log(values.fullname);
+
+            RoomsService.start_room(room.id, values.fullname)
+                .then((result) => {
+                    window.open(result.data, '_self');
+                })
+                .catch((error) => {
+                    console.log(error.response.data);
+                    Notifications.openNotificationWithIcon(
+                        'error',
+                        t(Object.keys(EN_US).filter((elem) => EN_US[elem] === error.response.data.meeting))
+                    );
+                });
+        } catch (errInfo) {
+            console.log('could not start or join the meeting :', errInfo);
+        }
     };
     const getPresets = () => {
         if (currentUser != null) {
@@ -154,7 +166,6 @@ const RoomDetails = () => {
 
         RecordingsService.list_recordings(id)
             .then((response) => {
-                console.log(response);
                 setRoomRecordings(response.data);
             })
             .catch((error) => {
@@ -170,9 +181,17 @@ const RoomDetails = () => {
                 const room: RoomType = response.data.room;
 
                 const meeting = response.data.meeting;
+                console.log(currentUser?.role);
+                setRoom(response.data.room);
                 if (room != null) {
                     setRoom(room);
-                    getRoomRecordings(room.id);
+
+                    setOpen(true);
+                    if (room.user_id == currentUser?.id || currentUser?.role == 'administrator') {
+                        getRoomRecordings(room.id);
+                        setShowRecodingAndPresenttaions(true);
+                        setShowSocialMedia(true);
+                    }
                 }
                 if (meeting != null) {
                     setCanStart(meeting.canStart);
@@ -182,6 +201,7 @@ const RoomDetails = () => {
             })
             .catch((error) => {
                 console.log(error);
+                navigate('/login');
             })
             .finally(() => {
                 setIsLoading(false);
@@ -189,18 +209,15 @@ const RoomDetails = () => {
     };
 
     useEffect(() => {
-        if (currentUser != null) {
-            //Runs only on the first render
-            checkRoomStarted();
-            getPresets();
-            getLabels();
-        } else {
-            navigate('/login');
-        }
+        //Runs only on the first render
+        checkRoomStarted();
+        getPresets();
+        getLabels();
     }, []);
 
     //edit
     const [editForm] = Form.useForm();
+
     const editFormItems: editFormItemType[] = [
         {
             item: 'name',
@@ -375,7 +392,30 @@ const RoomDetails = () => {
             </Form.Item>
         );
     };
-
+    const renderLinkOrUsername = (open) => {
+        if (currentUser != null) {
+            return (
+                <Input
+                    id={'room-shortlink'}
+                    readOnly
+                    defaultValue={window.location.origin + prefixShortLink + room.short_link}
+                    prefix={<LinkOutlined />}
+                    suffix={
+                        <CopyTextToClipBoard textToCopy={window.location.origin + prefixShortLink + room?.short_link} />
+                    }
+                />
+            );
+        } else {
+            return (
+                <Form form={startForm}>
+                    {' '}
+                    <Form.Item name="fullname" label={t('fullname.label')}>
+                        <Input placeholder={t('fullname.label')} />
+                    </Form.Item>
+                </Form>
+            );
+        }
+    };
     return (
         <>
             {isLoading ? (
@@ -386,44 +426,50 @@ const RoomDetails = () => {
                         <Row align="bottom" className="mb-40">
                             <Col span={10}>
                                 <Row justify="end" className="mb-5">
-                                    {!isEditing ? (
+                                    {!isEditing && showRecodingAndPresenttaions ? (
                                         <Button
                                             className="edit-btn"
                                             size="small"
                                             type="link"
                                             icon={<EditOutlined />}
                                             onClick={toggleEdit}
-                                            disabled={room.user_id !== currentUser.id}
+                                            disabled={!canStart}
                                         >
                                             {t('edit')}
                                         </Button>
                                     ) : (
                                         <>
-                                            <Space size={'middle'}>
-                                                <Popconfirm
-                                                    title={t('cancel_edit')}
-                                                    placement="leftTop"
-                                                    onConfirm={() => cancelEdit()}
-                                                >
-                                                    <Button
-                                                        size="middle"
-                                                        onClick={() => cancelEditRoom()}
-                                                        className="cell-input-cancel"
+                                            {isEditing && (
+                                                <Space size={'middle'}>
+                                                    <Popconfirm
+                                                        title={t('cancel_edit')}
+                                                        placement="leftTop"
+                                                        onConfirm={() => cancelEdit()}
                                                     >
-                                                        <Trans i18nKey="cancel" />
+                                                        <Button
+                                                            size="middle"
+                                                            onClick={() => cancelEditRoom()}
+                                                            className="cell-input-cancel"
+                                                        >
+                                                            <Trans i18nKey="cancel" />
+                                                        </Button>
+                                                    </Popconfirm>
+                                                    <Button size="middle" onClick={handleSaveEdit} type="primary">
+                                                        <Trans i18nKey="save" />
                                                     </Button>
-                                                </Popconfirm>
-                                                <Button size="middle" onClick={handleSaveEdit} type="primary">
-                                                    <Trans i18nKey="save" />
-                                                </Button>
-                                            </Space>
+                                                </Space>
+                                            )}
                                         </>
                                     )}
                                 </Row>
                                 <Card bordered={false} className="room-details gray-bg">
                                     <Row justify="center" align="middle">
                                         <Col span={22}>
-                                            <Space direction="vertical" size="large">
+                                            <Space
+                                                direction="vertical"
+                                                size="large"
+                                                className={isEditing ? 'edit-room-form' : null}
+                                            >
                                                 {!isEditing ? (
                                                     <>
                                                         <Title level={3}>{room.name}</Title>
@@ -434,28 +480,11 @@ const RoomDetails = () => {
                                                                 </Tag>
                                                             ))}
                                                         </div>
-                                                        <Input
-                                                            id={'room-shortlink'}
-                                                            readOnly
-                                                            defaultValue={
-                                                                window.location.origin +
-                                                                prefixShortLink +
-                                                                room.short_link
-                                                            }
-                                                            prefix={<LinkOutlined />}
-                                                            suffix={
-                                                                <CopyTextToClipBoard
-                                                                    textToCopy={
-                                                                        window.location.origin +
-                                                                        prefixShortLink +
-                                                                        room?.short_link
-                                                                    }
-                                                                />
-                                                            }
-                                                        />
+
+                                                        {renderLinkOrUsername(open)}
                                                     </>
                                                 ) : (
-                                                    <Space size="middle">
+                                                    <Space size="middle" className="edit-room-form">
                                                         <Form form={editForm} labelAlign="left" labelCol={{ span: 11 }}>
                                                             {editFormItems.map((editFormItem) => {
                                                                 return customFormItem(editFormItem);
@@ -516,14 +545,12 @@ const RoomDetails = () => {
                                         </Col>
                                         {showStartButton && (
                                             <Col span={2}>
-                                                <a onClick={canStart || isRunning ? startRoom : null}>
+                                                <a onClick={startRoom}>
                                                     <Avatar
                                                         size={{ xs: 40, sm: 64, md: 85, lg: 100, xl: 120, xxl: 140 }}
-                                                        className={
-                                                            canStart || isRunning ? 'bbbeasy-btn' : 'disableStart'
-                                                        }
+                                                        className={'bbbeasy-btn'}
                                                     >
-                                                        <Trans i18nKey={canStart ? 'start' : 'join'} />
+                                                        <Trans i18nKey={canStart && !isRunning ? 'start' : 'join'} />
                                                     </Avatar>
                                                 </a>
                                             </Col>
@@ -532,10 +559,14 @@ const RoomDetails = () => {
                                 </Card>
                             </Col>
                             <Col span={8} offset={6} className="RoomPresentation">
-                                <RoomPresentations />
+                                <RoomPresentations open={showRecodingAndPresenttaions} />
                             </Col>
                         </Row>
-                        <RoomRecordings loading={loading} roomRecordings={roomRecordings} />
+                        <RoomRecordings
+                            loading={loading}
+                            roomRecordings={roomRecordings}
+                            open={showRecodingAndPresenttaions}
+                        />
                     </div>
                 )
             )}

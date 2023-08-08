@@ -133,7 +133,9 @@ const RoomsCol: React.FC<RoomsColProps> = ({ index, room, editable, deleteClickH
                                 </Badge>
                             </Badge>
                             <Tooltip title={room.name} placement="top">
-                                <Title level={4}>{room.name}</Title>
+                                <Title level={4} className="room-title">
+                                    {room.name}
+                                </Title>
                             </Tooltip>
                         </Space>
                     </div>

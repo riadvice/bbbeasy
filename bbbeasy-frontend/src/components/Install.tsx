@@ -30,6 +30,7 @@ import LoadingSpinner from './LoadingSpinner';
 import { Step1Form } from './Step1Form';
 import { Step2Form } from './Step2Form';
 import { Step3Form } from './Step3Form';
+
 import { UserPasswordForm } from './UserPasswordForm';
 
 import { UploadFile } from 'antd/lib/upload/interface';
@@ -39,6 +40,7 @@ import { PresetType } from '../types/PresetType';
 
 import axios from 'axios';
 import { apiRoutes } from '../routing/backend-config';
+import usersService from 'services/users.service';
 
 const { Step } = Steps;
 
@@ -228,8 +230,17 @@ const Install = () => {
 
     const onFinish = () => {
         const stepsData: formType = stepForm.getFieldsValue(true);
-
-        if (activeStep < steps.length - 1) {
+        if (activeStep == 0) {
+            setMessage('');
+            usersService
+                .collect_users(stepsData)
+                .then(() => {
+                    next();
+                })
+                .catch((error) => {
+                    setMessage(error.response.data.message);
+                });
+        } else if (activeStep < steps.length - 1) {
             next();
         } else {
             //edit file
@@ -329,7 +340,11 @@ const Install = () => {
                                 }
                             >
                                 {activeStep > 0 && (
-                                    <Button onClick={() => prev()} className="btn-installer prev">
+                                    <Button
+                                        onClick={() => prev()}
+                                        className="btn-installer prev"
+                                        style={{ 'width': '47%' }}
+                                    >
                                         <Trans i18nKey="previous" />
                                     </Button>
                                 )}
@@ -338,7 +353,7 @@ const Install = () => {
                                         type="primary"
                                         className="btn-installer"
                                         htmlType="submit"
-                                        style={activeStep == 0 ? { 'width': '100%' } : { 'width': '50%' }}
+                                        style={activeStep == 0 ? { 'width': '100%' } : { 'width': '47%' }}
                                     >
                                         {steps[activeStep].button}
                                     </Button>

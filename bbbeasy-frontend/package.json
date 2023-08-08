@@ -22,7 +22,7 @@
         "craco-less": "^2.0.0",
         "craco-plugin-react-hot-reload": "^0.1.0",
         "dayjs": "^1.11.8",
-        "dotenv": "^16.1.4",
+        "dotenv": "^16.3.1",
         "dotenv-cra": "^3.0.3",
         "eslint-plugin-react-hooks": "^4.6.0",
         "global": "^4.4.0",
@@ -37,7 +37,7 @@
         "pino-transmit-http": "^1.0.1",
         "pm2": "^5.3.0",
         "rc-select": "^14.5.2",
-        "rc-util": "^5.33.0",
+        "rc-util": "^5.33.1",
         "react": "^17.0.2",
         "react-color": "^2.19.3",
         "react-copy-to-clipboard": "^5.1.0",
@@ -48,7 +48,7 @@
         "react-i18next": "^12.3.1",
         "react-images-uploading": "^3.1.7",
         "react-intl": "^6.4.4",
-        "react-router-dom": "^6.12.1",
+        "react-router-dom": "^6.13.0",
         "react-scripts": "^5.0.1",
         "react-share": "^4.4.1",
         "reload": "^3.2.1",
@@ -128,5 +128,5 @@
         "source-map-explorer": "^2.5.3",
         "ts-loader": "^9.4.3"
     },
-    "packageManager": "yarn@3.6.0"
+    "packageManager": "yarn@3.6.1"
 }

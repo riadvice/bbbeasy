@@ -26,6 +26,7 @@ use MabeEnum\Enum;
 
 class Presentation extends Enum
 {
+    public const GROUP_NAME = 'Presentation';
     public const PRE_UPLOAD = 'pre_upload';
 
     public const PRE_UPLOAD_TYPE = 'bool';

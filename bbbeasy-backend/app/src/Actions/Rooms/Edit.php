@@ -36,8 +36,10 @@ class Edit extends BaseAction
     use RequirePrivilegeTrait;
 
     /**
-     * @param \Base $f3
-     * @param array $params
+     * @param mixed $f3
+     * @param mixed $params
+     *
+     * @throws \JsonException
      */
     public function rename($f3, $params): void
     {
@@ -62,21 +64,21 @@ class Edit extends BaseAction
                 $room->preset_id  = $form['preset_id'];
 
                 $nameExist      = $checkRoom->nameExists($room->name, $room->user_id);
-                $shortlinkExist = $checkRoom->shortlinkExists($room->short_link);
+                $shortLinkExist = $checkRoom->shortlinkExists($room->short_link);
                 $presetExist    = $checkRoom->presetExists($form['preset_id'], $form['name']);
                 $labelUpdated   = $this->labelUpdated($room->getLabels($room->id), $form['labels']);
 
                 if ($form['labels']) {
-                    foreach ($form['labels'] as $label) {
+                    foreach ($form['labels'] as $labelForm) {
                         // test if element has been added to room labels list
-                        $l = new Label();
-                        $l = $l->getByColor($label);
+                        $label = new Label();
+                        $label = $label->getByColor($labelForm);
 
-                        if (!$l->dry()) {
+                        if (!$label->dry()) {
                             $room_label = new RoomLabel();
 
-                            if (!$room_label->roomAndLabelExists($room->id, $l->id)) {
-                                $room_label->label_id = $l->id;
+                            if (!$room_label->roomAndLabelExists($room->id, $label->id)) {
+                                $room_label->label_id = $label->id;
                                 $room_label->room_id  = $room->id;
 
                                 $room_label->save();
@@ -97,7 +99,7 @@ class Edit extends BaseAction
                 }
 
                 try {
-                    if (!$labelUpdated && $nameExist && $shortlinkExist && $presetExist) {
+                    if (!$labelUpdated && $nameExist && $shortLinkExist && $presetExist) {
                         $this->logger->info('The room is not updated', ['room' => $room->toArray()]);
                         $this->renderJson(['result' => 'FAILED', 'room' => $room->getRoomInfos($room)]);
 

@@ -22,12 +22,21 @@ declare(strict_types=1);
 
 namespace Utils;
 
+use Data\PresetData;
+use Enum\Presets\Audio;
+use Enum\Presets\Branding;
+use Enum\Presets\BreakoutRooms;
+use Enum\Presets\General;
+use Enum\Presets\GuestPolicy;
+use Enum\Presets\Layout;
+use Enum\Presets\LearningDashboard;
+use Enum\Presets\LockSettings;
+use Enum\Presets\Presentation;
+use Enum\Presets\Recording;
+use Enum\Presets\Webcams;
+
 class PresetProcessor
 {
-    public function __construct()
-    {
-    }
-
     public function preparePresetData($preset)
     {
         $data = [];
@@ -47,62 +56,131 @@ class PresetProcessor
 
     public function toCreateMeetingParams($preset, $createParams)
     {
-        $presetData = $this->preparePresetData($preset);
+        $presetsData       = new PresetData();
+        $preparePresetData = $this->preparePresetData($preset);
 
-        $createParams->setMuteOnStart($presetData['Audio'] ? ($presetData['Audio']['users_join_muted'] ? true : false) : false);
-        $createParams->setAllowModsToUnmuteUsers($presetData['Audio'] ? ($presetData['Audio']['moderators_allowed_to_unmute_users'] ? true : false) : false);
+        // Set the preset data
+        $presetsData->setData(Audio::GROUP_NAME, Audio::USERS_JOIN_MUTED, $preparePresetData[Audio::GROUP_NAME][Audio::USERS_JOIN_MUTED]);
+        $presetsData->setData(Audio::GROUP_NAME, Audio::MODERATORS_ALLOWED_TO_UNMUTE_USERS, $preparePresetData[Audio::GROUP_NAME][Audio::MODERATORS_ALLOWED_TO_UNMUTE_USERS]);
 
-        $createParams->setLogo($presetData['Branding'] ? $presetData['Branding']['logo'] : null);
-        $createParams->setBannerText($presetData['Branding'] ? $presetData['Branding']['banner_text'] : null);
-        $createParams->setBannerColor($presetData['Branding'] ? $presetData['Branding']['banner_color'] : null);
+        $presetsData->setData(Branding::GROUP_NAME, Branding::LOGO, $preparePresetData[Branding::GROUP_NAME][Branding::LOGO]);
+        $presetsData->setData(Branding::GROUP_NAME, Branding::BANNER_COLOR, $preparePresetData[Branding::GROUP_NAME][Branding::BANNER_COLOR]);
+        $presetsData->setData(Branding::GROUP_NAME, Branding::BANNER_TEXT, $preparePresetData[Branding::GROUP_NAME][Branding::BANNER_TEXT]);
 
-        $createParams->setBreakoutRoomsEnabled($presetData['Breakout Rooms'] ? ($presetData['Breakout Rooms']['configurable'] ? true : false) : false);
-        $createParams->setBreakoutRoomsRecord($presetData['Breakout Rooms'] ? ($presetData['Breakout Rooms']['recording'] ? true : false) : false);
-        $createParams->setBreakoutRoomsPrivateChatEnabled($presetData['Breakout Rooms'] ? ($presetData['Breakout Rooms']['private_chat'] ? true : false) : false);
+        $presetsData->setData(BreakoutRooms::GROUP_NAME, BreakoutRooms::CONFIGURABLE, $preparePresetData[BreakoutRooms::GROUP_NAME][BreakoutRooms::CONFIGURABLE]);
+        $presetsData->setData(BreakoutRooms::GROUP_NAME, BreakoutRooms::RECORDING, $preparePresetData[BreakoutRooms::GROUP_NAME][BreakoutRooms::RECORDING]);
+        $presetsData->setData(BreakoutRooms::GROUP_NAME, BreakoutRooms::PRIVATE_CHAT, $preparePresetData[BreakoutRooms::GROUP_NAME][BreakoutRooms::PRIVATE_CHAT]);
 
-        $createParams->setDuration($presetData['General'] ? $presetData['General']['duration'] : null);
-        $createParams->setMaxParticipants($presetData['General'] ? $presetData['General']['maximum_participants'] : null);
+        $presetsData->setData(General::GROUP_NAME, General::DURATION, $preparePresetData[General::GROUP_NAME][General::DURATION]);
+
+        $presetsData->setData(General::GROUP_NAME, General::MAXIMUM_PARTICIPANTS, $preparePresetData[General::GROUP_NAME][General::MAXIMUM_PARTICIPANTS]);
+
+        $presetsData->setData(GuestPolicy::GROUP_NAME, GuestPolicy::POLICY, $preparePresetData[GuestPolicy::GROUP_NAME][GuestPolicy::POLICY]);
+
+        $presetsData->setData(LearningDashboard::GROUP_NAME, LearningDashboard::CONFIGURABLE, $preparePresetData[LearningDashboard::GROUP_NAME][LearningDashboard::CONFIGURABLE]);
+        $presetsData->setData(LearningDashboard::GROUP_NAME, LearningDashboard::CLEANUP_DELAY, $preparePresetData[LearningDashboard::GROUP_NAME][LearningDashboard::CLEANUP_DELAY]);
+
+        $presetsData->setData(LockSettings::GROUP_NAME, LockSettings::WEBCAMS, $preparePresetData[LockSettings::GROUP_NAME][LockSettings::WEBCAMS]);
+        $presetsData->setData(LockSettings::GROUP_NAME, LockSettings::MICROPHONES, $preparePresetData[LockSettings::GROUP_NAME][LockSettings::MICROPHONES]);
+        $presetsData->setData(LockSettings::GROUP_NAME, LockSettings::PRIVATE_CHAT, $preparePresetData[LockSettings::GROUP_NAME][LockSettings::PRIVATE_CHAT]);
+        $presetsData->setData(LockSettings::GROUP_NAME, LockSettings::PUBLIC_CHAT, $preparePresetData[LockSettings::GROUP_NAME][LockSettings::PUBLIC_CHAT]);
+        $presetsData->setData(LockSettings::GROUP_NAME, LockSettings::SHARED_NOTES, $preparePresetData[LockSettings::GROUP_NAME][LockSettings::SHARED_NOTES]);
+        $presetsData->setData(LockSettings::GROUP_NAME, LockSettings::LAYOUT, $preparePresetData[LockSettings::GROUP_NAME][LockSettings::LAYOUT]);
+
+        $presetsData->setData(Presentation::GROUP_NAME, Presentation::PRE_UPLOAD, $preparePresetData[Presentation::GROUP_NAME][Presentation::PRE_UPLOAD]);
+
+        $presetsData->setData(Recording::GROUP_NAME, Recording::AUTO_START, $preparePresetData[Recording::GROUP_NAME][Recording::AUTO_START]);
+        $presetsData->setData(Recording::GROUP_NAME, Recording::ALLOW_START_STOP, $preparePresetData[Recording::GROUP_NAME][Recording::ALLOW_START_STOP]);
+        $presetsData->setData(Recording::GROUP_NAME, Recording::RECORD, $preparePresetData[Recording::GROUP_NAME][Recording::RECORD]);
+
+        $presetsData->setData(Webcams::GROUP_NAME, Webcams::VISIBLE_FOR_MODERATOR_ONLY, $preparePresetData[Webcams::GROUP_NAME][Webcams::VISIBLE_FOR_MODERATOR_ONLY]);
+        $presetsData->setData(Webcams::GROUP_NAME, Webcams::MODERATOR_ALLOWED_CAMERA_EJECT, $preparePresetData[Webcams::GROUP_NAME][Webcams::MODERATOR_ALLOWED_CAMERA_EJECT]);
+
+        // Get preset data to create meeting parameters
+        $createParams->setMuteOnStart($presetsData->getData(Audio::GROUP_NAME, Audio::USERS_JOIN_MUTED));
+
+        $createParams->setAllowModsToUnmuteUsers($presetsData->getData(Audio::GROUP_NAME, Audio::MODERATORS_ALLOWED_TO_UNMUTE_USERS));
+        // $createParams->setListenOnlyEnabled($presetData->getData(Audio::GROUP_NAME, Audio::LISTEN_ONLY_ENABLED));
+        // $createParams->setSkipEchoTest($presetData->getData(Audio::GROUP_NAME, Audio::SKIP_ECHO_TEST));
+
+        $createParams->setLogo($presetsData->getData(Branding::GROUP_NAME, Branding::LOGO));
+        $createParams->setBannerText($presetsData->getData(Branding::GROUP_NAME, Branding::BANNER_TEXT));
+        $createParams->setBannerColor($presetsData->getData(Branding::GROUP_NAME, Branding::BANNER_COLOR));
+        // $createParams->setUseAvatars($presetsData->getData(Branding::GROUP_NAME, Branding::USE_AVATARS));
+
+        $createParams->setBreakoutRoomsEnabled($presetsData->getData(BreakoutRooms::GROUP_NAME, BreakoutRooms::CONFIGURABLE));
+        $createParams->setBreakoutRoomsRecord($presetsData->getData(BreakoutRooms::GROUP_NAME, BreakoutRooms::RECORDING));
+
+        $createParams->setBreakoutRoomsPrivateChatEnabled(null !== $presetsData->getData(BreakoutRooms::GROUP_NAME, BreakoutRooms::PRIVATE_CHAT) ? $presetsData->getData(BreakoutRooms::GROUP_NAME, BreakoutRooms::PRIVATE_CHAT) : true);
+
+        $createParams->setDuration($presetsData->getData(General::GROUP_NAME, General::DURATION));
+        $createParams->setMaxParticipants($presetsData->getData(General::GROUP_NAME, General::MAXIMUM_PARTICIPANTS));
+        // $createParams->setOpenForEveryone($presetData->getData(General::GROUP_NAME, General::OPEN_FOR_EVERYONE));
         // anyone_can_start,open_for_everyone,logged_in_users_only
 
-        $createParams->setGuestPolicy($presetData['Guest Policy'] ? $presetData['Guest Policy']['policy'] : null);
+        $createParams->setGuestPolicy($presetsData->getData(GuestPolicy::GROUP_NAME, GuestPolicy::POLICY));
         // configurable
 
         // language:default_language
         // layout: presentation,participants,chat,navigation_bar,actions_bar
 
-        $createParams->setLearningDashboardEnabled($presetData['Learning_dashboard'] ? ($presetData['Learning_dashboard']['configurable'] ? true : false) : false);
-        $createParams->setLearningDashboardCleanupDelayInMinutes($presetData['Learning_dashboard'] ? $presetData['Learning_dashboard']['cleanup_delay'] : null);
+        $createParams->setLearningDashboardEnabled($presetsData->getData(LearningDashboard::GROUP_NAME, LearningDashboard::CONFIGURABLE));
+        $createParams->setLearningDashboardCleanupDelayInMinutes($presetsData->getData(LearningDashboard::GROUP_NAME, LearningDashboard::CLEANUP_DELAY));
 
-        $createParams->setLockSettingsDisableCam($presetData['Lock Settings'] ? ($presetData['Lock Settings']['webcams'] ? true : false) : false);
-        $createParams->setLockSettingsDisableMic($presetData['Lock Settings'] ? ($presetData['Lock Settings']['microphones'] ? true : false) : false);
-        $createParams->setLockSettingsDisablePrivateChat($presetData['Lock Settings'] ? ($presetData['Lock Settings']['private_chat'] ? true : false) : false);
-        $createParams->setLockSettingsDisablePublicChat($presetData['Lock Settings'] ? ($presetData['Lock Settings']['public_chat'] ? true : false) : false);
-        $createParams->setLockSettingsDisableNote($presetData['Lock Settings'] ? ($presetData['Lock Settings']['shared_notes'] ? true : false) : false);
-        $createParams->setLockSettingsLockedLayout($presetData['Lock Settings'] ? ($presetData['Lock Settings']['layout'] ? true : false) : false);
+        $createParams->setLockSettingsDisableCam($presetsData->getData(LockSettings::GROUP_NAME, LockSettings::WEBCAMS));
+        $createParams->setLockSettingsDisableMic($presetsData->getData(LockSettings::GROUP_NAME, LockSettings::MICROPHONES));
+        $createParams->setLockSettingsDisablePrivateChat($presetsData->getData(LockSettings::GROUP_NAME, LockSettings::PRIVATE_CHAT));
+        $createParams->setLockSettingsDisablePublicChat($presetsData->getData(LockSettings::GROUP_NAME, LockSettings::PUBLIC_CHAT));
+        $createParams->setLockSettingsDisableNote($presetsData->getData(LockSettings::GROUP_NAME, LockSettings::SHARED_NOTES));
+        $createParams->setLockSettingsLockedLayout($presetsData->getData(LockSettings::GROUP_NAME, LockSettings::LAYOUT));
 
-        $createParams->setPreUploadedPresentationOverrideDefault($presetData['presentation'] ? ($presetData['presentation']['pre_upload'] ? true : false) : false);
+        // $createParams->setPreUploadedPresentationOverrideDefault($presetsData->getData(Presentation::GROUP_NAME, Presentation::PRE_UPLOAD));
 
-        $createParams->setAutoStartRecording($presetData['Recording'] ? ($presetData['Recording']['auto_start'] ? true : false) : false);
-        $createParams->setAllowStartStopRecording($presetData['Recording'] ? ($presetData['Recording']['allow_start_stop'] ? true : false) : false);
-        $createParams->setRecord($presetData['Recording'] ? ($presetData['Recording']['configurable'] ? true : false) : null);
+        $createParams->setAutoStartRecording($presetsData->getData(Recording::GROUP_NAME, Recording::AUTO_START));
+        $createParams->setAllowStartStopRecording($presetsData->getData(Recording::GROUP_NAME, Recording::ALLOW_START_STOP));
+        $createParams->setRecord($presetsData->getData(Recording::GROUP_NAME, Recording::RECORD));
 
         // Screenshare:configurable
         // UserExperience: keyboard_shortcuts,ask_for_feedback
 
-        $createParams->setWebcamsOnlyForModerator($presetData['Webcams'] ? ($presetData['Webcams']['visible_for_moderator_only'] ? true : false) : false);
-        $createParams->setAllowModsToEjectCameras($presetData['Webcams'] ? ($presetData['Webcams']['moderator_allowed_camera_eject'] ? true : false) : false);
+        $createParams->setWebcamsOnlyForModerator($presetsData->getData(Webcams::GROUP_NAME, Webcams::VISIBLE_FOR_MODERATOR_ONLY));
+        // $createParams->setAllowModsToEjectCameras($presetsData->getData(Webcams::GROUP_NAME, Webcams::MODERATOR_ALLOWED_CAMERA_EJECT));
         // configurable,auto_share,skip_preview
 
         // Whiteboard:multi_user_pen_only,presenter_tools,multi_user_tools
-        // Zcaleright: poolname
+        // Zcaleright: poolname*/
 
         return $createParams;
     }
 
     public function toJoinParameters($preset, $joinParams)
     {
-        $presetData = $this->preparePresetData($preset);
-        $joinParams->setRedirect($presetData['Audio'] ? ($presetData['Audio']['auto_join'] ? true : false) : false);
+        $presetsData       = new PresetData();
+        $preparePresetData = $this->preparePresetData($preset);
+
+        // Set the preset data
+        $presetsData->setData(Audio::GROUP_NAME, Audio::AUTO_JOIN, $preparePresetData[Audio::GROUP_NAME][Audio::AUTO_JOIN]);
+        $presetsData->setData(Audio::GROUP_NAME, Audio::LISTEN_ONLY_ENABLED, $preparePresetData[Audio::GROUP_NAME][Audio::LISTEN_ONLY_ENABLED]);
+        $presetsData->setData(Audio::GROUP_NAME, Audio::SKIP_ECHO_TEST, $preparePresetData[Audio::GROUP_NAME][Audio::SKIP_ECHO_TEST]);
+
+        $presetsData->setData(Layout::GROUP_NAME, Layout::PRESENTATION, $preparePresetData[Layout::GROUP_NAME][Layout::PRESENTATION]);
+        $presetsData->setData(Layout::GROUP_NAME, Layout::PARTICIPANTS, $preparePresetData[Layout::GROUP_NAME][Layout::PARTICIPANTS]);
+        $presetsData->setData(Layout::GROUP_NAME, Layout::CHAT, $preparePresetData[Layout::GROUP_NAME][Layout::CHAT]);
+        $presetsData->setData(Layout::GROUP_NAME, Layout::NAVIGATION_BAR, $preparePresetData[Layout::GROUP_NAME][Layout::NAVIGATION_BAR]);
+        $presetsData->setData(Layout::GROUP_NAME, Layout::ACTIONS_BAR, $preparePresetData[Layout::GROUP_NAME][Layout::ACTIONS_BAR]);
+
+        $joinParams->addUserData('bbb_listen_only_mode', !$presetsData->getData(Audio::GROUP_NAME, Audio::AUTO_JOIN));
+        $joinParams->addUserData('bbb_force_listen_only', $presetsData->getData(Audio::GROUP_NAME, Audio::LISTEN_ONLY_ENABLED));
+
+        $joinParams->addUserData('bbb_skip_check_audio', $presetsData->getData(Audio::GROUP_NAME, Audio::SKIP_ECHO_TEST) || $presetsData->getData(Audio::GROUP_NAME, Audio::AUTO_JOIN));
+
+        $joinParams->addUserData('bbb_hide_presentation_on_join', !$presetsData->getData(Layout::GROUP_NAME, Layout::PRESENTATION));
+        $joinParams->addUserData('bbb_show_participants_on_login', $presetsData->getData(Layout::GROUP_NAME, Layout::PARTICIPANTS));
+        $joinParams->addUserData('bbb_show_public_chat_on_login', $presetsData->getData(Layout::GROUP_NAME, Layout::CHAT));
+        $joinParams->addUserData('bbb_hide_nav_bar', !$presetsData->getData(Layout::GROUP_NAME, Layout::NAVIGATION_BAR));
+        $joinParams->addUserData('bbb_hide_actions_bar', !$presetsData->getData(Layout::GROUP_NAME, Layout::ACTIONS_BAR));
+
+        $joinParams->setRedirect(false);
 
         return $joinParams;
     }

@@ -20,30 +20,26 @@ declare(strict_types=1);
  * with BBBEasy; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Actions\Labels;
+namespace Data;
 
-use Actions\Base as BaseAction;
-use Actions\RequirePrivilegeTrait;
-use Models\Label;
-
-/**
- *Class Index.
- */
-class Index extends BaseAction
+class PresetData
 {
-    use RequirePrivilegeTrait;
+    private array $data = [];
 
-    /**
-     * @param mixed $f3
-     * @param mixed $params
-     *
-     * @throws \JsonException
-     */
-    public function show($f3, $params): void
+    public function setData($category, $subCategory, $value): void
     {
-        $label  = new Label();
-        $labels = $label->getAllLabels();
-        $this->logger->debug('collecting labels', ['labels' => json_encode($labels)]);
-        $this->renderJson($labels);
+        if (null !== $value || (\is_string($value) && !empty($value))) {
+            $this->data[$category][$subCategory] = $value;
+        }
+    }
+
+    public function getData($category, $subCategory)
+    {
+        // @fixme: should return null if not found
+        // if (\array_key_exists($category, $this->data) && \array_key_exists($category, $this->data[$category])) {
+        return $this->data[$category][$subCategory];
+        // }
+
+        // return null;
     }
 }

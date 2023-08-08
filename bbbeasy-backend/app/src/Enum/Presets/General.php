@@ -26,6 +26,7 @@ use MabeEnum\Enum;
 
 class General extends Enum
 {
+    public const GROUP_NAME            = 'General';
     public const DURATION              = 'duration';
     public const MAXIMUM_PARTICIPANTS  = 'maximum_participants';
     public const ANYONE_CAN_START      = 'anyone_can_start';

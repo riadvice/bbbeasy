@@ -26,6 +26,8 @@ use MabeEnum\Enum;
 
 class Branding extends Enum
 {
+    public const GROUP_NAME = 'Branding';
+
     public const TITLE        = 'title';
     public const LOGO         = 'logo';
     public const BANNER_TEXT  = 'banner_text';

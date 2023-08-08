@@ -26,7 +26,8 @@ use MabeEnum\Enum;
 
 class ZcaleRight extends Enum
 {
-    public const POOL_NAME = 'pool_name';
+    public const GROUP_NAME = 'ZcaleRight';
+    public const POOL_NAME  = 'pool_name';
 
     public const POOL_NAME_TYPE = 'string';
 }

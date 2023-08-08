@@ -19,7 +19,7 @@
     "reset-password": "Reset password",
     "forgot-password": "Forgot password ?",
     "reset-here": "Reset here",
-    "login-now": "Login Now",
+    "login-now": "Login now",
     "Dont-t-have-account": "Don't have an account",
     "register-here": "Register here",
     "change-password": "Change password",
@@ -36,15 +36,20 @@
         "invalid": "Invalid password"
     },
     "join-us": "Join us",
-    "register-now": "Register now and join our community ",
+    "register-now": "Register now and join our community",
     "username": {
         "label": "Username",
         "required": "Username is required",
         "size": "Username must have at least 4 characters"
     },
+    "fullname": {
+        "label": "Full name",
+        "required": "Full name is required"
+    },
+    "empty-fullname": "Could not join a meeting with an empty fullname",
     "confirm-password": {
         "label": "Confirm password",
-        "required": "Confirm password is required ",
+        "required": "Confirm password is required",
         "size": "Confirm password must have at least 8 characters"
     },
     "read-agreement": "I have read the agreement",
@@ -79,7 +84,7 @@
     "error-registration": "User could not be added",
     "sent-link-successfully": "Please check your email to reset your password",
     "token": {
-        "expired": "Token was expired",
+        "expired": "Token has expired",
         "consumed": "Token was consumed"
     },
     "create-first-room": "Create my first room",
@@ -94,13 +99,13 @@
     "drop-logo-here": "Drop your logo here",
     "branding": "Branding",
     "company": {
-        "label": "Company",
-        "name": "Company Name",
-        "required": "Company name is required",
+        "label": "Organisation",
+        "name": "Organisation name",
+        "required": "Organisation name is required",
         "website": {
-            "label": "Company website",
-            "required": "Company website is required",
-            "invalid": "Company website is not a valid url"
+            "label": "Organisation website",
+            "required": "Organisation website is required",
+            "invalid": "Organisation website is not a valid url"
         }
     },
     "platform": {
@@ -109,7 +114,7 @@
     },
     "terms_url": {
         "label": "Terms of use URL",
-        "invalid": "Term of use url is not a valid url"
+        "invalid": "Terms of use url is not a valid url"
     },
     "privacy_policy_url": {
         "label": "Privacy Policy URL",
@@ -133,7 +138,7 @@
     "labels": "Labels",
     "presets": "Presets",
     "settings": "Settings",
-    "company_branding": "Company & Branding",
+    "company_branding": "Organisation & Branding",
     "users": "Users",
     "roles": "Roles",
     "bigbluebutton": "BigBlueButton",
@@ -167,10 +172,10 @@
     },
 
     "name_col": "Name",
-    "users_col": "N◦ Users",
-    "nb_rooms_col": "N° of Rooms",
+    "users_col": "No. of users",
+    "nb_rooms_col": "No. of Rooms",
     "actions_col": "Actions",
-    "new_role": "New Role",
+    "new_role": "New role",
     "name": {
         "label": "Name",
         "required": "Name is required"
@@ -251,7 +256,7 @@
     "no_changes": "No changes made",
     "new_preset": "New Preset",
     "preset_name": {
-        "maxSize": "Preset Name cannot be longer than 64 characters"
+        "maxSize": "Preset name cannot be longer than 64 characters"
     },
     "upload_img": "Upload jpg, jpeg, png only",
     "search_preset": "Search all my presets",
@@ -260,26 +265,26 @@
     "delete_preset_title": "Do you Want to delete this preset ?",
     "delete_preset_content": "This preset is already assigned to some rooms, if you confirm, all assigned rooms will switch to Default preset",
     "delete_preset_success": "Preset successfully deleted",
-    "add_preset_success": "Preset Successfully added",
-    "edit_preset_success": "Preset Successfully updated",
-    "copy_preset_success": "Preset Successfully copied",
+    "add_preset_success": "Preset successfully added",
+    "edit_preset_success": "Preset successfully updated",
+    "copy_preset_success": "Preset successfully copied",
 
-    "edit_settings_success": "Company & Branding settings successfully updated",
+    "edit_settings_success": "Organisation & Branding settings successfully updated",
     "edit_preset_settings_success": "BigBlueButton rooms settings successfully updated",
 
     "new_room": "New Room",
     "room_name": {
-        "minSize": "Room Name must have at least 4 characters",
-        "maxSize": "Room Name cannot be longer than 256 characters"
+        "minSize": "Room name must have at least 4 characters",
+        "maxSize": "Room name cannot be longer than 256 characters"
     },
     "shortlink": {
-        "label": "Short Link",
-        "required": "The Short Link is required"
+        "label": "Shortlink",
+        "required": "The shortlink is required"
     },
     "labels_required": "labels are required",
     "room-name-already-exist": "Room name already exists",
     "room-link-already-exist": "Room link already exists",
-    "add_room_success": "Room Added Successfully",
+    "add_room_success": "Room added Successfully",
 
     "view": "View",
     "copy": "Copy",
@@ -305,14 +310,14 @@
     "found_results": "Found {{count}} results",
     "search_all_rooms": "Search all my rooms",
 
-    "update_profile": "Update Profile",
-    "current_password": "Current Password",
-    "new_password": "New Password",
-    "confirm_new_password": "Re-Type New Password",
-    "change_avatar": "Change Avatar",
+    "update_profile": "Update profile",
+    "current_password": "Current password",
+    "new_password": "New password",
+    "confirm_new_password": "Re-type new password",
+    "change_avatar": "Change avatar",
     "edit_account_success": "Profile successfully updated",
 
-    "install_locked_title": "Install Process locked",
+    "install_locked_title": "Install process locked",
     "install_locked_text": "Sorry, you are not authorized to access this page, application already installed",
     "install_error_title": "Installer disabled",
     "install_error_text": "Installer must be enabled in the backend configuration. Please reload once updated",
@@ -340,7 +345,7 @@
     "guest_policy": "Guest Policy",
     "language": "Language",
     "layout": "Layout",
-    "learning_dashboard": "Learning Dashboard",
+    "learning_dashboard": "Learning Analytics Dashboard",
     "lock_settings": "Lock Settings",
     "presentation": "Presentation",
     "recording": "Recording",
@@ -361,7 +366,7 @@
     "banner_color": "Banner color",
     "use_avatars": "Use avatars",
     "custom_css": "Custom css",
-    "configurable": "Configurable",
+    "configurable": "Adjustable",
     "private_chat": "Private chat",
     "duration": "Duration",
     "maximum_participants": "Maximum participants",
@@ -401,9 +406,21 @@
     "no_data": "No Data",
     "wrong_file_name": "Wrong file name : File name must not contain special characters",
 
-    "email_not_exist": "User does not exist with this email",
+    "email_not_exist": "User with this email does not exist",
     "send_invitation.label": "Send registration invitation to users",
     "self_registration.label": "Allow self-registration",
     "administration": "Administration",
-    "edit_administration_settings_success": "Administration settings successfully updated"
+    "edit_administration_settings_success": "Administration settings successfully updated",
+
+    "status_presets_active": "Active",
+    "status_presets_inactive": "Inactive",
+    "availability": "Availability",
+    "record": "Record",
+
+    "askModerator": "Ask moderator",
+    "alwaysAccept": "Always accept",
+
+    "alwaysDeny": "Always deny",
+
+    "email-not-exist": "User does not exist with this email"
 }

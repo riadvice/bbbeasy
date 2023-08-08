@@ -20,30 +20,11 @@ declare(strict_types=1);
  * with BBBEasy; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Actions\Labels;
+namespace Enum;
 
-use Actions\Base as BaseAction;
-use Actions\RequirePrivilegeTrait;
-use Models\Label;
-
-/**
- *Class Index.
- */
-class Index extends BaseAction
+class GuestPolicy extends Enum
 {
-    use RequirePrivilegeTrait;
-
-    /**
-     * @param mixed $f3
-     * @param mixed $params
-     *
-     * @throws \JsonException
-     */
-    public function show($f3, $params): void
-    {
-        $label  = new Label();
-        $labels = $label->getAllLabels();
-        $this->logger->debug('collecting labels', ['labels' => json_encode($labels)]);
-        $this->renderJson($labels);
-    }
+    public const ALWAYS_ACCEPT = 'ALWAYS_ACCEPT';
+    public const ALWAYS_DENY   = 'ALWAYS_DENY';
+    public const ASK_MODERATOR = 'ASK_MODERATOR';
 }

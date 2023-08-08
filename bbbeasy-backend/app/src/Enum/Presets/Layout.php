@@ -26,6 +26,7 @@ use MabeEnum\Enum;
 
 class Layout extends Enum
 {
+    public const GROUP_NAME     = 'Layout';
     public const PRESENTATION   = 'presentation';
     public const PARTICIPANTS   = 'participants';
     public const CHAT           = 'chat';
