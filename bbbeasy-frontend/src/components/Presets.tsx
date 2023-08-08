@@ -54,7 +54,7 @@ import {
     WarningOutlined,
 } from '@ant-design/icons';
 
-import { Trans, withTranslation } from 'react-i18next';
+import { initReactI18next, Trans, withTranslation } from 'react-i18next';
 import { t } from 'i18next';
 import EN_US from '../locale/en-US.json';
 
@@ -78,8 +78,10 @@ import { SubCategoryType } from '../types/SubCategoryType';
 import { UploadFile } from 'antd/lib/upload/interface';
 import type { Color } from 'antd/es/color-picker';
 import ReactDomServer from 'react-dom/server';
+import { getType } from 'react-styleguidist/lib/client/rsg-components/Props/util';
 import { LanguagesBBB } from './LanguagesBBB';
 import { GuestPolicy } from './GuestPolicy';
+import { isEmpty } from 'lodash';
 
 const { Title } = Typography;
 
