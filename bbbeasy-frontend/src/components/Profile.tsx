@@ -40,6 +40,7 @@ import { apiRoutes } from '../routing/backend-config';
 
 import { FormInstance } from 'antd/lib/form';
 import { UserType } from '../types/UserType';
+import authService from '../services/auth.service';
 
 type formType = {
     username?: string;
@@ -53,8 +54,8 @@ type formType = {
 let accountForm: FormInstance = null;
 
 const Profile = () => {
-    const currentUser: UserType = AuthService.getCurrentUser();
-    console.log(currentUser.avatar);
+    const [currentUser, setCurrentUser] = React.useState<UserType>(authService.getCurrentUser());
+
     const initialAddValues: formType = {
         username: currentUser.username,
         email: currentUser.email,
@@ -62,21 +63,41 @@ const Profile = () => {
     };
     const [images, setImages] = React.useState([]);
     const [errors, setErrors] = React.useState<string>('');
+    const handleFileName = (imageList) => {
+        if (imageList[0]) {
+            imageList[0].name = 'avatar-' + Date.now() + '.' + imageList[0].file.type.substring(6);
+
+            setImages(imageList);
+        }
+    };
+
+    const handleRemoveAvatar = () => {
+        authService
+            .remove_avatar(currentUser.avatar)
+            .then((response) => {
+                setCurrentUser(response.data.user);
+                authService.updateCurrentUser(response.data.user.username, response.data.user.email, null);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    };
 
     const handleUpdate = (formValues: formType) => {
         setErrors('');
 
         // save avatar
-        if (images.length != 0 && images[0].file != null) {
+        if (images[0] != null && images) {
             const formData: FormData = new FormData();
-            formData.append('logo', images[0].file, images[0].file.name);
-            formData.append('logo_name', images[0].file.name);
-
+            formData.append('logo', images[0]['file'], images[0].name);
+            formData.append('logo_name', images[0].name);
             axios.post(apiRoutes.SAVE_FILE_URL, formData).catch((error) => {
                 console.log(error);
             });
 
-            formValues.avatar = images[0].file.name;
+            formValues.avatar = images[0].name;
+        } else {
+            formValues.avatar = null;
         }
 
         //edit account
@@ -89,6 +110,7 @@ const Profile = () => {
                     accountForm.resetFields(['current_password', 'new_password', 'confirm_new_password']);
                     //update LS
                     AuthService.updateCurrentUser(user.username, user.email, user.avatar);
+
                     Notifications.openNotificationWithIcon('success', t('edit_account_success'));
                 }
             })
@@ -148,10 +170,11 @@ const Profile = () => {
                             <ImageUploading
                                 multiple={false}
                                 value={images}
-                                onChange={(imageList: ImageListType) => setImages(imageList as never[])}
+                                onChange={(imageList: ImageListType) => handleFileName(imageList)}
                                 maxNumber={1}
+                                acceptType={['jpg', 'jpeg', 'png']}
                             >
-                                {({ imageList, onImageUpload, onImageUpdate, onImageRemove }) => (
+                                {({ imageList, onImageUpload, onImageUpdate }) => (
                                     <Badge
                                         count={
                                             <Tooltip
@@ -180,19 +203,28 @@ const Profile = () => {
                                                         <img
                                                             className="ant-image-img"
                                                             //   src={  src={logo ? process.env.REACT_APP_API_URL +"/"+ logo : '/images/logo_01.png'}}
+                                                            src={imageList[0].dataURL}
+                                                            width={130}
+                                                            height={130}
+                                                        />
+                                                    </div>
+                                                ) : currentUser.avatar != null ? (
+                                                    <div className="ant-image">
+                                                        <img
+                                                            className="ant-image-img"
+                                                            //   src={  src={logo ? process.env.REACT_APP_API_URL +"/"+ logo : '/images/logo_01.png'}}
                                                             src={
-                                                                currentUser.avatar
-                                                                    ? process.env.REACT_APP_API_URL +
-                                                                      '/' +
-                                                                      currentUser.avatar
-                                                                    : '/images/logo_01.png'
+                                                                process.env.REACT_APP_API_URL + '/' + currentUser.avatar
                                                             }
                                                             width={130}
                                                             height={130}
                                                         />
                                                         <div className="ant-image-mask">
                                                             <div className="ant-image-mask-info">
-                                                                <DeleteOutlined onClick={() => onImageRemove(0)} />
+                                                                <DeleteOutlined
+                                                                    style={{ 'width': '0.25em' }}
+                                                                    onClick={() => handleRemoveAvatar()}
+                                                                />
                                                             </div>
                                                         </div>
                                                     </div>
@@ -201,6 +233,12 @@ const Profile = () => {
                                             icon={imageList[0] == null ? <UserOutlined /> : null}
                                             size={{ xs: 32, sm: 40, md: 64, lg: 80, xl: 125, xxl: 135 }}
                                             className="bbbeasy-btn"
+                                            style={{
+                                                backgroundColor:
+                                                    imageList[0] == null && currentUser.avatar == null
+                                                        ? '#fbbc0b'
+                                                        : 'white',
+                                            }}
                                         />
                                     </Badge>
                                 )}

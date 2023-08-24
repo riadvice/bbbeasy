@@ -60,6 +60,10 @@ class AuthService {
         return axiosInstance.put(apiRoutes.EDIT_ACCOUNT_URL, { data });
     }
 
+    remove_avatar(avatar: string) {
+        return axiosInstance.put(apiRoutes.REMOVE_AVATAR_URL, { avatar });
+    }
+
     addCurrentUser(user: UserType) {
         localStorage.setItem('user', JSON.stringify(user));
     }

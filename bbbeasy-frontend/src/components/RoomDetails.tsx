@@ -24,14 +24,7 @@ import { FacebookShareButton, LinkedinShareButton, TwitterShareButton } from 're
 import EN_US from '../locale/en-US.json';
 import { t } from 'i18next';
 
-import {
-    EditOutlined,
-    FacebookOutlined,
-    LinkedinOutlined,
-    LinkOutlined,
-    MailOutlined,
-    TwitterOutlined,
-} from '@ant-design/icons';
+import { EditOutlined, FacebookOutlined, LinkedinOutlined, LinkOutlined, TwitterOutlined } from '@ant-design/icons';
 import { Avatar, Button, Card, Col, Input, Row, Space, Tag, Tooltip, Typography, Form, Select, Popconfirm } from 'antd';
 
 import Notifications from './Notifications';
@@ -392,7 +385,7 @@ const RoomDetails = () => {
             </Form.Item>
         );
     };
-    const renderLinkOrUsername = (open) => {
+    const renderLinkOrUsername = () => {
         if (currentUser != null) {
             return (
                 <Input
@@ -481,7 +474,7 @@ const RoomDetails = () => {
                                                             ))}
                                                         </div>
 
-                                                        {renderLinkOrUsername(open)}
+                                                        {renderLinkOrUsername}
                                                     </>
                                                 ) : (
                                                     <Space size="middle" className="edit-room-form">
