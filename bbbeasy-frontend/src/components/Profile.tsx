@@ -16,7 +16,7 @@
  * with BBBEasy; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import React  from 'react';
+import React from 'react';
 import { Trans, withTranslation } from 'react-i18next';
 import { t } from 'i18next';
 import EN_US from '../locale/en-US.json';
@@ -82,7 +82,7 @@ const Profile = () => {
                 console.error(error);
             });
     };
-   
+
     const handleUpdate = (formValues: formType) => {
         setErrors('');
 
@@ -106,12 +106,11 @@ const Profile = () => {
                 const user = response.data.user;
                 console.log(user);
                 if (user) {
-                     
                     //remove passwords from form
                     accountForm.resetFields(['current_password', 'new_password', 'confirm_new_password']);
                     //update LS
                     AuthService.updateCurrentUser(user.username, user.email, user.avatar);
-                    
+
                     Notifications.openNotificationWithIcon('success', t('edit_account_success'));
                 }
             })
@@ -209,7 +208,7 @@ const Profile = () => {
                                                             height={130}
                                                         />
                                                     </div>
-                                                ) : currentUser.avatar != null  ? (
+                                                ) : currentUser.avatar != null ? (
                                                     <div className="ant-image">
                                                         <img
                                                             className="ant-image-img"
@@ -222,7 +221,10 @@ const Profile = () => {
                                                         />
                                                         <div className="ant-image-mask">
                                                             <div className="ant-image-mask-info">
-                                                                <DeleteOutlined style={{"width":"0.25em"}} onClick={() => handleRemoveAvatar()} />
+                                                                <DeleteOutlined
+                                                                    style={{ 'width': '0.25em' }}
+                                                                    onClick={() => handleRemoveAvatar()}
+                                                                />
                                                             </div>
                                                         </div>
                                                     </div>
