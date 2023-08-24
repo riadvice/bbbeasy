@@ -258,7 +258,7 @@ const AppHeader = () => {
                                             {' '}
                                         </Button>
                                     ) : (
-                                        <>
+                                         
                                             <Button
                                                 type="primary"
                                                 className="profil-btn"
@@ -272,11 +272,11 @@ const AppHeader = () => {
                                                     backgroundImage: `url( ${
                                                         process.env.REACT_APP_API_URL + '/' + currentUser.avatar
                                                     })`,
-                                                }}
+                                                }} 
                                             >
                                                 {' '}
                                             </Button>
-                                        </>
+                                         
                                     )}
                                 </Dropdown>
                                 {dropdownLang}
