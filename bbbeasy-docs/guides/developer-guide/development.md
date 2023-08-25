@@ -84,11 +84,16 @@ yarn start-dev
  ```bash
 cd /app/bbbeasy-backend/
 ```
-2-The command used to rollback ,run this command :
+2-This command is used to undo the last applied migration,run this command :
  ```bash
 php vendor/bin/phinx rollback -e development
 ```
-3-The commands used in the migration ,run this command :
+2.1 -Continue to use this command until it appears
+
+ ```bash
+No migrations to rollback
+```
+3-This command is used to run all pending migrations for your application,run this command :
  ```bash
 php vendor/bin/phinx migrate -e development
 ```
@@ -114,25 +119,25 @@ yarn run start-dev
 
 you can start using Yarn. Here are some of the most common commands you’ll need.
 
-**Adding a dependency**
+1 -Adding a dependency
 
  ```bash
 yarn add [package]
 yarn add [package]@[version]
 yarn add [package]@[tag]
 ```
-**Adding a dependency to different categories of dependencies**
+2-Adding a dependency to different categories of dependencies
 Add to `devDependencies`, `peerDependencies`, and `optionalDependencies` respectively:
  ```bash
 yarn add [package] --dev
 yarn add [package] --peer
 yarn add [package] --optional
 ```
-**Removing a dependency**
+3-Removing a dependency
  ```bash
 yarn remove [package]
 ```
-**Installing all the dependencies of project**
+4-Installing all the dependencies of project
 
  ```bash
 yarn 
@@ -141,4 +146,21 @@ or
  ```bash
 yarn install
 ```
+### The commands vagrant the used
+1-This command shuts down the running machine Vagrant is managing
+ ```bash
+vagrant halt
+```
+
+2-Restarting a machine (equivalent to a vagrant halt then a vagrant up)
+ ```bash
+vagrant reload 
+```
+
+3-Start all VMs in the Vagrantfile
+
+ ```bash
+vagrant up
+```
+
 ### Structure
