@@ -69,6 +69,10 @@ export const AddRoomForm = (props: Props) => {
     const dataContext = React.useContext(DataContext);
 
     const currentUser: UserType = AuthService.getCurrentUser();
+    useEffect(() => {
+        setReadOnly(true);
+    }, [props.close]);
+
 
     useEffect(() => {
         PresetsService.list_presets(currentUser.id)
@@ -113,13 +117,18 @@ export const AddRoomForm = (props: Props) => {
         setShortLink('');
         setErrorsAdd([]);
     };
-
+    const cancelEdit = () => {
+        setShortLink(shortlink);
+        setReadOnly(true);
+    };
     const cancelAdd = () => {
-        props.close();
         setShortLink('');
         addForm?.resetFields();
-    };
+        setReadOnly(false);
+        props.close();
 
+
+    };
     const toggleEdit = () => {
         setReadOnly(false);
 
@@ -130,9 +139,7 @@ export const AddRoomForm = (props: Props) => {
             addForm.setFieldValue('shortlink', shortLink);
         }
     };
-    const cancelEdit = () => {
-        setReadOnly(true);
-    };
+
     const handleSaveEdit = async () => {
         setReadOnly(true);
 
@@ -162,200 +169,205 @@ export const AddRoomForm = (props: Props) => {
 
     const handleChange = (event) => {
         addForm.setFieldValue('shortlink', event.target.value);
-
         setShortLink(event.target.value);
     };
 
     return (
         <>
-            <Modal
-                title={<Trans i18nKey="new_room" />}
-                className="add-modal large-modal"
-                centered
-                open={props.isModalShow}
-                onOk={handleAdd}
-                onCancel={props.close}
-                footer={null}
-                maskClosable={true}
-            >
-                <Form
-                    layout="vertical"
-                    ref={(form) => (addForm = form)}
-                    initialValues={props.initialAddValues}
-                    hideRequiredMark
-                    onFinish={handleAdd}
-                    onFinishFailed={failedAdd}
-                    validateTrigger="onSubmit"
-                >
-                    <Row justify="center">
-                        <Col span={11}>
-                            <Form.Item
-                                label={<Trans i18nKey="name.label" />}
-                                name="name"
-                                {...('name' in errorsAdd && {
-                                    help: (
-                                        <Trans
-                                            i18nKey={Object.keys(EN_US).filter(
-                                                (elem) => EN_US[elem] == errorsAdd['name']
-                                            )}
-                                        />
-                                    ),
-                                    validateStatus: 'error',
-                                })}
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: <Trans i18nKey="name.required" />,
-                                    },
-                                    {
-                                        min: 4,
-                                        message: <Trans i18nKey="room_name.minSize" />,
-                                    },
-                                    {
-                                        max: 256,
-                                        message: <Trans i18nKey="room_name.maxSize" />,
-                                    },
-                                ]}
-                            >
-                                <Input placeholder={t('name.label')} />
-                            </Form.Item>
-
-                            <Form.Item
-                                label={<Trans i18nKey="preset.label" />}
-                                name="preset"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: <Trans i18nKey="preset.required" />,
-                                    },
-                                ]}
-                            >
-                                <Select
-                                    className="select-field"
-                                    showSearch
-                                    allowClear
-                                    placeholder={t('preset.label')}
-                                    filterOption={(input, option) =>
-                                        option.children
-                                            .toString()
-                                            .toLowerCase()
-                                            .indexOf(input.toString().toLowerCase()) >= 0
-                                    }
-                                    filterSort={(optionA, optionB) =>
-                                        optionA.children
-                                            .toString()
-                                            .toLowerCase()
-                                            .localeCompare(optionB.children.toString().toLowerCase())
-                                    }
-                                >
-                                    {presets != null &&
-                                        presets.map((item) => (
-                                            <Option key={item.id} value={item.id} className="text-capitalize">
-                                                {item.name}
-                                            </Option>
-                                        ))}
-                                </Select>
-                            </Form.Item>
-                        </Col>
-                        <Col span={11} offset={2}>
-                            <Form.Item
-                                label={<Trans i18nKey="shortlink.label" />}
-                                name="shortlink"
-                                {...('short_link' in errorsAdd && {
-                                    help: (
-                                        <Trans
-                                            i18nKey={Object.keys(EN_US).filter(
-                                                (elem) => EN_US[elem] == errorsAdd['short_link']
-                                            )}
-                                        />
-                                    ),
-                                    validateStatus: 'error',
-                                })}
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: <Trans i18nKey="shortlink.required" />,
-                                    },
-                                ]}
-                            >
-                                {readOnly ? (
-                                    <Input.Group compact className="readonly-item">
-                                        <Input
-                                            readOnly={readOnly}
-                                            defaultValue={prefixShortLink + (shortLink != '' ? shortLink : shortlink)}
-                                        />
-                                        <Button icon={<EditOutlined />} onClick={toggleEdit} />
-                                    </Input.Group>
-                                ) : (
-                                    <Input
-                                        addonBefore={prefixShortLink}
-                                        onChange={handleChange}
-                                        readOnly={readOnly}
-                                        defaultValue={shortLink != '' ? shortLink : shortlink}
-                                        onPressEnter={handleSaveEdit}
-                                        suffix={
-                                            <>
-                                                <Popconfirm
-                                                    title={t('cancel_edit')}
-                                                    placement="leftTop"
-                                                    onConfirm={cancelEdit}
-                                                >
-                                                    <Button
-                                                        icon={<CloseOutlined />}
-                                                        size="small"
-                                                        onClick={cancelEdit}
-                                                        className="cell-input-cancel"
-                                                    />
-                                                </Popconfirm>
-                                                <Button
-                                                    icon={<CheckOutlined />}
-                                                    size="small"
-                                                    onClick={handleSaveEdit}
-                                                    type="primary"
+            {
+                props.isModalShow ?
+                    <Modal
+                        title={<Trans i18nKey="new_room" />}
+                        className="add-modal large-modal"
+                        centered
+                        open={props.isModalShow}
+                        onOk={handleAdd}
+                        onCancel={cancelAdd}
+                        footer={null}
+                        maskClosable={true}
+                    >
+                        <Form
+                            layout="vertical"
+                            ref={(form) => (addForm = form)}
+                            initialValues={props.initialAddValues}
+                            hideRequiredMark
+                            onFinish={handleAdd}
+                            onFinishFailed={failedAdd}
+                            validateTrigger="onSubmit"
+                        >
+                            <Row justify="center">
+                                <Col span={11}>
+                                    <Form.Item
+                                        label={<Trans i18nKey="name.label" />}
+                                        name="name"
+                                        {...('name' in errorsAdd && {
+                                            help: (
+                                                <Trans
+                                                    i18nKey={Object.keys(EN_US).filter(
+                                                        (elem) => EN_US[elem] == errorsAdd['name']
+                                                    )}
                                                 />
-                                            </>
-                                        }
-                                    />
-                                )}
-                            </Form.Item>
-                            <Form.Item
-                                {...('labels' in errorsAdd && {
-                                    help: (
-                                        <Trans
-                                            i18nKey={Object.keys(EN_US).filter(
-                                                (elem) => EN_US[elem] == errorsAdd['labels']
-                                            )}
-                                        />
-                                    ),
-                                    validateStatus: 'error',
-                                })}
-                                name="labels"
-                                label={<Trans i18nKey="labels" />}
-                            >
-                                <Select
-                                    mode="multiple"
-                                    showArrow
-                                    tagRender={tagRender}
-                                    style={{ width: '100%' }}
-                                    options={labels_data}
-                                    notFoundContent={
-                                        <NoData description={<Trans i18nKey="no_labels" />} className="empty-labels" />
-                                    }
-                                />
-                            </Form.Item>
-                        </Col>
-                    </Row>
+                                            ),
+                                            validateStatus: 'error',
+                                        })}
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message: <Trans i18nKey="name.required" />,
+                                            },
+                                            {
+                                                min: 4,
+                                                message: <Trans i18nKey="room_name.minSize" />,
+                                            },
+                                            {
+                                                max: 256,
+                                                message: <Trans i18nKey="room_name.maxSize" />,
+                                            },
+                                        ]}
+                                    >
+                                        <Input placeholder={t('name.label')} />
+                                    </Form.Item>
 
-                    <Form.Item className="modal-submit-btn button-container">
-                        <Button type="text" className="cancel-btn prev" block onClick={cancelAdd}>
-                            <Trans i18nKey="cancel" />
-                        </Button>
-                        <Button type="primary" htmlType="submit" disabled={loading} block>
-                            <Trans i18nKey="create" />
-                        </Button>
-                    </Form.Item>
-                </Form>
-            </Modal>
+                                    <Form.Item
+                                        label={<Trans i18nKey="preset.label" />}
+                                        name="preset"
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message: <Trans i18nKey="preset.required" />,
+                                            },
+                                        ]}
+                                    >
+                                        <Select
+                                            className="select-field"
+                                            showSearch
+                                            allowClear
+                                            placeholder={t('preset.label')}
+                                            filterOption={(input, option) =>
+                                                option.children
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .indexOf(input.toString().toLowerCase()) >= 0
+                                            }
+                                            filterSort={(optionA, optionB) =>
+                                                optionA.children
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .localeCompare(optionB.children.toString().toLowerCase())
+                                            }
+                                        >
+                                            {presets != null &&
+                                                presets.map((item) => (
+                                                    <Option key={item.id} value={item.id} className="text-capitalize">
+                                                        {item.name}
+                                                    </Option>
+                                                ))}
+                                        </Select>
+                                    </Form.Item>
+                                </Col>
+                                <Col span={11} offset={2}>
+                                    <Form.Item
+                                        label={<Trans i18nKey="shortlink.label" />}
+                                        name="shortlink"
+                                        {...('short_link' in errorsAdd && {
+                                            help: (
+                                                <Trans
+                                                    i18nKey={Object.keys(EN_US).filter(
+                                                        (elem) => EN_US[elem] == errorsAdd['short_link']
+                                                    )}
+                                                />
+                                            ),
+                                            validateStatus: 'error',
+                                        })}
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message: <Trans i18nKey="shortlink.required" />,
+                                            },
+                                        ]}
+                                    >
+                                        {readOnly ? (
+                                            <Input.Group compact className="readonly-item">
+                                                <Input
+                                                    disabled={true}
+                                                    readOnly={readOnly}
+                                                    defaultValue={prefixShortLink + (shortLink != '' ? shortLink : shortlink)}
+                                                />
+                                                <Button icon={<EditOutlined />} onClick={toggleEdit} />
+                                            </Input.Group>
+                                        ) : (
+                                            <Input
+                                                addonBefore={prefixShortLink}
+                                                onChange={handleChange}
+                                                readOnly={readOnly}
+                                                defaultValue={prefixShortLink + (shortLink != '' ? shortLink : shortlink)}
+                                                onPressEnter={handleSaveEdit}
+                                                suffix={
+                                                    <>
+                                                        <Popconfirm
+                                                            title={t('cancel_edit')}
+                                                            placement="leftTop"
+                                                            onConfirm={cancelEdit}
+                                                        >
+                                                            <Button
+                                                                icon={<CloseOutlined />}
+                                                                size="small"
+                                                                onClick={cancelEdit}
+                                                                className="cell-input-cancel"
+                                                            />
+                                                        </Popconfirm>
+                                                        <Button
+                                                            icon={<CheckOutlined />}
+                                                            size="small"
+                                                            onClick={handleSaveEdit}
+                                                            type="primary"
+                                                        />
+                                                    </>
+                                                }
+                                            />
+                                        )}
+                                    </Form.Item>
+                                    <Form.Item
+                                        {...('labels' in errorsAdd && {
+                                            help: (
+                                                <Trans
+                                                    i18nKey={Object.keys(EN_US).filter(
+                                                        (elem) => EN_US[elem] == errorsAdd['labels']
+                                                    )}
+                                                />
+                                            ),
+                                            validateStatus: 'error',
+                                        })}
+                                        name="labels"
+                                        label={<Trans i18nKey="labels" />}
+                                    >
+                                        <Select
+                                            mode="multiple"
+                                            showArrow
+                                            tagRender={tagRender}
+                                            style={{ width: '100%' }}
+                                            options={labels_data}
+                                            notFoundContent={
+                                                <NoData description={<Trans i18nKey="no_labels" />} className="empty-labels" />
+                                            }
+                                        />
+                                    </Form.Item>
+                                </Col>
+                            </Row>
+
+                            <Form.Item className="modal-submit-btn button-container">
+                                <Button type="text" className="cancel-btn prev" block onClick={cancelAdd}>
+                                    <Trans i18nKey="cancel" />
+                                </Button>
+                                <Button type="primary" htmlType="submit" disabled={loading} block>
+                                    <Trans i18nKey="create" />
+                                </Button>
+                            </Form.Item>
+                        </Form>
+                    </Modal>
+                    :
+                    null
+            }
         </>
     );
 };

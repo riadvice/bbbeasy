@@ -95,7 +95,7 @@ export const AddPresetForm = (props: Props) => {
                 centered
                 open={props.isModalShow}
                 onOk={handleAdd}
-                onCancel={props.close}
+                onCancel={cancelAdd}
                 footer={null}
                 maskClosable={true}
             >
