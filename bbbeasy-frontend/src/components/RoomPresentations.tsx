@@ -23,6 +23,8 @@ import { Card, Modal, Typography, Upload } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { UploadFile } from 'antd/es/upload/interface';
 import { RcFile, UploadProps } from 'antd/es/upload';
+import Notifications from "./Notifications";
+import { t } from 'i18next';
 
 const { Title } = Typography;
 type Props = {
@@ -74,7 +76,40 @@ const RoomPresentations = (props: Props) => {
         setPreviewImage(file.url || (file.preview as string));
         setPreviewOpen(true);
     };
-    const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) => setFileList(newFileList);
+    const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) =>
+    {
+        {
+            const XLS  = 'application/vnd.ms-excel';
+            const XLSX = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+            const DOC  = 'application/msword';
+            const DOCX = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+            const PPT  = 'application/vnd.ms-powerpoint';
+            const PPTX = 'application/vnd.openxmlformats-officedocument.presentationml.presentation';
+            const ODT  = 'application/vnd.oasis.opendocument.text';
+            const RTF  = 'application/rtf';
+            const TXT  = 'text/plain';
+            const ODS  = 'application/vnd.oasis.opendocument.spreadsheet';
+            const ODP  = 'application/vnd.oasis.opendocument.presentation';
+            const PDF  = 'application/pdf';
+            const JPEG = 'image/jpeg';
+            const PNG  = 'image/png';
+            const SVG  = 'image/svg+xml';
+
+            const validFormats = [
+                XLS, XLSX, DOC, DOCX, PPT, PPTX, ODT, RTF,
+                TXT, ODS, ODP, PDF, JPEG, PNG, SVG
+            ];
+
+            const lastFile= newFileList[(newFileList.length)-1];
+            const filetype = lastFile.type;
+
+            if(filetype != undefined && validFormats.includes(filetype)){
+                setFileList(newFileList);
+                return;
+            }
+            Notifications.openNotificationWithIcon('error', t('invalid_format'));
+        }
+    }
 
     const uploadButton = (
         <div>
