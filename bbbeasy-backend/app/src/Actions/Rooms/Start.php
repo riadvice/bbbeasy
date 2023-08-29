@@ -29,6 +29,7 @@ use BigBlueButton\Parameters\CreateMeetingParameters;
 use BigBlueButton\Parameters\GetMeetingInfoParameters;
 use BigBlueButton\Parameters\JoinMeetingParameters;
 use Enum\Presets\General;
+use Enum\Presets\Security;
 use Enum\ResponseCode;
 use Models\Preset;
 use Models\Room;
@@ -71,6 +72,8 @@ class Start extends BaseAction
         $form         = $this->getDecodedBody();
 
         $fullname = (null !== $this->session->get('user') ? $this->session->get('user.username') : $form['fullname']);
+        $password= $form['password'] ;
+
         if (null !== $fullname) {
             $room = new Room();
             $room = $room->getById($id);
@@ -88,17 +91,19 @@ class Start extends BaseAction
                 }
                 $preset = new Preset();
                 $p      = $preset->findById($room->getPresetID($room->id)['preset_id']);
-
+                $presetprocessor = new PresetProcessor();
+                $presetData      = $presetprocessor->preparePresetData($p->getMyPresetInfos($p));
+            //    var_dump($presetData[General::GROUP_NAME][General::ALL_JOIN_AS_MODERATOR]);
                 if (!$getMeetingInfoResponse->success()) {
                     // meeting not found
+
+
                     if ('notFound' === $getMeetingInfoResponse->getMessageKey()) {
                         // create new meeting with the same meetingId
 
-                        $presetprocessor = new PresetProcessor();
-                        $presetData      = $presetprocessor->preparePresetData($p->getMyPresetInfos($p));
 
                         if ($room->getRoomInfos($room)['user_id'] === $this->session->get('user.id') || $presetData[General::GROUP_NAME][General::ANYONE_CAN_START]) {
-                            $createResult = $this->createMeeting($meetingId, $bbbRequester, $room->short_link, $p->getMyPresetInfos($p), $presetprocessor);
+                            $createResult = $this->createMeeting($meetingId, $bbbRequester, $room->short_link, $p->getMyPresetInfos($p), $presetprocessor,$password_moderator,$password_attendee);
 
                             if (null === $createResult) {
                                 return;
@@ -109,7 +114,7 @@ class Start extends BaseAction
                             return;
                         }
                     } else {
-                        $this->logger->error('Could not fetch a meeting due to an error.');
+                        $this->logger->error('Could not start or join a meeting');
                         $this->renderJson(['meeting' => 'Could not start or join the meeting'], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
 
                         return;
@@ -117,10 +122,29 @@ class Start extends BaseAction
                 }
 
                 if ($room->getRoomInfos($room)['user_id'] === $this->session->get('user.id') || $presetData[General::GROUP_NAME][General::ALL_JOIN_AS_MODERATOR]) {
+
                     $this->joinMeeting($meetingId, Role::MODERATOR, $bbbRequester, $p->getMyPresetInfos($p), $fullname);
                 } else {
-                    $this->joinMeeting($meetingId, Role::VIEWER, $bbbRequester, $p->getMyPresetInfos($p), $fullname);
-                }
+                  /*  var_dump($password);
+                    die;*/
+
+                     if($password == $presetData[Security::GROUP_NAME][Security::PASSWORD_FOR_ATTENDEE] || $password== $presetData[Security::GROUP_NAME][Security::PASSWORD_FOR_MODERATOR]){
+                     /*   var_dump($presetData[Security::GROUP_NAME][Security::PASSWORD_FOR_ATTENDEE]);
+                        var_dump(password_hash($password, PASSWORD_BCRYPT) == $presetData[Security::GROUP_NAME][Security::PASSWORD_FOR_ATTENDEE]);
+                        die;*/
+
+                        /* var_dump($presetData[Security::GROUP_NAME][Security::PASSWORD_FOR_ATTENDEE]);
+                         die;*/
+
+                         $this->joinMeeting($meetingId, $password?$password:Role::VIEWER, $bbbRequester, $p->getMyPresetInfos($p), $fullname);
+                     }else{
+                         $this->logger->error('Could not join a meeting with a wrong password');
+                         $this->renderJson(['password' => 'Could not join a meeting with a wrong password'], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+
+                         return;
+                     }
+                     }
+
             } else {
                 $this->logger->error($errorMessage);
                 $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
@@ -148,13 +172,14 @@ class Start extends BaseAction
         return $meetingInfoResponse;
     }
 
-    public function createMeeting(string $meetingId, BigBlueButtonRequester $bbbRequester, $link, $p, $preetprocessor)
+    public function createMeeting(string $meetingId, BigBlueButtonRequester $bbbRequester, $link, $p, $preetprocessor )
     {
         $presetProcessor = new PresetProcessor();
         $createParams    = new CreateMeetingParameters($meetingId, 'meeting-' . $meetingId);
         $createParams    = $presetProcessor->toCreateMeetingParams($p, $createParams);
-        $createParams->setModeratorPassword(DataUtils::generateRandomString());
-        $createParams->setAttendeePassword(DataUtils::generateRandomString());
+     //  $createParams->setModeratorPassword("1234567890");
+      //  $createParams->setAttendeePassword($password_attendee?$password_attendee:DataUtils::generateRandomString());
+       // $createParams->setAttendeePassword("123456789");
         // @todo : set later via presets
 
         $createParams->setModeratorOnlyMessage('to invite someone you can use this link ' . $this->f3->get('SERVER.HTTP_ORIGIN') . $this->f3->get('client.room_url_prefix') . $link);
@@ -181,7 +206,12 @@ class Start extends BaseAction
 
     public function joinMeeting(string $meetingId, string $role, BigBlueButtonRequester $bbbRequester, $p, $fullname): void
     {
-        $joinParams      = new JoinMeetingParameters($meetingId, $fullname, $role);
+      /*  var_dump($role);
+       var_dump($fullname);*/
+      /*  var_dump($meetingId);*/
+       // die;
+
+        $joinParams      = new JoinMeetingParameters($meetingId, $fullname,$role);
         $presetProcessor = new PresetProcessor();
 
         $joinParams = $presetProcessor->toJoinParameters($p, $joinParams);

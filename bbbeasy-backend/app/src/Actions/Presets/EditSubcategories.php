@@ -24,6 +24,7 @@ namespace Actions\Presets;
 
 use Actions\Base as BaseAction;
 use Actions\RequirePrivilegeTrait;
+use Enum\Presets\Security;
 use Enum\ResponseCode;
 use Models\Preset;
 
@@ -53,6 +54,7 @@ class EditSubcategories extends BaseAction
                 $subCategories = json_decode($categories->{$categoryName});
                 foreach ($form as $editedSubCategory) {
                     $subCategoryName  = $editedSubCategory['name'];
+
                     $subCategoryValue = $editedSubCategory['value'];
 
                     $subCategories->{$subCategoryName} = $subCategoryValue;

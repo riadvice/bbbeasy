@@ -40,9 +40,9 @@ class RoomsService {
     delete_room(id: number) {
         return axiosInstance.delete(apiRoutes.DELETE_ROOM_URL + id);
     }
-    start_room(id: number, fullname) {
+    start_room(id: number, fullname,password ) {
         return axiosInstance.post(apiRoutes.START_ROOM_URL + id, {
-            fullname,
+            fullname,password 
         });
     }
     getRoomByLink(link: string) {

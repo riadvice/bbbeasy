@@ -33,6 +33,7 @@ use Enum\Presets\LearningDashboard;
 use Enum\Presets\LockSettings;
 use Enum\Presets\Presentation;
 use Enum\Presets\Recording;
+use Enum\Presets\Security;
 use Enum\Presets\Webcams;
 
 class PresetProcessor
@@ -93,10 +94,17 @@ class PresetProcessor
         $presetsData->setData(Recording::GROUP_NAME, Recording::ALLOW_START_STOP, $preparePresetData[Recording::GROUP_NAME][Recording::ALLOW_START_STOP]);
         $presetsData->setData(Recording::GROUP_NAME, Recording::RECORD, $preparePresetData[Recording::GROUP_NAME][Recording::RECORD]);
 
+        $presetsData->setData(Security::GROUP_NAME,Security::PASSWORD_FOR_MODERATOR,($preparePresetData[Security::GROUP_NAME][Security::PASSWORD_FOR_MODERATOR]));
+        $presetsData->setData(Security::GROUP_NAME,Security::PASSWORD_FOR_ATTENDEE, $preparePresetData[Security::GROUP_NAME][Security::PASSWORD_FOR_ATTENDEE] );
+
+
         $presetsData->setData(Webcams::GROUP_NAME, Webcams::VISIBLE_FOR_MODERATOR_ONLY, $preparePresetData[Webcams::GROUP_NAME][Webcams::VISIBLE_FOR_MODERATOR_ONLY]);
         $presetsData->setData(Webcams::GROUP_NAME, Webcams::MODERATOR_ALLOWED_CAMERA_EJECT, $preparePresetData[Webcams::GROUP_NAME][Webcams::MODERATOR_ALLOWED_CAMERA_EJECT]);
 
         // Get preset data to create meeting parameters
+        $createParams->setModeratorPassword($presetsData->getData(Security::GROUP_NAME,Security::PASSWORD_FOR_MODERATOR)?$presetsData->getData(Security::GROUP_NAME,Security::PASSWORD_FOR_MODERATOR):DataUtils::generateRandomString());
+        $createParams->setAttendeePassword($presetsData->getData(Security::GROUP_NAME,Security::PASSWORD_FOR_ATTENDEE)?$presetsData->getData(Security::GROUP_NAME,Security::PASSWORD_FOR_ATTENDEE):DataUtils::generateRandomString());
+
         $createParams->setMuteOnStart($presetsData->getData(Audio::GROUP_NAME, Audio::USERS_JOIN_MUTED));
 
         $createParams->setAllowModsToUnmuteUsers($presetsData->getData(Audio::GROUP_NAME, Audio::MODERATORS_ALLOWED_TO_UNMUTE_USERS));

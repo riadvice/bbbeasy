@@ -19,6 +19,7 @@
 import React, { useEffect, useState } from 'react';
 
 import { PageHeader } from '@ant-design/pro-layout';
+import { PasswordInput } from 'antd-password-input-strength';
 
 import {
     Button,
@@ -509,7 +510,12 @@ const PresetsCol: React.FC<PresetColProps> = ({
                                                             }}
                                                         />
                                                     )}
-
+                                                  {item.type === 'password' && (
+                                                      <PasswordInput placeholder="**********"   onChange={(event) => {
+                                                        item.value = event.target.value;
+                                                    }}/>
+                                                        
+                                                    )}
                                                     {item.type === 'color' && (
                                                         <ColorPicker
                                                             value={item.value ? item.value : '#fbbc0b'}
