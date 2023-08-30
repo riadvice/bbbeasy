@@ -1570,6 +1570,18 @@ fieldset {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+.room-labels {
+    word-break: break-all;
+    max-width: max-content !important;
+    overflow: hidden;
+    text-overflow: unset;
+    max-height: 24px;
+}
+.room-label{
+    max-width: 120px !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 div.error-message-Label{
     max-width: max-content;
     margin-bottom: 10px;
