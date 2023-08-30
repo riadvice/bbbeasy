@@ -53,7 +53,7 @@ final class RoleTest extends Scenario
             'permissions' => $role->getRolePermissions(),
         ];
 
-        $test->expect(empty(array_udiff($data, $role->getLecturerRole(), fn ($obj1, $obj2) => $obj1 === $obj2)), 'getLecturerRole() found lecturer role');
+        $test->expect(empty(array_udiff($data, $role->getLecturerRole(), static fn ($obj1, $obj2) => $obj1 === $obj2)), 'getLecturerRole() found lecturer role');
 
         return $test->results();
     }
@@ -73,7 +73,7 @@ final class RoleTest extends Scenario
             'permissions' => $role->getRolePermissions(),
         ];
 
-        $test->expect(empty(array_udiff($data, $role->getAdministratorRole(), fn ($obj1, $obj2) => $obj1 === $obj2)), 'getAdministratorRole() found administrator role');
+        $test->expect(empty(array_udiff($data, $role->getAdministratorRole(), static fn ($obj1, $obj2) => $obj1 === $obj2)), 'getAdministratorRole() found administrator role');
 
         return $test->results();
     }
@@ -198,7 +198,7 @@ final class RoleTest extends Scenario
             'permissions' => $role->getRolePermissions(),
         ];
 
-        $test->expect(empty(array_udiff($data, $role->getRoleInfos($role), fn ($obj1, $obj2) => $obj1 === $obj2)), 'getRoleInfos() returned role informations');
+        $test->expect(empty(array_udiff($data, $role->getRoleInfos($role), static fn ($obj1, $obj2) => $obj1 === $obj2)), 'getRoleInfos() returned role informations');
 
         return $test->results();
     }

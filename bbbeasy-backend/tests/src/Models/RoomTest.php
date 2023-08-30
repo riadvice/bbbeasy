@@ -194,7 +194,7 @@ final class RoomTest extends Scenario
             $recordingExist = $room->getRecordingByRecordId($recordId);
             $recording      = $room->getRecordingByRecordId($recordId, true);
 
-            $test->expect($recordingExist && empty(array_udiff($recordings[0], $recording, fn ($obj1, $obj2) => $obj1 === $obj2)), 'getRecordingByRecordId(' . $recordId . ') returned recording for the given recordId');
+            $test->expect($recordingExist && empty(array_udiff($recordings[0], $recording, static fn ($obj1, $obj2) => $obj1 === $obj2)), 'getRecordingByRecordId(' . $recordId . ') returned recording for the given recordId');
             $test->expect(null === $room->getRecordingByRecordId('404', true), 'getRecordingByRecordId(404) did not found recording');
         }
 
@@ -249,10 +249,10 @@ final class RoomTest extends Scenario
         $data1 = ['id' => $room1->id, 'name' => $room1->name, 'short_link' => $room1->short_link];
         $data2 = ['id' => $room2->id, 'name' => $room2->name, 'short_link' => $room2->short_link];
         $data  = [$data1, $data2];
-        $test->expect(empty(array_udiff($data, $room->collectAllByUserId($user1->id), fn ($obj1, $obj2) => $obj1 === $obj2)), 'CollectAllByUserId(' . $user1->id . ') returned all rooms for the given user');
+        $test->expect(empty(array_udiff($data, $room->collectAllByUserId($user1->id), static fn ($obj1, $obj2) => $obj1 === $obj2)), 'CollectAllByUserId(' . $user1->id . ') returned all rooms for the given user');
 
         $data = ['id' => $room3->id, 'name' => $room3->name, 'short_link' => $room3->short_link];
-        $test->expect(empty(array_udiff($data, $room->collectAllByPresetId($preset2->id), fn ($obj1, $obj2) => $obj1 === $obj2)), 'CollectAllByPresetId(' . $preset2->id . ') returned all rooms for the given preset');
+        $test->expect(empty(array_udiff($data, $room->collectAllByPresetId($preset2->id), static fn ($obj1, $obj2) => $obj1 === $obj2)), 'CollectAllByPresetId(' . $preset2->id . ') returned all rooms for the given preset');
 
         return $test->results();
     }

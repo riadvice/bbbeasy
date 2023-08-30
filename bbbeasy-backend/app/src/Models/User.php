@@ -59,7 +59,7 @@ class User extends BaseModel
     public function __construct($db = null, $table = null, $fluid = null, $ttl = 0)
     {
         parent::__construct($db, $table, $fluid, $ttl);
-        $this->onset('password', fn ($self, $value) => password_hash($value, PASSWORD_BCRYPT));
+        $this->onset('password', static fn ($self, $value) => password_hash($value, PASSWORD_BCRYPT));
         $this->virtual('role', fn () => $this->role_id);
     }
 

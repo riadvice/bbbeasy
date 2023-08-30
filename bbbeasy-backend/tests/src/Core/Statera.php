@@ -260,7 +260,7 @@ class Statera
         // Set custom reroute handler for unit tests
         $f3->set(
             'ONREROUTE',
-            function($url, $permanent) use ($f3): void {
+            static function($url, $permanent) use ($f3): void {
                 $f3->set('utest.rerouted', $url);
             }
         );
