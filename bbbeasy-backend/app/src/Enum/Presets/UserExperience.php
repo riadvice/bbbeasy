@@ -26,7 +26,7 @@ use MabeEnum\Enum;
 
 class UserExperience extends Enum
 {
-    public const GROUP_NAME         = 'UserExperience';
+    public const GROUP_NAME         = 'User Experience';
     public const KEYBOARD_SHORTCUTS = 'keyboard_shortcuts';
     public const ASK_FOR_FEEDBACK   = 'ask_for_feedback';
 

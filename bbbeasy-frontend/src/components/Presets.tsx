@@ -552,7 +552,7 @@ const PresetsCol: React.FC<PresetColProps> = ({
 
                                                     {item.type === 'integer' && (
                                                         <InputNumber
-                                                            min={1}
+                                                            min={0}
                                                             max={100}
                                                             defaultValue={item.value}
                                                             placeholder={t(item.name)}

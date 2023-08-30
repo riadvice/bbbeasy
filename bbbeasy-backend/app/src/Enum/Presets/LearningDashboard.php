@@ -26,7 +26,7 @@ use MabeEnum\Enum;
 
 class LearningDashboard extends Enum
 {
-    public const GROUP_NAME    = 'LearningDashboard';
+    public const GROUP_NAME    = 'Learning Dashboard';
     public const CONFIGURABLE  = 'configurable';
     public const CLEANUP_DELAY = 'cleanup_delay';
 
