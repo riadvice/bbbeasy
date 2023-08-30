@@ -4,26 +4,25 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "91361b3f081889e39aec9ac40f7bfc9c",
+    "content-hash": "6ebc5a60f2e0e17e565228f96f8733c7",
     "packages": [
         {
             "name": "bcosca/fatfree-core",
-            "version": "dev-master",
+            "version": "3.8.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/f3-factory/fatfree-core.git",
-                "reference": "437058e"
+                "reference": "774692ce7698904d3cb35bbd4f79376bb17eeddc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/f3-factory/fatfree-core/zipball/437058e",
-                "reference": "437058e",
+                "url": "https://api.github.com/repos/f3-factory/fatfree-core/zipball/774692ce7698904d3cb35bbd4f79376bb17eeddc",
+                "reference": "774692ce7698904d3cb35bbd4f79376bb17eeddc",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.4"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "classmap": [
@@ -382,22 +381,21 @@
         },
         {
             "name": "ikkez/f3-cortex",
-            "version": "dev-master",
+            "version": "v1.7.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ikkez/f3-cortex.git",
-                "reference": "44b30fd"
+                "reference": "44b30fd4ca1b199729778d72f3840318cc64dfd9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ikkez/f3-cortex/zipball/44b30fd",
-                "reference": "44b30fd",
+                "url": "https://api.github.com/repos/ikkez/f3-cortex/zipball/44b30fd4ca1b199729778d72f3840318cc64dfd9",
+                "reference": "44b30fd4ca1b199729778d72f3840318cc64dfd9",
                 "shasum": ""
             },
             "require": {
                 "ikkez/f3-schema-builder": "2.*"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "classmap": [
@@ -834,20 +832,20 @@
         },
         {
             "name": "nette/utils",
-            "version": "v4.0.0",
+            "version": "v4.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/utils.git",
-                "reference": "cacdbf5a91a657ede665c541eda28941d4b09c1e"
+                "reference": "9124157137da01b1f5a5a22d6486cb975f26db7e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/utils/zipball/cacdbf5a91a657ede665c541eda28941d4b09c1e",
-                "reference": "cacdbf5a91a657ede665c541eda28941d4b09c1e",
+                "url": "https://api.github.com/repos/nette/utils/zipball/9124157137da01b1f5a5a22d6486cb975f26db7e",
+                "reference": "9124157137da01b1f5a5a22d6486cb975f26db7e",
                 "shasum": ""
             },
             "require": {
-                "php": ">=8.0 <8.3"
+                "php": ">=8.0 <8.4"
             },
             "conflict": {
                 "nette/finder": "<3",
@@ -855,7 +853,7 @@
             },
             "require-dev": {
                 "jetbrains/phpstorm-attributes": "dev-master",
-                "nette/tester": "^2.4",
+                "nette/tester": "^2.5",
                 "phpstan/phpstan": "^1.0",
                 "tracy/tracy": "^2.9"
             },
@@ -915,9 +913,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/utils/issues",
-                "source": "https://github.com/nette/utils/tree/v4.0.0"
+                "source": "https://github.com/nette/utils/tree/v4.0.1"
             },
-            "time": "2023-02-02T10:41:53+00:00"
+            "time": "2023-07-30T15:42:21+00:00"
         },
         {
             "name": "nikic/php-parser",
@@ -5523,18 +5521,6 @@
     ],
     "aliases": [
         {
-            "package": "bcosca/fatfree-core",
-            "version": "9999999-dev",
-            "alias": "3.8.1",
-            "alias_normalized": "3.8.1.0"
-        },
-        {
-            "package": "ikkez/f3-cortex",
-            "version": "9999999-dev",
-            "alias": "1.7.5",
-            "alias_normalized": "1.7.5.0"
-        },
-        {
             "package": "ikkez/f3-mailer",
             "version": "9999999-dev",
             "alias": "1.2.3",
@@ -5543,8 +5529,6 @@
     ],
     "minimum-stability": "stable",
     "stability-flags": {
-        "bcosca/fatfree-core": 20,
-        "ikkez/f3-cortex": 20,
         "ikkez/f3-mailer": 20,
         "bigbluebutton/bigbluebutton-api-php": 20,
         "roave/security-advisories": 20
