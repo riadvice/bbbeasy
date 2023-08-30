@@ -1570,6 +1570,12 @@ fieldset {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+div.error-message-Label{
+    max-width: max-content;
+    margin-bottom: 10px;
+    margin-left: 10px;
+}
+
 .ant-table-cell {
     max-width: 150px !important;
 }
