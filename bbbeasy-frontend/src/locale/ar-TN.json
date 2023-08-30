@@ -42,6 +42,11 @@
         "required": "اسم المستخدم مطلوب",
         "size": "يجب أن يحتوي اسم المستخدم على 4 أحرف على الأقل"
     },
+    "fullname": {
+        "label": "الاسم الكامل",
+        "required": "التسم الكامل مطلوب"
+    },
+    "empty-fullname": "الرجاء إدخال الاسم الكامل للانضمام إلى الاجتماع",
     "confirm-password": {
         "label": "تأكيد كلمة المرور",
         "required": "تأكيد كلمة المرور مطلوب",
@@ -392,5 +397,16 @@
     "send_invitation.label": "إرسال دعوة تسجيل للمستخدمين",
     "self_registration.label": "السماح بالتسجيل الذاتي",
     "administration": "الإدارة",
-    "edit_administration_settings_success": "تم تحديث إعدادات الإدارة بنجاح"
+    "edit_administration_settings_success": "تم تحديث إعدادات الإدارة بنجاح",
+
+    "status_presets_active": "نشيط",
+    "status_presets_inactive": "عاطل",
+    "availability": "التوفر",
+    "record": "سجل",
+    "askModerator": "اسأل المشرف",
+    "alwaysAccept": "تقبل دائما",
+
+    "alwaysDeny": "ينفي دائما",
+
+    "email-not-exist": "المستخدم غير موجود مع هذا البريد الإلكتروني"
 }

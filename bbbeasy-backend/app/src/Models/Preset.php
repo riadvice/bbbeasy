@@ -22,6 +22,9 @@ declare(strict_types=1);
 
 namespace Models;
 
+use Enum\Presets\GuestPolicy;
+use Enum\Presets\Layout;
+use Enum\Presets\Screenshare;
 use Models\Base as BaseModel;
 
 /**
@@ -183,7 +186,8 @@ class Preset extends BaseModel
     public function addDefaultSettings($successMessage, $errorMessage): bool|string
     {
         try {
-            $settings       = $this->getPresetSettings();
+            $settings = $this->getPresetSettings();
+
             $this->settings = json_encode($settings);
             $this->save();
         } catch (\Exception $e) {
@@ -206,6 +210,7 @@ class Preset extends BaseModel
         $categories     = $preset->getPresetCategories();
         $presetSettings = [];
         $settings       = [];
+
         if ($categories) {
             foreach ($categories as $category) {
                 // get category name
@@ -217,15 +222,29 @@ class Preset extends BaseModel
                 $presetSett = new PresetSetting();
 
                 foreach ($attributes as $attribute) {
-                    $presetSettings = $presetSett->getByName($attribute);
+                    $presetSettings = $presetSett->getByNameAndGroup($attribute, $categoryName);
+
                     if (!$presetSettings->dry() && $presetSettings->enabled) {
                         if (!$settings[$categoryName]) {
-                            $settings += [$categoryName => [$presetSettings->name => '']];
+                            if (GuestPolicy::GROUP_NAME === $categoryName && GuestPolicy::POLICY === $presetSettings->name) {
+                                $settings += [$categoryName => [$presetSettings->name => \Enum\GuestPolicy::ALWAYS_ACCEPT]];
+                            } elseif (Layout::GROUP_NAME === $categoryName || Screenshare::GROUP_NAME === $categoryName) {
+                                $settings += [$categoryName => [$presetSettings->name => true]];
+                            } else {
+                                $settings += [$categoryName => [$presetSettings->name => '']];
+                            }
                         } else {
-                            $settings[$categoryName] += [$presetSettings->name => ''];
+                            if (GuestPolicy::GROUP_NAME === $categoryName && GuestPolicy::POLICY === $presetSettings->name) {
+                                $settings[$categoryName] += [$presetSettings->name => \Enum\GuestPolicy::ALWAYS_ACCEPT];
+                            } elseif (Layout::GROUP_NAME === $categoryName) {
+                                $settings[$categoryName] += [$presetSettings->name => true];
+                            } else {
+                                $settings[$categoryName] += [$presetSettings->name => ''];
+                            }
                         }
                     }
                 }
+
                 $settings[$categoryName] = json_encode($settings[$categoryName]);
             }
         }

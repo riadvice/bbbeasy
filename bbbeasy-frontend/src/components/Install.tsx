@@ -40,6 +40,7 @@ import { PresetType } from '../types/PresetType';
 
 import axios from 'axios';
 import { apiRoutes } from '../routing/backend-config';
+import usersService from 'services/users.service';
 
 const { Step } = Steps;
 
@@ -229,8 +230,17 @@ const Install = () => {
 
     const onFinish = () => {
         const stepsData: formType = stepForm.getFieldsValue(true);
-
-        if (activeStep < steps.length - 1) {
+        if (activeStep == 0) {
+            setMessage('');
+            usersService
+                .collect_users(stepsData)
+                .then(() => {
+                    next();
+                })
+                .catch((error) => {
+                    setMessage(error.response.data.message);
+                });
+        } else if (activeStep < steps.length - 1) {
             next();
         } else {
             //edit file

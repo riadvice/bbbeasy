@@ -20,16 +20,11 @@ declare(strict_types=1);
  * with BBBEasy; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Enum\Presets;
+namespace Enum;
 
-use MabeEnum\Enum;
-
-class LearningDashboard extends Enum
+class GuestPolicy extends Enum
 {
-    public const GROUP_NAME    = 'Learning Dashboard';
-    public const CONFIGURABLE  = 'configurable';
-    public const CLEANUP_DELAY = 'cleanup_delay';
-
-    public const CONFIGURABLE_TYPE  = 'bool';
-    public const CLEANUP_DELAY_TYPE = 'integer';
+    public const ALWAYS_ACCEPT = 'ALWAYS_ACCEPT';
+    public const ALWAYS_DENY   = 'ALWAYS_DENY';
+    public const ASK_MODERATOR = 'ASK_MODERATOR';
 }

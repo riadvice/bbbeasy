@@ -119,7 +119,7 @@ const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
     //loading page and user already logged => set current user
     useEffect(() => {
         window.addEventListener('error', (e) => {
-            if (e.message === 'ResizeObserver loop limit exceeded') {
+            if (e.message.includes('ResizeObserver')) {
                 const resizeObserverErrDiv = document.getElementById('webpack-dev-server-client-overlay-div');
                 const resizeObserverErr = document.getElementById('webpack-dev-server-client-overlay');
                 if (resizeObserverErr) {

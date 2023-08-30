@@ -1255,7 +1255,7 @@ fieldset {
 .white-space {
     white-space: pre-wrap;
     text-align: left;
-    width: 300px;
+    width: 260px;
 }
 .presets-modal .ant-modal-content {
     margin: 0 30px;
@@ -1515,6 +1515,12 @@ fieldset {
     width: 90px;
 }
 
+.input-status-presets {
+    background: transparent;
+    border: transparent;
+    width: 50px;
+}
+
 .space-color-picker-add-label {
     position: relative;
     display: inline-flex;
@@ -1558,4 +1564,30 @@ fieldset {
 }
 .edit-room-form {
     display: block !important;
+}
+.room-title {
+    max-width: 150px !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.room-labels {
+    word-break: break-all;
+    max-width: max-content !important;
+    overflow: hidden;
+    text-overflow: unset;
+    max-height: 24px;
+}
+.room-label{
+    max-width: 120px !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+div.error-message-Label{
+    max-width: max-content;
+    margin-bottom: 10px;
+    margin-left: 10px;
+}
+
+.ant-table-cell {
+    max-width: 150px !important;
 }

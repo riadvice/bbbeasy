@@ -42,6 +42,11 @@
         "required": "Username is required",
         "size": "Username must have at least 4 characters"
     },
+    "fullname": {
+        "label": "Full name",
+        "required": "Full name is required"
+    },
+    "empty-fullname": "Could not join a meeting with an empty fullname",
     "confirm-password": {
         "label": "Confirm password",
         "required": "Confirm password is required",
@@ -57,7 +62,7 @@
     "error-title": "Error",
     "info-title": "Info",
     "success-registration": "Congratulations ! Your account has been successfully created",
-    "username-email-already-exist": "Username and email already exist",
+    "username-email-already-exist": "Username and Email already exist",
     "username-already-exist": "Username already exists",
     "email-already-exist": "Email already exists",
     "welcome": "Welcome back",
@@ -405,5 +410,17 @@
     "send_invitation.label": "Send registration invitation to users",
     "self_registration.label": "Allow self-registration",
     "administration": "Administration",
-    "edit_administration_settings_success": "Administration settings successfully updated"
+    "edit_administration_settings_success": "Administration settings successfully updated",
+
+    "status_presets_active": "Active",
+    "status_presets_inactive": "Inactive",
+    "availability": "Availability",
+    "record": "Record",
+
+    "askModerator": "Ask moderator",
+    "alwaysAccept": "Always accept",
+
+    "alwaysDeny": "Always deny",
+
+    "email-not-exist": "User does not exist with this email"
 }

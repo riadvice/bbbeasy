@@ -27,7 +27,7 @@ use MabeEnum\Enum;
 class Webcams extends Enum
 {
     public const GROUP_NAME                     = 'Webcams';
-    public const CONFIGURABLE                   = 'configurable';
+    public const CONFIGURABLE                   = 'availability';
     public const VISIBLE_FOR_MODERATOR_ONLY     = 'visible_for_moderator_only';
     public const MODERATOR_ALLOWED_CAMERA_EJECT = 'moderator_allowed_camera_eject';
     public const AUTO_SHARE                     = 'auto_share';

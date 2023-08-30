@@ -133,7 +133,7 @@ const RoomsCol: React.FC<RoomsColProps> = ({ index, room, editable, deleteClickH
                                 </Badge>
                             </Badge>
                             <Tooltip title={room.name} placement="top">
-                                <Title level={4}>{room.name}</Title>
+                                <Title level={4} className="room-title">{room.name}</Title>
                             </Tooltip>
                         </Space>
                     </div>
@@ -151,11 +151,35 @@ const RoomsCol: React.FC<RoomsColProps> = ({ index, room, editable, deleteClickH
                     )
                 }
             >
-                <div className="room-card-body">
+                <div className="room-card-body room-labels">
                     {room.labels.map((item) => (
-                        <Tag key={item.id} color={item.color}>
-                            {item.name}
-                        </Tag>
+                        <>
+                            <Tooltip
+                                key={item.name}
+                                overlayClassName="install-tooltip"
+                                title={  <ul>
+
+                                    {room.labels.map((myItem) => {
+                                        const myLabel = myItem.name;
+
+                                        return (
+                                            <li
+                                                key={item.name + '_' + myItem.name}
+                                            >
+                                                <Tag key={myItem.id} color={myItem.color}>
+                                                    {myLabel}
+                                                </Tag>
+                                            </li>
+                                        );
+                                    })}
+                                </ul>
+                                }
+                            >
+                                <Tag className="room-label" key={item.id} color={item.color}>
+                                    {item.name}
+                                </Tag>
+                            </Tooltip>
+                        </>
                     ))}
                 </div>
             </Card>

@@ -41,6 +41,7 @@ import {
     Space,
     Dropdown,
     Menu,
+    Select,
 } from 'antd';
 import {
     CheckOutlined,
@@ -53,7 +54,7 @@ import {
     WarningOutlined,
 } from '@ant-design/icons';
 
-import { Trans, withTranslation } from 'react-i18next';
+import { initReactI18next, Trans, withTranslation } from 'react-i18next';
 import { t } from 'i18next';
 import EN_US from '../locale/en-US.json';
 
@@ -76,6 +77,12 @@ import { MyPresetType } from '../types/MyPresetType';
 import { SubCategoryType } from '../types/SubCategoryType';
 import { UploadFile } from 'antd/lib/upload/interface';
 import type { Color } from 'antd/es/color-picker';
+import ReactDomServer from 'react-dom/server';
+import { getType } from 'react-styleguidist/lib/client/rsg-components/Props/util';
+import { LanguagesBBB } from './LanguagesBBB';
+import { GuestPolicy } from './GuestPolicy';
+import { isEmpty } from 'lodash';
+
 const { Title } = Typography;
 
 interface PresetColProps {
@@ -140,11 +147,19 @@ const PresetsCol: React.FC<PresetColProps> = ({
         },
     };
 
+    const getData = () => {
+        if ('Guest Policy' === modalTitle) {
+            return GuestPolicy;
+        } else {
+            return LanguagesBBB;
+        }
+    };
     const showModal = (title: string, titleTrans: string, content: SubCategoryType[]) => {
         setIsModalVisible(true);
         setModalTitle(title);
         setModalTitleTrans(titleTrans);
         setModalContent(content);
+
         const indexLogo = content.findIndex((item) => item.type === 'file');
         if (indexLogo > -1 && content[indexLogo].value != '') {
             const presetLogo: UploadFile = {
@@ -428,74 +443,145 @@ const PresetsCol: React.FC<PresetColProps> = ({
                         <div className="presets-body">
                             <Form>
                                 {modalContent.map((item) => (
-                                    <div key={modalTitle + '_' + item.name}>
-                                        <Form.Item label={t(item.name)} name={item.name}>
-                                            {item.type == 'bool' && (
-                                                <Switch
-                                                    defaultChecked={item.value == true ? true : false}
-                                                    onChange={(checked) => {
-                                                        item.value = checked;
-                                                    }}
-                                                />
-                                            )}
-
-                                            {item.type === 'string' && (
-                                                <Input
-                                                    defaultValue={item.value}
-                                                    placeholder={t(item.name)}
-                                                    onChange={(event) => {
-                                                        item.value = event.target.value;
-                                                    }}
-                                                />
-                                            )}
-
-                                            {item.type === 'color' && (
-                                                <ColorPicker
-                                                    value={item.value ? item.value : '#fbbc0b'}
-                                                    onChange={(color1: Color) => {
-                                                        setColor(color1);
-                                                        item.value =
-                                                            typeof color1 === 'string' ? color1 : color1.toHexString();
-                                                    }}
+                                    <>
+                                        {typeof item.type !== 'boolean' && (
+                                            <div key={modalTitle + '_' + item.name}>
+                                                <Form.Item
+                                                    label={
+                                                        item.name.length > 30 ? (
+                                                            <div className="white-space">{t(item.name)}</div>
+                                                        ) : (
+                                                            t(item.name)
+                                                        )
+                                                    }
+                                                    name={item.name}
                                                 >
-                                                    <Space className="space-presets-border">
-                                                        <div
-                                                            style={{
-                                                                width: token.sizeMD,
-                                                                height: token.sizeMD,
+                                                    {item.type == 'bool' && (
+                                                        <>
+                                                            <input
+                                                                className="input-status-presets"
+                                                                disabled
+                                                                type="text"
+                                                                id={item.name}
+                                                                value={
+                                                                    item.value == true
+                                                                        ? ReactDomServer.renderToString(
+                                                                              <Trans i18nKey="status_presets_active" />
+                                                                          )
+                                                                        : ReactDomServer.renderToString(
+                                                                              <Trans i18nKey="status_presets_inactive" />
+                                                                          )
+                                                                }
+                                                            />
 
-                                                                backgroundColor: item.value ? item.value : '#fbbc0b',
+                                                            <Switch
+                                                                defaultChecked={item.value == true ? true : false}
+                                                                onChange={(checked) => {
+                                                                    item.value = checked;
+                                                                    if (item.value) {
+                                                                        (
+                                                                            document.getElementById(
+                                                                                item.name
+                                                                            ) as HTMLInputElement
+                                                                        ).value = ReactDomServer.renderToString(
+                                                                            <Trans i18nKey="status_presets_active" />
+                                                                        );
+                                                                    } else {
+                                                                        (
+                                                                            document.getElementById(
+                                                                                item.name
+                                                                            ) as HTMLInputElement
+                                                                        ).value = ReactDomServer.renderToString(
+                                                                            <Trans i18nKey="status_presets_inactive" />
+                                                                        );
+                                                                    }
+                                                                }}
+                                                            />
+                                                        </>
+                                                    )}
+
+                                                    {item.type === 'string' && (
+                                                        <Input
+                                                            defaultValue={item.value}
+                                                            placeholder={t(item.name)}
+                                                            onChange={(event) => {
+                                                                item.value = event.target.value;
                                                             }}
                                                         />
-                                                    </Space>
-                                                </ColorPicker>
-                                            )}
+                                                    )}
 
-                                            {item.type === 'file' && (
-                                                <Upload
-                                                    {...props}
-                                                    multiple={false}
-                                                    name={item.name}
-                                                    fileList={fileList}
-                                                    accept=".png,.jpg,.jpeg"
-                                                >
-                                                    <Button icon={<UploadOutlined />}>
-                                                        <Trans i18nKey="upload_img" />
-                                                    </Button>
-                                                </Upload>
-                                            )}
+                                                    {item.type === 'color' && (
+                                                        <ColorPicker
+                                                            value={item.value ? item.value : '#fbbc0b'}
+                                                            onChange={(color1: Color) => {
+                                                                setColor(color1);
+                                                                item.value =
+                                                                    typeof color1 === 'string'
+                                                                        ? color1
+                                                                        : color1.toHexString();
+                                                            }}
+                                                        >
+                                                            <Space className="space-presets-border">
+                                                                <div
+                                                                    style={{
+                                                                        width: token.sizeMD,
+                                                                        height: token.sizeMD,
 
-                                            {item.type === 'integer' && (
-                                                <InputNumber
-                                                    min={1}
-                                                    max={100}
-                                                    defaultValue={item.value}
-                                                    placeholder={t(item.name)}
-                                                    onChange={(val) => (item.value = val)}
-                                                />
-                                            )}
-                                        </Form.Item>
-                                    </div>
+                                                                        backgroundColor: item.value
+                                                                            ? item.value
+                                                                            : '#fbbc0b',
+                                                                    }}
+                                                                />
+                                                            </Space>
+                                                        </ColorPicker>
+                                                    )}
+
+                                                    {item.type === 'file' && (
+                                                        <Upload
+                                                            {...props}
+                                                            multiple={false}
+                                                            name={item.name}
+                                                            fileList={fileList}
+                                                            accept=".png,.jpg,.jpeg"
+                                                        >
+                                                            <Button icon={<UploadOutlined />}>
+                                                                <Trans i18nKey="upload_img" />
+                                                            </Button>
+                                                        </Upload>
+                                                    )}
+
+                                                    {item.type === 'integer' && (
+                                                        <InputNumber
+                                                            min={0}
+                                                            max={100}
+                                                            defaultValue={item.value}
+                                                            placeholder={t(item.name)}
+                                                            onChange={(val) => (item.value = val)}
+                                                        />
+                                                    )}
+
+                                                    {item.type === 'select' && (
+                                                        <Select
+                                                            defaultValue={item.value}
+                                                            options={getData().map((data) => ({
+                                                                label:
+                                                                    'Guest Policy' == modalTitle
+                                                                        ? ReactDomServer.renderToString(
+                                                                              <Trans i18nKey={data.key} />
+                                                                          )
+                                                                        : data.name,
+                                                                value: data.value,
+                                                            }))}
+                                                            onChange={(event) => {
+                                                                item.value = event;
+                                                                console.log(event);
+                                                            }}
+                                                        />
+                                                    )}
+                                                </Form.Item>
+                                            </div>
+                                        )}
+                                    </>
                                 ))}
                                 <Form.Item className="button-container">
                                     <Button

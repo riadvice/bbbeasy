@@ -1,8 +1,4 @@
-<?php
-
-declare(strict_types=1);
-
-/*
+/**
  * BBBEasy open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022-2023 RIADVICE SUARL and by respective authors (see below).
@@ -20,16 +16,8 @@ declare(strict_types=1);
  * with BBBEasy; if not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Enum\Presets;
-
-use MabeEnum\Enum;
-
-class LearningDashboard extends Enum
-{
-    public const GROUP_NAME    = 'Learning Dashboard';
-    public const CONFIGURABLE  = 'configurable';
-    public const CLEANUP_DELAY = 'cleanup_delay';
-
-    public const CONFIGURABLE_TYPE  = 'bool';
-    public const CLEANUP_DELAY_TYPE = 'integer';
-}
+export type GuestPolicyType = {
+    name: string;
+    key: string;
+    value: string;
+};

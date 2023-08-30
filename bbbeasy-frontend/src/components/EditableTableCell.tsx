@@ -98,6 +98,14 @@ const EditableTableCell: React.FC<Props> = ({
                             message: t('required_' + index),
                         },
                         { ...editRules },
+                        {
+                            min: 1,
+                            message: <Trans i18nKey="label_name.size" />,
+                        },
+                        {
+                            max: 32,
+                            message: <Trans i18nKey="label_name.maxSize" />,
+                        },
                     ]}
                 >
                     {customInputNode}
