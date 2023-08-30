@@ -59,7 +59,7 @@ class PresetProcessor
 
     public function toCreateMeetingParams($preset, $createParams)
     {
-        $disabledFeatures=[];
+        $disabledFeatures  = [];
         $presetsData       = new PresetData();
         $preparePresetData = $this->preparePresetData($preset);
 
@@ -136,19 +136,17 @@ class PresetProcessor
         $createParams->setLockSettingsDisablePrivateChat($presetsData->getData(LockSettings::GROUP_NAME, LockSettings::PRIVATE_CHAT));
         $createParams->setLockSettingsDisablePublicChat($presetsData->getData(LockSettings::GROUP_NAME, LockSettings::PUBLIC_CHAT));
         $createParams->setLockSettingsDisableNote($presetsData->getData(LockSettings::GROUP_NAME, LockSettings::SHARED_NOTES));
-       if($presetsData->getData(LockSettings::GROUP_NAME,LockSettings::LAYOUT)){
-           array_push($disabledFeatures,'layouts');
-       }
-
-
+        if ($presetsData->getData(LockSettings::GROUP_NAME, LockSettings::LAYOUT)) {
+            $disabledFeatures[] = 'layouts';
+        }
 
         // $createParams->setPreUploadedPresentationOverrideDefault($presetsData->getData(Presentation::GROUP_NAME, Presentation::PRE_UPLOAD));
 
         $createParams->setAutoStartRecording($presetsData->getData(Recording::GROUP_NAME, Recording::AUTO_START));
         $createParams->setAllowStartStopRecording($presetsData->getData(Recording::GROUP_NAME, Recording::ALLOW_START_STOP));
         $createParams->setRecord($presetsData->getData(Recording::GROUP_NAME, Recording::RECORD));
-        if(!$presetsData->getData(Screenshare::GROUP_NAME,Screenshare::CONFIGURABLE)){
-            array_push($disabledFeatures,'screenshare');
+        if (!$presetsData->getData(Screenshare::GROUP_NAME, Screenshare::CONFIGURABLE)) {
+            $disabledFeatures[] = 'screenshare';
         }
         $createParams->setDisabledFeatures($disabledFeatures);
 
@@ -156,7 +154,7 @@ class PresetProcessor
         // UserExperience: keyboard_shortcuts,ask_for_feedback
 
         $createParams->setWebcamsOnlyForModerator($presetsData->getData(Webcams::GROUP_NAME, Webcams::VISIBLE_FOR_MODERATOR_ONLY));
-        $createParams->setAllowModsToEjectCameras( $presetsData->getData(Webcams::GROUP_NAME, Webcams::MODERATOR_ALLOWED_CAMERA_EJECT)?true:false);
+        $createParams->setAllowModsToEjectCameras($presetsData->getData(Webcams::GROUP_NAME, Webcams::MODERATOR_ALLOWED_CAMERA_EJECT) ? true : false);
         // configurable,auto_share,skip_preview
 
         // Whiteboard:multi_user_pen_only,presenter_tools,multi_user_tools

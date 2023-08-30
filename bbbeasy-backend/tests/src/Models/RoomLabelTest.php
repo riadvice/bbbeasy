@@ -106,7 +106,7 @@ final class RoomLabelTest extends Scenario
         $data2 = ['id' => $roomlabel2->id];
         $data  = [$data1, $data2];
 
-        $test->expect(empty(array_udiff($data, $roomlabel->collectAllByRoomId($room->id), fn ($obj1, $obj2) => $obj1 === $obj2)), 'CollectAllByRoomId(' . $room->id . ') returned all roomlabels for the given room');
+        $test->expect(empty(array_udiff($data, $roomlabel->collectAllByRoomId($room->id), static fn ($obj1, $obj2) => $obj1 === $obj2)), 'CollectAllByRoomId(' . $room->id . ') returned all roomlabels for the given room');
 
         return $test->results();
     }

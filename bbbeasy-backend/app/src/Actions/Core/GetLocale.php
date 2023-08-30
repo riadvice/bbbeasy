@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Actions\Core;
 
 use Actions\Base as BaseAction;
-use Cache;
 
 /**
  * Class LocalesController.

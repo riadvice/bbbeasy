@@ -63,7 +63,8 @@ class Scenario
     {
         $f3 = \Base::instance();
 
-        return empty(array_diff($this->loadResult($path), json_decode($f3->get('RESPONSE'), true, 512, JSON_THROW_ON_ERROR)));
+        // return empty(array_diff($this->loadResult($path), json_decode($f3->get('RESPONSE'), true, 512, JSON_THROW_ON_ERROR)));
+        return empty(array_diff($this->loadResult($path), json_decode($f3->get('RESPONSE'), true) ?? []));
     }
 
     /**
@@ -73,7 +74,8 @@ class Scenario
     {
         $f3 = \Base::instance();
 
-        return empty(array_diff($array, json_decode($f3->get('RESPONSE'), true, 512, JSON_THROW_ON_ERROR)));
+        // return empty(array_diff($array, json_decode($f3->get('RESPONSE'), true, 512, JSON_THROW_ON_ERROR)));
+        return empty(array_diff($array, json_decode($f3->get('RESPONSE'), true) ?? []));
     }
 
     public function uploadImage($name, $file): string
@@ -118,7 +120,7 @@ class Scenario
         $f3 = \Base::instance();
 
         // Remove error handler in unit test mode
-        $f3->set('ONERROR', function() use ($f3): void {
+        $f3->set('ONERROR', static function() use ($f3): void {
             // Never use $f3->clear('ERROR'); here as it needs to be done by the developer after checking the error
             $f3->set('utest.errors.' . $f3->hash(serialize($f3->get('ERROR'))), $f3->get('ERROR'));
         });

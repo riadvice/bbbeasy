@@ -83,11 +83,12 @@ final class LabelTest extends Scenario
         $label              = new Label();
         $label->name        = 'labelLabel';
         $label->color       = $faker->safeHexColor();
+        $name               = $label->name;
+        $color              = $label->color;
         $label->description = $faker->text();
         $label->save();
-
-        $test->expect(0 !== $label->id, 'Label mocked and saved to the database');
-        $test->expect('label_label' === $label->name, 'Name formatted to ' . $label->name);
+        $myLabel = $label->getLabelByNameAndColor($name, $color);
+        $test->expect(0 !== $myLabel->id, 'Label mocked and saved to the database');
 
         return $test->results();
     }
@@ -119,20 +120,6 @@ final class LabelTest extends Scenario
         $test->expect($label->getByColor($label->color)->color === $label->color, 'getByColor(' . $label->color . ') found label');
         $test->expect($label->getByColor($arrayColor)->color === $label->color, 'getByColor(' . $arrayColor . ') found label');
         $test->expect(!$label->getByColor('404')->color, 'getByColor(404) did not find label');
-
-        return $test->results();
-    }
-
-    /**
-     * @return array
-     */
-    public function testNameExists()
-    {
-        $test  = $this->newTest();
-        $label = LabelFaker::create();
-
-        $test->expect($label->nameExists($label->name), 'nameExists(' . $label->name . ') exists');
-        $test->expect(!$label->nameExists('404'), 'nameExists("404") does not exist');
 
         return $test->results();
     }

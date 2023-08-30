@@ -99,6 +99,8 @@ final class UserTest extends Scenario
 
     /**
      * @return array
+     *
+     * @throws \ReflectionException
      */
     public function testGetByEmail()
     {
@@ -140,6 +142,8 @@ final class UserTest extends Scenario
 
     /**
      * @return array
+     *
+     * @throws \ReflectionException
      */
     public function testEmailExists()
     {
@@ -170,6 +174,8 @@ final class UserTest extends Scenario
 
     /**
      * @return array
+     *
+     * @throws \ReflectionException
      */
     public function testGetUsersByUsernameOrEmail()
     {
@@ -190,6 +196,8 @@ final class UserTest extends Scenario
 
     /**
      * @return array
+     *
+     * @throws \ReflectionException
      */
     public function testUserExists()
     {
@@ -222,6 +230,8 @@ final class UserTest extends Scenario
 
     /**
      * @return array
+     *
+     * @throws \ReflectionException
      */
     public function testGetAllUsers()
     {
@@ -245,6 +255,8 @@ final class UserTest extends Scenario
 
     /**
      * @return array
+     *
+     * @throws \ReflectionException
      */
     public function testGetUserInfos()
     {

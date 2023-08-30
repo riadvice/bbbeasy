@@ -197,7 +197,7 @@ class Upload extends \Prefab
     {
         if (!is_dir($uploadDirectory)) {
             // @fixme
-            mkdir($uploadDirectory, 0755, true);
+            mkdir($uploadDirectory, 0o755, true);
         }
     }
 }

@@ -40,6 +40,8 @@ class RoomFaker
         $room->short_link = $shortLink ?? $faker->text(14);
         $room->preset_id  = $preset->id;
         $room->user_id    = $user->id;
+        $name             = $room->name;
+        $link             = $room->short_link;
         $room->meeting_id = DataUtils::generateRandomString();
 
         $room->save();
@@ -48,6 +50,6 @@ class RoomFaker
             self::$storage[$storageName] = $room;
         }
 
-        return $room;
+        return $room->getByNameAndLink($name, $link);
     }
 }

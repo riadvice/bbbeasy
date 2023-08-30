@@ -37,6 +37,7 @@ class PresetSettingFaker
         $presetSetting->group   = $group ?? $faker->name;
         $presetSetting->name    = $faker->name;
         $presetSetting->enabled = (bool) random_int(0, 1);
+        $presetName             = $presetSetting->name;
 
         $presetSetting->save();
 
@@ -44,7 +45,7 @@ class PresetSettingFaker
             self::$storage[$storageName] = $presetSetting;
         }
 
-        return $presetSetting;
+        return $presetSetting->getByName($presetName);
     }
 
     /**

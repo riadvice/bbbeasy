@@ -122,7 +122,7 @@ class Room extends BaseModel
         $rooms = $this->find([], ['order' => 'id']);
         if ($rooms) {
             foreach ($rooms as $room) {
-                $data[] = $room->getRoomInfos();
+                $data[] = $room->getRoomInfos($room);
             }
         }
 

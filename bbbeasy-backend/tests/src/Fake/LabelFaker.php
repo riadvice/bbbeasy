@@ -36,6 +36,8 @@ class LabelFaker
         $label->name        = $faker->text(14);
         $label->color       = $faker->safeHexColor;
         $label->description = $faker->text;
+        $nameLabel          = $label->name;
+        $ColorLabel         = $label->color;
 
         $label->save();
 
@@ -43,7 +45,7 @@ class LabelFaker
             self::$storage[$storageName] = $label;
         }
 
-        return $label;
+        return $label->getLabelByNameAndColor($nameLabel, $ColorLabel);
     }
 
     /**

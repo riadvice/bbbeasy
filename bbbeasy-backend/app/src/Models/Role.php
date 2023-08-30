@@ -106,7 +106,7 @@ class Role extends BaseModel
         $data = [];
         $this->load(['id = ?', [UserRole::LECTURER_ID]]);
         if ($this->valid()) {
-            $data = $this->getRoleInfos();
+            $data = $this->getRoleInfos($this);
         }
 
         return $data;
@@ -117,7 +117,7 @@ class Role extends BaseModel
         $data = [];
         $this->load(['id = ?', [UserRole::ADMINISTRATOR_ID]]);
         if ($this->valid()) {
-            $data = $this->getRoleInfos();
+            $data = $this->getRoleInfos($this);
         }
 
         return $data;

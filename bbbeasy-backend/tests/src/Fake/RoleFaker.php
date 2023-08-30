@@ -31,9 +31,11 @@ class RoleFaker
 
     public static function create($permissions = null, $storageName = null)
     {
-        $faker      = Faker::create();
-        $role       = new Role();
-        $role->name = $faker->name;
+        $faker    = Faker::create();
+        $role     = new Role();
+        $roleName = $faker->name;
+
+        $role->name = $roleName;
 
         if (null !== $permissions) {
             $role->saveRoleAndPermissions($permissions);
@@ -45,7 +47,7 @@ class RoleFaker
             self::$storage[$storageName] = $role;
         }
 
-        return $role;
+        return $role->getRoleByName($roleName);
     }
 
     /**

@@ -76,7 +76,7 @@ class Bootstrap extends Boot
         // Tracy consumes about 300 Ko of memory
         Debugger::enable(3 !== $this->debug ? Debugger::PRODUCTION : Debugger::DEVELOPMENT, __DIR__ . '/../../' . $this->f3->get('LOGS'));
         if (Debugger::$productionMode) {
-            Debugger::$onFatalError = [function($exception): void {
+            Debugger::$onFatalError = [static function($exception): void {
                 /**
                  * @var MailSender $mailer
                  */
