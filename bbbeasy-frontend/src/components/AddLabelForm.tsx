@@ -46,13 +46,14 @@ type formType = {
 let addForm: FormInstance = null;
 
 export const AddLabelForm = (props: Props) => {
+    const [initialColor, setInitialColor] = React.useState<string>('#fbbc0b');
     const { defaultColor } = props;
     const initialAddValues: formType = {
         name: '',
         description: '',
-        color: '#fbbc0b',
+        color: initialColor,
     };
-    const [color, setColor] = React.useState<string>(defaultColor ? defaultColor : '#fbbc0b');
+    const [color, setColor] = React.useState<string>(defaultColor ? defaultColor : initialColor);
     const dataContext = React.useContext(DataContext);
     const [data, setData] = React.useState<LabelType[]>([]);
     const [loading, setLoading] = React.useState<boolean>(false);
@@ -87,8 +88,8 @@ export const AddLabelForm = (props: Props) => {
     };
     const cancelAdd = () => {
         props.close();
-
         addForm?.resetFields();
+        setColor(initialColor);
     };
 
     const failedAdd = () => {
@@ -102,7 +103,7 @@ export const AddLabelForm = (props: Props) => {
                 centered
                 open={props.isModalShow}
                 onOk={handleAdd}
-                onCancel={props.close}
+                onCancel={cancelAdd}
                 footer={null}
                 maskClosable={true}
             >
