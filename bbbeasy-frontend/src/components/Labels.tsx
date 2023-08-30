@@ -23,7 +23,7 @@ import { t } from 'i18next';
 
 import { PageHeader } from '@ant-design/pro-layout';
 
-import {Badge, Button, Form, Input, Modal, Popconfirm, Space, Typography, ColorPicker, theme, Alert} from 'antd';
+import { Badge, Button, Form, Input, Modal, Popconfirm, Space, Typography, ColorPicker, theme, Alert } from 'antd';
 import { DeleteOutlined, EditOutlined, QuestionCircleOutlined, WarningOutlined } from '@ant-design/icons';
 
 import Notifications from './Notifications';
@@ -40,8 +40,8 @@ import LabelsService from '../services/labels.service';
 
 import { TableColumnType } from '../types/TableColumnType';
 import { LabelType } from '../types/LabelType';
-import EN_US from "../locale/en-US.json";
-import {isEmpty} from "lodash";
+import EN_US from '../locale/en-US.json';
+import { isEmpty } from 'lodash';
 const { Link } = Typography;
 
 interface EditableCellProps {
@@ -62,7 +62,7 @@ const Labels = () => {
     const [cancelVisibility, setCancelVisibility] = React.useState<boolean>(false);
     const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
     const [color, setColor] = React.useState<string>('');
-    const [isErrorValidation , setIsErrorValidation] = React.useState<boolean>(false);
+    const [isErrorValidation, setIsErrorValidation] = React.useState<boolean>(false);
     const [errorMsg, setErrorMsg] = React.useState<string>('');
     const { token } = theme.useToken();
     const getLabels = () => {
@@ -154,7 +154,7 @@ const Labels = () => {
                             setCancelVisibility(false);
                         }}
                         style={{
-                            borderColor: dataIndex == "name" && isErrorValidation  ? "red" : null,
+                            borderColor: dataIndex == 'name' && isErrorValidation ? 'red' : null,
                         }}
                     />
                 }
@@ -271,19 +271,18 @@ const Labels = () => {
         }
     };
     const dataValidation = (record: LabelType, key: number) => {
-
         const newLabel = editForm.getFieldsValue(true);
-        if(isEmpty(newLabel.name)){
+        if (isEmpty(newLabel.name)) {
             setIsErrorValidation(true);
-            setErrorMsg("name.required");
+            setErrorMsg('name.required');
             return;
         }
-        if(newLabel.name.length > 32){
+        if (newLabel.name.length > 32) {
             setIsErrorValidation(true);
-            setErrorMsg("label_name.maxSize");
+            setErrorMsg('label_name.maxSize');
             return;
         }
-        saveEdit(record,key);
+        saveEdit(record, key);
     };
     const columns: TableColumnType[] = [
         {
@@ -426,11 +425,11 @@ const Labels = () => {
                     }}
                 />
             )}
-            {isErrorValidation  ?
+            {isErrorValidation ? (
                 <div className="error-message-Label">
-                    <Alert type="error"  message={<Trans i18nKey={errorMsg} />} showIcon/>
+                    <Alert type="error" message={<Trans i18nKey={errorMsg} />} showIcon />
                 </div>
-                : null}
+            ) : null}
             <EditableTable
                 EditableCell={EditableCell}
                 editForm={editForm}

@@ -77,12 +77,14 @@ const tagRender = (props: CustomTagProps) => {
         event.stopPropagation();
     };
     return (
-        <Tooltip
-            key="tooltipLabels"
-            overlayClassName="install-tooltip"
-            title={label}
-        >
-            <Tag className="room-label" color={value} onMouseDown={onPreventMouseDown} closable={closable} onClose={onClose}>
+        <Tooltip key="tooltipLabels" overlayClassName="install-tooltip" title={label}>
+            <Tag
+                className="room-label"
+                color={value}
+                onMouseDown={onPreventMouseDown}
+                closable={closable}
+                onClose={onClose}
+            >
                 {label}
             </Tag>
         </Tooltip>

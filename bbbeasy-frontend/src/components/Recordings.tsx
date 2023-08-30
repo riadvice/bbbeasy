@@ -60,8 +60,8 @@ import {
     LinkedinIcon,
     LinkedinShareButton,
     TwitterIcon,
-    TwitterShareButton
-} from "react-share";
+    TwitterShareButton,
+} from 'react-share';
 
 const { Link } = Typography;
 
@@ -430,32 +430,25 @@ const Recordings = () => {
                         <Space size={38} direction="vertical" className="modal-content">
                             <div className="mt-24">{getFormatIcons(modalFormats, true)}</div>
                             <Space size="middle" className="social-medias">
-                                    <div className="bbbeasy-white-btn">
-                                        <FacebookShareButton
-                                            url={modalUrl}
+                                <div className="bbbeasy-white-btn">
+                                    <FacebookShareButton url={modalUrl} quote={'Join us!'}>
+                                        <FacebookIcon size={75} round />
+                                    </FacebookShareButton>
+                                </div>
+                                <div className="bbbeasy-white-btn">
+                                    <TwitterShareButton url={modalUrl}>
+                                        <TwitterIcon size={75} round />
+                                    </TwitterShareButton>
+                                </div>
 
-                                            quote={'Join us!'}
-                                        >
-                                            <FacebookIcon size={75} round />
-                                        </FacebookShareButton>
-                                    </div>
-                                    <div className="bbbeasy-white-btn">
-                                        <TwitterShareButton
-                                            url={modalUrl}
-                                        >
-                                            <TwitterIcon size={75} round />
-                                        </TwitterShareButton>
-                                    </div>
-
-                                    <div className="bbbeasy-white-btn">
-                                        <LinkedinShareButton
-                                            url={modalUrl}
-                                            title="Create LinkedIn Share button on Website Webpages"
-                                        >
-                                            <LinkedinIcon size={75} round />
-                                        </LinkedinShareButton>
-
-                                    </div>
+                                <div className="bbbeasy-white-btn">
+                                    <LinkedinShareButton
+                                        url={modalUrl}
+                                        title="Create LinkedIn Share button on Website Webpages"
+                                    >
+                                        <LinkedinIcon size={75} round />
+                                    </LinkedinShareButton>
+                                </div>
                             </Space>
                             <Input
                                 readOnly
@@ -463,14 +456,16 @@ const Recordings = () => {
                                 suffix={<CopyTextToClipBoard textToCopy={modalUrl} />}
                             />
                             <Form.Item className="modal-submit-btn">
-                                <Button type="primary" id="submit-btn"
-                                        icon={
-                                            <DynamicIcon
-                                                type="playback-presentation"
-                                                className="bbbeasy-ppt"
-                                            />
-                                        }
-                                        onClick={() => {window.open(modalUrl)}} htmlType="submit" block>
+                                <Button
+                                    type="primary"
+                                    id="submit-btn"
+                                    icon={<DynamicIcon type="playback-presentation" className="bbbeasy-ppt" />}
+                                    onClick={() => {
+                                        window.open(modalUrl);
+                                    }}
+                                    htmlType="submit"
+                                    block
+                                >
                                     <span>
                                         <Trans i18nKey="replay" />
                                     </span>
