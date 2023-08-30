@@ -128,7 +128,6 @@ const RoomDetails = () => {
     const startRoom = async () => {
         try {
             const values = await startForm.validateFields();
-            console.log(values.fullname);
 
             RoomsService.start_room(room.id, values.fullname)
                 .then((result) => {
@@ -409,7 +408,16 @@ const RoomDetails = () => {
             return (
                 <Form form={startForm}>
                     {' '}
-                    <Form.Item name="fullname" label={t('fullname.label')}>
+                    <Form.Item
+                        name="fullname"
+                        label={t('fullname.label')}
+                        rules={[
+                            {
+                                required: true,
+                                message: <Trans i18nKey="fullname.required" />,
+                            },
+                        ]}
+                    >
                         <Input placeholder={t('fullname.label')} />
                     </Form.Item>
                 </Form>
@@ -473,13 +481,17 @@ const RoomDetails = () => {
                                                 {!isEditing ? (
                                                     <>
                                                         <Title level={3}>{room.name}</Title>
-                                                        <div>
-                                                            {room.labels.map((item) => (
-                                                                <Tag key={item.id} color={item.color}>
-                                                                    {item.name}
-                                                                </Tag>
-                                                            ))}
-                                                        </div>
+                                                        {currentUser != null ? (
+                                                            <>
+                                                                <div>
+                                                                    {room.labels.map((item) => (
+                                                                        <Tag key={item.id} color={item.color}>
+                                                                            {item.name}
+                                                                        </Tag>
+                                                                    ))}
+                                                                </div>
+                                                            </>
+                                                        ) : null}
 
                                                         {renderLinkOrUsername(open)}
                                                     </>
