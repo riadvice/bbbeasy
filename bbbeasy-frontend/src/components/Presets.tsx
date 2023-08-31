@@ -510,11 +510,13 @@ const PresetsCol: React.FC<PresetColProps> = ({
                                                             }}
                                                         />
                                                     )}
-                                                  {item.type === 'password' && (
-                                                      <PasswordInput placeholder="**********"   onChange={(event) => {
-                                                        item.value = event.target.value;
-                                                    }}/>
-                                                        
+                                                    {item.type === 'password' && (
+                                                        <PasswordInput
+                                                            placeholder="**********"
+                                                            onChange={(event) => {
+                                                                item.value = event.target.value;
+                                                            }}
+                                                        />
                                                     )}
                                                     {item.type === 'color' && (
                                                         <ColorPicker

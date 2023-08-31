@@ -33,7 +33,22 @@ import {
     MailOutlined,
     TwitterOutlined,
 } from '@ant-design/icons';
-import { Avatar, Button, Card, Col, Input, Row, Space, Tag, Tooltip, Typography, Form, Select, Popconfirm,Alert } from 'antd';
+import {
+    Avatar,
+    Button,
+    Card,
+    Col,
+    Input,
+    Row,
+    Space,
+    Tag,
+    Tooltip,
+    Typography,
+    Form,
+    Select,
+    Popconfirm,
+    Alert,
+} from 'antd';
 
 import Notifications from './Notifications';
 import { CustomTagProps } from 'rc-select/lib/BaseSelect';
@@ -94,7 +109,7 @@ const RoomDetails = () => {
     const [isRunning, setIsRunning] = useState<boolean>(false);
     const [canStart, setCanStart] = useState<boolean>(false);
     const dataContext = React.useContext(DataContext);
-    const [errors,setErrors]=React.useState<any>();
+    const [errors, setErrors] = React.useState<any>();
     const [errorsEdit, setErrorsEdit] = React.useState({});
     const [showSocialMedia, setShowSocialMedia] = useState(false);
     const [showStartButton, setShowStartButton] = useState(true);
@@ -102,7 +117,7 @@ const RoomDetails = () => {
     const [labels, setLabels] = React.useState<LabelType[]>();
     const [presets, setPresets] = React.useState<PresetType[]>();
     const prefixShortLink = '/r/';
-    const [meeting,setMeeting]=React.useState<any>(null);
+    const [meeting, setMeeting] = React.useState<any>(null);
     const [showRecodingAndPresenttaions, setShowRecodingAndPresenttaions] = React.useState<boolean>(false);
     const [open, setOpen] = React.useState<boolean>(false);
     const [roomRecordings, setRoomRecordings] = React.useState<RecordingType[]>([]);
@@ -130,15 +145,15 @@ const RoomDetails = () => {
     const startRoom = async () => {
         try {
             const values = await startForm.validateFields();
-            console.log(values)
+            console.log(values);
 
-            RoomsService.start_room(room.id, values.fullname,values.password  )
+            RoomsService.start_room(room.id, values.fullname, values.password)
                 .then((result) => {
                     window.open(result.data, '_self');
                 })
                 .catch((error) => {
                     console.log(error.response.data);
-                    setErrors(error.response.data)
+                    setErrors(error.response.data);
                     /*Notifications.openNotificationWithIcon(
                         'error',
                         t(Object.keys(EN_US).filter((elem) => EN_US[elem] === error.response.data.meeting))
@@ -184,7 +199,7 @@ const RoomDetails = () => {
                 const room: RoomType = response.data.room;
 
                 const meeting = response.data.meeting;
-                setMeeting(meeting)
+                setMeeting(meeting);
                 console.log(currentUser?.role);
                 setRoom(response.data.room);
                 if (room != null) {
@@ -199,7 +214,7 @@ const RoomDetails = () => {
                 }
                 if (meeting != null) {
                     setCanStart(meeting.canStart);
-                    console.log(meeting)
+                    console.log(meeting);
 
                     setIsRunning(meeting.running);
                 }
@@ -397,49 +412,48 @@ const RoomDetails = () => {
             </Form.Item>
         );
     };
-    const showErrors=(errors)=>{
-        {errors && (
-            <Alert
-                type="error"
-                className="alert-msg"
-                message={<Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errors)} />}
-                showIcon
-            />
-        )}
-    }
-    const renderPasswordModeratorOrAttendee=(errors,user,meeting )=>{
-        console.log('meeting',meeting)
-        console.log("user",user)
-        console.log("errors",errors)
-       if(user ==null && !meeting.all_join_as_moderator){
-           return  (
-                 <Form.Item
-                 
-                        name="password"
-                        label={t('password.label')}
-                         {...(errors && 'password' in errors && {
+    const showErrors = (errors) => {
+        {
+            errors && (
+                <Alert
+                    type="error"
+                    className="alert-msg"
+                    message={<Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errors)} />}
+                    showIcon
+                />
+            );
+        }
+    };
+    const renderPasswordModeratorOrAttendee = (errors, user, meeting) => {
+        console.log('meeting', meeting);
+        console.log('user', user);
+        console.log('errors', errors);
+        if (user == null && !meeting.all_join_as_moderator) {
+            return (
+                <Form.Item
+                    name="password"
+                    label={t('password.label')}
+                    {...(errors &&
+                        'password' in errors && {
                             help: (
                                 <Trans
-                                    i18nKey={Object.keys(EN_US).filter(
-                                        (elem) => EN_US[elem] == errors['password']
-                                    )}
+                                    i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errors['password'])}
                                 />
                             ),
                             validateStatus: 'error',
-                        })} 
-                       rules={[
-                            {
-                                required: true,
-                                message: <Trans i18nKey="password.required" />,
-                            },
-                        ]} 
-                    >
-                        <PasswordInput placeholder="**********" />
-                    </Form.Item>
-           )
-            
-     }
-    /* else if(user ==null && meeting.password_attendee){
+                        })}
+                    rules={[
+                        {
+                            required: true,
+                            message: <Trans i18nKey="password.required" />,
+                        },
+                    ]}
+                >
+                    <PasswordInput placeholder="**********" />
+                </Form.Item>
+            );
+        }
+        /* else if(user ==null && meeting.password_attendee){
             return  (
                 <Form.Item
                        name="password_attendee"
@@ -455,7 +469,7 @@ const RoomDetails = () => {
                    </Form.Item>
           )
         }*/
-    }
+    };
     const renderLinkOrUsername = (open) => {
         if (currentUser != null) {
             return (
@@ -471,21 +485,18 @@ const RoomDetails = () => {
             );
         } else {
             return (
-                
-                    
-                    <Form.Item
-                        name="fullname"
-                        label={t('fullname.label')}
-                        rules={[
-                            {
-                                required: true,
-                                message: <Trans i18nKey="fullname.required" />,
-                            },
-                        ]}
-                    >
-                        <Input placeholder={t('fullname.label')} />
-                    </Form.Item>
-                
+                <Form.Item
+                    name="fullname"
+                    label={t('fullname.label')}
+                    rules={[
+                        {
+                            required: true,
+                            message: <Trans i18nKey="fullname.required" />,
+                        },
+                    ]}
+                >
+                    <Input placeholder={t('fullname.label')} />
+                </Form.Item>
             );
         }
     };
@@ -556,17 +567,18 @@ const RoomDetails = () => {
                                                                     ))}
                                                                 </div>
                                                             </>
-
                                                         ) : null}
                                                         <Form form={startForm}>
                                                             {showErrors(errors)}
-                                                      
-                                                        {renderPasswordModeratorOrAttendee(errors,currentUser,meeting)}
 
+                                                            {renderPasswordModeratorOrAttendee(
+                                                                errors,
+                                                                currentUser,
+                                                                meeting
+                                                            )}
 
-{renderLinkOrUsername(open)}
+                                                            {renderLinkOrUsername(open)}
                                                         </Form>
-                                                       
                                                     </>
                                                 ) : (
                                                     <Space size="middle" className="edit-room-form">

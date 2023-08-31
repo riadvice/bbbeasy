@@ -46,14 +46,14 @@
         "label": "Full name",
         "required": "Full name is required"
     },
-    "password_moderator":{
-        "label":"Password for moderator",
-        "required":"Password for moderator is required"
+    "password_moderator": {
+        "label": "Password for moderator",
+        "required": "Password for moderator is required"
     },
-    "wrong-password-join-meeting":"Could not join a meeting with a wrong password",
-    "password_attendee":{
-        "label":"Password for attendee",
-        "required":"Password for attendee is required"
+    "wrong-password-join-meeting": "Could not join a meeting with a wrong password",
+    "password_attendee": {
+        "label": "Password for attendee",
+        "required": "Password for attendee is required"
     },
     "empty-fullname": "Could not join a meeting with an empty fullname",
     "confirm-password": {

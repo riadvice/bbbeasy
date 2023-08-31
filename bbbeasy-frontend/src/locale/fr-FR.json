@@ -46,15 +46,15 @@
         "label": "Nom Complet",
         "required": "Le Nom complet est obligatoire"
     },
-    "password_moderator":{
-        "label":"Mot de passe du modérateur",
-        "required":"Le mot de passe du modérateur est obligatoire"
+    "password_moderator": {
+        "label": "Mot de passe du modérateur",
+        "required": "Le mot de passe du modérateur est obligatoire"
     },
-    "password_attendee":{
-        "label":"Mot de passe du Participant",
-        "required":"Mot de passe du Participant est obligatoire"
+    "password_attendee": {
+        "label": "Mot de passe du Participant",
+        "required": "Mot de passe du Participant est obligatoire"
     },
-    "wrong-password-join-meeting":"Impossible de rejoindre une réunion avec un mot de passe erroné",
+    "wrong-password-join-meeting": "Impossible de rejoindre une réunion avec un mot de passe erroné",
     "empty-fullname": "Veuillez entrer le Nom complet pour rejoindre la réunion",
     "confirm-password": {
         "label": "Confirmation du mot de passe",

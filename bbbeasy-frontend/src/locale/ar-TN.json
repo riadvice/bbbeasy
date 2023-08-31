@@ -46,15 +46,15 @@
         "label": "الاسم الكامل",
         "required": "التسم الكامل مطلوب"
     },
-    "password_moderator":{
-        "label":"كلمة المرور للمشرف",
-        "required":"كلمة المرور للمشرف مطلوبة"
+    "password_moderator": {
+        "label": "كلمة المرور للمشرف",
+        "required": "كلمة المرور للمشرف مطلوبة"
     },
-    "wrong-password-join-meeting":"تعذر الانضمام إلى اجتماع باستخدام كلمة مرور خاطئة",
+    "wrong-password-join-meeting": "تعذر الانضمام إلى اجتماع باستخدام كلمة مرور خاطئة",
 
-    "password_attendee":{
-        "label":"كلمة المرور للحضور",
-        "required":"كلمة المرور للحضور مطلوبة"
+    "password_attendee": {
+        "label": "كلمة المرور للحضور",
+        "required": "كلمة المرور للحضور مطلوبة"
     },
     "empty-fullname": "الرجاء إدخال الاسم الكامل للانضمام إلى الاجتماع",
     "confirm-password": {
