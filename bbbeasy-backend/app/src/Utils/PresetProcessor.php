@@ -8,16 +8,16 @@ declare(strict_types=1);
  * Copyright (c) 2022-2023 RIADVICE SUARL and by respective authors (see below).
  *
  * This program is free software; you can redistribute it and/or modify it under the
- * terms of the GNU Lesser General Public License as published by the Free Software
+ * terms of the GNU Affero General Public License as published by the Free Software
  * Foundation; either version 3.0 of the License, or (at your option) any later
  * version.
  *
- * BBBEasy is distributed in the hope that it will be useful, but WITHOUT ANY
+ * BBBeasy is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
- * PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License along
- * with BBBEasy; if not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License along
+ * with BBBeasy. If not, see <https://www.gnu.org/licenses/>
  */
 
 namespace Utils;
@@ -33,8 +33,14 @@ use Enum\Presets\LearningDashboard;
 use Enum\Presets\LockSettings;
 use Enum\Presets\Presentation;
 use Enum\Presets\Recording;
+
 use Enum\Presets\Security;
+
+use Enum\Presets\Screenshare;
+use Enum\Presets\UserExperience;
+
 use Enum\Presets\Webcams;
+use Enum\Presets\Whiteboard;
 
 class PresetProcessor
 {
@@ -57,6 +63,7 @@ class PresetProcessor
 
     public function toCreateMeetingParams($preset, $createParams)
     {
+        $disabledFeatures  = [];
         $presetsData       = new PresetData();
         $preparePresetData = $this->preparePresetData($preset);
 
@@ -93,11 +100,15 @@ class PresetProcessor
         $presetsData->setData(Recording::GROUP_NAME, Recording::AUTO_START, $preparePresetData[Recording::GROUP_NAME][Recording::AUTO_START]);
         $presetsData->setData(Recording::GROUP_NAME, Recording::ALLOW_START_STOP, $preparePresetData[Recording::GROUP_NAME][Recording::ALLOW_START_STOP]);
         $presetsData->setData(Recording::GROUP_NAME, Recording::RECORD, $preparePresetData[Recording::GROUP_NAME][Recording::RECORD]);
+
         $password_moderator = openssl_decrypt($preparePresetData[Security::GROUP_NAME][Security::PASSWORD_FOR_MODERATOR], Password::CIPHERING_VALUE, Password::ENCRYPTION_KEY);
         $password_attendee  = openssl_decrypt($preparePresetData[Security::GROUP_NAME][Security::PASSWORD_FOR_ATTENDEE], Password::CIPHERING_VALUE, Password::ENCRYPTION_KEY);
 
         $presetsData->setData(Security::GROUP_NAME, Security::PASSWORD_FOR_MODERATOR, $password_moderator);
         $presetsData->setData(Security::GROUP_NAME, Security::PASSWORD_FOR_ATTENDEE, $password_attendee);
+
+
+        $presetsData->setData(Screenshare::GROUP_NAME, Screenshare::CONFIGURABLE, $preparePresetData[Screenshare::GROUP_NAME][Screenshare::CONFIGURABLE]);
 
         $presetsData->setData(Webcams::GROUP_NAME, Webcams::VISIBLE_FOR_MODERATOR_ONLY, $preparePresetData[Webcams::GROUP_NAME][Webcams::VISIBLE_FOR_MODERATOR_ONLY]);
         $presetsData->setData(Webcams::GROUP_NAME, Webcams::MODERATOR_ALLOWED_CAMERA_EJECT, $preparePresetData[Webcams::GROUP_NAME][Webcams::MODERATOR_ALLOWED_CAMERA_EJECT]);
@@ -141,19 +152,25 @@ class PresetProcessor
         $createParams->setLockSettingsDisablePrivateChat($presetsData->getData(LockSettings::GROUP_NAME, LockSettings::PRIVATE_CHAT));
         $createParams->setLockSettingsDisablePublicChat($presetsData->getData(LockSettings::GROUP_NAME, LockSettings::PUBLIC_CHAT));
         $createParams->setLockSettingsDisableNote($presetsData->getData(LockSettings::GROUP_NAME, LockSettings::SHARED_NOTES));
-        $createParams->setLockSettingsLockedLayout($presetsData->getData(LockSettings::GROUP_NAME, LockSettings::LAYOUT));
+        if ($presetsData->getData(LockSettings::GROUP_NAME, LockSettings::LAYOUT)) {
+            $disabledFeatures[] = 'layouts';
+        }
 
         // $createParams->setPreUploadedPresentationOverrideDefault($presetsData->getData(Presentation::GROUP_NAME, Presentation::PRE_UPLOAD));
 
         $createParams->setAutoStartRecording($presetsData->getData(Recording::GROUP_NAME, Recording::AUTO_START));
         $createParams->setAllowStartStopRecording($presetsData->getData(Recording::GROUP_NAME, Recording::ALLOW_START_STOP));
         $createParams->setRecord($presetsData->getData(Recording::GROUP_NAME, Recording::RECORD));
+        if (!$presetsData->getData(Screenshare::GROUP_NAME, Screenshare::CONFIGURABLE)) {
+            $disabledFeatures[] = 'screenshare';
+        }
+        $createParams->setDisabledFeatures($disabledFeatures);
 
         // Screenshare:configurable
         // UserExperience: keyboard_shortcuts,ask_for_feedback
 
         $createParams->setWebcamsOnlyForModerator($presetsData->getData(Webcams::GROUP_NAME, Webcams::VISIBLE_FOR_MODERATOR_ONLY));
-        // $createParams->setAllowModsToEjectCameras($presetsData->getData(Webcams::GROUP_NAME, Webcams::MODERATOR_ALLOWED_CAMERA_EJECT));
+        $createParams->setAllowModsToEjectCameras($presetsData->getData(Webcams::GROUP_NAME, Webcams::MODERATOR_ALLOWED_CAMERA_EJECT) ? true : false);
         // configurable,auto_share,skip_preview
 
         // Whiteboard:multi_user_pen_only,presenter_tools,multi_user_tools
@@ -178,6 +195,14 @@ class PresetProcessor
         $presetsData->setData(Layout::GROUP_NAME, Layout::NAVIGATION_BAR, $preparePresetData[Layout::GROUP_NAME][Layout::NAVIGATION_BAR]);
         $presetsData->setData(Layout::GROUP_NAME, Layout::ACTIONS_BAR, $preparePresetData[Layout::GROUP_NAME][Layout::ACTIONS_BAR]);
 
+        $presetsData->setData(UserExperience::GROUP_NAME, UserExperience::ASK_FOR_FEEDBACK, $preparePresetData[UserExperience::GROUP_NAME][UserExperience::ASK_FOR_FEEDBACK]);
+
+        $presetsData->setData(Webcams::GROUP_NAME, Webcams::CONFIGURABLE, $preparePresetData[Webcams::GROUP_NAME][Webcams::CONFIGURABLE]);
+        $presetsData->setData(Webcams::GROUP_NAME, Webcams::AUTO_SHARE, $preparePresetData[Webcams::GROUP_NAME][Webcams::AUTO_SHARE]);
+        $presetsData->setData(Webcams::GROUP_NAME, Webcams::SKIP_PREVIEW, $preparePresetData[Webcams::GROUP_NAME][Webcams::SKIP_PREVIEW]);
+
+        $presetsData->setData(Whiteboard::GROUP_NAME, Whiteboard::MULTI_USER_PEN_ONLY, $preparePresetData[Whiteboard::GROUP_NAME][Whiteboard::MULTI_USER_PEN_ONLY]);
+
         $joinParams->addUserData('bbb_listen_only_mode', !$presetsData->getData(Audio::GROUP_NAME, Audio::AUTO_JOIN));
         $joinParams->addUserData('bbb_force_listen_only', $presetsData->getData(Audio::GROUP_NAME, Audio::LISTEN_ONLY_ENABLED));
 
@@ -188,6 +213,14 @@ class PresetProcessor
         $joinParams->addUserData('bbb_show_public_chat_on_login', $presetsData->getData(Layout::GROUP_NAME, Layout::CHAT));
         $joinParams->addUserData('bbb_hide_nav_bar', !$presetsData->getData(Layout::GROUP_NAME, Layout::NAVIGATION_BAR));
         $joinParams->addUserData('bbb_hide_actions_bar', !$presetsData->getData(Layout::GROUP_NAME, Layout::ACTIONS_BAR));
+
+        $joinParams->addUserData('bbb_ask_for_feedback_on_logout', $presetsData->getData(UserExperience::GROUP_NAME, UserExperience::ASK_FOR_FEEDBACK));
+
+        $joinParams->addUserData('bbb_enable_video', $presetsData->getData(Webcams::GROUP_NAME, Webcams::CONFIGURABLE));
+        $joinParams->addUserData('bbb_auto_share_webcam', $presetsData->getData(Webcams::GROUP_NAME, Webcams::AUTO_SHARE));
+        $joinParams->addUserData('bbb_skip_video_preview', $presetsData->getData(Webcams::GROUP_NAME, Webcams::SKIP_PREVIEW));
+
+        $joinParams->addUserData('bbb_multi_user_pen_only', $presetsData->getData(Whiteboard::GROUP_NAME, Whiteboard::MULTI_USER_PEN_ONLY));
 
         $joinParams->setRedirect(false);
 
