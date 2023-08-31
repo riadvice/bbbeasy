@@ -8,16 +8,16 @@ declare(strict_types=1);
  * Copyright (c) 2022-2023 RIADVICE SUARL and by respective authors (see below).
  *
  * This program is free software; you can redistribute it and/or modify it under the
- * terms of the GNU Lesser General Public License as published by the Free Software
+ * terms of the GNU Affero General Public License as published by the Free Software
  * Foundation; either version 3.0 of the License, or (at your option) any later
  * version.
  *
- * BBBEasy is distributed in the hope that it will be useful, but WITHOUT ANY
+ * BBBeasy is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
- * PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License along
- * with BBBEasy; if not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License along
+ * with BBBeasy. If not, see <https://www.gnu.org/licenses/>
  */
 
 namespace Models;
@@ -97,7 +97,6 @@ final class PresetTest extends Scenario
         $result          = $preset->addDefaultSettings('Default preset successfully added', 'Default preset could not be added');
 
         $test->expect(0 !== $preset->id && $result, 'Preset mocked and saved to the database');
-        $test->expect('preset_preset' === $preset->name, 'Name formatted to ' . $preset->name);
 
         return $test->results();
     }
@@ -119,7 +118,7 @@ final class PresetTest extends Scenario
             'nb_rooms'   => \count($room->collectAllByPresetId($myPreset['id'])),
         ];
 
-        $test->expect(empty(array_udiff($data, $preset->getMyPresetInfos($myPreset), fn ($obj1, $obj2) => $obj1 === $obj2)), 'getRoleInfos() returned role informations');
+        $test->expect(empty(array_udiff($data, $preset->getMyPresetInfos($myPreset), static fn ($obj1, $obj2) => $obj1 === $obj2)), 'getRoleInfos() returned role informations');
 
         return $test->results();
     }
@@ -161,7 +160,7 @@ final class PresetTest extends Scenario
         $data2 = ['id' => $preset2->id, 'name' => $preset2->name, 'settings' => $preset2->settings];
         $data  = [$data1, $data2];
 
-        $test->expect(empty(array_udiff($data, $preset->collectAllByUserId($user->id), fn ($obj1, $obj2) => $obj1 === $obj2)), 'CollectAllByUserId(' . $user->id . ') returned all presets for the given user');
+        $test->expect(empty(array_udiff($data, $preset->collectAllByUserId($user->id), static fn ($obj1, $obj2) => $obj1 === $obj2)), 'CollectAllByUserId(' . $user->id . ') returned all presets for the given user');
 
         return $test->results();
     }

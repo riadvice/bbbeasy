@@ -8,16 +8,16 @@ declare(strict_types=1);
  * Copyright (c) 2022-2023 RIADVICE SUARL and by respective authors (see below).
  *
  * This program is free software; you can redistribute it and/or modify it under the
- * terms of the GNU Lesser General Public License as published by the Free Software
+ * terms of the GNU Affero General Public License as published by the Free Software
  * Foundation; either version 3.0 of the License, or (at your option) any later
  * version.
  *
- * BBBEasy is distributed in the hope that it will be useful, but WITHOUT ANY
+ * BBBeasy is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
- * PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License along
- * with BBBEasy; if not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License along
+ * with BBBeasy. If not, see <https://www.gnu.org/licenses/>
  */
 
 namespace Test;
@@ -63,7 +63,8 @@ class Scenario
     {
         $f3 = \Base::instance();
 
-        return empty(array_diff($this->loadResult($path), json_decode($f3->get('RESPONSE'), true, 512, JSON_THROW_ON_ERROR)));
+        // return empty(array_diff($this->loadResult($path), json_decode($f3->get('RESPONSE'), true, 512, JSON_THROW_ON_ERROR)));
+        return empty(array_diff($this->loadResult($path), json_decode($f3->get('RESPONSE'), true) ?? []));
     }
 
     /**
@@ -73,7 +74,8 @@ class Scenario
     {
         $f3 = \Base::instance();
 
-        return empty(array_diff($array, json_decode($f3->get('RESPONSE'), true, 512, JSON_THROW_ON_ERROR)));
+        // return empty(array_diff($array, json_decode($f3->get('RESPONSE'), true, 512, JSON_THROW_ON_ERROR)));
+        return empty(array_diff($array, json_decode($f3->get('RESPONSE'), true) ?? []));
     }
 
     public function uploadImage($name, $file): string
@@ -118,7 +120,7 @@ class Scenario
         $f3 = \Base::instance();
 
         // Remove error handler in unit test mode
-        $f3->set('ONERROR', function() use ($f3): void {
+        $f3->set('ONERROR', static function() use ($f3): void {
             // Never use $f3->clear('ERROR'); here as it needs to be done by the developer after checking the error
             $f3->set('utest.errors.' . $f3->hash(serialize($f3->get('ERROR'))), $f3->get('ERROR'));
         });

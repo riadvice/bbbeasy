@@ -8,16 +8,16 @@ declare(strict_types=1);
  * Copyright (c) 2022-2023 RIADVICE SUARL and by respective authors (see below).
  *
  * This program is free software; you can redistribute it and/or modify it under the
- * terms of the GNU Lesser General Public License as published by the Free Software
+ * terms of the GNU Affero General Public License as published by the Free Software
  * Foundation; either version 3.0 of the License, or (at your option) any later
  * version.
  *
- * BBBEasy is distributed in the hope that it will be useful, but WITHOUT ANY
+ * BBBeasy is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
- * PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License along
- * with BBBEasy; if not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License along
+ * with BBBeasy. If not, see <https://www.gnu.org/licenses/>
  */
 
 namespace Models;
@@ -83,11 +83,11 @@ abstract class Base extends Cortex
         $this->pageSize = $this->f3->get('pagination.limit');
         $this->initLogger();
 
-        $this->beforeinsert(function(self $self): void {
+        $this->beforeinsert(static function(self $self): void {
             $self->setCreatedOnDate();
         });
 
-        $this->beforeupdate(function(self $self): void {
+        $this->beforeupdate(static function(self $self): void {
             $self->setUpdatedOnDate();
         });
     }
@@ -99,7 +99,7 @@ abstract class Base extends Cortex
      */
     public function prepareFilter($filter)
     {
-        return array_map(fn ($value) => '' === $value ? '%' : '%' . $value . '%', $filter);
+        return array_map(static fn ($value) => '' === $value ? '%' : '%' . $value . '%', $filter);
     }
 
     /**

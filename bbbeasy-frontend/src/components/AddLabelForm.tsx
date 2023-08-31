@@ -4,15 +4,15 @@
  * Copyright (c) 2022-2023 RIADVICE SUARL and by respective authors (see below).
  *
  * This program is free software; you can redistribute it and/or modify it under the
- * terms of the GNU Lesser General Public License as published by the Free Software
+ * terms of the GNU Affero General Public License as published by the Free Software
  * Foundation; either version 3.0 of the License, or (at your option) any later
  * version.
  *
- * BBBEasy is distributed in the hope that it will be useful, but WITHOUT ANY
+ * BBBeasy is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
- * PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License along
+ * You should have received a copy of the GNU Affero General Public License along
  * with BBBEasy; if not, see <http://www.gnu.org/licenses/>.
  */
 
@@ -46,13 +46,14 @@ type formType = {
 let addForm: FormInstance = null;
 
 export const AddLabelForm = (props: Props) => {
+    const [initialColor, setInitialColor] = React.useState<string>('#fbbc0b');
     const { defaultColor } = props;
     const initialAddValues: formType = {
         name: '',
         description: '',
-        color: '#fbbc0b',
+        color: initialColor,
     };
-    const [color, setColor] = React.useState<string>(defaultColor ? defaultColor : '#fbbc0b');
+    const [color, setColor] = React.useState<string>(defaultColor ? defaultColor : initialColor);
     const dataContext = React.useContext(DataContext);
     const [data, setData] = React.useState<LabelType[]>([]);
     const [loading, setLoading] = React.useState<boolean>(false);
@@ -87,8 +88,8 @@ export const AddLabelForm = (props: Props) => {
     };
     const cancelAdd = () => {
         props.close();
-
         addForm?.resetFields();
+        setColor(initialColor);
     };
 
     const failedAdd = () => {
@@ -102,7 +103,7 @@ export const AddLabelForm = (props: Props) => {
                 centered
                 open={props.isModalShow}
                 onOk={handleAdd}
-                onCancel={props.close}
+                onCancel={cancelAdd}
                 footer={null}
                 maskClosable={true}
             >
