@@ -113,7 +113,8 @@ class PresetProcessor
         // $createParams->setUseAvatars($presetsData->getData(Branding::GROUP_NAME, Branding::USE_AVATARS));
 
         $createParams->setBreakoutRoomsEnabled($presetsData->getData(BreakoutRooms::GROUP_NAME, BreakoutRooms::CONFIGURABLE));
-        $createParams->setBreakoutRoomsRecord($presetsData->getData(BreakoutRooms::GROUP_NAME, BreakoutRooms::RECORDING));
+
+       $createParams->setBreakoutRoomsRecord(null !== $presetsData->getData(BreakoutRooms::GROUP_NAME, BreakoutRooms::RECORDING) ? $presetsData->getData(BreakoutRooms::GROUP_NAME, BreakoutRooms::RECORDING) : true);
 
         $createParams->setBreakoutRoomsPrivateChatEnabled(null !== $presetsData->getData(BreakoutRooms::GROUP_NAME, BreakoutRooms::PRIVATE_CHAT) ? $presetsData->getData(BreakoutRooms::GROUP_NAME, BreakoutRooms::PRIVATE_CHAT) : true);
 

@@ -22,15 +22,22 @@ declare(strict_types=1);
 
 namespace Data;
 
+ 
+
 class PresetData
 {
     private array $data = [];
 
     public function setData($category, $subCategory, $value): void
     {
-        if (null !== $value || (\is_string($value) && !empty($value))) {
-            $this->data[$category][$subCategory] = $value;
+
+
+        if ( is_string($value) &&  empty($value)  ) {
+            $value=null;
         }
+
+        $this->data[$category][$subCategory] = $value;
+
     }
 
     public function getData($category, $subCategory)
