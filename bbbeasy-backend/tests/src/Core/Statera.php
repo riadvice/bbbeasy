@@ -8,16 +8,16 @@ declare(strict_types=1);
  * Copyright (c) 2022-2023 RIADVICE SUARL and by respective authors (see below).
  *
  * This program is free software; you can redistribute it and/or modify it under the
- * terms of the GNU Lesser General Public License as published by the Free Software
+ * terms of the GNU Affero General Public License as published by the Free Software
  * Foundation; either version 3.0 of the License, or (at your option) any later
  * version.
  *
- * BBBEasy is distributed in the hope that it will be useful, but WITHOUT ANY
+ * BBBeasy is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
- * PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License along
- * with BBBEasy; if not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License along
+ * with BBBeasy. If not, see <https://www.gnu.org/licenses/>
  */
 
 namespace Core;
@@ -27,7 +27,7 @@ use ByteUnits\Metric as ByteFormatter;
 use Helpers\Time;
 use Nette\Utils\Strings;
 use SebastianBergmann\CodeCoverage\CodeCoverage;
-use SebastianBergmann\CodeCoverage\Driver\Xdebug3Driver;
+use SebastianBergmann\CodeCoverage\Driver\XdebugDriver;
 use SebastianBergmann\CodeCoverage\Filter;
 use SebastianBergmann\CodeCoverage\Report\Clover;
 use SebastianBergmann\CodeCoverage\Report\Html\Facade;
@@ -242,7 +242,7 @@ class Statera
             if (self::$coverageEnabled && null === self::$coverage) {
                 $filter = new Filter();
                 $filter->includeDirectory(getcwd() . \DIRECTORY_SEPARATOR . 'src');
-                self::$coverage = new CodeCoverage(new Xdebug3Driver($filter), $filter);
+                self::$coverage = new CodeCoverage(new XdebugDriver($filter), $filter);
             }
         }
 
@@ -260,7 +260,7 @@ class Statera
         // Set custom reroute handler for unit tests
         $f3->set(
             'ONREROUTE',
-            function($url, $permanent) use ($f3): void {
+            static function($url, $permanent) use ($f3): void {
                 $f3->set('utest.rerouted', $url);
             }
         );
