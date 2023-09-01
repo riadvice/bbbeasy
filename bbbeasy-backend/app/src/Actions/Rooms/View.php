@@ -81,14 +81,18 @@ class View extends BaseAction
             if (!$meetingInfoResponse->success()) {
                 if ('notFound' === $meetingInfoResponse->getMessageKey()) {
                     $anyonestart = false;
-
+                }
+                if("checksumError" == $meetingInfoResponse->getMessageKey()){
+                    $joindisabled=true;
+                }
+            }
                     if ($room->getRoomInfos($room)['user_id'] === $this->session->get('user.id') || $presetData[General::GROUP_NAME][General::ANYONE_CAN_START]) {
                         $canStart = true;
                     }
-                }
-            }
+
 
             $meeting                          = (array) $meetingInfoResponse->getRawXml();
+                    $meeting["joinDisabled"]=$joindisabled;
             $meeting['canStart']              = $canStart;
             $meeting['password_moderator']    = $presetData[Security::GROUP_NAME][Security::PASSWORD_FOR_MODERATOR];
             $meeting['password_attendee']     = $presetData[Security::GROUP_NAME][Security::PASSWORD_FOR_ATTENDEE];

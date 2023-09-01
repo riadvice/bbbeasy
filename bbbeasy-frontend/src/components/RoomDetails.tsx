@@ -461,23 +461,11 @@ const RoomDetails = () => {
                 </Form.Item>
             );
         }
-        /* else if(user ==null && meeting.password_attendee){
-            return  (
-                <Form.Item
-                       name="password_attendee"
-                       label={t('password_attendee.label')}
-                       rules={[
-                           {
-                               required: true,
-                               message: <Trans i18nKey="password_attendee.required" />,
-                           },
-                       ]}
-                   >
-                      <PasswordInput placeholder="**********" />
-                   </Form.Item>
-          )
-        }*/
+       
     };
+    const disabled=(disabled)=>{
+    return disabled?' btn-disabled':''; 
+    }
     const renderLinkOrUsername = (open) => {
         if (currentUser != null) {
             return (
@@ -653,7 +641,7 @@ const RoomDetails = () => {
                                                 <a onClick={startRoom}>
                                                     <Avatar
                                                         size={{ xs: 40, sm: 64, md: 85, lg: 100, xl: 120, xxl: 140 }}
-                                                        className={'bbbeasy-btn'}
+                                                        className={'bbbeasy-btn'+disabled(meeting.joinDisabled)}
                                                     >
                                                         <Trans i18nKey={canStart && !isRunning ? 'start' : 'join'} />
                                                     </Avatar>

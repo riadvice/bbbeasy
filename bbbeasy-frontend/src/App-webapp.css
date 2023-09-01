@@ -818,7 +818,7 @@ fieldset {
     font-weight: 600;
     clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%);
     border-radius: 50%;
-    background-color: #fbbc0b !important;
+    background-color: #fbbc0b ;
 }
 .room-presentations {
     border-radius: 5px !important;
@@ -1369,7 +1369,10 @@ fieldset {
 .recording-formats .icon-disabled {
     color: var(--bbbeasy-medimum-gray) !important;
 }
-
+.btn-disabled{
+    cursor: not-allowed;
+    background-color: var(--bbbeasy-medimum-gray) !important;
+}
 .share-modal {
     padding: 0 30px !important;
     text-align: center !important;
