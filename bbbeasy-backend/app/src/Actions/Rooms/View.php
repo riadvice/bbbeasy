@@ -94,8 +94,8 @@ class View extends BaseAction
             $meeting['joinDisabled']          = $joindisabled;
             $meeting['canStart']              = $canStart;
 
-            $meeting['password_moderator']    = $presetData[Security::GROUP_NAME][Security::PASSWORD_FOR_MODERATOR];
-            $meeting['password_attendee']     = $presetData[Security::GROUP_NAME][Security::PASSWORD_FOR_ATTENDEE];
+            $meeting['password_moderator']    = $presetData[Security::GROUP_NAME][Security::PASSWORD_FOR_MODERATOR]?:null;
+            $meeting['password_attendee']     = $presetData[Security::GROUP_NAME][Security::PASSWORD_FOR_ATTENDEE]?:null;
             $meeting['all_join_as_moderator'] = $presetData[General::GROUP_NAME][General::ALL_JOIN_AS_MODERATOR];
 
             $this->renderJson(['room' => $room->getRoomInfos($room), 'meeting' => $meeting]);
