@@ -419,7 +419,7 @@ const RoomDetails = () => {
  
     const renderPasswordModeratorOrAttendee = (errors, user, meeting) => {
         
-        if (user == null && !meeting.all_join_as_moderator) {
+        if (user == null && !meeting.all_join_as_moderator &&( meeting.password_moderator!=null || meeting.password_attendee!=null)) {
             return (
                 <Form.Item
                     name="password"

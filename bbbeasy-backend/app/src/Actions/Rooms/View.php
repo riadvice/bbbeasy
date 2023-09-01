@@ -93,6 +93,7 @@ class View extends BaseAction
             $meeting                          = (array) $meetingInfoResponse->getRawXml();
             $meeting['joinDisabled']          = $joindisabled;
             $meeting['canStart']              = $canStart;
+
             $meeting['password_moderator']    = $presetData[Security::GROUP_NAME][Security::PASSWORD_FOR_MODERATOR];
             $meeting['password_attendee']     = $presetData[Security::GROUP_NAME][Security::PASSWORD_FOR_ATTENDEE];
             $meeting['all_join_as_moderator'] = $presetData[General::GROUP_NAME][General::ALL_JOIN_AS_MODERATOR];

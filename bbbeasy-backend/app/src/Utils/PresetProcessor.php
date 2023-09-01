@@ -97,8 +97,8 @@ class PresetProcessor
         $presetsData->setData(Recording::GROUP_NAME, Recording::ALLOW_START_STOP, $preparePresetData[Recording::GROUP_NAME][Recording::ALLOW_START_STOP]);
         $presetsData->setData(Recording::GROUP_NAME, Recording::RECORD, $preparePresetData[Recording::GROUP_NAME][Recording::RECORD]);
 
-        $password_moderator = openssl_decrypt($preparePresetData[Security::GROUP_NAME][Security::PASSWORD_FOR_MODERATOR], Password::CIPHERING_VALUE, Password::ENCRYPTION_KEY);
-        $password_attendee  = openssl_decrypt($preparePresetData[Security::GROUP_NAME][Security::PASSWORD_FOR_ATTENDEE], Password::CIPHERING_VALUE, Password::ENCRYPTION_KEY);
+        $password_moderator = $preparePresetData[Security::GROUP_NAME][Security::PASSWORD_FOR_MODERATOR]?openssl_decrypt($preparePresetData[Security::GROUP_NAME][Security::PASSWORD_FOR_MODERATOR], Password::CIPHERING_VALUE, Password::ENCRYPTION_KEY):null;
+        $password_attendee  = $preparePresetData[Security::GROUP_NAME][Security::PASSWORD_FOR_ATTENDEE]?openssl_decrypt($preparePresetData[Security::GROUP_NAME][Security::PASSWORD_FOR_ATTENDEE], Password::CIPHERING_VALUE, Password::ENCRYPTION_KEY):null;
 
         $presetsData->setData(Security::GROUP_NAME, Security::PASSWORD_FOR_MODERATOR, $password_moderator);
         $presetsData->setData(Security::GROUP_NAME, Security::PASSWORD_FOR_ATTENDEE, $password_attendee);

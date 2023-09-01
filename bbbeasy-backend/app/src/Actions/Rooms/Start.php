@@ -122,8 +122,8 @@ class Start extends BaseAction
                 if ($room->getRoomInfos($room)['user_id'] === $this->session->get('user.id') || $presetData[General::GROUP_NAME][General::ALL_JOIN_AS_MODERATOR]) {
                     $this->joinMeeting($meetingId, Role::MODERATOR, $bbbRequester, $p->getMyPresetInfos($p), $fullname);
                 } else {
-                    $password_moderator = openssl_decrypt($presetData[Security::GROUP_NAME][Security::PASSWORD_FOR_MODERATOR], Password::CIPHERING_VALUE, Password::ENCRYPTION_KEY);
-                    $password_attendee  = openssl_decrypt($presetData[Security::GROUP_NAME][Security::PASSWORD_FOR_ATTENDEE], Password::CIPHERING_VALUE, Password::ENCRYPTION_KEY);
+                    $password_moderator =$presetData[Security::GROUP_NAME][Security::PASSWORD_FOR_MODERATOR]?openssl_decrypt($presetData[Security::GROUP_NAME][Security::PASSWORD_FOR_MODERATOR], Password::CIPHERING_VALUE, Password::ENCRYPTION_KEY):null;
+                    $password_attendee  =$presetData[Security::GROUP_NAME][Security::PASSWORD_FOR_ATTENDEE]?openssl_decrypt($presetData[Security::GROUP_NAME][Security::PASSWORD_FOR_ATTENDEE], Password::CIPHERING_VALUE, Password::ENCRYPTION_KEY):null;
 
                     if ($password === $password_moderator || $password === $password_attendee) {
                         $this->joinMeeting($meetingId, $password ?: Role::VIEWER, $bbbRequester, $p->getMyPresetInfos($p), $fullname);
