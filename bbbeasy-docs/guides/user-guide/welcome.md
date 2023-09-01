@@ -10,10 +10,11 @@ slug: "/user-guide/welcome"
 BigBlueButton. Technically, it is a complete and fully featured integration for BigBlueButton
 developed to handle multiple web-conferencing use cases.
 
+
+
 **BBBEasy** is developed and maintained by **[RIADVICE](https://riadvice.tn)** to serve its own and
 customers requirements regarding managing BigBlueButton rooms management.
 
-**BBBeasy** is unique because it facilitates communication.
 
 ![BBBEasy Screenshots](/img/intro.png)
 
@@ -23,15 +24,18 @@ customers requirements regarding managing BigBlueButton rooms management.
 
 # Languages :
 
-The BBBeasy project consists of 3 languages
 
-- English
-- French
-- Arabic
+The `BBBeasy` supports 3 languages and more are coming later
+
+* English
+* French
+* Arabic
 
 All the translations are made by crowdin tool
 
-**[Crowdin](https://crowdin.com/)**
+ **[Crowdin](https://crowdin.com/)**
+
+
 
 ## Fast Track ⏱️
 
@@ -46,20 +50,23 @@ to BigBlueButton.
 
 ## Features 🧱
 
-- [Rooms](./rooms.md)
-- [Users](./Users.md)
-- [Users roles and permissions](./Roles.md)
-- [Presets Management](./presets_management.md)
-- [Label](./Labels.md)
+- [Registration](./register.md)
+- [Authentication](./login.md)
+- [Reset password](./reset_password.md)
 - [Branding](./branding.md)
-- [Recording](./Recordings.md)
-- [Administration](./Administration.md)
-- [Room details](./Rooms Details.md)
-- [Authentication](./authentication.md)
-- [Registration](./registration.md)
-- [Profile](Profile.md)
-- [Reset password](./Reset_password.md)
 - [BigBlueButton settings](./bigbluebutton_settings.md)
+- [Presets management](./presets.md)
+- [Labels management](./labels.md)
+- [Rooms management](./rooms.md)
+- [Room details](./rooms details.md)
+- [Access to recordings](./recordings.md)
+- [Roles configuration](./roles.md)
+- [ Users management](./users.md)
+- [User profile](profile.md)
+- [Platfrom administration](./administration.md)
+- [FAQs](./faqs.md)
+
+
 
 ## Design principles 📜
 
