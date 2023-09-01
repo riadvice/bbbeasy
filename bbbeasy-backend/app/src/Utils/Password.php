@@ -20,26 +20,13 @@ declare(strict_types=1);
  * with BBBeasy. If not, see <https://www.gnu.org/licenses/>
  */
 
-namespace Data;
+namespace Utils;
 
-class PresetData
+/**
+ * @codeCoverageIgnore
+ */
+class Password
 {
-    private array $data = [];
-
-    public function setData($category, $subCategory, $value): void
-    {
-        if (null !== $value) {
-            $this->data[$category][$subCategory] = $value;
-        }
-    }
-
-    public function getData($category, $subCategory)
-    {
-        // @fixme: should return null if not found
-        // if (\array_key_exists($category, $this->data) && \array_key_exists($category, $this->data[$category])) {
-        return $this->data[$category][$subCategory];
-        // }
-
-        // return null;
-    }
+    public const ENCRYPTION_KEY  = 'security_group';
+    public const CIPHERING_VALUE = 'AES-128-CTR';
 }

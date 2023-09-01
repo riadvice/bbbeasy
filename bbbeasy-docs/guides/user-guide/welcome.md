@@ -11,8 +11,10 @@ BigBlueButton. Technically, it is a complete and fully featured integration for 
 developed to handle multiple web-conferencing use cases.
 
 
+
 **BBBEasy** is developed and maintained by **[RIADVICE](https://riadvice.tn)** to serve its own and
 customers requirements regarding managing BigBlueButton rooms management.
+
 
 ![BBBEasy Screenshots](/img/intro.png)
 
@@ -21,6 +23,7 @@ customers requirements regarding managing BigBlueButton rooms management.
 **BBBEasy** is a standalone HTML5 web-application powered by a backend API.
 
 # Languages :
+
 
 The `BBBeasy` supports 3 languages and more are coming later
 
@@ -31,6 +34,7 @@ The `BBBeasy` supports 3 languages and more are coming later
 All the translations are made by crowdin tool
 
  **[Crowdin](https://crowdin.com/)**
+
 
 
 ## Fast Track ⏱️
@@ -45,6 +49,7 @@ to BigBlueButton.
 `Label` : A room can be tagged by different labels to make it easily identifiable.
 
 ## Features 🧱
+
 - [Registration](./register.md)
 - [Authentication](./login.md)
 - [Reset password](./reset_password.md)
@@ -60,6 +65,7 @@ to BigBlueButton.
 - [User profile](profile.md)
 - [Platfrom administration](./administration.md)
 - [FAQs](./faqs.md)
+
 
 
 ## Design principles 📜

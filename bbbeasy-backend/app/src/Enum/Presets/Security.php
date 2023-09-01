@@ -30,6 +30,6 @@ class Security extends Enum
     public const PASSWORD_FOR_MODERATOR = 'password_for_moderator';
     public const PASSWORD_FOR_ATTENDEE  = 'password_for_attendee';
 
-    public const PASS_FOR_MODERATOR_TYPE = 'bool';
-    public const PASS_FOR_ATTENDEE_TYPE  = 'bool';
+    public const PASS_FOR_MODERATOR_TYPE = 'password';
+    public const PASS_FOR_ATTENDEE_TYPE  = 'password';
 }

@@ -34,6 +34,7 @@ use Enum\Presets\LockSettings;
 use Enum\Presets\Presentation;
 use Enum\Presets\Recording;
 use Enum\Presets\Screenshare;
+use Enum\Presets\Security;
 use Enum\Presets\UserExperience;
 use Enum\Presets\Webcams;
 use Enum\Presets\Whiteboard;
@@ -75,10 +76,9 @@ class PresetProcessor
         $presetsData->setData(BreakoutRooms::GROUP_NAME, BreakoutRooms::RECORDING, $preparePresetData[BreakoutRooms::GROUP_NAME][BreakoutRooms::RECORDING]);
         $presetsData->setData(BreakoutRooms::GROUP_NAME, BreakoutRooms::PRIVATE_CHAT, $preparePresetData[BreakoutRooms::GROUP_NAME][BreakoutRooms::PRIVATE_CHAT]);
 
-        $presetsData->setData(General::GROUP_NAME, General::DURATION, $preparePresetData[General::GROUP_NAME][General::DURATION]);
+        $presetsData->setData(General::GROUP_NAME, General::DURATION, $preparePresetData[General::GROUP_NAME][General::DURATION] ?: null);
 
-        $presetsData->setData(General::GROUP_NAME, General::MAXIMUM_PARTICIPANTS, $preparePresetData[General::GROUP_NAME][General::MAXIMUM_PARTICIPANTS]);
-
+        $presetsData->setData(General::GROUP_NAME, General::MAXIMUM_PARTICIPANTS, $preparePresetData[General::GROUP_NAME][General::MAXIMUM_PARTICIPANTS] ?: null);
         $presetsData->setData(GuestPolicy::GROUP_NAME, GuestPolicy::POLICY, $preparePresetData[GuestPolicy::GROUP_NAME][GuestPolicy::POLICY]);
 
         $presetsData->setData(LearningDashboard::GROUP_NAME, LearningDashboard::CONFIGURABLE, $preparePresetData[LearningDashboard::GROUP_NAME][LearningDashboard::CONFIGURABLE]);
@@ -96,11 +96,22 @@ class PresetProcessor
         $presetsData->setData(Recording::GROUP_NAME, Recording::AUTO_START, $preparePresetData[Recording::GROUP_NAME][Recording::AUTO_START]);
         $presetsData->setData(Recording::GROUP_NAME, Recording::ALLOW_START_STOP, $preparePresetData[Recording::GROUP_NAME][Recording::ALLOW_START_STOP]);
         $presetsData->setData(Recording::GROUP_NAME, Recording::RECORD, $preparePresetData[Recording::GROUP_NAME][Recording::RECORD]);
+
+        $password_moderator = $preparePresetData[Security::GROUP_NAME][Security::PASSWORD_FOR_MODERATOR]?openssl_decrypt($preparePresetData[Security::GROUP_NAME][Security::PASSWORD_FOR_MODERATOR], Password::CIPHERING_VALUE, Password::ENCRYPTION_KEY):null;
+        $password_attendee  = $preparePresetData[Security::GROUP_NAME][Security::PASSWORD_FOR_ATTENDEE]?openssl_decrypt($preparePresetData[Security::GROUP_NAME][Security::PASSWORD_FOR_ATTENDEE], Password::CIPHERING_VALUE, Password::ENCRYPTION_KEY):null;
+
+        $presetsData->setData(Security::GROUP_NAME, Security::PASSWORD_FOR_MODERATOR, $password_moderator);
+        $presetsData->setData(Security::GROUP_NAME, Security::PASSWORD_FOR_ATTENDEE, $password_attendee);
+
         $presetsData->setData(Screenshare::GROUP_NAME, Screenshare::CONFIGURABLE, $preparePresetData[Screenshare::GROUP_NAME][Screenshare::CONFIGURABLE]);
+
         $presetsData->setData(Webcams::GROUP_NAME, Webcams::VISIBLE_FOR_MODERATOR_ONLY, $preparePresetData[Webcams::GROUP_NAME][Webcams::VISIBLE_FOR_MODERATOR_ONLY]);
         $presetsData->setData(Webcams::GROUP_NAME, Webcams::MODERATOR_ALLOWED_CAMERA_EJECT, $preparePresetData[Webcams::GROUP_NAME][Webcams::MODERATOR_ALLOWED_CAMERA_EJECT]);
 
         // Get preset data to create meeting parameters
+        $createParams->setModeratorPassword($presetsData->getData(Security::GROUP_NAME, Security::PASSWORD_FOR_MODERATOR) ?: DataUtils::generateRandomString());
+        $createParams->setAttendeePassword($presetsData->getData(Security::GROUP_NAME, Security::PASSWORD_FOR_ATTENDEE) ?: DataUtils::generateRandomString());
+
         $createParams->setMuteOnStart($presetsData->getData(Audio::GROUP_NAME, Audio::USERS_JOIN_MUTED));
 
         $createParams->setAllowModsToUnmuteUsers($presetsData->getData(Audio::GROUP_NAME, Audio::MODERATORS_ALLOWED_TO_UNMUTE_USERS));
@@ -129,7 +140,7 @@ class PresetProcessor
         // layout: presentation,participants,chat,navigation_bar,actions_bar
 
         $createParams->setLearningDashboardEnabled($presetsData->getData(LearningDashboard::GROUP_NAME, LearningDashboard::CONFIGURABLE));
-        $createParams->setLearningDashboardCleanupDelayInMinutes($presetsData->getData(LearningDashboard::GROUP_NAME, LearningDashboard::CLEANUP_DELAY));
+        $createParams->setLearningDashboardCleanupDelayInMinutes($presetsData->getData(LearningDashboard::GROUP_NAME, LearningDashboard::CLEANUP_DELAY) ?: null);
 
         $createParams->setLockSettingsDisableCam($presetsData->getData(LockSettings::GROUP_NAME, LockSettings::WEBCAMS));
         $createParams->setLockSettingsDisableMic($presetsData->getData(LockSettings::GROUP_NAME, LockSettings::MICROPHONES));

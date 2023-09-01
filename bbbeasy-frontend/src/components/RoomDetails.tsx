@@ -20,6 +20,7 @@ import React, { useEffect, useState } from 'react';
 import { Trans, withTranslation } from 'react-i18next';
 import { useLocation, useParams, useNavigate } from 'react-router-dom';
 import { FacebookShareButton, LinkedinShareButton, TwitterShareButton } from 'react-share';
+import { PasswordInput } from 'antd-password-input-strength';
 
 import EN_US from '../locale/en-US.json';
 import { t } from 'i18next';
@@ -32,7 +33,22 @@ import {
     MailOutlined,
     TwitterOutlined,
 } from '@ant-design/icons';
-import { Avatar, Button, Card, Col, Input, Row, Space, Tag, Tooltip, Typography, Form, Select, Popconfirm } from 'antd';
+import {
+    Avatar,
+    Button,
+    Card,
+    Col,
+    Input,
+    Row,
+    Space,
+    Tag,
+    Tooltip,
+    Typography,
+    Form,
+    Select,
+    Popconfirm,
+    Alert,
+} from 'antd';
 
 import Notifications from './Notifications';
 import { CustomTagProps } from 'rc-select/lib/BaseSelect';
@@ -101,7 +117,7 @@ const RoomDetails = () => {
     const [isRunning, setIsRunning] = useState<boolean>(false);
     const [canStart, setCanStart] = useState<boolean>(false);
     const dataContext = React.useContext(DataContext);
-
+    const [errors, setErrors] = React.useState<any>();
     const [errorsEdit, setErrorsEdit] = React.useState({});
     const [showSocialMedia, setShowSocialMedia] = useState(false);
     const [showStartButton, setShowStartButton] = useState(true);
@@ -109,6 +125,7 @@ const RoomDetails = () => {
     const [labels, setLabels] = React.useState<LabelType[]>();
     const [presets, setPresets] = React.useState<PresetType[]>();
     const prefixShortLink = '/r/';
+    const [meeting, setMeeting] = React.useState<any>(null);
     const [showRecodingAndPresenttaions, setShowRecodingAndPresenttaions] = React.useState<boolean>(false);
     const [open, setOpen] = React.useState<boolean>(false);
     const [roomRecordings, setRoomRecordings] = React.useState<RecordingType[]>([]);
@@ -136,17 +153,15 @@ const RoomDetails = () => {
     const startRoom = async () => {
         try {
             const values = await startForm.validateFields();
-
-            RoomsService.start_room(room.id, values.fullname)
+            
+            RoomsService.start_room(room.id, values.fullname, values.password)
                 .then((result) => {
                     window.open(result.data, '_self');
                 })
                 .catch((error) => {
                     console.log(error.response.data);
-                    Notifications.openNotificationWithIcon(
-                        'error',
-                        t(Object.keys(EN_US).filter((elem) => EN_US[elem] === error.response.data.meeting))
-                    );
+                    setErrors(error.response.data);
+                     
                 });
         } catch (errInfo) {
             console.log('could not start or join the meeting :', errInfo);
@@ -188,7 +203,8 @@ const RoomDetails = () => {
                 const room: RoomType = response.data.room;
 
                 const meeting = response.data.meeting;
-                console.log(currentUser?.role);
+                setMeeting(meeting);
+               
                 setRoom(response.data.room);
                 if (room != null) {
                     setRoom(room);
@@ -202,6 +218,7 @@ const RoomDetails = () => {
                 }
                 if (meeting != null) {
                     setCanStart(meeting.canStart);
+                    
 
                     setIsRunning(meeting.running);
                 }
@@ -399,6 +416,39 @@ const RoomDetails = () => {
             </Form.Item>
         );
     };
+ 
+    const renderPasswordModeratorOrAttendee = (errors, user, meeting) => {
+        
+        if (user == null && !meeting.all_join_as_moderator &&( meeting.password_moderator!=null || meeting.password_attendee!=null)) {
+            return (
+                <Form.Item
+                    name="password"
+                    label={t('password.label')}
+                    {...(errors &&
+                        'password' in errors && {
+                            help: (
+                                <Trans
+                                    i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errors['password'])}
+                                />
+                            ),
+                            validateStatus: 'error',
+                        })}
+                    rules={[
+                        {
+                            required: true,
+                            message: <Trans i18nKey="password.required" />,
+                        },
+                    ]}
+                >
+                    <PasswordInput placeholder="**********" />
+                </Form.Item>
+            );
+        }
+       
+    };
+    const disabled=(disabled)=>{
+    return disabled?' btn-disabled':''; 
+    }
     const renderLinkOrUsername = (open) => {
         if (currentUser != null) {
             return (
@@ -414,21 +464,22 @@ const RoomDetails = () => {
             );
         } else {
             return (
-                <Form form={startForm}>
-                    {' '}
-                    <Form.Item
-                        name="fullname"
-                        label={t('fullname.label')}
-                        rules={[
-                            {
-                                required: true,
-                                message: <Trans i18nKey="fullname.required" />,
-                            },
-                        ]}
-                    >
-                        <Input placeholder={t('fullname.label')} />
-                    </Form.Item>
-                </Form>
+                <Form.Item
+                    name="fullname"
+                    label={t('fullname.label')}
+                    rules={[
+                        {
+                            required: true,
+                            message: <Trans i18nKey="fullname.required" />,
+                        },
+                        {
+                            min:2,
+                            message:<Trans i18nKey="fullname.minSize"/>
+                        }
+                    ]}
+                >
+                    <Input placeholder={t('fullname.label')} />
+                </Form.Item>
             );
         }
     };
@@ -500,8 +551,17 @@ const RoomDetails = () => {
                                                                 </div>
                                                             </>
                                                         ) : null}
+                                                        <Form form={startForm}>
+                                                          
 
-                                                        {renderLinkOrUsername(open)}
+                                                            {renderPasswordModeratorOrAttendee(
+                                                                errors,
+                                                                currentUser,
+                                                                meeting
+                                                            )}
+
+                                                            {renderLinkOrUsername(open)}
+                                                        </Form>
                                                     </>
                                                 ) : (
                                                     <Space size="middle" className="edit-room-form">
@@ -568,7 +628,7 @@ const RoomDetails = () => {
                                                 <a onClick={startRoom}>
                                                     <Avatar
                                                         size={{ xs: 40, sm: 64, md: 85, lg: 100, xl: 120, xxl: 140 }}
-                                                        className={'bbbeasy-btn'}
+                                                        className={'bbbeasy-btn'+disabled(meeting.joinDisabled)}
                                                     >
                                                         <Trans i18nKey={canStart && !isRunning ? 'start' : 'join'} />
                                                     </Avatar>

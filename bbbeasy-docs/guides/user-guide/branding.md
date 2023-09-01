@@ -1,8 +1,11 @@
 ---
+
 sidebar_position: 4
+
 ---
 
 # Branding
+
 
 ##  Organization and branding
 

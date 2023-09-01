@@ -1,9 +1,11 @@
 ---
+
 sidebar_position: 15
 id: introduction-faqs
 title: 'Frequently Asked Questions 🙋'
 sidebar_label: 'FAQs'
 slug: '/user-guide/introduction/faqs'
+
 ---
 
 ## What is BigBlueButton?
@@ -27,6 +29,7 @@ manager experience easy behind the very wide choice of managing all the configur
 
 **BBBEasy** has been developed to respond the following specific requirements:
 
+
 * Cover multiple business cases within a single integration: 1-to-1, hiring, exams, master class, pre-recorded
   courses...
 * An integration where all the features of BigBlueButton are configurable.
@@ -35,6 +38,7 @@ manager experience easy behind the very wide choice of managing all the configur
 * Roles with customisable permissions' matrix.
 * Easy to install with the minimum system command line knowledge.
 * Full branding part of the experience.
+
 
 ## Is BBBEasy open-source?
 

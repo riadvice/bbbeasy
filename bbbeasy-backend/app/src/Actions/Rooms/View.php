@@ -26,6 +26,7 @@ use Actions\Base as BaseAction;
 use Actions\RequirePrivilegeTrait;
 use BigBlueButton\Parameters\GetMeetingInfoParameters;
 use Enum\Presets\General;
+use Enum\Presets\Security;
 use Enum\ResponseCode;
 use Models\Preset;
 use Models\Room;
@@ -80,15 +81,22 @@ class View extends BaseAction
             if (!$meetingInfoResponse->success()) {
                 if ('notFound' === $meetingInfoResponse->getMessageKey()) {
                     $anyonestart = false;
-
-                    if ($room->getRoomInfos($room)['user_id'] === $this->session->get('user.id') || $presetData[General::GROUP_NAME][General::ANYONE_CAN_START]) {
-                        $canStart = true;
-                    }
+                }
+                if ('checksumError' === $meetingInfoResponse->getMessageKey()) {
+                    $joindisabled = true;
                 }
             }
+            if ($room->getRoomInfos($room)['user_id'] === $this->session->get('user.id') || $presetData[General::GROUP_NAME][General::ANYONE_CAN_START]) {
+                $canStart = true;
+            }
 
-            $meeting             = (array) $meetingInfoResponse->getRawXml();
-            $meeting['canStart'] = $canStart;
+            $meeting                          = (array) $meetingInfoResponse->getRawXml();
+            $meeting['joinDisabled']          = $joindisabled;
+            $meeting['canStart']              = $canStart;
+
+            $meeting['password_moderator']    = $presetData[Security::GROUP_NAME][Security::PASSWORD_FOR_MODERATOR]?:null;
+            $meeting['password_attendee']     = $presetData[Security::GROUP_NAME][Security::PASSWORD_FOR_ATTENDEE]?:null;
+            $meeting['all_join_as_moderator'] = $presetData[General::GROUP_NAME][General::ALL_JOIN_AS_MODERATOR];
 
             $this->renderJson(['room' => $room->getRoomInfos($room), 'meeting' => $meeting]);
         } else {

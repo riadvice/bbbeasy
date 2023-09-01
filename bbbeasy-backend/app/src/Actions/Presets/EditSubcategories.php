@@ -24,8 +24,10 @@ namespace Actions\Presets;
 
 use Actions\Base as BaseAction;
 use Actions\RequirePrivilegeTrait;
+use Enum\Presets\Security;
 use Enum\ResponseCode;
 use Models\Preset;
+use Utils\Password;
 
 class EditSubcategories extends BaseAction
 {
@@ -52,10 +54,16 @@ class EditSubcategories extends BaseAction
             if (isset($categories->{$categoryName})) {
                 $subCategories = json_decode($categories->{$categoryName});
                 foreach ($form as $editedSubCategory) {
-                    $subCategoryName  = $editedSubCategory['name'];
-                    $subCategoryValue = $editedSubCategory['value'];
+                    $subCategoryName = $editedSubCategory['name'];
 
-                    $subCategories->{$subCategoryName} = $subCategoryValue;
+                    $subCategoryValue = $editedSubCategory['value'];
+                    if (Security::PASSWORD_FOR_MODERATOR === $subCategoryName || Security::PASSWORD_FOR_ATTENDEE === $subCategoryName) {
+                        $encryption_value = openssl_encrypt($subCategoryValue, Password::CIPHERING_VALUE, Password::ENCRYPTION_KEY);
+
+                        $subCategories->{$subCategoryName} = $encryption_value;
+                    } else {
+                        $subCategories->{$subCategoryName} = $subCategoryValue;
+                    }
                 }
 
                 $categories->{$categoryName} = json_encode($subCategories);
