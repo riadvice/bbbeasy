@@ -489,6 +489,10 @@ const RoomDetails = () => {
                             required: true,
                             message: <Trans i18nKey="fullname.required" />,
                         },
+                        {
+                            min:2,
+                            message:<Trans i18nKey="fullname.minSize"/>
+                        }
                     ]}
                 >
                     <Input placeholder={t('fullname.label')} />

@@ -44,7 +44,8 @@
     },
     "fullname": {
         "label": "Full name",
-        "required": "Full name is required"
+        "required": "Full name is required",
+        "minSize":"Fullname must have at least 2 characters"
     },
     "password_moderator": {
         "label": "Password for moderator",
