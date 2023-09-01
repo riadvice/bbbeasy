@@ -8,16 +8,16 @@ declare(strict_types=1);
  * Copyright (c) 2022-2023 RIADVICE SUARL and by respective authors (see below).
  *
  * This program is free software; you can redistribute it and/or modify it under the
- * terms of the GNU Lesser General Public License as published by the Free Software
+ * terms of the GNU Affero General Public License as published by the Free Software
  * Foundation; either version 3.0 of the License, or (at your option) any later
  * version.
  *
- * BBBEasy is distributed in the hope that it will be useful, but WITHOUT ANY
+ * BBBeasy is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
- * PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License along
- * with BBBEasy; if not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License along
+ * with BBBeasy. If not, see <https://www.gnu.org/licenses/>
  */
 
 namespace Models;
@@ -45,14 +45,16 @@ final class ResetPasswordTokenTest extends Scenario
      */
     public function testTokenCreation()
     {
-        $test                = $this->newTest();
-        $user                = UserFaker::create(UserRole::ADMINISTRATOR);
-        $resetToken          = new ResetPasswordToken();
+        $test       = $this->newTest();
+        $user       = UserFaker::create(UserRole::ADMINISTRATOR);
+        $resetToken = new ResetPasswordToken();
+
         $resetToken->user_id = $user->id;
+        $userId              = $resetToken->user_id;
         $resetToken->insert();
 
-        $test->expect($resetToken->isUsable(), 'Newly inserted password reset token is usable with user id = ' . $resetToken->user_id);
-        $test->expect($resetToken->userExists($resetToken->user_id), 'userExists(' . $resetToken->user_id . ') exists');
+        $test->expect($resetToken->isUsable(), 'Newly inserted password reset token is usable with user id = ' . $userId);
+        $test->expect($resetToken->userExists($userId), 'userExists(' . $userId . ') exists');
 
         return $test->results();
     }

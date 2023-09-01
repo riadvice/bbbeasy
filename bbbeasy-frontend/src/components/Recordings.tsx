@@ -4,15 +4,15 @@
  * Copyright (c) 2022-2023 RIADVICE SUARL and by respective authors (see below).
  *
  * This program is free software; you can redistribute it and/or modify it under the
- * terms of the GNU Lesser General Public License as published by the Free Software
+ * terms of the GNU Affero General Public License as published by the Free Software
  * Foundation; either version 3.0 of the License, or (at your option) any later
  * version.
  *
- * BBBEasy is distributed in the hope that it will be useful, but WITHOUT ANY
+ * BBBeasy is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
- * PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License along
+ * You should have received a copy of the GNU Affero General Public License along
  * with BBBEasy; if not, see <http://www.gnu.org/licenses/>.
  */
 
@@ -54,6 +54,14 @@ import RecordingsService from '../services/recordings.service';
 import { TableColumnType } from '../types/TableColumnType';
 import { RecordingType } from '../types/RecordingType';
 import CopyTextToClipBoard from './CopyTextToClipBoard';
+import {
+    FacebookIcon,
+    FacebookShareButton,
+    LinkedinIcon,
+    LinkedinShareButton,
+    TwitterIcon,
+    TwitterShareButton,
+} from 'react-share';
 
 const { Link } = Typography;
 
@@ -422,21 +430,25 @@ const Recordings = () => {
                         <Space size={38} direction="vertical" className="modal-content">
                             <div className="mt-24">{getFormatIcons(modalFormats, true)}</div>
                             <Space size="middle" className="social-medias">
-                                <Avatar size={75} className="bbbeasy-btn">
-                                    <div className="bbbeasy-white-btn">
-                                        <FacebookOutlined />
-                                    </div>
-                                </Avatar>
-                                <Avatar size={75} className="bbbeasy-btn">
-                                    <div className="bbbeasy-white-btn">
-                                        <TwitterOutlined />
-                                    </div>
-                                </Avatar>
-                                <Avatar size={75} className="bbbeasy-btn">
-                                    <div className="bbbeasy-white-btn">
-                                        <LinkedinOutlined />
-                                    </div>
-                                </Avatar>
+                                <div className="bbbeasy-white-btn">
+                                    <FacebookShareButton url={modalUrl} quote={'Join us!'}>
+                                        <FacebookIcon size={75} round />
+                                    </FacebookShareButton>
+                                </div>
+                                <div className="bbbeasy-white-btn">
+                                    <TwitterShareButton url={modalUrl}>
+                                        <TwitterIcon size={75} round />
+                                    </TwitterShareButton>
+                                </div>
+
+                                <div className="bbbeasy-white-btn">
+                                    <LinkedinShareButton
+                                        url={modalUrl}
+                                        title="Create LinkedIn Share button on Website Webpages"
+                                    >
+                                        <LinkedinIcon size={75} round />
+                                    </LinkedinShareButton>
+                                </div>
                             </Space>
                             <Input
                                 readOnly
@@ -444,8 +456,19 @@ const Recordings = () => {
                                 suffix={<CopyTextToClipBoard textToCopy={modalUrl} />}
                             />
                             <Form.Item className="modal-submit-btn">
-                                <Button type="primary" id="submit-btn" htmlType="submit" block>
-                                    <Trans i18nKey="share" />
+                                <Button
+                                    type="primary"
+                                    id="submit-btn"
+                                    icon={<DynamicIcon type="playback-presentation" className="bbbeasy-ppt" />}
+                                    onClick={() => {
+                                        window.open(modalUrl);
+                                    }}
+                                    htmlType="submit"
+                                    block
+                                >
+                                    <span>
+                                        <Trans i18nKey="replay" />
+                                    </span>
                                 </Button>
                             </Form.Item>
                         </Space>

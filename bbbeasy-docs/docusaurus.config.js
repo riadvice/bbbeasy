@@ -44,7 +44,7 @@ const config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            'https://github.com/riadvice/bbbeasy/tree/develop/bbbeasy-docs',
+              'https://github.com/riadvice/bbbeasy/tree/develop/bbbeasy-docs',
         },
         theme: {
           customCss: require.resolve('./src/css/bbbeasy.css'),
@@ -54,111 +54,111 @@ const config = {
   ],
 
   themeConfig:
-    /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
-    ({
-      // Replace with your project's social card
-      image: 'img/docusaurus-social-card.jpg',
-      navbar: {
-        title: 'BBBEasy',
-        logo: {
-          alt: 'BBBEasy Logo',
-          src: 'img/logo.svg',
+  /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
+      ({
+        // Replace with your project's social card
+        image: 'img/docusaurus-social-card.jpg',
+        navbar: {
+          title: 'BBBEasy',
+          logo: {
+            alt: 'BBBEasy Logo',
+            src: 'img/logo.svg',
+          },
+          items: [
+            {
+              type: 'doc',
+              docId: 'user-guide/introduction-welcome',
+              position: 'left',
+              sidebarId: 'user',
+              label: 'User Guide',
+            },
+            {
+              type: 'doc',
+              docId: 'administrator-guide/software',
+              sidebarId: 'administrator',
+              position: 'left',
+              label: 'Administrator Guide',
+            },
+            {
+              type: 'doc',
+              docId: 'developer-guide/bbbeasy-configuration-utility',
+              sidebarId: 'developer',
+              position: 'left',
+              label: 'Developer Guide',
+            },
+            {
+              type: 'doc',
+              docId: 'api-reference/overview',
+              position: 'left',
+              sidebarId: 'api',
+              label: 'API',
+            },
+            {
+              label: 'Discussions',
+              href: 'https://github.com/riadvice/bbbeasy/discussions',
+              position: 'right',
+            },
+            {
+              href: 'https://github.com/facebook/docusaurus',
+              label: 'GitHub',
+              position: 'right',
+            },
+          ],
         },
-        items: [
-          {
-            type: 'doc',
-            docId: 'user-guide/congratulations',
-            position: 'left',
-            sidebarId: 'user',
-            label: 'User Guide',
-          },
-          {
-            type: 'doc',
-            docId: 'administrator-guide/software',
-            sidebarId: 'administrator',
-            position: 'left',
-            label: 'Administrator Guide',
-          },
-          {
-            type: 'doc',
-            docId: 'developer-guide/bbbeasy-configuration-utility',
-            sidebarId: 'developer',
-            position: 'left',
-            label: 'Developer Guide',
-          },
-          {
-            type: 'doc',
-            docId: 'api-reference/overview',
-            position: 'left',
-            sidebarId: 'api',
-            label: 'API',
-          },
-          {
-            label: 'Discussions',
-            href: 'https://github.com/riadvice/bbbeasy/discussions',
-            position: 'right',
-          },
-          {
-            href: 'https://github.com/facebook/docusaurus',
-            label: 'GitHub',
-            position: 'right',
-          },
-        ],
-      },
-      footer: {
-        style: 'dark',
-        links: [
-          {
-            title: 'Docs',
-            items: [
-              {
-                label: 'User Guide',
-                to: '/user-guide/introduction/welcome',
-              },
-              {
-                label: 'Administrator Guide',
-                to: '/administrator-guide/software',
-              },
-              {
-                label: 'Developer Guide',
-                to: '/developer-guide/bbbeasy-configuration-utility',
-              },
-              {
-                label: 'API',
-                to: '/api-reference/overview',
-              },
-            ],
-          },
-          {
-            title: 'Community',
-            items: [
-              {
-                label: 'Discussions',
-                href: 'https://github.com/riadvice/bbbeasy/discussions',
-              },
-              {
-                label: 'GitHub',
-                href: 'https://github.com/riadvice/bbbeasy',
-              },
-            ],
-          },
-          {
-            title: 'Commercial Support',
-            items: [
-              {
-                label: 'RIADVICE',
-                href: 'https://riadvice.tn/',
-              },
-            ],
-          },
-        ],
-        copyright: `Copyright © 2022-${new Date().getFullYear()} BBBEasy, RIADVICE SUARL. Built with Docusaurus.`,
-      },
-      prism: {
-        theme: lightCodeTheme,
-        darkTheme: darkCodeTheme,
-      },
-    }),
+        footer: {
+          style: "dark",
+          links: [
+            {
+              title: "Docs",
+              items: [
+                {
+                  label: "User Guide",
+                  to: "/guides/user-guide/welcome",
+                },
+                {
+                  label: "Administrator Guide",
+                  to: "/guides/administrator-guide/software",
+                },
+                {
+                  label: "Developer Guide",
+                  to: "/guides/developer-guide/bbbeasy-configuration-utility",
+                },
+                {
+                  label: "API",
+                  to: "/guides/api-reference/overview",
+                },
+              ],
+            },
+            {
+              title: "Community",
+              items: [
+                {
+                  label: "Discussions",
+                  href: "https://github.com/riadvice/bbbeasy/discussions",
+                },
+                {
+                  label: "GitHub",
+                  href: "https://github.com/riadvice/bbbeasy",
+                },
+              ],
+            },
+            {
+              title: "Commercial Support",
+              items: [
+                {
+                  label: "RIADVICE",
+                  href: "https://riadvice.tn/",
+                },
+              ],
+            },
+          ],
+          copyright: `Copyright © 2022-${new Date().getFullYear()} BBBEasy, RIADVICE SUARL. Built with Docusaurus.`,
+        },
+        prism: {
+          theme: lightCodeTheme,
+          darkTheme: darkCodeTheme,
+        },
+      }),
 };
 
 module.exports = config;

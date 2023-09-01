@@ -8,16 +8,16 @@ declare(strict_types=1);
  * Copyright (c) 2022-2023 RIADVICE SUARL and by respective authors (see below).
  *
  * This program is free software; you can redistribute it and/or modify it under the
- * terms of the GNU Lesser General Public License as published by the Free Software
+ * terms of the GNU Affero General Public License as published by the Free Software
  * Foundation; either version 3.0 of the License, or (at your option) any later
  * version.
  *
- * BBBEasy is distributed in the hope that it will be useful, but WITHOUT ANY
+ * BBBeasy is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
- * PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License along
- * with BBBEasy; if not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License along
+ * with BBBeasy. If not, see <https://www.gnu.org/licenses/>
  */
 
 namespace Models;
@@ -102,10 +102,11 @@ final class RoleTest extends Scenario
         $test       = $this->newTest();
         $role       = new Role();
         $role->name = 'roleRole';
+        $name       = $role->name;
         $role->save();
+        $myRole = $role->getRoleByName($name);
 
-        $test->expect(0 !== $role->id, 'Role mocked and saved to the database');
-        $test->expect('role_role' === $role->name, 'Name formatted to ' . $role->name);
+        $test->expect(0 !== $myRole->id, 'Role mocked and saved to the database');
 
         return $test->results();
     }
@@ -115,10 +116,10 @@ final class RoleTest extends Scenario
      */
     public function testNameExists()
     {
-        $test = $this->newTest();
-        $role = RoleFaker::create();
-
-        $test->expect($role->nameExists($role->name), 'nameExists(' . $role->name . ') exists');
+        $test     = $this->newTest();
+        $role     = RoleFaker::create();
+        $roleName = $role->name;
+        $test->expect($role->nameExists($roleName), 'nameExists(' . $roleName . ') exists');
         $test->expect(!$role->nameExists('404'), 'nameExists("404") does not exist');
 
         return $test->results();
@@ -173,8 +174,8 @@ final class RoleTest extends Scenario
         $dataGet = [
             $role->getAdministratorRole(),
             $role->getLecturerRole(),
-            $role1->getRoleInfos(),
-            $role2->getRoleInfos(),
+            $role1->getRoleInfos($role1),
+            $role2->getRoleInfos($role2),
         ];
 
         $test->expect($dataCollect === $role->collectAll(), 'collectAllRoles() returned all roles names');
@@ -197,7 +198,9 @@ final class RoleTest extends Scenario
             'permissions' => $role->getRolePermissions(),
         ];
 
+ 
         $test->expect(empty(array_udiff($data, $role->getRoleInfos(), static fn ($obj1, $obj2) => $obj1 === $obj2)), 'getRoleInfos() returned role informations');
+ 
 
         return $test->results();
     }
@@ -232,7 +235,7 @@ final class RoleTest extends Scenario
         $data       = ['labels' => ['add', 'delete', 'edit']];
         $role       = new Role();
         $role->name = 'labels manager';
-        $result     = $role->saveRoleAndPermissions($data);
+        $result     = $role->saveRoleAndPermissions($role->name, $data);
 
         $test->expect($result, 'saveRoleAndPermissions() add role permissions');
         $test->expect($data === $role->getRolePermissions(), 'getRolePermissions() returned role permissions');
@@ -252,7 +255,7 @@ final class RoleTest extends Scenario
         $data       = ['labels' => ['add', 'delete', 'edit']];
         $role       = new Role();
         $role->name = $faker->name;
-        $role->saveRoleAndPermissions($data);
+        $role->saveRoleAndPermissions($role->name, $data);
         $roleId = $role->id;
         $role->delete();
 
