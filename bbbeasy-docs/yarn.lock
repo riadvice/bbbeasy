@@ -25,7 +25,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@algolia/autocomplete-js@npm:^1.5.1":
+"@algolia/autocomplete-js@npm:^1.8.2":
   version: 1.11.0
   resolution: "@algolia/autocomplete-js@npm:1.11.0"
   dependencies:
@@ -107,7 +107,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@algolia/autocomplete-theme-classic@npm:^1.5.1":
+"@algolia/autocomplete-theme-classic@npm:^1.8.2":
   version: 1.11.0
   resolution: "@algolia/autocomplete-theme-classic@npm:1.11.0"
   checksum: 8ad3d80c160d8d240cd1be552432d5144d25938c974231dbcbe55c37950aa2c3d3d9a0ae4fc1d2426bb369ebf9d10e8a8f17f73b2f349e373ae8e3c12466c458
@@ -1763,12 +1763,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cmfcmf/docusaurus-search-local@npm:^0.11.0":
-  version: 0.11.0
-  resolution: "@cmfcmf/docusaurus-search-local@npm:0.11.0"
+"@cmfcmf/docusaurus-search-local@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "@cmfcmf/docusaurus-search-local@npm:1.1.0"
   dependencies:
-    "@algolia/autocomplete-js": ^1.5.1
-    "@algolia/autocomplete-theme-classic": ^1.5.1
+    "@algolia/autocomplete-js": ^1.8.2
+    "@algolia/autocomplete-theme-classic": ^1.8.2
     "@algolia/client-search": ^4.12.0
     algoliasearch: ^4.12.0
     cheerio: ^1.0.0-rc.9
@@ -1776,12 +1776,12 @@ __metadata:
     lunr-languages: ^1.4.0
     mark.js: ^8.11.1
   peerDependencies:
-    "@docusaurus/core": ^v2.0.0-beta.21
+    "@docusaurus/core": ^2.0.0
     nodejieba: ^2.5.0
   peerDependenciesMeta:
     nodejieba:
       optional: true
-  checksum: 9657bc43987bb8fedeb48a50d1aa375fd947d9d7a3c46f09320c369e7c974ef8c6161847dba35b5166a1d83ce63120bdf6046c8fb4af8e147b8b9adde887737f
+  checksum: da719d70db835a61d0e99a2aaf64ef5a758e92c5f67698bfee3d196666cd6ecadec6eb495eaa44ca80b8682b2846bf698f9c0008535874eeed2968f5188c9ba8
   languageName: node
   linkType: hard
 
@@ -3820,7 +3820,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "bbbeasy-docs@workspace:."
   dependencies:
-    "@cmfcmf/docusaurus-search-local": ^0.11.0
+    "@cmfcmf/docusaurus-search-local": ^1.1.0
     "@docusaurus/core": ^2.4.1
     "@docusaurus/module-type-aliases": ^2.4.1
     "@docusaurus/plugin-client-redirects": 2.4.1
