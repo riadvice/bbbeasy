@@ -153,8 +153,7 @@ const RoomDetails = () => {
     const startRoom = async () => {
         try {
             const values = await startForm.validateFields();
-            console.log(values);
-
+            
             RoomsService.start_room(room.id, values.fullname, values.password)
                 .then((result) => {
                     window.open(result.data, '_self');
@@ -162,10 +161,7 @@ const RoomDetails = () => {
                 .catch((error) => {
                     console.log(error.response.data);
                     setErrors(error.response.data);
-                    /*Notifications.openNotificationWithIcon(
-                        'error',
-                        t(Object.keys(EN_US).filter((elem) => EN_US[elem] === error.response.data.meeting))
-                    );*/
+                     
                 });
         } catch (errInfo) {
             console.log('could not start or join the meeting :', errInfo);
@@ -208,7 +204,7 @@ const RoomDetails = () => {
 
                 const meeting = response.data.meeting;
                 setMeeting(meeting);
-                console.log(currentUser?.role);
+               
                 setRoom(response.data.room);
                 if (room != null) {
                     setRoom(room);
@@ -222,7 +218,7 @@ const RoomDetails = () => {
                 }
                 if (meeting != null) {
                     setCanStart(meeting.canStart);
-                    console.log(meeting);
+                    
 
                     setIsRunning(meeting.running);
                 }
@@ -420,22 +416,9 @@ const RoomDetails = () => {
             </Form.Item>
         );
     };
-    const showErrors = (errors) => {
-        {
-            errors && (
-                <Alert
-                    type="error"
-                    className="alert-msg"
-                    message={<Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errors)} />}
-                    showIcon
-                />
-            );
-        }
-    };
+ 
     const renderPasswordModeratorOrAttendee = (errors, user, meeting) => {
-        console.log('meeting', meeting);
-        console.log('user', user);
-        console.log('errors', errors);
+        
         if (user == null && !meeting.all_join_as_moderator) {
             return (
                 <Form.Item
@@ -569,7 +552,7 @@ const RoomDetails = () => {
                                                             </>
                                                         ) : null}
                                                         <Form form={startForm}>
-                                                            {showErrors(errors)}
+                                                          
 
                                                             {renderPasswordModeratorOrAttendee(
                                                                 errors,
