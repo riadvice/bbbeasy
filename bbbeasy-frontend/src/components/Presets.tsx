@@ -278,7 +278,13 @@ const PresetsCol: React.FC<PresetColProps> = ({
                         <Space>
                             {!isEditing ? (
                                 <>
-                                    <span>{preset['name']}</span>
+                                    <Tooltip
+                                        key="tooltipLabels"
+                                        overlayClassName="install-tooltip"
+                                        title={preset['name']}
+                                    >
+                                        <div className='preset-name'>{preset['name']}</div>
+                                    </Tooltip>
                                     {isShown && editName && !isDefault && (
                                         <Button
                                             className="edit-btn"
@@ -645,6 +651,10 @@ const Presets = () => {
 
     //edit
     const editPreset = (newPreset: MyPresetType, oldPreset: MyPresetType) => {
+        if(newPreset.name == oldPreset.name){
+            Notifications.openNotificationWithIcon('info', t('no_changes'));
+            return
+        }
         const newPresets = [...myPresets];
         const index = newPresets.findIndex((item) => oldPreset.id === item.id);
         if (index > -1 && newPreset != undefined) {

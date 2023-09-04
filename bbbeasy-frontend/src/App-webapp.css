@@ -1587,7 +1587,11 @@ div.error-message-Label {
     margin-bottom: 10px;
     margin-left: 10px;
 }
-
+.preset-name {
+    max-width: 120px !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 .ant-table-cell {
     max-width: 150px !important;
 }
