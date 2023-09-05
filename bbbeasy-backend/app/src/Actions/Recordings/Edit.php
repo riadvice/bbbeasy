@@ -49,22 +49,19 @@ class Edit extends BaseAction
         $form     = $body['data'];
         $room     = new Room();
         if ($room->getRecordingByRecordId($recordId)) {
-            $recording=$room->getRecordingByRecordId($recordId,true);
-
+            $recording = $room->getRecordingByRecordId($recordId, true);
 
             $bbbRequester = new BigBlueButtonRequester();
             $editParams   = new UpdateRecordingsParameters($recordId);
 
-            $recordName   = $form['name'];
-            $recordState =$form['state'];
+            $recordName  = $form['name'];
+            $recordState = $form['state'];
 
-            if($recordName !== $recording['name'] ) {
-
+            if ($recordName !== $recording['name']) {
                 $editParams->addMeta('name', $recordName);
                 $this->logger->info('Received request to edit recording', ['recordID' => $recordId]);
                 $editResponse = $bbbRequester->updateRecordings($editParams);
                 if ($editResponse->success() && $editResponse->isUpdated()) {
-
                     $this->logger->info('Recording name successfully updated', ['recordID' => $recordId]);
                     $newRecording = $room->getRecordingByRecordId($recordId, true);
                     $this->renderJson(['result' => 'success', 'recording' => $newRecording]);
@@ -74,18 +71,14 @@ class Edit extends BaseAction
                 }
             }
 
-            if($recordState!==$recording['state']){
+            if ($recordState !== $recording['state']) {
+                $publish = 'published' === $form['state'] ? true : ('unpublished' === $form['state'] ? false : null);
 
+                if ('published' === $form['state'] || 'unpublished' === $form['state']) {
+                    $publish = 'published' === $form['state'] ? true : false;
 
-                $publish=$form['state']=='published'?true:($form["state"]=='unpublished'?false:null);
-
-                if($form["state"] =="published" || $form['state']=='unpublished') {
-                    $publish=$form['state']=='published'?true: false;
-
-
-                    $publishParams = new PublishRecordingsParameters($recordId, $publish);
+                    $publishParams   = new PublishRecordingsParameters($recordId, $publish);
                     $publishResponse = $bbbRequester->publishRecordings($publishParams);
-
 
                     if ($publishResponse->success() && ($publish && $publishResponse->isPublished() || !$publish && !$publishResponse->isPublished())) {
                         $this->logger->info('Recording state successfully updated', ['recordID' => $recordId]);
@@ -95,12 +88,10 @@ class Edit extends BaseAction
                         $this->logger->error('Recording state could not be updated', ['recordID' => $recordId, 'error' => $publishResponse->getMessage()]);
                         $this->renderJson([], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
                     }
-
-                }else{
-
-                    $deleteParams=new DeleteRecordingsParameters($recordId);
-                    $deleteResponse=$bbbRequester->deleteRecordings($deleteParams);
-                    if($deleteResponse->success() && $deleteResponse->isDeleted()){
+                } else {
+                    $deleteParams   = new DeleteRecordingsParameters($recordId);
+                    $deleteResponse = $bbbRequester->deleteRecordings($deleteParams);
+                    if ($deleteResponse->success() && $deleteResponse->isDeleted()) {
                         $this->logger->info('Recording  successfully deleted', ['recordID' => $recordId]);
                         $newRecording = $room->getRecordingByRecordId($recordId, true);
                         $this->renderJson(['result' => 'success', 'recording' => $newRecording]);
@@ -108,14 +99,8 @@ class Edit extends BaseAction
                         $this->logger->error('Recording  could not be deleted', ['recordID' => $recordId, 'error' => $deleteResponse->getMessage()]);
                         $this->renderJson([], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
                     }
-                    }
                 }
-
-
-
-
-
-
+            }
         } else {
             $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
         }

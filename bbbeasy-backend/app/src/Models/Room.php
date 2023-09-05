@@ -250,7 +250,6 @@ class Room extends BaseModel
     {
         $recordingId = $record->getRecordId();
 
-
         if (\array_key_exists('name', $record->getMetas())) {
             $recordingName = $record->getMetas()['name'];
         } else {

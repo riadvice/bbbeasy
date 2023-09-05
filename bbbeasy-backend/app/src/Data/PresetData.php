@@ -22,22 +22,14 @@ declare(strict_types=1);
 
 namespace Data;
 
-use Enum\Presets\General;
-
 class PresetData
 {
     private array $data = [];
 
     public function setData($category, $subCategory, $value): void
     {
-
-
-        if (null !== $value ) {
-
+        if (null !== $value) {
             $this->data[$category][$subCategory] = $value;
-
-
-
         }
     }
 

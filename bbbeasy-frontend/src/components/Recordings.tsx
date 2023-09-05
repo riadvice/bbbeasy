@@ -23,7 +23,7 @@ import { t } from 'i18next';
 
 import { PageHeader } from '@ant-design/pro-layout';
 
-import { Button, Typography, Space, Popconfirm, Input, Tooltip, Modal, Avatar, Tag,Select } from 'antd';
+import { Button, Typography, Space, Popconfirm, Input, Tooltip, Modal, Avatar, Tag, Select } from 'antd';
 import {
     DeleteOutlined,
     QuestionCircleOutlined,
@@ -128,17 +128,24 @@ const Recordings = () => {
     };
     // edit
     const [editForm] = Form.useForm();
-    const EditableCell: React.FC<EditableCellProps> = ({ editing, children, dataIndex, record,inputType, ...restProps }) => {
+    const EditableCell: React.FC<EditableCellProps> = ({
+        editing,
+        children,
+        dataIndex,
+        record,
+        inputType,
+        ...restProps
+    }) => {
         let inputNode: JSX.Element;
         if (inputType === 'select') {
-            console.log("select")
+            console.log('select');
             const statesOptions = recordingStates.map((item, index) => (
                 <Option key={index} value={item} className="text-capitalize">
                     {t(item)}
                 </Option>
-            )); 
+            ));
 
-            inputNode =    getSelectItems(t('state.placeholder'), statesOptions);
+            inputNode = getSelectItems(t('state.placeholder'), statesOptions);
         } else {
             inputNode = <Input onFocus={() => setCancelVisibility(false)} />;
         }
@@ -429,14 +436,10 @@ const Recordings = () => {
         return {
             ...col,
             onCell: (record: RecordingType) => ({
-
-
-
-                
                 record,
                 editing: isEditing(record),
-                inputType: col.dataIndex === 'state'   ? 'select' : 'text',
-           
+                inputType: col.dataIndex === 'state' ? 'select' : 'text',
+
                 dataIndex: col.dataIndex,
                 title: col.title,
             }),

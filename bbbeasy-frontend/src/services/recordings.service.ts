@@ -33,7 +33,7 @@ class RecordingsService {
             data,
         });
     }
-    publish_recording(  id: string,data:object) {
+    publish_recording(id: string, data: object) {
         return axiosInstance.put(apiRoutes.PUBLISH_RECORDING_URL + id, {
             data,
         });

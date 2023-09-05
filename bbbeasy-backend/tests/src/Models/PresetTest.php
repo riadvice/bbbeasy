@@ -119,7 +119,7 @@ final class PresetTest extends Scenario
             'nb_rooms'   => \count($room->collectAllByPresetId($myPreset['id'])),
         ];
 
-        $test->expect(empty(array_udiff($data, $preset->getMyPresetInfos($myPreset), fn ($obj1, $obj2) => $obj1 === $obj2)), 'getRoleInfos() returned role informations');
+        $test->expect(empty(array_udiff($data, $preset->getMyPresetInfos($myPreset), static fn ($obj1, $obj2) => $obj1 === $obj2)), 'getRoleInfos() returned role informations');
 
         return $test->results();
     }
@@ -161,7 +161,7 @@ final class PresetTest extends Scenario
         $data2 = ['id' => $preset2->id, 'name' => $preset2->name, 'settings' => $preset2->settings];
         $data  = [$data1, $data2];
 
-        $test->expect(empty(array_udiff($data, $preset->collectAllByUserId($user->id), fn ($obj1, $obj2) => $obj1 === $obj2)), 'CollectAllByUserId(' . $user->id . ') returned all presets for the given user');
+        $test->expect(empty(array_udiff($data, $preset->collectAllByUserId($user->id), static fn ($obj1, $obj2) => $obj1 === $obj2)), 'CollectAllByUserId(' . $user->id . ') returned all presets for the given user');
 
         return $test->results();
     }

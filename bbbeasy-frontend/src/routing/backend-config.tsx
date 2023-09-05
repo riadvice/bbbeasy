@@ -74,6 +74,6 @@ export const apiRoutes = {
     COLLECT_RECORDINGS_URL: API_URL + '/recordings',
     LIST_RECORDINGS_URL: API_URL + '/recordings/',
     EDIT_RECORDING_URL: API_URL + '/recordings/',
-    PUBLISH_RECORDING_URL:API_URL+'/recordings/publish/',
+    PUBLISH_RECORDING_URL: API_URL + '/recordings/publish/',
     DELETE_RECORDING_URL: API_URL + '/recordings/',
 };

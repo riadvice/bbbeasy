@@ -83,11 +83,11 @@ abstract class Base extends Cortex
         $this->pageSize = $this->f3->get('pagination.limit');
         $this->initLogger();
 
-        $this->beforeinsert(function(self $self): void {
+        $this->beforeinsert(static function(self $self): void {
             $self->setCreatedOnDate();
         });
 
-        $this->beforeupdate(function(self $self): void {
+        $this->beforeupdate(static function(self $self): void {
             $self->setUpdatedOnDate();
         });
     }
@@ -99,7 +99,7 @@ abstract class Base extends Cortex
      */
     public function prepareFilter($filter)
     {
-        return array_map(fn ($value) => '' === $value ? '%' : '%' . $value . '%', $filter);
+        return array_map(static fn ($value) => '' === $value ? '%' : '%' . $value . '%', $filter);
     }
 
     /**

@@ -72,10 +72,9 @@ class PresetProcessor
         $presetsData->setData(BreakoutRooms::GROUP_NAME, BreakoutRooms::RECORDING, $preparePresetData[BreakoutRooms::GROUP_NAME][BreakoutRooms::RECORDING]);
         $presetsData->setData(BreakoutRooms::GROUP_NAME, BreakoutRooms::PRIVATE_CHAT, $preparePresetData[BreakoutRooms::GROUP_NAME][BreakoutRooms::PRIVATE_CHAT]);
 
-        $presetsData->setData(General::GROUP_NAME, General::DURATION , $preparePresetData[General::GROUP_NAME][General::DURATION]?:null);
+        $presetsData->setData(General::GROUP_NAME, General::DURATION, $preparePresetData[General::GROUP_NAME][General::DURATION] ?: null);
 
-
-        $presetsData->setData(General::GROUP_NAME, General::MAXIMUM_PARTICIPANTS, $preparePresetData[General::GROUP_NAME][General::MAXIMUM_PARTICIPANTS]?:null);
+        $presetsData->setData(General::GROUP_NAME, General::MAXIMUM_PARTICIPANTS, $preparePresetData[General::GROUP_NAME][General::MAXIMUM_PARTICIPANTS] ?: null);
 
         $presetsData->setData(GuestPolicy::GROUP_NAME, GuestPolicy::POLICY, $preparePresetData[GuestPolicy::GROUP_NAME][GuestPolicy::POLICY]);
 
@@ -95,16 +94,15 @@ class PresetProcessor
         $presetsData->setData(Recording::GROUP_NAME, Recording::ALLOW_START_STOP, $preparePresetData[Recording::GROUP_NAME][Recording::ALLOW_START_STOP]);
         $presetsData->setData(Recording::GROUP_NAME, Recording::RECORD, $preparePresetData[Recording::GROUP_NAME][Recording::RECORD]);
 
-        $presetsData->setData(Security::GROUP_NAME,Security::PASSWORD_FOR_MODERATOR,($preparePresetData[Security::GROUP_NAME][Security::PASSWORD_FOR_MODERATOR]));
-        $presetsData->setData(Security::GROUP_NAME,Security::PASSWORD_FOR_ATTENDEE, $preparePresetData[Security::GROUP_NAME][Security::PASSWORD_FOR_ATTENDEE] );
-
+        $presetsData->setData(Security::GROUP_NAME, Security::PASSWORD_FOR_MODERATOR, $preparePresetData[Security::GROUP_NAME][Security::PASSWORD_FOR_MODERATOR]);
+        $presetsData->setData(Security::GROUP_NAME, Security::PASSWORD_FOR_ATTENDEE, $preparePresetData[Security::GROUP_NAME][Security::PASSWORD_FOR_ATTENDEE]);
 
         $presetsData->setData(Webcams::GROUP_NAME, Webcams::VISIBLE_FOR_MODERATOR_ONLY, $preparePresetData[Webcams::GROUP_NAME][Webcams::VISIBLE_FOR_MODERATOR_ONLY]);
         $presetsData->setData(Webcams::GROUP_NAME, Webcams::MODERATOR_ALLOWED_CAMERA_EJECT, $preparePresetData[Webcams::GROUP_NAME][Webcams::MODERATOR_ALLOWED_CAMERA_EJECT]);
 
         // Get preset data to create meeting parameters
-        $createParams->setModeratorPassword($presetsData->getData(Security::GROUP_NAME,Security::PASSWORD_FOR_MODERATOR)?$presetsData->getData(Security::GROUP_NAME,Security::PASSWORD_FOR_MODERATOR):DataUtils::generateRandomString());
-        $createParams->setAttendeePassword($presetsData->getData(Security::GROUP_NAME,Security::PASSWORD_FOR_ATTENDEE)?$presetsData->getData(Security::GROUP_NAME,Security::PASSWORD_FOR_ATTENDEE):DataUtils::generateRandomString());
+        $createParams->setModeratorPassword($presetsData->getData(Security::GROUP_NAME, Security::PASSWORD_FOR_MODERATOR) ?: DataUtils::generateRandomString());
+        $createParams->setAttendeePassword($presetsData->getData(Security::GROUP_NAME, Security::PASSWORD_FOR_ATTENDEE) ?: DataUtils::generateRandomString());
 
         $createParams->setMuteOnStart($presetsData->getData(Audio::GROUP_NAME, Audio::USERS_JOIN_MUTED));
 
@@ -134,7 +132,7 @@ class PresetProcessor
         // layout: presentation,participants,chat,navigation_bar,actions_bar
 
         $createParams->setLearningDashboardEnabled($presetsData->getData(LearningDashboard::GROUP_NAME, LearningDashboard::CONFIGURABLE));
-        $createParams->setLearningDashboardCleanupDelayInMinutes($presetsData->getData(LearningDashboard::GROUP_NAME, LearningDashboard::CLEANUP_DELAY)?:null);
+        $createParams->setLearningDashboardCleanupDelayInMinutes($presetsData->getData(LearningDashboard::GROUP_NAME, LearningDashboard::CLEANUP_DELAY) ?: null);
 
         $createParams->setLockSettingsDisableCam($presetsData->getData(LockSettings::GROUP_NAME, LockSettings::WEBCAMS));
         $createParams->setLockSettingsDisableMic($presetsData->getData(LockSettings::GROUP_NAME, LockSettings::MICROPHONES));

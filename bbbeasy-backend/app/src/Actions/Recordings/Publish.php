@@ -25,7 +25,6 @@ namespace Actions\Recordings;
 use Actions\Base as BaseAction;
 use Actions\RequirePrivilegeTrait;
 use BigBlueButton\Parameters\PublishRecordingsParameters;
-use BigBlueButton\Parameters\UpdateRecordingsParameters;
 use Enum\ResponseCode;
 use Models\Room;
 use Utils\BigBlueButtonRequester;
@@ -45,24 +44,21 @@ class Publish extends BaseAction
     {
         $recordId = $params['id'];
 
-        $body     = $this->getDecodedBody();
-        $publish     = $body['data'];
+        $body    = $this->getDecodedBody();
+        $publish = $body['data'];
 
-
-        $room     = new Room();
+        $room = new Room();
         if ($room->getRecordingByRecordId($recordId)) {
+            $bbbRequester  = new BigBlueButtonRequester();
+            $publishParams = new PublishRecordingsParameters($recordId, $publish);
+            // $recordName   = $form['name'];
+            // $recordState =$form['state'];
 
-
-           $bbbRequester = new BigBlueButtonRequester();
-            $publishParams   = new PublishRecordingsParameters($recordId,$publish);
-           // $recordName   = $form['name'];
-           // $recordState =$form['state'];
-
-            //$editParams->addMeta('HVname', $recordName);
+            // $editParams->addMeta('HVname', $recordName);
             $this->logger->info('Received request to publish recording', ['recordID' => $recordId]);
             $publishResponse = $bbbRequester->publishRecordings($publishParams);
 
-           if ($publishResponse->success() && ($publish && $publishResponse->isPublished() || !$publish && !$publishResponse->isPublished())) {
+            if ($publishResponse->success() && ($publish && $publishResponse->isPublished() || !$publish && !$publishResponse->isPublished())) {
                 $this->logger->info('Recording state successfully updated', ['recordID' => $recordId]);
                 $newRecording = $room->getRecordingByRecordId($recordId, true);
                 $this->renderJson(['result' => 'success', 'recording' => $newRecording]);
