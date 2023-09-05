@@ -28,7 +28,7 @@ class PresetData
 
     public function setData($category, $subCategory, $value): void
     {
-        if (null !== $value || (\is_string($value) && !empty($value))) {
+        if (null !== $value) {
             $this->data[$category][$subCategory] = $value;
         }
     }

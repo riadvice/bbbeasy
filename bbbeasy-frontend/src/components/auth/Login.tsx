@@ -81,7 +81,7 @@ const Login = () => {
                     Notifications.openNotificationWithIcon(
                         'success',
                         <>
-                            <Trans i18nKey="welcome" /> {' ' + user_infos.username + ' !'}
+                            <Trans i18nKey="welcome-app" /> {' ' + user_infos.username + ' !'}
                         </>,
                         <SmileOutlined className="text-color-primary" />,
                         2.5
