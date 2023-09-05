@@ -220,6 +220,9 @@
         "required": "Please select a role",
         "placeholder": "Select a role"
     },
+    "state":{
+        "placeholder":"Select a state"
+    },
     "status": {
         "label": "State",
         "required": "Please select a state",
@@ -253,6 +256,7 @@
     "required_email": "Email is required",
     "required_role": "Please select a role",
     "required_status": "Please select a state",
+    "required_state":"Please select a visibility",
     "no_changes": "No changes made",
     "new_preset": "New Preset",
     "preset_name": {
@@ -302,6 +306,7 @@
     "room_recordings": "Room recordings",
     "attendees": "Attendees",
     "publish": "Publish",
+    "unpublish":"Unpublish",
     "replay": "Replay",
     "mb": "MB",
     "delete_room_confirm": "Are you sure to delete this room ?",
@@ -422,5 +427,7 @@
 
     "alwaysDeny": "Always deny",
 
-    "email-not-exist": "User does not exist with this email"
+    "email-not-exist": "User does not exist with this email",
+    "publish_record_success":"Recording published successfully",
+    "unpublish_record_success":"Recording unpublished successfully"
 }

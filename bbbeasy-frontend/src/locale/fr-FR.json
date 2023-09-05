@@ -296,6 +296,7 @@
     "room_recordings": "Enregistrements de salle",
     "attendees": "Participants",
     "publish": "Publier",
+    "unpublish":"Dépublier",
     "replay": "Rejouer",
     "mb": "Mo",
     "delete_room_confirm": "Êtes-vous sûr de vouloir supprimer cette salle ?",
@@ -406,5 +407,7 @@
 
     "askModerator": "Demander au modérateur",
     "alwaysAccept": "Toujours accepter",
-    "alwaysDeny": "Toujours refuser"
+    "alwaysDeny": "Toujours refuser",
+    "publish_record_success":"Enregistrement publié avec succès",
+    "unpublish_record_success":"L'enregistrement a été inédit avec succès"
 }

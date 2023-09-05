@@ -563,6 +563,7 @@ const RoomDetails = () => {
                             </Col>
                         </Row>
                         <RoomRecordings
+                            id={room.id}
                             loading={loading}
                             roomRecordings={roomRecordings}
                             open={showRecodingAndPresenttaions}

@@ -206,11 +206,13 @@ class Room extends BaseModel
         $this->logger->info('Received request to fetch recordings', ['meetingID' => $meetingId]);
 
         $recordingsResponse = $bbbRequester->getRecordings($recordingsParams);
+
         if ($recordingsResponse->success() && \count($recordingsResponse->getRecords()) > 0) {
             $recordingsData = [];
             $recordings     = $recordingsResponse->getRawXml()->recordings;
+            $recordings     = $recordings[0];
+
             foreach ($recordings as $recording) {
-                $recording = $recording->recording;
                 $bbbRecord = new Record($recording);
 
                 $recordingsData[] = $this->getRecordingInfo($bbbRecord, (array) $recording->participants);
@@ -247,8 +249,10 @@ class Room extends BaseModel
     public function getRecordingInfo(Record $record, array $attendees): array
     {
         $recordingId = $record->getRecordId();
-        if (\array_key_exists('HVname', $record->getMetas())) {
-            $recordingName = $record->getMetas()['HVname'];
+
+
+        if (\array_key_exists('name', $record->getMetas())) {
+            $recordingName = $record->getMetas()['name'];
         } else {
             $recordingName = $record->getName();
         }

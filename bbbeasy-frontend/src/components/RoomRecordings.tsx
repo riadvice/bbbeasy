@@ -16,11 +16,11 @@
  * with BBBEasy; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from 'react';
+import React,{useEffect} from 'react';
 import { Trans } from 'react-i18next';
 import { t } from 'i18next';
 
-import { Button, Card, Col, Dropdown, Input, Row, Space, Typography } from 'antd';
+import { Button, Card, Col, Dropdown, Input, Row, Space, Typography,Menu } from 'antd';
 import {
     CalendarOutlined,
     ClockCircleOutlined,
@@ -37,6 +37,9 @@ import LocaleService from '../services/locale.service';
 
 import { RecordingType } from '../types/RecordingType';
 import { MenuProps } from 'antd/lib/menu';
+import recordingsService from 'services/recordings.service';
+ 
+import Notifications from './Notifications';
 
 const { Title } = Typography;
 
@@ -44,28 +47,91 @@ type Props = {
     loading: boolean;
     roomRecordings: RecordingType[];
     open: boolean;
+    id:any;
 };
 
 const RoomRecordings = (props: Props) => {
-    const { loading, roomRecordings, open } = props;
-    const actionsItems: MenuProps['items'] = [
-        {
-            key: '1',
-            label: <Trans i18nKey="rename" />,
-        },
-        {
-            key: '2',
-            label: <Trans i18nKey="publish" />,
-        },
-        {
-            type: 'divider',
-        },
-        {
-            key: '3',
-            danger: true,
-            label: <Trans i18nKey="delete" />,
-        },
-    ];
+    const { loading, roomRecordings, open,id } = props;
+    
+    const [isLoading, setIsLoading] = React.useState<boolean>(loading);
+    const [recordings, setRecordings] = React.useState<RecordingType[]>([]);
+    
+   const getRoomRecordings = (id) => {
+    setIsLoading(true);
+
+    recordingsService.list_recordings(id)
+        .then((response) => {
+            setRecordings(response.data);
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+        .finally(() => {
+            setIsLoading(false);
+        });
+};
+   useEffect(() => {
+    //Runs only on the first render
+   getRoomRecordings(id)
+}, []);
+    const publish=(key,publish)=>{
+         console.log(publish) 
+        
+         recordingsService.publish_recording(  key, publish  )
+         .then((result)=>{
+            setIsLoading(true)
+            const newRow: RecordingType = result.data.recording;
+            const index = roomRecordings.findIndex((item) => key === item.key);
+           
+          
+            if (index !== -1 && newRow) {
+                roomRecordings[index] = newRow;
+                
+                setRecordings(roomRecordings)
+                
+             
+            }
+            if(publish){
+                Notifications.openNotificationWithIcon('success', t('publish_record_success'));
+
+            }else{
+                Notifications.openNotificationWithIcon('success', t('unpublish_record_success'));
+
+            }
+    
+            
+            
+         })
+         .catch((err)=>{
+            console.log(err)
+         })
+         .finally(() => {
+           setIsLoading(false);
+        });
+    }
+    const actionsItems  =(record)=>{
+        
+        
+        return  (
+<Menu>
+         
+         <Menu.Item key="2"  onClick={() =>  publish(record.key,record.state=='published'?false:true)}>
+             <Trans i18nKey={record.state=="published"?'unpublish':'publish'} />
+         </Menu.Item>
+         <Menu.Item key="1"  >
+             <Trans i18nKey='rename' />
+         </Menu.Item>
+         <Menu.Item key="3" danger  >
+             <Trans i18nKey='delete' />
+         </Menu.Item>
+      
+ </Menu>
+        ) 
+           
+    
+        
+    } 
+   
 
     return (
         <>
@@ -88,11 +154,11 @@ const RoomRecordings = (props: Props) => {
                             )}
                         </Space>
                     </div>
-                    {loading ? (
+                    {isLoading  ? (
                         <LoadingSpinner className="mt-30 content-center" />
-                    ) : roomRecordings.length != 0 ? (
+                    ) : recordings.length != 0 ? (
                         <Row gutter={[16, 20]} className="room-recordings-body">
-                            {roomRecordings.map((recording) => {
+                            {recordings.map((recording) => {
                                 const addHeight = recording.name.length <= 16 ? '65px' : null;
                                 const recordingName =
                                     recording.name.length <= 24
@@ -106,7 +172,7 @@ const RoomRecordings = (props: Props) => {
                                             hoverable
                                             cover={
                                                 <div className="recording-box">
-                                                    <img src="/images/meeting.png" width={281} height={220} />
+                                                    <img src="/images/meeting.png"  style={{"width":"-webkit-fill-available"}} height={220} />
                                                     <div className="recording-cover">
                                                         <div className="recording-header">
                                                             <Title level={3} style={{ height: addHeight }}>
@@ -114,7 +180,8 @@ const RoomRecordings = (props: Props) => {
                                                             </Title>
                                                             <Dropdown
                                                                 key="more"
-                                                                menu={{ items: actionsItems }}
+                                                                overlay={actionsItems(recording)}
+                                                              
                                                                 placement={
                                                                     LocaleService.direction == 'rtl'
                                                                         ? 'bottomLeft'

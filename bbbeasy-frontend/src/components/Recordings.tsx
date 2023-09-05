@@ -23,7 +23,7 @@ import { t } from 'i18next';
 
 import { PageHeader } from '@ant-design/pro-layout';
 
-import { Button, Typography, Space, Popconfirm, Input, Tooltip, Modal, Avatar, Tag } from 'antd';
+import { Button, Typography, Space, Popconfirm, Input, Tooltip, Modal, Avatar, Tag,Select } from 'antd';
 import {
     DeleteOutlined,
     QuestionCircleOutlined,
@@ -56,12 +56,14 @@ import { RecordingType } from '../types/RecordingType';
 import CopyTextToClipBoard from './CopyTextToClipBoard';
 
 const { Link } = Typography;
+const { Option } = Select;
 
 interface EditableCellProps {
     editing: boolean;
     children: React.ReactNode;
     dataIndex: keyof RecordingType;
     record: RecordingType;
+    inputType: 'text' | 'select';
 }
 
 const Recordings = () => {
@@ -105,16 +107,47 @@ const Recordings = () => {
         recordingsActions.push('share');
         setActions(recordingsActions);
     }, []);
-
+    const getSelectItems = (placeholderText: string, options) => {
+        return (
+            <Select
+                className="select-field"
+                showSearch
+                allowClear
+                placeholder={placeholderText}
+                filterOption={(input, option) =>
+                    option.children.toString().toLowerCase().indexOf(input.toString().toLowerCase()) >= 0
+                }
+                filterSort={(optionA, optionB) =>
+                    optionA.children.toString().toLowerCase().localeCompare(optionB.children.toString().toLowerCase())
+                }
+                onFocus={() => setCancelVisibility(false)}
+            >
+                {options}
+            </Select>
+        );
+    };
     // edit
     const [editForm] = Form.useForm();
-    const EditableCell: React.FC<EditableCellProps> = ({ editing, children, dataIndex, record, ...restProps }) => {
+    const EditableCell: React.FC<EditableCellProps> = ({ editing, children, dataIndex, record,inputType, ...restProps }) => {
+        let inputNode: JSX.Element;
+        if (inputType === 'select') {
+            console.log("select")
+            const statesOptions = recordingStates.map((item, index) => (
+                <Option key={index} value={item} className="text-capitalize">
+                    {t(item)}
+                </Option>
+            )); 
+
+            inputNode =    getSelectItems(t('state.placeholder'), statesOptions);
+        } else {
+            inputNode = <Input onFocus={() => setCancelVisibility(false)} />;
+        }
         return (
             <EditableTableCell
                 editing={editing}
                 dataIndex={dataIndex}
                 record={record}
-                inputNode={<Input />}
+                inputNode={inputNode}
                 errorsEdit={errorsEdit}
                 {...restProps}
             >
@@ -270,7 +303,7 @@ const Recordings = () => {
         {
             title: t('state_col'),
             dataIndex: 'state',
-            editable: false,
+            editable: true,
             render: (text, record) => {
                 const stateText = record.state;
                 let stateIcon;
@@ -396,8 +429,14 @@ const Recordings = () => {
         return {
             ...col,
             onCell: (record: RecordingType) => ({
+
+
+
+                
                 record,
                 editing: isEditing(record),
+                inputType: col.dataIndex === 'state'   ? 'select' : 'text',
+           
                 dataIndex: col.dataIndex,
                 title: col.title,
             }),
