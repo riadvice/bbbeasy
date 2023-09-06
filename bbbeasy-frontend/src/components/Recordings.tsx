@@ -175,8 +175,9 @@ const Recordings = () => {
         try {
             const formValues: object = await editForm.validateFields();
             setErrorsEdit({});
-            setLoading(true);
+           
             if (!CompareRecords(record, editForm.getFieldsValue(true))) {
+                setLoading(true);
                 RecordingsService.edit_recording(formValues, record.key)
                     .then((response) => {
                         if (response.data.recording == null) {
