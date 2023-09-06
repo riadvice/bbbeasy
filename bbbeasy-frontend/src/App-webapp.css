@@ -1554,6 +1554,14 @@ fieldset {
     cursor: pointer;
     box-shadow: 0 0 0 2px #fff inset;
 }
+.input-editable .ant-input-suffix .cell-input-cancel-record {
+    width: 100% !important;
+    height: 100% !important;
+}
+.input-editable .ant-input-suffix .cell-input-save-record {
+    width: 100% !important;
+    height: 100% !important;
+}
 .room-details .disableStart {
     font-size: 20px !important;
     font-weight: 600;

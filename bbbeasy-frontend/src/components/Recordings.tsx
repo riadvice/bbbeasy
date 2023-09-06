@@ -175,25 +175,34 @@ const Recordings = () => {
         try {
             const formValues: object = await editForm.validateFields();
             setErrorsEdit({});
+            setLoading(true);
             if (!CompareRecords(record, editForm.getFieldsValue(true))) {
                 RecordingsService.edit_recording(formValues, record.key)
                     .then((response) => {
-                        const newRowData: RecordingType = response.data.recording;
-                        const newData = [...data];
-                        const index = newData.findIndex((item) => record.key === item.key);
-                        if (index > -1 && newRowData != undefined) {
-                            const item = newData[index];
-                            newData.splice(index, 1, {
-                                ...item,
-                                ...newRowData,
-                            });
-                            setData(newData);
-                            Notifications.openNotificationWithIcon('success', t('edit_recording_success'));
-                            cancelEdit();
+                        if (response.data.recording == null) {
+                            setData(data.filter((item) => item.key !== record.key));
+                            Notifications.openNotificationWithIcon('success', t('delete_recording_success'));
+                        } else {
+                            const newRowData: RecordingType = response.data.recording;
+                            const newData = [...data];
+                            const index = newData.findIndex((item) => record.key === item.key);
+                            if (index > -1 && newRowData != undefined) {
+                                const item = newData[index];
+                                newData.splice(index, 1, {
+                                    ...item,
+                                    ...newRowData,
+                                });
+                                setData(newData);
+                                Notifications.openNotificationWithIcon('success', t('edit_recording_success'));
+                                cancelEdit();
+                            }
                         }
                     })
                     .catch((error) => {
                         console.log(error);
+                    })
+                    .finally(() => {
+                        setLoading(false);
                     });
             } else {
                 Notifications.openNotificationWithIcon('info', t('no_changes'));
@@ -211,7 +220,7 @@ const Recordings = () => {
             .then(() => {
                 const newData = [...data];
                 // delete table item
-                setData(newData.filter((item) => item.key !== key));
+                setData(data.filter((item) => item.key !== key));
                 Notifications.openNotificationWithIcon('success', t('delete_recording_success'));
             })
             .catch((error) => {

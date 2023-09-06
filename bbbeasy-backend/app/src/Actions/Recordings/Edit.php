@@ -29,7 +29,9 @@ use BigBlueButton\Parameters\PublishRecordingsParameters;
 use BigBlueButton\Parameters\UpdateRecordingsParameters;
 use Enum\ResponseCode;
 use Models\Room;
+use Respect\Validation\Validator;
 use Utils\BigBlueButtonRequester;
+use Validation\DataChecker;
 
 /**
  * Class Edit.
@@ -45,61 +47,76 @@ class Edit extends BaseAction
     public function save($f3, $params): void
     {
         $recordId = $params['id'];
+
         $body     = $this->getDecodedBody();
         $form     = $body['data'];
+        $dataChecker = new DataChecker();
+        $dataChecker->verify($form['name'], Validator::notEmpty()->setName('name'));
+        $errorMessage = 'Recording could not be updated';
         $room     = new Room();
         if ($room->getRecordingByRecordId($recordId)) {
-            $recording = $room->getRecordingByRecordId($recordId, true);
+            if ($dataChecker->allValid()) {
 
-            $bbbRequester = new BigBlueButtonRequester();
-            $editParams   = new UpdateRecordingsParameters($recordId);
 
-            $recordName  = $form['name'];
-            $recordState = $form['state'];
+                $recording = $room->getRecordingByRecordId($recordId, true);
 
-            if ($recordName !== $recording['name']) {
-                $editParams->addMeta('name', $recordName);
-                $this->logger->info('Received request to edit recording', ['recordID' => $recordId]);
-                $editResponse = $bbbRequester->updateRecordings($editParams);
-                if ($editResponse->success() && $editResponse->isUpdated()) {
-                    $this->logger->info('Recording name successfully updated', ['recordID' => $recordId]);
-                    $newRecording = $room->getRecordingByRecordId($recordId, true);
-                    $this->renderJson(['result' => 'success', 'recording' => $newRecording]);
-                } else {
-                    $this->logger->error('Recording could not be updated', ['recordID' => $recordId, 'error' => $editResponse->getMessage()]);
-                    $this->renderJson([], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-                }
-            }
 
-            if ($recordState !== $recording['state']) {
-                $publish = 'published' === $form['state'] ? true : ('unpublished' === $form['state'] ? false : null);
+                $bbbRequester = new BigBlueButtonRequester();
+                $editParams = new UpdateRecordingsParameters($recordId);
 
-                if ('published' === $form['state'] || 'unpublished' === $form['state']) {
-                    $publish = 'published' === $form['state'] ? true : false;
+                $recordName = $form['name'];
 
-                    $publishParams   = new PublishRecordingsParameters($recordId, $publish);
-                    $publishResponse = $bbbRequester->publishRecordings($publishParams);
 
-                    if ($publishResponse->success() && ($publish && $publishResponse->isPublished() || !$publish && !$publishResponse->isPublished())) {
-                        $this->logger->info('Recording state successfully updated', ['recordID' => $recordId]);
+                $recordState = $form['state'];
+
+                if ($recordName !== $recording['name']) {
+
+                    $editParams->addMeta('name', $recordName);
+                    $this->logger->info('Received request to edit recording', ['recordID' => $recordId]);
+                    $editResponse = $bbbRequester->updateRecordings($editParams);
+                    if ($editResponse->success() && $editResponse->isUpdated()) {
+                        $this->logger->info('Recording name successfully updated', ['recordID' => $recordId]);
                         $newRecording = $room->getRecordingByRecordId($recordId, true);
                         $this->renderJson(['result' => 'success', 'recording' => $newRecording]);
                     } else {
-                        $this->logger->error('Recording state could not be updated', ['recordID' => $recordId, 'error' => $publishResponse->getMessage()]);
-                        $this->renderJson([], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-                    }
-                } else {
-                    $deleteParams   = new DeleteRecordingsParameters($recordId);
-                    $deleteResponse = $bbbRequester->deleteRecordings($deleteParams);
-                    if ($deleteResponse->success() && $deleteResponse->isDeleted()) {
-                        $this->logger->info('Recording  successfully deleted', ['recordID' => $recordId]);
-                        $newRecording = $room->getRecordingByRecordId($recordId, true);
-                        $this->renderJson(['result' => 'success', 'recording' => $newRecording]);
-                    } else {
-                        $this->logger->error('Recording  could not be deleted', ['recordID' => $recordId, 'error' => $deleteResponse->getMessage()]);
+                        $this->logger->error('Recording could not be updated', ['recordID' => $recordId, 'error' => $editResponse->getMessage()]);
                         $this->renderJson([], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
                     }
                 }
+
+                if ($recordState != null && $recordState !== $recording['state']) {
+                    $publish = 'published' === $form['state'] ? true : ('unpublished' === $form['state'] ? false : null);
+
+                    if ('published' === $form['state'] || 'unpublished' === $form['state']) {
+                        $publish = 'published' === $form['state'] ? true : false;
+
+                        $publishParams = new PublishRecordingsParameters($recordId, $publish);
+                        $publishResponse = $bbbRequester->publishRecordings($publishParams);
+
+                        if ($publishResponse->success() && ($publish && $publishResponse->isPublished() || !$publish && !$publishResponse->isPublished())) {
+                            $this->logger->info('Recording state successfully updated', ['recordID' => $recordId]);
+                            $newRecording = $room->getRecordingByRecordId($recordId, true);
+                            $this->renderJson(['result' => 'success', 'recording' => $newRecording]);
+                        } else {
+                            $this->logger->error('Recording state could not be updated', ['recordID' => $recordId, 'error' => $publishResponse->getMessage()]);
+                            $this->renderJson([], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+                        }
+                    } else {
+                        $deleteParams = new DeleteRecordingsParameters($recordId);
+                        $deleteResponse = $bbbRequester->deleteRecordings($deleteParams);
+                        if ($deleteResponse->success() && $deleteResponse->isDeleted()) {
+                            $this->logger->info('Recording  successfully deleted', ['recordID' => $recordId]);
+                            $newRecording = $room->getRecordingByRecordId($recordId, true);
+                            $this->renderJson(['result' => 'success', 'recording' => $newRecording]);
+                        } else {
+                            $this->logger->error('Recording  could not be deleted', ['recordID' => $recordId, 'error' => $deleteResponse->getMessage()]);
+                            $this->renderJson([], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+                        }
+                    }
+                }
+            }else{
+                $this->logger->error($errorMessage, ['errors' => $dataChecker->getErrors()]);
+                $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
             }
         } else {
             $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
