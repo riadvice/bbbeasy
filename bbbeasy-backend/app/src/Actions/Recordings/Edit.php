@@ -48,29 +48,24 @@ class Edit extends BaseAction
     {
         $recordId = $params['id'];
 
-        $body     = $this->getDecodedBody();
-        $form     = $body['data'];
+        $body        = $this->getDecodedBody();
+        $form        = $body['data'];
         $dataChecker = new DataChecker();
         $dataChecker->verify($form['name'], Validator::notEmpty()->setName('name'));
         $errorMessage = 'Recording could not be updated';
-        $room     = new Room();
+        $room         = new Room();
         if ($room->getRecordingByRecordId($recordId)) {
             if ($dataChecker->allValid()) {
-
-
                 $recording = $room->getRecordingByRecordId($recordId, true);
 
-
                 $bbbRequester = new BigBlueButtonRequester();
-                $editParams = new UpdateRecordingsParameters($recordId);
+                $editParams   = new UpdateRecordingsParameters($recordId);
 
                 $recordName = $form['name'];
-
 
                 $recordState = $form['state'];
 
                 if ($recordName !== $recording['name']) {
-
                     $editParams->addMeta('name', $recordName);
                     $this->logger->info('Received request to edit recording', ['recordID' => $recordId]);
                     $editResponse = $bbbRequester->updateRecordings($editParams);
@@ -84,13 +79,13 @@ class Edit extends BaseAction
                     }
                 }
 
-                if ($recordState != null && $recordState !== $recording['state']) {
+                if (null !== $recordState && $recordState !== $recording['state']) {
                     $publish = 'published' === $form['state'] ? true : ('unpublished' === $form['state'] ? false : null);
 
                     if ('published' === $form['state'] || 'unpublished' === $form['state']) {
                         $publish = 'published' === $form['state'] ? true : false;
 
-                        $publishParams = new PublishRecordingsParameters($recordId, $publish);
+                        $publishParams   = new PublishRecordingsParameters($recordId, $publish);
                         $publishResponse = $bbbRequester->publishRecordings($publishParams);
 
                         if ($publishResponse->success() && ($publish && $publishResponse->isPublished() || !$publish && !$publishResponse->isPublished())) {
@@ -102,7 +97,7 @@ class Edit extends BaseAction
                             $this->renderJson([], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
                         }
                     } else {
-                        $deleteParams = new DeleteRecordingsParameters($recordId);
+                        $deleteParams   = new DeleteRecordingsParameters($recordId);
                         $deleteResponse = $bbbRequester->deleteRecordings($deleteParams);
                         if ($deleteResponse->success() && $deleteResponse->isDeleted()) {
                             $this->logger->info('Recording  successfully deleted', ['recordID' => $recordId]);
@@ -114,7 +109,7 @@ class Edit extends BaseAction
                         }
                     }
                 }
-            }else{
+            } else {
                 $this->logger->error($errorMessage, ['errors' => $dataChecker->getErrors()]);
                 $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
             }
