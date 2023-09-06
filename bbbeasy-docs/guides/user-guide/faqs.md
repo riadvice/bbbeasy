@@ -1,5 +1,5 @@
 ---
-sidebar_position: 1
+sidebar_position: 15
 id: introduction-faqs
 title: 'Frequently Asked Questions 🙋'
 sidebar_label: 'FAQs'

@@ -4,15 +4,15 @@
  * Copyright (c) 2022-2023 RIADVICE SUARL and by respective authors (see below).
  *
  * This program is free software; you can redistribute it and/or modify it under the
- * terms of the GNU Lesser General Public License as published by the Free Software
+ * terms of the GNU Affero General Public License as published by the Free Software
  * Foundation; either version 3.0 of the License, or (at your option) any later
  * version.
  *
- * BBBEasy is distributed in the hope that it will be useful, but WITHOUT ANY
+ * BBBeasy is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
- * PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License along
+ * You should have received a copy of the GNU Affero General Public License along
  * with BBBEasy; if not, see <http://www.gnu.org/licenses/>.
  */
 
@@ -278,7 +278,13 @@ const PresetsCol: React.FC<PresetColProps> = ({
                         <Space>
                             {!isEditing ? (
                                 <>
-                                    <span>{preset['name']}</span>
+                                    <Tooltip
+                                        key="tooltipLabels"
+                                        overlayClassName="install-tooltip"
+                                        title={preset['name']}
+                                    >
+                                        <div className='preset-name'>{preset['name']}</div>
+                                    </Tooltip>
                                     {isShown && editName && !isDefault && (
                                         <Button
                                             className="edit-btn"
@@ -552,7 +558,7 @@ const PresetsCol: React.FC<PresetColProps> = ({
 
                                                     {item.type === 'integer' && (
                                                         <InputNumber
-                                                            min={1}
+                                                            min={0}
                                                             max={100}
                                                             defaultValue={item.value}
                                                             placeholder={t(item.name)}
@@ -645,6 +651,10 @@ const Presets = () => {
 
     //edit
     const editPreset = (newPreset: MyPresetType, oldPreset: MyPresetType) => {
+        if(newPreset.name == oldPreset.name){
+            Notifications.openNotificationWithIcon('info', t('no_changes'));
+            return
+        }
         const newPresets = [...myPresets];
         const index = newPresets.findIndex((item) => oldPreset.id === item.id);
         if (index > -1 && newPreset != undefined) {
