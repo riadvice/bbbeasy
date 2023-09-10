@@ -71,7 +71,7 @@ class ChangePassword extends BaseAction
                     $this->logger->error($errorMessage, ['error' => $common]);
                     $this->renderJson(['message' => $common], $responseCode);
                 } elseif ($user->verifyPassword($password)) {
-                    $message = 'New password old password must be different';
+                    $message = 'New and old password must be different';
                     $this->logger->error($errorMessage, ['error' => $message]);
                     $this->renderJson(['message' => $message], $responseCode);
                 } else {
@@ -96,23 +96,6 @@ class ChangePassword extends BaseAction
     {
         try {
             $user->password = $password;
-            $compliant      = SecurityUtils::isGdprCompliant($password);
-
-            $common = SecurityUtils::credentialsAreCommon($user->username, $user->email, $password);
-
-            if (true !== $compliant) {
-                $this->logger->error($errorMessage, ['error' => $compliant]);
-                $this->renderJson(['message' => $compliant], ResponseCode::HTTP_PRECONDITION_FAILED);
-
-                return;
-            }
-            if ($common) {
-                $this->logger->error($errorMessage, ['error' => $common]);
-                $this->renderJson(['message' => $common], ResponseCode::HTTP_PRECONDITION_FAILED);
-
-                return;
-            }
-
             $user->status = UserStatus::ACTIVE;
             $resetToken->save();
             $user->save();

@@ -22,19 +22,27 @@ declare(strict_types=1);
 
 namespace Utils;
 
+use Models\User;
+
 class SecurityUtils
 {
     public static string $GDPR_PATTERN = '/^(?=(.*[a-z]){1,})(?=(.*[A-Z]){1,})(?=(.*[\d]){1,})(?=(.*[!@#$%^&*()\-__+.]){1,}).{8,}$/';
 
     public static function credentialsAreCommon(string $username, string $email, string $password): string|null
     {
-        // @fixme: to be cached, reload to cache if update time changed
-        foreach (json_decode(\Base::instance()->read('security/dictionary/en-US.json')) as $word) {
-            $checkVars = [$username, $email, $word];
-            if (\in_array($password, $checkVars, true)) {
+        $user=new User();
+
+
+        $users=$user->getUsers($username,$email);
+
+        foreach ($users as $user1){
+            $user=$user->getByEmail($user1['email']);
+            if($user->verifyPassword($password)){
                 return 'Avoid choosing a common password';
             }
         }
+        // @fixme: to be cached, reload to cache if update time changed
+
 
         return null;
     }
