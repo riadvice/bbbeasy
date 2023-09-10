@@ -33,7 +33,11 @@ class RecordingsService {
             data,
         });
     }
-
+    publish_recording(id: string, data: object) {
+        return axiosInstance.put(apiRoutes.PUBLISH_RECORDING_URL + id, {
+            data,
+        });
+    }
     delete_recording(id: string) {
         return axiosInstance.delete(apiRoutes.DELETE_RECORDING_URL + id);
     }

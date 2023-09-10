@@ -201,6 +201,7 @@ final class RoleTest extends Scenario
  
         $test->expect(empty(array_udiff($data, $role->getRoleInfos(), static fn ($obj1, $obj2) => $obj1 === $obj2)), 'getRoleInfos() returned role informations');
  
+  
 
         return $test->results();
     }

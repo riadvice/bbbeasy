@@ -249,8 +249,9 @@ class Room extends BaseModel
     public function getRecordingInfo(Record $record, array $attendees): array
     {
         $recordingId = $record->getRecordId();
-        if (\array_key_exists('HVname', $record->getMetas())) {
-            $recordingName = $record->getMetas()['HVname'];
+
+        if (\array_key_exists('name', $record->getMetas())) {
+            $recordingName = $record->getMetas()['name'];
         } else {
             $recordingName = $record->getName();
         }
