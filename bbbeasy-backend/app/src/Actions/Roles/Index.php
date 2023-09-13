@@ -25,14 +25,34 @@ namespace Actions\Roles;
 use Actions\Base as BaseAction;
 use Actions\RequirePrivilegeTrait;
 use Models\Role;
-
+use Models\User;
 /**
  * Class Index.
  */
 class Index extends BaseAction
 {
     use RequirePrivilegeTrait;
-
+    public function beforeroute(): void
+    {
+        if ( null === $this->session->get('user')) {
+            $this->logger->warning('Access denied to route ');
+            $this->f3->error(401);
+        }
+        else{
+            $user  = new User();
+            $user_id   = $this->session->get('user.id');
+         
+            $Infos=$user->getById($user_id);
+           
+            $permissions =  $Infos->role->getRolePermissions();
+             
+            if(!is_array($permissions)||!isset($permissions['roles'])){
+                $this->logger->warning('Access denied to route ');
+                $this->f3->error(401);
+            }
+           
+        }
+    }
     /**
      * @param mixed $f3
      * @param mixed $params

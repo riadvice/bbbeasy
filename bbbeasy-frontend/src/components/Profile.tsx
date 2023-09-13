@@ -53,8 +53,9 @@ type formType = {
 let accountForm: FormInstance = null;
 
 const Profile = () => {
-    const currentUser: UserType = AuthService.getCurrentUser();
-    console.log(currentUser.avatar);
+    const currentUser : UserType  = AuthService.getCurrentUser()
+            
+    
     const initialAddValues: formType = {
         username: currentUser.username,
         email: currentUser.email,

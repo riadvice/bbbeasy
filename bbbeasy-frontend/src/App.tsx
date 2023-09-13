@@ -61,7 +61,7 @@ const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
     const [dataRooms, setDataRooms] = React.useState<RoomType[]>([]);
     const [dataLabels, setDataLabels] = React.useState<LabelType[]>([]);
     const [dataPresets, setDataPresets] = React.useState<PresetType[]>([]);
-
+    const [data, setData] = React.useState(null);
     const dataProvider = useMemo(
         () => ({ dataRooms, setDataRooms, dataLabels, setDataLabels, dataPresets, setDataPresets }),
         [dataRooms, setDataRooms, dataLabels, setDataLabels, dataPresets, setDataPresets]
@@ -130,13 +130,17 @@ const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
                 }
             }
         });
-        const user: UserType = AuthService.getCurrentUser();
+        let user: UserType = AuthService.getCurrentUser();
         const session: SessionType = AuthService.getCurrentSession();
         if (user != null && session != null) {
-            setCurrentUser(user);
+              AuthService.collectCurrentUser().then((response) => {
+               
+           
+            setCurrentUser(response);
             setCurrentSession(session);
             setIsLogged(true);
-
+            user = response
+            console.log("userpermissions", user)
             const allowedGroups = Object.keys(user.permissions);
             if (allowedGroups.length != 0) {
                 if (AuthService.isAllowedGroup(allowedGroups, 'logs')) {
@@ -152,34 +156,42 @@ const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
                     getPresets(user.id);
                 }
             }
+            setData(true);
+        });
+        }
+        else {
+            setIsLogged(false);
+            setData(true);
         }
     }, []);
 
     return (
-        <StyleProvider hashPriority="high" transformers={[legacyLogicalPropertiesTransformer]}>
-            <Layout className={LocaleService.direction == 'rtl' ? 'page-layout-content-rtl' : 'page-layout-content'}>
-                <ConfigProvider
-                    theme={customTheme}
-                    locale={LocaleService.antLocale}
-                    direction={LocaleService.direction}
-                    componentSize="large"
-                >
-                    <UserContext.Provider value={userProvider}>
-                        <DataContext.Provider value={dataProvider}>
-                            {isLogged && isSider && <AppSider presets={dataPresets} />}
-                            <Layout className="page-layout-body">
-                                <AppHeader />
-                                <Content className="site-content">
-                                    <Router routes={routes} />
-                                </Content>
-                                <AppFooter />
-                            </Layout>
-                        </DataContext.Provider>
-                    </UserContext.Provider>
-                </ConfigProvider>
-                <FloatButton.BackTop />
-            </Layout>
-        </StyleProvider>
+        <> 
+        {data &&   <StyleProvider hashPriority="high" transformers={[legacyLogicalPropertiesTransformer]}>
+        <Layout className={LocaleService.direction == 'rtl' ? 'page-layout-content-rtl' : 'page-layout-content'}>
+            <ConfigProvider
+                theme={customTheme}
+                locale={LocaleService.antLocale}
+                direction={LocaleService.direction}
+                componentSize="large"
+            >
+                <UserContext.Provider value={userProvider}>
+                    <DataContext.Provider value={dataProvider}>
+                        {isLogged && isSider && <AppSider presets={dataPresets} />}
+                        <Layout className="page-layout-body">
+                            <AppHeader />
+                            <Content className="site-content">
+                                <Router routes={routes} />
+                            </Content>
+                            <AppFooter />
+                        </Layout>
+                    </DataContext.Provider>
+                </UserContext.Provider>
+            </ConfigProvider>
+            <FloatButton.BackTop />
+        </Layout>
+    </StyleProvider>}
+    </>
     );
 };
 

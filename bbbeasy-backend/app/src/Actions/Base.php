@@ -111,6 +111,15 @@ abstract class Base extends \Prefab
 
     public function beforeroute(): void
     {
+     
+    
+    if($this->session->isLoggedIn()&&!$this->session->getSession(session_id())){
+    
+     $this->session->revokeUser();
+      
+     $this->f3->error(401);
+       die();
+    }
         $this->access->authorize($this->getRole(), function($route, $subject): void {
             $this->onAccessAuthorizeDeny($route, $subject);
         });
@@ -125,12 +134,15 @@ abstract class Base extends \Prefab
             $uri = preg_replace('/\/' . $this->f3->get('PARAMS.page') . '$/', '/1', $uri);
             $this->f3->reroute($uri);
         }
+ 
     }
 
     public function onAccessAuthorizeDeny($route, $subject): void
     {
         $this->logger->warning('Access denied to route ' . $route . ' for subject ' . ($subject ?: 'unknown'));
-        $this->f3->error(404);
+   		$this->session->revokeUser();
+        $this->f3->error(401);
+       die();
     }
 
     /**

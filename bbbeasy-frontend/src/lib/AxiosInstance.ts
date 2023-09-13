@@ -15,9 +15,36 @@
  * You should have received a copy of the GNU Affero General Public License along
  * with BBBEasy; if not, see <http://www.gnu.org/licenses/>.
  */
-
-import axios from 'axios';
-
-axios.defaults.withCredentials = true;
-
-export const axiosInstance = axios.create();
+ 
+import axios from 'axios'; 
+import { apiRoutes } from '../routing/backend-config'; 
+ axios.defaults.withCredentials = true;
+const interceptor = axios.create();
+  const logout=()=> {
+        return interceptor.get(apiRoutes.LOGOUT_URL);
+    }
+interceptor.interceptors.response.use(response => {
+   return response;
+}, error => {
+  if (error.response.status === 401) {
+  
+  logout()
+            .then(() => {
+   console.log("Unauthorized");
+   
+              
+                localStorage.removeItem('user');
+               
+                localStorage.removeItem('session');
+                
+                window.location.href ='/login';
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+  
+  }
+  return error;
+});
+ 
+export const axiosInstance = interceptor;
