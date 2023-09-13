@@ -92,7 +92,7 @@ const Login = () => {
                     setCurrentSession(session_infos);
                     setIsLogged(true);
                     setSuccessful(true);
-                    navigate('/login');
+                    navigate('/');
                 }
             })
             .catch((error) => {

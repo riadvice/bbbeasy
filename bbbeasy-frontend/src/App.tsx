@@ -134,13 +134,12 @@ const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
         const session: SessionType = AuthService.getCurrentSession();
         if (user != null && session != null) {
               AuthService.collectCurrentUser().then((response) => {
-               
-           
+                if(response) {
             setCurrentUser(response);
             setCurrentSession(session);
             setIsLogged(true);
             user = response
-            console.log("userpermissions", user)
+          
             const allowedGroups = Object.keys(user.permissions);
             if (allowedGroups.length != 0) {
                 if (AuthService.isAllowedGroup(allowedGroups, 'logs')) {
@@ -156,18 +155,20 @@ const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
                     getPresets(user.id);
                 }
             }
-            setData(true);
+           
+                setData(true);
+            }
         });
         }
         else {
-            setIsLogged(false);
+            
             setData(true);
         }
     }, []);
 
     return (
-        <> 
-        {data &&   <StyleProvider hashPriority="high" transformers={[legacyLogicalPropertiesTransformer]}>
+     
+         <StyleProvider hashPriority="high" transformers={[legacyLogicalPropertiesTransformer]}>
         <Layout className={LocaleService.direction == 'rtl' ? 'page-layout-content-rtl' : 'page-layout-content'}>
             <ConfigProvider
                 theme={customTheme}
@@ -177,12 +178,12 @@ const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
             >
                 <UserContext.Provider value={userProvider}>
                     <DataContext.Provider value={dataProvider}>
-                        {isLogged && isSider && <AppSider presets={dataPresets} />}
+                        {data && isLogged && isSider && <AppSider presets={dataPresets} />}
                         <Layout className="page-layout-body">
                             <AppHeader />
-                            <Content className="site-content">
+                            {data &&   <Content className="site-content">
                                 <Router routes={routes} />
-                            </Content>
+                            </Content>}
                             <AppFooter />
                         </Layout>
                     </DataContext.Provider>
@@ -190,8 +191,8 @@ const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
             </ConfigProvider>
             <FloatButton.BackTop />
         </Layout>
-    </StyleProvider>}
-    </>
+    </StyleProvider>
+    
     );
 };
 

@@ -74,7 +74,7 @@ class AuthService {
     getCurrentUser() {
        
         const userStr: string = localStorage.getItem('user');
-        console.log('user',userStr)
+        
         if (userStr) return JSON.parse(userStr);
        
         return null;
@@ -83,14 +83,14 @@ class AuthService {
         let currentUser : UserType  = null
         await this.getUser()
         .then((response) => {
-            console.log('response', response.data.user.id )
+           
             if (
                
                 response.data.user.id  
             ) {
               
                   currentUser= response.data.user;
-                  console.log(currentUser)
+                 
                   this.addCurrentUser(currentUser)
                   return currentUser
             }

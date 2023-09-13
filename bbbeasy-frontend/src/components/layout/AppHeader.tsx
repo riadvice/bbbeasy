@@ -78,18 +78,7 @@ const AppHeader = () => {
     const isRoomsSearch = location.pathname.includes('rooms');
     const [logo, setLogo] = React.useState<string>('');
     const isLoginPage = location.pathname.includes('login');
-    if (isLoginPage) {
-        setIsLogged(false);
-    }
-    settingsService
-        .collect_settings()
-        .then((response) => {
-            const settings: SettingsType = response.data;
-            setLogo(settings.logo);
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+  
     const logout = () => {
         AuthService.logout()
             .then(() => {
@@ -126,6 +115,18 @@ const AppHeader = () => {
     };
 
     useEffect(() => {
+        if (isLoginPage) {
+            setIsLogged(false);
+        }
+        settingsService
+            .collect_settings()
+            .then((response) => {
+                const settings: SettingsType = response.data;
+                setLogo(settings.logo);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
         notificationService
             .collect_notification()
             .then((response) => {

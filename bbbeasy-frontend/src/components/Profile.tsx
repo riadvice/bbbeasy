@@ -84,7 +84,7 @@ const Profile = () => {
         AuthService.edit_account(formValues)
             .then((response) => {
                 const user = response.data.user;
-                console.log(user);
+              
                 if (user) {
                     //remove passwords from form
                     accountForm.resetFields(['current_password', 'new_password', 'confirm_new_password']);

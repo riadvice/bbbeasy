@@ -50,10 +50,10 @@ class Edit extends BaseAction
            
             $permissions =  $Infos->role->getRolePermissions();
              
-            if(!is_array($permissions)||!isset($permissions['users'])){
+            /*if(!is_array($permissions)||!isset($permissions['users'])){
                 $this->logger->warning('Access denied to route ');
                 $this->f3->error(401);
-            }
+            }*/
            
         }
     }
