@@ -120,7 +120,7 @@ abstract class Base extends \Prefab
             $this->f3->error(401); 
             die();
         }
-    
+ 
         $this->access->authorize( $this->getRole(), function($route, $subject): void {
             $this->onAccessAuthorizeDeny($route, $subject);
         });
@@ -141,6 +141,7 @@ abstract class Base extends \Prefab
 
     public function onAccessAuthorizeDeny($route, $subject): void
     {
+    
         $this->logger->warning('Access denied to route ' . $route . ' for subject ' . ($subject ?: 'unknown'));
         if(!$this->session->isLoggedIn() ){
             $this->f3->error(401); 
