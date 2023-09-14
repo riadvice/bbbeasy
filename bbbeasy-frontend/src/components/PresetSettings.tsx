@@ -49,7 +49,6 @@ const PresetSettings = () => {
             })
             .catch((error) => {
                 setIsLoading(false);
-               
             });
 
         const presetSettingsActions = AuthService.getActionsPermissionsByGroup('preset_settings');

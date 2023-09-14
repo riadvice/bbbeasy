@@ -17,8 +17,8 @@
  */
 
 import pino from 'pino';
-import { apiRoutes } from '../routing/backend-config';
-import { axiosInstance } from './AxiosInstance';
+import {apiRoutes} from '../routing/backend-config';
+import {axiosInstance} from './AxiosInstance';
 
 const levels = {
     http: 10,

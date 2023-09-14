@@ -27,7 +27,7 @@ use DB\SQL\Session as SQLSession;
 use Log\LogWriterTrait;
 use Models\User;
 use Session as F3Session;
-use Models\UserSession;
+
 class Session extends \Prefab
 {
     use LogWriterTrait;
@@ -99,26 +99,6 @@ class Session extends \Prefab
     {
         $this->f3->set('SESSION.' . $key, $value);
         $this->f3->sync('SESSION');
-    }
-
-    public function getSession($sessionId)
-    {
-<<<<<<< HEAD
-        $userSession  = new UserSession();
-        $userSession  = $this->getBySId($sessionId);
-        // $result  = $this->db->exec('SELECT expires FROM users_sessions where session_id = :session', [':session' => $sessionId]);
-    
-         
-        if ($result) {
-=======
-        $result = $this->db->exec('SELECT expires FROM users_sessions where session_id = :session', [':session' => $sessionId]);
-
-        if (\count($result) < 1) {
->>>>>>> e5f65f63c5001f8831b6a93822d2a1d859ea5c58
-            return false;
-        }
-
-        return true;
     }
 
     /**

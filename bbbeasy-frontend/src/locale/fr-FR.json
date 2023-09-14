@@ -79,7 +79,7 @@
     "email_instructions": "pour recevoir un e-mail contenant des instructions sur la façon de déverrouiller votre compte",
     "invalid_password": "Le mot de passe doit contenir au moins un chiffre, une lettre majuscule, une lettre minuscule et un caractère spécial",
     "common_password": "Évitez de choisir un mot de passe courant",
-    "new-old-password":"Le nouveau et l'ancien mot de passe doivent être différents",
+    "new-old-password": "Le nouveau et l'ancien mot de passe doivent être différents",
     "already_used_password": "Le nouveau mot de passe ne peut pas être le même que votre ancien mot de passe",
     "success_change_password": "Mot de passe changé avec succès",
     "error_change_password": "Le mot de passe n'a pas pu être modifié",
