@@ -111,6 +111,8 @@ abstract class Base extends \Prefab
 
     public function beforeroute(): void
     {
+       
+
         $this->access->authorize($this->getRole(), function($route, $subject): void {
             $this->onAccessAuthorizeDeny($route, $subject);
         });
@@ -121,7 +123,7 @@ abstract class Base extends \Prefab
             $this->f3->reroute($uri);
         }
     }
-
+ 
     public function onAccessAuthorizeDeny($route, $subject): void
     {
         $this->logger->warning('Access denied to route ' . $route . ' for subject ' . ($subject ?: 'unknown'));
