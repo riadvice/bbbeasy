@@ -103,18 +103,18 @@ class Session extends \Prefab
 
     public function getSession($sessionId)
     {
-<<<<<<< HEAD
+ 
         $userSession  = new UserSession();
         $userSession  = $this->getBySId($sessionId);
         // $result  = $this->db->exec('SELECT expires FROM users_sessions where session_id = :session', [':session' => $sessionId]);
     
          
         if ($result) {
-=======
+ 
         $result = $this->db->exec('SELECT expires FROM users_sessions where session_id = :session', [':session' => $sessionId]);
 
         if (\count($result) < 1) {
->>>>>>> e5f65f63c5001f8831b6a93822d2a1d859ea5c58
+ 
             return false;
         }
 
