@@ -35,7 +35,7 @@ use Validation\DataChecker;
 class Add extends BaseAction
 {
     use RequirePrivilegeTrait;
-  
+
     /**
      * @param mixed $f3
      * @param mixed $params

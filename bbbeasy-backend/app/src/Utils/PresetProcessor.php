@@ -33,12 +33,9 @@ use Enum\Presets\LearningDashboard;
 use Enum\Presets\LockSettings;
 use Enum\Presets\Presentation;
 use Enum\Presets\Recording;
- 
-use Enum\Presets\Security;
- 
 use Enum\Presets\Screenshare;
+use Enum\Presets\Security;
 use Enum\Presets\UserExperience;
- 
 use Enum\Presets\Webcams;
 use Enum\Presets\Whiteboard;
 
@@ -80,10 +77,8 @@ class PresetProcessor
         $presetsData->setData(BreakoutRooms::GROUP_NAME, BreakoutRooms::PRIVATE_CHAT, $preparePresetData[BreakoutRooms::GROUP_NAME][BreakoutRooms::PRIVATE_CHAT]);
 
         $presetsData->setData(General::GROUP_NAME, General::DURATION, $preparePresetData[General::GROUP_NAME][General::DURATION] ?: null);
- 
 
         $presetsData->setData(General::GROUP_NAME, General::MAXIMUM_PARTICIPANTS, $preparePresetData[General::GROUP_NAME][General::MAXIMUM_PARTICIPANTS] ?: null);
- 
 
         $presetsData->setData(General::GROUP_NAME, General::MAXIMUM_PARTICIPANTS, $preparePresetData[General::GROUP_NAME][General::MAXIMUM_PARTICIPANTS] ?: null);
         $presetsData->setData(General::GROUP_NAME, General::WELCOME, $preparePresetData[General::GROUP_NAME][General::WELCOME]);
@@ -104,14 +99,12 @@ class PresetProcessor
         $presetsData->setData(Recording::GROUP_NAME, Recording::AUTO_START, $preparePresetData[Recording::GROUP_NAME][Recording::AUTO_START]);
         $presetsData->setData(Recording::GROUP_NAME, Recording::ALLOW_START_STOP, $preparePresetData[Recording::GROUP_NAME][Recording::ALLOW_START_STOP]);
         $presetsData->setData(Recording::GROUP_NAME, Recording::RECORD, $preparePresetData[Recording::GROUP_NAME][Recording::RECORD]);
- 
 
         $presetsData->setData(Security::GROUP_NAME, Security::PASSWORD_FOR_MODERATOR, $preparePresetData[Security::GROUP_NAME][Security::PASSWORD_FOR_MODERATOR]);
         $presetsData->setData(Security::GROUP_NAME, Security::PASSWORD_FOR_ATTENDEE, $preparePresetData[Security::GROUP_NAME][Security::PASSWORD_FOR_ATTENDEE]);
 
- 
         $presetsData->setData(Screenshare::GROUP_NAME, Screenshare::CONFIGURABLE, $preparePresetData[Screenshare::GROUP_NAME][Screenshare::CONFIGURABLE]);
- 
+
         $presetsData->setData(Webcams::GROUP_NAME, Webcams::VISIBLE_FOR_MODERATOR_ONLY, $preparePresetData[Webcams::GROUP_NAME][Webcams::VISIBLE_FOR_MODERATOR_ONLY]);
         $presetsData->setData(Webcams::GROUP_NAME, Webcams::MODERATOR_ALLOWED_CAMERA_EJECT, $preparePresetData[Webcams::GROUP_NAME][Webcams::MODERATOR_ALLOWED_CAMERA_EJECT]);
 

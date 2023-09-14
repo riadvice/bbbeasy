@@ -33,7 +33,7 @@ use Models\User;
 class Index extends BaseAction
 {
     use RequirePrivilegeTrait;
- 
+
     /**
      * @param \Base $f3
      * @param array $params
@@ -49,5 +49,4 @@ class Index extends BaseAction
         $this->logger->debug('collecting users', ['users' => json_encode($users)]);
         $this->renderJson(['users' => $users, 'states' => $states]);
     }
-   
 }

@@ -116,11 +116,13 @@ class User extends BaseModel
     {
         return $this->load(['lower(username) = ? and  id != ?', mb_strtolower($username), $id]);
     }
-    public function getUsers($username,$email){
-        $data = [];
-        $users = $this->find(['username !=  ? and email != ? ', $username,  $email ]);
+
+    public function getUsers($username, $email)
+    {
+        $data  = [];
+        $users = $this->find(['username !=  ? and email != ? ', $username, $email]);
         if ($users) {
-            $data = $users->castAll(['username', 'email','password']);
+            $data = $users->castAll(['username', 'email', 'password']);
         }
 
         return $data;

@@ -54,7 +54,7 @@ class Session extends \Prefab
      */
     public function __construct(SQL $db = null, $table = 'sessions', $force = false, $onsuspect = null, $key = null)
     {
-    $this->db = $db ?: \Registry::get('db');
+        $this->db = $db ?: \Registry::get('db');
         $this->f3 = \Base::instance();
         $this->initLogger();
         if ('CACHE' === $table) {
@@ -100,18 +100,18 @@ class Session extends \Prefab
         $this->f3->set('SESSION.' . $key, $value);
         $this->f3->sync('SESSION');
     }
+
     public function getSession($sessionId)
     {
-   
-         $result  = $this->db->exec('SELECT expires FROM users_sessions where session_id = :session', [':session' => $sessionId]);
-    
-         
-        if (count($result)<1) {
+        $result = $this->db->exec('SELECT expires FROM users_sessions where session_id = :session', [':session' => $sessionId]);
+
+        if (\count($result) < 1) {
             return false;
         }
 
         return true;
     }
+
     /**
      * @param mixed $key
      *

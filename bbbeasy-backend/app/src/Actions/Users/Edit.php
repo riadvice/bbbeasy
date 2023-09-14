@@ -27,9 +27,10 @@ use Actions\RequirePrivilegeTrait;
 use Enum\ResponseCode;
 use Models\Role;
 use Models\User;
+use Models\UserSession;
 use Respect\Validation\Validator;
 use Validation\DataChecker;
-use Models\UserSession;
+
 /**
  * Class Edit.
  */
@@ -125,20 +126,20 @@ class Edit extends BaseAction
 
         return $user;
     }
-    public function getuser($f3, $params) 
+
+    public function getuser($f3, $params)
     {
-       
-        $user  = new User();
-        $user_id   = $this->session->get('user.id');
-    
-     if(!$user_id) {
-        $this->session->revokeUser();
-      
-        $this->f3->error(401); 
-     }
- 
-        $Infos=$user->getById($user_id);
-       
+        $user    = new User();
+        $user_id = $this->session->get('user.id');
+
+        if (!$user_id) {
+            $this->session->revokeUser();
+
+            $this->f3->error(401);
+        }
+
+        $Infos = $user->getById($user_id);
+
         $userInfos = [
             'id'          => $Infos->id,
             'username'    => $Infos->username,
@@ -152,7 +153,7 @@ class Edit extends BaseAction
             'PHPSESSID' => session_id(),
             'expires'   => $userSession->getSessionExpirationTime(session_id()),
         ];
-    
+
         $this->renderJson(['user' => $userInfos, 'session' => $sessionInfos]);
     }
 }
