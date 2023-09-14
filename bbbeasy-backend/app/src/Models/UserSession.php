@@ -38,11 +38,17 @@ use Models\Base as BaseModel;
 class UserSession extends BaseModel
 {
     protected $table = 'users_sessions';
+    public function getBySId($id): self
+    {
+        $this->load(['session_id = ?', $id]);
 
+        return $this;
+    }
     public function getSessionExpirationTime(string $sessionId): string
     {
-        $result  = $this->db->exec('SELECT expires FROM users_sessions where session_id = :session', [':session' => $sessionId]);
-        $expires = $result[0]['expires'];
+      //  $result  = $this->db->exec('SELECT expires FROM users_sessions where session_id = :session', [':session' => $sessionId]);
+      $result  = $this->getBySId($sessionId);
+      $expires = $result->expires;
         if (!$expires) {
             return date('c', time() + \ini_get('session.cookie_lifetime'));
         }
