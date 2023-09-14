@@ -146,7 +146,7 @@ class Edit extends BaseAction
 
             try {
                 $role->save();
-                $this->session->set('user.role',$role->name);
+               if($roleId==$this->session->set('user.roleId')) $this->session->set('user.role',$role->name);
             } catch (\Exception $e) {
                 $this->logger->error($errorMessage, ['error' => $e->getMessage()]);
                 $this->renderJson(['errors' => $e->getMessage()], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
