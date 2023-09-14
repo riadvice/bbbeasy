@@ -112,17 +112,19 @@ abstract class Base extends \Prefab
     public function beforeroute(): void
     {
      
+     
+        
+        if($this->session->isLoggedIn()&&!$this->session->getSession(session_id())){
+           
+            $this->session->revokeUser();
+            $this->f3->error(401); 
+            die();
+        }
     
-    if($this->session->isLoggedIn()&&!$this->session->getSession(session_id())){
-    
-     $this->session->revokeUser();
-      
-     $this->f3->error(401);
-       die();
-    }
-        $this->access->authorize($this->getRole(), function($route, $subject): void {
+        $this->access->authorize( $this->getRole(), function($route, $subject): void {
             $this->onAccessAuthorizeDeny($route, $subject);
         });
+        
         if ($this->session->isLoggedIn() && $this->f3->get('ALIAS') === $this->f3->get('ALIASES.login')) {
             $this->f3->reroute($this->f3->get('ALIASES.home'));
         } elseif ('POST' === $this->f3->VERB && !$this->session->validateToken()) {
@@ -140,9 +142,11 @@ abstract class Base extends \Prefab
     public function onAccessAuthorizeDeny($route, $subject): void
     {
         $this->logger->warning('Access denied to route ' . $route . ' for subject ' . ($subject ?: 'unknown'));
-   		$this->session->revokeUser();
-        $this->f3->error(401);
-       die();
+        if(!$this->session->isLoggedIn() ){
+            $this->f3->error(401); 
+        
+        }
+        $this->f3->error(403); 
     }
 
     /**

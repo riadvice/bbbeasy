@@ -94,22 +94,22 @@ class Login extends BaseAction
             --$user->password_attempts;
             $user->save();
             $this->logger->error($errorMessage, ['email' => $email]);
-            $this->renderJson(['message' => 'Invalid credentials provided, try again'], ResponseCode::HTTP_OK);
+            $this->renderJson(['message' => 'Invalid credentials provided, try again'], ResponseCode::HTTP_BAD_REQUEST);
         } elseif ($user->valid() && 0 === $user->password_attempts || 1 === $user->password_attempts) {
             $user->password_attempts = 0;
             $user->status            = UserStatus::INACTIVE;
             $user->save();
             $this->logger->error($errorMessage, ['email' => $email]);
-            $this->renderJson(['message' => 'Your account has been locked because you have reached the maximum number of invalid sign-in attempts. You can contact the administrator or click here to receive an email containing instructions on how to unlock your account'], ResponseCode::HTTP_OK);
+            $this->renderJson(['message' => 'Your account has been locked because you have reached the maximum number of invalid sign-in attempts. You can contact the administrator or click here to receive an email containing instructions on how to unlock your account'], ResponseCode::HTTP_BAD_REQUEST);
         } elseif ($user->valid() && (UserStatus::PENDING === $user->status || UserStatus::INACTIVE === $user->status)) {
             $this->logger->error($errorMessage, ['email' => $email]);
-            $this->renderJson(['message' => 'Your account is not active. Please contact your administrator'], ResponseCode::HTTP_OK);
+            $this->renderJson(['message' => 'Your account is not active. Please contact your administrator'], ResponseCode::HTTP_BAD_REQUEST);
         } elseif ($user->valid() && UserStatus::DELETED === $user->status) {
             $this->logger->error($errorMessage, ['email' => $email]);
-            $this->renderJson(['message' => 'Your account has been disabled for violating our terms'], ResponseCode::HTTP_OK);
+            $this->renderJson(['message' => 'Your account has been disabled for violating our terms'], ResponseCode::HTTP_BAD_REQUEST);
         } elseif (!$user->valid()) {
             $this->logger->error($errorMessage, ['email' => $email]);
-            $this->renderJson(['message' => 'Invalid credentials provided, try again'], ResponseCode::HTTP_OK);
+            $this->renderJson(['message' => 'Invalid credentials provided, try again'], ResponseCode::HTTP_BAD_REQUEST);
         }
     }
 }

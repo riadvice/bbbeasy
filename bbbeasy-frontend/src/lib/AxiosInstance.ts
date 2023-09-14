@@ -18,6 +18,7 @@
  
 import axios from 'axios'; 
 import { apiRoutes } from '../routing/backend-config'; 
+ 
  axios.defaults.withCredentials = true;
 const interceptor = axios.create();
   const logout=()=> {
@@ -27,24 +28,24 @@ interceptor.interceptors.response.use(response => {
    return response;
 }, error => {
   if (error.response.status === 401) {
-  
-  logout()
-            .then(() => {
-   console.log("Unauthorized");
-   
-              
-                localStorage.removeItem('user');
-               
-                localStorage.removeItem('session');
+ 
+  logout().then(() => {
+ 
+                localStorage.clear();
+                window.location.href ='/';
                 
-                window.location.href ='/login';
             })
             .catch((error) => {
                 console.log(error);
+                window.location.href ='/';
             });
   
   }
-  return error;
+  if (error.response.status === 400) {
+     
+      return Promise.reject(error);
+    }
+  return Promise.reject(error);
 });
  
 export const axiosInstance = interceptor;

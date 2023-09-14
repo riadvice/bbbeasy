@@ -36,27 +36,7 @@ use Models\UserSession;
 class Edit extends BaseAction
 {
     use RequirePrivilegeTrait;
-    public function beforeroute(): void
-    {
-        if ( null === $this->session->get('user')) {
-            $this->logger->warning('Access denied to route ');
-            $this->f3->error(401);
-        }
-        else{
-            $user  = new User();
-            $user_id   = $this->session->get('user.id');
-         
-            $Infos=$user->getById($user_id);
-           
-            $permissions =  $Infos->role->getRolePermissions();
-             
-            /*if(!is_array($permissions)||!isset($permissions['users'])){
-                $this->logger->warning('Access denied to route ');
-                $this->f3->error(401);
-            }*/
-           
-        }
-    }
+
     /**
      * @param \Base $f3
      * @param array $params
@@ -150,7 +130,13 @@ class Edit extends BaseAction
        
         $user  = new User();
         $user_id   = $this->session->get('user.id');
-     
+    
+     if(!$user_id) {
+        $this->session->revokeUser();
+      
+        $this->f3->error(401); 
+     }
+ 
         $Infos=$user->getById($user_id);
        
         $userInfos = [

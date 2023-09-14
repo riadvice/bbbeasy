@@ -96,6 +96,7 @@ const Login = () => {
                 }
             })
             .catch((error) => {
+                console.log(error)
                 const responseData = error.response.data;
                 if (responseData.message) {
                     setSuccessful(false);

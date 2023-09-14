@@ -79,24 +79,7 @@ class AuthService {
        
         return null;
     }
-    async collectCurrentUser() {
-        let currentUser : UserType  = null
-        await this.getUser()
-        .then((response) => {
-           
-            if (
-               
-                response.data.user.id  
-            ) {
-              
-                  currentUser= response.data.user;
-                 
-                  this.addCurrentUser(currentUser)
-                  return currentUser
-            }
-        })
-        return currentUser;
-    }
+     
     getCurrentSession() {
         const sessionStr: string = localStorage.getItem('session');
         if (sessionStr) return JSON.parse(sessionStr);
