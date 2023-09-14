@@ -36,7 +36,7 @@ class AuthService {
     }
 
     getUser() {
-        return axiosInstance.get(apiRoutes.USER_URL);
+        return axiosInstance.get(apiRoutes.USER_SESSION_URL);
     }
     logout() {
         return axiosInstance.get(apiRoutes.LOGOUT_URL);

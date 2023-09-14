@@ -36,7 +36,7 @@ use Validation\DataChecker;
 class Edit extends BaseAction
 {
     use RequirePrivilegeTrait;
-   
+
     /**
      * @param mixed $f3
      * @param mixed $params
@@ -146,7 +146,9 @@ class Edit extends BaseAction
 
             try {
                 $role->save();
-               if($roleId==$this->session->get('user.roleId')) $this->session->set('user.role',$role->name);
+                if ($roleId === $this->session->get('user.roleId')) {
+                    $this->session->set('user.role', $role->name);
+                }
             } catch (\Exception $e) {
                 $this->logger->error($errorMessage, ['error' => $e->getMessage()]);
                 $this->renderJson(['errors' => $e->getMessage()], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);

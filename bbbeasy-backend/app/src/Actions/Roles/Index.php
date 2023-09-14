@@ -25,14 +25,14 @@ namespace Actions\Roles;
 use Actions\Base as BaseAction;
 use Actions\RequirePrivilegeTrait;
 use Models\Role;
-use Models\User;
+
 /**
  * Class Index.
  */
 class Index extends BaseAction
 {
     use RequirePrivilegeTrait;
-    
+
     /**
      * @param mixed $f3
      * @param mixed $params

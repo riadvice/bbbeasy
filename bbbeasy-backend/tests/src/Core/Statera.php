@@ -280,11 +280,7 @@ class Statera
 
 class Map
 {
-    public function get(): void
-    {
-    }
+    public function get(): void {}
 
-    public function post(): void
-    {
-    }
+    public function post(): void {}
 }

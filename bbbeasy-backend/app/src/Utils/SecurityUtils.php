@@ -30,19 +30,17 @@ class SecurityUtils
 
     public static function credentialsAreCommon(string $username, string $email, string $password): string|null
     {
-        $user=new User();
+        $user = new User();
 
+        $users = $user->getUsers($username, $email);
 
-        $users=$user->getUsers($username,$email);
-
-        foreach ($users as $user1){
-            $user=$user->getByEmail($user1['email']);
-            if($user->verifyPassword($password)){
+        foreach ($users as $user1) {
+            $user = $user->getByEmail($user1['email']);
+            if ($user->verifyPassword($password)) {
                 return 'Avoid choosing a common password';
             }
         }
         // @fixme: to be cached, reload to cache if update time changed
-
 
         return null;
     }
