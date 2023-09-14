@@ -106,7 +106,7 @@ const Users = () => {
                     const states: string[] = response.data.states;
                     setAllStates(states);
                 }
-            }) 
+            })
             .catch((error) => {
                 console.log(error);
             })
@@ -117,15 +117,15 @@ const Users = () => {
     useEffect(() => {
         //Runs only on the first render
         const rolesActions = AuthService.getActionsPermissionsByGroup('roles');
-        if(rolesActions.length){
+        if (rolesActions.length) {
             const isCollect = AuthService.isAllowedAction(rolesActions, 'collect');
             setCollectRolesAction(isCollect);
-    
+
             if (isCollect) {
                 getRoles();
             }
         }
-        
+
         getUsers();
         getBrandColor();
 

@@ -31,8 +31,6 @@ type Props = {
 const ConfirmPassword = (props: Props) => {
     const { dependOn, confirmText } = props;
 
-    
-
     return (
         <Form.Item
             label={<Trans i18nKey={confirmText ?? 'confirm-password.label'} />}
@@ -47,16 +45,16 @@ const ConfirmPassword = (props: Props) => {
                     required: true,
                     message: <Trans i18nKey="confirm-password.required" />,
                 },
-            
-           ({ getFieldValue }) => ({
-            validator(_, value) {
-              if (!value || getFieldValue('password') === value) {
-                return Promise.resolve();
-              }
-              return Promise.reject(new Error(t('passwords-not-match')));
-            },
-          }),
-        ]}
+
+                ({ getFieldValue }) => ({
+                    validator(_, value) {
+                        if (!value || getFieldValue('password') === value) {
+                            return Promise.resolve();
+                        }
+                        return Promise.reject(new Error(t('passwords-not-match')));
+                    },
+                }),
+            ]}
         >
             <PasswordInput placeholder="**********" />
         </Form.Item>

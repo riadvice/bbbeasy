@@ -16,8 +16,8 @@
  * with BBBEasy; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from 'react'; 
-import { Link,   useNavigate } from 'react-router-dom';
+import React from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import AuthService from '../../services/auth.service';
 import Notifications from '../Notifications';
 
@@ -96,7 +96,7 @@ const Login = () => {
                 }
             })
             .catch((error) => {
-                console.log(error)
+                console.log(error);
                 const responseData = error.response.data;
                 if (responseData.message) {
                     setSuccessful(false);

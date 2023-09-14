@@ -28,16 +28,16 @@ class Session extends BaseAction
 {
     public function execute($f3, $params)
     {
-        $user    = new User();
-        $user_id = $this->session->get('user.id');
+        $user   = new User();
+        $userId = $this->session->get('user.id');
 
-        if (!$user_id) {
+        if (!$userId) {
             $this->session->revokeUser();
 
             $this->f3->error(401);
         }
 
-        $Infos = $user->getById($user_id);
+        $Infos = $user->getById($userId);
 
         $userInfos = [
             'id'          => $Infos->id,

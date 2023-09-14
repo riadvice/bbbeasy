@@ -78,7 +78,7 @@ const AppHeader = () => {
     const isRoomsSearch = location.pathname.includes('rooms');
     const [logo, setLogo] = React.useState<string>('');
     const isLoginPage = location.pathname.includes('login');
-  
+
     const logout = () => {
         AuthService.logout()
             .then(() => {

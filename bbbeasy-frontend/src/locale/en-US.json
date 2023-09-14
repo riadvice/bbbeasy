@@ -79,7 +79,7 @@
     "email_instructions": "to receive an email containing instructions on how to unlock your account",
     "invalid_password": "Password must contain at least one number, one uppercase letter, one lowercase letter, and one special character",
     "common_password": "Avoid choosing a common password",
-    "new-old-password":"New and old password must be different",
+    "new-old-password": "New and old password must be different",
     "already_used_password": "New password cannot be the same as your old password",
     "success_change_password": "Password changed successfully",
     "error_change_password": "Password could not be changed",

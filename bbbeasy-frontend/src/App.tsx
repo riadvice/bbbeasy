@@ -21,7 +21,7 @@ import { withTranslation } from 'react-i18next';
 import { IRoute } from './routing/IRoute';
 import Router from './routing/Router';
 import { hot } from 'react-hot-loader';
-import {  useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Layout, ConfigProvider, FloatButton } from 'antd';
 import { StyleProvider, legacyLogicalPropertiesTransformer } from '@ant-design/cssinjs';
 
@@ -132,83 +132,80 @@ const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
         });
         let user: UserType = AuthService.getCurrentUser();
         const session: SessionType = AuthService.getCurrentSession();
-        if (user != null && session != null) {
-              AuthService.getUser().then((response) => {
-                if(response&&response.data.user.id  ) {
-                    user = response.data.user
-                    AuthService.addCurrentUser(user)
-                    setCurrentUser(user);
-                    setCurrentSession(session);
-                    setIsLogged(true);
-            
-          
-                    const allowedGroups = Object.keys(user.permissions);
-                    if (allowedGroups.length != 0) {
-                        if (AuthService.isAllowedGroup(allowedGroups, 'logs')) {
-                            Logger.info(logs);
+        if (session != null) {
+            AuthService.getUserSession()
+                .then((response) => {
+                    if (response && response.data.user.id) {
+                        user = response.data.user;
+                        AuthService.addCurrentUser(user);
+                        setCurrentUser(user);
+                        setCurrentSession(session);
+                        setIsLogged(true);
+
+                        const allowedGroups = Object.keys(user.permissions);
+                        if (allowedGroups.length != 0) {
+                            if (AuthService.isAllowedGroup(allowedGroups, 'logs')) {
+                                Logger.info(logs);
+                            }
+                            if (AuthService.isAllowedGroup(allowedGroups, 'rooms')) {
+                                getRooms(user.id);
+                            }
+                            if (AuthService.isAllowedGroup(allowedGroups, 'labels')) {
+                                getLabels();
+                            }
+                            if (AuthService.isAllowedGroup(allowedGroups, 'presets')) {
+                                getPresets(user.id);
+                            }
                         }
-                        if (AuthService.isAllowedGroup(allowedGroups, 'rooms')) {
-                            getRooms(user.id);
-                        }
-                        if (AuthService.isAllowedGroup(allowedGroups, 'labels')) {
-                            getLabels();
-                        }
-                        if (AuthService.isAllowedGroup(allowedGroups, 'presets')) {
-                            getPresets(user.id);
-                        }
+
+                        setData(true);
+                    } else {
+                        setCurrentSession(null);
+                        setIsLogged(false);
+                        localStorage.clear();
+                        navigate('/');
+                        setData(true);
                     }
-           
-                 setData(true);
-            }
-            else  {
-                setCurrentSession(null);
-                setIsLogged(false);
-                localStorage.clear();
-                navigate('/');
-                setData(true);
-            }
-            
-        }) .catch(() => {
-            setCurrentSession(null);
-            setIsLogged(false);
-            localStorage.clear();
-            navigate('/');
-            setData(true);
-        });
-        }
-        else {
-            
+                })
+                .catch(() => {
+                    setCurrentSession(null);
+                    setIsLogged(false);
+                    localStorage.clear();
+                    navigate('/');
+                    setData(true);
+                });
+        } else {
             setData(true);
         }
     }, []);
 
     return (
-     
-         <StyleProvider hashPriority="high" transformers={[legacyLogicalPropertiesTransformer]}>
-        <Layout className={LocaleService.direction == 'rtl' ? 'page-layout-content-rtl' : 'page-layout-content'}>
-            <ConfigProvider
-                theme={customTheme}
-                locale={LocaleService.antLocale}
-                direction={LocaleService.direction}
-                componentSize="large"
-            >
-                <UserContext.Provider value={userProvider}>
-                    <DataContext.Provider value={dataProvider}>
-                        {data && isLogged && isSider && <AppSider presets={dataPresets} />}
-                        <Layout className="page-layout-body">
-                            <AppHeader />
-                            {data &&   <Content className="site-content">
-                                <Router routes={routes} />
-                            </Content>}
-                            <AppFooter />
-                        </Layout>
-                    </DataContext.Provider>
-                </UserContext.Provider>
-            </ConfigProvider>
-            <FloatButton.BackTop />
-        </Layout>
-    </StyleProvider>
-    
+        <StyleProvider hashPriority="high" transformers={[legacyLogicalPropertiesTransformer]}>
+            <Layout className={LocaleService.direction == 'rtl' ? 'page-layout-content-rtl' : 'page-layout-content'}>
+                <ConfigProvider
+                    theme={customTheme}
+                    locale={LocaleService.antLocale}
+                    direction={LocaleService.direction}
+                    componentSize="large"
+                >
+                    <UserContext.Provider value={userProvider}>
+                        <DataContext.Provider value={dataProvider}>
+                            {data && isLogged && isSider && <AppSider presets={dataPresets} />}
+                            <Layout className="page-layout-body">
+                                <AppHeader />
+                                {data && (
+                                    <Content className="site-content">
+                                        <Router routes={routes} />
+                                    </Content>
+                                )}
+                                <AppFooter />
+                            </Layout>
+                        </DataContext.Provider>
+                    </UserContext.Provider>
+                </ConfigProvider>
+                <FloatButton.BackTop />
+            </Layout>
+        </StyleProvider>
     );
 };
 

@@ -53,9 +53,8 @@ type formType = {
 let accountForm: FormInstance = null;
 
 const Profile = () => {
-    const currentUser : UserType  = AuthService.getCurrentUser()
-            
-    
+    const currentUser: UserType = AuthService.getCurrentUser();
+
     const initialAddValues: formType = {
         username: currentUser.username,
         email: currentUser.email,
@@ -84,7 +83,7 @@ const Profile = () => {
         AuthService.edit_account(formValues)
             .then((response) => {
                 const user = response.data.user;
-              
+
                 if (user) {
                     //remove passwords from form
                     accountForm.resetFields(['current_password', 'new_password', 'confirm_new_password']);
