@@ -65,6 +65,7 @@ class Edit extends BaseAction
                 $label->color       = $form['color'];
 
                 $colorExist = $checkLabel->colorExists($form['color'], $id);
+                // @fixme: ambiguous double cehck for $colorExist
                 if ($colorExist) {
                     if ($colorExist) {
                         $message = ['name' => $nameErrorMessage, 'color' => $colorErrorMessage];
