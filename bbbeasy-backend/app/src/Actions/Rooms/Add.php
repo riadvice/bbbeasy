@@ -89,8 +89,7 @@ class Add extends BaseAction
 
                         try {
                             $room->save();
-
-                            $room = $room->getByNameAndLink($form['name'], $form['shortlink']);
+                            $room = $room->getById($room->lastInsertId());
                         } catch (\Exception $e) {
                             $this->logger->error($errorMessage, ['error' => $e->getMessage()]);
                             $this->renderJson(['errors' => $e->getMessage()], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
@@ -117,7 +116,7 @@ class Add extends BaseAction
                             }
                         }
 
-                        $this->renderJson(['result' => 'success', 'room' => $room->getRoomInfos($room)], ResponseCode::HTTP_CREATED);
+                        $this->renderJson(['result' => 'success', 'room' => $room->getRoomInfos()], ResponseCode::HTTP_CREATED);
                     }
                 } else {
                     $this->logger->error($errorMessage);
