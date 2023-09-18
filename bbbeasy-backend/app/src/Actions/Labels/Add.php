@@ -70,14 +70,14 @@ class Add extends BaseAction
 
             try {
                 $label->save();
-                $label = $label->getLabelByNameAndColor($form['name'], $form['color']);
+                $label = $label->getById($label->lastInsertId());
             } catch (\Exception $e) {
                 $this->logger->error($errorMessage, ['error' => $e->getMessage()]);
                 $this->renderJson(['errors' => $e->getMessage()], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
 
                 return;
             }
-            $this->renderJson(['result' => 'success', 'label' => $label->getLabelInfos($label)], ResponseCode::HTTP_CREATED);
+            $this->renderJson(['result' => 'success', 'label' => $label->getLabelInfos()], ResponseCode::HTTP_CREATED);
         } else {
             $this->logger->error($errorMessage, ['errors' => $dataChecker->getErrors()]);
             $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
