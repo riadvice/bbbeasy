@@ -241,7 +241,7 @@ class User extends BaseModel
             $this->password_attempts = 3;
 
             $this->save();
-            $userId = $this->getByEmail($email)->id;
+            $this->getById($this->lastInsertId());
         } catch (\Exception $e) {
             $this->logger->error($errorMessage, ['user' => $this->toArray(), 'error' => $e->getMessage()]);
 

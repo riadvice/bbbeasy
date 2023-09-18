@@ -47,9 +47,11 @@ class Label extends BaseModel
     /**
      * Get label record by id value.
      *
+     * @param mixed $id
+     *
      * @return $this
      */
-    public function getById(int $id): self
+    public function getById($id): self
     {
         $this->load(['id = ?', $id]);
 
@@ -92,21 +94,41 @@ class Label extends BaseModel
         $labels = $this->find([], ['order' => 'id']);
         if ($labels) {
             foreach ($labels as $label) {
-                $data[] = $label->getLabelInfos($label);
+                $data[] = $label->getLabelInfos();
             }
         }
 
         return $data;
     }
 
-    public function getLabelInfos($label): array
+    public function saveLabel($name, $description, $color, $successMessage, $errorMessage): bool|string
+    {
+        try {
+            $this->name        = $name;
+            $this->description = $description;
+            $this->color       = $color;
+
+            $this->save();
+            $this->getByColor($color);
+        } catch (\Exception $e) {
+            $this->logger->error($errorMessage, ['label' => $this->toArray(), 'error' => $e->getMessage()]);
+
+            return false;
+        }
+
+      $this->logger->info($successMessage, ['label' => $this->toArray()]);
+
+        return true;
+    }
+
+    public function getLabelInfos(): array
     {
         return [
-            'key'         => $label->id,
-            'name'        => $label->name,
-            'description' => $label->description,
-            'color'       => $label->color,
-            'nb_rooms'    => \count($label->getRooms($label->id)),
+            'key'         => $this->id,
+            'name'        => $this->name,
+            'description' => $this->description,
+            'color'       => $this->color,
+            'nb_rooms'    => \count($this->getRooms($this->id)),
         ];
     }
 
