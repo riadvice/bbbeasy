@@ -376,6 +376,14 @@ run_migrations() {
 }
 
 #
+# Run Containers
+#
+run_containers() {
+  echo "► Running Containers"
+  sudo docker-compose up -d -f "$BASEDIR/docker/docker-compose.yml"
+}
+
+#
 # Generate code quality metrics
 #
 generate_metrics() {
@@ -504,6 +512,12 @@ run() {
 
     if [ "$1" = "--migrate" -o "$1" = "-migrate" -o "$1" = "-m" ]; then
       run_migrations
+      shift
+      continue
+    fi
+
+    if [ "$1" = "--containers" -o "$1" = "-containers" -o "$1" = "-rc" ]; then
+      run_containers
       shift
       continue
     fi

@@ -210,16 +210,21 @@ install_docker() {
   wget -nc https://raw.githubusercontent.com/riadvice/bbbeasy/master/docker/phinx.yml
   wget -nc https://raw.githubusercontent.com/riadvice/bbbeasy/master/docker/php.ini
   wget -nc https://raw.githubusercontent.com/riadvice/bbbeasy/master/docker/www-bbbeasy.conf
+  wget -nc https://raw.githubusercontent.com/riadvice/bbbeasy/master/docker-compose.yml
 
   cd "$INSTALL_DIR"
 
   generate_passwords
-  setup_host
-  generate_ssl
+
+  #######################################
+  #TODO Prepare certbot for SSL connexion
+  #######################################
+  #setup_host_docker
+  #generate_ssl
   # Create ssl certificates directory
-  mkdir -p "$INSTALL_DIR/docker/certs"
-  ln -s /etc/letsencrypt/live/meetings.riadvice.ovh/fullchain.pem docker/certs/fullchain.pem
-  ln -s /etc/letsencrypt/live/meetings.riadvice.ovh/privkey.pem docker/certs/privkey.pem
+  #mkdir -p "$INSTALL_DIR/docker/certs"
+  #ln -s /etc/letsencrypt/live/meetings.riadvice.ovh/fullchain.pem docker/certs/fullchain.pem
+  #ln -s /etc/letsencrypt/live/meetings.riadvice.ovh/privkey.pem docker/certs/privkey.pem
 }
 
 generate_passwords() {
@@ -275,13 +280,17 @@ clone_repo() {
 
 build_apps() {
   "$INSTALL_DIR/tools/./bbbeasy" -si
-  cp "$INSTALL_DIR/package/templates/nginx/bbbeasy.conf" /etc/nginx/sites-available/bbbeasy
-  ln -s /etc/nginx/sites-available/bbbeasy /etc/nginx/sites-enabled/bbbeasy
-  sed -i "s/server_name.*/server_name $HV_HOST;/g" /etc/nginx/sites-available/bbbeasy
-  sed -i "s|return 301 https.*|return 301 https://$HV_HOST\$request_uri;|g" /etc/nginx/sites-available/bbbeasy
-  sed -i "s|HV_HOST|$HV_HOST|g" /etc/nginx/sites-available/bbbeasy
-  bbbeasy -d
-  bbbeasy -ei
+  if [[ "$INSTALL_TYPE" == "docker" ]]; then
+    bbbeasy -rc
+  elif [[ "$INSTALL_TYPE" == "git" ]]; then
+    cp "$INSTALL_DIR/package/templates/nginx/bbbeasy.conf" /etc/nginx/sites-available/bbbeasy
+    ln -s /etc/nginx/sites-available/bbbeasy /etc/nginx/sites-enabled/bbbeasy
+    sed -i "s/server_name.*/server_name $HV_HOST;/g" /etc/nginx/sites-available/bbbeasy
+    sed -i "s|return 301 https.*|return 301 https://$HV_HOST\$request_uri;|g" /etc/nginx/sites-available/bbbeasy
+    sed -i "s|HV_HOST|$HV_HOST|g" /etc/nginx/sites-available/bbbeasy
+    bbbeasy -d
+    bbbeasy -ei
+  fi
 }
 
 install() {
@@ -291,6 +300,7 @@ install() {
     install_common_deps
     install_docker_deps
     install_docker
+    build_apps
   elif [[ "$INSTALL_TYPE" == "git" ]]; then
     echo "-- Installing git version --"
     install_common_deps
