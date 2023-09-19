@@ -411,5 +411,6 @@
     "alwaysAccept": "Toujours accepter",
     "alwaysDeny": "Toujours refuser",
     "publish_record_success": "Enregistrement publié avec succès",
-    "unpublish_record_success": "L'enregistrement a été inédit avec succès"
+    "unpublish_record_success": "L'enregistrement a été inédit avec succès",
+    "role_name": "Ce nom ne peut pas être modifié"
 }

@@ -431,5 +431,6 @@
 
     "email-not-exist": "User does not exist with this email",
     "publish_record_success": "Recording published successfully",
-    "unpublish_record_success": "Recording unpublished successfully"
+    "unpublish_record_success": "Recording unpublished successfully",
+    "role_name": "This name cannot be changed"
 }

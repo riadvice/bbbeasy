@@ -413,5 +413,6 @@
 
     "email-not-exist": "المستخدم غير موجود مع هذا البريد الإلكتروني",
     "publish_record_success": "تم نشر التسجيل بنجاح",
-    "unpublish_record_success": "تم إلغاء نشر التسجيل بنجاح"
+    "unpublish_record_success": "تم إلغاء نشر التسجيل بنجاح",
+    "role_name": "لا يمكن تغيير هذا الاسم"
 }

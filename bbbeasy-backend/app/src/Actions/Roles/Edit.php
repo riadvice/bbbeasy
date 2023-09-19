@@ -68,6 +68,14 @@ class Edit extends BaseAction
 
                         return;
                     }
+
+                    if ($role->id == 1 || $role->id == 2) {
+                        $this->logger->error('Role could not be updated', ['error' => 'Role could not be updated']);
+                        $this->renderJson(['errors' => ['id' => 'Role could not be updated']], ResponseCode::HTTP_PRECONDITION_FAILED);
+
+                        return;
+                    }
+
                 } else {
                     $this->logger->error($errorMessage, ['errors' => $dataChecker->getErrors()]);
                     $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);

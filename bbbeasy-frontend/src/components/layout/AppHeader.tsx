@@ -87,7 +87,7 @@ const AppHeader = () => {
                 setCurrentUser(null);
                 localStorage.removeItem('session');
                 setCurrentSession(null);
-                navigate('/login');
+                navigate('/');
             })
             .catch((error) => {
                 console.log(error);
