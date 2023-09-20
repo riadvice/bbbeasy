@@ -21,7 +21,7 @@ import { withTranslation } from 'react-i18next';
 import { IRoute } from './routing/IRoute';
 import Router from './routing/Router';
 import { hot } from 'react-hot-loader';
-
+import { useNavigate } from 'react-router-dom';
 import { Layout, ConfigProvider, FloatButton } from 'antd';
 import { StyleProvider, legacyLogicalPropertiesTransformer } from '@ant-design/cssinjs';
 
@@ -61,7 +61,7 @@ const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
     const [dataRooms, setDataRooms] = React.useState<RoomType[]>([]);
     const [dataLabels, setDataLabels] = React.useState<LabelType[]>([]);
     const [dataPresets, setDataPresets] = React.useState<PresetType[]>([]);
-
+    const [data, setData] = React.useState(null);
     const dataProvider = useMemo(
         () => ({ dataRooms, setDataRooms, dataLabels, setDataLabels, dataPresets, setDataPresets }),
         [dataRooms, setDataRooms, dataLabels, setDataLabels, dataPresets, setDataPresets]
@@ -71,7 +71,7 @@ const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
         () => ({ isLogged, setIsLogged, currentUser, setCurrentUser, currentSession, setCurrentSession }),
         [isLogged, setIsLogged, currentUser, setCurrentUser, currentSession, setCurrentSession]
     );
-
+    const navigate = useNavigate();
     const customTheme = {
         token: {
             colorPrimary: '#fbbc0b',
@@ -130,28 +130,52 @@ const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
                 }
             }
         });
-        const user: UserType = AuthService.getCurrentUser();
+        let user: UserType = AuthService.getCurrentUser();
         const session: SessionType = AuthService.getCurrentSession();
-        if (user != null && session != null) {
-            setCurrentUser(user);
-            setCurrentSession(session);
-            setIsLogged(true);
+        if (session != null) {
+            AuthService.getUserSession()
+                .then((response) => {
+                    if (response && response.data.user.id) {
+                        user = response.data.user;
+                        AuthService.addCurrentUser(user);
+                        setCurrentUser(user);
+                        setCurrentSession(session);
+                        setIsLogged(true);
 
-            const allowedGroups = Object.keys(user.permissions);
-            if (allowedGroups.length != 0) {
-                if (AuthService.isAllowedGroup(allowedGroups, 'logs')) {
-                    Logger.info(logs);
-                }
-                if (AuthService.isAllowedGroup(allowedGroups, 'rooms')) {
-                    getRooms(user.id);
-                }
-                if (AuthService.isAllowedGroup(allowedGroups, 'labels')) {
-                    getLabels();
-                }
-                if (AuthService.isAllowedGroup(allowedGroups, 'presets')) {
-                    getPresets(user.id);
-                }
-            }
+                        const allowedGroups = Object.keys(user.permissions);
+                        if (allowedGroups.length != 0) {
+                            if (AuthService.isAllowedGroup(allowedGroups, 'logs')) {
+                                Logger.info(logs);
+                            }
+                            if (AuthService.isAllowedGroup(allowedGroups, 'rooms')) {
+                                getRooms(user.id);
+                            }
+                            if (AuthService.isAllowedGroup(allowedGroups, 'labels')) {
+                                getLabels();
+                            }
+                            if (AuthService.isAllowedGroup(allowedGroups, 'presets')) {
+                                getPresets(user.id);
+                            }
+                        }
+
+                        setData(true);
+                    } else {
+                        setCurrentSession(null);
+                        setIsLogged(false);
+                        localStorage.clear();
+                        navigate('/');
+                        setData(true);
+                    }
+                })
+                .catch(() => {
+                    setCurrentSession(null);
+                    setIsLogged(false);
+                    localStorage.clear();
+                    navigate('/');
+                    setData(true);
+                });
+        } else {
+            setData(true);
         }
     }, []);
 
@@ -166,12 +190,14 @@ const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
                 >
                     <UserContext.Provider value={userProvider}>
                         <DataContext.Provider value={dataProvider}>
-                            {isLogged && isSider && <AppSider presets={dataPresets} />}
+                            {data && isLogged && isSider && <AppSider presets={dataPresets} />}
                             <Layout className="page-layout-body">
                                 <AppHeader />
-                                <Content className="site-content">
-                                    <Router routes={routes} />
-                                </Content>
+                                {data && (
+                                    <Content className="site-content">
+                                        <Router routes={routes} />
+                                    </Content>
+                                )}
                                 <AppFooter />
                             </Layout>
                         </DataContext.Provider>

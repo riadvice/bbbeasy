@@ -23,7 +23,7 @@ import EN_US from '../locale/en-US.json';
 
 import { PageHeader } from '@ant-design/pro-layout';
 
-import { Button, Row, Col, Typography, Space, Modal, Popconfirm, Card, Checkbox, Input } from 'antd';
+import {Button, Row, Col, Typography, Space, Modal, Popconfirm, Card, Checkbox, Input, Alert} from 'antd';
 import {
     DeleteOutlined,
     QuestionCircleOutlined,
@@ -408,12 +408,20 @@ const Roles = () => {
                 editable={editable}
                 editComponent={
                     isShown &&
-                    AuthService.isAllowedAction(actions, 'edit') && (
+                    AuthService.isAllowedAction(actions, 'edit') &&(
                         <Button
                             size="small"
                             type="link"
                             icon={<EditOutlined className="cell-edit-icon" />}
-                            onClick={toggleEditName}
+                            onClick={()=>{
+
+                                if(record.key == 1 || record.key == 2 ){
+                                    Notifications.openNotificationWithIcon('info', t('role_name'));
+                                    return;
+                                }
+                                toggleEditName()
+
+                            }}
                         />
                     )
                 }

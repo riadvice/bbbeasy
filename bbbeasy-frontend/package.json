@@ -52,7 +52,7 @@
         "react-scripts": "^5.0.1",
         "react-share": "^4.4.1",
         "reload": "^3.2.1",
-        "serve": "^14.2.0",
+        "serve": "^14.2.1",
         "ts-node": "^10.9.1",
         "typescript": "^4.9.5",
         "web-vitals": "^3.3.2",
@@ -65,8 +65,8 @@
         "nth-check": "^2.1.1"
     },
     "scripts": {
-        "start-dev": "bbbeasy -ew && PORT=3300 NODE_ENV=development INSTALLER_FEATURE=false FAST_REFRESH=true craco start",
-        "start-dev-installer": "bbbeasy -ei && PORT=3300 NODE_ENV=development INSTALLER_FEATURE=true FAST_REFRESH=true craco start",
+        "start-dev": "./bbbeasy -ew && PORT=3300 NODE_ENV=development INSTALLER_FEATURE=false FAST_REFRESH=true craco start",
+        "start-dev-installer": "./bbbeasy -ei && PORT=3300 NODE_ENV=development INSTALLER_FEATURE=true FAST_REFRESH=true craco start",
         "build": "INSTALLER_FEATURE=false GENERATE_SOURCEMAP=false craco build",
         "build-installer": "INSTALLER_FEATURE=true craco build",
         "nyc": "nyc instrument --compact=false src instrumented",
@@ -128,5 +128,5 @@
         "source-map-explorer": "^2.5.3",
         "ts-loader": "^9.4.3"
     },
-    "packageManager": "yarn@3.6.1"
+    "packageManager": "yarn@3.6.3"
 }

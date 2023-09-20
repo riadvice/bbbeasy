@@ -111,14 +111,11 @@ abstract class Base extends \Prefab
 
     public function beforeroute(): void
     {
+       
+
         $this->access->authorize($this->getRole(), function($route, $subject): void {
             $this->onAccessAuthorizeDeny($route, $subject);
         });
-        if ($this->session->isLoggedIn() && $this->f3->get('ALIAS') === $this->f3->get('ALIASES.login')) {
-            $this->f3->reroute($this->f3->get('ALIASES.home'));
-        } elseif ('POST' === $this->f3->VERB && !$this->session->validateToken()) {
-            $this->f3->reroute($this->f3->get('PATH'));
-        }
         // Rerouted paged uri having the page value less than one
         if ($this->f3->exists('PARAMS.page') && $this->f3->get('PARAMS.page') < 1) {
             $uri = $this->f3->get('PATH');
@@ -126,11 +123,14 @@ abstract class Base extends \Prefab
             $this->f3->reroute($uri);
         }
     }
-
+ 
     public function onAccessAuthorizeDeny($route, $subject): void
     {
         $this->logger->warning('Access denied to route ' . $route . ' for subject ' . ($subject ?: 'unknown'));
-        $this->f3->error(404);
+        if (!$this->session->isLoggedIn()) {
+            $this->f3->error(401);
+        }
+        $this->f3->error(403);
     }
 
     /**

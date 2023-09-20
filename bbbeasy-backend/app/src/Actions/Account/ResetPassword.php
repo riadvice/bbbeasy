@@ -44,7 +44,7 @@ class ResetPassword extends BaseAction
         if (!$dataChecker->allValid()) {
             $this->logger->error('User could not reset password', ['errors' => $dataChecker->getErrors()]);
             $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
-        } elseif (!$user->dry() && $user->emailExists($email)) {
+        } elseif ( $user->emailExists($email) && !$user->dry()) {
             // valid credentials
             $this->session->authorizeUser($user);
 

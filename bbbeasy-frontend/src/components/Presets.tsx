@@ -98,12 +98,12 @@ type formType = {
 };
 
 const PresetsCol: React.FC<PresetColProps> = ({
-    key,
-    preset,
-    editName,
-    editClickHandler,
-    copyClickHandler,
-    deleteClickHandler,
+  key,
+  preset,
+  editName,
+  editClickHandler,
+  copyClickHandler,
+  deleteClickHandler,
 }) => {
     const [file, setFile] = React.useState<UploadFile>(null);
     const [fileList, setFileList] = React.useState<UploadFile[]>(null);
@@ -208,6 +208,9 @@ const PresetsCol: React.FC<PresetColProps> = ({
         setErrorsEdit({});
         setIsEditing(false);
     };
+    function compareObjs(obj1,obj2){
+        return JSON.stringify(obj1)===JSON.stringify(obj2);
+    }
     const handleSaveEdit = async () => {
         setErrorsEdit({});
         try {
@@ -215,6 +218,11 @@ const PresetsCol: React.FC<PresetColProps> = ({
 
             PresetsService.edit_preset(values, preset.id)
                 .then((response) => {
+                    if (compareObjs(response.data.preset, preset)) {
+                        Notifications.openNotificationWithIcon('info', t('no_changes'));
+                        cancelEdit();
+                        return;
+                    }
                     editClickHandler(response.data.preset, preset);
 
                     cancelEdit();
@@ -283,7 +291,7 @@ const PresetsCol: React.FC<PresetColProps> = ({
                                         overlayClassName="install-tooltip"
                                         title={preset['name']}
                                     >
-                                        <div className='preset-name'>{preset['name']}</div>
+                                        <div className="preset-name">{preset['name']}</div>
                                     </Tooltip>
                                     {isShown && editName && !isDefault && (
                                         <Button
@@ -395,8 +403,8 @@ const PresetsCol: React.FC<PresetColProps> = ({
                                                 ? 'leftTop'
                                                 : 'left'
                                             : item.enabled
-                                            ? 'rightTop'
-                                            : 'right'
+                                                ? 'rightTop'
+                                                : 'right'
                                     }
                                     overlayClassName={item.enabled ? 'install-tooltip' : 'title-tooltip'}
                                     title={
@@ -472,11 +480,11 @@ const PresetsCol: React.FC<PresetColProps> = ({
                                                                 value={
                                                                     item.value == true
                                                                         ? ReactDomServer.renderToString(
-                                                                              <Trans i18nKey="status_presets_active" />
-                                                                          )
+                                                                            <Trans i18nKey="status_presets_active" />
+                                                                        )
                                                                         : ReactDomServer.renderToString(
-                                                                              <Trans i18nKey="status_presets_inactive" />
-                                                                          )
+                                                                            <Trans i18nKey="status_presets_inactive" />
+                                                                        )
                                                                 }
                                                             />
 
@@ -573,8 +581,8 @@ const PresetsCol: React.FC<PresetColProps> = ({
                                                                 label:
                                                                     'Guest Policy' == modalTitle
                                                                         ? ReactDomServer.renderToString(
-                                                                              <Trans i18nKey={data.key} />
-                                                                          )
+                                                                            <Trans i18nKey={data.key} />
+                                                                        )
                                                                         : data.name,
                                                                 value: data.value,
                                                             }))}
@@ -651,10 +659,7 @@ const Presets = () => {
 
     //edit
     const editPreset = (newPreset: MyPresetType, oldPreset: MyPresetType) => {
-        if(newPreset.name == oldPreset.name){
-            Notifications.openNotificationWithIcon('info', t('no_changes'));
-            return
-        }
+
         const newPresets = [...myPresets];
         const index = newPresets.findIndex((item) => oldPreset.id === item.id);
         if (index > -1 && newPreset != undefined) {

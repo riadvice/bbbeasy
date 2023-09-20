@@ -46,7 +46,7 @@ export const apiRoutes = {
     COLLECT_ROLES_URL: API_URL + '/roles/collect',
 
     COLLECT_PRIVILEGES_URL: API_URL + '/roles-permissions',
-
+    USER_SESSION_URL: API_URL + '/users/session ',
     LIST_USER_URL: API_URL + '/users',
     ADD_USER_URL: API_URL + '/users',
     EDIT_USER_URL: API_URL + '/users/',

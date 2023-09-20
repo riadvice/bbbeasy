@@ -156,7 +156,12 @@ const RoomDetails = () => {
         if (currentUser != null) {
             PresetsService.list_presets(currentUser.id).then((result) => {
                 setPresets(result.data);
-            });
+            })
+                .catch((error) => {
+                    console.log(error);
+                    navigate('/');
+                })
+
         }
     };
     const getLabels = () => {
@@ -166,7 +171,11 @@ const RoomDetails = () => {
                 labels_data.push({ label: label.name, value: label.color });
             });
             setLabels(labels_data);
-        });
+        })
+            .catch((error) => {
+                console.log(error);
+                navigate('/');
+            });
     };
     const getRoomRecordings = (id) => {
         setLoading(true);
@@ -177,6 +186,7 @@ const RoomDetails = () => {
             })
             .catch((error) => {
                 console.log(error);
+                navigate('/');
             })
             .finally(() => {
                 setLoading(false);

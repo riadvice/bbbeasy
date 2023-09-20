@@ -28,7 +28,7 @@ import { DeleteOutlined, EditOutlined, QuestionCircleOutlined, StarFilled } from
 import { FormInstance } from 'antd/lib/form';
 import { CompareRecords } from '../functions/compare.function';
 import { EditableTable } from './EditableTable';
-import EditableTableCell from './EditableTableCell';
+import EditableTableUsers from './EditableTableUsers';
 import Notifications from './Notifications';
 import AddUserForm from './AddUserForm';
 import EditableTableColumnSearch from './EditableTableColumnSearch';
@@ -117,12 +117,15 @@ const Users = () => {
     useEffect(() => {
         //Runs only on the first render
         const rolesActions = AuthService.getActionsPermissionsByGroup('roles');
-        const isCollect = AuthService.isAllowedAction(rolesActions, 'collect');
-        setCollectRolesAction(isCollect);
+        if (rolesActions.length) {
+            const isCollect = AuthService.isAllowedAction(rolesActions, 'collect');
+            setCollectRolesAction(isCollect);
 
-        if (isCollect) {
-            getRoles();
+            if (isCollect) {
+                getRoles();
+            }
         }
+
         getUsers();
         getBrandColor();
 
@@ -200,13 +203,13 @@ const Users = () => {
     // edit
     const [editForm] = Form.useForm();
     const EditableCell: React.FC<EditableCellProps> = ({
-        editing,
-        children,
-        dataIndex,
-        record,
-        inputType,
-        ...restProps
-    }) => {
+                                                           editing,
+                                                           children,
+                                                           dataIndex,
+                                                           record,
+                                                           inputType,
+                                                           ...restProps
+                                                       }) => {
         let inputNode: JSX.Element;
         if (inputType === 'select') {
             const statesOptions = allStates.map((item, index) => (
@@ -220,7 +223,7 @@ const Users = () => {
             inputNode = <Input onFocus={() => setCancelVisibility(false)} />;
         }
         return (
-            <EditableTableCell
+            <EditableTableUsers
                 editing={editing}
                 dataIndex={dataIndex}
                 record={record}
@@ -242,7 +245,7 @@ const Users = () => {
                 {...restProps}
             >
                 {children}
-            </EditableTableCell>
+            </EditableTableUsers>
         );
     };
     const isEditing = (record: UserType) => record.key == editingKey;

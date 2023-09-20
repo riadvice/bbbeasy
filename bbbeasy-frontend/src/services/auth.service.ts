@@ -35,6 +35,9 @@ class AuthService {
         });
     }
 
+    getUserSession() {
+        return axiosInstance.get(apiRoutes.USER_SESSION_URL);
+    }
     logout() {
         return axiosInstance.get(apiRoutes.LOGOUT_URL);
     }
@@ -70,7 +73,9 @@ class AuthService {
 
     getCurrentUser() {
         const userStr: string = localStorage.getItem('user');
+
         if (userStr) return JSON.parse(userStr);
+
         return null;
     }
 
@@ -94,7 +99,8 @@ class AuthService {
 
     getActionsPermissionsByGroup(group: string): string[] {
         const currentUser: UserType = this.getCurrentUser();
-        if (currentUser) return currentUser.permissions[group];
+
+        if (currentUser && currentUser.permissions[group]) return currentUser.permissions[group];
         return [];
     }
 
@@ -103,6 +109,7 @@ class AuthService {
     };
 
     isAllowedAction = (actions: string[], action: string): boolean => {
+        console.log(actions);
         return actions.includes(action);
     };
 }

@@ -32,7 +32,5 @@ final class RemoveNameIndexInPreset extends AbstractMigration
         ;
     }
 
-    public function down(): void
-    {
-    }
+    public function down(): void {}
 }

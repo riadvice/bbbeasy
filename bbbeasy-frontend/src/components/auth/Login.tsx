@@ -17,7 +17,7 @@
  */
 
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import AuthService from '../../services/auth.service';
 import Notifications from '../Notifications';
 
@@ -47,7 +47,7 @@ const Login = () => {
     const [message, setMessage] = React.useState<string>('');
     const [email, setEmail] = React.useState<string>('');
     const [logo, setLogo] = React.useState<string>('');
-
+    const navigate = useNavigate();
     const initialValues: formType = {
         email: '',
         password: '',
@@ -92,9 +92,11 @@ const Login = () => {
                     setCurrentSession(session_infos);
                     setIsLogged(true);
                     setSuccessful(true);
+                    navigate('/');
                 }
             })
             .catch((error) => {
+                console.log(error);
                 const responseData = error.response.data;
                 if (responseData.message) {
                     setSuccessful(false);
