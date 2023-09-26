@@ -67,6 +67,7 @@ INSTALL_TYPE="git"
 INSTALL_DIR="/opt/bbbeasy"
 ADMIN_EMAIL=$(grep '^root:' /etc/passwd | awk -F'[<>]' '{print $2}')
 DB_NAME="bbbeasy"
+ENVIRONMENT="production"
 
 # Additional values
 BACKEND_DIR="$INSTALL_DIR/bbbeasy-backend"
@@ -282,6 +283,10 @@ build_apps() {
   "$INSTALL_DIR/tools/./bbbeasy" -si
   if [[ "$INSTALL_TYPE" == "docker" ]]; then
     bbbeasy -rc
+    echo "► Waiting until containers UP"
+    sleep 30
+    echo "► Running database migration"
+    sudo docker exec -it bbbeasy-backend vendor/bin/phinx migrate -e "$ENVIRONMENT"
   elif [[ "$INSTALL_TYPE" == "git" ]]; then
     cp "$INSTALL_DIR/package/templates/nginx/bbbeasy.conf" /etc/nginx/sites-available/bbbeasy
     ln -s /etc/nginx/sites-available/bbbeasy /etc/nginx/sites-enabled/bbbeasy
