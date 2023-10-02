@@ -46,6 +46,16 @@ GIT_BRANCH=$(git --git-dir="$BASEDIR/../.git" branch | sed -n '/\* /s///p')
 # Git tag, commits ahead & commit id under format '0.4-160-g3bb256c'
 GIT_VERSION=$(git --git-dir="$BASEDIR/../.git" describe --tags --always HEAD)
 
+# Setup default values
+INSTALL_DIR="/opt/bbbeasy"
+
+# Docker bbbeasy default names
+DOCKER_FRONTEND=bbbeasy-frontend
+DOCKER_DOCS=bbbeasy-docs
+DOCKER_BACKEND=bbbeasy-backend
+DOCKER_CACHE=bbbeasy_cache
+DOCKER_DB=bbbeasy_db
+
 #
 # Display usage
 #
@@ -111,11 +121,15 @@ need_production() {
 # Display installed BBBEasy & servers version
 #
 display_version() {
-  echo "■ BBBEasy     :  $GIT_VERSION"
-  echo "■ Nginx      :  $(nginx -v)"
-  echo "■ PHP        :  $(php -v | sed -n 1p)"
-  echo "■ Redis      :  $(redis-server --version)"
-  echo "■ PostgreSQL :  $(psql -V)"
+  echo "■ BBBEasy    :  $GIT_VERSION"
+  if [[ "$INSTALL_TYPE" == "docker" ]]; then
+    sudo docker images
+  else
+    echo "■ Nginx      :  $(nginx -v)"
+    echo "■ PHP        :  $(php -v | sed -n 1p)"
+    echo "■ Redis      :  $(redis-server --version)"
+    echo "■ PostgreSQL :  $(psql -V)"
+  fi
 }
 
 #
@@ -134,31 +148,39 @@ self_install() {
 # Clean server status
 #
 display_status() {
-  units="nginx php-fpm postgresql redis"
-  echo
-  line='————————————————————►'
-  for unit in $units; do
-    if [ $(pgrep -c "$unit") != 0 ]; then
-      printf "%s %s [✔ - UP]\n" $unit "${line:${#unit}}"
-    else
-      printf "%s %s [✘ - DOWN]\n" $unit "${line:${#unit}}"
-    fi
-  done
-  echo
+  if [[ "$INSTALL_TYPE" == "docker" ]]; then
+    sudo docker ps
+  else
+    units="nginx php-fpm postgresql redis"
+    echo
+    line='————————————————————►'
+    for unit in $units; do
+      if [ $(pgrep -c "$unit") != 0 ]; then
+        printf "%s %s [✔ - UP]\n" $unit "${line:${#unit}}"
+      else
+        printf "%s %s [✘ - DOWN]\n" $unit "${line:${#unit}}"
+      fi
+    done
+    echo
+  fi
 }
 
 #
 # Clean BBBEasy cache
 #
 clean_cache() {
-  echo "► Deleting cache"
-  find "$BASEDIR/../bbbeasy-backend/bin/" ! -name '.gitkeep' -type f -exec rm -rfv {} \;
-  find "$BASEDIR/../bbbeasy-backend/tmp/" ! -name '.gitkeep' -type f -exec rm -rfv {} \;
-  find "$BASEDIR/../bbbeasy-backend/tmp/cache/" ! -name '.gitkeep' -type f -exec rm -rfv {} \;
-  find "$BASEDIR/../bbbeasy-backend/tmp/mail/" -name '*.eml' -type f -exec rm -v {} \;
-  find "$BASEDIR/../bbbeasy-backend/uploads/tmp/" -type f -exec rm -v {} \;
-  find "$BASEDIR/../bbbeasy-backend/public/minified/" ! -name '.gitkeep' -type f -exec rm -v {} \;
-  echo "✔ Cache deleted"
+  if [[ "$INSTALL_TYPE" == "docker" ]]; then
+    exit 0
+  else
+    echo "► Deleting cache"
+    find "$BASEDIR/../bbbeasy-backend/bin/" ! -name '.gitkeep' -type f -exec rm -rfv {} \;
+    find "$BASEDIR/../bbbeasy-backend/tmp/" ! -name '.gitkeep' -type f -exec rm -rfv {} \;
+    find "$BASEDIR/../bbbeasy-backend/tmp/cache/" ! -name '.gitkeep' -type f -exec rm -rfv {} \;
+    find "$BASEDIR/../bbbeasy-backend/tmp/mail/" -name '*.eml' -type f -exec rm -v {} \;
+    find "$BASEDIR/../bbbeasy-backend/uploads/tmp/" -type f -exec rm -v {} \;
+    find "$BASEDIR/../bbbeasy-backend/public/minified/" ! -name '.gitkeep' -type f -exec rm -v {} \;
+    echo "✔ Cache deleted"
+  fi
 }
 
 #
@@ -166,9 +188,11 @@ clean_cache() {
 #
 clean_logs() {
   echo "► Cleaning logs"
-
-  find "$BASEDIR/../bbbeasy-backend/logs/" ! -name '.gitkeep' -type f -exec rm -v {} \;
-
+  if [[ "$INSTALL_TYPE" == "docker" ]]; then
+    find "$BASEDIR/../docker/logs/backend/" ! -name '.gitkeep' -type f -exec rm -v {} \;
+  else
+    find "$BASEDIR/../bbbeasy-backend/logs/" ! -name '.gitkeep' -type f -exec rm -v {} \;
+  fi
   echo "✔ Cleaned logs folder"
 }
 
@@ -176,8 +200,19 @@ clean_logs() {
 # Clean sessions from the database
 #
 clean_sessions() {
-  sudo -u postgres psql -d bbbeasy -c "SELECT setval('users_sessions_id_seq'::regclass, 1);"
-  sudo -u postgres psql -d bbbeasy -c "TRUNCATE users_sessions;"
+  if [[ "$INSTALL_TYPE" == "docker" ]]; then
+    DB_USER=$(grep "POSTGRES_USER" $BASEDIR/../docker-compose.yml | awk -F "=" '{ print $2 }')
+    DB_PASSWORD=$(grep "POSTGRES_PASSWORD" $BASEDIR/../docker-compose.yml | awk -F "=" '{ print $2 }')
+    DB_NAME=$(grep "POSTGRES_DB" $BASEDIR/../docker-compose.yml | awk -F "=" '{ print $2 }')
+    DB_URL="postgresql://${DB_NAME}/${DB_PASSWORD}@localhost:5432/${DB_NAME}"
+    sudo docker exec -it $DOCKER_DB psql "${DB_URL}" <<EOF
+SELECT setval('users_sessions_id_seq'::regclass, 1);
+TRUNCATE users_sessions;
+EOF
+  else
+    sudo -u postgres psql -d bbbeasy -c "SELECT setval('users_sessions_id_seq'::regclass, 1);"
+    sudo -u postgres psql -d bbbeasy -c "TRUNCATE users_sessions;"
+  fi
 }
 
 #
@@ -191,8 +226,12 @@ zip_logs() {
 
   touch /tmp/empty
   tar cfv "$ARCHIVE" /tmp/empty
-  tar rfv "$ARCHIVE" "$BASEDIR/../logs/" --exclude='.gitkeep'
-  sudo tar rfv "$ARCHIVE" /var/log/nginx/
+  if [[ "$INSTALL_TYPE" == "docker" ]]; then
+    sudo tar rfv "$ARCHIVE" "$BASEDIR/../docker/logs/" --exclude='.gitkeep'
+  else
+    tar rfv "$ARCHIVE" "$BASEDIR/../logs/" --exclude='.gitkeep'
+    sudo tar rfv "$ARCHIVE" /var/log/nginx/
+  fi
   echo "✔ Logs archived at $ARCHIVE"
 }
 
@@ -201,9 +240,14 @@ zip_logs() {
 #
 fix_styles() {
   echo "► Running PHP Code Style Fixer"
-  cd "$BASEDIR/../bbbeasy-backend/"
-  PHP_CS_FIXER_IGNORE_ENV=true composer csfix
-  echo "✔ PHP Code Style Fixed"
+  if [[ "$INSTALL_TYPE" == "docker" ]]; then
+    echo "Not yet implemented for docker version"
+    exit 1
+  else
+    cd "$BASEDIR/../bbbeasy-backend/"
+    PHP_CS_FIXER_IGNORE_ENV=true composer csfix
+    echo "✔ PHP Code Style Fixed"
+  fi
 }
 
 #
@@ -212,12 +256,18 @@ fix_styles() {
 enable_installer() {
   echo "► Enabling backend installer app"
   if [ "$ENVIRONMENT" == "production" ]; then
-    if grep -q -v "config.extension" "$BASEDIR/../bbbeasy-backend/app/config/config-$ENVIRONMENT.ini"; then
-      echo "config.extension = -install" >>"$BASEDIR/../bbbeasy-backend/app/config/config-$ENVIRONMENT.ini"
-      sudo sed -i 's/webapp/installer/g' /etc/nginx/sites-available/bbbeasy
-      sudo service nginx reload
-      printf "%s %s [✔ - DONE]\n"
+    if [[ "$INSTALL_TYPE" == "docker" ]]; then
+      sudo sed -i 's/;config.extension.*/config.extension = -install/g' "$BASEDIR/../docker/config-$ENVIRONMENT.ini"
+      sudo sed -i 's/webapp/installer/g' "$BASEDIR/../docker/bbbe-frontend.conf"
+      sudo docker restart DOCKER_FRONTEND
+    else
+       if grep -q -v "config.extension" "$BASEDIR/../bbbeasy-backend/app/config/config-$ENVIRONMENT.ini"; then
+         echo "config.extension = -install" >>"$BASEDIR/../bbbeasy-backend/app/config/config-$ENVIRONMENT.ini"
+         sudo sed -i 's/webapp/installer/g' /etc/nginx/sites-available/bbbeasy
+         sudo service nginx reload
+       fi
     fi
+    printf "%s %s [✔ - DONE]\n"
   else
     if [ $(grep -c "config.extension =" "$BASEDIR/../bbbeasy-backend/app/config/config-$ENVIRONMENT.ini") != 0 ]; then
       #c cmd to replace the matched line in one go
@@ -235,12 +285,17 @@ enable_installer() {
 enable_web() {
   echo "► Enabling backend webapp"
   if [ $ENVIRONMENT == "production" ]; then
-    sed -i '/^config\.extension/d' "$BASEDIR/../bbbeasy-backend/app/config/config-$ENVIRONMENT.ini"
-    sudo sed -i 's/installer/webapp/g' /etc/nginx/sites-available/bbbeasy
-    sudo service nginx reload
+    if [[ "$INSTALL_TYPE" == "docker" ]]; then
+      sudo sed -i 's/config.extension/;config.extension/g' "$BASEDIR/../docker/config-$ENVIRONMENT.ini"
+      sudo sed -i 's/installer/webapp/g' "$BASEDIR/../docker/bbbe-frontend.conf"
+      sudo docker restart DOCKER_FRONTEND
+    else
+       sed -i '/^config\.extension/d' "$BASEDIR/../bbbeasy-backend/app/config/config-$ENVIRONMENT.ini"
+       sudo sed -i 's/installer/webapp/g' /etc/nginx/sites-available/bbbeasy
+       sudo service nginx reload
+    fi
     printf "%s %s [✔ - DONE]\n"
   else
-    echo "► Enabling backend web app"
     if [ $(grep -c "config.extension = -install" "$BASEDIR/../bbbeasy-backend/app/config/config-$ENVIRONMENT.ini") != 0 ]; then
       sed -i '/config.extension = -install/ c config.extension =' "$BASEDIR/../bbbeasy-backend/app/config/config-$ENVIRONMENT.ini"
       printf "%s %s [✔ - DONE]\n"
@@ -254,20 +309,25 @@ enable_web() {
 # Enable unit tests
 #
 enable_tests() {
-  echo "► Enabling unit tests"
+  if [[ "$INSTALL_TYPE" == "docker" ]]; then
+    echo "Not yet implemented for docker version"
+    exit 0
+  else
+    echo "► Enabling unit tests"
 
-  rm -rfv "$BASEDIR/../bbbeasy-backend/public/statera/"
-  mkdir -pv "$BASEDIR/../bbbeasy-backend/public/statera/coverage/"
-  mkdir -pv "$BASEDIR/../bbbeasy-backend/public/statera/result/"
-  cp -Rv "$BASEDIR/../bbbeasy-backend/tools/statera.php" "$BASEDIR/../bbbeasy-backend/public/statera/index.php"
-  cp -Rv "$BASEDIR/../bbbeasy-backend/tests/ui/css" "$BASEDIR/../bbbeasy-backend/public/statera/"
-  cp -Rv "$BASEDIR/../bbbeasy-backend/tests/ui/images" "$BASEDIR/../bbbeasy-backend/public/statera/"
-  cp -Rv "$BASEDIR/../bbbeasy-backend/tests/ui/css" "$BASEDIR/../bbbeasy-backend/public/statera/result"
-  cp -Rv "$BASEDIR/../bbbeasy-backend/tests/ui/images" "$BASEDIR/../bbbeasy-backend/public/statera/result"
-  cp "$BASEDIR/../bbbeasy-backend/vendor/bcosca/fatfree-core/code.css" "$BASEDIR/../bbbeasy-backend/public/statera/css/code.css"
-  cp "$BASEDIR/../bbbeasy-backend/vendor/bcosca/fatfree-core/code.css" "$BASEDIR/../bbbeasy-backend/public/statera/result/css/code.css"
+    rm -rfv "$BASEDIR/../bbbeasy-backend/public/statera/"
+    mkdir -pv "$BASEDIR/../bbbeasy-backend/public/statera/coverage/"
+    mkdir -pv "$BASEDIR/../bbbeasy-backend/public/statera/result/"
+    cp -Rv "$BASEDIR/../bbbeasy-backend/tools/statera.php" "$BASEDIR/../bbbeasy-backend/public/statera/index.php"
+    cp -Rv "$BASEDIR/../bbbeasy-backend/tests/ui/css" "$BASEDIR/../bbbeasy-backend/public/statera/"
+    cp -Rv "$BASEDIR/../bbbeasy-backend/tests/ui/images" "$BASEDIR/../bbbeasy-backend/public/statera/"
+    cp -Rv "$BASEDIR/../bbbeasy-backend/tests/ui/css" "$BASEDIR/../bbbeasy-backend/public/statera/result"
+    cp -Rv "$BASEDIR/../bbbeasy-backend/tests/ui/images" "$BASEDIR/../bbbeasy-backend/public/statera/result"
+    cp "$BASEDIR/../bbbeasy-backend/vendor/bcosca/fatfree-core/code.css" "$BASEDIR/../bbbeasy-backend/public/statera/css/code.css"
+    cp "$BASEDIR/../bbbeasy-backend/vendor/bcosca/fatfree-core/code.css" "$BASEDIR/../bbbeasy-backend/public/statera/result/css/code.css"
 
-  echo "✔ Unit tests enabled"
+    echo "✔ Unit tests enabled"
+  fi
 }
 
 #
@@ -317,10 +377,14 @@ run_tests() {
 }
 
 deploy_apps() {
-  install_dependencies
-  chown_folders
-  chmod_folders
-  run_migrations
+  if [[ "$INSTALL_TYPE" == "docker" ]]; then
+    exit 1
+  else
+    install_dependencies
+    chown_folders
+    chmod_folders
+    run_migrations
+  fi
 }
 
 #
@@ -371,23 +435,36 @@ install_dependencies() {
 #
 run_migrations() {
   echo "► Running database migration"
-  cd "$(dirname "$BASEDIR")/bbbeasy-backend/"
-  vendor/bin/phinx migrate -e "$ENVIRONMENT"
+  if [[ "$INSTALL_TYPE" == "docker" ]]; then
+    sudo docker restart DOCKER_BACKEND
+  else
+    cd "$(dirname "$BASEDIR")/bbbeasy-backend/"
+    vendor/bin/phinx migrate -e "$ENVIRONMENT"
+  fi
 }
 
 #
 # Run Containers
 #
 run_containers() {
-  echo "► Running Containers"
-  sudo docker-compose up -d -f "$BASEDIR/docker/docker-compose.yml"
+  if [[ "$INSTALL_TYPE" == "docker" ]]; then
+    echo "► Running Containers"
+    sudo docker-compose up -d -f "$BASEDIR/../docker-compose.yml"
+  else
+    exit 1
+  fi
 }
 
 #
 # Generate code quality metrics
 #
 generate_metrics() {
-  vendor/bin/phpmetrics --report-html="$BASEDIR/../bbbeasy-backend/public/metrics" "$BASEDIR/../bbbeasy-backend/app/src/"
+  if [[ "$INSTALL_TYPE" == "docker" ]]; then
+    echo "Not implemented yet for docker version"
+    exit 1
+  else
+    vendor/bin/phpmetrics --report-html="$BASEDIR/../bbbeasy-backend/public/metrics" "$BASEDIR/../bbbeasy-backend/app/src/"
+  fi
 }
 
 chown_folders() {
@@ -413,30 +490,42 @@ chmod_folders() {
 # Start services
 #
 start_services() {
-  sudo service postgresql start
-  sudo service redis start
-  sudo service nginx start
-  sudo service php8.2-fpm start
+  if [[ "$INSTALL_TYPE" == "docker" ]]; then
+    sudo docker-compose -f "$BASEDIR/../docker-compose.yml" start
+  else
+    sudo service postgresql start
+    sudo service redis start
+    sudo service nginx start
+    sudo service php8.2-fpm start
+  fi
 }
 
 #
 # Stop services
 #
 stop_services() {
-  sudo service postgresql stop
-  sudo service redis stop
-  sudo service nginx stop
-  sudo service php8.2-fpm stop
+  if [[ "$INSTALL_TYPE" == "docker" ]]; then
+    sudo docker-compose -f "$BASEDIR/../docker-compose.yml" stop
+  else
+    sudo service postgresql stop
+    sudo service redis stop
+    sudo service nginx stop
+    sudo service php8.2-fpm stop
+  fi
 }
 
 #
 # Restart services
 #
 restart_services() {
-  sudo service postgresql restart
-  sudo service redis restart
-  sudo service nginx restart
-  sudo service php8.2-fpm restart
+  if [[ "$INSTALL_TYPE" == "docker" ]]; then
+    sudo docker-compose -f "$BASEDIR/../docker-compose.yml" restart
+  else
+    sudo service postgresql restart
+    sudo service redis restart
+    sudo service nginx restart
+    sudo service php8.2-fpm restart
+  fi
 }
 
 run() {
@@ -454,7 +543,14 @@ run() {
     ENVIRONMENT="production"
   fi
 
+  if [ $(grep -c "INSTALL_TYPE=docker" /etc/default/bbbeasy) -eq 1 ];
+    INSTALL_TYPE="docker"
+  else
+    INSTALL_TYPE="git"
+  fi
+
   echo "► Detected environment: \`$ENVIRONMENT\`"
+  echo "► Detected installation type: \`$INSTALL_TYPE\`"
 
   while [[ $# -gt 0 ]]; do
 

@@ -114,6 +114,9 @@ read_options() {
 }
 
 install_docker_deps() {
+  echo "Install basic dependencies"
+  apt-get install -y git wget
+
   mkdir -p /etc/apt/keyrings
   curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
   echo \
@@ -214,7 +217,14 @@ install_docker() {
   wget -nc https://raw.githubusercontent.com/riadvice/bbbeasy/master/docker-compose.yml
 
   cd "$INSTALL_DIR"
+  # Create tools directory
+  mkdir -p "tools"
 
+  cd "tools"
+  # Download bbbeasy bianry
+  wget -nc https://raw.githubusercontent.com/riadvice/bbbeasy/master/tools/bbbeasy
+
+  cd "$INSTALL_DIR"
   generate_passwords
 
   #######################################
@@ -230,6 +240,7 @@ install_docker() {
 
 generate_passwords() {
   if [[ "$INSTALL_TYPE" == "docker" ]]; then
+    cd "$INSTALL_DIR"
     CURRENT_PASSWORD=$(grep "POSTGRES_PASSWORD=" docker-compose.yml | cut -d= -f2)
     # If docker-compose.yml has not been configured
     if [[ "$CURRENT_PASSWORD" == "bbbeasy" ]]; then
@@ -280,6 +291,13 @@ clone_repo() {
 }
 
 build_apps() {
+  # Define Installation Type on /etc/default/bbbeasy
+  if [[ "$INSTALL_TYPE" == "docker" ]]; then
+    echo "INSTALL_TYPE=docker" > /etc/default/bbbeasy
+  elif [[ "$INSTALL_TYPE" == "git" ]]; then
+    echo "INSTALL_TYPE=git" > /etc/default/bbbeasy
+  fi
+
   "$INSTALL_DIR/tools/./bbbeasy" -si
   if [[ "$INSTALL_TYPE" == "docker" ]]; then
     bbbeasy -rc
@@ -302,7 +320,6 @@ install() {
   read_options "$@"
   if [[ "$INSTALL_TYPE" == "docker" ]]; then
     echo "-- Installing docker version --"
-    install_common_deps
     install_docker_deps
     install_docker
     build_apps
