@@ -20,4 +20,4 @@ COPY package/ressources/BBBE-FRONTEND/config/bbbe-frontend.conf /etc/nginx/conf.
 RUN rm /etc/nginx/conf.d/default.conf
 
 
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["nginx", "-g", "daemon off; load_module modules/ngx_http_js_module.so;"]

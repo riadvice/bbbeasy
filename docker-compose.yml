@@ -38,8 +38,9 @@ services:
       - ./docker/phinx.yml:/var/www/html/bbbeasy-backend/phinx.yml:ro
       - ./docker/www-bbbeasy.conf:/usr/local/etc/php-fpm.d/www-bbbeasy.conf:ro
       - ./docker/default.ini:/var/www/html/bbbeasy-backend/app/config/default.ini:ro
-      - ./docker/config-production.ini:/var/www/html/bbbeasy-backend/app/config/config-production.ini:ro
+      - ./docker/config-production.ini:/var/www/html/bbbeasy-backend/app/config/config-production.ini:rw
       - ./docker/logs/backend:/var/www/html/bbbeasy-backend/logs/:rw
+      - ./docker/logs/nginx:/var/log/nginx:rw
       - ./docker/cache:/var/www/html/bbbeasy-backend/tmp/:rw
   bbbeasy-docs:
     restart: always

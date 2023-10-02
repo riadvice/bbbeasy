@@ -2,6 +2,7 @@ FROM php:8.2.3-fpm-alpine3.17
 
 LABEL authors="ghazi.triki@riadvice.tn,wael.bouslama@riadvice.tn,o.moussi@arribatt.com"
 
+# Environment Variables
 ENV TERM="xterm"
 
 # Update headers
@@ -66,18 +67,15 @@ COPY bbbeasy-backend/. /var/www/html/bbbeasy-backend
 
 WORKDIR /var/www/html/bbbeasy-backend
 
-
-RUN sed -i 's/listen = 9000/listen = 8000/g' /usr/local/etc/php-fpm.d/zz-docker.conf
-
-#setting permissions
-RUN sed -i '4i \chown -R www-data:www-data /var/www/html && chmod -R 770 /var/www/html' /usr/local/bin/docker-php-entrypoint
-
+# Copy the entrypoint.sh script
+COPY package/bbbeasy-backend.entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
 
 #preparing Nginx
 RUN rm /etc/nginx/http.d/*
 COPY package/ressources/BBBE-BACKEND/config/nginx/bbbe-backend.conf /etc/nginx/http.d/
-RUN sed -i '3i nginx -g '\''daemon on;'\''' /usr/local/bin/docker-php-entrypoint
 
  
-CMD php vendor/bin/phinx migrate -e production && php-fpm 
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 
+EXPOSE 8000
