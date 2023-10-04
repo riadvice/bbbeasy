@@ -62,7 +62,7 @@ if [[ "$DISTRIB_ID" != "Ubuntu" && "$DISTRIB_RELEASE" != "22.04" ]]; then
 fi
 
 # Setup default values
-HV_HOST=$(hostname)
+#HV_HOST=$(hostname)
 INSTALL_TYPE="git"
 INSTALL_DIR="/opt/bbbeasy"
 ADMIN_EMAIL=$(grep '^root:' /etc/passwd | awk -F'[<>]' '{print $2}')
@@ -72,39 +72,73 @@ ENVIRONMENT="production"
 # Additional values
 BACKEND_DIR="$INSTALL_DIR/bbbeasy-backend"
 
+# Docker bbbeasy default names
+DOCKER_FRONTEND=bbbeasy-frontend
+DOCKER_DOCS=bbbeasy-docs
+DOCKER_BACKEND=bbbeasy-backend
+DOCKER_CACHE=bbbeasy_cache
+DOCKER_DB=bbbeasy_db
+
+say() {
+  echo "bbbeasy-install: $1"
+}
+
+err() {
+  say "$1" >&2
+  exit 1
+}
+
+check_root() {
+  if [ $EUID != 0 ]; then
+    err "You must run this command as root."
+    exit 0
+  fi
+}
+
+usage_err() {
+  say "$1" >&2
+  # usage
+  # TODO: prepare usage function
+  exit 1
+}
+
 # Read CLI options
 read_options() {
-  while [[ $# -gt 0 ]]; do
-    case $1 in
-    -h | --host)
-      HV_HOST="$2"
-      shift
+  while builtin getopts "h:t:d:e:x" opt "${@}"; do
+    case "${opt}" in
+    h)
+      HV_HOST="${OPTARG}"
       ;;
-    -t | --type)
-      case "$2" in
+    t)
+     case "${OPTARG}" in
       docker | git)
-        INSTALL_TYPE="$2"
-        shift
+        INSTALL_TYPE="${OPTARG}"
+        #shift
         ;;
       *)
         echo "Error: option --type only accepts \"docker\" or \"git\""
         exit 1
         ;;
       esac
-      shift
       ;;
-    -d | --dir)
-      INSTALL_DIR="$2"
-      shift
+    d)
+      INSTALL_DIR="${OPTARG}"
       ;;
-    *)
+    e)
+      ADMIN_EMAIL="${OPTARG}"
+      ;;
+    x)
+      LETS_ENCRYPT_OPTIONS=(--manual --preferred-challenges dns)
+      ;;
+    :)
+      err "Missing option argument for -$OPTARG"
+      ;;
+    \?)
       echo "Unknown option: $1"
-      exit 1
+      usage_err "Invalid option: -$OPTARG" >&2
       ;;
     esac
-    shift
   done
-  # TODO: capture admin email option
   echo "---- INSTALL OPTIONS ----"
   echo "Hostname  : $HV_HOST"
   echo "Type      : $INSTALL_TYPE"
@@ -210,11 +244,11 @@ install_docker() {
   # Download docker configuration files
   wget -nc https://raw.githubusercontent.com/riadvice/bbbeasy/master/docker/default.ini
   wget -nc https://raw.githubusercontent.com/riadvice/bbbeasy/master/docker/config-production.ini
-  wget -nc https://raw.githubusercontent.com/riadvice/bbbeasy/master/docker/bbbeasy.conf
   wget -nc https://raw.githubusercontent.com/riadvice/bbbeasy/master/docker/phinx.yml
   wget -nc https://raw.githubusercontent.com/riadvice/bbbeasy/master/docker/php.ini
   wget -nc https://raw.githubusercontent.com/riadvice/bbbeasy/master/docker/www-bbbeasy.conf
   wget -nc https://raw.githubusercontent.com/riadvice/bbbeasy/master/docker-compose.yml
+  wget -nc https://raw.githubusercontent.com/riadvice/bbbeasy/master/package/ressources/BBBE-FRONTEND/config/bbbe-frontend.conf
 
   cd "$INSTALL_DIR"
   # Create tools directory
@@ -275,8 +309,24 @@ setup_host() {
 }
 
 generate_ssl() {
-  apt-get install -y certbot
-  certbot certonly --standalone --non-interactive --preferred-challenges http -d $HV_HOST --email $ADMIN_EMAIL --agree-tos -n
+  if [[ "$INSTALL_TYPE" == "docker" ]]; then
+    cd "$INSTALL_DIR"
+    docker compose run --rm  certbot certonly --webroot --webroot-path /var/www/certbot/ --email $ADMIN_EMAIL -d $HV_HOST --agree-tos --non-interactive
+    # Create Crontab for auto renw of the SSL
+    (crontab -l; echo "30 2 * * 1 docker compose -f $INSTALL_DIR/docker-compose.yml  run --rm certbot renew") | crontab -
+    (crontab -l; echo "35 2 * * 1 docker restart $DOCKER_FRONTEND") | crontab -
+    LIVE_DIR="$INSTALL_DIR/docker/certbot/conf/live/$HV_HOST"
+    if [ -n "$(find "$LIVE_DIR" -mindepth 1 -print -quit)" ]; then
+      cd "docker"
+      wget -nc https://raw.githubusercontent.com/riadvice/bbbeasy/master/package/ressources/BBBE-FRONTEND/config/bbbe-frontend-ssl.conf
+      cd "$INSTALL_DIR"
+      sed -e "s/bbbeasy.test/$HV_HOST/g" -i "docker/bbbe-frontend-ssl.conf"
+      sed -i 's/bbbe-frontend-ssl.conf:/bbbe-frontend.conf:/g' docker-compose.yml
+    fi
+  else
+    apt-get install -y certbot
+    certbot certonly --standalone --non-interactive --preferred-challenges http -d $HV_HOST --email $ADMIN_EMAIL --agree-tos -n
+  fi
 }
 
 clone_repo() {
@@ -300,6 +350,7 @@ build_apps() {
 
   "$INSTALL_DIR/tools/./bbbeasy" -si
   if [[ "$INSTALL_TYPE" == "docker" ]]; then
+    #TODO Edit bbbeasy-frontend nginx configruation for check ssl
     bbbeasy -rc
     echo "► Waiting until containers UP"
     sleep 30
@@ -313,27 +364,32 @@ build_apps() {
     sed -i "s|HV_HOST|$HV_HOST|g" /etc/nginx/sites-available/bbbeasy
     bbbeasy -d
     bbbeasy -ei
+    service nginx restart
   fi
 }
 
 install() {
+  check_root
   read_options "$@"
+  if [ -z "$HV_HOST" ]; then
+    HV_HOST=$(hostname)
+  fi
   if [[ "$INSTALL_TYPE" == "docker" ]]; then
     echo "-- Installing docker version --"
     install_docker_deps
     install_docker
-    build_apps
   elif [[ "$INSTALL_TYPE" == "git" ]]; then
     echo "-- Installing git version --"
     install_common_deps
     install_deps
     service nginx stop
-    generate_ssl
     clone_repo
     generate_passwords
-    build_apps
-    service nginx restart
   fi
+  if [ -n "$ADMIN_EMAIL" ] && [ -n "$HV_HOST" ]; then
+    generate_ssl
+  fi
+  build_apps
 }
 
 install "$@" 2>&1 | tee -a "/tmp/bbbeasy-install-$NOW.log"
