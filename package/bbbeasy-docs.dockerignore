@@ -1,0 +1,3 @@
+bbbeasy-backend/app/config/config-*.ini
+bbbeasy-backend/app/config/default.ini
+bbbeasy-backend/logs/*.log
