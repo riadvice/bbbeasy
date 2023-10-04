@@ -129,15 +129,15 @@ class Room extends BaseModel
         return $data;
     }
 
-    public function getRoomInfos($room): array
+    public function getRoomInfos(): array
     {
         return [
-            'id'         => $room->id,
-            'name'       => $room->name,
-            'preset_id'  => $room->getPresetID($this->id)['preset_id'],
-            'user_id'    => $room->getUserID($this->id)['user_id'],
-            'short_link' => $room->short_link,
-            'labels'     => $room->getLabels($room->id),
+            'id'         => $this->id,
+            'name'       => $this->name,
+            'preset_id'  => $this->getPresetID($this->id)['preset_id'],
+            'user_id'    => $this->getUserID($this->id)['user_id'],
+            'short_link' => $this->short_link,
+            'labels'     => $this->getLabels($this->id),
         ];
     }
 

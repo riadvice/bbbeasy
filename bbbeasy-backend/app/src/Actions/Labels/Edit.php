@@ -65,6 +65,7 @@ class Edit extends BaseAction
                 $label->color       = $form['color'];
 
                 $colorExist = $checkLabel->colorExists($form['color'], $id);
+                // @fixme: ambiguous double cehck for $colorExist
                 if ($colorExist) {
                     if ($colorExist) {
                         $message = ['name' => $nameErrorMessage, 'color' => $colorErrorMessage];
@@ -87,7 +88,7 @@ class Edit extends BaseAction
                 }
 
                 $this->logger->info('Label successfully updated', ['Label' => $label->toArray()]);
-                $this->renderJson(['result' => 'success', 'label' => $label->getLabelInfos($label)]);
+                $this->renderJson(['result' => 'success', 'label' => $label->getLabelInfos()]);
             } else {
                 $this->logger->error($errorMessage, ['errors' => $dataChecker->getErrors()]);
                 $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
