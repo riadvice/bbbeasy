@@ -37,6 +37,7 @@ class GetFile extends BaseAction
     {
         $file = $f3->get('PARAMS.filename');
 
+        // @fixme: relative paths must be avoided for security reasons, instead use or create F3 hive properties/config
         return \Web::instance()->send('../uploads/' . $file);
     }
 }

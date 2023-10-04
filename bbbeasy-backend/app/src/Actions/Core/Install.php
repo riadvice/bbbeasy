@@ -128,7 +128,7 @@ class Install extends BaseAction
                                         $presetSettings = new PresetSetting();
                                         $result         = $presetSettings->savePresetSettings($presets);
 
-                                        if ('string' === \gettype($result)) {
+                                        if (\is_string($result)) {
                                             $this->renderJson(['errors' => $result], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
                                         }
                                     }

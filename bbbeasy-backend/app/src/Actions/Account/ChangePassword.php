@@ -96,7 +96,7 @@ class ChangePassword extends BaseAction
     {
         try {
             $user->password = $password;
-            $user->status = UserStatus::ACTIVE;
+            $user->status   = UserStatus::ACTIVE;
             $resetToken->save();
             $user->save();
         } catch (\Exception $e) {
