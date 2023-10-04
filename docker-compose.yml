@@ -4,7 +4,7 @@ networks:
   bbbeasy-network:
     ipam:
       config:
-        - subnet: 172.55.0.0/24
+        - subnet: 172.25.0.0/24
 
 services:
   bbbeasy-frontend:
@@ -18,7 +18,7 @@ services:
       - "443:443"
     networks:
       bbbeasy-network:
-        ipv4_address: 172.55.0.20
+        ipv4_address: 172.25.0.20
     volumes:
       - ./docker/logs/nginx:/var/log/nginx:rw
       - ./docker/certbot/www:/var/www/certbot/:ro
@@ -33,7 +33,7 @@ services:
       - cache
     networks:
       bbbeasy-network:
-        ipv4_address: 172.55.0.21
+        ipv4_address: 172.25.0.21
     volumes:
       - ./docker/php.ini:/usr/local/etc/php/conf.d/custom.ini:ro
       - ./docker/phinx.yml:/var/www/html/bbbeasy-backend/phinx.yml:ro
@@ -52,7 +52,7 @@ services:
       - cache
     networks:
       bbbeasy-network:
-        ipv4_address: 172.55.0.22
+        ipv4_address: 172.25.0.22
     volumes:
       - ./docker/logs/nginx:/var/log/nginx:rw
   db:
@@ -67,7 +67,7 @@ services:
       - POSTGRES_PASSWORD=bbbeasy
     networks:
       bbbeasy-network:
-        ipv4_address: 172.55.0.50
+        ipv4_address: 172.25.0.50
     volumes:
       - ./docker/data/postgres:/var/lib/postgresql/data
   cache:
@@ -78,7 +78,7 @@ services:
       - "6379:6379"
     networks:
       bbbeasy-network:
-        ipv4_address: 172.55.0.60
+        ipv4_address: 172.25.0.60
   certbot:
     restart: always
     image: certbot/certbot:latest
