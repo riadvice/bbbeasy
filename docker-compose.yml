@@ -9,7 +9,7 @@ networks:
 services:
   bbbeasy-frontend:
     restart: always
-    image: riadvice/bbbeasy-frontend
+    image: waelsan/bbbeasy-frontend:v1.0.0
     container_name: bbbeasy-frontend
     depends_on:
       - bbbeasy-backend
@@ -21,11 +21,12 @@ services:
         ipv4_address: 172.55.0.20
     volumes:
       - ./docker/logs/nginx:/var/log/nginx:rw
-      - ./docker/certs/fullchain.pem:/etc/nginx/certs/fullchain.pem:ro
-      - ./docker/certs/privkey.pem:/etc/nginx/certs/privkey.pem:ro
+      - ./docker/certbot/www:/var/www/certbot/:ro
+      - ./docker/certbot/conf/:/etc/nginx/ssl/:ro
+      - ./docker/bbbe-frontend.conf:/etc/nginx/conf.d/bbbe-frontend.conf
   bbbeasy-backend:
     restart: always
-    image: riadvice/bbbeasy-backend
+    image: waelsan/bbbeasy-backend:v1.0.0
     container_name: bbbeasy-backend
     depends_on:
       - db
@@ -44,7 +45,7 @@ services:
       - ./docker/cache:/var/www/html/bbbeasy-backend/tmp/:rw
   bbbeasy-docs:
     restart: always
-    image: riadvice/bbbeasy-docs
+    image: waelsan/bbbeasy-docs:v1.0.0
     container_name: bbbeasy-docs
     depends_on:
       - db
@@ -68,7 +69,7 @@ services:
       bbbeasy-network:
         ipv4_address: 172.55.0.50
     volumes:
-      - postgresdata:/var/lib/postgresql/data
+      - ./docker/data/postgres:/var/lib/postgresql/data
   cache:
     restart: always
     image: redis:7.0.9-alpine3.17
@@ -78,12 +79,11 @@ services:
     networks:
       bbbeasy-network:
         ipv4_address: 172.55.0.60
+  certbot:
+    restart: always
+    image: certbot/certbot:latest
+    container_name: certbot
+    volumes:
+      - ./docker/certbot/www:/var/www/certbot/:rw
+      - ./docker/certbot/conf/:/etc/letsencrypt/:rw
 
-volumes:
-  bbbeasy-repo:
-  postgresdata:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ./docker/data/postgres
