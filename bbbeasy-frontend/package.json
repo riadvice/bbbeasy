@@ -65,8 +65,8 @@
         "nth-check": "^2.1.1"
     },
     "scripts": {
-        "start-dev": "bbbeasy -ew && PORT=3300 NODE_ENV=development INSTALLER_FEATURE=false FAST_REFRESH=true craco start",
-        "start-dev-installer": "bbbeasy -ei && PORT=3300 NODE_ENV=development INSTALLER_FEATURE=true FAST_REFRESH=true craco start",
+        "start-dev": "./bbbeasy -ew && PORT=3300 NODE_ENV=development INSTALLER_FEATURE=false FAST_REFRESH=true craco start",
+        "start-dev-installer": "./bbbeasy -ei && PORT=3300 NODE_ENV=development INSTALLER_FEATURE=true FAST_REFRESH=true craco start",
         "build": "INSTALLER_FEATURE=false GENERATE_SOURCEMAP=false craco build",
         "build-installer": "INSTALLER_FEATURE=true craco build",
         "nyc": "nyc instrument --compact=false src instrumented",
