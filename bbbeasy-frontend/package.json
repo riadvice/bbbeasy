@@ -104,7 +104,7 @@
         "@crowdin/cli": "^3.13.0",
         "@cypress/code-coverage": "^3.10.7",
         "@testing-library/jest-dom": "^5.16.5",
-        "@testing-library/react": "^12.1.5",
+        "@testing-library/react": "^14.1.0",
         "@testing-library/user-event": "^14.4.3",
         "@types/node": "^18.16.17",
         "@types/pino": "^7.0.5",
