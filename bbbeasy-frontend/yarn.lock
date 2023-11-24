@@ -3715,10 +3715,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^18.16.17":
-  version: 18.16.17
-  resolution: "@types/node@npm:18.16.17"
-  checksum: 2f7e3a552d525ef4b7a2620ef5ef59b3fdfb1d8ab20627b537e090732b35c2bd103944933d347a319cc7d478b3866b0d1bc3d629ee5899ca663a4547ca078cee
+"@types/node@npm:^20.9.5":
+  version: 20.9.5
+  resolution: "@types/node@npm:20.9.5"
+  dependencies:
+    undici-types: ~5.26.4
+  checksum: 050ebd958e31ad21143f93614a25b15a8de5d0004338359409f76a661f734c4549698d852f21176c62f5661dacb572a090669cffef93cf6361c959e4d27d8d95
   languageName: node
   linkType: hard
 
@@ -5412,7 +5414,7 @@ __metadata:
     "@testing-library/react": ^12.1.5
     "@testing-library/user-event": ^14.4.3
     "@types/lodash": ^4.14.195
-    "@types/node": ^18.16.17
+    "@types/node": ^20.9.5
     "@types/pino": ^7.0.5
     "@types/react": ^17.0.61
     "@types/react-dom": ^17.0.20
@@ -19010,11 +19012,11 @@ __metadata:
 
 "typescript@patch:typescript@^4.9.5#~builtin<compat/typescript>":
   version: 4.9.5
-  resolution: "typescript@patch:typescript@npm%3A4.9.5#~builtin<compat/typescript>::version=4.9.5&hash=23ec76"
+  resolution: "typescript@patch:typescript@npm%3A4.9.5#~builtin<compat/typescript>::version=4.9.5&hash=289587"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: ab417a2f398380c90a6cf5a5f74badd17866adf57f1165617d6a551f059c3ba0a3e4da0d147b3ac5681db9ac76a303c5876394b13b3de75fdd5b1eaa06181c9d
+  checksum: 1f8f3b6aaea19f0f67cba79057674ba580438a7db55057eb89cc06950483c5d632115c14077f6663ea76fd09fce3c190e6414bb98582ec80aa5a4eaf345d5b68
   languageName: node
   linkType: hard
 
@@ -19027,6 +19029,13 @@ __metadata:
     has-symbols: ^1.0.3
     which-boxed-primitive: ^1.0.2
   checksum: b7a1cf5862b5e4b5deb091672ffa579aa274f648410009c81cca63fed3b62b610c4f3b773f912ce545bb4e31edc3138975b5bc777fc6e4817dca51affb6380e9
+  languageName: node
+  linkType: hard
+
+"undici-types@npm:~5.26.4":
+  version: 5.26.5
+  resolution: "undici-types@npm:5.26.5"
+  checksum: 3192ef6f3fd5df652f2dc1cd782b49d6ff14dc98e5dced492aa8a8c65425227da5da6aafe22523c67f035a272c599bb89cfe803c1db6311e44bed3042fc25487
   languageName: node
   linkType: hard
 
