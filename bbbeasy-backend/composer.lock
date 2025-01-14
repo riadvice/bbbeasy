@@ -8,20 +8,20 @@
     "packages": [
         {
             "name": "bcosca/fatfree-core",
-            "version": "3.8.2",
+            "version": "3.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/f3-factory/fatfree-core.git",
-                "reference": "774692ce7698904d3cb35bbd4f79376bb17eeddc"
+                "reference": "227b3b03315ab86b1601d9e9fd8e07efbedf6ab9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/f3-factory/fatfree-core/zipball/774692ce7698904d3cb35bbd4f79376bb17eeddc",
-                "reference": "774692ce7698904d3cb35bbd4f79376bb17eeddc",
+                "url": "https://api.github.com/repos/f3-factory/fatfree-core/zipball/227b3b03315ab86b1601d9e9fd8e07efbedf6ab9",
+                "reference": "227b3b03315ab86b1601d9e9fd8e07efbedf6ab9",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.4"
+                "php": ">=7.2"
             },
             "type": "library",
             "autoload": {
@@ -37,9 +37,19 @@
             "homepage": "http://fatfreeframework.com/",
             "support": {
                 "issues": "https://github.com/f3-factory/fatfree-core/issues",
-                "source": "https://github.com/f3-factory/fatfree-core/tree/3.8.2"
+                "source": "https://github.com/f3-factory/fatfree-core/tree/3.9.0"
             },
-            "time": "2023-07-23T22:11:30+00:00"
+            "funding": [
+                {
+                    "url": "https://www.buymeacoffee.com/ikkez",
+                    "type": "buy_me_a_coffee"
+                },
+                {
+                    "url": "https://github.com/ikkez",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-12-31T17:11:04+00:00"
         },
         {
             "name": "bigbluebutton/bigbluebutton-api-php",
@@ -6298,9 +6308,9 @@
     ],
     "minimum-stability": "stable",
     "stability-flags": {
-        "bigbluebutton/bigbluebutton-api-php": 20,
         "ikkez/f3-cortex": 20,
         "ikkez/f3-mailer": 20,
+        "bigbluebutton/bigbluebutton-api-php": 20,
         "roave/security-advisories": 20
     },
     "prefer-stable": false,
@@ -6317,5 +6327,5 @@
     "platform-dev": {
         "ext-xdebug": ">=3.2.0"
     },
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.3.0"
 }
