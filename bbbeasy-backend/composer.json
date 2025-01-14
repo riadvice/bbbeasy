@@ -43,7 +43,7 @@
   "require-dev": {
     "roave/security-advisories": "dev-latest",
     "ext-xdebug": ">=3.2.0",
-    "kint-php/kint": "^5.0.5",
+    "kint-php/kint": "^6.0.1",
     "fakerphp/faker": "^v1.23.0",
     "friendsofphp/php-cs-fixer": "^v3.15.1",
     "phpunit/php-code-coverage": "^10.1.2",
