@@ -38,6 +38,10 @@ Vagrant.configure("2") do |config|
     vb.memory = options["memory"]
     # machine name (for VirtualBox UI)
     vb.name = options["machine_name"]
+
+    # ENABLE SYMLINKS FOR NFS/SYNCED FOLDERS
+    # This is required for Node.js to work correctly with synced folders
+    vb.customize ["setextradata", :id, "VBoxInternal2/SharedFoldersEnableSymlinksCreate//app", "1"]
   end
 
   # machine name (for vagrant console)
