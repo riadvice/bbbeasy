@@ -23,7 +23,7 @@ options = YAML.load_file config[:local]
 # vagrant configurate
 Vagrant.configure("2") do |config|
   # select the box
-  config.vm.box = "ubuntu/jammy64"
+  config.vm.box = "alvistack/ubuntu-24.04"
 
   # should we ask about box updates?
   config.vm.box_check_update = options["box_check_update"]
