@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fac6636379d00f6a5d163521422f3186",
+    "content-hash": "33df94f8bb861670085bbc28637d1417",
     "packages": [
         {
             "name": "bcosca/fatfree-core",
@@ -353,6 +353,195 @@
             "time": "2024-06-23T00:11:14+00:00"
         },
         {
+            "name": "carbonphp/carbon-doctrine-types",
+            "version": "3.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/CarbonPHP/carbon-doctrine-types.git",
+                "reference": "18ba5ddfec8976260ead6e866180bd5d2f71aa1d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/CarbonPHP/carbon-doctrine-types/zipball/18ba5ddfec8976260ead6e866180bd5d2f71aa1d",
+                "reference": "18ba5ddfec8976260ead6e866180bd5d2f71aa1d",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.1"
+            },
+            "conflict": {
+                "doctrine/dbal": "<4.0.0 || >=5.0.0"
+            },
+            "require-dev": {
+                "doctrine/dbal": "^4.0.0",
+                "nesbot/carbon": "^2.71.0 || ^3.0.0",
+                "phpunit/phpunit": "^10.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Carbon\\Doctrine\\": "src/Carbon/Doctrine/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "KyleKatarn",
+                    "email": "kylekatarnls@gmail.com"
+                }
+            ],
+            "description": "Types to use Carbon in Doctrine",
+            "keywords": [
+                "carbon",
+                "date",
+                "datetime",
+                "doctrine",
+                "time"
+            ],
+            "support": {
+                "issues": "https://github.com/CarbonPHP/carbon-doctrine-types/issues",
+                "source": "https://github.com/CarbonPHP/carbon-doctrine-types/tree/3.2.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/kylekatarnls",
+                    "type": "github"
+                },
+                {
+                    "url": "https://opencollective.com/Carbon",
+                    "type": "open_collective"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/nesbot/carbon",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2024-02-09T16:56:22+00:00"
+        },
+        {
+            "name": "dragonmantank/cron-expression",
+            "version": "v3.6.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dragonmantank/cron-expression.git",
+                "reference": "d61a8a9604ec1f8c3d150d09db6ce98b32675013"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dragonmantank/cron-expression/zipball/d61a8a9604ec1f8c3d150d09db6ce98b32675013",
+                "reference": "d61a8a9604ec1f8c3d150d09db6ce98b32675013",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.2|^8.3|^8.4|^8.5"
+            },
+            "replace": {
+                "mtdowling/cron-expression": "^1.0"
+            },
+            "require-dev": {
+                "phpstan/extension-installer": "^1.4.3",
+                "phpstan/phpstan": "^1.12.32|^2.1.31",
+                "phpunit/phpunit": "^8.5.48|^9.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Cron\\": "src/Cron/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Chris Tankersley",
+                    "email": "chris@ctankersley.com",
+                    "homepage": "https://github.com/dragonmantank"
+                }
+            ],
+            "description": "CRON for PHP: Calculate the next or previous run date and determine if a CRON expression is due",
+            "keywords": [
+                "cron",
+                "schedule"
+            ],
+            "support": {
+                "issues": "https://github.com/dragonmantank/cron-expression/issues",
+                "source": "https://github.com/dragonmantank/cron-expression/tree/v3.6.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/dragonmantank",
+                    "type": "github"
+                }
+            ],
+            "time": "2025-10-31T18:51:33+00:00"
+        },
+        {
+            "name": "gabrielelana/byte-units",
+            "version": "0.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/gabrielelana/byte-units.git",
+                "reference": "eaf7b998535578c7160be30b39904a8326bb9bb8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/gabrielelana/byte-units/zipball/eaf7b998535578c7160be30b39904a8326bb9bb8",
+                "reference": "eaf7b998535578c7160be30b39904a8326bb9bb8",
+                "shasum": ""
+            },
+            "require": {
+                "ext-bcmath": "*",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": ">=4.0,<6.0"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/ByteUnits/functions.php"
+                ],
+                "psr-4": {
+                    "ByteUnits\\": "src/ByteUnits"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Gabriele Lana",
+                    "email": "gabriele.lana@gmail.com"
+                }
+            ],
+            "description": "Library to parse, format and convert byte units",
+            "homepage": "https://github.com/gabrielelana/byte-units",
+            "keywords": [
+                "byte",
+                "convert",
+                "format",
+                "parse",
+                "size",
+                "units"
+            ],
+            "support": {
+                "issues": "https://github.com/gabrielelana/byte-units/issues",
+                "source": "https://github.com/gabrielelana/byte-units/tree/master"
+            },
+            "time": "2018-01-11T10:40:03+00:00"
+        },
+        {
             "name": "haydenpierce/class-finder",
             "version": "0.5.3",
             "source": {
@@ -396,22 +585,21 @@
         },
         {
             "name": "ikkez/f3-cortex",
-            "version": "dev-master",
+            "version": "v1.7.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ikkez/f3-cortex.git",
-                "reference": "44b30fd"
+                "reference": "79468b7a04695ad343b2f4d7dbdbe575a6b08a35"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ikkez/f3-cortex/zipball/44b30fd",
-                "reference": "44b30fd",
+                "url": "https://api.github.com/repos/ikkez/f3-cortex/zipball/79468b7a04695ad343b2f4d7dbdbe575a6b08a35",
+                "reference": "79468b7a04695ad343b2f4d7dbdbe575a6b08a35",
                 "shasum": ""
             },
             "require": {
                 "ikkez/f3-schema-builder": "2.*"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "classmap": [
@@ -433,7 +621,7 @@
             ],
             "support": {
                 "issues": "https://github.com/ikkez/f3-cortex/issues",
-                "source": "https://github.com/ikkez/f3-cortex/tree/master"
+                "source": "https://github.com/ikkez/f3-cortex/tree/v1.7.8"
             },
             "funding": [
                 {
@@ -445,23 +633,62 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-07-08T20:54:22+00:00"
+            "time": "2025-02-25T00:25:02+00:00"
         },
         {
-            "name": "ikkez/f3-mailer",
-            "version": "dev-master",
+            "name": "ikkez/f3-events",
+            "version": "v1.0.3",
             "source": {
                 "type": "git",
-                "url": "https://github.com/ikkez/f3-mailer.git",
-                "reference": "972d715"
+                "url": "https://github.com/ikkez/f3-events.git",
+                "reference": "3ab4425fdf255157d9295b2bca8115d6af088a81"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ikkez/f3-mailer/zipball/972d715",
-                "reference": "972d715",
+                "url": "https://api.github.com/repos/ikkez/f3-events/zipball/3ab4425fdf255157d9295b2bca8115d6af088a81",
+                "reference": "3ab4425fdf255157d9295b2bca8115d6af088a81",
                 "shasum": ""
             },
-            "default-branch": true,
+            "require": {
+                "bcosca/fatfree-core": "3.*"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "lib/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0"
+            ],
+            "description": "Sweet event system for the PHP Fat-Free Framework",
+            "homepage": "https://github.com/ikkez/f3-events",
+            "keywords": [
+                "F3",
+                "event",
+                "fatfree"
+            ],
+            "support": {
+                "issues": "https://github.com/ikkez/f3-events/issues",
+                "source": "https://github.com/ikkez/f3-events/tree/v1.0.3"
+            },
+            "time": "2021-11-06T19:53:26+00:00"
+        },
+        {
+            "name": "ikkez/f3-mailer",
+            "version": "v1.2.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ikkez/f3-mailer.git",
+                "reference": "972d715ae38b799955647678da6a02bbb2daaa8d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ikkez/f3-mailer/zipball/972d715ae38b799955647678da6a02bbb2daaa8d",
+                "reference": "972d715ae38b799955647678da6a02bbb2daaa8d",
+                "shasum": ""
+            },
             "type": "library",
             "autoload": {
                 "classmap": [
@@ -570,6 +797,61 @@
                 "type"
             ],
             "time": "2025-09-18T15:47:24+00:00"
+        },
+        {
+            "name": "kevinlebrun/colors.php",
+            "version": "1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kevinlebrun/colors.php.git",
+                "reference": "cdda5eee41314b87cd5a8bb91b1ffc7c0210e673"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kevinlebrun/colors.php/zipball/cdda5eee41314b87cd5a8bb91b1ffc7c0210e673",
+                "reference": "cdda5eee41314b87cd5a8bb91b1ffc7c0210e673",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "3.7.*",
+                "satooshi/php-coveralls": "1.0.*",
+                "squizlabs/php_codesniffer": "1.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Colors": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Kevin Le Brun",
+                    "email": "lebrun.k@gmail.com",
+                    "homepage": "http://kevinlebrun.fr",
+                    "role": "developer"
+                }
+            ],
+            "description": "Colors for PHP CLI scripts",
+            "homepage": "https://github.com/kevinlebrun/colors.php",
+            "keywords": [
+                "cli",
+                "color",
+                "colors",
+                "console",
+                "shell"
+            ],
+            "support": {
+                "issues": "https://github.com/kevinlebrun/colors.php/issues",
+                "source": "https://github.com/kevinlebrun/colors.php/tree/master"
+            },
+            "time": "2018-05-30T08:34:23+00:00"
         },
         {
             "name": "linfo/linfo",
@@ -752,6 +1034,129 @@
             "time": "2022-04-02T12:39:57+00:00"
         },
         {
+            "name": "matthiasmullie/minify",
+            "version": "1.3.75",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/matthiasmullie/minify.git",
+                "reference": "76ba4a5f555fd7bf4aa408af608e991569076671"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/matthiasmullie/minify/zipball/76ba4a5f555fd7bf4aa408af608e991569076671",
+                "reference": "76ba4a5f555fd7bf4aa408af608e991569076671",
+                "shasum": ""
+            },
+            "require": {
+                "ext-pcre": "*",
+                "matthiasmullie/path-converter": "~1.1",
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": ">=2.0",
+                "matthiasmullie/scrapbook": ">=1.3",
+                "phpunit/phpunit": ">=4.8"
+            },
+            "suggest": {
+                "psr/cache-implementation": "Cache implementation to use with Minify::cache"
+            },
+            "bin": [
+                "bin/minifycss",
+                "bin/minifyjs"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "MatthiasMullie\\Minify\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Matthias Mullie",
+                    "email": "minify@mullie.eu",
+                    "homepage": "https://www.mullie.eu",
+                    "role": "Developer"
+                }
+            ],
+            "description": "CSS & JavaScript minifier, in PHP. Removes whitespace, strips comments, combines files (incl. @import statements and small assets in CSS files), and optimizes/shortens a few common programming patterns.",
+            "homepage": "https://github.com/matthiasmullie/minify",
+            "keywords": [
+                "JS",
+                "css",
+                "javascript",
+                "minifier",
+                "minify"
+            ],
+            "support": {
+                "issues": "https://github.com/matthiasmullie/minify/issues",
+                "source": "https://github.com/matthiasmullie/minify/tree/1.3.75"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/matthiasmullie",
+                    "type": "github"
+                }
+            ],
+            "time": "2025-06-25T09:56:19+00:00"
+        },
+        {
+            "name": "matthiasmullie/path-converter",
+            "version": "1.1.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/matthiasmullie/path-converter.git",
+                "reference": "e7d13b2c7e2f2268e1424aaed02085518afa02d9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/matthiasmullie/path-converter/zipball/e7d13b2c7e2f2268e1424aaed02085518afa02d9",
+                "reference": "e7d13b2c7e2f2268e1424aaed02085518afa02d9",
+                "shasum": ""
+            },
+            "require": {
+                "ext-pcre": "*",
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.8"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "MatthiasMullie\\PathConverter\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Matthias Mullie",
+                    "email": "pathconverter@mullie.eu",
+                    "homepage": "http://www.mullie.eu",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Relative path converter",
+            "homepage": "http://github.com/matthiasmullie/path-converter",
+            "keywords": [
+                "converter",
+                "path",
+                "paths",
+                "relative"
+            ],
+            "support": {
+                "issues": "https://github.com/matthiasmullie/path-converter/issues",
+                "source": "https://github.com/matthiasmullie/path-converter/tree/1.1.3"
+            },
+            "time": "2019-02-05T23:41:09+00:00"
+        },
+        {
             "name": "monolog/monolog",
             "version": "3.10.0",
             "source": {
@@ -853,6 +1258,111 @@
                 }
             ],
             "time": "2026-01-02T08:56:05+00:00"
+        },
+        {
+            "name": "nesbot/carbon",
+            "version": "3.11.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/CarbonPHP/carbon.git",
+                "reference": "f438fcc98f92babee98381d399c65336f3a3827f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/CarbonPHP/carbon/zipball/f438fcc98f92babee98381d399c65336f3a3827f",
+                "reference": "f438fcc98f92babee98381d399c65336f3a3827f",
+                "shasum": ""
+            },
+            "require": {
+                "carbonphp/carbon-doctrine-types": "<100.0",
+                "ext-json": "*",
+                "php": "^8.1",
+                "psr/clock": "^1.0",
+                "symfony/clock": "^6.3.12 || ^7.0 || ^8.0",
+                "symfony/polyfill-mbstring": "^1.0",
+                "symfony/translation": "^4.4.18 || ^5.2.1 || ^6.0 || ^7.0 || ^8.0"
+            },
+            "provide": {
+                "psr/clock-implementation": "1.0"
+            },
+            "require-dev": {
+                "doctrine/dbal": "^3.6.3 || ^4.0",
+                "doctrine/orm": "^2.15.2 || ^3.0",
+                "friendsofphp/php-cs-fixer": "^v3.87.1",
+                "kylekatarnls/multi-tester": "^2.5.3",
+                "phpmd/phpmd": "^2.15.0",
+                "phpstan/extension-installer": "^1.4.3",
+                "phpstan/phpstan": "^2.1.22",
+                "phpunit/phpunit": "^10.5.53",
+                "squizlabs/php_codesniffer": "^3.13.4 || ^4.0.0"
+            },
+            "bin": [
+                "bin/carbon"
+            ],
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Carbon\\Laravel\\ServiceProvider"
+                    ]
+                },
+                "phpstan": {
+                    "includes": [
+                        "extension.neon"
+                    ]
+                },
+                "branch-alias": {
+                    "dev-2.x": "2.x-dev",
+                    "dev-master": "3.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Carbon\\": "src/Carbon/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Brian Nesbitt",
+                    "email": "brian@nesbot.com",
+                    "homepage": "https://markido.com"
+                },
+                {
+                    "name": "kylekatarnls",
+                    "homepage": "https://github.com/kylekatarnls"
+                }
+            ],
+            "description": "An API extension for DateTime that supports 281 different languages.",
+            "homepage": "https://carbonphp.github.io/carbon/",
+            "keywords": [
+                "date",
+                "datetime",
+                "time"
+            ],
+            "support": {
+                "docs": "https://carbonphp.github.io/carbon/guide/getting-started/introduction.html",
+                "issues": "https://github.com/CarbonPHP/carbon/issues",
+                "source": "https://github.com/CarbonPHP/carbon"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/sponsors/kylekatarnls",
+                    "type": "github"
+                },
+                {
+                    "url": "https://opencollective.com/Carbon#sponsor",
+                    "type": "opencollective"
+                },
+                {
+                    "url": "https://tidelift.com/subscription/pkg/packagist-nesbot-carbon?utm_source=packagist-nesbot-carbon&utm_medium=referral&utm_campaign=readme",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2026-01-29T09:26:29+00:00"
         },
         {
             "name": "nette/utils",
@@ -1004,6 +1514,65 @@
             "time": "2025-12-06T11:56:16+00:00"
         },
         {
+            "name": "peppeocchi/php-cron-scheduler",
+            "version": "v4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/peppeocchi/php-cron-scheduler.git",
+                "reference": "0acfa032e60f0ea22a27b96a6b15a673a31d3448"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/peppeocchi/php-cron-scheduler/zipball/0acfa032e60f0ea22a27b96a6b15a673a31d3448",
+                "reference": "0acfa032e60f0ea22a27b96a6b15a673a31d3448",
+                "shasum": ""
+            },
+            "require": {
+                "dragonmantank/cron-expression": "^3.0",
+                "php": "^7.3 || ^8.0"
+            },
+            "require-dev": {
+                "php-coveralls/php-coveralls": "^2.4",
+                "phpunit/phpunit": "~9.5",
+                "swiftmailer/swiftmailer": "~5.4 || ^6.0"
+            },
+            "suggest": {
+                "swiftmailer/swiftmailer": "Required to send the output of a job to email address/es (~5.4 || ^6.0)."
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "GO\\": "src/GO/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Giuseppe Occhipinti",
+                    "email": "peppeocchi@gmail.com"
+                },
+                {
+                    "name": "Carsten Windler",
+                    "email": "carsten@carstenwindler.de",
+                    "homepage": "http://carstenwindler.de",
+                    "role": "Contributor"
+                }
+            ],
+            "description": "PHP Cron Job Scheduler",
+            "keywords": [
+                "cron job",
+                "scheduler"
+            ],
+            "support": {
+                "issues": "https://github.com/peppeocchi/php-cron-scheduler/issues",
+                "source": "https://github.com/peppeocchi/php-cron-scheduler/tree/v4.0"
+            },
+            "time": "2021-04-22T21:32:03+00:00"
+        },
+        {
             "name": "phpstan/phpstan",
             "version": "1.12.32",
             "dist": {
@@ -1055,6 +1624,54 @@
                 }
             ],
             "time": "2025-09-30T10:16:31+00:00"
+        },
+        {
+            "name": "psr/clock",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/clock.git",
+                "reference": "e41a24703d4560fd0acb709162f73b8adfc3aa0d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/clock/zipball/e41a24703d4560fd0acb709162f73b8adfc3aa0d",
+                "reference": "e41a24703d4560fd0acb709162f73b8adfc3aa0d",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.0 || ^8.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Clock\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "https://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interface for reading the clock.",
+            "homepage": "https://github.com/php-fig/clock",
+            "keywords": [
+                "clock",
+                "now",
+                "psr",
+                "psr-20",
+                "time"
+            ],
+            "support": {
+                "issues": "https://github.com/php-fig/clock/issues",
+                "source": "https://github.com/php-fig/clock/tree/1.0.0"
+            },
+            "time": "2022-11-25T14:36:26+00:00"
         },
         {
             "name": "psr/container",
@@ -1542,6 +2159,210 @@
                 "source": "https://github.com/cakephp/phinx/tree/0.13.4"
             },
             "time": "2023-01-07T00:42:55+00:00"
+        },
+        {
+            "name": "sukarix/f3-access",
+            "version": "v1.2.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sukarix/f3-access.git",
+                "reference": "5cb89fb7df24da2d961383980a26449774b51188"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sukarix/f3-access/zipball/5cb89fb7df24da2d961383980a26449774b51188",
+                "reference": "5cb89fb7df24da2d961383980a26449774b51188",
+                "shasum": ""
+            },
+            "require": {
+                "bcosca/fatfree-core": "3.*"
+            },
+            "require-dev": {
+                "roave/security-advisories": "dev-latest"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "lib/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0"
+            ],
+            "description": "Route access control for the PHP Fat-Free Framework",
+            "homepage": "https://github.com/sukarix/f3-access",
+            "keywords": [
+                "F3",
+                "access control",
+                "acl",
+                "fatfree",
+                "permissions"
+            ],
+            "support": {
+                "issues": "https://github.com/sukarix/f3-access/issues",
+                "source": "https://github.com/sukarix/f3-access"
+            },
+            "time": "2024-06-17T09:29:34+00:00"
+        },
+        {
+            "name": "sukarix/sukarix",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sukarix/sukarix.git",
+                "reference": "8b2f1df0a3c3d14d2cdace9ecbf1454cb70bb7c0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sukarix/sukarix/zipball/8b2f1df0a3c3d14d2cdace9ecbf1454cb70bb7c0",
+                "reference": "8b2f1df0a3c3d14d2cdace9ecbf1454cb70bb7c0",
+                "shasum": ""
+            },
+            "require": {
+                "bcosca/fatfree-core": "^3.9.2",
+                "gabrielelana/byte-units": "^0.5.0",
+                "ikkez/f3-cortex": "^v1.7.8",
+                "ikkez/f3-events": "^1.0.3",
+                "ikkez/f3-mailer": "^1.2.3",
+                "kevinlebrun/colors.php": "^1.0.3",
+                "marc-mabe/php-enum": "^v4.7.2",
+                "matthiasmullie/minify": "^1.3.75",
+                "monolog/monolog": "^3.10.0",
+                "nesbot/carbon": "^3.11.1",
+                "peppeocchi/php-cron-scheduler": "^v4.0",
+                "php": "^8.4",
+                "respect/validation": "^2.4.10",
+                "sukarix/f3-access": "^v1.2.3",
+                "tracy/tracy": "^v2.11.0",
+                "xfra35/f3-multilang": "^v1.3.2"
+            },
+            "require-dev": {
+                "ext-xdebug": "*",
+                "friendsofphp/php-cs-fixer": "^v3.93.1",
+                "nunomaduro/phpinsights": "^2.13.3",
+                "phpmetrics/phpmetrics": "^v2.9.1",
+                "phpstan/phpstan": "^1.12.32",
+                "rector/rector": "^1.2.10",
+                "roave/security-advisories": "dev-latest",
+                "squizlabs/php_codesniffer": "^3.13.5",
+                "vimeo/psalm": "^6.13.0",
+                "wapmorgan/php-deprecation-detector": "^2.0.33"
+            },
+            "suggest": {
+                "ikkez/f3-middleware": "A middleware router plugin for PHP Fat-Free Framework"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Sukarix\\": "src/Sukarix/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "RIADVICE",
+                    "email": "contact@riadvice.com"
+                },
+                {
+                    "name": "Ghazi Triki",
+                    "email": "ghazi.triki@riadvice.com"
+                }
+            ],
+            "description": "The Sukarix Framework - Just the Right Amount of Sweetness and Efficiency on Top of Fat-Free",
+            "homepage": "https://sukarix.com",
+            "keywords": [
+                "fat-free",
+                "framework",
+                "php",
+                "sukarix"
+            ],
+            "support": {
+                "issues": "https://github.com/suakrix/suakrix/issues",
+                "source": "https://github.com/suakrix/suakrix"
+            },
+            "time": "2026-02-14T10:19:15+00:00"
+        },
+        {
+            "name": "symfony/clock",
+            "version": "v8.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/clock.git",
+                "reference": "832119f9b8dbc6c8e6f65f30c5969eca1e88764f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/clock/zipball/832119f9b8dbc6c8e6f65f30c5969eca1e88764f",
+                "reference": "832119f9b8dbc6c8e6f65f30c5969eca1e88764f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.4",
+                "psr/clock": "^1.0"
+            },
+            "provide": {
+                "psr/clock-implementation": "1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "Resources/now.php"
+                ],
+                "psr-4": {
+                    "Symfony\\Component\\Clock\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Decouples applications from the system clock",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "clock",
+                "psr20",
+                "time"
+            ],
+            "support": {
+                "source": "https://github.com/symfony/clock/tree/v8.0.0"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/nicolas-grekas",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2025-11-12T15:46:48+00:00"
         },
         {
             "name": "symfony/config",
@@ -2770,6 +3591,181 @@
             "time": "2026-01-12T10:54:30+00:00"
         },
         {
+            "name": "symfony/translation",
+            "version": "v8.0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/translation.git",
+                "reference": "db70c8ce7db74fd2da7b1d268db46b2a8ce32c10"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/translation/zipball/db70c8ce7db74fd2da7b1d268db46b2a8ce32c10",
+                "reference": "db70c8ce7db74fd2da7b1d268db46b2a8ce32c10",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.4",
+                "symfony/polyfill-mbstring": "^1.0",
+                "symfony/translation-contracts": "^3.6.1"
+            },
+            "conflict": {
+                "nikic/php-parser": "<5.0",
+                "symfony/http-client-contracts": "<2.5",
+                "symfony/service-contracts": "<2.5"
+            },
+            "provide": {
+                "symfony/translation-implementation": "2.3|3.0"
+            },
+            "require-dev": {
+                "nikic/php-parser": "^5.0",
+                "psr/log": "^1|^2|^3",
+                "symfony/config": "^7.4|^8.0",
+                "symfony/console": "^7.4|^8.0",
+                "symfony/dependency-injection": "^7.4|^8.0",
+                "symfony/finder": "^7.4|^8.0",
+                "symfony/http-client-contracts": "^2.5|^3.0",
+                "symfony/http-kernel": "^7.4|^8.0",
+                "symfony/intl": "^7.4|^8.0",
+                "symfony/polyfill-intl-icu": "^1.21",
+                "symfony/routing": "^7.4|^8.0",
+                "symfony/service-contracts": "^2.5|^3",
+                "symfony/yaml": "^7.4|^8.0"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "Resources/functions.php"
+                ],
+                "psr-4": {
+                    "Symfony\\Component\\Translation\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Provides tools to internationalize your application",
+            "homepage": "https://symfony.com",
+            "support": {
+                "source": "https://github.com/symfony/translation/tree/v8.0.4"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/nicolas-grekas",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2026-01-13T13:06:50+00:00"
+        },
+        {
+            "name": "symfony/translation-contracts",
+            "version": "v3.6.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/translation-contracts.git",
+                "reference": "65a8bc82080447fae78373aa10f8d13b38338977"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/translation-contracts/zipball/65a8bc82080447fae78373aa10f8d13b38338977",
+                "reference": "65a8bc82080447fae78373aa10f8d13b38338977",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.1"
+            },
+            "type": "library",
+            "extra": {
+                "thanks": {
+                    "url": "https://github.com/symfony/contracts",
+                    "name": "symfony/contracts"
+                },
+                "branch-alias": {
+                    "dev-main": "3.6-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Contracts\\Translation\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Test/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Generic abstractions related to translation",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "abstractions",
+                "contracts",
+                "decoupling",
+                "interfaces",
+                "interoperability",
+                "standards"
+            ],
+            "support": {
+                "source": "https://github.com/symfony/translation-contracts/tree/v3.6.1"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/nicolas-grekas",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2025-07-15T13:41:35+00:00"
+        },
+        {
             "name": "symfony/type-info",
             "version": "v8.0.4",
             "source": {
@@ -3004,6 +4000,47 @@
                 "source": "https://github.com/nette/tracy/tree/v2.11.1"
             },
             "time": "2026-02-08T02:51:45+00:00"
+        },
+        {
+            "name": "xfra35/f3-multilang",
+            "version": "v1.3.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/xfra35/f3-multilang.git",
+                "reference": "fc227fba6b70f4046365874539c831ae85bd0330"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/xfra35/f3-multilang/zipball/fc227fba6b70f4046365874539c831ae85bd0330",
+                "reference": "fc227fba6b70f4046365874539c831ae85bd0330",
+                "shasum": ""
+            },
+            "require": {
+                "bcosca/fatfree-core": "3.*"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "lib/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0"
+            ],
+            "description": "Route localization plugin for the PHP Fat-Free Framework",
+            "homepage": "https://github.com/xfra35/f3-multilang",
+            "keywords": [
+                "F3",
+                "fatfree",
+                "localization",
+                "multilingual"
+            ],
+            "support": {
+                "issues": "https://github.com/xfra35/f3-multilang/issues",
+                "source": "https://github.com/xfra35/f3-multilang/tree/v1.3.2"
+            },
+            "time": "2025-08-05T12:46:30+00:00"
         },
         {
             "name": "yohang/finite",
@@ -3691,117 +4728,6 @@
                 }
             ],
             "time": "2026-02-11T16:44:33+00:00"
-        },
-        {
-            "name": "gabrielelana/byte-units",
-            "version": "0.5.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/gabrielelana/byte-units.git",
-                "reference": "eaf7b998535578c7160be30b39904a8326bb9bb8"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/gabrielelana/byte-units/zipball/eaf7b998535578c7160be30b39904a8326bb9bb8",
-                "reference": "eaf7b998535578c7160be30b39904a8326bb9bb8",
-                "shasum": ""
-            },
-            "require": {
-                "ext-bcmath": "*",
-                "php": ">=5.4.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": ">=4.0,<6.0"
-            },
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "src/ByteUnits/functions.php"
-                ],
-                "psr-4": {
-                    "ByteUnits\\": "src/ByteUnits"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Gabriele Lana",
-                    "email": "gabriele.lana@gmail.com"
-                }
-            ],
-            "description": "Library to parse, format and convert byte units",
-            "homepage": "https://github.com/gabrielelana/byte-units",
-            "keywords": [
-                "byte",
-                "convert",
-                "format",
-                "parse",
-                "size",
-                "units"
-            ],
-            "support": {
-                "issues": "https://github.com/gabrielelana/byte-units/issues",
-                "source": "https://github.com/gabrielelana/byte-units/tree/master"
-            },
-            "time": "2018-01-11T10:40:03+00:00"
-        },
-        {
-            "name": "kevinlebrun/colors.php",
-            "version": "1.0.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/kevinlebrun/colors.php.git",
-                "reference": "cdda5eee41314b87cd5a8bb91b1ffc7c0210e673"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/kevinlebrun/colors.php/zipball/cdda5eee41314b87cd5a8bb91b1ffc7c0210e673",
-                "reference": "cdda5eee41314b87cd5a8bb91b1ffc7c0210e673",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "3.7.*",
-                "satooshi/php-coveralls": "1.0.*",
-                "squizlabs/php_codesniffer": "1.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Colors": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Kevin Le Brun",
-                    "email": "lebrun.k@gmail.com",
-                    "homepage": "http://kevinlebrun.fr",
-                    "role": "developer"
-                }
-            ],
-            "description": "Colors for PHP CLI scripts",
-            "homepage": "https://github.com/kevinlebrun/colors.php",
-            "keywords": [
-                "cli",
-                "color",
-                "colors",
-                "console",
-                "shell"
-            ],
-            "support": {
-                "issues": "https://github.com/kevinlebrun/colors.php/issues",
-                "source": "https://github.com/kevinlebrun/colors.php/tree/master"
-            },
-            "time": "2018-05-30T08:34:23+00:00"
         },
         {
             "name": "kint-php/kint",
@@ -6609,26 +7535,12 @@
             "time": "2025-11-17T20:03:58+00:00"
         }
     ],
-    "aliases": [
-        {
-            "package": "ikkez/f3-cortex",
-            "version": "9999999-dev",
-            "alias": "1.7.5",
-            "alias_normalized": "1.7.5.0"
-        },
-        {
-            "package": "ikkez/f3-mailer",
-            "version": "9999999-dev",
-            "alias": "1.2.3",
-            "alias_normalized": "1.2.3.0"
-        }
-    ],
+    "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
         "bigbluebutton/bigbluebutton-api-php": 20,
-        "ikkez/f3-cortex": 20,
-        "ikkez/f3-mailer": 20,
-        "roave/security-advisories": 20
+        "roave/security-advisories": 20,
+        "sukarix/sukarix": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
