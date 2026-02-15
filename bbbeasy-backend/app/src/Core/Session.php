@@ -231,9 +231,9 @@ class Session extends \Prefab
             $tokenIsValid = $this->f3->get($this->f3->get('VERB') . '.csrf_token') === $this->get('csrf_token');
             if (!$tokenIsValid) {
                 $this->logger->critical(
-                    'Invalid request token provided ' .
-                                        $this->f3->get($this->f3->get('VERB') . '.csrf_token') .
-                                        ' where it should be ' . $this->get('csrf_token')
+                    'Invalid request token provided '
+                                        . $this->f3->get($this->f3->get('VERB') . '.csrf_token')
+                                        . ' where it should be ' . $this->get('csrf_token')
                 );
                 $errors['csrf_token'] = 'Invalid CSRF token';
             }

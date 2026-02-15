@@ -102,7 +102,7 @@ class Server
          */
         $message = json_encode([
             'author'  => $agent->id(),
-            'message' => trim($data),
+            'message' => mb_trim($data),
         ]);
 
         $this->logger->debug('Forward message to all clients: ' . $message);

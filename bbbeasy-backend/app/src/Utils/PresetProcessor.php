@@ -123,19 +123,19 @@ class PresetProcessor
         $createParams->setBannerColor((string) $presetsData->getData(Branding::GROUP_NAME, Branding::BANNER_COLOR));
         // $createParams->setUseAvatars($presetsData->getData(Branding::GROUP_NAME, Branding::USE_AVATARS));
 
-        $createParams->setBreakoutRoomsEnabled((bool)$presetsData->getData(BreakoutRooms::GROUP_NAME, BreakoutRooms::CONFIGURABLE));
-        $createParams->setBreakoutRoomsRecord((bool)$presetsData->getData(BreakoutRooms::GROUP_NAME, BreakoutRooms::RECORDING));
+        $createParams->setBreakoutRoomsEnabled((bool) $presetsData->getData(BreakoutRooms::GROUP_NAME, BreakoutRooms::CONFIGURABLE));
+        $createParams->setBreakoutRoomsRecord((bool) $presetsData->getData(BreakoutRooms::GROUP_NAME, BreakoutRooms::RECORDING));
 
         $createParams->setBreakoutRoomsPrivateChatEnabled(null !== $presetsData->getData(BreakoutRooms::GROUP_NAME, BreakoutRooms::PRIVATE_CHAT) ? $presetsData->getData(BreakoutRooms::GROUP_NAME, BreakoutRooms::PRIVATE_CHAT) : true);
 
-        $createParams->setDuration((int)$presetsData->getData(General::GROUP_NAME, General::DURATION));
-        $createParams->setMaxParticipants((int)$presetsData->getData(General::GROUP_NAME, General::MAXIMUM_PARTICIPANTS));
-        $createParams->setWelcomeMessage((string)$presetsData->getData(General::GROUP_NAME, General::WELCOME));
-      
+        $createParams->setDuration((int) $presetsData->getData(General::GROUP_NAME, General::DURATION));
+        $createParams->setMaxParticipants((int) $presetsData->getData(General::GROUP_NAME, General::MAXIMUM_PARTICIPANTS));
+        $createParams->setWelcomeMessage((string) $presetsData->getData(General::GROUP_NAME, General::WELCOME));
+
         // $createParams->setOpenForEveryone($presetData->getData(General::GROUP_NAME, General::OPEN_FOR_EVERYONE));
         // anyone_can_start,open_for_everyone,logged_in_users_only
 
-        $createParams->setGuestPolicy((string)$presetsData->getData(GuestPolicy::GROUP_NAME, GuestPolicy::POLICY));
+        $createParams->setGuestPolicy((string) $presetsData->getData(GuestPolicy::GROUP_NAME, GuestPolicy::POLICY));
         // configurable
 
         // language:default_language

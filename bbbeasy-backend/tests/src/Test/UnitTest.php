@@ -47,8 +47,8 @@ final class UnitTest extends \Test
 
         foreach (debug_backtrace() as $frame) {
             if (isset($frame['file'])) {
-                $result->data[0]['source'] = \Base::instance()->
-                    fixslashes($frame['file']) . ':' . $frame['line'];
+                $result->data[0]['source'] = \Base::instance()
+                    ->fixslashes($frame['file']) . ':' . $frame['line'];
 
                 break;
             }

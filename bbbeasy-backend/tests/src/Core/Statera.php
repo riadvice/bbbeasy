@@ -88,10 +88,10 @@ class Statera
         // check what test should be launched
         if (\array_key_exists('help', $_GET)) {
             CliUtils::instance()->write(PHP_EOL . 'Please specify `test` param to set tests which will be launched:');
-            CliUtils::instance()->write(str_pad('all', 15) . "\t-> all tests");
+            CliUtils::instance()->write(mb_str_pad('all', 15) . "\t-> all tests");
             foreach ($classes as $class) {
                 $name = preg_replace('/[a-z]{1,}\\\|actionstest|test/', '', mb_strtolower($class), -1);
-                CliUtils::instance()->write(str_pad($name, 15) . "\t-> {$class}");
+                CliUtils::instance()->write(mb_str_pad($name, 15) . "\t-> {$class}");
             }
 
             exit;
