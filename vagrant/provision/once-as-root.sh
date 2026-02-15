@@ -45,7 +45,8 @@ sudo apt install -y zsh
 
 info "Install Node.js"
 sudo apt install -y gcc g++ make ca-certificates curl gnupg
-sudo apt install -y libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
+sudo apt install -y libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libnss3 libxss1 libxtst6 xauth
+sudo apt install -y xvfb libasound2t64 libgtk-3-dev libxrandr2 libpangocairo-1.0-0 libatk1.0-0t64 libcairo-gobject2 libgtk-3-0t64 libgdk-pixbuf2.0-0 libxcomposite1 libxcursor1 libxdamage1 libxi6 libxext6 libxfixes3 libxrender1 libnss3-dev
 sudo mkdir -p /etc/apt/keyrings
 curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
 NODE_MAJOR=24
