@@ -45,9 +45,6 @@ class ResetPassword extends BaseAction
             $this->logger->error('User could not reset password', ['errors' => $dataChecker->getErrors()]);
             $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
         } elseif (!$user->dry() && $user->emailExists($email)) {
-            // valid credentials
-            $this->session->authorizeUser($user);
-
             // $this->session->set('locale', $user->locale);
 
             $mailer     = new MailSender();

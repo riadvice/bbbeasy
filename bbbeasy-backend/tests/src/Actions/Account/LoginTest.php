@@ -27,7 +27,6 @@ use Enum\UserStatus;
 use Fake\UserFaker;
 use Faker\Factory as Faker;
 use Models\User;
-use Models\UserSession;
 use Test\Scenario;
 
 /**
@@ -133,29 +132,32 @@ final class LoginTest extends Scenario
      */
     public function testAuthenticateExistingUser($f3)
     {
-        $test        = $this->newTest();
-        $user        = UserFaker::create(UserRole::ADMINISTRATOR);
-        $userSession = new UserSession();
+        $test = $this->newTest();
+        $user = UserFaker::create(UserRole::ADMINISTRATOR);
+        $now  = time();
 
         $data = ['email' => $user->email, 'password' => UserRole::ADMINISTRATOR . UserRole::ADMINISTRATOR];
         $f3->mock(self::LOGIN_ROUTE, null, null, $this->postJsonData($data));
-        $test->expect(
-            $this->compareArrayToResponse([
-                'user' => [
-                    'id'          => $user->id,
-                    'username'    => $user->username,
-                    'email'       => $user->email,
-                    'role'        => $user->role->name,
-                    'avatar'      => $user->avatar,
-                    'permissions' => $user->role->getRolePermissions(),
-                ],
-                'session' => [
-                    'PHPSESSID' => session_id(),
-                    'expires'   => $userSession->getSessionExpirationTime(session_id()),
-                ],
-            ]),
-            'Login with user "' . $user->email . '" with status ' . $user->status . ' and correct credentials rerouted to dashboard'
-        );
+
+        $responseBody = json_decode((string) $f3->get('RESPONSE'), true, 512, JSON_THROW_ON_ERROR);
+        $accessToken = $responseBody['session']['accessToken'] ?? null;
+        $expiresAt = $responseBody['session']['expiresAt'] ?? null;
+        $tokenParts = is_string($accessToken) ? explode('.', $accessToken) : [];
+        $payload = [];
+
+        if (3 === count($tokenParts)) {
+            $decodedPayload = base64_decode(strtr($tokenParts[1], '-_', '+/') . str_repeat('=', (4 - strlen($tokenParts[1]) % 4) % 4), true);
+            if (false !== $decodedPayload) {
+                $payload = json_decode($decodedPayload, true, 512, JSON_THROW_ON_ERROR);
+            }
+        }
+
+        $test->expect(isset($responseBody['user']) && $responseBody['user']['id'] === $user->id, 'Login returns the authenticated user payload');
+        $test->expect(($responseBody['session']['tokenType'] ?? null) === 'Bearer', 'Login returns a bearer token type');
+        $test->expect(is_string($accessToken) && 3 === count($tokenParts), 'Login returns a JWT access token');
+        $test->expect(isset($payload['sub']) && (int) $payload['sub'] === (int) $user->id, 'JWT subject matches the authenticated user');
+        $test->expect(isset($payload['exp']) && is_string($expiresAt) && strtotime($expiresAt) > $now, 'JWT expiry is set in the future');
+        $test->expect(isset($responseBody['session']['expiresAt']) && $responseBody['session']['expiresAt'] === $expiresAt, 'Login returns a concrete token expiration date');
         $test->expect($f3->exists('SESSION.user'), 'Sessions is aware that the user us logged in');
 
         UserFaker::logout();

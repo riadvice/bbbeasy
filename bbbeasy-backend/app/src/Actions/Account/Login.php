@@ -27,7 +27,6 @@ use Enum\ResponseCode;
 use Enum\UserStatus;
 use Helpers\Time;
 use Models\User;
-use Models\UserSession;
 use Respect\Validation\Validator;
 use Validation\DataChecker;
 
@@ -62,7 +61,7 @@ class Login extends BaseAction
 
         if ($user->valid() && UserStatus::ACTIVE === $user->status && $user->verifyPassword($password)) {
             // @todo: test UserRole::API !== $user->role->name
-            $this->session->authorizeUser($user);
+            $accessToken = $this->session->authorizeUser($user);
 
             $user->last_login        = Time::db();
             $user->password_attempts = 3;
@@ -82,10 +81,10 @@ class Login extends BaseAction
                 'permissions' => $user->role->getRolePermissions(),
             ];
 
-            $userSession  = new UserSession();
             $sessionInfos = [
-                'PHPSESSID' => session_id(),
-                'expires'   => $userSession->getSessionExpirationTime(session_id()),
+                'accessToken' => $accessToken,
+                'tokenType'    => 'Bearer',
+                'expiresAt'    => $this->session->getTokenExpiresAt(),
             ];
 
             $this->logger->info('User successfully logged in', ['email' => $email, 'session' => $sessionInfos]);

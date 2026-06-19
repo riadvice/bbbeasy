@@ -22,7 +22,6 @@ import { SessionType } from '../types/SessionType';
 export const authHeader = () => {
     const currentSession: SessionType = AuthService.getCurrentSession();
     if (currentSession != null) {
-        // return PHPSESSID cookie in request headers
-        return { Cookie: 'PHPSESSID=' + currentSession.PHPSESSID + ';expires=' + currentSession.expires + ';' };
+        return { Authorization: currentSession.tokenType + ' ' + currentSession.accessToken };
     }
 };
