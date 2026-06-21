@@ -199,29 +199,11 @@ class Session extends \Prefab
     }
 
     /**
-     * Generates a token that can be used by the legacy interface.
-     *
-     * @return string
-     */
-    public function generateToken()
-    {
-        return $this->issuedToken ?? $this->accessToken ?? '';
-    }
-
-    /**
      * @return null|string
      */
     public function sid()
     {
         return $this->tokenClaims['jti'] ?? null;
-    }
-
-    /**
-     * This project no longer uses CSRF tokens for bearer-authenticated requests.
-     */
-    public function validateToken()
-    {
-        return true;
     }
 
     public function getAccessToken(): ?string

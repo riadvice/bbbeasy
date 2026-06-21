@@ -133,8 +133,6 @@ class Scenario
 
     protected function postJsonData($array): string
     {
-        $array['csrf_token'] = \Registry::get('session')->generateToken();
-
         return json_encode($array);
     }
 
