@@ -39,6 +39,7 @@ axiosInstance.interceptors.request.use((config) => {
             }
         }
     } catch (error) {
+        console.warn('Failed to process session from localStorage:', error);
         localStorage.removeItem('session');
     }
 
