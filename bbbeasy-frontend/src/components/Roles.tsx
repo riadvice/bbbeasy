@@ -1,7 +1,7 @@
 /**
- * BBBEasy open source platform - https://riadvice.tn/
+ * BBBEasy open source platform - https://riadvice.com/
  *
- * Copyright (c) 2022-2023 RIADVICE SUARL and by respective authors (see below).
+ * Copyright (c) 2022-2026 RIADVICE SUARL and by respective authors (see below).
  *
  * This program is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Affero General Public License as published by the Free Software
@@ -35,6 +35,7 @@ import {
 } from '@ant-design/icons';
 
 import Form, { FormInstance } from 'antd/lib/form';
+import { FormRef } from 'rc-field-form/lib/interface';
 import { CompareRecords } from '../functions/compare.function';
 import { EditableTable } from './EditableTable';
 import EditableTableCell from './EditableTableCell';
@@ -53,7 +54,7 @@ const { Link } = Typography;
 
 type formType = {
     name?: string;
-    permissions?: {};
+    permissions?: object;
 };
 
 interface EditableCellProps {
@@ -65,7 +66,7 @@ interface EditableCellProps {
 }
 const EditableContext = React.createContext<FormInstance | null>(null);
 
-let addForm: FormInstance = null;
+let addForm: FormRef = null;
 
 const Roles = () => {
     const [data, setData] = React.useState<RoleType[]>([]);

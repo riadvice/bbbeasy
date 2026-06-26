@@ -17,7 +17,7 @@
  */
 
 import React from 'react';
-import { Trans, useTranslation, withTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 
 import { message, Form, Input, Typography, Upload, InputNumber, theme, ColorPicker, Space } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';

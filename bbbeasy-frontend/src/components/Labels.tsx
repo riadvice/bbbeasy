@@ -40,7 +40,6 @@ import LabelsService from '../services/labels.service';
 
 import { TableColumnType } from '../types/TableColumnType';
 import { LabelType } from '../types/LabelType';
-import EN_US from '../locale/en-US.json';
 import { isEmpty } from 'lodash';
 const { Link } = Typography;
 
@@ -62,7 +61,6 @@ const Labels = () => {
     const [errorsEdit, setErrorsEdit] = React.useState({});
     const [cancelVisibility, setCancelVisibility] = React.useState<boolean>(false);
     const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
-    const [color, setColor] = React.useState<string>('');
     const [isErrorValidation, setIsErrorValidation] = React.useState<boolean>(false);
     const [errorMsg, setErrorMsg] = React.useState<string>('');
     const { token } = theme.useToken();
@@ -331,7 +329,9 @@ const Labels = () => {
             editable: false,
             render: (text, record) => {
                 const handleCancelVisibilityChange = () => {
-                    CompareRecords(record, editForm.getFieldsValue(true)) ? cancelEdit() : null;
+                    if (CompareRecords(record, editForm.getFieldsValue(true))) {
+                        cancelEdit();
+                    }
                 };
 
                 const EditActions = (

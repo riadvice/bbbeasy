@@ -1,7 +1,7 @@
 /**
- * BBBEasy open source platform - https://riadvice.tn/
+ * BBBEasy open source platform - https://riadvice.com/
  *
- * Copyright (c) 2022-2023 RIADVICE SUARL and by respective authors (see below).
+ * Copyright (c) 2022-2026 RIADVICE SUARL and by respective authors (see below).
  *
  * This program is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Affero General Public License as published by the Free Software
@@ -28,7 +28,7 @@ import { PresetType } from '../types/PresetType';
 import { SubCategoryType } from '../types/SubCategoryType';
 import { getIconName } from '../types/GetIconName';
 import EN_US from '../locale/en-US.json';
-import { FormInstance } from 'antd/lib/form';
+import { FormRef } from 'rc-field-form/lib/interface';
 const { Title, Paragraph } = Typography;
 const { Grid, Meta } = Card;
 import { useLocation } from 'react-router-dom';
@@ -38,7 +38,7 @@ type Props = {
     onFinish?: (category: string, subCategories: SubCategoryType[]) => void;
     enabled?: boolean;
 };
-let step3: FormInstance = null;
+let step3: FormRef = null;
 export const Step3Form = (props: Props) => {
     const location = useLocation();
     const { presets } = props;

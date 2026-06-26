@@ -105,6 +105,7 @@ const AppSider = (props: Props) => {
                 setCurrentPath(defaultRoute);
             }
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const handleClick = (e) => {
@@ -118,7 +119,7 @@ const AppSider = (props: Props) => {
                         <Link to={'/'}>
                             <img
                                 className="sider-logo-image"
-                                src={logo ? process.env.REACT_APP_API_URL + '/' + logo : '/images/logo_01.png'}
+                                src={logo ? import.meta.env.VITE_API_URL + '/' + logo : '/images/logo_01.png'}
                                 alt="Logo"
                             />
                         </Link>

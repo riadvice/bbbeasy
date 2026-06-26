@@ -1,9 +1,9 @@
 <?php
 
 /**
- * BBBEasy open source platform - https://riadvice.tn/
+ * BBBEasy open source platform - https://riadvice.com/
  *
- * Copyright (c) 2022-2023 RIADVICE SUARL and by respective authors (see below).
+ * Copyright (c) 2022-2026 RIADVICE SUARL and by respective authors (see below).
  *
  * This program is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Affero General Public License as published by the Free Software
@@ -21,9 +21,9 @@
 declare(strict_types=1);
 
 $header = <<<'EOF'
-BBBEasy open source platform - https://riadvice.tn/
+BBBEasy open source platform - https://riadvice.com/
 
-Copyright (c) 2022-2023 RIADVICE SUARL and by respective authors (see below).
+Copyright (c) 2022-2026 RIADVICE SUARL and by respective authors (see below).
 
 This program is free software; you can redistribute it and/or modify it under the
 terms of the GNU Affero General Public License as published by the Free Software
@@ -50,7 +50,7 @@ $config = new PhpCsFixer\Config();
 $config
     ->setRiskyAllowed(true)
     ->setRules([
-        '@PHP82Migration' => true,
+        '@PHP84Migration' => true,
         '@PhpCsFixer' => true,
         '@PhpCsFixer:risky' => true,
         'general_phpdoc_annotation_remove' => ['annotations' => ['expectedDeprecation']], // one should use PHPUnit built-in method instead

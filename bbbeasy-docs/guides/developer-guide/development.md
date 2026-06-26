@@ -54,28 +54,22 @@ cp /app/bbbeasy-backend/app/config/config-development.sample.ini /app/bbbeasy-ba
  ```bash
 cd /app/bbbeasy-frontend
 ```
-2- To copy the file ,run this command :
+2- (Optional) To make `bbbeasy` available globally, run this command :
 
  ```bash
-cp /app/tools/bbbeasy /app/bbbeasy-frontend/bbbeasy
+sudo /app/tools/bbbeasy --selfinstall
 ```
-3- To removes the carriage return character(\r)at the end of each line in the bbbeasy file, run this command:
-
-```bash
-sed -i -e 's/\r$//' bbbeasy
-```
-4-To replace bbbeasy with./bbbeasy in package.json file , run this command :
- ```bash
-sed -i -e 's/"bbbeasy /".\/bbbeasy /g' package.json
-```
-5- To enable the installer application ,run this command :
+3- On machines where the hostname is not `bbbeasy.test`, pass `--env development` to `bbbeasy` commands (e.g., `../tools/bbbeasy --env development --enableweb`).
+4- To enable the installer application ,run this command :
  ```bash
 yarn start-dev-installer
 ```
-6-To enable the web application, run this command :
+5-To enable the web application, run this command :
  ```bash
 yarn start-dev
 ```
+
+The Vite dev server runs on port 3300 and the browser will open http://bbbeasy.test/ (via nginx).
 
 `Reload the installation process , run this command`
 

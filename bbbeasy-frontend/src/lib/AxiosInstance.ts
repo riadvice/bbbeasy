@@ -1,7 +1,7 @@
 /**
- * BBBEasy open source platform - https://riadvice.tn/
+ * BBBEasy open source platform - https://riadvice.com/
  *
- * Copyright (c) 2022-2023 RIADVICE SUARL and by respective authors (see below).
+ * Copyright (c) 2022-2026 RIADVICE SUARL and by respective authors (see below).
  *
  * This program is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Affero General Public License as published by the Free Software
@@ -16,7 +16,7 @@
  * with BBBEasy; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import axios from 'axios';
+import axios, { AxiosRequestHeaders } from 'axios';
 
 export const axiosInstance = axios.create();
 
@@ -32,7 +32,7 @@ axiosInstance.interceptors.request.use((config) => {
             }
 
             if (session?.accessToken && session?.tokenType) {
-                config.headers = config.headers || {};
+                config.headers = (config.headers || {}) as AxiosRequestHeaders;
                 Object.assign(config.headers, {
                     Authorization: `${session.tokenType} ${session.accessToken}`,
                 });

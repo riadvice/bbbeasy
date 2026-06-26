@@ -1,7 +1,7 @@
 /**
- * BBBEasy open source platform - https://riadvice.tn/
+ * BBBEasy open source platform - https://riadvice.com/
  *
- * Copyright (c) 2022-2023 RIADVICE SUARL and by respective authors (see below).
+ * Copyright (c) 2022-2026 RIADVICE SUARL and by respective authors (see below).
  *
  * This program is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Affero General Public License as published by the Free Software
@@ -28,7 +28,7 @@ import Notifications from './Notifications';
 
 import LabelsService from 'services/labels.service';
 
-import { FormInstance } from 'antd/lib/form';
+import { FormRef } from 'rc-field-form/lib/interface';
 import { LabelType } from '../types/LabelType';
 
 type Props = {
@@ -43,10 +43,10 @@ type formType = {
     description?: string;
     color?: string;
 };
-let addForm: FormInstance = null;
+let addForm: FormRef = null;
 
 export const AddLabelForm = (props: Props) => {
-    const [initialColor, setInitialColor] = React.useState<string>('#fbbc0b');
+    const [initialColor] = React.useState<string>('#fbbc0b');
     const { defaultColor } = props;
     const initialAddValues: formType = {
         name: '',
@@ -55,7 +55,7 @@ export const AddLabelForm = (props: Props) => {
     };
     const [color, setColor] = React.useState<string>(defaultColor ? defaultColor : initialColor);
     const dataContext = React.useContext(DataContext);
-    const [data, setData] = React.useState<LabelType[]>([]);
+    const [, setData] = React.useState<LabelType[]>([]);
     const [loading, setLoading] = React.useState<boolean>(false);
     const [errorsAdd, setErrorsAdd] = React.useState<string[]>([]);
     const { token } = theme.useToken();

@@ -1,7 +1,7 @@
 /**
- * BBBEasy open source platform - https://riadvice.tn/
+ * BBBEasy open source platform - https://riadvice.com/
  *
- * Copyright (c) 2022-2023 RIADVICE SUARL and by respective authors (see below).
+ * Copyright (c) 2022-2026 RIADVICE SUARL and by respective authors (see below).
  *
  * This program is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Affero General Public License as published by the Free Software
@@ -38,11 +38,6 @@ const send = async (_level, logEvent) => {
 const Logger = pino({
     customLevels: levels,
     useOnlyCustomLevels: true,
-    prettyPrint: {
-        colorize: true,
-        levelFirst: true,
-        translateTime: 'yyyy-dd-mm, h:MM:ss TT',
-    },
     browser: {
         serialize: true,
         asObject: true,

@@ -1,7 +1,7 @@
 /**
- * BBBEasy open source platform - https://riadvice.tn/
+ * BBBEasy open source platform - https://riadvice.com/
  *
- * Copyright (c) 2022-2023 RIADVICE SUARL and by respective authors (see below).
+ * Copyright (c) 2022-2026 RIADVICE SUARL and by respective authors (see below).
  *
  * This program is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Affero General Public License as published by the Free Software
@@ -38,7 +38,7 @@ import LocaleService from '../services/locale.service';
 import axios from 'axios';
 import { apiRoutes } from '../routing/backend-config';
 
-import { FormInstance } from 'antd/lib/form';
+import { FormRef } from 'rc-field-form/lib/interface';
 import { UserType } from '../types/UserType';
 
 type formType = {
@@ -50,7 +50,7 @@ type formType = {
     avatar?: string;
 };
 
-let accountForm: FormInstance = null;
+let accountForm: FormRef = null;
 
 const Profile = () => {
     const currentUser: UserType = AuthService.getCurrentUser();
@@ -179,10 +179,10 @@ const Profile = () => {
                                                     <div className="ant-image">
                                                         <img
                                                             className="ant-image-img"
-                                                            //   src={  src={logo ? process.env.REACT_APP_API_URL +"/"+ logo : '/images/logo_01.png'}}
+                                                            //   src={  src={logo ? import.meta.env.VITE_API_URL +"/"+ logo : '/images/logo_01.png'}}
                                                             src={
                                                                 currentUser.avatar
-                                                                    ? process.env.REACT_APP_API_URL +
+                                                                    ? import.meta.env.VITE_API_URL +
                                                                       '/' +
                                                                       currentUser.avatar
                                                                     : '/images/logo_01.png'

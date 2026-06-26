@@ -51,13 +51,13 @@ The web-application is split in two parts:
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1- Run `cd /app/bbbeasy-frontend`.
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2- Run `cp /app/tools/bbbeasy /app/bbbeasy-frontend/bbbeasy`.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2- (Optional) Run `sudo /app/tools/bbbeasy --selfinstall` to make `bbbeasy` available globally.
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3- Run `sed -i -e 's/\r$//' bbbeasy`.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3- On machines where the hostname is not `bbbeasy.test`, pass `--env development` to `bbbeasy` commands (e.g., `../tools/bbbeasy --env development --enableweb`).
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4- Run `sed -i -e 's/"bbbeasy /".\/bbbeasy /g' package.json`.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4- Run `yarn start-dev-installer` to enable the **installer** app or `yarn start-dev` to enable the **web** app.
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 5- Run `yarn start-dev-installer` to enable the **installer** app or `yarn start-dev` to enable the **web** app.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The Vite dev server runs on port 3300 and the browser will open http://bbbeasy.test/ (via nginx).
 
 ## Contributing
 

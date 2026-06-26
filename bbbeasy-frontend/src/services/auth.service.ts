@@ -73,7 +73,7 @@ class AuthService {
         if (userStr) {
             try {
                 return JSON.parse(userStr);
-            } catch (error) {
+            } catch {
                 this.clearAuth();
             }
         }
@@ -91,7 +91,7 @@ class AuthService {
                 }
 
                 return session;
-            } catch (error) {
+            } catch {
                 this.clearAuth();
             }
         }

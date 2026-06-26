@@ -16,7 +16,7 @@
  * with BBBEasy; if not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '~perfect-scrollbar/css/perfect-scrollbar.css';
+@import 'perfect-scrollbar/css/perfect-scrollbar.css';
 
 @font-face {
     font-family: 'Poppins';
@@ -1414,6 +1414,7 @@ fieldset {
 
 .share-modal .bbbeasy-btn:not(:hover) .bbbeasy-white-btn {
     -webkit-clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%);
+    clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%);
 }
 
 .profile-form .ant-image .ant-image-img {

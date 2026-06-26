@@ -1,7 +1,7 @@
 /**
- * BBBEasy open source platform - https://riadvice.tn/
+ * BBBEasy open source platform - https://riadvice.com/
  *
- * Copyright (c) 2022-2023 RIADVICE SUARL and by respective authors (see below).
+ * Copyright (c) 2022-2026 RIADVICE SUARL and by respective authors (see below).
  *
  * This program is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Affero General Public License as published by the Free Software
@@ -57,11 +57,11 @@ import notificationService from '../../services/notification.service';
 
 import settingsService from 'services/settings.service';
 import { SettingsType } from 'types/SettingsType';
-import { apiRoutes } from 'routing/backend-config';
 
 const { Header } = Layout;
 const { Title, Text, Paragraph } = Typography;
 
+// eslint-disable-next-line complexity
 const AppHeader = () => {
     const { isLogged, setIsLogged, currentUser, setCurrentUser, setCurrentSession } = React.useContext(UserContext);
     const currentLocale = LocaleService.language;
@@ -92,8 +92,6 @@ const AppHeader = () => {
         });
     const logout = () => {
         AuthService.logout()
-            .then(() => {
-            })
             .catch((error) => {
                 console.log(error);
             })
@@ -210,7 +208,7 @@ const AppHeader = () => {
                         <Link to={'/'}>
                             <img
                                 className="header-logo-image"
-                                src={logo ? process.env.REACT_APP_API_URL + '/' + logo : '/images/logo_01.png'}
+                                src={logo ? import.meta.env.VITE_API_URL + '/' + logo : '/images/logo_01.png'}
                                 alt="Logo"
                             />
                         </Link>

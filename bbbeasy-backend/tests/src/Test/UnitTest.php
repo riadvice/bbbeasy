@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 /*
- * BBBEasy open source platform - https://riadvice.tn/
+ * BBBEasy open source platform - https://riadvice.com/
  *
- * Copyright (c) 2022-2023 RIADVICE SUARL and by respective authors (see below).
+ * Copyright (c) 2022-2026 RIADVICE SUARL and by respective authors (see below).
  *
  * This program is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Affero General Public License as published by the Free Software
@@ -48,7 +48,8 @@ final class UnitTest extends \Test
         foreach (debug_backtrace() as $frame) {
             if (isset($frame['file'])) {
                 $result->data[0]['source'] = \Base::instance()
-                    ->fixslashes($frame['file']) . ':' . $frame['line'];
+                    ->fixslashes($frame['file']) . ':' . $frame['line']
+                ;
 
                 break;
             }

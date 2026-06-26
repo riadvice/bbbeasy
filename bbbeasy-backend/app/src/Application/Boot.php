@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 /*
- * BBBEasy open source platform - https://riadvice.tn/
+ * BBBEasy open source platform - https://riadvice.com/
  *
- * Copyright (c) 2022-2023 RIADVICE SUARL and by respective authors (see below).
+ * Copyright (c) 2022-2026 RIADVICE SUARL and by respective authors (see below).
  *
  * This program is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Affero General Public License as published by the Free Software
@@ -188,7 +188,7 @@ abstract class Boot
         // log session SQL queries only in dev environment for debugging purpose
         if (true === $this->f3->get('log.session')) {
             $dbLog = \Registry::get('db')->log();
-            if (is_string($dbLog) && '' !== trim($dbLog)) {
+            if (\is_string($dbLog) && '' !== mb_trim($dbLog)) {
                 $this->logger->debug($dbLog);
             }
         }

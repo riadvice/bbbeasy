@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 /*
- * BBBEasy open source platform - https://riadvice.tn/
+ * BBBEasy open source platform - https://riadvice.com/
  *
- * Copyright (c) 2022-2023 RIADVICE SUARL and by respective authors (see below).
+ * Copyright (c) 2022-2026 RIADVICE SUARL and by respective authors (see below).
  *
  * This program is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Affero General Public License as published by the Free Software
@@ -140,13 +140,13 @@ final class LoginTest extends Scenario
         $f3->mock(self::LOGIN_ROUTE, null, null, $this->postJsonData($data));
 
         $responseBody = json_decode((string) $f3->get('RESPONSE'), true, 512, JSON_THROW_ON_ERROR);
-        $accessToken = $responseBody['session']['accessToken'] ?? null;
-        $expiresAt = $responseBody['session']['expiresAt'] ?? null;
-        $tokenParts = is_string($accessToken) ? explode('.', $accessToken) : [];
-        $payload = [];
+        $accessToken  = $responseBody['session']['accessToken'] ?? null;
+        $expiresAt    = $responseBody['session']['expiresAt'] ?? null;
+        $tokenParts   = \is_string($accessToken) ? explode('.', $accessToken) : [];
+        $payload      = [];
 
-        if (3 === count($tokenParts)) {
-            $decodedPayload = base64_decode(strtr($tokenParts[1], '-_', '+/') . str_repeat('=', (4 - strlen($tokenParts[1]) % 4) % 4), true);
+        if (3 === \count($tokenParts)) {
+            $decodedPayload = base64_decode(strtr($tokenParts[1], '-_', '+/') . str_repeat('=', (4 - mb_strlen($tokenParts[1]) % 4) % 4), true);
             if (false !== $decodedPayload) {
                 $payload = json_decode($decodedPayload, true, 512, JSON_THROW_ON_ERROR);
             }
@@ -154,9 +154,9 @@ final class LoginTest extends Scenario
 
         $test->expect(isset($responseBody['user']) && $responseBody['user']['id'] === $user->id, 'Login returns the authenticated user payload');
         $test->expect(($responseBody['session']['tokenType'] ?? null) === 'Bearer', 'Login returns a bearer token type');
-        $test->expect(is_string($accessToken) && 3 === count($tokenParts), 'Login returns a JWT access token');
+        $test->expect(\is_string($accessToken) && 3 === \count($tokenParts), 'Login returns a JWT access token');
         $test->expect(isset($payload['sub']) && (int) $payload['sub'] === (int) $user->id, 'JWT subject matches the authenticated user');
-        $test->expect(isset($payload['exp']) && is_string($expiresAt) && strtotime($expiresAt) > $now, 'JWT expiry is set in the future');
+        $test->expect(isset($payload['exp']) && \is_string($expiresAt) && strtotime($expiresAt) > $now, 'JWT expiry is set in the future');
         $test->expect(isset($responseBody['session']['expiresAt']) && $responseBody['session']['expiresAt'] === $expiresAt, 'Login returns a concrete token expiration date');
         $test->expect($f3->exists('SESSION.user'), 'Sessions is aware that the user us logged in');
 
