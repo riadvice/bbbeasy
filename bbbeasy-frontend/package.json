@@ -57,7 +57,7 @@
         "@types/react-router-dom": "^5.3.3",
         "@vitejs/plugin-react-swc": "^3.8.1",
         "babel-plugin-istanbul": "^7.0.0",
-        "cypress": "^10.11.0",
+        "cypress": "^14.0.3",
         "eslint": "^9.23.0",
         "eslint-config-prettier": "^10.1.1",
         "eslint-plugin-prettier": "^5.2.3",

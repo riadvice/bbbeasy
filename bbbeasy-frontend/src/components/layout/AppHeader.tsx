@@ -149,7 +149,7 @@ const AppHeader = () => {
     );
     const dropdownLang = (
         <Dropdown
-            overlay={menuLang}
+            popupRender={() => menuLang}
             placement={LocaleService.direction == 'rtl' ? 'bottomLeft' : 'bottomRight'}
             arrow
             trigger={['click']}
@@ -161,15 +161,19 @@ const AppHeader = () => {
     );
     const dropdownWarning = (
         <Dropdown
-            overlay={
-                <Menu>
-                    <Menu.Item key="1" className="username-item">
-                        <Text>
-                            <Trans i18nKey="user_dropdown.warning_notification" />
-                        </Text>
-                    </Menu.Item>
-                </Menu>
-            }
+            menu={{
+                items: [
+                    {
+                        key: '1',
+                        className: 'username-item',
+                        label: (
+                            <Text>
+                                <Trans i18nKey="user_dropdown.warning_notification" />
+                            </Text>
+                        ),
+                    },
+                ],
+            }}
             overlayClassName="profil-btn-dropdown warning-btn-dropdown"
             disabled={!warningNotification}
             placement={LocaleService.direction == 'rtl' ? 'bottomLeft' : 'bottomRight'}
@@ -183,22 +187,35 @@ const AppHeader = () => {
         </Dropdown>
     );
 
-    const menuProfile = (
-        <Menu>
-            <Menu.Item key="1" className="username-item">
-                <Trans i18nKey="signed_as" /> {currentUser?.username}
-                <br />
-                <Text>{currentUser?.email}</Text>
-            </Menu.Item>
-            <Menu.Divider />
-            <Menu.Item key="2" icon={<UserOutlined />} onClick={() => navigate('/profile')}>
-                <Trans i18nKey="user_dropdown.profile" />
-            </Menu.Item>
-            <Menu.Item id="logout-btn" key="3" icon={<LogoutOutlined />} onClick={() => logout()}>
-                <Trans i18nKey="user_dropdown.logout" />
-            </Menu.Item>
-        </Menu>
-    );
+    const menuProfile = {
+        items: [
+            {
+                key: '1',
+                className: 'username-item',
+                label: (
+                    <>
+                        <Trans i18nKey="signed_as" /> {currentUser?.username}
+                        <br />
+                        <Text>{currentUser?.email}</Text>
+                    </>
+                ),
+            },
+            { type: 'divider' as const },
+            {
+                key: '2',
+                icon: <UserOutlined />,
+                label: <Trans i18nKey="user_dropdown.profile" />,
+                onClick: () => navigate('/profile'),
+            },
+            {
+                key: '3',
+                id: 'logout-btn',
+                icon: <LogoutOutlined />,
+                label: <Trans i18nKey="user_dropdown.logout" />,
+                onClick: () => logout(),
+            },
+        ],
+    };
 
     return (
         <Header className="site-header">
@@ -247,7 +264,7 @@ const AppHeader = () => {
                             <Space size="middle">
                                 {dropdownWarning}
                                 <Dropdown
-                                    overlay={menuProfile}
+                                    menu={menuProfile}
                                     overlayClassName="profil-btn-dropdown"
                                     placement={LocaleService.direction == 'rtl' ? 'bottomLeft' : 'bottomRight'}
                                     arrow

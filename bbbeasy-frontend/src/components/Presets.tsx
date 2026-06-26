@@ -348,7 +348,7 @@ const PresetsCol: React.FC<PresetColProps> = ({
                     copyClickHandler != null || deleteEnabled ? (
                         <Dropdown
                             key="more"
-                            overlay={
+                            popupRender={() => (
                                 <Menu>
                                     {copyClickHandler != null && (
                                         <Menu.Item key="1" onClick={copyClickHandler}>
@@ -367,7 +367,7 @@ const PresetsCol: React.FC<PresetColProps> = ({
                                         </Popconfirm>
                                     )}
                                 </Menu>
-                            }
+                            )}
                             placement={LocaleService.direction == 'rtl' ? 'bottomLeft' : 'bottomRight'}
                         >
                             <MoreOutlined />

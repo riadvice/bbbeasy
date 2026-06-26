@@ -128,25 +128,25 @@ const AppSider = (props: Props) => {
                         {newMenuItems.length != 0 && (
                             <>
                                 <Dropdown
-                                    overlay={
-                                        <Menu>
-                                            {newMenuItems.includes('rooms') && (
-                                                <Menu.Item key="1" onClick={() => setIsModalVisibleRoom(true)}>
-                                                    <span>{t('room')}</span>
-                                                </Menu.Item>
-                                            )}
-                                            {newMenuItems.includes('labels') && (
-                                                <Menu.Item key="2" onClick={() => setIsModalVisibleLabel(true)}>
-                                                    {t('label')}
-                                                </Menu.Item>
-                                            )}
-                                            {newMenuItems.includes('presets') && (
-                                                <Menu.Item key="3" onClick={() => setIsModalVisiblePreset(true)}>
-                                                    {t('preset.label')}
-                                                </Menu.Item>
-                                            )}
-                                        </Menu>
-                                    }
+                                    menu={{
+                                        items: [
+                                            newMenuItems.includes('rooms') && {
+                                                key: '1',
+                                                label: <span>{t('room')}</span>,
+                                                onClick: () => setIsModalVisibleRoom(true),
+                                            },
+                                            newMenuItems.includes('labels') && {
+                                                key: '2',
+                                                label: t('label'),
+                                                onClick: () => setIsModalVisibleLabel(true),
+                                            },
+                                            newMenuItems.includes('presets') && {
+                                                key: '3',
+                                                label: t('preset.label'),
+                                                onClick: () => setIsModalVisiblePreset(true),
+                                            },
+                                        ].filter(Boolean),
+                                    }}
                                     trigger={['click']}
                                 >
                                     <Button size="middle" className="sider-new-btn">

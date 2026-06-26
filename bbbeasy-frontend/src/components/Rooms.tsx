@@ -22,7 +22,7 @@ import { Trans, withTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { t } from 'i18next';
 
-import { Avatar, Badge, Card, Col, Dropdown, Row, Space, Tag, Typography, Menu, Button, Modal, Tooltip } from 'antd';
+import { Avatar, Badge, Card, Col, Dropdown, Row, Space, Tag, Typography, Button, Modal, Tooltip } from 'antd';
 import { ClockCircleOutlined, MoreOutlined, TeamOutlined, WarningOutlined } from '@ant-design/icons';
 
 import Notifications from './Notifications';
@@ -83,15 +83,16 @@ const RoomsCol: React.FC<RoomsColProps> = ({ index, room, editable, deleteClickH
         });
     };
 
-    const actions = (
-        <Menu>
-            {deleteClickHandler != null && (
-                <Menu.Item key="2" danger onClick={() => handleDelete()}>
-                    <Trans i18nKey={'delete'} />
-                </Menu.Item>
-            )}
-        </Menu>
-    );
+    const actions = {
+        items: [
+            deleteClickHandler != null && {
+                key: '2',
+                danger: true,
+                label: <Trans i18nKey={'delete'} />,
+                onClick: () => handleDelete(),
+            },
+        ].filter(Boolean),
+    };
 
     return (
         <Col key={index} span={5} className="custom-col-5 room-box">
@@ -144,7 +145,7 @@ const RoomsCol: React.FC<RoomsColProps> = ({ index, room, editable, deleteClickH
                     isShown && (
                         <Dropdown
                             key="more"
-                            overlay={actions}
+                            menu={actions}
                             placement={LocaleService.direction == 'rtl' ? 'bottomLeft' : 'bottomRight'}
                             trigger={['click']}
                         >
