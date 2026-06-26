@@ -135,7 +135,7 @@ detect_php_version() {
   fi
   if [ -z "$version" ]; then
     echo "✘ No PHP-FPM version detected. Please install PHP-FPM first."
-    exit 1
+    return 1
   fi
   PHP_VERSION=$version
 }
@@ -690,11 +690,16 @@ run() {
     esac
   done
 
-  detect_php_version
   load_nvm
 
   echo "► Detected environment: \`$ENVIRONMENT\`"
-  echo "► Detected PHP-FPM    : php${PHP_VERSION}-fpm"
+
+  ensure_php_version() {
+    if [ -z "$PHP_VERSION" ]; then
+      detect_php_version || exit 1
+      echo "► Detected PHP-FPM    : php${PHP_VERSION}-fpm"
+    fi
+  }
 
   while [[ $# -gt 0 ]]; do
     if [ "$1" = "--version" -o "$1" = "-version" -o "$1" = "-v" ]; then
@@ -731,6 +736,7 @@ run() {
       continue
     fi
     if [ "$1" = "--check" -o "$1" = "-check" ]; then
+      ensure_php_version
       check_config
       shift
       continue
@@ -767,21 +773,25 @@ run() {
       continue
     fi
     if [ "$1" = "--restart" -o "$1" = "-restart" -o "$1" = "-r" ]; then
+      ensure_php_version
       restart_services
       shift
       continue
     fi
     if [ "$1" = "--stop" -o "$1" = "-stop" -o "$1" = "-sp" ]; then
+      ensure_php_version
       stop_services
       shift
       continue
     fi
     if [ "$1" = "--start" -o "$1" = "-start" -o "$1" = "-sr" ]; then
+      ensure_php_version
       start_services
       shift
       continue
     fi
     if [ "$1" = "--status" -o "$1" = "-status" ]; then
+      ensure_php_version
       display_status
       shift
       continue
