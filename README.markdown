@@ -33,7 +33,8 @@ The web-application is split in two parts:
 
 ## 🪴 Project Activity
 
-![Alt](https://repobeats.axiom.co/api/embed/22737fcd7e97f3c37ff740f195ece60264185796.svg "Repobeats analytics image")
+![Alt](https://repobeats.axiom.co/api/embed/22737fcd7e97f3c37ff740f195ece60264185796.svg "Repobeats analytics image")[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Friadvice%2Fbbbeasy.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Friadvice%2Fbbbeasy?ref=badge_shield)
+
 
 ## Development
 
@@ -100,3 +101,7 @@ Frontend test:
 [NGINX](https://www.nginx.com/)
 
 [Vagrant](https://www.vagrantup.com/)
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Friadvice%2Fbbbeasy.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Friadvice%2Fbbbeasy?ref=badge_large)
