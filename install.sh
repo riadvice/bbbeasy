@@ -159,27 +159,24 @@ install_deps() {
   apt-get install -y ca-certificates curl gnupg
   mkdir -p /etc/apt/keyrings
   -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
-  NODE_MAJOR=18
+  NODE_MAJOR=24
   echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
 
-  echo "Install PHP 8.2 with its dependencies"
-  apt-get install -y php8.2-curl php8.2-cli php8.2-intl php8.2-redis php8.2-gd php8.2-fpm php8.2-pgsql \
-    php8.2-mbstring php8.2-xml php8.2-bcmath php8.2-xdebug
+  echo "Install PHP 8.5 with its dependencies"
+  apt-get install -y php8.5-curl php8.5-cli php8.5-intl php8.5-redis php8.5-gd php8.5-fpm php8.5-pgsql \
+    php8.5-mbstring php8.5-xml php8.5-bcmath php8.5-xdebug
 
   echo "Installing PostgreSQL"
-  percona-release setup ppg-15.2
-  apt-get install -y percona-postgresql-15 \
-    percona-postgresql-15-repack \
-    percona-postgresql-15-pgaudit \
-    percona-pg-stat-monitor15 \
-    percona-pgbackrest \
-    percona-patroni \
-    percona-pgbadger \
-    percona-pgaudit15-set-user \
-    percona-pgbadger \
-    percona-postgresql-15-wal2json \
-    percona-pg-stat-monitor15 \
-    percona-postgresql-contrib
+sudo percona-release setup ppg-18
+sudo apt install -y percona-postgresql-18 \
+  percona-postgresql-18-repack \
+  percona-postgresql-18-pgaudit \
+  percona-pg-stat-monitor18 \
+  percona-pgaudit18-set-user \
+  percona-pgbadger \
+  percona-postgresql-18-wal2json \
+  percona-pg-stat-monitor18 \
+  percona-postgresql-contrib
 
   # Must apply yarn version in HOME directory of root user
   cd $HOME

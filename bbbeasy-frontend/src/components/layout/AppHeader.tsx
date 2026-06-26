@@ -93,15 +93,16 @@ const AppHeader = () => {
     const logout = () => {
         AuthService.logout()
             .then(() => {
-                setIsLogged(false);
-                localStorage.removeItem('user');
-                setCurrentUser(null);
-                localStorage.removeItem('session');
-                setCurrentSession(null);
-                navigate('/login');
             })
             .catch((error) => {
                 console.log(error);
+            })
+            .finally(() => {
+                setIsLogged(false);
+                AuthService.clearAuth();
+                setCurrentUser(null);
+                setCurrentSession(null);
+                navigate('/login');
             });
     };
 

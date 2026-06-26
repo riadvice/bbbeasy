@@ -17,6 +17,7 @@
  */
 
 export type SessionType = {
-    PHPSESSID: string;
-    expires: string;
+    accessToken: string;
+    tokenType: string;
+    expiresAt: string;
 };

@@ -78,7 +78,7 @@ usage() {
   echo "#    --stop                           Stop BBBEasy"
   echo "#    --start                          Start BBBEasy"
   echo "#    --clean                          Restart and clean all log files"
-  echo "#    --cleansessions                  Cleans sessions from the database"
+  echo "#    --cleansessions                  Cleans legacy session data (no-op with JWT)"
   echo "#    --status                         Display running status of components"
   echo "#    --zip                            Zip up log files for reporting an error"
   echo "#========================================================================================================"
@@ -188,8 +188,8 @@ clean_logs() {
 # Clean sessions from the database
 #
 clean_sessions() {
-  sudo -u postgres psql -d bbbeasy -c "SELECT setval('users_sessions_id_seq'::regclass, 1);"
-  sudo -u postgres psql -d bbbeasy -c "TRUNCATE users_sessions;"
+  echo "JWT auth does not use the users_sessions table anymore."
+  echo "Nothing to clean in PostgreSQL."
 }
 
 #

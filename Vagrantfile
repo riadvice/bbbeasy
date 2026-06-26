@@ -22,8 +22,15 @@ options = YAML.load_file config[:local]
 
 # vagrant configurate
 Vagrant.configure("2") do |config|
+  # ================================================================
+  # FIX: désactive la mise à jour automatique des Guest Additions
+  # vagrant-vbguest 0.32.0 a un bug avec Ruby (File.exists? supprimé)
+  # ================================================================
+  config.vbguest.auto_update = false
+  config.vbguest.no_install  = true
+
   # select the box
-  config.vm.box = "ubuntu/jammy64"
+  config.vm.box = "alvistack/ubuntu-24.04"
 
   # should we ask about box updates?
   config.vm.box_check_update = options["box_check_update"]
@@ -36,8 +43,12 @@ Vagrant.configure("2") do |config|
     vb.cpus = options["cpus"]
     # machine memory size
     vb.memory = options["memory"]
-    # machine name (for VirtualBox UI)
+    # machine name (for VirtualBox UI),+
     vb.name = options["machine_name"]
+
+    # ENABLE SYMLINKS FOR NFS/SYNCED FOLDERS
+    # This is required for Node.js to work correctly with synced folders
+    vb.customize ["setextradata", :id, "VBoxInternal2/SharedFoldersEnableSymlinksCreate//app", "1"]
   end
 
   # machine name (for vagrant console)

@@ -224,7 +224,7 @@ class Room extends BaseModel
         return null;
     }
 
-    public function getRecordingByRecordId(string $recordId, bool $loadRecord = false): null|array|bool
+    public function getRecordingByRecordId(string $recordId, bool $loadRecord = false): array|bool|null
     {
         $bbbRequester    = new BigBlueButtonRequester();
         $recordingParams = new GetRecordingsParameters();
@@ -260,7 +260,7 @@ class Room extends BaseModel
         if (null !== $record->getPlaybackType()) {
             $recordingFormats[] = $record->getPlaybackType();
         }
-        $recordingUrl          = trim($record->getPlaybackUrl());
+        $recordingUrl          = mb_trim($record->getPlaybackUrl());
         $participants          = $attendees;
         $recordingParticipants = null !== $participants ? (int) $participants[0] : 0;
         // convert milliseconds to timestamp

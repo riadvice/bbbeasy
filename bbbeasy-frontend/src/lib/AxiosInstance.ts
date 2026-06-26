@@ -18,6 +18,30 @@
 
 import axios from 'axios';
 
-axios.defaults.withCredentials = true;
-
 export const axiosInstance = axios.create();
+
+axiosInstance.interceptors.request.use((config) => {
+    try {
+        const sessionStr = localStorage.getItem('session');
+        if (sessionStr) {
+            const session = JSON.parse(sessionStr);
+            if (session?.expiresAt && Date.parse(session.expiresAt) < Date.now()) {
+                localStorage.removeItem('user');
+                localStorage.removeItem('session');
+                return config;
+            }
+
+            if (session?.accessToken && session?.tokenType) {
+                config.headers = config.headers || {};
+                Object.assign(config.headers, {
+                    Authorization: `${session.tokenType} ${session.accessToken}`,
+                });
+            }
+        }
+    } catch (error) {
+        console.warn('Failed to process session from localStorage:', error);
+        localStorage.removeItem('session');
+    }
+
+    return config;
+});

@@ -107,20 +107,19 @@ class Bootstrap extends Boot
             $this->f3->set(CacheKey::CONFIG_LOADED, true, 3590);
             // Load global settings
             foreach ([] as $entry => $cacheKey) {
-                $exists = 'locale' === $entry ? $this->session->get($entry) : $this->f3->exists($entry);
+                $exists = $this->f3->exists($entry);
                 if (!$exists) {
                     $setting = new Setting();
                     $setting->load();
                     $value = $setting->{$entry};
-                    if ('locale' === $entry) {
-                        $this->session->set($entry, $value);
-                    } else {
-                        $this->f3->set($cacheKey, $value, 3600);
-                    }
+                    $this->f3->set($cacheKey, $value, 3600);
                 }
             }
         }
-        $this->f3->set('LANGUAGE', $this->session->get('locale'));
+        $locale = $this->session->get('locale');
+        if (!empty($locale)) {
+            $this->f3->set('LANGUAGE', $locale);
+        }
     }
 
     protected function loadRoutesAndAssets(): void
@@ -150,8 +149,7 @@ class Bootstrap extends Boot
         header('Access-Control-Allow-Origin: ' . $this->f3->get('webapps.allowed'));
         header('Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE');
         header('Access-Control-Allow-Headers: Content-Type, Origin, Authorization, X-Authorization, Accept, Accept-Language, Access-Control-Request-Method');
-        header('Access-Control-Allow-Credentials: true');
-        header('Access-Control-Expose-Headers: *, PHPSESSID');
+        header('Access-Control-Expose-Headers: Authorization, X-Authorization');
     }
 
     protected function allowRoutesDynamically(): void

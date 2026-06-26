@@ -70,14 +70,42 @@ class AuthService {
 
     getCurrentUser() {
         const userStr: string = localStorage.getItem('user');
-        if (userStr) return JSON.parse(userStr);
+        if (userStr) {
+            try {
+                return JSON.parse(userStr);
+            } catch (error) {
+                this.clearAuth();
+            }
+        }
         return null;
     }
 
     getCurrentSession() {
         const sessionStr: string = localStorage.getItem('session');
-        if (sessionStr) return JSON.parse(sessionStr);
+        if (sessionStr) {
+            try {
+                const session: SessionType = JSON.parse(sessionStr);
+                if (session.expiresAt && Date.parse(session.expiresAt) < Date.now()) {
+                    this.clearAuth();
+                    return null;
+                }
+
+                return session;
+            } catch (error) {
+                this.clearAuth();
+            }
+        }
         return null;
+    }
+
+    getAccessToken(): string | null {
+        const currentSession: SessionType = this.getCurrentSession();
+        return currentSession ? currentSession.accessToken : null;
+    }
+
+    clearAuth() {
+        localStorage.removeItem('user');
+        localStorage.removeItem('session');
     }
 
     updateCurrentUser(username: string, email: string, avatar: string) {
