@@ -20,33 +20,27 @@ declare(strict_types=1);
  * with BBBeasy. If not, see <https://www.gnu.org/licenses/>
  */
 
-namespace Models;
+use Phinx\Migration\AbstractMigration;
 
-use Models\Base as BaseModel;
-
-/**
- * Class UserSession.
- *
- * @property int       $id
- * @property string    $session_id
- * @property string    $data
- * @property string    $ip
- * @property string    $agent
- * @property int       $stamp
- * @property \DateTime $expires
- */
-class UserSession extends BaseModel
+class DropUsersSessionsTable extends AbstractMigration
 {
-    protected $table = 'users_sessions';
-
-    public function getSessionExpirationTime(string $sessionId): string
+    public function up(): void
     {
-        $result  = $this->db->exec('SELECT expires FROM users_sessions where session_id = :session', [':session' => $sessionId]);
-        $expires = $result[0]['expires'];
-        if (!$expires) {
-            return date('c', time() + \ini_get('session.cookie_lifetime'));
+        if ($this->hasTable('users_sessions')) {
+            $this->table('users_sessions')->drop()->save();
         }
+    }
 
-        return $expires;
+    public function down(): void
+    {
+        $table = $this->table('users_sessions');
+        $table->addColumn('session_id', 'string', ['limit' => 256, 'null' => false])
+            ->addColumn('data', 'text', ['null' => true])
+            ->addColumn('ip', 'string', ['limit' => 56, 'null' => true])
+            ->addColumn('agent', 'string', ['limit' => 512, 'null' => true])
+            ->addColumn('stamp', 'integer', ['null' => true])
+            ->addColumn('expires', 'datetime', ['timezone' => true, 'null' => true])
+            ->save()
+        ;
     }
 }

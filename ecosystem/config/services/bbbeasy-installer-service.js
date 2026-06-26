@@ -8,7 +8,7 @@ module.exports = {
 	env: {
 		NODE_ENV: "development",
 		PM2_SERVE_PATH: `${globalConfig.rootPath}bbbeasy-frontend/build/installer`,
-		PM2_SERVE_PORT: 3300,
+		PM2_SERVE_PORT: 3301,
 		PM2_SERVE_SPA: 'true',
 		PM2_SERVE_HOMEPAGE: '/index.html'
 	}

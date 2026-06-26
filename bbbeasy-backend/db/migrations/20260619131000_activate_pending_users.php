@@ -1,4 +1,8 @@
-/**
+<?php
+
+declare(strict_types=1);
+
+/*
  * BBBEasy open source platform - https://riadvice.tn/
  *
  * Copyright (c) 2022-2023 RIADVICE SUARL and by respective authors (see below).
@@ -13,15 +17,20 @@
  * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License along
- * with BBBEasy; if not, see <http://www.gnu.org/licenses/>.
+ * with BBBeasy. If not, see <https://www.gnu.org/licenses/>
  */
 
-import AuthService from '../services/auth.service';
-import { SessionType } from '../types/SessionType';
+use Phinx\Migration\AbstractMigration;
 
-export const authHeader = () => {
-    const currentSession: SessionType = AuthService.getCurrentSession();
-    if (currentSession != null) {
-        return { Authorization: currentSession.tokenType + ' ' + currentSession.accessToken };
+final class ActivatePendingUsers extends AbstractMigration
+{
+    public function up(): void
+    {
+        $this->execute("UPDATE users SET status = 'active' WHERE status = 'pending'");
     }
-};
+
+    public function down(): void
+    {
+        $this->execute("UPDATE users SET status = 'pending' WHERE status = 'active'");
+    }
+}

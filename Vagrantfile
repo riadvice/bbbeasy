@@ -22,6 +22,13 @@ options = YAML.load_file config[:local]
 
 # vagrant configurate
 Vagrant.configure("2") do |config|
+  # ================================================================
+  # FIX: désactive la mise à jour automatique des Guest Additions
+  # vagrant-vbguest 0.32.0 a un bug avec Ruby (File.exists? supprimé)
+  # ================================================================
+  config.vbguest.auto_update = false
+  config.vbguest.no_install  = true
+
   # select the box
   config.vm.box = "alvistack/ubuntu-24.04"
 
@@ -36,7 +43,7 @@ Vagrant.configure("2") do |config|
     vb.cpus = options["cpus"]
     # machine memory size
     vb.memory = options["memory"]
-    # machine name (for VirtualBox UI)
+    # machine name (for VirtualBox UI),+
     vb.name = options["machine_name"]
 
     # ENABLE SYMLINKS FOR NFS/SYNCED FOLDERS

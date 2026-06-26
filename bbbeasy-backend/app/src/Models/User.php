@@ -237,7 +237,7 @@ class User extends BaseModel
             $this->email             = $email;
             $this->password          = $password;
             $this->role_id           = $roleId;
-            $this->status            = UserStatus::PENDING;
+            $this->status            = UserStatus::ACTIVE;
             $this->password_attempts = 3;
 
             $this->save();
@@ -250,7 +250,7 @@ class User extends BaseModel
 
         $this->logger->info($successMessage, ['user' => $this->toArray()]);
 
-        return $this->saveDefaultPreset($userId);
+        return $this->saveDefaultPreset($this->id);
     }
 
     public function saveDefaultPreset($userId, $returnPreset = null): bool|Preset|string

@@ -116,8 +116,6 @@ abstract class Base extends \Prefab
         });
         if ($this->session->isLoggedIn() && $this->f3->get('ALIAS') === $this->f3->get('ALIASES.login')) {
             $this->f3->reroute($this->f3->get('ALIASES.home'));
-        } elseif ('POST' === $this->f3->VERB && !$this->session->validateToken()) {
-            $this->f3->reroute($this->f3->get('PATH'));
         }
         // Rerouted paged uri having the page value less than one
         if ($this->f3->exists('PARAMS.page') && $this->f3->get('PARAMS.page') < 1) {
@@ -215,7 +213,9 @@ abstract class Base extends \Prefab
     protected function parseHeaderAuthorization(): void
     {
         if ($header = $this->f3->get('HEADERS.Authorization')) {
-            $this->headerAuthorization = str_replace('Basic ', '', $header);
+            if (0 === mb_stripos($header, 'Basic ')) {
+                $this->headerAuthorization = str_replace('Basic ', '', $header);
+            }
         }
     }
 

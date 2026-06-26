@@ -85,10 +85,7 @@ abstract class Boot
 
     public function prepareSession(): void
     {
-        // store the session into sqlite database file
-        ini_set('session.cookie_lifetime', 1209600);
-        ini_set('session.gc_maxlifetime', 1209600);
-        $this->session = new Session(\Registry::get('db'), $this->f3->get('session.table'), false);
+        $this->session = new Session(\Registry::get('db'));
         \Registry::set('session', $this->session);
     }
 
@@ -190,7 +187,10 @@ abstract class Boot
     {
         // log session SQL queries only in dev environment for debugging purpose
         if (true === $this->f3->get('log.session')) {
-            $this->logger->debug(\Registry::get('db')->log());
+            $dbLog = \Registry::get('db')->log();
+            if (is_string($dbLog) && '' !== trim($dbLog)) {
+                $this->logger->debug($dbLog);
+            }
         }
 
         $execution_time = round(microtime(true) - $this->f3->get('TIME'), 3);
