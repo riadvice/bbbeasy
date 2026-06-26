@@ -20,7 +20,7 @@ import React, { useEffect } from 'react';
 import { Trans } from 'react-i18next';
 import { t } from 'i18next';
 
-import { Button, Card, Col, Dropdown, Input, Row, Space, Typography, Menu, Form, Popconfirm } from 'antd';
+import { Button, Card, Col, Dropdown, Input, Row, Space, Typography, Form, Popconfirm } from 'antd';
 import {
     CalendarOutlined,
     ClockCircleOutlined,
@@ -172,22 +172,26 @@ const RoomRecordings = (props: Props) => {
         }
     };
 
-    const actionsItems = (record) => {
-        return (
-            <Menu>
-                <Menu.Item key="1" onClick={() => toggleEdit(record)}>
-                    <Trans i18nKey="rename" />
-                </Menu.Item>
-                <Menu.Item key="2" onClick={() => publish(record.key, record.state == 'published' ? false : true)}>
-                    <Trans i18nKey={record.state == 'published' ? 'unpublish' : 'publish'} />
-                </Menu.Item>
-
-                <Menu.Item key="3" danger onClick={() => deleteRecord(record.key)}>
-                    <Trans i18nKey="delete" />
-                </Menu.Item>
-            </Menu>
-        );
-    };
+    const actionsItems = (record) => ({
+        items: [
+            {
+                key: '1',
+                label: <Trans i18nKey="rename" />,
+                onClick: () => toggleEdit(record),
+            },
+            {
+                key: '2',
+                label: <Trans i18nKey={record.state == 'published' ? 'unpublish' : 'publish'} />,
+                onClick: () => publish(record.key, record.state == 'published' ? false : true),
+            },
+            {
+                key: '3',
+                danger: true,
+                label: <Trans i18nKey="delete" />,
+                onClick: () => deleteRecord(record.key),
+            },
+        ],
+    });
 
     return (
         <>
@@ -241,7 +245,7 @@ const RoomRecordings = (props: Props) => {
                                                                 </Title>
                                                                 <Dropdown
                                                                     key="more"
-                                                                    overlay={actionsItems(recording)}
+                                                                    menu={actionsItems(recording)}
                                                                     placement={
                                                                         LocaleService.direction == 'rtl'
                                                                             ? 'bottomLeft'
