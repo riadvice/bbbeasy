@@ -1,7 +1,7 @@
 /**
- * BBBEasy open source platform - https://riadvice.tn/
+ * BBBEasy open source platform - https://riadvice.com/
  *
- * Copyright (c) 2022-2023 RIADVICE SUARL and by respective authors (see below).
+ * Copyright (c) 2022-2026 RIADVICE SUARL and by respective authors (see below).
  *
  * This program is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Affero General Public License as published by the Free Software
@@ -29,7 +29,7 @@ import PresetsService from 'services/presets.service';
 import AuthService from 'services/auth.service';
 
 import { MyPresetType } from 'types/MyPresetType';
-import { FormInstance } from 'antd/lib/form';
+import { FormRef } from 'rc-field-form/lib/interface';
 
 type Props = {
     isLogin?: boolean;
@@ -42,7 +42,7 @@ type formType = {
     name?: string;
 };
 
-let addForm: FormInstance = null;
+let addForm: FormRef = null;
 
 export const AddPresetForm = (props: Props) => {
     const dataContext = React.useContext(DataContext);

@@ -1,7 +1,7 @@
 /**
- * BBBEasy open source platform - https://riadvice.tn/
+ * BBBEasy open source platform - https://riadvice.com/
  *
- * Copyright (c) 2022-2023 RIADVICE SUARL and by respective authors (see below).
+ * Copyright (c) 2022-2026 RIADVICE SUARL and by respective authors (see below).
  *
  * This program is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Affero General Public License as published by the Free Software
@@ -28,7 +28,7 @@ import Notifications from './Notifications';
 
 import LabelsService from 'services/labels.service';
 
-import { FormInstance } from 'antd/lib/form';
+import { FormRef } from 'rc-field-form/lib/interface';
 import { LabelType } from '../types/LabelType';
 
 type Props = {
@@ -43,7 +43,7 @@ type formType = {
     description?: string;
     color?: string;
 };
-let addForm: FormInstance = null;
+let addForm: FormRef = null;
 
 export const AddLabelForm = (props: Props) => {
     const [initialColor, setInitialColor] = React.useState<string>('#fbbc0b');

@@ -1,7 +1,7 @@
 /**
- * BBBEasy open source platform - https://riadvice.tn/
+ * BBBEasy open source platform - https://riadvice.com/
  *
- * Copyright (c) 2022-2023 RIADVICE SUARL and by respective authors (see below).
+ * Copyright (c) 2022-2026 RIADVICE SUARL and by respective authors (see below).
  *
  * This program is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Affero General Public License as published by the Free Software
@@ -31,7 +31,7 @@ import { CustomTagProps } from 'rc-select/lib/BaseSelect';
 import RoomsService from 'services/rooms.service';
 import AuthService from 'services/auth.service';
 
-import { FormInstance } from 'antd/es/form/Form';
+import { FormRef } from 'rc-field-form/lib/interface';
 import { LabelType } from 'types/LabelType';
 import { PresetType } from 'types/PresetType';
 import { UserType } from 'types/UserType';
@@ -44,7 +44,7 @@ type formType = {
     preset?: PresetType;
     labels?: LabelType[];
 };
-let addForm: FormInstance = null;
+let addForm: FormRef = null;
 
 type Props = {
     isLogin?: boolean;

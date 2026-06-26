@@ -1,9 +1,9 @@
 #!/bin/bash
 
 #
-# BBBEasy open source platform - https://riadvice.tn/
+# BBBEasy open source platform - https://riadvice.com/
 #
-# Copyright (c) 2022-2023 RIADVICE SUARL and by respective authors (see below).
+# Copyright (c) 2022-2026 RIADVICE SUARL and by respective authors (see below).
 #
 # This program is free software; you can redistribute it and/or modify it under the
 # terms of the GNU Affero General Public License as published by the Free Software
@@ -56,8 +56,8 @@ echo "BBBeasy - INSTALL SCRIPT"
 # Check for the OS
 source /etc/lsb-release
 
-if [[ "$DISTRIB_ID" != "Ubuntu" && "$DISTRIB_RELEASE" != "22.04" ]]; then
-  echo "Ubuntu 22.04 LTS (jammy) is required to install BBBeasy - https://releases.ubuntu.com/jammy/"
+if [[ "$DISTRIB_ID" != "Ubuntu" && "$DISTRIB_RELEASE" != "22.04" && "$DISTRIB_RELEASE" != "24.04" ]]; then
+  echo "Ubuntu 22.04 LTS (jammy) or 24.04 LTS (noble) is required to install BBBeasy - https://releases.ubuntu.com/"
   exit
 fi
 
@@ -116,7 +116,7 @@ install_docker_deps() {
   mkdir -p /etc/apt/keyrings
   curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
   echo \
-    "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+    "deb [arch=$(dpkg --printarchitecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
   $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list >/dev/null
   apt-get update
   apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
@@ -125,6 +125,18 @@ install_docker_deps() {
 install_common_deps() {
   echo "Install basic dependencies"
   apt-get install -y git gcc g++ make curl software-properties-common
+}
+
+install_nvm_node() {
+  echo "Install nvm and Node.js LTS"
+  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+  export NVM_DIR="$HOME/.nvm"
+  # shellcheck source=/dev/null
+  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+  nvm install --lts
+  nvm alias default lts/*
+  nvm use default
+  echo "Node.js version: $(node -v)"
 }
 
 install_deps() {
@@ -136,7 +148,7 @@ install_deps() {
   echo "adding redislabs/redis repository"
   add-apt-repository -y ppa:redislabs/redis
 
-  echo "Enable Percoan PostgreSQL distribution"
+  echo "Enable Percona PostgreSQL distribution"
   wget https://repo.percona.com/apt/percona-release_latest.generic_all.deb
   dpkg -i percona-release_latest.generic_all.deb
   rm percona-release_latest.generic_all.deb
@@ -154,38 +166,29 @@ install_deps() {
   echo "Install Redis for caching"
   apt-get install -y redis-server
 
-  echo "Install node.js"
-  apt-get update
-  apt-get install -y ca-certificates curl gnupg
-  mkdir -p /etc/apt/keyrings
-  -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
-  NODE_MAJOR=24
-  echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
+  echo "Install nvm and Node.js LTS"
+  install_nvm_node
+
+  echo "Enable corepack for yarn"
+  corepack enable
 
   echo "Install PHP 8.5 with its dependencies"
   apt-get install -y php8.5-curl php8.5-cli php8.5-intl php8.5-redis php8.5-gd php8.5-fpm php8.5-pgsql \
-    php8.5-mbstring php8.5-xml php8.5-bcmath php8.5-xdebug
+    php8.5-mbstring php8.5-xml php8.5-bcmath php8.5-zip php8.5-xdebug
 
   echo "Installing PostgreSQL"
-sudo percona-release setup ppg-18
-sudo apt install -y percona-postgresql-18 \
-  percona-postgresql-18-repack \
-  percona-postgresql-18-pgaudit \
-  percona-pg-stat-monitor18 \
-  percona-pgaudit18-set-user \
-  percona-pgbadger \
-  percona-postgresql-18-wal2json \
-  percona-pg-stat-monitor18 \
-  percona-postgresql-contrib
+  sudo percona-release setup ppg-18
+  sudo apt install -y percona-postgresql-18 \
+    percona-postgresql-18-repack \
+    percona-postgresql-18-pgaudit \
+    percona-pg-stat-monitor18 \
+    percona-pgaudit18-set-user \
+    percona-pgbadger \
+    percona-postgresql-18-wal2json \
+    percona-pg-stat-monitor18 \
+    percona-postgresql-contrib
 
-  # Must apply yarn version in HOME directory of root user
-  cd $HOME
-  echo "Install yarn"
-  curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
-  echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
-  apt update
-  apt-get install -y yarn
-  yarn set version berry
+  echo "Install pm2"
   npm install -g pm2
 
   sudo curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer

@@ -1,7 +1,7 @@
 /**
- * BBBEasy open source platform - https://riadvice.tn/
+ * BBBEasy open source platform - https://riadvice.com/
  *
- * Copyright (c) 2022-2023 RIADVICE SUARL and by respective authors (see below).
+ * Copyright (c) 2022-2026 RIADVICE SUARL and by respective authors (see below).
  *
  * This program is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Affero General Public License as published by the Free Software
@@ -25,7 +25,7 @@ import { PageHeader } from '@ant-design/pro-layout';
 import { Alert, Button, Form, Input, Modal, Popconfirm, Select, Space, Tag, Typography } from 'antd';
 import { DeleteOutlined, EditOutlined, QuestionCircleOutlined, StarFilled } from '@ant-design/icons';
 
-import { FormInstance } from 'antd/lib/form';
+import { FormRef } from 'rc-field-form/lib/interface';
 import { CompareRecords } from '../functions/compare.function';
 import { EditableTable } from './EditableTable';
 import EditableTableCell from './EditableTableCell';
@@ -61,7 +61,7 @@ interface EditableCellProps {
     record: UserType;
     inputType: 'text' | 'select';
 }
-let addForm: FormInstance = null;
+let addForm: FormRef = null;
 
 const Users = () => {
     const [data, setData] = React.useState<UserType[]>([]);

@@ -1,7 +1,7 @@
 /**
- * BBBEasy open source platform - https://riadvice.tn/
+ * BBBEasy open source platform - https://riadvice.com/
  *
- * Copyright (c) 2022-2023 RIADVICE SUARL and by respective authors (see below).
+ * Copyright (c) 2022-2026 RIADVICE SUARL and by respective authors (see below).
  *
  * This program is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Affero General Public License as published by the Free Software
@@ -20,7 +20,6 @@
 
 const path = require('path');
 const webpack = require('webpack');
-const WebpackBar = require('webpackbar');
 const CracoLessPlugin = require('craco-less');
 const child_process = require('child_process');
 const FastRefreshCracoPlugin = require('craco-fast-refresh');
@@ -31,12 +30,14 @@ function git(command) {
     return cp.execSync(`git ${command}`, { encoding: 'utf8' }, { shell: false }).trim();
 }
 module.exports = {
+    devServer: {
+        open: 'http://bbbeasy.test/',
+    },
     webpack: {
         output: {
             clean: true,
         },
         plugins: [
-            new WebpackBar({ profile: true }),
             new webpack.DefinePlugin({
                 'INSTALLER_FEATURE': JSON.parse(process.env.INSTALLER_FEATURE),
             }),

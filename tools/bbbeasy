@@ -1,9 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 #
-# BBBEasy open source platform - https://riadvice.tn/
+# BBBEasy open source platform - https://riadvice.com/
 #
-# Copyright (c) 2022-2024 RIADVICE SUARL and by respective authors (see below).
+# Copyright (c) 2022-2026 RIADVICE SUARL and by respective authors (see below).
 #
 # This program is free software; you can redistribute it and/or modify it under the
 # terms of the GNU Affero General Public License as published by the Free Software
@@ -34,17 +34,29 @@ USER=$(whoami)
 # Directory where the script is located
 BASEDIR=$(dirname "$SCRIPT")
 
-# Formatted current date
-NOW=$(date +"%Y-%m-%d_%H.%M.%S")
-
 # Production BBBEasy directory
 APP_DIR=$BASEDIR/../
 
+# Formatted current date
+NOW=$(date +"%Y-%m-%d_%H.%M.%S")
+
 # Current git branch name transforms '* dev-0.5' to 'dev-0.5'
-GIT_BRANCH=$(git --git-dir="$BASEDIR/../.git" branch | sed -n '/\* /s///p')
+GIT_BRANCH=$(git --git-dir="$BASEDIR/../.git" branch 2>/dev/null | sed -n '/\* /s///p')
 
 # Git tag, commits ahead & commit id under format '0.4-160-g3bb256c'
-GIT_VERSION=$(git --git-dir="$BASEDIR/../.git" describe --tags --always HEAD)
+GIT_VERSION=$(git --git-dir="$BASEDIR/../.git" describe --tags --always HEAD 2>/dev/null)
+
+# Environment, set in run()
+ENVIRONMENT=""
+
+# Detected PHP-FPM version (e.g., 8.4 or 8.5)
+PHP_VERSION=""
+
+# Detected nginx site config path
+NGINX_SITE_CONF=""
+
+# Backend config directory
+BACKEND_CONFIG_DIR="$BASEDIR/../bbbeasy-backend/app/config"
 
 #
 # Display usage
@@ -78,11 +90,74 @@ usage() {
   echo "#    --stop                           Stop BBBEasy"
   echo "#    --start                          Start BBBEasy"
   echo "#    --clean                          Restart and clean all log files"
-  echo "#    --cleansessions                  Cleans sessions from the database"
+  echo "#    --cleansessions                  Cleans legacy session data (no-op with JWT)"
   echo "#    --status                         Display running status of components"
   echo "#    --zip                            Zip up log files for reporting an error"
+  echo "#    --deploy                         Install dependencies, build and run migrations"
+  echo "#"
+  echo "# Environment:"
+  echo "#    --env <development|production>   Force environment (default: auto-detect from hostname)"
   echo "#========================================================================================================"
   echo
+}
+
+#
+# Load nvm if available (so yarn/npm are accessible in non-interactive shells)
+#
+load_nvm() {
+  if [ -s "$HOME/.nvm/nvm.sh" ]; then
+    # shellcheck source=/dev/null
+    . "$HOME/.nvm/nvm.sh"
+  fi
+  if [ -s "$HOME/.nvm/bash_completion" ]; then
+    # shellcheck source=/dev/null
+    . "$HOME/.nvm/bash_completion"
+  fi
+}
+
+#
+# Detect the installed PHP-FPM version from the socket or available binaries
+#
+detect_php_version() {
+  local version=""
+  # Prefer the version that owns the active FPM socket
+  if [ -S /run/php/php-fpm.sock ]; then
+    version=$(readlink -f /run/php/php-fpm.sock 2>/dev/null | grep -oE 'php[0-9]+\.[0-9]+' | head -1 | sed 's/php//')
+  fi
+  if [ -z "$version" ]; then
+    version=$(ls /run/php/ 2>/dev/null | grep -oE 'php[0-9]+\.[0-9]+' | sed 's/php//' | sort -V | tail -1)
+  fi
+  if [ -z "$version" ]; then
+    version=$(ls /etc/php/ 2>/dev/null | grep -oE '^[0-9]+\.[0-9]+$' | sort -V | tail -1)
+  fi
+  if [ -z "$version" ]; then
+    version=$(command -v php-fpm 2>/dev/null | grep -oE '[0-9]+\.[0-9]+$')
+  fi
+  if [ -z "$version" ]; then
+    echo "✘ No PHP-FPM version detected. Please install PHP-FPM first."
+    exit 1
+  fi
+  PHP_VERSION=$version
+}
+
+#
+# Discover the active nginx site config for BBBEasy
+#
+detect_nginx_site() {
+  local candidates=(
+    "/etc/nginx/sites-available/bbbeasy"
+    "/etc/nginx/sites-available/bbbeasy.conf"
+    "/etc/nginx/sites-enabled/bbbeasy"
+    "/etc/nginx/sites-enabled/bbbeasy.conf"
+    "/etc/nginx/conf.d/bbbeasy.conf"
+  )
+  for candidate in "${candidates[@]}"; do
+    if [ -f "$candidate" ]; then
+      NGINX_SITE_CONF=$candidate
+      return
+    fi
+  done
+  NGINX_SITE_CONF=""
 }
 
 #
@@ -148,14 +223,14 @@ validate_service() {
 }
 
 display_status() {
-  units="nginx php-fpm postgresql redis"
+  local units=("nginx" "php${PHP_VERSION}-fpm" "postgresql" "redis")
   echo
-  line='————————————————————►'
-  for unit in $units; do
-    if [ $(pgrep -c "$unit") -ne 0 ]; then
-      printf "%s %s [✔ - UP]\n" $unit "${line:${#unit}}"
+  local line='————————————————————►'
+  for unit in "${units[@]}"; do
+    if systemctl is-active --quiet "$unit"; then
+      printf "%s %s [✔ - UP]\n" "$unit" "${line:${#unit}}"
     else
-      printf "%s %s [✘ - DOWN]\n" $unit "${line:${#unit}}"
+      printf "%s %s [✘ - DOWN]\n" "$unit" "${line:${#unit}}"
     fi
   done
   echo
@@ -188,8 +263,14 @@ clean_logs() {
 # Clean sessions from the database
 #
 clean_sessions() {
-  sudo -u postgres psql -d bbbeasy -c "SELECT setval('users_sessions_id_seq'::regclass, 1);"
-  sudo -u postgres psql -d bbbeasy -c "TRUNCATE users_sessions;"
+  echo "► Cleaning legacy sessions"
+  if sudo -u postgres psql -d bbbeasy -tAc "SELECT 1 FROM information_schema.tables WHERE table_name='users_sessions'" 2>/dev/null | grep -q 1; then
+    sudo -u postgres psql -d bbbeasy -c "SELECT setval('users_sessions_id_seq'::regclass, 1);" 2>/dev/null || true
+    sudo -u postgres psql -d bbbeasy -c "TRUNCATE users_sessions;" 2>/dev/null || true
+    echo "✔ Legacy sessions cleaned"
+  else
+    echo "ℹ users_sessions table does not exist (JWT auth). Nothing to clean."
+  fi
 }
 
 #
@@ -197,7 +278,7 @@ clean_sessions() {
 #
 zip_logs() {
   echo "► Archiving logs"
-  ARCHIVE="/home/$USER/logs/logs-$NOW.tar.gz"
+  local ARCHIVE="/home/$USER/logs/logs-$NOW.tar.gz"
   mkdir -p "/home/$USER/logs/"
   touch /tmp/empty
   tar cfv "$ARCHIVE" /tmp/empty
@@ -217,7 +298,7 @@ fix_styles() {
 }
 
 #
-# Enable backend installer app
+# Validate file exists
 #
 validate_file() {
   if [ ! -f "$1" ]; then
@@ -226,20 +307,63 @@ validate_file() {
   fi
 }
 
+#
+# Ensure backend config files exist
+#
+ensure_backend_config() {
+  if [ ! -f "$BACKEND_CONFIG_DIR/config-$ENVIRONMENT.ini" ]; then
+    local SAMPLE="$BACKEND_CONFIG_DIR/config-$ENVIRONMENT.sample.ini"
+    if [ -f "$SAMPLE" ]; then
+      echo "► Creating $BACKEND_CONFIG_DIR/config-$ENVIRONMENT.ini from sample"
+      cp "$SAMPLE" "$BACKEND_CONFIG_DIR/config-$ENVIRONMENT.ini"
+    else
+      echo "✘ Error: $SAMPLE does not exist. Cannot create config-$ENVIRONMENT.ini."
+      exit 1
+    fi
+  fi
+}
+
+#
+# Reload nginx after validating the configuration
+#
+reload_nginx() {
+  detect_nginx_site
+  if [ -z "$NGINX_SITE_CONF" ]; then
+    echo "✘ No BBBEasy nginx site config found"
+    return 1
+  fi
+  echo "► Validating nginx configuration"
+  if sudo nginx -t; then
+    echo "► Reloading nginx"
+    sudo systemctl reload nginx || sudo systemctl restart nginx
+  else
+    echo "✘ Nginx configuration is invalid. Aborting reload."
+    return 1
+  fi
+}
+
+#
+# Enable backend installer app
+#
 enable_installer() {
+  ensure_backend_config
   echo "► Enabling backend installer app"
-  validate_file "$BASEDIR/../bbbeasy-backend/app/config/config-$ENVIRONMENT.ini"
+  local CONFIG="$BACKEND_CONFIG_DIR/config-$ENVIRONMENT.ini"
+  validate_file "$CONFIG"
   if [ "$ENVIRONMENT" == "production" ]; then
-    if grep -q -v "config.extension" "$BASEDIR/../bbbeasy-backend/app/config/config-$ENVIRONMENT.ini"; then
-      echo "config.extension = -install" >>"$BASEDIR/../bbbeasy-backend/app/config/config-$ENVIRONMENT.ini"
-      sudo sed -i 's/webapp/installer/g' /etc/nginx/sites-available/bbbeasy
-      sudo service nginx reload
+    if grep -q -v "config.extension" "$CONFIG"; then
+      echo "config.extension = -install" >>"$CONFIG"
+      detect_nginx_site
+      if [ -n "$NGINX_SITE_CONF" ]; then
+        sudo sed -i 's/webapp/installer/g' "$NGINX_SITE_CONF"
+        reload_nginx
+      fi
       printf "%s %s [✔ - DONE]\n"
     fi
   else
-    if [ $(grep -c "config.extension =" "$BASEDIR/../bbbeasy-backend/app/config/config-$ENVIRONMENT.ini") -ne 0 ]; then
+    if [ "$(grep -c "config.extension =" "$CONFIG")" -ne 0 ]; then
       # c cmd to replace the matched line in one go
-      sed -i '/config.extension =/ c config.extension = -install' "$BASEDIR/../bbbeasy-backend/app/config/config-$ENVIRONMENT.ini"
+      sed -i '/config.extension =/ c config.extension = -install' "$CONFIG"
       printf "%s %s [✔ - DONE]\n"
     fi
   fi
@@ -250,16 +374,21 @@ enable_installer() {
 # Enable backend web app
 #
 enable_web() {
+  ensure_backend_config
   echo "► Enabling backend webapp"
+  local CONFIG="$BACKEND_CONFIG_DIR/config-$ENVIRONMENT.ini"
   if [ "$ENVIRONMENT" == "production" ]; then
-    sed -i '/^config\.extension/d' "$BASEDIR/../bbbeasy-backend/app/config/config-$ENVIRONMENT.ini"
-    sudo sed -i 's/installer/webapp/g' /etc/nginx/sites-available/bbbeasy
-    sudo service nginx reload
+    sed -i '/^config\.extension/d' "$CONFIG"
+    detect_nginx_site
+    if [ -n "$NGINX_SITE_CONF" ]; then
+      sudo sed -i 's/installer/webapp/g' "$NGINX_SITE_CONF"
+      reload_nginx
+    fi
     printf "%s %s [✔ - DONE]\n"
   else
     echo "► Enabling backend web app"
-    if [ $(grep -c "config.extension = -install" "$BASEDIR/../bbbeasy-backend/app/config/config-$ENVIRONMENT.ini") -ne 0 ]; then
-      sed -i '/config.extension = -install/ c config.extension =' "$BASEDIR/../bbbeasy-backend/app/config/config-$ENVIRONMENT.ini"
+    if [ "$(grep -c "config.extension = -install" "$CONFIG")" -ne 0 ]; then
+      sed -i '/config.extension = -install/ c config.extension =' "$CONFIG"
       printf "%s %s [✔ - DONE]\n"
     fi
   fi
@@ -290,9 +419,9 @@ enable_tests() {
 run_tests() {
   echo "► Running unit tests"
   sudo phpenmod -s cli xdebug
-  COVERAGE=$1
-  USE_COVERAGE=""
-  TEST_NAME="all"
+  local COVERAGE=$1
+  local USE_COVERAGE=""
+  local TEST_NAME="all"
   if [[ "$1" != "-c" ]]; then
     if [[ "$1" != "" ]]; then
       TEST_NAME=$1
@@ -313,7 +442,7 @@ run_tests() {
   "vendor/bin/phinx" migrate -e testing -vvv
   cd "public"
   php index.php "/api?statera$USE_COVERAGE&test=$TEST_NAME" -o="../public/statera/result/index.html"
-  SUCCESS=$(cat "statera/test.result")
+  local SUCCESS=$(cat "statera/test.result" 2>/dev/null)
   if [[ "$SUCCESS" == "success" ]]; then
     echo "✔ Test success"
     exit 0
@@ -328,6 +457,9 @@ deploy_apps() {
   chown_folders
   chmod_folders
   run_migrations
+  if [ "$ENVIRONMENT" == "production" ]; then
+    start_pm2
+  fi
 }
 
 #
@@ -345,28 +477,59 @@ install_dependencies() {
   # Backend
   cd "$(dirname "$BASEDIR")/bbbeasy-backend/"
   echo "► Updating composer dependencies"
-  COMPOSER_ALLOW_SUPERUSER=1 composer install -o --no-dev
-  sudo mkdir -p "$(dirname "$BASEDIR")/bbbeasy-frontend/build/"
-  # Installer
-  cd "$(dirname "$BASEDIR")/bbbeasy-frontend/"
-  rm -rf dist/
-  yarn cache clean
-  NODE_ENV=production yarn install
-  yarn build-installer
-  cp -a "$BASEDIR/../bbbeasy-frontend/dist/." "$BASEDIR/../bbbeasy-frontend/build/installer/"
-  # Installer
-  cd "$(dirname "$BASEDIR")/bbbeasy-frontend/"
-  rm -rf dist/
-  yarn cache clean
-  NODE_ENV=production yarn install
-  yarn build
-  cp -a "$BASEDIR/../bbbeasy-frontend/dist/." "$BASEDIR/../bbbeasy-frontend/build/webapp/"
-  # Docs
-  cd "$(dirname "$BASEDIR")/bbbeasy-docs/"
-  yarn clear
-  NODE_ENV=production yarn install
-  yarn docusaurus clear
-  yarn build
+  if [ "$ENVIRONMENT" == "production" ]; then
+    COMPOSER_ALLOW_SUPERUSER=1 composer install -o --no-dev
+  else
+    COMPOSER_ALLOW_SUPERUSER=1 composer install -o
+  fi
+
+  load_nvm
+  ensure_yarn
+
+  if [ "$ENVIRONMENT" == "production" ]; then
+    # Installer
+    cd "$(dirname "$BASEDIR")/bbbeasy-frontend/"
+    rm -rf dist/
+    yarn cache clean
+    NODE_ENV=production yarn install
+    yarn build-installer
+    cp -a "$(dirname "$BASEDIR")/bbbeasy-frontend/dist/." "$(dirname "$BASEDIR")/bbbeasy-frontend/build/installer/"
+    # Webapp
+    cd "$(dirname "$BASEDIR")/bbbeasy-frontend/"
+    rm -rf dist/
+    yarn cache clean
+    NODE_ENV=production yarn install
+    yarn build
+    cp -a "$(dirname "$BASEDIR")/bbbeasy-frontend/dist/." "$(dirname "$BASEDIR")/bbbeasy-frontend/build/webapp/"
+    # Docs
+    cd "$(dirname "$BASEDIR")/bbbeasy-docs/"
+    yarn clear
+    NODE_ENV=production yarn install
+    yarn docusaurus clear
+    yarn build
+  else
+    echo "► Development environment: skipping production frontend/docs builds"
+  fi
+}
+
+#
+# Ensure yarn is available (bootstrap yarn 4 if needed)
+#
+ensure_yarn() {
+  load_nvm
+  if ! command -v yarn &>/dev/null; then
+    echo "✘ Error: yarn is not available. Please install Node.js and enable corepack, or install yarn."
+    exit 1
+  fi
+  # If the project expects a local yarn release but it is missing, download it
+  if [ -f "$(dirname "$BASEDIR")/bbbeasy-frontend/.yarnrc.yml" ]; then
+    local YARN_PATH
+    YARN_PATH=$(grep -oE 'yarnPath:.*' "$(dirname "$BASEDIR")/bbbeasy-frontend/.yarnrc.yml" | awk '{print $2}')
+    if [ -n "$YARN_PATH" ] && [ ! -f "$(dirname "$BASEDIR")/bbbeasy-frontend/$YARN_PATH" ]; then
+      echo "► Bootstrapping yarn release"
+      (cd "$(dirname "$BASEDIR")/bbbeasy-frontend" && YARN_IGNORE_PATH=1 yarn set version 4.16.0)
+    fi
+  fi
 }
 
 #
@@ -394,10 +557,10 @@ generate_metrics() {
 }
 
 chown_folders() {
-  sudo chown -R www-data: "$BASEDIR/../bbbeasy-frontend/build/installer/"
-  sudo chown -R www-data: "$BASEDIR/../bbbeasy-frontend/build/webapp/"
-  sudo chown -R www-data: "$BASEDIR/../bbbeasy-docs/build/"
-  sudo chown -R www-data: "$BASEDIR/../bbbeasy-backend"
+  sudo chown -R www-data: "$(dirname "$BASEDIR")/bbbeasy-frontend/build/installer/"
+  sudo chown -R www-data: "$(dirname "$BASEDIR")/bbbeasy-frontend/build/webapp/"
+  sudo chown -R www-data: "$(dirname "$BASEDIR")/bbbeasy-docs/build/"
+  sudo chown -R www-data: "$(dirname "$BASEDIR")/bbbeasy-backend"
 }
 
 #
@@ -413,23 +576,57 @@ chmod_folders() {
 }
 
 #
+# Start pm2 services in production
+#
+start_pm2() {
+  load_nvm
+  ensure_yarn
+  if [ -f "$(dirname "$BASEDIR")/ecosystem/ecosystem.config.js" ]; then
+    echo "► Starting pm2 services"
+    cd "$(dirname "$BASEDIR")/ecosystem"
+    pm2 start ecosystem.config.js
+    pm2 save
+    echo "✔ PM2 services started"
+  fi
+}
+
+#
+# Stop pm2 services
+#
+stop_pm2() {
+  load_nvm
+  if [ -f "$(dirname "$BASEDIR")/ecosystem/ecosystem.config.js" ]; then
+    echo "► Stopping pm2 services"
+    cd "$(dirname "$BASEDIR")/ecosystem"
+    pm2 stop ecosystem.config.js || true
+    echo "✔ PM2 services stopped"
+  fi
+}
+
+#
 # Start services
 #
 start_services() {
   sudo service postgresql start
   sudo service redis start
   sudo service nginx start
-  sudo service php8.5-fpm start
+  sudo service "php${PHP_VERSION}-fpm" start
+  if [ "$ENVIRONMENT" == "production" ]; then
+    start_pm2
+  fi
 }
 
 #
 # Stop services
 #
 stop_services() {
-  sudo service postgresql stop
-  sudo service redis stop
+  if [ "$ENVIRONMENT" == "production" ]; then
+    stop_pm2
+  fi
+  sudo service "php${PHP_VERSION}-fpm" stop
   sudo service nginx stop
-  sudo service php8.5-fpm stop
+  sudo service redis stop
+  sudo service postgresql stop
 }
 
 #
@@ -439,7 +636,25 @@ restart_services() {
   sudo service postgresql restart
   sudo service redis restart
   sudo service nginx restart
-  sudo service php8.5-fpm restart
+  sudo service "php${PHP_VERSION}-fpm" restart
+  if [ "$ENVIRONMENT" == "production" ]; then
+    stop_pm2
+    start_pm2
+  fi
+}
+
+#
+# Check configuration and processes for problems
+#
+check_config() {
+  detect_nginx_site
+  echo "► Environment   : $ENVIRONMENT"
+  echo "► PHP version   : $PHP_VERSION"
+  echo "► Nginx site    : ${NGINX_SITE_CONF:-not found}"
+  echo "► Checking nginx configuration"
+  sudo nginx -t
+  echo "► Checking service status"
+  display_status
 }
 
 run() {
@@ -447,14 +662,40 @@ run() {
     usage
     exit 1
   fi
-  # Environment
+
+  # Environment detection
   HOST_TESTER=$(hostname)
   if [[ "$HOST_TESTER" == "bbbeasy.test" ]]; then
     ENVIRONMENT="development"
   else
     ENVIRONMENT="production"
   fi
+
+  # Parse arguments
+  local args=("$@")
+  local i=0
+  while [[ $i -lt ${#args[@]} ]]; do
+    case "${args[$i]}" in
+    --env)
+      ENVIRONMENT="${args[$((i + 1))]}"
+      i=$((i + 2))
+      ;;
+    --env=*)
+      ENVIRONMENT="${args[$i]#*=}"
+      i=$((i + 1))
+      ;;
+    *)
+      i=$((i + 1))
+      ;;
+    esac
+  done
+
+  detect_php_version
+  load_nvm
+
   echo "► Detected environment: \`$ENVIRONMENT\`"
+  echo "► Detected PHP-FPM    : php${PHP_VERSION}-fpm"
+
   while [[ $# -gt 0 ]]; do
     if [ "$1" = "--version" -o "$1" = "-version" -o "$1" = "-v" ]; then
       display_version
@@ -486,11 +727,11 @@ run() {
       run_tests "$2" "$3"
       shift
       shift
+      shift
       continue
     fi
     if [ "$1" = "--check" -o "$1" = "-check" ]; then
-      # todo: nginx config, mysql config, directories permissions...
-      echo "not implemented yet"
+      check_config
       shift
       continue
     fi
@@ -547,6 +788,15 @@ run() {
     fi
     if [ "$1" = "--zip" -o "$1" = "-zip" -o "$1" = "-z" ]; then
       zip_logs
+      shift
+      continue
+    fi
+    if [ "$1" = "--env" ]; then
+      shift
+      shift
+      continue
+    fi
+    if [[ "$1" == --env=* ]]; then
       shift
       continue
     fi
