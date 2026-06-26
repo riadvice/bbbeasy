@@ -22,7 +22,9 @@ import { Trans } from 'react-i18next';
 import { Tooltip } from 'antd';
 import { CheckOutlined, CopyOutlined } from '@ant-design/icons';
 
-import { CopyToClipboard } from 'react-copy-to-clipboard';
+import ReactCopyToClipboard from 'react-copy-to-clipboard';
+
+const CopyToClipboard = ReactCopyToClipboard as any;
 
 type Props = {
     textToCopy: string;

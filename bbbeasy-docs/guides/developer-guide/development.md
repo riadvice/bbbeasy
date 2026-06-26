@@ -69,7 +69,7 @@ yarn start-dev-installer
 yarn start-dev
 ```
 
-The browser will open http://bbbeasy.test/ (via nginx) instead of localhost:3300.
+The Vite dev server runs on port 3300 and the browser will open http://bbbeasy.test/ (via nginx).
 
 `Reload the installation process , run this command`
 

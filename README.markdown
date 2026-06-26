@@ -57,7 +57,7 @@ The web-application is split in two parts:
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4- Run `yarn start-dev-installer` to enable the **installer** app or `yarn start-dev` to enable the **web** app.
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The browser will open http://bbbeasy.test/ (via nginx) instead of localhost:3300.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The Vite dev server runs on port 3300 and the browser will open http://bbbeasy.test/ (via nginx).
 
 ## Contributing
 

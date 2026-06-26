@@ -23,16 +23,13 @@ import { t } from 'i18next';
 
 import { PageHeader } from '@ant-design/pro-layout';
 
-import { Button, Typography, Space, Popconfirm, Input, Tooltip, Modal, Avatar, Tag, Select } from 'antd';
+import { Button, Typography, Space, Popconfirm, Input, Tooltip, Modal, Tag, Select } from 'antd';
 import {
     DeleteOutlined,
     QuestionCircleOutlined,
     UserOutlined,
     EditOutlined,
     ShareAltOutlined,
-    FacebookOutlined,
-    TwitterOutlined,
-    LinkedinOutlined,
     CheckCircleOutlined,
     SyncOutlined,
     InfoCircleOutlined,
@@ -229,7 +226,6 @@ const Recordings = () => {
         setLoading(true);
         RecordingsService.delete_recording(key)
             .then(() => {
-                const newData = [...data];
                 // delete table item
                 setData(data.filter((item) => item.key !== key));
                 Notifications.openNotificationWithIcon('success', t('delete_recording_success'));
@@ -390,7 +386,11 @@ const Recordings = () => {
             editable: false,
             render: (text, record) => {
                 const clickCancel = (record) => {
-                    CompareRecords(record, editForm.getFieldsValue(true)) ? cancelEdit() : setCancelVisibility(true);
+                    if (CompareRecords(record, editForm.getFieldsValue(true))) {
+                        cancelEdit();
+                    } else {
+                        setCancelVisibility(true);
+                    }
                 };
 
                 return isEditing(record) ? (
@@ -485,7 +485,7 @@ const Recordings = () => {
                             <div className="mt-24">{getFormatIcons(modalFormats, true)}</div>
                             <Space size="middle" className="social-medias">
                                 <div className="bbbeasy-white-btn">
-                                    <FacebookShareButton url={modalUrl} quote={'Join us!'}>
+                                    <FacebookShareButton url={modalUrl}>
                                         <FacebookIcon size={75} round />
                                     </FacebookShareButton>
                                 </div>

@@ -54,7 +54,7 @@ import {
     WarningOutlined,
 } from '@ant-design/icons';
 
-import { initReactI18next, Trans, withTranslation } from 'react-i18next';
+import { Trans, withTranslation } from 'react-i18next';
 import { t } from 'i18next';
 import EN_US from '../locale/en-US.json';
 
@@ -78,10 +78,8 @@ import { SubCategoryType } from '../types/SubCategoryType';
 import { UploadFile } from 'antd/lib/upload/interface';
 import type { Color } from 'antd/es/color-picker';
 import ReactDomServer from 'react-dom/server';
-import { getType } from 'react-styleguidist/lib/client/rsg-components/Props/util';
 import { LanguagesBBB } from './LanguagesBBB';
 import { GuestPolicy } from './GuestPolicy';
-import { isEmpty } from 'lodash';
 
 const { Title } = Typography;
 
@@ -109,7 +107,6 @@ const PresetsCol: React.FC<PresetColProps> = ({
     const [fileList, setFileList] = React.useState<UploadFile[]>(null);
     const [isShown, setIsShown] = useState<boolean>(false);
     const [modalTitle, setModalTitle] = React.useState<string>('');
-    const [modalTitleTrans, setModalTitleTrans] = React.useState<string>('');
     const [modalContent, setModalContent] = React.useState<SubCategoryType[]>([]);
     const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
     const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -117,7 +114,6 @@ const PresetsCol: React.FC<PresetColProps> = ({
     const isDefault = preset['name'] == 'default';
     const deleteEnabled = deleteClickHandler != null && !isDefault;
     const { token } = theme.useToken();
-    const [color, setColor] = useState<Color | string>(token.colorPrimary);
 
     const props = {
         beforeUpload: (file) => {
@@ -154,10 +150,9 @@ const PresetsCol: React.FC<PresetColProps> = ({
             return LanguagesBBB;
         }
     };
-    const showModal = (title: string, titleTrans: string, content: SubCategoryType[]) => {
+    const showModal = (title: string, _titleTrans: string, content: SubCategoryType[]) => {
         setIsModalVisible(true);
         setModalTitle(title);
-        setModalTitleTrans(titleTrans);
         setModalContent(content);
 
         const indexLogo = content.findIndex((item) => item.type === 'file');
@@ -520,7 +515,6 @@ const PresetsCol: React.FC<PresetColProps> = ({
                                                         <ColorPicker
                                                             value={item.value ? item.value : '#fbbc0b'}
                                                             onChange={(color1: Color) => {
-                                                                setColor(color1);
                                                                 item.value =
                                                                     typeof color1 === 'string'
                                                                         ? color1

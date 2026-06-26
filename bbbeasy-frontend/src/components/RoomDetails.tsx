@@ -29,7 +29,6 @@ import {
     FacebookOutlined,
     LinkedinOutlined,
     LinkOutlined,
-    MailOutlined,
     TwitterOutlined,
 } from '@ant-design/icons';
 import { Avatar, Button, Card, Col, Input, Row, Space, Tag, Tooltip, Typography, Form, Select, Popconfirm } from 'antd';
@@ -91,6 +90,7 @@ const tagRender = (props: CustomTagProps) => {
     );
 };
 
+// eslint-disable-next-line complexity
 const RoomDetails = () => {
     const { state } = useLocation();
     const param = useParams();
@@ -110,7 +110,7 @@ const RoomDetails = () => {
     const [presets, setPresets] = React.useState<PresetType[]>();
     const prefixShortLink = '/r/';
     const [showRecodingAndPresenttaions, setShowRecodingAndPresenttaions] = React.useState<boolean>(false);
-    const [open, setOpen] = React.useState<boolean>(false);
+    const [, setOpen] = React.useState<boolean>(false);
     const [roomRecordings, setRoomRecordings] = React.useState<RecordingType[]>([]);
     const [loading, setLoading] = React.useState<boolean>(false);
     const validateMessages = {
@@ -230,6 +230,7 @@ const RoomDetails = () => {
         checkRoomStarted();
         getPresets();
         getLabels();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     //edit
@@ -411,7 +412,7 @@ const RoomDetails = () => {
             </Form.Item>
         );
     };
-    const renderLinkOrUsername = (open) => {
+    const renderLinkOrUsername = () => {
         if (currentUser != null) {
             return (
                 <Input
@@ -513,7 +514,7 @@ const RoomDetails = () => {
                                                             </>
                                                         ) : null}
 
-                                                        {renderLinkOrUsername(open)}
+                                                        {renderLinkOrUsername()}
                                                     </>
                                                 ) : (
                                                     <Space size="middle" className="edit-room-form">
@@ -537,7 +538,6 @@ const RoomDetails = () => {
                                                                         prefixShortLink +
                                                                         room?.short_link
                                                                     }
-                                                                    quote={'Join us!'}
                                                                 >
                                                                     <FacebookOutlined />
                                                                 </FacebookShareButton>

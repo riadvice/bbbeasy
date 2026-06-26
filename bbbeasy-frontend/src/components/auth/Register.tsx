@@ -95,7 +95,7 @@ const Register = () => {
                         <Paragraph className="form-header text-center">
                             <img
                                 className="form-img"
-                                src={logo ? process.env.REACT_APP_API_URL + '/' + logo : '/images/logo_02.png'}
+                                src={logo ? import.meta.env.VITE_API_URL + '/' + logo : '/images/logo_02.png'}
                                 alt="Logo"
                             />
                             <Title level={4}>

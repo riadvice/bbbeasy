@@ -16,8 +16,6 @@
  * with BBBEasy; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import App from './App';
-
 test('renders learn react link', () => {
     // render(<App />);
     // const linkElement = screen.getByText(/learn react/i);

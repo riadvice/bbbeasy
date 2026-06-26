@@ -17,7 +17,7 @@
  */
 
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import reportWebVitals from './reportWebVitals';
 import App from './App';
@@ -26,27 +26,29 @@ import { INSTALLER_FEATURE } from './constants';
 import { webRoutes } from './routing/config';
 import { installRoutes } from './routing/config-install';
 
+import './App-webapp.css';
+import './App-installer.css';
+
+const container = document.getElementById('root');
+if (!container) {
+    throw new Error('Root container not found');
+}
+const root = createRoot(container);
+
 if (!INSTALLER_FEATURE) {
-    require('./App-webapp.css');
-    ReactDOM.render(
+    root.render(
         <BrowserRouter>
             <App routes={webRoutes} isSider={true} logs={'Initialisation BBBEasy Webapp Application'} />
-        </BrowserRouter>,
-        document.getElementById('root')
+        </BrowserRouter>
     );
 }
 
 if (INSTALLER_FEATURE) {
-    require('./App-installer.css');
-    ReactDOM.render(
+    root.render(
         <BrowserRouter>
             <App routes={installRoutes} isSider={false} logs={'Initialisation BBBEasy Installer Application'} />
-        </BrowserRouter>,
-        document.getElementById('root')
+        </BrowserRouter>
     );
 }
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals(console.log);

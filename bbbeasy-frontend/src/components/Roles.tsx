@@ -54,7 +54,7 @@ const { Link } = Typography;
 
 type formType = {
     name?: string;
-    permissions?: {};
+    permissions?: object;
 };
 
 interface EditableCellProps {

@@ -81,6 +81,7 @@ export const AddRoomForm = (props: Props) => {
             .catch((err) => {
                 console.log(err);
             });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.presets]);
 
     const prefixShortLink = '/r/';

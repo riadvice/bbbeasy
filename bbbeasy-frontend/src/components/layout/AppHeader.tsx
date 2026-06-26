@@ -57,11 +57,11 @@ import notificationService from '../../services/notification.service';
 
 import settingsService from 'services/settings.service';
 import { SettingsType } from 'types/SettingsType';
-import { apiRoutes } from 'routing/backend-config';
 
 const { Header } = Layout;
 const { Title, Text, Paragraph } = Typography;
 
+// eslint-disable-next-line complexity
 const AppHeader = () => {
     const { isLogged, setIsLogged, currentUser, setCurrentUser, setCurrentSession } = React.useContext(UserContext);
     const currentLocale = LocaleService.language;
@@ -208,7 +208,7 @@ const AppHeader = () => {
                         <Link to={'/'}>
                             <img
                                 className="header-logo-image"
-                                src={logo ? process.env.REACT_APP_API_URL + '/' + logo : '/images/logo_01.png'}
+                                src={logo ? import.meta.env.VITE_API_URL + '/' + logo : '/images/logo_01.png'}
                                 alt="Logo"
                             />
                         </Link>

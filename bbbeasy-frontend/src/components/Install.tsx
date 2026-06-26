@@ -161,7 +161,7 @@ const Install = () => {
         localStorage.removeItem('user');
 
         InstallService.install()
-            .then((response) => {
+            .then(() => {
                 setLocked(false);
 
                 getSettings();
@@ -179,6 +179,7 @@ const Install = () => {
             .finally(() => {
                 setIsLoading(false);
             });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     function next() {

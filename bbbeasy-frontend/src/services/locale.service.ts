@@ -34,7 +34,7 @@ import translationAR from '../locale/ar-TN.json';
 import { Languages } from '../components/Languages';
 import { DirectionType } from 'antd/lib/config-provider';
 
-const defaultLang: string = process.env.REACT_APP_FALLBACK_LANG;
+const defaultLang: string = import.meta.env.VITE_FALLBACK_LANG;
 
 const initLang = (): string => {
     if (localStorage.getItem('locale') == null) {

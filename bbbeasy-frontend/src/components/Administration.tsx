@@ -33,7 +33,6 @@ import Notifications from './Notifications';
 import { CompareRecords } from 'functions/compare.function';
 
 export const Administration = () => {
-    const [successful, setSuccessful] = React.useState<boolean>(false);
     const [settings, setSettings] = React.useState<SettingsType>(null);
     const [message, setMessage] = React.useState<string>('');
     const [isLoading, setIsLoading] = React.useState<boolean>(true);
@@ -78,6 +77,7 @@ export const Administration = () => {
             .catch((error) => {
                 console.log(error);
             });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const onFinish = () => {
@@ -119,7 +119,7 @@ export const Administration = () => {
                         onValuesChange={() => setMessage('')}
                     >
                         <div className="step1">
-                            {message && successful && (
+                            {message && (
                                 <Alert
                                     type="error"
                                     className="text-center"

@@ -39,7 +39,6 @@ import EN_US from '../locale/en-US.json';
 import LocaleService from '../services/locale.service';
 
 import { RecordingType } from '../types/RecordingType';
-import { MenuProps } from 'antd/lib/menu';
 import recordingsService from 'services/recordings.service';
 
 import Notifications from './Notifications';
@@ -83,6 +82,7 @@ const RoomRecordings = (props: Props) => {
     useEffect(() => {
         //Runs only on the first render
         getRoomRecordings(id);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     const toggleEdit = (record) => {
         setIsEditing(true);
@@ -120,7 +120,7 @@ const RoomRecordings = (props: Props) => {
         recordingsService
             .delete_recording(key)
 
-            .then((result) => {
+            .then(() => {
                 setRecordings(() => roomRecordings.filter((record) => record.key !== key));
 
                 Notifications.openNotificationWithIcon('success', t('delete_recording_success'));

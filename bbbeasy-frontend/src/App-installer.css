@@ -16,7 +16,7 @@
  * with BBBEasy; if not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '~perfect-scrollbar/css/perfect-scrollbar.css';
+@import 'perfect-scrollbar/css/perfect-scrollbar.css';
 
 @font-face {
     font-family: 'Poppins';

@@ -1,7 +1,7 @@
 /**
- * BBBEasy open source platform - https://riadvice.tn/
+ * BBBEasy open source platform - https://riadvice.com/
  *
- * Copyright (c) 2022-2023 RIADVICE SUARL and by respective authors (see below).
+ * Copyright (c) 2022-2026 RIADVICE SUARL and by respective authors (see below).
  *
  * This program is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Affero General Public License as published by the Free Software
@@ -16,16 +16,17 @@
  * with BBBEasy; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ReportHandler } from 'web-vitals';
+import type { Metric } from 'web-vitals';
 
-const reportWebVitals = (onPerfEntry?: ReportHandler) => {
+const reportWebVitals = (onPerfEntry?: (metric: Metric) => void) => {
     if (typeof onPerfEntry === 'function') {
         import('web-vitals')
             .then((webVitals) => {
-                const { getCLS, getFID, getFCP, getLCP, getTTFB } = webVitals;
-                [getCLS, getFID, getFCP, getLCP, getTTFB].forEach((metric) => {
-                    metric(onPerfEntry);
-                });
+                webVitals.onCLS(onPerfEntry);
+                webVitals.onINP(onPerfEntry);
+                webVitals.onFCP(onPerfEntry);
+                webVitals.onLCP(onPerfEntry);
+                webVitals.onTTFB(onPerfEntry);
             })
             .catch((error) => {
                 console.error('Error loading web-vitals:', error);

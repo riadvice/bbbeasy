@@ -109,6 +109,7 @@ const Branding = () => {
 
         const settingsActions = AuthService.getActionsPermissionsByGroup('settings');
         setActions(settingsActions);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const onFinish = () => {

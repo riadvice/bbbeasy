@@ -20,7 +20,6 @@ import React, { useEffect, useMemo, useCallback } from 'react';
 import { withTranslation } from 'react-i18next';
 import { IRoute } from './routing/IRoute';
 import Router from './routing/Router';
-import { hot } from 'react-hot-loader';
 
 import { Layout, ConfigProvider, FloatButton } from 'antd';
 import { StyleProvider, legacyLogicalPropertiesTransformer } from '@ant-design/cssinjs';
@@ -119,26 +118,6 @@ const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
     }, []);
 
     useEffect(() => {
-        const handleResizeObserverError = (e: ErrorEvent) => {
-            if (e.message.includes('ResizeObserver')) {
-                const resizeObserverErrDiv = document.getElementById('webpack-dev-server-client-overlay-div');
-                const resizeObserverErr = document.getElementById('webpack-dev-server-client-overlay');
-                if (resizeObserverErr) {
-                    resizeObserverErr.setAttribute('style', 'display: none');
-                }
-                if (resizeObserverErrDiv) {
-                    resizeObserverErrDiv.setAttribute('style', 'display: none');
-                }
-            }
-        };
-
-        window.addEventListener('error', handleResizeObserverError);
-        return () => {
-            window.removeEventListener('error', handleResizeObserverError);
-        };
-    }, []);
-
-    useEffect(() => {
         const user: UserType | null = AuthService.getCurrentUser();
         const session: SessionType | null = AuthService.getCurrentSession();
         if (user && session) {
@@ -192,4 +171,4 @@ const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
     );
 };
 
-export default withTranslation()(hot(module)(App));
+export default withTranslation()(App);

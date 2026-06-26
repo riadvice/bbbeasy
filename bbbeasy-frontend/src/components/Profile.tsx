@@ -179,10 +179,10 @@ const Profile = () => {
                                                     <div className="ant-image">
                                                         <img
                                                             className="ant-image-img"
-                                                            //   src={  src={logo ? process.env.REACT_APP_API_URL +"/"+ logo : '/images/logo_01.png'}}
+                                                            //   src={  src={logo ? import.meta.env.VITE_API_URL +"/"+ logo : '/images/logo_01.png'}}
                                                             src={
                                                                 currentUser.avatar
-                                                                    ? process.env.REACT_APP_API_URL +
+                                                                    ? import.meta.env.VITE_API_URL +
                                                                       '/' +
                                                                       currentUser.avatar
                                                                     : '/images/logo_01.png'

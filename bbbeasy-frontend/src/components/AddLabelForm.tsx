@@ -46,7 +46,7 @@ type formType = {
 let addForm: FormRef = null;
 
 export const AddLabelForm = (props: Props) => {
-    const [initialColor, setInitialColor] = React.useState<string>('#fbbc0b');
+    const [initialColor] = React.useState<string>('#fbbc0b');
     const { defaultColor } = props;
     const initialAddValues: formType = {
         name: '',
@@ -55,7 +55,7 @@ export const AddLabelForm = (props: Props) => {
     };
     const [color, setColor] = React.useState<string>(defaultColor ? defaultColor : initialColor);
     const dataContext = React.useContext(DataContext);
-    const [data, setData] = React.useState<LabelType[]>([]);
+    const [, setData] = React.useState<LabelType[]>([]);
     const [loading, setLoading] = React.useState<boolean>(false);
     const [errorsAdd, setErrorsAdd] = React.useState<string[]>([]);
     const { token } = theme.useToken();
