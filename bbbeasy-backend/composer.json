@@ -26,7 +26,7 @@
     "sukarix/sukarix": "dev-main",
     "nette/utils": "^v4.0.0",
     "bigbluebutton/bigbluebutton-api-php": "dev-master",
-    "robmorgan/phinx": "^0.13.4",
+    "robmorgan/phinx": "^0.16.11",
     "symfony/yaml": "^v6.2.10",
     "linfo/linfo": "^v4.0.7",
     "roave/better-reflection": "^6.10.0",
