@@ -27,7 +27,7 @@
     "nette/utils": "^v4.0.0",
     "bigbluebutton/bigbluebutton-api-php": "dev-master",
     "robmorgan/phinx": "^0.16.11",
-    "symfony/yaml": "^v6.2.10",
+    "symfony/yaml": "^v8.1.1",
     "linfo/linfo": "^v4.0.7",
     "roave/better-reflection": "^6.10.0",
     "haydenpierce/class-finder": "^0.6.0",
