@@ -31,7 +31,7 @@ const PublicRoute = ({ children, restricted }) => {
 
     // restricted = true meaning restricted route else public route
     if (currentUser != null && currentSession != null && restricted) {
-        const menuSider = MenuService.getMenuSider(currentUser.permissions);
+        const menuSider = MenuService.getMenuSider(currentUser.permissions ?? {});
         const defaultRoute = menuSider.defaultRoute;
         if (defaultRoute != '') {
             return <Navigate to={defaultRoute} />;

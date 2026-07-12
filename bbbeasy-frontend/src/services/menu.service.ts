@@ -111,7 +111,7 @@ const addSettings = (keys: string[], items: MenuType[]) => {
 };
 
 class MenuService {
-    getMenuSider(userPermissions: object): MenuSiderType {
+    getMenuSider(userPermissions: Record<string, string[]> = {}): MenuSiderType {
         const items: MenuType[] = [];
         const news: string[] = [];
         let defaultRoute = '';
@@ -120,7 +120,7 @@ class MenuService {
             const keys = Object.keys(userPermissions);
 
             const addActionExist = (key: string) => {
-                if (userPermissions[key].includes('add')) {
+                if (Array.isArray(userPermissions[key]) && userPermissions[key].includes('add')) {
                     news.push(key);
                 }
             };

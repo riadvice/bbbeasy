@@ -78,7 +78,7 @@ const AppSider = (props: Props) => {
 
     useEffect(() => {
         const user: UserType = AuthService.getCurrentUser();
-        const menuSider = MenuService.getMenuSider(user.permissions);
+        const menuSider = MenuService.getMenuSider(user?.permissions ?? {});
 
         setMenuItems(menuSider.items);
         setNewMenuItems(menuSider.news);

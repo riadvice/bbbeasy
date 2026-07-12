@@ -14,3 +14,6 @@ output/**/*.*
 
 .env
 .history/
+
+# Local JWT secret used only for development
+bbbeasy-backend/tmp/jwt.secret

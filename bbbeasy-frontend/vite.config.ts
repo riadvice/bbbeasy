@@ -43,11 +43,11 @@ export default defineConfig(({ mode }) => {
             sourcemap: env.GENERATE_SOURCEMAP !== 'false',
             emptyOutDir: true,
         },
-        server: {
+        server: {   
             host: true,
             port: 3300,
-            strictPort: true,
-            allowedHosts: ['bbbeasy.test', 'localhost', '127.0.0.1'],
+            strictPort: true,   
+            allowedHosts: ['bbbeasy.test', 'localhost', '127.0.0.1',"snooper-foe-cosigner.ngrok-free.dev"],
             open: env.NODE_ENV === 'development' ? 'http://bbbeasy.test/' : false,
             proxy: {
                 '/api': {

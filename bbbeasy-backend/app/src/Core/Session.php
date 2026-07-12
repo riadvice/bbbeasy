@@ -89,7 +89,6 @@ class Session extends \Prefab
     public function set($key, $value): void
     {
         $this->runtimeValues[$key] = $value;
-        $this->f3->set('SESSION.' . $key, $value);
     }
 
     /**
@@ -278,20 +277,7 @@ class Session extends \Prefab
 
     private function syncSessionState(): void
     {
-        if (!$this->currentUser instanceof User) {
-            return;
-        }
-
-        $user             = $this->serializeUser($this->currentUser);
-        $user['loggedIn'] = true;
-
-        $this->f3->set('SESSION.user', $user);
-        $this->f3->set('SESSION.user.loggedIn', true);
-        $this->f3->set('SESSION.user.id', $user['id']);
-        $this->f3->set('SESSION.user.role', $user['role']);
-        $this->f3->set('SESSION.user.roleId', $this->currentUser->role->id);
-        $this->f3->set('SESSION.user.username', $user['username']);
-        $this->f3->set('SESSION.user.email', $user['email']);
+        // JWT-only mode keeps the authenticated user in request memory only.
     }
 
     /**
@@ -386,7 +372,7 @@ class Session extends \Prefab
             return true;
         }
 
-        return null !== \Cache::instance()->get($this->revokedTokenCacheKey($jti));
+        return false !== \Cache::instance()->get($this->revokedTokenCacheKey($jti));
     }
 
     private function revokedTokenCacheKey(string $jti): string

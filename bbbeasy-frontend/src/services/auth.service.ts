@@ -21,7 +21,70 @@ import { apiRoutes } from '../routing/backend-config';
 import { UserType } from '../types/UserType';
 import { SessionType } from '../types/SessionType';
 
+type AuthState = {
+    user?: UserType;
+    session?: SessionType;
+};
+
 class AuthService {
+    private readonly authStorageKey = 'auth';
+
+    private readStoredAuth(): AuthState {
+        const authStr = localStorage.getItem(this.authStorageKey);
+        if (authStr) {
+            try {
+                const authData = JSON.parse(authStr);
+                return authData && typeof authData === 'object' ? authData : {};
+            } catch {
+                localStorage.removeItem(this.authStorageKey);
+            }
+        }
+
+        return {};
+    }
+
+    private migrateLegacyAuth(): AuthState {
+        const legacyUserStr = localStorage.getItem('user');
+        const legacySessionStr = localStorage.getItem('session');
+        if (!legacyUserStr && !legacySessionStr) {
+            return {};
+        }
+
+        try {
+            const authState: AuthState = {
+                user: legacyUserStr ? (JSON.parse(legacyUserStr) as UserType) : undefined,
+                session: legacySessionStr ? (JSON.parse(legacySessionStr) as SessionType) : undefined,
+            };
+            localStorage.setItem(this.authStorageKey, JSON.stringify(authState));
+            localStorage.removeItem('user');
+            localStorage.removeItem('session');
+
+            return authState;
+        } catch {
+            localStorage.removeItem('user');
+            localStorage.removeItem('session');
+            return {};
+        }
+    }
+
+    private readAuth(): AuthState {
+        const storedAuth = this.readStoredAuth();
+        if (storedAuth.user || storedAuth.session) {
+            return storedAuth;
+        }
+
+        return this.migrateLegacyAuth();
+    }
+
+    private writeAuth(nextAuth: AuthState): void {
+        if (!nextAuth.user && !nextAuth.session) {
+            localStorage.removeItem(this.authStorageKey);
+            return;
+        }
+
+        localStorage.setItem(this.authStorageKey, JSON.stringify(nextAuth));
+    }
+
     register(data: object) {
         return axiosInstance.post(apiRoutes.REGISTER_URL, {
             data,
@@ -61,57 +124,59 @@ class AuthService {
     }
 
     addCurrentUser(user: UserType) {
-        localStorage.setItem('user', JSON.stringify(user));
+        const auth = this.readAuth();
+        this.writeAuth({
+            user,
+            session: auth.session,
+        });
     }
 
     addCurrentSession(session: SessionType) {
-        localStorage.setItem('session', JSON.stringify(session));
+        const auth = this.readAuth();
+        this.writeAuth({
+            user: auth.user,
+            session,
+        });
     }
 
-    getCurrentUser() {
-        const userStr: string = localStorage.getItem('user');
-        if (userStr) {
-            try {
-                return JSON.parse(userStr);
-            } catch {
-                this.clearAuth();
-            }
+    getCurrentUser(): UserType | null {
+        const auth = this.readAuth();
+        if (auth.user) {
+            return auth.user;
         }
+
         return null;
     }
 
-    getCurrentSession() {
-        const sessionStr: string = localStorage.getItem('session');
-        if (sessionStr) {
-            try {
-                const session: SessionType = JSON.parse(sessionStr);
-                if (session.expiresAt && Date.parse(session.expiresAt) < Date.now()) {
-                    this.clearAuth();
-                    return null;
-                }
-
-                return session;
-            } catch {
+    getCurrentSession(): SessionType | null {
+        const auth = this.readAuth();
+        if (auth.session) {
+            if (auth.session.expiresAt && Date.parse(auth.session.expiresAt) < Date.now()) {
                 this.clearAuth();
+                return null;
             }
+
+            return auth.session;
         }
+
         return null;
     }
 
     getAccessToken(): string | null {
-        const currentSession: SessionType = this.getCurrentSession();
+        const currentSession = this.getCurrentSession();
         return currentSession ? currentSession.accessToken : null;
     }
 
     clearAuth() {
+        localStorage.removeItem(this.authStorageKey);
         localStorage.removeItem('user');
         localStorage.removeItem('session');
     }
 
     updateCurrentUser(username: string, email: string, avatar: string) {
-        const userStr: string = localStorage.getItem('user');
-        if (userStr) {
-            const userObj: UserType = JSON.parse(userStr);
+        const auth = this.readAuth();
+        if (auth.user) {
+            const userObj: UserType = auth.user;
             userObj.username = username;
             userObj.email = email;
             userObj.avatar = avatar;
@@ -121,8 +186,10 @@ class AuthService {
     }
 
     getActionsPermissionsByGroup(group: string): string[] {
-        const currentUser: UserType = this.getCurrentUser();
-        if (currentUser) return currentUser.permissions[group];
+        const currentUser = this.getCurrentUser();
+        if (currentUser?.permissions && currentUser.permissions[group]) {
+            return currentUser.permissions[group] as string[];
+        }
         return [];
     }
 

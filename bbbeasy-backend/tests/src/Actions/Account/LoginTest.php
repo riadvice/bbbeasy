@@ -158,7 +158,7 @@ final class LoginTest extends Scenario
         $test->expect(isset($payload['sub']) && (int) $payload['sub'] === (int) $user->id, 'JWT subject matches the authenticated user');
         $test->expect(isset($payload['exp']) && \is_string($expiresAt) && strtotime($expiresAt) > $now, 'JWT expiry is set in the future');
         $test->expect(isset($responseBody['session']['expiresAt']) && $responseBody['session']['expiresAt'] === $expiresAt, 'Login returns a concrete token expiration date');
-        $test->expect($f3->exists('SESSION.user'), 'Sessions is aware that the user us logged in');
+        $test->expect(null !== \Registry::get('session')->get('user'), 'JWT session keeps the authenticated user in memory');
 
         UserFaker::logout();
 
@@ -179,7 +179,7 @@ final class LoginTest extends Scenario
         $user = UserFaker::create(UserRole::ADMINISTRATOR);
         $data = ['email' => $user->email, 'password' => UserRole::ADMINISTRATOR . UserRole::ADMINISTRATOR];
         $f3->mock(self::LOGIN_ROUTE, null, null, $this->postJsonData($data));
-        $test->expect($f3->exists('SESSION.user'), 'User with id "' . $user->id . '" is now logged in');
+        $test->expect(null !== \Registry::get('session')->get('user'), 'User with id "' . $user->id . '" is now logged in');
 
         return $test->results();
     }

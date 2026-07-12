@@ -125,7 +125,7 @@ const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
             setCurrentSession(session);
             setIsLogged(true);
 
-            const allowedGroups = Object.keys(user.permissions);
+            const allowedGroups = Object.keys(user.permissions ?? {});
             if (allowedGroups.length > 0) {
                 if (AuthService.isAllowedGroup(allowedGroups, 'logs')) {
                     Logger.info(logs);
