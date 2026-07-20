@@ -53,9 +53,10 @@ interface IProps {
 }
 
 const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
-    const [currentUser, setCurrentUser] = React.useState<UserType | null>(null);
-    const [currentSession, setCurrentSession] = React.useState<SessionType | null>(null);
-    const [isLogged, setIsLogged] = React.useState<boolean>(false);
+    const [currentUser, setCurrentUser] = React.useState<UserType | null>(() => AuthService.getCurrentUser());
+    const [currentSession, setCurrentSession] = React.useState<SessionType | null>(() => AuthService.getCurrentSession());
+    const [isLogged, setIsLogged] = React.useState<boolean>(() => Boolean(AuthService.getCurrentUser() && AuthService.getCurrentSession()));
+    const isAuthenticated = Boolean(AuthService.getCurrentUser() && AuthService.getCurrentSession());
 
     const [dataRooms, setDataRooms] = React.useState<RoomType[]>([]);
     const [dataLabels, setDataLabels] = React.useState<LabelType[]>([]);
@@ -70,6 +71,7 @@ const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
         () => ({ isLogged, setIsLogged, currentUser, setCurrentUser, currentSession, setCurrentSession }),
         [isLogged, currentUser, currentSession]
     );
+    const authViewKey = isLogged ? 'authenticated' : 'anonymous';
 
     const customTheme = {
         token: {
@@ -152,9 +154,9 @@ const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
                     direction={LocaleService.direction}
                     componentSize="large"
                 >
-                    <UserContext.Provider value={userProvider}>
+                    <UserContext.Provider key={authViewKey} value={userProvider}>
                         <DataContext.Provider value={dataProvider}>
-                            {isLogged && isSider && <AppSider presets={dataPresets} />}
+                            {isAuthenticated && isSider && <AppSider presets={dataPresets} />}
                             <Layout className="page-layout-body">
                                 <AppHeader />
                                 <Content className="site-content">

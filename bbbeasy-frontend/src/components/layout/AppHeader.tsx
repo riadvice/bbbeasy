@@ -78,18 +78,21 @@ const AppHeader = () => {
     const isRoomsSearch = location.pathname.includes('rooms');
     const [logo, setLogo] = React.useState<string>('');
     const isLoginPage = location.pathname.includes('login');
-    if (isLoginPage) {
-        setIsLogged(false);
-    }
-    settingsService
-        .collect_settings()
-        .then((response) => {
-            const settings: SettingsType = response.data;
-            setLogo(settings.logo);
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+    const storedUser = AuthService.getCurrentUser();
+    const storedSession = AuthService.getCurrentSession();
+    const isAuthenticated = Boolean(storedUser && storedSession);
+
+    useEffect(() => {
+        settingsService
+            .collect_settings()
+            .then((response) => {
+                const settings: SettingsType = response.data;
+                setLogo(settings.logo);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }, []);
     const logout = () => {
         AuthService.logout()
             .catch((error) => {
@@ -187,6 +190,7 @@ const AppHeader = () => {
         </Dropdown>
     );
 
+    const activeUser = currentUser ?? storedUser;
     const menuProfile = {
         items: [
             {
@@ -194,9 +198,9 @@ const AppHeader = () => {
                 className: 'username-item',
                 label: (
                     <>
-                        <Trans i18nKey="signed_as" /> {currentUser?.username}
+                        <Trans i18nKey="signed_as" /> {activeUser?.username}
                         <br />
-                        <Text>{currentUser?.email}</Text>
+                        <Text>{activeUser?.email}</Text>
                     </>
                 ),
             },
@@ -220,7 +224,7 @@ const AppHeader = () => {
     return (
         <Header className="site-header">
             <>
-                {!isLogged ? (
+                {!isAuthenticated || isLoginPage ? (
                     <Paragraph className="site-header-inner">
                         <Link to={'/'}>
                             <img

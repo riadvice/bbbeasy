@@ -111,9 +111,18 @@ const PresetsCol: React.FC<PresetColProps> = ({
     const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [errorsEdit, setErrorsEdit] = React.useState({});
+    const [originalPreset, setOriginalPreset] = React.useState<MyPresetType | null>(null);
     const isDefault = preset['name'] == 'default';
     const deleteEnabled = deleteClickHandler != null && !isDefault;
     const { token } = theme.useToken();
+
+    const clonePreset = (presetToClone: MyPresetType): MyPresetType => ({
+        ...presetToClone,
+        categories: presetToClone.categories.map((category) => ({
+            ...category,
+            subcategories: category.subcategories.map((subCategory) => ({ ...subCategory })),
+        })),
+    });
 
     const props = {
         beforeUpload: (file) => {
@@ -153,7 +162,10 @@ const PresetsCol: React.FC<PresetColProps> = ({
     const showModal = (title: string, _titleTrans: string, content: SubCategoryType[]) => {
         setIsModalVisible(true);
         setModalTitle(title);
-        setModalContent(content);
+        setOriginalPreset(clonePreset(preset));
+        setModalContent(content.map((item) => ({ ...item })));
+        setFile(null);
+        setFileList(null);
 
         const indexLogo = content.findIndex((item) => item.type === 'file');
         if (indexLogo > -1 && content[indexLogo].value != '') {
