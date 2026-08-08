@@ -323,6 +323,49 @@ body.rtl {
     margin: 25px 20px;
     z-index: 2;
 }
+.site-sider {
+    background: #07192c !important;
+}
+.site-sider .logo {
+    background: #07192c !important;
+}
+.site-sider .menu-sider .site-menu {
+    color: #ffffff !important;
+}
+.site-sider .site-menu .ant-menu-item,
+.site-sider .site-menu .ant-menu-submenu-title,
+.site-sider .site-menu .ant-menu-title-content,
+.site-sider .site-menu .ant-menu-item a,
+.site-sider .site-menu .ant-menu-submenu-title a,
+.site-sider .site-menu .anticon,
+.site-sider .sider-new-btn {
+    color: #ffffff !important;
+}
+.site-sider .sider-new-btn {
+    background: #1677ff !important;
+    border-color: #1677ff !important;
+}
+.site-sider .sider-new-btn:hover,
+.site-sider .sider-new-btn:focus {
+    background: #4096ff !important;
+    color: #ffffff !important;
+    border-color: #4096ff !important;
+}
+.site-sider .site-menu .ant-menu-submenu-title .ant-menu-title-content,
+.site-sider .site-menu .ant-menu-item .ant-menu-title-content {
+    color: #ffffff !important;
+}
+.site-sider .site-menu .ant-menu-item-selected,
+.site-sider .site-menu .ant-menu-submenu-selected > .ant-menu-submenu-title {
+    background: rgba(255, 255, 255, 0.08) !important;
+}
+.site-sider .site-menu .ant-menu-item:hover,
+.site-sider .site-menu .ant-menu-submenu-title:hover,
+.site-sider .site-menu .ant-menu-item:focus,
+.site-sider .site-menu .ant-menu-submenu-title:focus {
+    background: rgba(255, 255, 255, 0.12) !important;
+    color: #ffffff !important;
+}
 .site-footer {
     min-height: 50px;
     z-index: 1;
@@ -367,11 +410,14 @@ body.rtl {
 }
 /*********************************************/
 .color-primary {
-    border-color: #fbbc0b !important;
+    background: #1677ff !important;
+    border-color: #1677ff !important;
+    color: #ffffff !important;
 }
 .color-primary:hover {
-    color: #ffcf33 !important;
-    border-color: #ffcf33 !important;
+    background: #4096ff !important;
+    border-color: #4096ff !important;
+    color: #ffffff !important;
 }
 .color-blue {
     color: #fff !important;
@@ -442,6 +488,33 @@ body.rtl {
 }
 .button-container .ant-form-item-control-input-content {
     display: flex;
+}
+.modal-submit-btn .ant-btn-primary {
+    background: #1677ff !important;
+    border-color: #1677ff !important;
+    color: #ffffff !important;
+}
+.modal-submit-btn .ant-btn-primary:hover,
+.modal-submit-btn .ant-btn-primary:focus {
+    background: #4096ff !important;
+    border-color: #4096ff !important;
+    color: #ffffff !important;
+}
+
+.ant-page-header .ant-btn-primary,
+.site-page-header .ant-btn-primary {
+    background: #1677ff !important;
+    border-color: #1677ff !important;
+    color: #ffffff !important;
+}
+
+.ant-page-header .ant-btn-primary:hover,
+.ant-page-header .ant-btn-primary:focus,
+.site-page-header .ant-btn-primary:hover,
+.site-page-header .ant-btn-primary:focus {
+    background: #4096ff !important;
+    border-color: #4096ff !important;
+    color: #ffffff !important;
 }
 .final-step-btn {
     width: 81%;
