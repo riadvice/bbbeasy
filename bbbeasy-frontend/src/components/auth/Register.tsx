@@ -77,7 +77,7 @@ const Register = () => {
     };
 
     return (
-        <Row className="login-page login-layout">
+        <Row className="login-page login-layout register-page">
             <Col xs={24} lg={12} className="login-hero-column">
                 <div className="login-hero">
                     <div className="login-hero-tag">

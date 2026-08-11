@@ -2232,6 +2232,27 @@ fieldset {
 .login-page .login-form-column .form-content {
     margin-top: clamp(-12px, -1vh, 0px);
     transform: translateY(-18px);
+    width: min(100%, 520px);
+}
+
+.login-page .password-install {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+.register-page .login-form-column {
+    min-height: calc(100vh - 240px);
+}
+
+.register-page .login-form-column .form-content {
+    margin-top: clamp(-28px, -3vh, -12px);
+    transform: translateY(-28px);
+    width: min(100%, 460px);
+}
+
+.register-page .password-install {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
 }
 
 .section-top {
