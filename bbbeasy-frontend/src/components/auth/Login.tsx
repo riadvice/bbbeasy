@@ -119,8 +119,47 @@ const Login: React.FC = () => {
     };
 
     return (
-        <Row>
-            <Col span={8} offset={8} className="section-top">
+        <Row className="login-page login-layout">
+            <Col xs={24} lg={12} className="login-hero-column">
+                <div className="login-hero">
+                    <div className="login-hero-tag">
+                        <span className="login-hero-tag-line" />
+                        <span>
+                            <Trans i18nKey="login-hero-tag" />
+                        </span>
+                    </div>
+
+                    <Title level={1} className="login-hero-title">
+                        <span className="login-hero-title-main">
+                            <Trans i18nKey="login-hero-title-main" />
+                        </span>
+                        <span className="login-hero-title-accent">
+                            <Trans i18nKey="login-hero-title-accent" />
+                        </span>
+                    </Title>
+
+                    <Paragraph className="login-hero-description">
+                        <Trans i18nKey="login-hero-description" />
+                    </Paragraph>
+
+                    <div className="login-hero-points">
+                        <div className="login-hero-point">
+                            <span className="login-hero-point-icon">✓</span>
+                            <span>
+                                <Trans i18nKey="login-hero-point-1" />
+                            </span>
+                        </div>
+                        <div className="login-hero-point">
+                            <span className="login-hero-point-icon">✓</span>
+                            <span>
+                                <Trans i18nKey="login-hero-point-2" />
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </Col>
+
+            <Col xs={24} lg={10} className="section-top login-form-column">
                 <Card className="form-content">
                     <Paragraph className="form-header text-center">
                         <img

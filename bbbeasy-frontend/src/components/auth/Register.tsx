@@ -50,16 +50,18 @@ const Register = () => {
         confirmPassword: '',
         agreement: false,
     };
-    settingsService
-        .collect_settings()
-        .then((response) => {
-            console.log(response.data);
-            const settings: SettingsType = response.data;
-            setLogo(settings.logo);
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+    React.useEffect(() => {
+        settingsService
+            .collect_settings()
+            .then((response) => {
+                const settings: SettingsType = response.data;
+                setLogo(settings.logo);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }, []);
+
     const navigate = useNavigate();
 
     const handleRegistration = (formValue: formType) => {
@@ -75,93 +77,138 @@ const Register = () => {
     };
 
     return (
-        <Row>
-            {successful ? (
-                <Col span={10} offset={7} className="section-top">
-                    <Result
-                        status="success"
-                        title={<Trans i18nKey="completed_registration" />}
-                        subTitle={<Trans i18nKey="user_account_created" />}
-                        extra={
-                            <Button onClick={() => navigate('/login')}>
-                                <Trans i18nKey="login-now" />
-                            </Button>
-                        }
-                    />
-                </Col>
-            ) : (
-                <Col span={8} offset={8} className="section-top">
-                    <Card className="form-content">
-                        <Paragraph className="form-header text-center">
-                            <img
-                                className="form-img"
-                                src={logo ? import.meta.env.VITE_API_URL + '/' + logo : '/images/logo_02.png'}
-                                alt="Logo"
-                            />
-                            <Title level={4}>
-                                <Trans i18nKey="sign-up" />
-                            </Title>
-                        </Paragraph>
+        <Row className="login-page login-layout">
+            <Col xs={24} lg={12} className="login-hero-column">
+                <div className="login-hero">
+                    <div className="login-hero-tag">
+                        <span className="login-hero-tag-line" />
+                        <span>
+                            <Trans i18nKey="sign-up-hero-tag" />
+                        </span>
+                    </div>
 
-                        {message && (
-                            <Alert
-                                type="error"
-                                className="alert-msg"
-                                message={
-                                    <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == message)} />
-                                }
-                                showIcon
-                            />
-                        )}
+                    <Title level={1} className="login-hero-title">
+                        <span className="login-hero-title-main">
+                            <Trans i18nKey="sign-up-hero-title-main" />
+                        </span>
+                        <span className="login-hero-title-accent">
+                            <Trans i18nKey="sign-up-hero-title-accent" />
+                        </span>
+                    </Title>
 
-                        <Form
-                            layout="vertical"
-                            name="register_form"
-                            initialValues={initialValues}
-                            requiredMark={false}
-                            scrollToFirstError={true}
-                            validateTrigger="onSubmit"
-                            onFinish={handleRegistration}
-                            onValuesChange={() => setMessage('')}
-                        >
-                            <AddUserForm />
-                            <ConfirmPassword />
-                            <Form.Item
-                                className="form-agree"
-                                name="agreement"
-                                valuePropName="checked"
-                                rules={[
-                                    {
-                                        validator: (_, value) =>
-                                            value
-                                                ? Promise.resolve()
-                                                : Promise.reject(new Error(t('accept-agreement'))),
-                                    },
-                                ]}
-                            >
-                                <Checkbox>
-                                    <Trans i18nKey="agree" />
-                                    <a href="#">
-                                        {' '}
-                                        <Trans i18nKey="terms" />
-                                    </a>{' '}
-                                    <Trans i18nKey="and" />
-                                    <a href="#">
-                                        {' '}
-                                        <Trans i18nKey="privacy-policy" />
-                                    </a>
-                                </Checkbox>
-                            </Form.Item>
+                    <Paragraph className="login-hero-description">
+                        <Trans i18nKey="sign-up-hero-description" />
+                    </Paragraph>
 
-                            <Form.Item>
-                                <Button type="primary" id="submit-btn" htmlType="submit" block>
-                                    <Trans i18nKey="register" />
+                    <div className="login-hero-points">
+                        <div className="login-hero-point">
+                            <span className="login-hero-point-icon">✓</span>
+                            <span>
+                                <Trans i18nKey="sign-up-hero-point-1" />
+                            </span>
+                        </div>
+                        <div className="login-hero-point">
+                            <span className="login-hero-point-icon">✓</span>
+                            <span>
+                                <Trans i18nKey="sign-up-hero-point-2" />
+                            </span>
+                        </div>
+                        <div className="login-hero-point">
+                            <span className="login-hero-point-icon">✓</span>
+                            <span>
+                                <Trans i18nKey="sign-up-hero-point-3" />
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </Col>
+
+            <Col xs={24} lg={10} className="section-top login-form-column">
+                <Card className="form-content">
+                    {successful ? (
+                        <Result
+                            status="success"
+                            title={<Trans i18nKey="completed_registration" />}
+                            subTitle={<Trans i18nKey="user_account_created" />}
+                            extra={
+                                <Button onClick={() => navigate('/login')}>
+                                    <Trans i18nKey="login-now" />
                                 </Button>
-                            </Form.Item>
-                        </Form>
-                    </Card>
-                </Col>
-            )}
+                            }
+                        />
+                    ) : (
+                        <>
+                            <Paragraph className="form-header text-center">
+                                <img
+                                    className="form-img"
+                                    src={logo ? import.meta.env.VITE_API_URL + '/' + logo : '/images/logo_02.png'}
+                                    alt="Logo"
+                                />
+                                <Title level={4}>
+                                    <Trans i18nKey="sign-up" />
+                                </Title>
+                            </Paragraph>
+
+                            {message && (
+                                <Alert
+                                    type="error"
+                                    className="alert-msg"
+                                    message={
+                                        <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == message)} />
+                                    }
+                                    showIcon
+                                />
+                            )}
+
+                            <Form
+                                layout="vertical"
+                                name="register_form"
+                                initialValues={initialValues}
+                                requiredMark={false}
+                                scrollToFirstError={true}
+                                validateTrigger="onSubmit"
+                                onFinish={handleRegistration}
+                                onValuesChange={() => setMessage('')}
+                            >
+                                <AddUserForm />
+                                <ConfirmPassword />
+                                <Form.Item
+                                    className="form-agree"
+                                    name="agreement"
+                                    valuePropName="checked"
+                                    rules={[
+                                        {
+                                            validator: (_, value) =>
+                                                value
+                                                    ? Promise.resolve()
+                                                    : Promise.reject(new Error(t('accept-agreement'))),
+                                        },
+                                    ]}
+                                >
+                                    <Checkbox>
+                                        <Trans i18nKey="agree" />
+                                        <a href="#">
+                                            {' '}
+                                            <Trans i18nKey="terms" />
+                                        </a>{' '}
+                                        <Trans i18nKey="and" />
+                                        <a href="#">
+                                            {' '}
+                                            <Trans i18nKey="privacy-policy" />
+                                        </a>
+                                    </Checkbox>
+                                </Form.Item>
+
+                                <Form.Item>
+                                    <Button type="primary" id="submit-btn" htmlType="submit" block>
+                                        <Trans i18nKey="register" />
+                                    </Button>
+                                </Form.Item>
+                            </Form>
+                        </>
+                    )}
+                </Card>
+            </Col>
         </Row>
     );
 };
