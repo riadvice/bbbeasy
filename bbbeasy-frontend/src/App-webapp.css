@@ -653,6 +653,7 @@ fieldset {
     background: transparent !important;
 }
 .site-sider {
+    position: relative;
     background-color: var(--bbbeasy-webapp-bg) !important;
     background-image: var(--bbbeasy-webapp-bg-image) !important;
     background-attachment: fixed !important;
@@ -667,11 +668,32 @@ fieldset {
     top: 0;
     bottom: 0;
 }
+.page-layout-content .site-sider::after,
+.page-layout-content-rtl .site-sider::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    pointer-events: none;
+    background: linear-gradient(
+        180deg,
+        rgba(148, 163, 184, 0.06) 0%,
+        rgba(96, 165, 250, 0.22) 48%,
+        rgba(59, 130, 246, 0.10) 100%
+    );
+}
 .page-layout-content .site-sider {
     left: 0;
 }
 .page-layout-content-rtl .site-sider {
     right: 0;
+}
+.page-layout-content .site-sider::after {
+    right: 0;
+}
+.page-layout-content-rtl .site-sider::after {
+    left: 0;
 }
 .rtl .ps__thumb-y {
     left: 2px !important;
