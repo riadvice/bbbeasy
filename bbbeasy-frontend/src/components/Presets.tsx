@@ -711,10 +711,11 @@ const Presets = () => {
     return (
         <>
             <PageHeader
+                className="site-page-header presets-page-header"
                 title={<Trans i18nKey="presets" />}
                 subTitle={
                     <Input
-                        className="search-input"
+                        className="search-input presets-search-input"
                         size="middle"
                         placeholder={t('search_preset')}
                         allowClear

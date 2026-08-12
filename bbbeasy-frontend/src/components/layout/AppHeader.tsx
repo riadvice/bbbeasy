@@ -76,6 +76,9 @@ const AppHeader = () => {
     const location = useLocation();
     const [searchForm] = Form.useForm();
     const isRoomsSearch = location.pathname.includes('rooms');
+    const isRecordingsSearch = location.pathname.includes('recordings');
+    const isLabelsSearch = location.pathname.includes('labels');
+    const isPresetsSearch = location.pathname.includes('presets');
     const [logo, setLogo] = React.useState<string>('');
     const isLoginPage = location.pathname.includes('login');
     const storedUser = AuthService.getCurrentUser();
@@ -254,7 +257,11 @@ const AppHeader = () => {
                                 <Form.Item name="search" className="mb-0">
                                     <Input
                                         onPressEnter={isRoomsSearch ? handleFilter : null}
-                                        className="search-input global-search"
+                                className={`search-input global-search ${isRoomsSearch ? 'rooms-search-input' : ''} ${
+                                    isRecordingsSearch ? 'recordings-search-input' : ''
+                                } ${isLabelsSearch ? 'labels-search-input' : ''} ${
+                                    isPresetsSearch ? 'presets-search-input' : ''
+                                }`}
                                         size="middle"
                                         placeholder={isRoomsSearch ? t('search_all_rooms') : t('search')}
                                         allowClear

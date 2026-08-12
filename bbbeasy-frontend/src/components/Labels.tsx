@@ -408,6 +408,7 @@ const Labels = () => {
     return (
         <>
             <PageHeader
+                className="site-page-header labels-page-header"
                 title={<Trans i18nKey="labels" />}
                 extra={
                     AuthService.isAllowedAction(actions, 'add') && [
@@ -432,14 +433,16 @@ const Labels = () => {
                     <Alert type="error" message={<Trans i18nKey={errorMsg} />} showIcon />
                 </div>
             ) : null}
-            <EditableTable
-                EditableCell={EditableCell}
-                editForm={editForm}
-                mergedColumns={mergedColumns}
-                dataSource={data}
-                loading={loading}
-                notFoundContent="no_labels"
-            />
+            <div className="labels-table">
+                <EditableTable
+                    EditableCell={EditableCell}
+                    editForm={editForm}
+                    mergedColumns={mergedColumns}
+                    dataSource={data}
+                    loading={loading}
+                    notFoundContent="no_labels"
+                />
+            </div>
         </>
     );
 };

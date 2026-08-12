@@ -429,7 +429,7 @@ const Recordings = () => {
                                 icon={<QuestionCircleOutlined className="red-icon" />}
                                 onConfirm={() => handleDelete(record.key)}
                             >
-                                <Link>
+                                <Link className="delete-button-color">
                                     <DeleteOutlined /> <Trans i18nKey="delete" />
                                 </Link>
                             </Popconfirm>
@@ -468,7 +468,7 @@ const Recordings = () => {
 
     return (
         <>
-            <PageHeader className="site-page-header" title={<Trans i18nKey="recordings" />} />
+            <PageHeader className="site-page-header recordings-page-header" title={<Trans i18nKey="recordings" />} />
 
             {isModalVisible && (
                 <Modal
@@ -530,14 +530,16 @@ const Recordings = () => {
                 </Modal>
             )}
 
-            <EditableTable
-                EditableCell={EditableCell}
-                editForm={editForm}
-                mergedColumns={mergedColumns}
-                dataSource={data}
-                loading={loading}
-                notFoundContent="no_data"
-            />
+            <div className="recordings-table">
+                <EditableTable
+                    EditableCell={EditableCell}
+                    editForm={editForm}
+                    mergedColumns={mergedColumns}
+                    dataSource={data}
+                    loading={loading}
+                    notFoundContent="no_data"
+                />
+            </div>
         </>
     );
 };
