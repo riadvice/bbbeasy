@@ -82,6 +82,7 @@ const AppHeader = () => {
     const isRoomDetailsSearch = location.pathname.startsWith('/r/');
     const isBrandingSearch = location.pathname.includes('branding');
     const isPresetSettingsSearch = location.pathname.includes('bigbluebutton');
+    const isUsersSearch = location.pathname.includes('users');
     const [logo, setLogo] = React.useState<string>('');
     const isLoginPage = location.pathname.includes('login');
     const storedUser = AuthService.getCurrentUser();
@@ -266,7 +267,9 @@ const AppHeader = () => {
                                     isPresetsSearch ? 'presets-search-input' : ''
                                 } ${isRoomDetailsSearch ? 'room-details-search-input' : ''} ${
                                     isBrandingSearch ? 'branding-search-input' : ''
-                                } ${isPresetSettingsSearch ? 'preset-settings-search-input' : ''}`}
+                                } ${isPresetSettingsSearch ? 'preset-settings-search-input' : ''} ${
+                                    isUsersSearch ? 'users-search-input' : ''
+                                }`}
                                         size="middle"
                                         placeholder={isRoomsSearch ? t('search_all_rooms') : t('search')}
                                         allowClear

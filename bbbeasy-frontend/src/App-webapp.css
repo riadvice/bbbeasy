@@ -3955,6 +3955,81 @@ div.error-message-Label {
     -webkit-backdrop-filter: blur(5px);
     backdrop-filter: blur(5px);
 }
+/*****************NEW USER MODAL - BLUE DESIGN*****************/
+.user-add-modal .ant-modal-content {
+    background: linear-gradient(145deg, #10203f 0%, #0d1b33 100%) !important;
+    border: 1px solid rgba(96, 165, 250, 0.25) !important;
+    border-radius: 14px !important;
+    box-shadow: 0 14px 44px rgba(37, 99, 235, 0.28);
+}
+.user-add-modal .ant-modal-header {
+    background: transparent !important;
+    border-bottom: 1px solid rgba(96, 165, 250, 0.14) !important;
+}
+.user-add-modal .ant-modal-title {
+    color: #ffffff !important;
+    font-weight: 600;
+}
+.user-add-modal .ant-modal-close {
+    color: #93c5fd !important;
+}
+.user-add-modal .ant-modal-close:hover {
+    color: #fbbc0b !important;
+}
+.user-add-modal .ant-form-item-label label {
+    color: #cbd5e1 !important;
+}
+.user-add-modal .ant-input,
+.user-add-modal .ant-input-affix-wrapper {
+    background: #0b1526 !important;
+    border-color: rgba(96, 165, 250, 0.4) !important;
+    color: #e2e8f0 !important;
+}
+.user-add-modal .ant-input::placeholder,
+.user-add-modal .ant-input-affix-wrapper input::placeholder {
+    color: rgba(148, 163, 184, 0.9) !important;
+}
+.user-add-modal .ant-input-affix-wrapper input {
+    background: transparent !important;
+    color: #e2e8f0 !important;
+}
+.user-add-modal .ant-select-selector {
+    background: #0b1526 !important;
+    border-color: rgba(96, 165, 250, 0.4) !important;
+}
+.user-add-modal .ant-select-selection-item,
+.user-add-modal .ant-select-selection-placeholder {
+    color: #e2e8f0 !important;
+}
+.user-add-modal .ant-select-arrow {
+    color: #93c5fd !important;
+}
+.user-add-modal .cancel-btn {
+    background: rgba(71, 85, 105, 0.4) !important;
+    border-color: rgba(96, 165, 250, 0.25) !important;
+    color: #cbd5e1 !important;
+}
+.user-add-modal .cancel-btn:hover,
+.user-add-modal .cancel-btn:focus {
+    background: rgba(71, 85, 105, 0.6) !important;
+    color: #ffffff !important;
+}
+.user-add-modal .ant-btn-primary {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+    border-color: #2563eb !important;
+    box-shadow: 0 6px 18px rgba(37, 99, 235, 0.35);
+}
+.user-add-modal .ant-btn-primary:hover,
+.user-add-modal .ant-btn-primary:focus {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+    border-color: #3b82f6 !important;
+}
+/* Blurred dark mask behind the New User modal */
+.ant-modal-root:has(.ant-modal.user-add-modal) > .ant-modal-mask {
+    background-color: rgba(2, 6, 23, 0.55) !important;
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+}
 /*****************BRANDING PAGE - WHITE TITLES / GRAY DETAILS*****************/
 .branding-page .form-header .ant-typography {
     color: #ffffff !important;
@@ -4033,44 +4108,49 @@ div.error-message-Label {
 .preset-settings-search-input .anticon-search {
     color: rgba(148, 163, 184, 0.9) !important;
 }
-/*****************BIGBLUEBUTTON SETTINGS - BLUE DESIGN*****************/
+/*****************BIGBLUEBUTTON SETTINGS - BLUE DESIGN (v2)*****************/
 .preset-settings-row .final-form-header .ant-typography {
     color: #ffffff !important;
     font-weight: 600;
 }
 .preset-settings-row .settings-info.ant-alert-warning {
-    background: rgba(15, 23, 42, 0.6) !important;
-    border: 1px solid rgba(96, 165, 250, 0.25) !important;
-    border-radius: 10px !important;
+    background: rgba(15, 23, 42, 0.55) !important;
+    border: 1px solid rgba(96, 165, 250, 0.18) !important;
+    border-radius: 12px !important;
 }
 .preset-settings-row .settings-info .ant-alert-message {
-    color: #e2e8f0 !important;
+    color: #cbd5e1 !important;
 }
-.preset-settings-row .settings-info .ant-alert-close-text {
-    color: #93c5fd !important;
+.preset-settings-row .settings-info .ant-alert-close-icon,
+.preset-settings-row .settings-info .ant-alert-close-icon * {
+    color: rgba(148, 163, 184, 0.9) !important;
 }
 .preset-settings-row .install-form .ant-card:not(.ant-card-bordered) {
-    background: rgba(11, 21, 38, 0.72) !important;
-    border: 1px solid rgba(96, 165, 250, 0.22) !important;
-    border-radius: 16px !important;
-    box-shadow: 0 18px 50px rgba(2, 6, 23, 0.45);
-    padding: 8px;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0;
 }
 .preset-settings-row .presets-grid {
-    background: linear-gradient(145deg, #10203f 0%, #0d1b33 100%) !important;
-    border: 1px solid rgba(96, 165, 250, 0.25) !important;
+    width: calc(25% - 20px) !important;
+    margin: 10px;
+    background: linear-gradient(145deg, #16264a 0%, #0e1c36 100%) !important;
+    border: 1px solid rgba(96, 165, 250, 0.22) !important;
     border-radius: 14px !important;
-    box-shadow: 0 10px 34px rgba(37, 99, 235, 0.18);
+    box-shadow: 0 8px 24px rgba(2, 6, 23, 0.35);
     transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
 }
 .preset-settings-row .presets-grid:hover {
     border-color: rgba(96, 165, 250, 0.55) !important;
-    box-shadow: 0 16px 44px rgba(37, 99, 235, 0.32);
-    transform: translateY(-3px);
+    box-shadow: 0 14px 36px rgba(37, 99, 235, 0.3);
+    transform: translateY(-4px);
 }
 .preset-settings-row .presets-grid .ant-card-meta-title {
     color: #ffffff !important;
     font-weight: 600;
+}
+.preset-settings-row .presets-grid .PresetIcon {
+    box-shadow: 0 4px 14px rgba(251, 188, 11, 0.35);
 }
 /* Preset settings modal (scoped to this page only) */
 .ant-modal-root:has(.ant-modal.preset-settings-modal) .ant-modal-content {
@@ -4086,10 +4166,168 @@ div.error-message-Label {
 .ant-modal-root:has(.ant-modal.preset-settings-modal) label {
     color: #cbd5e1 !important;
 }
-.ant-modal-root:has(.ant-modal.preset-settings-modal) .input-status-presets {
-    color: #94a3b8 !important;
+.ant-modal-root:has(.ant-modal.preset-settings-modal) .ant-modal-header {
     background: transparent !important;
-    border: transparent !important;
+}
+.ant-modal-root:has(.ant-modal.preset-settings-modal) .ant-modal-close {
+    color: rgba(148, 163, 184, 0.9) !important;
+}
+/*****************USERS PAGE - BLUE DESIGN*****************/
+.users-page-header .ant-page-header-heading-title {
+    color: #ffffff !important;
+}
+.users-search-input input,
+.users-search-input input::placeholder {
+    color: rgba(148, 163, 184, 0.9) !important;
+    -webkit-text-fill-color: rgba(148, 163, 184, 0.9);
+}
+.users-search-input .ant-input-clear-icon,
+.users-search-input .anticon-search {
+    color: rgba(148, 163, 184, 0.9) !important;
+}
+.users-table .ant-table {
+    background: transparent;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 10px 34px rgba(37, 99, 235, 0.22);
+}
+.users-table .ant-table-container {
+    border: 1px solid rgba(96, 165, 250, 0.25) !important;
+    border-radius: 14px !important;
+}
+.users-table .ant-table-thead > tr > th {
+    background: linear-gradient(135deg, #172554 0%, #1d4ed8 100%) !important;
+    color: #ffffff !important;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    border-bottom: 1px solid rgba(96, 165, 250, 0.35) !important;
+}
+.users-table .ant-table-thead > tr > th .ant-table-column-sorter {
+    color: rgba(255, 255, 255, 0.45);
+}
+.users-table .ant-table-thead > tr > th.ant-table-column-has-sorters:hover .ant-table-column-sorter {
+    color: rgba(255, 255, 255, 0.9);
+}
+.users-table .ant-table-thead > tr > th .ant-table-filter-trigger {
+    color: rgba(255, 255, 255, 0.65);
+}
+.users-table .ant-table-thead > tr > th .ant-table-filter-trigger:hover {
+    color: #ffffff;
+}
+.users-table .ant-table-thead > tr > th .ant-table-filter-trigger.active {
+    color: #fbbc0b;
+}
+.users-table .ant-table-tbody > tr > td {
+    background: #0d1b33 !important;
+    color: #cbd5e1 !important;
+    border-bottom: 1px solid rgba(96, 165, 250, 0.14) !important;
+}
+.users-table .ant-table-tbody > tr.ant-table-row:nth-child(even) > td {
+    background: #0f1f3d !important;
+}
+.users-table .ant-table-tbody > tr.ant-table-row:hover > td,
+.users-table .ant-table-tbody > tr.ant-table-row:hover > td.ant-table-cell-row-hover,
+.users-table .ant-table-tbody > tr > td.ant-table-cell-row-hover {
+    background: rgba(37, 99, 235, 0.24) !important;
+}
+.users-table .ant-table-tbody > tr.ant-table-placeholder > td {
+    background: #0d1b33 !important;
+}
+.users-table .ant-table-placeholder .ant-empty-description {
+    color: #94a3b8;
+}
+.users-table a.edit-button-color {
+    color: #93c5fd !important;
+}
+.users-table a.edit-button-color:hover {
+    color: #fbbc0b !important;
+}
+.users-table a.delete-button-color {
+    color: #93c5fd !important;
+}
+.users-table a.delete-button-color:hover {
+    color: #ff4d4f !important;
+}
+.users-table .ant-input {
+    background: #0b1526 !important;
+    border-color: rgba(96, 165, 250, 0.4) !important;
+    color: #e2e8f0 !important;
+}
+.users-table .ant-input::placeholder {
+    color: #64748b !important;
+}
+.users-table .ant-pagination .ant-pagination-item,
+.users-table .ant-pagination .ant-pagination-prev .ant-pagination-item-link,
+.users-table .ant-pagination .ant-pagination-next .ant-pagination-item-link {
+    background: transparent !important;
+    border-color: rgba(96, 165, 250, 0.35) !important;
+}
+.users-table .ant-pagination .ant-pagination-item a {
+    color: #93c5fd !important;
+}
+.users-table .ant-pagination .ant-pagination-prev .ant-pagination-item-link,
+.users-table .ant-pagination .ant-pagination-next .ant-pagination-item-link {
+    color: #93c5fd !important;
+}
+.users-table .ant-pagination .ant-pagination-item-active {
+    background: #1d4ed8 !important;
+    border-color: #1d4ed8 !important;
+}
+.users-table .ant-pagination .ant-pagination-item-active a {
+    color: #ffffff !important;
+}
+.users-table .ant-table-cell mark {
+    background-color: #ffcf33;
+    color: #1e293b;
+}
+.users-table .ant-tag {
+    border-radius: 999px;
+    padding: 2px 14px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    border: 1px solid;
+    text-transform: capitalize;
+}
+.users-table .ant-tag-success {
+    background: rgba(34, 197, 94, 0.16) !important;
+    border-color: rgba(34, 197, 94, 0.55) !important;
+    color: #4ade80 !important;
+}
+.users-table .ant-tag-error {
+    background: rgba(239, 68, 68, 0.16) !important;
+    border-color: rgba(239, 68, 68, 0.55) !important;
+    color: #f87171 !important;
+}
+.users-table .ant-tag-warning {
+    background: rgba(245, 158, 11, 0.16) !important;
+    border-color: rgba(245, 158, 11, 0.55) !important;
+    color: #fbbf24 !important;
+}
+.users-table .ant-tag-default {
+    background: rgba(148, 163, 184, 0.16) !important;
+    border-color: rgba(148, 163, 184, 0.45) !important;
+    color: #94a3b8 !important;
+}
+.users-table .ant-tag-success::before,
+.users-table .ant-tag-error::before,
+.users-table .ant-tag-warning::before {
+    content: '';
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    margin-right: 7px;
+    vertical-align: middle;
+    box-shadow: 0 0 8px currentColor;
+}
+.users-table .ant-tag-success::before {
+    background: #4ade80;
+}
+.users-table .ant-tag-error::before {
+    background: #f87171;
+}
+.users-table .ant-tag-warning::before {
+    background: #fbbf24;
 }
 .ant-modal-root:has(.ant-modal.preset-settings-modal) .ant-modal-footer .cancel-btn {
     background: rgba(71, 85, 105, 0.4) !important;
