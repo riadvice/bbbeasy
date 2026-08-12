@@ -24,13 +24,7 @@ import { FacebookShareButton, LinkedinShareButton, TwitterShareButton } from 're
 import EN_US from '../locale/en-US.json';
 import { t } from 'i18next';
 
-import {
-    EditOutlined,
-    FacebookOutlined,
-    LinkedinOutlined,
-    LinkOutlined,
-    TwitterOutlined,
-} from '@ant-design/icons';
+import { EditOutlined, LinkOutlined } from '@ant-design/icons';
 import { Avatar, Button, Card, Col, Input, Row, Space, Tag, Tooltip, Typography, Form, Select, Popconfirm } from 'antd';
 
 import Notifications from './Notifications';
@@ -68,6 +62,35 @@ type editFormItemType = {
     isRequired?: boolean;
     messageItem?: string;
 };
+
+const FacebookLogo = () => (
+    <svg className="social-icon" viewBox="0 0 60 60" width="20" height="20" aria-hidden="true" focusable="false">
+        <circle cx="30" cy="30" r="28" fill="#1877F2" />
+        <path
+            d="M39.5 30.3h-6.6V50h-8.1V30.3h-4.7v-6.9h4.7v-4.5c0-6.4 2.7-10.2 10.2-10.2h6.3v6.9h-3.9c-2.9 0-3.1 1.1-3.1 3.1l0 4.7h7.1l-0.8 6.9z"
+            fill="#ffffff"
+        />
+    </svg>
+);
+
+const XLogo = () => (
+    <svg className="social-icon" viewBox="0 0 60 60" width="20" height="20" aria-hidden="true" focusable="false">
+        <rect x="2" y="2" width="56" height="56" rx="10" fill="#000000" />
+        <path d="M17 15h8.2l7 9.7 8.1-9.7h4.4L34.2 28.6 45.4 45h-8.2l-7.9-11-9.2 11H15.7l11.8-14.1L17 15z" fill="#ffffff" />
+    </svg>
+);
+
+const LinkedinLogo = () => (
+    <svg className="social-icon" viewBox="0 0 60 60" width="20" height="20" aria-hidden="true" focusable="false">
+        <rect x="2" y="2" width="56" height="56" rx="10" fill="#0A66C2" />
+        <rect x="14" y="24" width="8" height="24" fill="#ffffff" />
+        <circle cx="18" cy="15" r="4.5" fill="#ffffff" />
+        <path
+            d="M28 24h7.6v3.3h0.1c1.1-2 3.7-4.1 7.6-4.1 8.1 0 9.6 5.3 9.6 12.2V48h-8v-11.4c0-2.7 0-6.2-3.8-6.2-3.8 0-4.4 3-4.4 6v11.6h-8V24z"
+            fill="#ffffff"
+        />
+    </svg>
+);
 
 const tagRender = (props: CustomTagProps) => {
     const { label, value, closable, onClose } = props;
@@ -539,7 +562,7 @@ const RoomDetails = () => {
                                                                         room?.short_link
                                                                     }
                                                                 >
-                                                                    <FacebookOutlined />
+                                                                    <FacebookLogo />
                                                                 </FacebookShareButton>
                                                             </Tooltip>
                                                             <Tooltip
@@ -553,7 +576,7 @@ const RoomDetails = () => {
                                                                         room?.short_link
                                                                     }
                                                                 >
-                                                                    <TwitterOutlined />
+                                                                    <XLogo />
                                                                 </TwitterShareButton>
                                                             </Tooltip>
                                                             <Tooltip
@@ -567,7 +590,7 @@ const RoomDetails = () => {
                                                                         room?.short_link
                                                                     }
                                                                 >
-                                                                    <LinkedinOutlined />
+                                                                    <LinkedinLogo />
                                                                 </LinkedinShareButton>
                                                             </Tooltip>
                                                         </Space>

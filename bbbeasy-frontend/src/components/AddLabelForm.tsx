@@ -99,7 +99,7 @@ export const AddLabelForm = (props: Props) => {
         <>
             <Modal
                 title={<Trans i18nKey="new_label" />}
-                className="add-modal"
+                className="add-modal label-add-modal"
                 centered
                 open={props.isModalShow}
                 onOk={handleAdd}

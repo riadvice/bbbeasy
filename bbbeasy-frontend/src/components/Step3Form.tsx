@@ -137,7 +137,7 @@ export const Step3Form = (props: Props) => {
                 {enabled && (
                     <Modal
                         title={<Trans i18nKey={modalTitleTrans} />}
-                        className="presets-modal"
+                        className="presets-modal preset-settings-modal"
                         centered
                         open={isModalVisible}
                         onOk={() => setIsModalVisible(false)}

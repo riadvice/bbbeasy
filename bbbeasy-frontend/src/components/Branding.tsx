@@ -172,7 +172,7 @@ const Branding = () => {
     };
 
     return (
-        <Row justify="center" className="branding-row">
+        <Row justify="center" className="branding-row branding-page">
             {isLoading ? (
                 <LoadingSpinner />
             ) : (
