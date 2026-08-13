@@ -445,7 +445,7 @@ const PresetsCol: React.FC<PresetColProps> = ({
                 {editClickHandler != null && (
                     <Modal
                         title={t(modalTitle)}
-                        className="presets-modal"
+                        className="presets-modal presets-edit-modal"
                         centered
                         open={isModalVisible}
                         onOk={() => setIsModalVisible(false)}

@@ -520,7 +520,7 @@ const Roles = () => {
                         size="middle"
                         className={expandedKeys.includes(record.key) ? 'table-actions editable' : 'table-actions'}
                     >
-                        <Link onClick={() => toggleEdit(record.key)}>
+                        <Link className="permissions-link" onClick={() => toggleEdit(record.key)}>
                             <DynamicIcon type="permissions" className="icon-bbbeasy-permissions" />{' '}
                             <Trans i18nKey="permissions.label" />
                         </Link>
@@ -530,7 +530,7 @@ const Roles = () => {
                                 icon={<QuestionCircleOutlined className="red-icon" />}
                                 onConfirm={() => handleDelete(record.key, record.users)}
                             >
-                                <Link>
+                                <Link className="delete-button-color">
                                     <DeleteOutlined /> <Trans i18nKey="delete" />
                                 </Link>
                             </Popconfirm>
@@ -558,6 +558,7 @@ const Roles = () => {
     return (
         <>
             <PageHeader
+                className="site-page-header roles-page-header"
                 title={<Trans i18nKey="roles" />}
                 extra={
                     AuthService.isAllowedAction(actions, 'add') && [
@@ -571,7 +572,7 @@ const Roles = () => {
             {AuthService.isAllowedAction(actions, 'add') && (
                 <Modal
                     title={<Trans i18nKey="new_role" />}
-                    className="add-modal medium-modal"
+                    className="add-modal medium-modal roles-add-modal"
                     centered
                     open={isModalVisible}
                     onOk={handleAdd}
@@ -628,20 +629,22 @@ const Roles = () => {
                 </Modal>
             )}
 
-            <EditableTable
-                EditableCell={EditableCell}
-                editForm={editTableForm}
-                EditableContext={EditableContext}
-                mergedColumns={mergedColumns}
-                dataSource={data}
-                loading={loading}
-                expandableTable={{
-                    expandedRowRender: expandedRowRender,
-                    showExpandColumn: false,
-                    expandedRowKeys: expandedKeys,
-                }}
-                notFoundContent="no_data"
-            />
+            <div className="roles-table">
+                <EditableTable
+                    EditableCell={EditableCell}
+                    editForm={editTableForm}
+                    EditableContext={EditableContext}
+                    mergedColumns={mergedColumns}
+                    dataSource={data}
+                    loading={loading}
+                    expandableTable={{
+                        expandedRowRender: expandedRowRender,
+                        showExpandColumn: false,
+                        expandedRowKeys: expandedKeys,
+                    }}
+                    notFoundContent="no_data"
+                />
+            </div>
         </>
     );
 };

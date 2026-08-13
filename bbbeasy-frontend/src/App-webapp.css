@@ -3993,6 +3993,35 @@ div.error-message-Label {
     background: transparent !important;
     color: #e2e8f0 !important;
 }
+/* Make the password field exactly the same size as the email field */
+.user-add-modal .ant-input-affix-wrapper {
+    height: 32px !important;
+    padding: 4px 11px !important;
+    line-height: 22px !important;
+    font-size: 14px !important;
+    box-sizing: border-box !important;
+    align-items: center !important;
+}
+.user-add-modal .ant-input-affix-wrapper .ant-input {
+    height: auto !important;
+    padding: 0 !important;
+    line-height: 22px !important;
+}
+/* Gray eye icon (show/hide password) */
+.user-add-modal .ant-input-suffix,
+.user-add-modal .ant-input-password-icon {
+    color: rgba(148, 163, 184, 0.9) !important;
+    font-size: 15px;
+}
+.user-add-modal .ant-input-password-icon:hover {
+    color: #fbbc0b !important;
+}
+/* Reset the installer padding on the password Form.Item so the field
+   has exactly the same width as the email field */
+.user-add-modal .password-install {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
 .user-add-modal .ant-select-selector {
     background: #0b1526 !important;
     border-color: rgba(96, 165, 250, 0.4) !important;
@@ -4339,6 +4368,380 @@ div.error-message-Label {
     border-color: #2563eb !important;
 }
 .ant-modal-root:has(.ant-modal.preset-settings-modal) > .ant-modal-mask {
+    background-color: rgba(2, 6, 23, 0.55) !important;
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+}
+/*****************ROLES PAGE - BLUE DESIGN*****************/
+.roles-page-header .ant-page-header-heading-title {
+    color: #ffffff !important;
+}
+.roles-search-input input,
+.roles-search-input input::placeholder {
+    color: rgba(148, 163, 184, 0.9) !important;
+    -webkit-text-fill-color: rgba(148, 163, 184, 0.9);
+}
+.roles-search-input .ant-input-clear-icon,
+.roles-search-input .anticon-search {
+    color: rgba(148, 163, 184, 0.9) !important;
+}
+.roles-table .ant-table {
+    background: transparent;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 10px 34px rgba(37, 99, 235, 0.22);
+}
+.roles-table .ant-table-container {
+    border: 1px solid rgba(96, 165, 250, 0.25) !important;
+    border-radius: 14px !important;
+}
+.roles-table .ant-table-thead > tr > th {
+    background: linear-gradient(135deg, #172554 0%, #1d4ed8 100%) !important;
+    color: #ffffff !important;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    border-bottom: 1px solid rgba(96, 165, 250, 0.35) !important;
+}
+.roles-table .ant-table-thead > tr > th .ant-table-column-sorter {
+    color: rgba(255, 255, 255, 0.45);
+}
+.roles-table .ant-table-thead > tr > th.ant-table-column-has-sorters:hover .ant-table-column-sorter {
+    color: rgba(255, 255, 255, 0.9);
+}
+.roles-table .ant-table-thead > tr > th .ant-table-filter-trigger {
+    color: rgba(255, 255, 255, 0.65);
+}
+.roles-table .ant-table-thead > tr > th .ant-table-filter-trigger:hover {
+    color: #ffffff;
+}
+.roles-table .ant-table-thead > tr > th .ant-table-filter-trigger.active {
+    color: #fbbc0b;
+}
+.roles-table .ant-table-tbody > tr > td {
+    background: #0d1b33 !important;
+    color: #cbd5e1 !important;
+    border-bottom: 1px solid rgba(96, 165, 250, 0.14) !important;
+}
+.roles-table .ant-table-tbody > tr.ant-table-row:nth-child(even) > td {
+    background: #0f1f3d !important;
+}
+.roles-table .ant-table-tbody > tr.ant-table-row:hover > td,
+.roles-table .ant-table-tbody > tr.ant-table-row:hover > td.ant-table-cell-row-hover,
+.roles-table .ant-table-tbody > tr > td.ant-table-cell-row-hover {
+    background: rgba(37, 99, 235, 0.24) !important;
+}
+.roles-table .ant-table-tbody > tr.ant-table-placeholder > td {
+    background: #0d1b33 !important;
+}
+.roles-table .ant-table-placeholder .ant-empty-description {
+    color: #94a3b8;
+}
+.roles-table a.edit-button-color,
+.roles-table .table-actions a {
+    color: #93c5fd !important;
+}
+.roles-table .table-actions a.permissions-link:hover {
+    color: #fbbc0b !important;
+}
+.roles-table a.delete-button-color:hover {
+    color: #ff4d4f !important;
+}
+.roles-table .ant-input {
+    background: #0b1526 !important;
+    border-color: rgba(96, 165, 250, 0.4) !important;
+    color: #e2e8f0 !important;
+}
+.roles-table .ant-input::placeholder {
+    color: #64748b !important;
+}
+.roles-table .ant-pagination .ant-pagination-item,
+.roles-table .ant-pagination .ant-pagination-prev .ant-pagination-item-link,
+.roles-table .ant-pagination .ant-pagination-next .ant-pagination-item-link {
+    background: transparent !important;
+    border-color: rgba(96, 165, 250, 0.35) !important;
+}
+.roles-table .ant-pagination .ant-pagination-item a {
+    color: #93c5fd !important;
+}
+.roles-table .ant-pagination .ant-pagination-prev .ant-pagination-item-link,
+.roles-table .ant-pagination .ant-pagination-next .ant-pagination-item-link {
+    color: #93c5fd !important;
+}
+.roles-table .ant-pagination .ant-pagination-item-active {
+    background: #1d4ed8 !important;
+    border-color: #1d4ed8 !important;
+}
+.roles-table .ant-pagination .ant-pagination-item-active a {
+    color: #ffffff !important;
+}
+.roles-table .ant-table-cell mark {
+    background-color: #ffcf33;
+    color: #1e293b;
+}
+/* Expanded permissions panel */
+.roles-table .ant-table-expanded-row > td {
+    background: #0d1b33 !important;
+}
+.roles-table .ant-table-expanded-row .bordered-card {
+    background: transparent;
+    border: none;
+    border-radius: 0;
+}
+.roles-table .ant-table-expanded-row .ant-card,
+.roles-add-modal .bordered-card .ant-card {
+    background: #0f1f3d !important;
+    border: 1px solid rgba(96, 165, 250, 0.22) !important;
+    border-radius: 10px !important;
+    margin-bottom: 10px !important;
+}
+.roles-table .ant-table-expanded-row .ant-card-head,
+.roles-add-modal .bordered-card .ant-card-head {
+    background: transparent !important;
+    border-bottom: 1px solid rgba(96, 165, 250, 0.18) !important;
+}
+.roles-table .ant-table-expanded-row .ant-card-head-title,
+.roles-add-modal .bordered-card .ant-card-head-title {
+    color: #ffffff !important;
+    font-weight: 600;
+}
+.roles-table .ant-table-expanded-row .ant-checkbox-wrapper:not(.ant-checkbox-wrapper-disabled),
+.roles-add-modal .bordered-card .ant-checkbox-wrapper:not(.ant-checkbox-wrapper-disabled) {
+    color: rgba(148, 163, 184, 0.9) !important;
+}
+.roles-table .ant-table-expanded-row .ant-checkbox-wrapper.ant-checkbox-wrapper-disabled,
+.roles-add-modal .bordered-card .ant-checkbox-wrapper.ant-checkbox-wrapper-disabled {
+    color: rgba(148, 163, 184, 0.45) !important;
+}
+.roles-table .ant-table-expanded-row .ant-checkbox-wrapper .ant-checkbox-label,
+.roles-add-modal .bordered-card .ant-checkbox-wrapper .ant-checkbox-label {
+    color: rgba(148, 163, 184, 0.9) !important;
+}
+.roles-table .ant-table-expanded-row .ant-checkbox-wrapper.ant-checkbox-wrapper-disabled .ant-checkbox-label,
+.roles-add-modal .bordered-card .ant-checkbox-wrapper.ant-checkbox-wrapper-disabled .ant-checkbox-label {
+    color: rgba(148, 163, 184, 0.45) !important;
+}
+.roles-table .ant-table-expanded-row .ant-checkbox-inner,
+.roles-add-modal .bordered-card .ant-checkbox-inner {
+    background-color: #1e293b !important;
+    border-color: rgba(148, 163, 184, 0.6) !important;
+}
+.roles-table .ant-table-expanded-row .ant-checkbox-wrapper:hover .ant-checkbox-inner,
+.roles-add-modal .bordered-card .ant-checkbox-wrapper:hover .ant-checkbox-inner {
+    border-color: rgba(148, 163, 184, 0.9) !important;
+}
+.roles-table .ant-table-expanded-row .ant-checkbox-checked .ant-checkbox-inner,
+.roles-add-modal .bordered-card .ant-checkbox-checked .ant-checkbox-inner {
+    background-color: #2563eb !important;
+    border-color: #2563eb !important;
+}
+.roles-table .ant-table-expanded-row .ant-checkbox-checked .ant-checkbox-inner::after,
+.roles-add-modal .bordered-card .ant-checkbox-checked .ant-checkbox-inner::after {
+    border-color: #ffffff !important;
+}
+.roles-table .ant-table-expanded-row .actions-expanded .cell-input-cancel {
+    background: rgba(71, 85, 105, 0.4) !important;
+    border-color: rgba(96, 165, 250, 0.25) !important;
+    color: #cbd5e1 !important;
+}
+.roles-table .ant-table-expanded-row .actions-expanded .ant-btn-primary {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+    border-color: #2563eb !important;
+}
+/* New Role modal - blue design (same as other add modals) */
+.roles-add-modal .ant-modal-content {
+    background: linear-gradient(145deg, #10203f 0%, #0d1b33 100%) !important;
+    border: 1px solid rgba(96, 165, 250, 0.25) !important;
+    border-radius: 14px !important;
+    box-shadow: 0 14px 44px rgba(37, 99, 235, 0.28);
+}
+.roles-add-modal .ant-modal-header {
+    background: transparent !important;
+    border-bottom: 1px solid rgba(96, 165, 250, 0.14) !important;
+}
+.roles-add-modal .ant-modal-title {
+    color: #ffffff !important;
+    font-weight: 600;
+}
+.roles-add-modal .ant-modal-close {
+    color: #93c5fd !important;
+}
+.roles-add-modal .ant-modal-close:hover {
+    color: #fbbc0b !important;
+}
+.roles-add-modal .ant-form-item-label label {
+    color: #cbd5e1 !important;
+}
+.roles-add-modal .ant-input {
+    background: #0b1526 !important;
+    border-color: rgba(96, 165, 250, 0.4) !important;
+    color: #e2e8f0 !important;
+}
+.roles-add-modal .ant-input::placeholder {
+    color: rgba(148, 163, 184, 0.9) !important;
+}
+.roles-add-modal .cancel-btn {
+    background: rgba(71, 85, 105, 0.4) !important;
+    border-color: rgba(96, 165, 250, 0.25) !important;
+    color: #cbd5e1 !important;
+}
+.roles-add-modal .cancel-btn:hover,
+.roles-add-modal .cancel-btn:focus {
+    background: rgba(71, 85, 105, 0.6) !important;
+    color: #ffffff !important;
+}
+.roles-add-modal .ant-btn-primary {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+    border-color: #2563eb !important;
+    box-shadow: 0 6px 18px rgba(37, 99, 235, 0.35);
+}
+.roles-add-modal .ant-btn-primary:hover,
+.roles-add-modal .ant-btn-primary:focus {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+    border-color: #3b82f6 !important;
+}
+.roles-add-modal .ant-form-item-label > label {
+    color: #cbd5e1 !important;
+}
+/* Blurred dark mask behind the New Role modal */
+.ant-modal-root:has(.ant-modal.roles-add-modal) > .ant-modal-mask {
+    background-color: rgba(2, 6, 23, 0.55) !important;
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+}
+/*****************ADMINISTRATION PAGE - BLUE DESIGN*****************/
+.administration-page-header .ant-page-header-heading-title {
+    color: #ffffff !important;
+    font-weight: 600;
+}
+.administration-search-input input,
+.administration-search-input input::placeholder {
+    color: rgba(148, 163, 184, 0.9) !important;
+    -webkit-text-fill-color: rgba(148, 163, 184, 0.9);
+}
+.administration-search-input .ant-input-clear-icon,
+.administration-search-input .anticon-search {
+    color: rgba(148, 163, 184, 0.9) !important;
+}
+.administration-page .step1 {
+    background: linear-gradient(145deg, #10203f 0%, #0d1b33 100%) !important;
+    border: 1px solid rgba(96, 165, 250, 0.35) !important;
+    border-radius: 14px !important;
+    box-shadow: 0 18px 45px rgba(2, 6, 23, 0.55), inset 0 0 0 1px rgba(96, 165, 250, 0.08) !important;
+}
+.administration-page .ant-form-item-label label {
+    color: #ffffff !important;
+    font-weight: 500;
+}
+.administration-page .ant-switch {
+    background: #0f1f3d !important;
+    border: 1px solid rgba(96, 165, 250, 0.4) !important;
+}
+.administration-page .ant-switch-checked {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+    border-color: #2563eb !important;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+}
+.administration-page .ant-switch .ant-switch-handle::before,
+.administration-page .ant-switch-checked .ant-switch-handle::before {
+    background-color: #ffffff !important;
+}
+.administration-page #submit-btn {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+    border-color: #2563eb !important;
+    color: #ffffff !important;
+    box-shadow: 0 6px 18px rgba(37, 99, 235, 0.35);
+}
+.administration-page #submit-btn:hover,
+.administration-page #submit-btn:focus {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+    border-color: #3b82f6 !important;
+    color: #ffffff !important;
+}
+/*****************PRESETS EDIT POPUP - BLUE DESIGN*****************/
+.ant-modal-root:has(.ant-modal.presets-edit-modal) .ant-modal-content {
+    background: linear-gradient(145deg, #10203f 0%, #0d1b33 100%) !important;
+    border: 1px solid rgba(96, 165, 250, 0.25) !important;
+    border-radius: 14px !important;
+    box-shadow: 0 14px 44px rgba(37, 99, 235, 0.28);
+}
+.ant-modal-root:has(.ant-modal.presets-edit-modal) .ant-modal-header {
+    background: transparent !important;
+}
+.ant-modal-root:has(.ant-modal.presets-edit-modal) .ant-modal-title {
+    color: #ffffff !important;
+    font-weight: 600;
+}
+.ant-modal-root:has(.ant-modal.presets-edit-modal) .ant-modal-close {
+    color: rgba(148, 163, 184, 0.9) !important;
+}
+.ant-modal-root:has(.ant-modal.presets-edit-modal) label {
+    color: #cbd5e1 !important;
+}
+.ant-modal-root:has(.ant-modal.presets-edit-modal) .ant-input,
+.ant-modal-root:has(.ant-modal.presets-edit-modal) .ant-input-number,
+.ant-modal-root:has(.ant-modal.presets-edit-modal) .ant-select .ant-select-selector {
+    background: #0b1526 !important;
+    border-color: rgba(96, 165, 250, 0.4) !important;
+    color: #e2e8f0 !important;
+}
+.ant-modal-root:has(.ant-modal.presets-edit-modal) .ant-input::placeholder,
+.ant-modal-root:has(.ant-modal.presets-edit-modal) .ant-input-number-input::placeholder {
+    color: rgba(148, 163, 184, 0.9) !important;
+}
+.ant-modal-root:has(.ant-modal.presets-edit-modal) .ant-select .ant-select-selector .ant-select-selection-item,
+.ant-modal-root:has(.ant-modal.presets-edit-modal) .ant-input-number-input {
+    color: #e2e8f0 !important;
+}
+.ant-modal-root:has(.ant-modal.presets-edit-modal) .ant-select .ant-select-arrow {
+    color: #93c5fd !important;
+}
+.ant-modal-root:has(.ant-modal.presets-edit-modal) .input-status-presets {
+    background: linear-gradient(145deg, #10203f 0%, #0d1b33 100%) !important;
+    border: 1px solid rgba(96, 165, 250, 0.4) !important;
+    border-radius: 6px;
+    color: #e2e8f0 !important;
+    width: 70px;
+    text-align: center;
+    padding: 2px 6px;
+}
+.ant-modal-root:has(.ant-modal.presets-edit-modal) .ant-switch {
+    background: #0f1f3d !important;
+    border: 1px solid rgba(96, 165, 250, 0.4) !important;
+}
+.ant-modal-root:has(.ant-modal.presets-edit-modal) .ant-switch-checked {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+    border-color: #2563eb !important;
+}
+.ant-modal-root:has(.ant-modal.presets-edit-modal) .space-presets-border {
+    background: #0b1526 !important;
+    border-color: rgba(96, 165, 250, 0.4) !important;
+}
+.ant-modal-root:has(.ant-modal.presets-edit-modal) .ant-upload button {
+    background: #0f1f3d !important;
+    border-color: rgba(96, 165, 250, 0.4) !important;
+    color: #cbd5e1 !important;
+}
+.ant-modal-root:has(.ant-modal.presets-edit-modal) .button-container .cancel-btn {
+    background: rgba(71, 85, 105, 0.4) !important;
+    border-color: rgba(96, 165, 250, 0.25) !important;
+    color: #cbd5e1 !important;
+}
+.ant-modal-root:has(.ant-modal.presets-edit-modal) .button-container .cancel-btn:hover,
+.ant-modal-root:has(.ant-modal.presets-edit-modal) .button-container .cancel-btn:focus {
+    background: rgba(71, 85, 105, 0.6) !important;
+    color: #ffffff !important;
+}
+.ant-modal-root:has(.ant-modal.presets-edit-modal) .button-container .ant-btn-primary {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+    border-color: #2563eb !important;
+    box-shadow: 0 6px 18px rgba(37, 99, 235, 0.35);
+}
+.ant-modal-root:has(.ant-modal.presets-edit-modal) .button-container .ant-btn-primary:hover,
+.ant-modal-root:has(.ant-modal.presets-edit-modal) .button-container .ant-btn-primary:focus {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+    border-color: #3b82f6 !important;
+}
+.ant-modal-root:has(.ant-modal.presets-edit-modal) > .ant-modal-mask {
     background-color: rgba(2, 6, 23, 0.55) !important;
     -webkit-backdrop-filter: blur(5px);
     backdrop-filter: blur(5px);
