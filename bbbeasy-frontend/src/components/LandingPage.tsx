@@ -45,15 +45,6 @@ const MicOffIcon = () => (
     </svg>
 );
 
-const ExpandIcon = () => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <polyline points="15 3 21 3 21 9" />
-        <polyline points="9 21 3 21 3 15" />
-        <line x1="21" y1="3" x2="14" y2="10" />
-        <line x1="3" y1="21" x2="10" y2="14" />
-    </svg>
-);
-
 const HandIcon = () => (
     <svg viewBox="0 0 24 24" fill="currentColor">
         <path d="M19 11h-1.7c0 .74-.16 1.43-.43 2.05l1.23 1.23c.56-.98.9-2.09.9-3.28zm-4.02.97c0-.06.02-.11.02-.16V5c0-1.66-1.34-3-3-3S9 3.34 9 5v.18l5.98 5.79zM4.27 3L3 4.27l6.01 6.01V11c0 1.66 1.33 3 2.99 3 .22 0 .44-.03.65-.08l1.66 1.66c-.71.33-1.5.52-2.31.52-2.76 0-5.3-2.1-5.3-5.1H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c.91-.13 1.77-.45 2.54-.9L19.73 21 21 19.73 4.27 3z" />
@@ -64,13 +55,6 @@ const ShieldIcon = () => (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
         <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-    </svg>
-);
-
-const CameraOffIcon = () => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M16 16v1a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2m5.66 0H14a2 2 0 0 1 2 2v3.34l1 1L23 7v10" />
-        <line x1="1" y1="1" x2="23" y2="23" />
     </svg>
 );
 
@@ -129,12 +113,39 @@ const ActionMoreIcon = () => (
 
 const LandingPage = () => {
     const [platformName, setPlatformName] = React.useState<string>('');
-    const [activeTab, setActiveTab] = React.useState<string>('My Table');
     const navigate = useNavigate();
+    const stageRef = React.useRef<HTMLDivElement>(null);
+    const mockupRef = React.useRef<HTMLDivElement>(null);
     useEffect(() => {
         settingsService.collect_settings().then((result) => {
             setPlatformName(result.data.platform_name);
         });
+    }, []);
+
+    // Subtle 3D tilt on the classroom mockup (purely visual, no logic)
+    useEffect(() => {
+        const stage = stageRef.current;
+        const mockup = mockupRef.current;
+        if (!stage || !mockup) return;
+        const canHover = window.matchMedia('(pointer: fine)').matches;
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (!canHover || reduceMotion) return;
+
+        const onMove = (event: MouseEvent) => {
+            const rect = stage.getBoundingClientRect();
+            const x = (event.clientX - rect.left) / rect.width - 0.5;
+            const y = (event.clientY - rect.top) / rect.height - 0.5;
+            mockup.style.transform = `rotateY(${(x * 5).toFixed(2)}deg) rotateX(${(y * -5).toFixed(2)}deg)`;
+        };
+        const onLeave = () => {
+            mockup.style.transform = 'rotateY(0deg) rotateX(0deg)';
+        };
+        stage.addEventListener('mousemove', onMove);
+        stage.addEventListener('mouseleave', onLeave);
+        return () => {
+            stage.removeEventListener('mousemove', onMove);
+            stage.removeEventListener('mouseleave', onLeave);
+        };
     }, []);
 
     return (
@@ -166,196 +177,175 @@ const LandingPage = () => {
                     </Paragraph>
                 </Col>
                 <Col span={12} className="hero-visual">
-                    <div className="bbb-classroom-widget">
-                        <div className="classroom-frame">
-                            <div className="classroom-topbar">
-                                <div className="room-tag">
-                                    <RoomIcon />
-                                    <span className="room-tag-prefix">Room:</span>
-                                    <span>Math-Class-01</span>
-                                </div>
-                                <div className="audio-hd-tag">
-                                    <SpeakerIcon />
-                                    <span className="audio-bars" aria-hidden="true">
-                                        <span />
-                                        <span />
-                                        <span />
+                    <div className="bbb-classroom-widget" ref={stageRef}>
+                        <div className="salle-mockup" ref={mockupRef}>
+                            <div className="salle-topbar">
+                                <span className="salle-room-pill">
+                                    <span className="salle-live-dot" />
+                                    Salle : Terminale-S-02
+                                </span>
+                                <span className="salle-audio-pill">
+                                    HD Audio
+                                    <span className="salle-eq" aria-hidden="true">
+                                        <i />
+                                        <i />
+                                        <i />
+                                        <i />
                                     </span>
-                                    <span>HD Audio</span>
-                                </div>
+                                </span>
                             </div>
 
-                            <div className="classroom-body">
-                                <div className="classroom-left">
-                                    <div>
-                                        <div className="sec-title">Instructors</div>
-                                        <div className="video-tile instructor-tile">
-                                            <div className="tile-avatar avatar-inst">👩‍🏫</div>
-                                            <div className="tile-footer">
-                                                <span className="user-lbl">Instructor (She-Her)</span>
-                                            </div>
-                                            <div className="expand-icn">
-                                                <ExpandIcon />
-                                            </div>
+                            <div className="salle-body">
+                                <aside className="salle-side">
+                                    <p className="salle-side-label">Intervenants</p>
+                                    <div className="salle-tile">
+                                        <div className="salle-avatar salle-avatar-lg salle-avatar-instructor">🎓</div>
+                                        <span className="salle-tile-name">
+                                            <span className="salle-mic-dot" />
+                                            Prof
+                                        </span>
+                                    </div>
+                                    <p className="salle-side-label">Estrade</p>
+                                    <div className="salle-tile">
+                                        <div className="salle-avatar salle-avatar-j" style={{ animationDelay: '0.6s' }}>
+                                            J
                                         </div>
+                                        <span className="salle-tile-name">
+                                            <span className="salle-mic-dot" />
+                                            Jon
+                                        </span>
+                                    </div>
+                                    <div className="salle-tile">
+                                        <div className="salle-avatar salle-avatar-a" style={{ animationDelay: '1.1s' }}>
+                                            A
+                                        </div>
+                                        <span className="salle-tile-name">
+                                            <span className="salle-mic-dot" />
+                                            Alicia
+                                        </span>
+                                    </div>
+                                </aside>
+
+                                <section className="salle-center">
+                                    <div className="salle-tabs">
+                                        <span className="salle-tab active">Ma table</span>
+                                        <span className="salle-tab">Partage</span>
+                                        <span className="salle-tab">Vidéo</span>
                                     </div>
 
-                                    <div>
-                                        <div className="sec-title">Podium</div>
-                                        <div className="video-tile podium-tile">
-                                            <div className="tile-avatar avatar-podium-1">J</div>
-                                            <div className="tile-footer">
-                                                <div className="mute-icn">
-                                                    <MicOffIcon />
-                                                </div>
-                                                <span className="user-lbl">Jon (guest)</span>
-                                            </div>
+                                    <div className="salle-grid">
+                                        <div className="salle-tile">
+                                            <div className="salle-avatar salle-avatar-ta">TA</div>
+                                            <span className="salle-tile-name">
+                                                <span className="salle-mic-dot" />
+                                                Tatiana
+                                            </span>
                                         </div>
-                                        <div className="video-tile podium-tile">
-                                            <div className="tile-avatar avatar-podium-2">A</div>
-                                            <div className="tile-footer">
-                                                <div className="mute-icn">
-                                                    <MicOffIcon />
-                                                </div>
-                                                <span className="user-lbl">Alicia (guest)</span>
+                                        <div className="salle-tile">
+                                            <div className="salle-avatar salle-avatar-a" style={{ animationDelay: '0.35s' }}>
+                                                A
+                                                <span className="salle-raise-badge">
+                                                    <HandIcon />
+                                                </span>
                                             </div>
+                                            <span className="salle-tile-name">
+                                                <span className="salle-mic-dot" />
+                                                Alicia
+                                            </span>
                                         </div>
+                                        <div className="salle-tile">
+                                            <div className="salle-avatar salle-avatar-b" style={{ animationDelay: '0.7s' }}>
+                                                B
+                                                <span className="salle-raise-badge">
+                                                    <HandIcon />
+                                                </span>
+                                            </div>
+                                            <span className="salle-tile-name">
+                                                <span className="salle-mic-dot" />
+                                                Brandon
+                                            </span>
+                                        </div>
+                                        <div className="salle-tile">
+                                            <div className="salle-avatar salle-avatar-c" style={{ animationDelay: '1.05s' }}>
+                                                C
+                                            </div>
+                                            <span className="salle-tile-name">
+                                                <span className="salle-mic-dot" />
+                                                Colin
+                                            </span>
+                                        </div>
+                                        <div className="salle-tile">
+                                            <div className="salle-avatar salle-avatar-j" style={{ animationDelay: '1.4s' }}>
+                                                J
+                                                <span className="salle-raise-badge">
+                                                    <HandIcon />
+                                                </span>
+                                            </div>
+                                            <span className="salle-tile-name">
+                                                <span className="salle-mic-dot" />
+                                                Jon
+                                            </span>
+                                        </div>
+                                        <div className="salle-tile salle-add-tile">+</div>
                                     </div>
-                                </div>
+                                </section>
 
-                                <div className="classroom-center">
-                                    <div className="tab-bar">
-                                        {['My Table', 'Class share', "Instructor's video"].map((tab) => (
-                                            <button
-                                                key={tab}
-                                                type="button"
-                                                className={`tab-btn ${activeTab === tab ? 'active' : ''}`}
-                                                onClick={() => setActiveTab(tab)}
-                                            >
-                                                {tab}
-                                            </button>
-                                        ))}
-                                    </div>
-
-                                    <div className="table-grid">
-                                        <div className="video-tile grid-tile">
-                                            <div className="ta-badge-tag">TA</div>
-                                            <div className="grid-avatar grid-avatar-ta">
-                                                <div className="speaking-ring" />
-                                                👩🏻‍💻
-                                            </div>
-                                            <div className="tile-footer">
-                                                <div className="mute-icn">
-                                                    <MicOffIcon />
-                                                </div>
-                                                <span className="user-lbl">Tatiana</span>
-                                            </div>
-                                        </div>
-
-                                        <div className="video-tile grid-tile">
-                                            <div className="hand-badge">
+                                <aside className="salle-right">
+                                    <div className="salle-raise-hub">
+                                        <div className="salle-ring-wrap">
+                                            <span className="salle-ring" />
+                                            <span className="salle-ring" />
+                                            <div className="salle-hand">
                                                 <HandIcon />
                                             </div>
-                                            <div className="grid-avatar grid-avatar-a">A</div>
-                                            <div className="tile-footer">
-                                                <div className="mute-icn">
-                                                    <MicOffIcon />
-                                                </div>
-                                                <span className="user-lbl">Alicia (guest)</span>
-                                            </div>
                                         </div>
-
-                                        <div className="video-tile grid-tile">
-                                            <div className="grid-avatar grid-avatar-b">B</div>
-                                            <div className="tile-footer">
-                                                <div className="mute-icn">
-                                                    <MicOffIcon />
-                                                </div>
-                                                <span className="user-lbl">Brandon (guest)</span>
-                                            </div>
-                                        </div>
-
-                                        <div className="video-tile grid-tile">
-                                            <div className="grid-avatar grid-avatar-c">C</div>
-                                            <div className="tile-footer">
-                                                <div className="mute-icn">
-                                                    <MicOffIcon />
-                                                </div>
-                                                <span className="user-lbl">Colin (guest)</span>
-                                            </div>
-                                        </div>
-
-                                        <div className="video-tile grid-tile">
-                                            <div className="hand-badge">
-                                                <HandIcon />
-                                            </div>
-                                            <div className="grid-avatar grid-avatar-j">J</div>
-                                            <div className="tile-footer">
-                                                <div className="mute-icn">
-                                                    <MicOffIcon />
-                                                </div>
-                                                <span className="user-lbl">Jon (guest)</span>
-                                            </div>
-                                        </div>
-
-                                        <div className="video-tile grid-tile add-tile">
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                                <line x1="12" y1="5" x2="12" y2="19" />
-                                                <line x1="5" y1="12" x2="19" y2="12" />
-                                            </svg>
-                                        </div>
+                                        <span className="salle-raise-count">3 mains levées</span>
                                     </div>
-                                </div>
 
-                                <div className="classroom-right">
-                                    <button type="button" className="raise-hand-main" title="Lever la main">
-                                        <HandIcon />
-                                    </button>
-
-                                    <div className="quick-actions-grid">
-                                        <button type="button" className="act-btn" title="Émojis">
+                                    <div className="salle-icon-grid">
+                                        <button type="button" className="salle-icon-btn" title="Émojis">
                                             <ActionEmojiIcon />
                                         </button>
-                                        <button type="button" className="act-btn" title="Plein écran">
+                                        <button type="button" className="salle-icon-btn" title="Plein écran">
                                             <ActionFullscreenIcon />
                                         </button>
-                                        <button type="button" className="act-btn" title="Poser une question">
+                                        <button type="button" className="salle-icon-btn" title="Poser une question">
                                             <ActionQuestionIcon />
                                         </button>
-                                        <button type="button" className="act-btn" title="Chat en direct">
+                                        <button type="button" className="salle-icon-btn" title="Chat en direct">
                                             <ActionChatIcon />
                                         </button>
-                                        <button type="button" className="act-btn" title="Agenda">
+                                        <button type="button" className="salle-icon-btn" title="Agenda">
                                             <ActionCalendarIcon />
                                         </button>
-                                        <button type="button" className="act-btn" title="Plus d'options">
+                                        <button type="button" className="salle-icon-btn" title="Plus d'options">
                                             <ActionMoreIcon />
                                         </button>
                                     </div>
 
-                                    <div className="room-mode-box">
-                                        <div className="mode-title">Room mode</div>
-                                        <div className="mode-sub">Audio only</div>
+                                    <div className="salle-mode">
+                                        Mode salle
+                                        <b>Audio seul</b>
                                     </div>
 
-                                    <div className="bottom-media-bar">
-                                        <div className="media-circle off" title="Caméra coupée">
-                                            <CameraOffIcon />
+                                    <div className="salle-bottom">
+                                        <div className="salle-round" title="Clavier">
+                                            ⌨
                                         </div>
-                                        <div className="media-circle main-speaker" title="Haut-parleur actif">
+                                        <div className="salle-round" title="Haut-parleur actif">
                                             <SpeakerIcon />
                                         </div>
-                                        <div className="media-circle off" title="Micro coupé">
+                                        <div className="salle-round salle-warn" title="Micro coupé">
                                             <MicOffIcon />
                                         </div>
                                     </div>
-                                </div>
+                                </aside>
                             </div>
                         </div>
 
-                        <div className="encryption-pill">
+                        <div className="salle-encryption">
                             <ShieldIcon />
-                            <span>End-to-end Encryption</span>
+                            <span>Chiffrement de bout en bout</span>
                         </div>
                     </div>
                 </Col>
