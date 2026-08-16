@@ -87,7 +87,7 @@ interface PresetColProps {
     key: number;
     preset: MyPresetType;
     editName: boolean;
-    editClickHandler: (newPreset: MyPresetType, oldPreset: MyPresetType) => void;
+    editClickHandler: (newPreset: MyPresetType, oldPreset: MyPresetType, checkName?: boolean) => void;
     copyClickHandler: () => void;
     deleteClickHandler: () => void;
 }
@@ -238,9 +238,45 @@ const PresetsCol: React.FC<PresetColProps> = ({
     };
 
     //edit category
+    const subCategoryValuesChanged = (
+        original: MyPresetType | null,
+        categoryTitle: string,
+        edited: SubCategoryType[]
+    ): boolean => {
+        const originalCategory = original?.categories?.find((category) => category.name === categoryTitle);
+        if (!originalCategory) {
+            return true;
+        }
+        for (const subCategory of edited) {
+            const originalSubCategory = originalCategory.subcategories.find((item) => item.name === subCategory.name);
+            if (!originalSubCategory || originalSubCategory.value !== subCategory.value) {
+                return true;
+            }
+        }
+        return false;
+    };
+
     const saveEditPresetCategory = (title: string, preset: MyPresetType, subCategories: SubCategoryType[]) => {
         setIsModalVisible(false);
         const indexLogo = subCategories.findIndex((item) => item.type === 'file');
+
+        if (indexLogo > -1) {
+            // updated logo
+            if (file != undefined && file.originFileObj != null) {
+                subCategories[indexLogo].value = file.name;
+            }
+            //deleted logo
+            else if (file == undefined && subCategories[indexLogo].value != null) {
+                subCategories[indexLogo].value = '';
+            }
+        }
+
+        //nothing changed -> show info toast without calling the backend
+        if (!subCategoryValuesChanged(originalPreset, title, subCategories)) {
+            Notifications.openNotificationWithIcon('info', t('no_changes'));
+            return;
+        }
+
         //edit file
         if (indexLogo > -1 && file != undefined && file.originFileObj != null) {
             const formData: FormData = new FormData();
@@ -257,19 +293,8 @@ const PresetsCol: React.FC<PresetColProps> = ({
                 });
         }
 
-        if (indexLogo > -1) {
-            // updated logo
-            if (file != undefined && file.originFileObj != null) {
-                subCategories[indexLogo].value = file.name;
-            }
-            //deleted logo
-            else if (file == undefined && subCategories[indexLogo].value != null) {
-                subCategories[indexLogo].value = '';
-            }
-        }
-
         PresetsService.edit_subcategory_preset(title, subCategories, preset.id).then((response) => {
-            editClickHandler(response.data.preset, preset);
+            editClickHandler(response.data.preset, preset, false);
         });
     };
 
@@ -656,8 +681,8 @@ const Presets = () => {
     }, []);
 
     //edit
-    const editPreset = (newPreset: MyPresetType, oldPreset: MyPresetType) => {
-        if (newPreset.name == oldPreset.name) {
+    const editPreset = (newPreset: MyPresetType, oldPreset: MyPresetType, checkName: boolean = true) => {
+        if (checkName && newPreset.name == oldPreset.name) {
             Notifications.openNotificationWithIcon('info', t('no_changes'));
             return;
         }
