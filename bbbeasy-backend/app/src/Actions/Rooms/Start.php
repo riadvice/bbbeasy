@@ -25,6 +25,7 @@ namespace Actions\Rooms;
 use Actions\Base as BaseAction;
 use Actions\RequirePrivilegeTrait;
 use BigBlueButton\Enum\Role;
+use BigBlueButton\Parameters\Config\DocumentOptionsStore;
 use BigBlueButton\Parameters\CreateMeetingParameters;
 use BigBlueButton\Parameters\GetMeetingInfoParameters;
 use BigBlueButton\Parameters\JoinMeetingParameters;
@@ -99,7 +100,7 @@ class Start extends BaseAction
                         $presetData      = $presetprocessor->preparePresetData($p->getMyPresetInfos($p));
 
                         if ($room->getRoomInfos($room)['user_id'] === $this->session->get('user.id') || $presetData[General::GROUP_NAME][General::ANYONE_CAN_START]) {
-                            $createResult = $this->createMeeting($meetingId, $bbbRequester, $room->short_link, $p->getMyPresetInfos($p), $presetprocessor);
+                            $createResult = $this->createMeeting($meetingId, $bbbRequester, $room->short_link, $p->getMyPresetInfos($p), $presetprocessor, $room);
 
                             if (null === $createResult) {
                                 return;
@@ -149,11 +150,14 @@ class Start extends BaseAction
         return $meetingInfoResponse;
     }
 
-    public function createMeeting(string $meetingId, BigBlueButtonRequester $bbbRequester, $link, $p, $preetprocessor)
+    public function createMeeting(string $meetingId, BigBlueButtonRequester $bbbRequester, $link, $p, $preetprocessor, Room $room = null)
     {
         $presetProcessor = new PresetProcessor();
         $createParams    = new CreateMeetingParameters($meetingId, 'meeting-' . $meetingId);
         $createParams    = $presetProcessor->toCreateMeetingParams($p, $createParams);
+        if (null !== $room) {
+            $this->attachPresentations($createParams, $room);
+        }
         $createParams->setModeratorPassword(DataUtils::generateRandomString());
         $createParams->setAttendeePassword(DataUtils::generateRandomString());
         // @todo : set later via presets
@@ -178,6 +182,55 @@ class Start extends BaseAction
         );
 
         return $createParams->getModeratorPassword();
+    }
+
+    /**
+     * Pre-upload the room presentations into the meeting (embedded content,
+     * so the BBB server does not need to reach the application public URL).
+     */
+    private function attachPresentations(CreateMeetingParameters $createParams, Room $room): void
+    {
+        $presentations = $room->getPresentations();
+        if (empty($presentations)) {
+            return;
+        }
+
+        $uploadsDir = realpath($this->f3->get('UPLOADS'));
+        if (false === $uploadsDir) {
+            $this->logger->warning('Uploads directory could not be resolved, presentations skipped', ['room_id' => $room->id]);
+
+            return;
+        }
+
+        // BBB rejects create requests whose POST body exceeds ~2 MB, so we
+        // embed the files as base64 but skip anything that would exceed that.
+        $embeddedBytes = 0;
+        foreach ($presentations as $name) {
+            $filePath = rtrim($uploadsDir, '/\\') . '/' . basename((string) $name);
+            if (!is_file($filePath)) {
+                $this->logger->warning('Presentation file not found, skipped', ['room_id' => $room->id, 'name' => $name]);
+
+                continue;
+            }
+
+            $size = filesize($filePath);
+            if (false === $size || $size + $embeddedBytes > 1500000) {
+                $this->logger->warning('Presentation file too large to pre-upload, skipped', ['room_id' => $room->id, 'name' => $name, 'size' => $size]);
+
+                continue;
+            }
+
+            $content = file_get_contents($filePath);
+            if (false === $content || '' === $content) {
+                $this->logger->warning('Presentation file could not be read, skipped', ['room_id' => $room->id, 'name' => $name]);
+
+                continue;
+            }
+
+            $createParams->addPresentation(basename((string) $name), $content, basename((string) $name), new DocumentOptionsStore());
+            $embeddedBytes += $size;
+            $this->logger->info('Presentation pre-uploaded to meeting', ['room_id' => $room->id, 'name' => $name]);
+        }
     }
 
     public function joinMeeting(string $meetingId, string $role, BigBlueButtonRequester $bbbRequester, $p, $fullname): void

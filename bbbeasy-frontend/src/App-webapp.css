@@ -3733,6 +3733,36 @@ div.error-message-Label {
 .room-presentations .ant-upload.ant-upload-select .upload-file {
     color: #93c5fd !important;
 }
+.room-presentations-preview-pdf {
+    border: none;
+    height: 480px;
+    background: #ffffff;
+}
+.room-presentations-preview-office {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 48px 24px;
+    min-height: 320px;
+    background: linear-gradient(145deg, #10203f 0%, #0d1b33 100%);
+    border: 1px solid rgba(96, 165, 250, 0.25);
+    border-radius: 12px;
+}
+.room-presentations-preview-office-icon {
+    font-size: 64px;
+    color: #93c5fd;
+}
+.room-presentations-preview-office-name {
+    color: #ffffff !important;
+    font-weight: 600;
+    word-break: break-all;
+    text-align: center;
+}
+.room-presentations-preview-office-hint {
+    color: #94a3b8 !important;
+}
 /* Recordings section title + filter */
 .room-recordings h4.ant-typography {
     color: #ffffff !important;

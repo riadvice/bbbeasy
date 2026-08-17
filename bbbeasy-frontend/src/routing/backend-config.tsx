@@ -71,6 +71,10 @@ export const apiRoutes = {
     START_ROOM_URL: API_URL + '/rooms/',
     GET_ROOM_BY_LINK: API_URL + '/rooms/get/',
 
+    LIST_ROOM_PRESENTATIONS_URL: API_URL + '/rooms/presentations/',
+    ADD_ROOM_PRESENTATION_URL: API_URL + '/rooms/presentations/',
+    DELETE_ROOM_PRESENTATION_URL: API_URL + '/rooms/presentations/',
+
     COLLECT_RECORDINGS_URL: API_URL + '/recordings',
     LIST_RECORDINGS_URL: API_URL + '/recordings/',
     EDIT_RECORDING_URL: API_URL + '/recordings/',

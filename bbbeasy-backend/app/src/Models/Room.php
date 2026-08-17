@@ -132,13 +132,26 @@ class Room extends BaseModel
     public function getRoomInfos(): array
     {
         return [
-            'id'         => $this->id,
-            'name'       => $this->name,
-            'preset_id'  => $this->getPresetID($this->id)['preset_id'],
-            'user_id'    => $this->getUserID($this->id)['user_id'],
-            'short_link' => $this->short_link,
-            'labels'     => $this->getLabels($this->id),
+            'id'            => $this->id,
+            'name'          => $this->name,
+            'preset_id'     => $this->getPresetID($this->id)['preset_id'],
+            'user_id'       => $this->getUserID($this->id)['user_id'],
+            'short_link'    => $this->short_link,
+            'labels'        => $this->getLabels($this->id),
+            'presentations' => $this->getPresentations(),
         ];
+    }
+
+    public function getPresentations(): array
+    {
+        $data = json_decode((string) $this->presentations, true);
+
+        return \is_array($data) ? $data : [];
+    }
+
+    public function setPresentations(array $presentations): void
+    {
+        $this->presentations = json_encode(\array_values($presentations));
     }
 
     public function getPresetID($id)

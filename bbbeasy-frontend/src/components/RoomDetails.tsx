@@ -614,7 +614,7 @@ const RoomDetails = () => {
                                 </Card>
                             </Col>
                             <Col span={8} offset={6} className="RoomPresentation">
-                                <RoomPresentations open={showRecodingAndPresenttaions} />
+                                <RoomPresentations roomId={room.id} open={showRecodingAndPresenttaions} />
                             </Col>
                         </Row>
                         <RoomRecordings
