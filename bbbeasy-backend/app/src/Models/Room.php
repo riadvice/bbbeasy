@@ -149,6 +149,23 @@ class Room extends BaseModel
         return \is_array($data) ? $data : [];
     }
 
+    /**
+     * Normalize a presentation entry (legacy plain name or [name, original]
+     * array) into ['name' => stored file name, 'original' => display name].
+     */
+    public static function normalizePresentation($entry): array
+    {
+        if (\is_array($entry)) {
+            return [
+                'name'     => (string) ($entry['name'] ?? ''),
+                'original' => (string) ($entry['original'] ?? ($entry['name'] ?? '')),
+            ];
+        }
+        $stored = (string) $entry;
+
+        return ['name' => $stored, 'original' => $stored];
+    }
+
     public function setPresentations(array $presentations): void
     {
         $this->presentations = json_encode(\array_values($presentations));

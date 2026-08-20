@@ -3751,8 +3751,11 @@ div.error-message-Label {
     border-radius: 12px;
 }
 .room-presentations-preview-office-icon {
-    font-size: 64px;
-    color: #93c5fd;
+    height: 84px;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 6px 18px rgba(0, 0, 0, 0.5));
 }
 .room-presentations-preview-office-name {
     color: #ffffff !important;
@@ -3762,6 +3765,66 @@ div.error-message-Label {
 }
 .room-presentations-preview-office-hint {
     color: #94a3b8 !important;
+}
+/* Room presentations — pre-upload size warning */
+.room-presentations-size-warning,
+.room-presentations-preview-size-warning {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 14px;
+    padding: 9px 12px;
+    background: rgba(245, 158, 11, 0.12);
+    border: 1px solid rgba(245, 158, 11, 0.35);
+    border-radius: 10px;
+    color: #fcd34d;
+    font-size: 12.5px;
+    line-height: 1.5;
+}
+.room-presentations-size-warning .anticon,
+.room-presentations-preview-size-warning .anticon {
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+.room-presentations-preview-size-warning {
+    margin-top: 14px;
+    margin-bottom: 0;
+}
+/* Room presentations — file type tiles (pdf / ppt / word) */
+.room-presentations .ant-upload-list-item-thumbnail.ant-upload-list-item-file {
+    background: linear-gradient(145deg, #0b1526 0%, #0d1b33 100%) !important;
+}
+.room-presentations .ant-upload-list-item-name,
+.room-presentations .ant-upload-list-picture-card .ant-upload-list-item-name {
+    display: none !important;
+}
+.room-presentations-file-thumb {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    height: 100%;
+    padding: 8px;
+}
+.room-presentations-file-icon {
+    width: 100%;
+    height: 100%;
+    max-width: 56px;
+    max-height: 56px;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.5));
+}
+.room-presentations-file-name {
+    max-width: 100%;
+    font-size: 10.5px;
+    line-height: 1.3;
+    color: #94a3b8;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 /* Recordings section title + filter */
 .room-recordings h4.ant-typography {

@@ -50,8 +50,14 @@ class Delete extends BaseAction
 
         $filename = basename((string) $params['filename']);
         $list     = $room->getPresentations();
-        $index    = array_search($filename, $list, true);
-        if (false === $index) {
+        $index    = null;
+        foreach ($list as $i => $entry) {
+            if (Room::normalizePresentation($entry)['name'] === $filename) {
+                $index = $i;
+                break;
+            }
+        }
+        if (null === $index) {
             $this->logger->warning('Presentation not found for room', ['room_id' => $room->id, 'name' => $filename]);
             $this->renderJson(['errors' => ['presentation' => 'Presentation not found']], ResponseCode::HTTP_NOT_FOUND);
 

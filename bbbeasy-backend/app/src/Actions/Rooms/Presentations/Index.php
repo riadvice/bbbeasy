@@ -49,10 +49,13 @@ class Index extends BaseAction
         }
 
         $presentations = [];
-        foreach ($room->getPresentations() as $name) {
+        foreach ($room->getPresentations() as $entry) {
+            $info = Room::normalizePresentation($entry);
             $presentations[] = [
-                'name' => $name,
-                'url'  => $this->presentationUrl($name),
+                'name'     => $info['name'],
+                'original' => $info['original'],
+                'url'      => $this->presentationUrl($info['name']),
+                'size'     => $this->presentationSize($info['name']),
             ];
         }
 

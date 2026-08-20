@@ -103,16 +103,22 @@ class Add extends BaseAction
             return;
         }
 
-        $presentations[] = $name;
+        $originalName   = (string) ($file['name'] ?? $name);
+        $presentations[] = [
+            'name'     => $name,
+            'original' => $originalName,
+        ];
         $room->setPresentations($presentations);
         $room->save();
 
-        $this->logger->info('Presentation successfully saved for room', ['room_id' => $room->id, 'name' => $name]);
+        $this->logger->info('Presentation successfully saved for room', ['room_id' => $room->id, 'name' => $name, 'original' => $originalName]);
         $this->renderJson([
             'result'       => 'success',
             'presentation' => [
-                'name' => $name,
-                'url'  => $this->presentationUrl($name),
+                'name'     => $name,
+                'original' => $originalName,
+                'url'      => $this->presentationUrl($name),
+                'size'     => $this->presentationSize($name),
             ],
         ]);
     }

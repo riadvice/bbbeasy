@@ -187,7 +187,14 @@ class Start extends BaseAction
     /**
      * Pre-upload the room presentations into the meeting (embedded content,
      * so the BBB server does not need to reach the application public URL).
+     *
+     * The embedded content is sent as the POST body of the /create request.
+     * The BBB server (or its front proxy) rejects bodies above ~1 MB, so the
+     * total raw size of the presentations must stay below this budget (base64
+     * inflates the body by ~33 %).
      */
+    private const PRE_UPLOAD_MAX_BYTES = 768000;
+
     private function attachPresentations(CreateMeetingParameters $createParams, Room $room): void
     {
         $presentations = $room->getPresentations();
@@ -205,8 +212,10 @@ class Start extends BaseAction
         // BBB rejects create requests whose POST body exceeds ~2 MB, so we
         // embed the files as base64 but skip anything that would exceed that.
         $embeddedBytes = 0;
-        foreach ($presentations as $name) {
-            $filePath = rtrim($uploadsDir, '/\\') . '/' . basename((string) $name);
+        foreach ($presentations as $entry) {
+            $info     = Room::normalizePresentation($entry);
+            $name     = $info['name'];
+            $filePath = rtrim($uploadsDir, '/\\') . '/' . $name;
             if (!is_file($filePath)) {
                 $this->logger->warning('Presentation file not found, skipped', ['room_id' => $room->id, 'name' => $name]);
 
@@ -214,8 +223,8 @@ class Start extends BaseAction
             }
 
             $size = filesize($filePath);
-            if (false === $size || $size + $embeddedBytes > 1500000) {
-                $this->logger->warning('Presentation file too large to pre-upload, skipped', ['room_id' => $room->id, 'name' => $name, 'size' => $size]);
+            if (false === $size || $size + $embeddedBytes > self::PRE_UPLOAD_MAX_BYTES) {
+                $this->logger->warning('Presentation file too large to pre-upload, skipped', ['room_id' => $room->id, 'name' => $name, 'size' => $size, 'limit' => self::PRE_UPLOAD_MAX_BYTES]);
 
                 continue;
             }
@@ -227,7 +236,7 @@ class Start extends BaseAction
                 continue;
             }
 
-            $createParams->addPresentation(basename((string) $name), $content, basename((string) $name), new DocumentOptionsStore());
+            $createParams->addPresentation($name, $content, $name, new DocumentOptionsStore());
             $embeddedBytes += $size;
             $this->logger->info('Presentation pre-uploaded to meeting', ['room_id' => $room->id, 'name' => $name]);
         }
