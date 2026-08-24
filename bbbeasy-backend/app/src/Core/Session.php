@@ -353,7 +353,8 @@ class Session extends \Prefab
         if (isset($payload['nbf']) && (int) $payload['nbf'] > $now + (int) ($this->f3->get('auth.jwt.leeway') ?: 30)) {
             return [];
         }
-        if (isset($payload['exp']) && (int) $payload['exp'] < $now) {
+        $leeway = (int) ($this->f3->get('auth.jwt.leeway') ?: 30);
+        if (isset($payload['exp']) && (int) $payload['exp'] < $now - $leeway) {
             return [];
         }
         if (isset($payload['jti']) && $this->isRevoked((string) $payload['jti'])) {

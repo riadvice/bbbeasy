@@ -37,3 +37,21 @@ axiosInstance.interceptors.request.use((config) => {
 
     return config;
 });
+
+// Handle 401 responses globally: clear auth state and redirect to login
+let isRedirectingToLogin = false;
+axiosInstance.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error?.response?.status === 401 && !isRedirectingToLogin) {
+            const currentPath = window.location.pathname;
+            // Don't redirect if already on login page
+            if (currentPath !== '/login' && currentPath !== '/') {
+                isRedirectingToLogin = true;
+                AuthService.clearAuth();
+                window.location.href = '/login';
+            }
+        }
+        return Promise.reject(error);
+    },
+);

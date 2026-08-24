@@ -17,8 +17,7 @@
  */
 
 import React from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
-import { Location } from 'history';
+import { Navigate } from 'react-router-dom';
 
 import AuthService from '../services/auth.service';
 
@@ -26,18 +25,13 @@ import { UserType } from '../types/UserType';
 import { SessionType } from '../types/SessionType';
 
 const PrivateRoute = ({ children }) => {
-    const { state }: Location = useLocation();
     const currentUser: UserType = AuthService.getCurrentUser();
     const currentSession: SessionType = AuthService.getCurrentSession();
 
-    if (state) {
+    if (currentUser != null && currentSession != null) {
         return children;
     } else {
-        if (currentUser != null && currentSession != null) {
-            return children;
-        } else {
-            return <Navigate to="/login" />;
-        }
+        return <Navigate to="/login" />;
     }
 };
 
