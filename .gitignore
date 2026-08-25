@@ -17,3 +17,7 @@ output/**/*.*
 
 # Local JWT secret used only for development
 bbbeasy-backend/tmp/jwt.secret
+.agents/
+.freebuff/
+.kilo/
+
