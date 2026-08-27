@@ -20,4 +20,6 @@ bbbeasy-backend/tmp/jwt.secret
 .agents/
 .freebuff/
 .kilo/
+test-results/
+playwright-report
 

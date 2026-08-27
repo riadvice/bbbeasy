@@ -1,15 +1,8 @@
 {
   "compilerOptions": {
-    "baseUrl": "./src",
     "target": "ES2020",
-    "lib": [
-      "ES2020",
-      "DOM",
-      "DOM.Iterable"
-    ],
-    "types": [
-      "vite/client"
-    ],
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "types": ["@playwright/test", "node"],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -23,15 +16,13 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "baseUrl": "."
   },
   "include": [
-    "src",
-    "vite.config.ts"
+    "tests/**/*.ts"
   ],
   "exclude": [
-    "node_modules",
-    "dist",
-    "tests"
+    "node_modules"
   ]
 }

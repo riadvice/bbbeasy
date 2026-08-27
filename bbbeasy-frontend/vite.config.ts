@@ -34,7 +34,6 @@ export default defineConfig(({ mode }) => {
                 exclude: ['node_modules', 'test/', 'tests/'],
                 extension: ['.ts', '.tsx'],
                 requireEnv: true,
-                cypress: true,
             }),
         ],
 

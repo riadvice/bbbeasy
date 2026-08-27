@@ -9,8 +9,10 @@
 # testing
 /.nyc_output/**
 /coverage
-/cypress/screenshots/**/*.png
-/cypress/videos/**/*.mp4
+/test-results/**
+/playwright-report/**
+/blob-report/**
+/playwright/.cache/
 /instrumented/**/*.*
 # production
 /build
