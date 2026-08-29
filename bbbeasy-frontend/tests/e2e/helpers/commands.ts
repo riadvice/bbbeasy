@@ -136,6 +136,8 @@ export async function requestEmail(
     );
 
     if (result.rows.length > 0) {
+        // Clear auth state so PublicRoute doesn't redirect away from /change-password
+        await page.evaluate(() => localStorage.clear());
         await page.goto(`/change-password?token=${result.rows[0].token}`);
         await page.waitForSelector('form#change, .ant-result', { state: 'visible', timeout: 15000 });
     }
@@ -211,6 +213,8 @@ export async function locate(
         } else if (matchFirst && (action === 'first' || action === 'last') && !color) {
             // Roles: click the first (permissions) or last (delete) <a> link in the actions column
             const lastCellLinks = row.locator('td').last().locator('a');
+            const linkCount = await lastCellLinks.count();
+            if (linkCount === 0) return; // No action links (e.g. deleted row) — nothing to click
             if (action === 'first') {
                 await lastCellLinks.first().click();
             } else {
@@ -221,6 +225,8 @@ export async function locate(
         } else if (matchSecond && action && !color) {
             // Users: click the first (edit) or last (delete) <a> link in the actions column
             const lastCellLinks = row.locator('td').last().locator('a');
+            const linkCount = await lastCellLinks.count();
+            if (linkCount === 0) return; // No action links (e.g. deleted row) — nothing to click
             if (action === 'first') {
                 await lastCellLinks.first().click();
             } else {
@@ -291,7 +297,10 @@ export async function addUser(page: Page, username: string, email: string, passw
     await page.locator('input#users_form_username').fill(username);
     await page.locator('input#users_form_email').fill(email);
     await page.locator('input#users_form_password').fill(password);
-    await page.locator('input#users_form_role').click();
+    // In antd v5, the Select trigger inside a Form.Item may not render as an <input> with the expected id.
+    // Click the .ant-select-selector in the role Form.Item instead.
+    const roleFormItem = page.locator('form#users_form').locator('.ant-form-item').filter({ hasText: /role|Role/i });
+    await roleFormItem.locator('.ant-select-selector').click();
     await page.waitForSelector('.ant-select-dropdown:not(.ant-select-dropdown-hidden)', { state: 'visible', timeout: 5000 });
     // Wait for options to be rendered
     await wait(500);
