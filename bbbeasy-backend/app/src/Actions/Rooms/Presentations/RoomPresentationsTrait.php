@@ -52,7 +52,7 @@ trait RoomPresentationsTrait
         if (false === $uploadsDir) {
             return 0;
         }
-        $filePath = rtrim($uploadsDir, '/\\') . '/' . basename($name);
+        $filePath = mb_rtrim($uploadsDir, '/\\') . '/' . basename($name);
         $size     = is_file($filePath) ? filesize($filePath) : 0;
 
         return false === $size ? 0 : $size;

@@ -46,6 +46,17 @@ class Start extends BaseAction
     use RequirePrivilegeTrait;
 
     /**
+     * Pre-upload the room presentations into the meeting (embedded content,
+     * so the BBB server does not need to reach the application public URL).
+     *
+     * The embedded content is sent as the POST body of the /create request.
+     * The BBB server (or its front proxy) rejects bodies above ~1 MB, so the
+     * total raw size of the presentations must stay below this budget (base64
+     * inflates the body by ~33 %).
+     */
+    private const PRE_UPLOAD_MAX_BYTES = 768000;
+
+    /**
      * @throws \Exception
      */
     public function beforeroute(): void
@@ -150,7 +161,7 @@ class Start extends BaseAction
         return $meetingInfoResponse;
     }
 
-    public function createMeeting(string $meetingId, BigBlueButtonRequester $bbbRequester, $link, $p, $preetprocessor, Room $room = null)
+    public function createMeeting(string $meetingId, BigBlueButtonRequester $bbbRequester, $link, $p, $preetprocessor, ?Room $room = null)
     {
         $presetProcessor = new PresetProcessor();
         $createParams    = new CreateMeetingParameters($meetingId, 'meeting-' . $meetingId);
@@ -184,16 +195,20 @@ class Start extends BaseAction
         return $createParams->getModeratorPassword();
     }
 
-    /**
-     * Pre-upload the room presentations into the meeting (embedded content,
-     * so the BBB server does not need to reach the application public URL).
-     *
-     * The embedded content is sent as the POST body of the /create request.
-     * The BBB server (or its front proxy) rejects bodies above ~1 MB, so the
-     * total raw size of the presentations must stay below this budget (base64
-     * inflates the body by ~33 %).
-     */
-    private const PRE_UPLOAD_MAX_BYTES = 768000;
+    public function joinMeeting(string $meetingId, string $role, BigBlueButtonRequester $bbbRequester, $p, $fullname): void
+    {
+        $joinParams      = new JoinMeetingParameters($meetingId, $fullname, $role);
+        $presetProcessor = new PresetProcessor();
+
+        $joinParams = $presetProcessor->toJoinParameters($p, $joinParams);
+
+        $this->logger->info(
+            'Meeting join request is going to redirect to the web client.',
+            ['meetingID' => $meetingId]
+        );
+
+        $this->renderJson($bbbRequester->joinMeeting($joinParams)->getUrl());
+    }
 
     private function attachPresentations(CreateMeetingParameters $createParams, Room $room): void
     {
@@ -215,7 +230,7 @@ class Start extends BaseAction
         foreach ($presentations as $entry) {
             $info     = Room::normalizePresentation($entry);
             $name     = $info['name'];
-            $filePath = rtrim($uploadsDir, '/\\') . '/' . $name;
+            $filePath = mb_rtrim($uploadsDir, '/\\') . '/' . $name;
             if (!is_file($filePath)) {
                 $this->logger->warning('Presentation file not found, skipped', ['room_id' => $room->id, 'name' => $name]);
 
@@ -240,20 +255,5 @@ class Start extends BaseAction
             $embeddedBytes += $size;
             $this->logger->info('Presentation pre-uploaded to meeting', ['room_id' => $room->id, 'name' => $name]);
         }
-    }
-
-    public function joinMeeting(string $meetingId, string $role, BigBlueButtonRequester $bbbRequester, $p, $fullname): void
-    {
-        $joinParams      = new JoinMeetingParameters($meetingId, $fullname, $role);
-        $presetProcessor = new PresetProcessor();
-
-        $joinParams = $presetProcessor->toJoinParameters($p, $joinParams);
-
-        $this->logger->info(
-            'Meeting join request is going to redirect to the web client.',
-            ['meetingID' => $meetingId]
-        );
-
-        $this->renderJson($bbbRequester->joinMeeting($joinParams)->getUrl());
     }
 }

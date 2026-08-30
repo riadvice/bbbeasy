@@ -50,7 +50,7 @@ class Index extends BaseAction
 
         $presentations = [];
         foreach ($room->getPresentations() as $entry) {
-            $info = Room::normalizePresentation($entry);
+            $info            = Room::normalizePresentation($entry);
             $presentations[] = [
                 'name'     => $info['name'],
                 'original' => $info['original'],

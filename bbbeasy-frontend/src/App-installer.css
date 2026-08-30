@@ -460,7 +460,7 @@ body.rtl {
     font-size: 40px !important;
     padding: 20px !important;
     color: white !important;
-    background: #fbbc0b;
+    background: var(--bbbeasy-brand-color);
     clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%);
     border-radius: 50%;
 }
@@ -638,7 +638,7 @@ body.rtl {
     font-size: 18px !important;
     padding: 10px;
     color: white;
-    background: #fbbc0b;
+    background: var(--bbbeasy-brand-color);
     clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%);
     border-radius: 50%;
 }

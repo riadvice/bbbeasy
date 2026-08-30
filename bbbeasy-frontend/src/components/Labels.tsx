@@ -421,7 +421,7 @@ const Labels = () => {
 
             {AuthService.isAllowedAction(actions, 'add') && (
                 <AddLabelForm
-                    defaultColor="#fbbc0b"
+                    defaultColor={getComputedStyle(document.documentElement).getPropertyValue('--bbbeasy-brand-color').trim() || '#fbbc0b'}
                     isModalShow={isModalVisible}
                     close={() => {
                         setIsModalVisible(false);

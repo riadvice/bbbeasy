@@ -41,10 +41,6 @@ class SaveLogo extends BaseAction
      */
     public function execute($f3, $params): void
     {
-        /**
-         * @todo for future tasks
-         * if ($f3->get('system.installed') === false) {
-         */
         $form        = $f3->get('POST');
         $dataChecker = new DataChecker();
         $dataChecker->verify($form['logo_name'], Validator::notEmpty()->setName('logo_name'));
@@ -53,16 +49,26 @@ class SaveLogo extends BaseAction
         if (!$dataChecker->allValid()) {
             $this->logger->error($errorMessage, ['errors' => $dataChecker->getErrors()]);
             $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
+
+            return;
+        }
+
+        $files = $f3->get('FILES');
+        if (empty($files['logo'])) {
+            $this->logger->error($errorMessage, ['error' => 'no file uploaded']);
+            $this->renderJson(['message' => 'no file uploaded'], ResponseCode::HTTP_BAD_REQUEST);
+
+            return;
+        }
+
+        $format       = $files['logo']['type'];
+        $validFormats = ['image/jpg', 'image/jpeg', 'image/png'];
+        if (DataUtils::validateImageFormat($format, $validFormats)) {
+            // correct
+            \Web::instance()->receive();
         } else {
-            $format       = $f3->get('FILES')['logo']['type'];
-            $validFormats = ['image/jpg', 'image/jpeg', 'image/png'];
-            if (DataUtils::validateImageFormat($format, $validFormats)) {
-                // correct
-                \Web::instance()->receive();
-            } else {
-                $this->logger->error($errorMessage, ['error' => 'invalid file format : ' . $format]);
-                $this->renderJson(['message' => 'invalid file format'], ResponseCode::HTTP_PRECONDITION_FAILED);
-            }
+            $this->logger->error($errorMessage, ['error' => 'invalid file format : ' . $format]);
+            $this->renderJson(['message' => 'invalid file format'], ResponseCode::HTTP_PRECONDITION_FAILED);
         }
     }
 }

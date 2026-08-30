@@ -96,14 +96,14 @@ class Add extends BaseAction
 
         $uploadDir = realpath($this->f3->get('UPLOADS'));
         $name      = 'presentation-' . $this->f3->hash($file['tmp_name'] . microtime()) . '.' . $extension;
-        if (false === $uploadDir || !move_uploaded_file($file['tmp_name'], rtrim($uploadDir, '/\\') . '/' . $name)) {
+        if (false === $uploadDir || !move_uploaded_file($file['tmp_name'], mb_rtrim($uploadDir, '/\\') . '/' . $name)) {
             $this->logger->error('Presentation could not be saved', ['room_id' => $room->id, 'error' => 'upload.failed_to_move']);
             $this->renderJson(['errors' => ['presentation' => 'upload.failed_to_move']], ResponseCode::HTTP_PRECONDITION_FAILED);
 
             return;
         }
 
-        $originalName   = (string) ($file['name'] ?? $name);
+        $originalName    = (string) ($file['name'] ?? $name);
         $presentations[] = [
             'name'     => $name,
             'original' => $originalName,

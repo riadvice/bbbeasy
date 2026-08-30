@@ -25,7 +25,6 @@ namespace Actions\Rooms;
 use Fake\PresetFaker;
 use Fake\RoomFaker;
 use Models\User;
-use Registry;
 use Test\Scenario;
 
 /**
@@ -66,8 +65,8 @@ final class ViewTest extends Scenario
     {
         $test = $this->newTest();
 
-        $loggedUser = new User();
-        $currentUser = Registry::get('session')->get('user');
+        $loggedUser  = new User();
+        $currentUser = \Registry::get('session')->get('user');
         $loggedUser->load(['id = ?', [$currentUser['id']]]);
         $preset = PresetFaker::create($loggedUser);
         $room   = RoomFaker::create($loggedUser, $preset, 'abcdef-123456');

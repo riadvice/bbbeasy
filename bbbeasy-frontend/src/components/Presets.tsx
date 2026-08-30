@@ -550,7 +550,7 @@ const PresetsCol: React.FC<PresetColProps> = ({
 
                                                     {item.type === 'color' && (
                                                         <ColorPicker
-                                                            value={item.value ? item.value : '#fbbc0b'}
+                                                            value={item.value ? item.value : getComputedStyle(document.documentElement).getPropertyValue('--bbbeasy-brand-color').trim() || '#fbbc0b'}
                                                             onChange={(color1: Color) => {
                                                                 item.value =
                                                                     typeof color1 === 'string'
@@ -566,7 +566,7 @@ const PresetsCol: React.FC<PresetColProps> = ({
 
                                                                         backgroundColor: item.value
                                                                             ? item.value
-                                                                            : '#fbbc0b',
+                                                                            : getComputedStyle(document.documentElement).getPropertyValue('--bbbeasy-brand-color').trim() || '#fbbc0b',
                                                                     }}
                                                                 />
                                                             </Space>

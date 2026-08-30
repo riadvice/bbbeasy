@@ -39,7 +39,7 @@ class GetFile extends BaseAction
 
         // PDFs must be rendered inline so the room presentation preview (iframe)
         // can display them; everything else keeps the download disposition.
-        $inline = 'pdf' === strtolower(pathinfo($file, PATHINFO_EXTENSION));
+        $inline = 'pdf' === mb_strtolower(pathinfo($file, PATHINFO_EXTENSION));
 
         // @fixme: relative paths must be avoided for security reasons, instead use or create F3 hive properties/config
         return \Web::instance()->send('../uploads/' . $file, null, 0, !$inline);

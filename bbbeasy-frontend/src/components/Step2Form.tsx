@@ -164,7 +164,7 @@ export const Step2Form = (props: Props) => {
                     rules={[
                         {
                             type: 'url',
-                            message: <Trans i18nkey="privacy_policy_url.invalid" />,
+                            message: <Trans i18nKey="privacy_policy_url.invalid" />,
                         },
                     ]}
                 >
@@ -186,20 +186,25 @@ export const Step2Form = (props: Props) => {
                             showUploadList={{ showRemoveIcon: true }}
                             fileList={fileList}
                             accept=".png,.jpg,.jpeg"
-                            beforeUpload={(file: RcFile) => {
-                                if (
-                                    !(
-                                        file.type === 'image/jpg' ||
-                                        file.type === 'image/png' ||
-                                        file.type === 'image/jpeg'
-                                    )
-                                ) {
-                                    message.error(t('wrong_file'));
-                                    return null;
-                                }
+                        beforeUpload={(file: RcFile) => {
+                            if (
+                                !(
+                                    file.type === 'image/jpg' ||
+                                    file.type === 'image/png' ||
+                                    file.type === 'image/jpeg'
+                                )
+                            ) {
+                                message.error(t('wrong_file'));
+                                return null;
+                            }
+                            const maxSize = 5 * 1024 * 1024; // 5MB
+                            if (file.size > maxSize) {
+                                message.error(t('file_too_large'));
+                                return null;
+                            }
 
-                                return false;
-                            }}
+                            return false;
+                        }}
                             onChange={(info) => {
                                 handleChangeFile(info);
                             }}

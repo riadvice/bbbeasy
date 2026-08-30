@@ -152,6 +152,8 @@ class Room extends BaseModel
     /**
      * Normalize a presentation entry (legacy plain name or [name, original]
      * array) into ['name' => stored file name, 'original' => display name].
+     *
+     * @param mixed $entry
      */
     public static function normalizePresentation($entry): array
     {
@@ -168,7 +170,7 @@ class Room extends BaseModel
 
     public function setPresentations(array $presentations): void
     {
-        $this->presentations = json_encode(\array_values($presentations));
+        $this->presentations = json_encode(array_values($presentations));
     }
 
     public function getPresetID($id)

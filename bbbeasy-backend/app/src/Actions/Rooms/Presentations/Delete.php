@@ -54,6 +54,7 @@ class Delete extends BaseAction
         foreach ($list as $i => $entry) {
             if (Room::normalizePresentation($entry)['name'] === $filename) {
                 $index = $i;
+
                 break;
             }
         }

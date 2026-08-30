@@ -202,6 +202,12 @@
     src: url(https://fonts.gstatic.com/s/tajawal/v9/Iurf6YBj_oCad4k1l7KmLrY.ttf) format('truetype');
 }
 :root {
+    --bbbeasy-brand-color: #fbbc0b;
+    --bbbeasy-brand-color-hover: #ffcf33;
+    --bbbeasy-font-size: 14px;
+    --bbbeasy-border-radius: 6px;
+    --bbbeasy-wireframe: 0;
+    --bbbeasy-brand-color-shadow: rgba(251, 188, 11, 0.35);
     --bbbeasy-border-gray: #dddfe1;
     --bbbeasy-lighten-gray: #eff1f2;
     --bbbeasy-medimum-gray: #c6c6c6;
@@ -338,16 +344,16 @@ body.rtl {
     color: red !important;
 }
 .text-color-primary {
-    color: #fbbc0b !important;
+    color: var(--bbbeasy-brand-color) !important;
 }
 .color-primary {
-    background: #1677ff !important;
-    border-color: #1677ff !important;
+    background: var(--bbbeasy-brand-color) !important;
+    border-color: var(--bbbeasy-brand-color) !important;
     color: #ffffff !important;
 }
 .color-primary:hover {
-    background: #4096ff !important;
-    border-color: #4096ff !important;
+    background: var(--bbbeasy-brand-color-hover) !important;
+    border-color: var(--bbbeasy-brand-color-hover) !important;
     color: #ffffff !important;
 }
 .color-blue {
@@ -573,7 +579,7 @@ fieldset {
     padding: 5px 20px !important;
 }
 .profil-btn-dropdown .ant-dropdown-menu-item:hover {
-    color: #fbbc0b !important;
+    color: var(--bbbeasy-brand-color) !important;
     background-color: transparent !important;
 }
 .profil-btn-dropdown .ant-dropdown-menu-item-icon {
@@ -712,7 +718,7 @@ fieldset {
     width: 70%;
 }
 .ant-layout-sider-trigger {
-    background: #fbbc0b;
+    background: var(--bbbeasy-brand-color);
 }
 .site-sider .menu-sider .site-menu {
     height: 100%;
@@ -732,14 +738,14 @@ fieldset {
     color: #ffffff !important;
 }
 .site-sider .sider-new-btn {
-    background: #1677ff !important;
-    border-color: #1677ff !important;
+    background: var(--bbbeasy-brand-color) !important;
+    border-color: var(--bbbeasy-brand-color) !important;
 }
 .site-sider .sider-new-btn:hover,
 .site-sider .sider-new-btn:focus {
-    background: #4096ff !important;
+    background: var(--bbbeasy-brand-color-hover) !important;
     color: #ffffff !important;
-    border-color: #4096ff !important;
+    border-color: var(--bbbeasy-brand-color-hover) !important;
 }
 .site-sider .site-menu .ant-menu-submenu-title .ant-menu-title-content,
 .site-sider .site-menu .ant-menu-item .ant-menu-title-content {
@@ -873,7 +879,7 @@ fieldset {
     margin-bottom: 24px;
     border: 1px solid rgba(96, 165, 250, 0.3);
     background: rgba(59, 130, 246, 0.1);
-    color: #60a5fa;
+    color: var(--bbbeasy-brand-color);
     font-family: 'JetBrains Mono', monospace;
     font-size: 12px;
     letter-spacing: 1.5px;
@@ -886,8 +892,8 @@ fieldset {
     width: 7px;
     height: 7px;
     border-radius: 50%;
-    background: #22d3ee;
-    box-shadow: 0 0 12px #22d3ee;
+    background: var(--bbbeasy-brand-color);
+    box-shadow: 0 0 12px var(--bbbeasy-brand-color);
     animation: tagPulse 1.6s infinite;
 }
 
@@ -938,7 +944,7 @@ fieldset {
 
 .landing-shell .landing-content .color-primary {
     color: #ffffff !important;
-    background: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 55%, #22d3ee 100%) !important;
+    background: linear-gradient(135deg, var(--bbbeasy-brand-color) 0%, var(--bbbeasy-brand-color) 55%, var(--bbbeasy-brand-color) 100%) !important;
 }
 
 .landing-shell .landing-content .ant-btn:hover,
@@ -1393,7 +1399,7 @@ fieldset {
 
 .landing-shell .tab-btn.active {
     color: #fff;
-    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    background: linear-gradient(135deg, var(--bbbeasy-brand-color) 0%, var(--bbbeasy-brand-color) 100%);
     box-shadow: 0 8px 18px rgba(59, 130, 246, 0.34);
 }
 
@@ -1666,7 +1672,7 @@ fieldset {
 }
 
 .gradient-text {
-    background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 55%, #22d3ee 100%);
+    background: linear-gradient(135deg, var(--bbbeasy-brand-color) 0%, var(--bbbeasy-brand-color) 55%, var(--bbbeasy-brand-color) 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -1701,7 +1707,7 @@ fieldset {
     font-size: 22px !important;
     margin-bottom: 18px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #3b82f6 0%, #22d3ee 100%);
+    background: linear-gradient(135deg, var(--bbbeasy-brand-color) 0%, var(--bbbeasy-brand-color) 100%);
     box-shadow: 0 10px 24px rgba(59, 130, 246, 0.28);
     clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%) !important;
 }
@@ -2431,7 +2437,7 @@ fieldset {
     clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%);
     margin-bottom: 20px;
     border-radius: 50%;
-    background: #fbbc0b !important;
+    background: var(--bbbeasy-brand-color);
 }
 .home-guide h4 {
     font-size: 16px !important;
@@ -2491,7 +2497,7 @@ fieldset {
     color: #93c5fd;
 }
 .rooms-cards .anticon-more:hover {
-    color: #fbbc0b;
+    color: var(--bbbeasy-brand-color);
 }
 .rooms-page-header .ant-page-header-heading-title {
     color: #ffffff !important;
@@ -2533,12 +2539,12 @@ fieldset {
     font-size: 22px !important;
     font-weight: 600;
     clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%);
-    background-color: #fbbc0b;
+    background-color: var(--bbbeasy-brand-color);
 }
 .room-card-title .custom-badge-bg {
     -webkit-clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%);
     clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%);
-    background: #fbbc0b;
+    background: var(--bbbeasy-brand-color);
     width: 25px;
     height: 25px;
 }
@@ -2552,7 +2558,7 @@ fieldset {
     left: 1px;
 }
 .custom-badge .anticon {
-    color: #fbbc0b;
+    color: var(--bbbeasy-brand-color);
 }
 .readonly-item input {
     width: 83% !important;
@@ -2591,7 +2597,7 @@ fieldset {
     font-weight: 600;
     clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%);
     border-radius: 50%;
-    background-color: #fbbc0b !important;
+    background-color: var(--bbbeasy-brand-color) !important;
 }
 .room-presentations {
     border-radius: 5px !important;
@@ -2633,7 +2639,7 @@ fieldset {
     font-size: 14px;
     padding: 7px;
     color: white;
-    background: #fbbc0b;
+    background: var(--bbbeasy-brand-color);
     clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%);
     border-radius: 50%;
 }
@@ -2721,7 +2727,7 @@ fieldset {
 .delete-wrap .delete-icon {
     font-size: 35px;
     margin-bottom: 20px;
-    color: #fbbc0b;
+    color: var(--bbbeasy-brand-color);
 }
 .delete-wrap .ant-modal-confirm-title {
     margin-bottom: 10px;
@@ -2751,7 +2757,7 @@ fieldset {
     border-radius: 14px !important;
 }
 .recordings-table .ant-table-thead > tr > th {
-    background: linear-gradient(135deg, #172554 0%, #1d4ed8 100%) !important;
+    background: linear-gradient(135deg, var(--bbbeasy-brand-color) 0%, var(--bbbeasy-brand-color) 100%) !important;
     color: #ffffff !important;
     font-weight: 600;
     letter-spacing: 0.02em;
@@ -2770,7 +2776,7 @@ fieldset {
     color: #ffffff;
 }
 .recordings-table .ant-table-thead > tr > th .ant-table-filter-trigger.active {
-    color: #fbbc0b;
+    color: var(--bbbeasy-brand-color);
 }
 .recordings-table .ant-table-tbody > tr > td {
     background: #0d1b33 !important;
@@ -2795,7 +2801,7 @@ fieldset {
     color: #93c5fd !important;
 }
 .recordings-table .table-actions:not(.editable) a:hover {
-    color: #fbbc0b !important;
+    color: var(--bbbeasy-brand-color) !important;
 }
 .recordings-table .recording-formats .anticon {
     color: #93c5fd;
@@ -2830,8 +2836,8 @@ fieldset {
     color: #93c5fd !important;
 }
 .recordings-table .ant-pagination .ant-pagination-item-active {
-    background: #1d4ed8 !important;
-    border-color: #1d4ed8 !important;
+    background: var(--bbbeasy-brand-color) !important;
+    border-color: var(--bbbeasy-brand-color) !important;
 }
 .recordings-table .ant-pagination .ant-pagination-item-active a {
     color: #ffffff !important;
@@ -2852,7 +2858,7 @@ fieldset {
     border-radius: 14px !important;
 }
 .labels-table .ant-table-thead > tr > th {
-    background: linear-gradient(135deg, #172554 0%, #1d4ed8 100%) !important;
+    background: linear-gradient(135deg, var(--bbbeasy-brand-color) 0%, var(--bbbeasy-brand-color) 100%) !important;
     color: #ffffff !important;
     font-weight: 600;
     letter-spacing: 0.02em;
@@ -2871,7 +2877,7 @@ fieldset {
     color: #ffffff;
 }
 .labels-table .ant-table-thead > tr > th .ant-table-filter-trigger.active {
-    color: #fbbc0b;
+    color: var(--bbbeasy-brand-color);
 }
 .labels-table .ant-table-tbody > tr > td {
     background: #0d1b33 !important;
@@ -2896,7 +2902,7 @@ fieldset {
     color: #93c5fd !important;
 }
 .labels-table .table-actions:not(.editable) a:hover {
-    color: #fbbc0b !important;
+    color: var(--bbbeasy-brand-color) !important;
 }
 .labels-table .ant-input {
     background: #0b1526 !important;
@@ -2920,8 +2926,8 @@ fieldset {
     color: #93c5fd !important;
 }
 .labels-table .ant-pagination .ant-pagination-item-active {
-    background: #1d4ed8 !important;
-    border-color: #1d4ed8 !important;
+    background: var(--bbbeasy-brand-color) !important;
+    border-color: var(--bbbeasy-brand-color) !important;
 }
 .labels-table .ant-pagination .ant-pagination-item-active a {
     color: #ffffff !important;
@@ -2932,7 +2938,7 @@ fieldset {
 }
 .table-actions:not(.editable) a:not(.ant-popover-open):hover,
 .table-actions.editable a:not(.ant-popover-open) {
-    color: #fbbc0b !important;
+    color: var(--bbbeasy-brand-color) !important;
 }
 .table-actions:not(.editable) a {
     color: var(--bbbeasy-medimum-gray) !important;
@@ -3004,7 +3010,7 @@ fieldset {
     display: block !important;
 }
 .search-icon-filtered {
-    color: #fbbc0b;
+    color: var(--bbbeasy-brand-color);
 }
 .search-text-highlighted {
     background: #ffcf33;
@@ -3034,8 +3040,8 @@ fieldset {
     border-color: var(--bbbeasy-medimum-gray);
 }
 .input-editable .ant-input-suffix .cell-input-cancel:hover {
-    color: #fbbc0b !important;
-    border-color: #fbbc0b;
+    color: var(--bbbeasy-brand-color) !important;
+    border-color: var(--bbbeasy-brand-color);
 }
 .cell-input-cancel {
     color: var(--bbbeasy-medimum-gray) !important;
@@ -3049,7 +3055,7 @@ fieldset {
 }
 .cell-edit-icon:hover,
 .edit-btn:hover {
-    color: #fbbc0b !important;
+    color: var(--bbbeasy-brand-color) !important;
 }
 .select-field .ant-select-selection-item {
     text-transform: capitalize;
@@ -3124,7 +3130,7 @@ fieldset {
     font-size: 20px;
 }
 .presets-cards .ant-card-head .anticon-more:hover {
-    color: #fbbc0b;
+    color: var(--bbbeasy-brand-color);
 }
 .presets-cards .preset-card-title .input-editable .ant-input {
     background: #0b1526 !important;
@@ -3146,7 +3152,7 @@ fieldset {
     font-size: 40px !important;
     padding: 20px !important;
     color: white !important;
-    background: #fbbc0b;
+    background: var(--bbbeasy-brand-color);
     clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%);
     border-radius: 50%;
 }
@@ -3163,21 +3169,21 @@ fieldset {
     display: flex;
 }
 .modal-submit-btn .ant-btn-primary {
-    background: #1677ff !important;
-    border-color: #1677ff !important;
+    background: var(--bbbeasy-brand-color) !important;
+    border-color: var(--bbbeasy-brand-color) !important;
     color: #ffffff !important;
 }
 .modal-submit-btn .ant-btn-primary:hover,
 .modal-submit-btn .ant-btn-primary:focus {
-    background: #4096ff !important;
-    border-color: #4096ff !important;
+    background: var(--bbbeasy-brand-color-hover) !important;
+    border-color: var(--bbbeasy-brand-color-hover) !important;
     color: #ffffff !important;
 }
 
 .ant-page-header .ant-btn-primary,
 .site-page-header .ant-btn-primary {
-    background: #1677ff !important;
-    border-color: #1677ff !important;
+    background: var(--bbbeasy-brand-color) !important;
+    border-color: var(--bbbeasy-brand-color) !important;
     color: #ffffff !important;
 }
 
@@ -3185,8 +3191,8 @@ fieldset {
 .ant-page-header .ant-btn-primary:focus,
 .site-page-header .ant-btn-primary:hover,
 .site-page-header .ant-btn-primary:focus {
-    background: #4096ff !important;
-    border-color: #4096ff !important;
+    background: var(--bbbeasy-brand-color-hover) !important;
+    border-color: var(--bbbeasy-brand-color-hover) !important;
     color: #ffffff !important;
 }
 .install-form .ant-card-body {
@@ -3281,7 +3287,7 @@ fieldset {
     font-size: 18px !important;
     padding: 10px;
     color: white;
-    background: #fbbc0b;
+    background: var(--bbbeasy-brand-color) !important;
     clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%);
     border-radius: 50%;
 }
@@ -3361,13 +3367,13 @@ fieldset {
 }
 .profile-form .bbbeasy-btn {
     clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%);
-    background-color: #fbbc0b;
+    background-color: var(--bbbeasy-brand-color);
     color: black;
 }
 .profile-form .custom-badge-bg {
     -webkit-clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%);
     clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%);
-    background: #fbbc0b;
+    background: var(--bbbeasy-brand-color);
     font-size: 19px !important;
     margin-top: 16px;
     right: 32px !important;
@@ -3487,7 +3493,7 @@ fieldset {
     color: var(--bbbeasy-medimum-gray) !important;
 }
 .edit-button-color:hover {
-    color: #fbbc0b !important;
+    color: var(--bbbeasy-brand-color) !important;
 }
 .labels-table a.delete-button-color {
     color: #93c5fd !important;
@@ -3499,7 +3505,7 @@ fieldset {
     color: #93c5fd !important;
 }
 .labels-table a.edit-button-color:hover {
-    color: #fbbc0b !important;
+    color: var(--bbbeasy-brand-color) !important;
 }
 .recordings-table .table-actions:not(.editable) a.delete-button-color:hover {
     color: #ff4d4f !important;
@@ -3696,13 +3702,13 @@ div.error-message-Label {
     color: #93c5fd !important;
 }
 .room-details .edit-btn:hover {
-    color: #fbbc0b !important;
+    color: var(--bbbeasy-brand-color) !important;
 }
 .room-details .medias .anticon {
     color: #93c5fd !important;
 }
 .room-details .medias .anticon:hover {
-    color: #fbbc0b !important;
+    color: var(--bbbeasy-brand-color) !important;
 }
 .room-details .medias .social-icon {
     width: 20px !important;
@@ -3900,7 +3906,7 @@ div.error-message-Label {
     color: #93c5fd !important;
 }
 .add-modal.large-modal .ant-modal-close:hover {
-    color: #fbbc0b !important;
+    color: var(--bbbeasy-brand-color) !important;
 }
 .add-modal.large-modal .ant-form-item-label label {
     color: #cbd5e1 !important;
@@ -3928,7 +3934,7 @@ div.error-message-Label {
     color: #93c5fd !important;
 }
 .add-modal.large-modal .readonly-item button:hover {
-    color: #fbbc0b !important;
+    color: var(--bbbeasy-brand-color) !important;
 }
 .add-modal.large-modal .ant-select-selector {
     background: #0b1526 !important;
@@ -3952,14 +3958,14 @@ div.error-message-Label {
     color: #ffffff !important;
 }
 .add-modal.large-modal .ant-btn-primary {
-    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
-    border-color: #2563eb !important;
+    background: linear-gradient(135deg, var(--bbbeasy-brand-color) 0%, var(--bbbeasy-brand-color) 100%) !important;
+    border-color: var(--bbbeasy-brand-color) !important;
     box-shadow: 0 6px 18px rgba(37, 99, 235, 0.35);
 }
 .add-modal.large-modal .ant-btn-primary:hover,
 .add-modal.large-modal .ant-btn-primary:focus {
-    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
-    border-color: #3b82f6 !important;
+    background: linear-gradient(135deg, var(--bbbeasy-brand-color) 0%, var(--bbbeasy-brand-color) 100%) !important;
+    border-color: var(--bbbeasy-brand-color) !important;
 }
 /* Blurred dark mask behind the New Room modal */
 .ant-modal-root:has(.ant-modal.add-modal.large-modal) > .ant-modal-mask {
@@ -3991,7 +3997,7 @@ div.error-message-Label {
 }
 .preset-add-modal .ant-modal-close:hover,
 .label-add-modal .ant-modal-close:hover {
-    color: #fbbc0b !important;
+    color: var(--bbbeasy-brand-color) !important;
 }
 .preset-add-modal .ant-form-item-label label,
 .label-add-modal .ant-form-item-label label {
@@ -4030,16 +4036,16 @@ div.error-message-Label {
 }
 .preset-add-modal .ant-btn-primary,
 .label-add-modal .ant-btn-primary {
-    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
-    border-color: #2563eb !important;
+    background: linear-gradient(135deg, var(--bbbeasy-brand-color) 0%, var(--bbbeasy-brand-color) 100%) !important;
+    border-color: var(--bbbeasy-brand-color) !important;
     box-shadow: 0 6px 18px rgba(37, 99, 235, 0.35);
 }
 .preset-add-modal .ant-btn-primary:hover,
 .preset-add-modal .ant-btn-primary:focus,
 .label-add-modal .ant-btn-primary:hover,
 .label-add-modal .ant-btn-primary:focus {
-    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
-    border-color: #3b82f6 !important;
+    background: linear-gradient(135deg, var(--bbbeasy-brand-color) 0%, var(--bbbeasy-brand-color) 100%) !important;
+    border-color: var(--bbbeasy-brand-color) !important;
 }
 /* Blurred dark mask behind the New Preset / New Label modals */
 .ant-modal-root:has(.ant-modal.preset-add-modal) > .ant-modal-mask,
@@ -4067,7 +4073,7 @@ div.error-message-Label {
     color: #93c5fd !important;
 }
 .user-add-modal .ant-modal-close:hover {
-    color: #fbbc0b !important;
+    color: var(--bbbeasy-brand-color) !important;
 }
 .user-add-modal .ant-form-item-label label {
     color: #cbd5e1 !important;
@@ -4107,7 +4113,7 @@ div.error-message-Label {
     font-size: 15px;
 }
 .user-add-modal .ant-input-password-icon:hover {
-    color: #fbbc0b !important;
+    color: var(--bbbeasy-brand-color) !important;
 }
 /* Reset the installer padding on the password Form.Item so the field
    has exactly the same width as the email field */
@@ -4137,14 +4143,14 @@ div.error-message-Label {
     color: #ffffff !important;
 }
 .user-add-modal .ant-btn-primary {
-    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
-    border-color: #2563eb !important;
+    background: linear-gradient(135deg, var(--bbbeasy-brand-color) 0%, var(--bbbeasy-brand-color) 100%) !important;
+    border-color: var(--bbbeasy-brand-color) !important;
     box-shadow: 0 6px 18px rgba(37, 99, 235, 0.35);
 }
 .user-add-modal .ant-btn-primary:hover,
 .user-add-modal .ant-btn-primary:focus {
-    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
-    border-color: #3b82f6 !important;
+    background: linear-gradient(135deg, var(--bbbeasy-brand-color) 0%, var(--bbbeasy-brand-color) 100%) !important;
+    border-color: var(--bbbeasy-brand-color) !important;
 }
 /* Blurred dark mask behind the New User modal */
 .ant-modal-root:has(.ant-modal.user-add-modal) > .ant-modal-mask {
@@ -4272,7 +4278,7 @@ div.error-message-Label {
     font-weight: 600;
 }
 .preset-settings-row .presets-grid .PresetIcon {
-    box-shadow: 0 4px 14px rgba(251, 188, 11, 0.35);
+    box-shadow: 0 4px 14px var(--bbbeasy-brand-color-shadow);
 }
 /* Preset settings modal (scoped to this page only) */
 .ant-modal-root:has(.ant-modal.preset-settings-modal) .ant-modal-content {
@@ -4293,8 +4299,8 @@ div.error-message-Label {
     border: 1px solid rgba(96, 165, 250, 0.4) !important;
 }
 .ant-modal-root:has(.ant-modal.preset-settings-modal) .ant-switch-checked {
-    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
-    border-color: #2563eb !important;
+    background: linear-gradient(135deg, var(--bbbeasy-brand-color) 0%, var(--bbbeasy-brand-color) 100%) !important;
+    border-color: var(--bbbeasy-brand-color) !important;
     box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
 }
 .ant-modal-root:has(.ant-modal.preset-settings-modal) .ant-switch .ant-switch-handle::before,
@@ -4337,7 +4343,7 @@ div.error-message-Label {
     border-radius: 14px !important;
 }
 .users-table .ant-table-thead > tr > th {
-    background: linear-gradient(135deg, #172554 0%, #1d4ed8 100%) !important;
+    background: linear-gradient(135deg, var(--bbbeasy-brand-color) 0%, var(--bbbeasy-brand-color) 100%) !important;
     color: #ffffff !important;
     font-weight: 600;
     letter-spacing: 0.02em;
@@ -4356,7 +4362,7 @@ div.error-message-Label {
     color: #ffffff;
 }
 .users-table .ant-table-thead > tr > th .ant-table-filter-trigger.active {
-    color: #fbbc0b;
+    color: var(--bbbeasy-brand-color);
 }
 .users-table .ant-table-tbody > tr > td {
     background: #0d1b33 !important;
@@ -4381,7 +4387,7 @@ div.error-message-Label {
     color: #93c5fd !important;
 }
 .users-table a.edit-button-color:hover {
-    color: #fbbc0b !important;
+    color: var(--bbbeasy-brand-color) !important;
 }
 .users-table a.delete-button-color {
     color: #93c5fd !important;
@@ -4411,8 +4417,8 @@ div.error-message-Label {
     color: #93c5fd !important;
 }
 .users-table .ant-pagination .ant-pagination-item-active {
-    background: #1d4ed8 !important;
-    border-color: #1d4ed8 !important;
+    background: var(--bbbeasy-brand-color) !important;
+    border-color: var(--bbbeasy-brand-color) !important;
 }
 .users-table .ant-pagination .ant-pagination-item-active a {
     color: #ffffff !important;
@@ -4476,8 +4482,8 @@ div.error-message-Label {
     color: #cbd5e1 !important;
 }
 .ant-modal-root:has(.ant-modal.preset-settings-modal) .ant-modal-footer .ant-btn-primary {
-    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
-    border-color: #2563eb !important;
+    background: linear-gradient(135deg, var(--bbbeasy-brand-color) 0%, var(--bbbeasy-brand-color) 100%) !important;
+    border-color: var(--bbbeasy-brand-color) !important;
 }
 .ant-modal-root:has(.ant-modal.preset-settings-modal) > .ant-modal-mask {
     background-color: rgba(2, 6, 23, 0.55) !important;
@@ -4508,7 +4514,7 @@ div.error-message-Label {
     border-radius: 14px !important;
 }
 .roles-table .ant-table-thead > tr > th {
-    background: linear-gradient(135deg, #172554 0%, #1d4ed8 100%) !important;
+    background: linear-gradient(135deg, var(--bbbeasy-brand-color) 0%, var(--bbbeasy-brand-color) 100%) !important;
     color: #ffffff !important;
     font-weight: 600;
     letter-spacing: 0.02em;
@@ -4527,7 +4533,7 @@ div.error-message-Label {
     color: #ffffff;
 }
 .roles-table .ant-table-thead > tr > th .ant-table-filter-trigger.active {
-    color: #fbbc0b;
+    color: var(--bbbeasy-brand-color);
 }
 .roles-table .ant-table-tbody > tr > td {
     background: #0d1b33 !important;
@@ -4553,7 +4559,7 @@ div.error-message-Label {
     color: #93c5fd !important;
 }
 .roles-table .table-actions a.permissions-link:hover {
-    color: #fbbc0b !important;
+    color: var(--bbbeasy-brand-color) !important;
 }
 .roles-table a.delete-button-color:hover {
     color: #ff4d4f !important;
@@ -4580,8 +4586,8 @@ div.error-message-Label {
     color: #93c5fd !important;
 }
 .roles-table .ant-pagination .ant-pagination-item-active {
-    background: #1d4ed8 !important;
-    border-color: #1d4ed8 !important;
+    background: var(--bbbeasy-brand-color) !important;
+    border-color: var(--bbbeasy-brand-color) !important;
 }
 .roles-table .ant-pagination .ant-pagination-item-active a {
     color: #ffffff !important;
@@ -4643,8 +4649,8 @@ div.error-message-Label {
 }
 .roles-table .ant-table-expanded-row .ant-checkbox-checked .ant-checkbox-inner,
 .roles-add-modal .bordered-card .ant-checkbox-checked .ant-checkbox-inner {
-    background-color: #2563eb !important;
-    border-color: #2563eb !important;
+    background-color: var(--bbbeasy-brand-color) !important;
+    border-color: var(--bbbeasy-brand-color) !important;
 }
 .roles-table .ant-table-expanded-row .ant-checkbox-checked .ant-checkbox-inner::after,
 .roles-add-modal .bordered-card .ant-checkbox-checked .ant-checkbox-inner::after {
@@ -4656,8 +4662,8 @@ div.error-message-Label {
     color: #cbd5e1 !important;
 }
 .roles-table .ant-table-expanded-row .actions-expanded .ant-btn-primary {
-    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
-    border-color: #2563eb !important;
+    background: linear-gradient(135deg, var(--bbbeasy-brand-color) 0%, var(--bbbeasy-brand-color) 100%) !important;
+    border-color: var(--bbbeasy-brand-color) !important;
 }
 /* New Role modal - blue design (same as other add modals) */
 .roles-add-modal .ant-modal-content {
@@ -4678,7 +4684,7 @@ div.error-message-Label {
     color: #93c5fd !important;
 }
 .roles-add-modal .ant-modal-close:hover {
-    color: #fbbc0b !important;
+    color: var(--bbbeasy-brand-color) !important;
 }
 .roles-add-modal .ant-form-item-label label {
     color: #cbd5e1 !important;
@@ -4702,14 +4708,14 @@ div.error-message-Label {
     color: #ffffff !important;
 }
 .roles-add-modal .ant-btn-primary {
-    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
-    border-color: #2563eb !important;
+    background: linear-gradient(135deg, var(--bbbeasy-brand-color) 0%, var(--bbbeasy-brand-color) 100%) !important;
+    border-color: var(--bbbeasy-brand-color) !important;
     box-shadow: 0 6px 18px rgba(37, 99, 235, 0.35);
 }
 .roles-add-modal .ant-btn-primary:hover,
 .roles-add-modal .ant-btn-primary:focus {
-    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
-    border-color: #3b82f6 !important;
+    background: linear-gradient(135deg, var(--bbbeasy-brand-color) 0%, var(--bbbeasy-brand-color) 100%) !important;
+    border-color: var(--bbbeasy-brand-color) !important;
 }
 .roles-add-modal .ant-form-item-label > label {
     color: #cbd5e1 !important;
@@ -4749,8 +4755,8 @@ div.error-message-Label {
     border: 1px solid rgba(96, 165, 250, 0.4) !important;
 }
 .administration-page .ant-switch-checked {
-    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
-    border-color: #2563eb !important;
+    background: linear-gradient(135deg, var(--bbbeasy-brand-color) 0%, var(--bbbeasy-brand-color) 100%) !important;
+    border-color: var(--bbbeasy-brand-color) !important;
     box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
 }
 .administration-page .ant-switch .ant-switch-handle::before,
@@ -4758,15 +4764,15 @@ div.error-message-Label {
     background-color: #ffffff !important;
 }
 .administration-page #submit-btn {
-    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
-    border-color: #2563eb !important;
+    background: linear-gradient(135deg, var(--bbbeasy-brand-color) 0%, var(--bbbeasy-brand-color) 100%) !important;
+    border-color: var(--bbbeasy-brand-color) !important;
     color: #ffffff !important;
     box-shadow: 0 6px 18px rgba(37, 99, 235, 0.35);
 }
 .administration-page #submit-btn:hover,
 .administration-page #submit-btn:focus {
-    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
-    border-color: #3b82f6 !important;
+    background: linear-gradient(135deg, var(--bbbeasy-brand-color) 0%, var(--bbbeasy-brand-color) 100%) !important;
+    border-color: var(--bbbeasy-brand-color) !important;
     color: #ffffff !important;
 }
 /*****************PRESETS EDIT POPUP - BLUE DESIGN*****************/
@@ -4794,8 +4800,8 @@ div.error-message-Label {
     border: 1px solid rgba(96, 165, 250, 0.4) !important;
 }
 .ant-modal-root:has(.ant-modal.presets-edit-modal) .ant-switch-checked {
-    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
-    border-color: #2563eb !important;
+    background: linear-gradient(135deg, var(--bbbeasy-brand-color) 0%, var(--bbbeasy-brand-color) 100%) !important;
+    border-color: var(--bbbeasy-brand-color) !important;
     box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
 }
 .ant-modal-root:has(.ant-modal.presets-edit-modal) .ant-switch .ant-switch-handle::before,
@@ -4854,14 +4860,14 @@ div.error-message-Label {
     color: #ffffff !important;
 }
 .ant-modal-root:has(.ant-modal.presets-edit-modal) .button-container .ant-btn-primary {
-    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
-    border-color: #2563eb !important;
+    background: linear-gradient(135deg, var(--bbbeasy-brand-color) 0%, var(--bbbeasy-brand-color) 100%) !important;
+    border-color: var(--bbbeasy-brand-color) !important;
     box-shadow: 0 6px 18px rgba(37, 99, 235, 0.35);
 }
 .ant-modal-root:has(.ant-modal.presets-edit-modal) .button-container .ant-btn-primary:hover,
 .ant-modal-root:has(.ant-modal.presets-edit-modal) .button-container .ant-btn-primary:focus {
-    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
-    border-color: #3b82f6 !important;
+    background: linear-gradient(135deg, var(--bbbeasy-brand-color) 0%, var(--bbbeasy-brand-color) 100%) !important;
+    border-color: var(--bbbeasy-brand-color) !important;
 }
 .ant-modal-root:has(.ant-modal.presets-edit-modal) > .ant-modal-mask {
     background-color: rgba(2, 6, 23, 0.55) !important;
@@ -5271,3 +5277,29 @@ div.error-message-Label {
         transition: none !important;
     }
 }
+
+/* Dynamic theme settings from Branding */
+body {
+    font-size: var(--bbbeasy-font-size) !important;
+}
+
+.ant-btn,
+.ant-input,
+.ant-select-selector,
+.ant-picker {
+    border-radius: var(--bbbeasy-border-radius) !important;
+}
+
+/* Wireframe style */
+[data-wireframe="1"] .ant-btn {
+    background: transparent !important;
+    border: 1px solid var(--bbbeasy-brand-color) !important;
+    color: var(--bbbeasy-brand-color) !important;
+}
+
+[data-wireframe="1"] .ant-btn-primary {
+    background: var(--bbbeasy-brand-color);
+    color: white !important;
+}
+
+
