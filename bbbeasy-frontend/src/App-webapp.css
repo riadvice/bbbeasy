@@ -3332,6 +3332,10 @@ fieldset {
 .page-not-found {
     padding: 60px 32px !important;
 }
+.page-not-found .ant-result-title,
+.page-not-found .ant-result-subtitle {
+    color: #ffffff !important;
+}
 /**********************NOTIFICATIONS*******************/
 .progress-bar {
     height: 8px;

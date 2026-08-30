@@ -158,23 +158,82 @@ const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
                             document.head.appendChild(styleEl);
                         }
                         styleEl.textContent = `
-                            .ant-btn-primary.ant-btn-color-primary {
+                            /* Primary solid buttons only */
+                            .ant-btn-primary.ant-btn-color-primary.ant-btn-variant-solid {
                                 background-color: ${settings.brand_color} !important;
                                 border-color: ${settings.brand_color} !important;
+                                color: #ffffff !important;
                                 box-shadow: 0 2px 0 ${settings.brand_color}33 !important;
                             }
-                            .ant-btn-primary.ant-btn-color-primary:hover,
-                            .ant-btn-primary.ant-btn-color-primary:focus {
+                            .ant-btn-primary.ant-btn-color-primary.ant-btn-variant-solid:hover,
+                            .ant-btn-primary.ant-btn-color-primary.ant-btn-variant-solid:focus {
                                 background-color: ${settings.brand_color}cc !important;
                                 border-color: ${settings.brand_color}cc !important;
                             }
-                            .ant-btn-primary.ant-btn-color-primary:active {
+                            .ant-btn-primary.ant-btn-color-primary.ant-btn-variant-solid:active {
                                 background-color: ${settings.brand_color}99 !important;
                                 border-color: ${settings.brand_color}99 !important;
                             }
+                            /* Ghost primary buttons - transparent bg, white icons */
+                            .ant-btn-background-ghost.ant-btn-primary {
+                                background: transparent !important;
+                                border-color: ${settings.brand_color} !important;
+                                color: #ffffff !important;
+                            }
+                            .ant-btn-background-ghost.ant-btn-primary .anticon,
+                            .ant-btn-background-ghost.ant-btn-primary .icon-bbbeasy-mp4,
+                            .ant-btn-background-ghost.ant-btn-primary .icon-bbbeasy-playback-podcast,
+                            .ant-btn-background-ghost.ant-btn-primary .icon-bbbeasy-playback-presentation,
+                            .ant-btn-background-ghost.ant-btn-primary .icon-bbbeasy-activity-reports {
+                                color: #ffffff !important;
+                            }
+                            .ant-btn-background-ghost.ant-btn-primary:hover,
+                            .ant-btn-background-ghost.ant-btn-primary:focus {
+                                color: #ffffff !important;
+                                border-color: ${settings.brand_color}cc !important;
+                                background: ${settings.brand_color}1a !important;
+                            }
+                            .ant-btn-background-ghost.ant-btn-primary:hover .anticon,
+                            .ant-btn-background-ghost.ant-btn-primary:focus .anticon,
+                            .ant-btn-background-ghost.ant-btn-primary:hover .icon-bbbeasy-mp4,
+                            .ant-btn-background-ghost.ant-btn-primary:focus .icon-bbbeasy-mp4,
+                            .ant-btn-background-ghost.ant-btn-primary:hover .icon-bbbeasy-playback-podcast,
+                            .ant-btn-background-ghost.ant-btn-primary:focus .icon-bbbeasy-playback-podcast,
+                            .ant-btn-background-ghost.ant-btn-primary:hover .icon-bbbeasy-activity-reports,
+                            .ant-btn-background-ghost.ant-btn-primary:focus .icon-bbbeasy-activity-reports {
+                                color: #ffffff !important;
+                            }
+                            /* Sider New button */
+                            button.sider-new-btn,
+                            .ant-dropdown-trigger.sider-new-btn {
+                                background: ${settings.brand_color} !important;
+                                border-color: ${settings.brand_color} !important;
+                                color: #ffffff !important;
+                            }
+                            button.sider-new-btn:hover,
+                            button.sider-new-btn:focus,
+                            .ant-dropdown-trigger.sider-new-btn:hover,
+                            .ant-dropdown-trigger.sider-new-btn:focus {
+                                background: ${settings.brand_color}cc !important;
+                                border-color: ${settings.brand_color}cc !important;
+                                color: #ffffff !important;
+                            }
+                            /* Back to Home button */
+                            .color-blue {
+                                background: ${settings.brand_color} !important;
+                                border-color: ${settings.brand_color} !important;
+                                color: #ffffff !important;
+                            }
+                            .color-blue:hover,
+                            .color-blue:focus {
+                                background: ${settings.brand_color}cc !important;
+                                border-color: ${settings.brand_color}cc !important;
+                            }
+                            /* Sider trigger */
                             .ant-layout-sider-trigger {
                                 background: ${settings.brand_color} !important;
                             }
+                            /* Menu selected */
                             .ant-menu-item-selected,
                             .ant-menu-submenu-selected > .ant-menu-submenu-title {
                                 color: ${settings.brand_color} !important;
