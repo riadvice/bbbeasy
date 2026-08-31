@@ -570,6 +570,16 @@ fieldset {
     border-radius: 50% !important;
     transition: transform 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
 }
+.site-header .profil-avatar {
+    clip-path: none !important;
+    border-radius: 50% !important;
+    overflow: hidden;
+    cursor: pointer;
+    border: 2px solid var(--bbbeasy-brand-color);
+}
+.site-header .profil-avatar img {
+    object-fit: cover;
+}
 .site-header .profil-btn:hover,
 .site-header .profil-btn:focus {
     color: #38bdf8 !important;
@@ -3368,6 +3378,14 @@ fieldset {
 /***********************PROFILE***********************************/
 .site-page-form {
     padding: 16px 24px !important;
+}
+.profile-page-header .ant-page-header-heading-title,
+.profile-form .ant-form-item-label > label,
+.profile-form .ant-typography,
+.profile-form h2,
+.profile-form h3,
+.profile-form h4 {
+    color: #ffffff !important;
 }
 .profile-form .bbbeasy-btn {
     clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%);

@@ -66,6 +66,7 @@ class SaveLogo extends BaseAction
         if (DataUtils::validateImageFormat($format, $validFormats)) {
             // correct
             \Web::instance()->receive();
+            $this->renderJson(['result' => 'success'], ResponseCode::HTTP_OK);
         } else {
             $this->logger->error($errorMessage, ['error' => 'invalid file format : ' . $format]);
             $this->renderJson(['message' => 'invalid file format'], ResponseCode::HTTP_PRECONDITION_FAILED);

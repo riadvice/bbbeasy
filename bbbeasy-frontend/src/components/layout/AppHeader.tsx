@@ -35,6 +35,7 @@ import {
     Divider,
     Form,
     Badge,
+    Avatar,
 } from 'antd';
 import { SearchOutlined, GlobalOutlined, UserOutlined, LogoutOutlined, WarningOutlined } from '@ant-design/icons';
 
@@ -293,7 +294,11 @@ const AppHeader = () => {
                                     arrow
                                     trigger={['click']}
                                 >
-                                    <Button type="primary" icon={<UserOutlined />} className="profil-btn" />
+                                    <Avatar
+                                        className="profil-btn profil-avatar"
+                                        src={activeUser?.avatar || undefined}
+                                        icon={<UserOutlined />}
+                                    />
                                 </Dropdown>
                                 {dropdownLang}
                             </Space>

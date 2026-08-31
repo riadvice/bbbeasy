@@ -72,7 +72,9 @@ class Edit extends BaseAction
                 if ($user->verifyPassword($current_password)) {
                     if ($this->credentialsAreValid($username, $email, $new_password, $errorMessage, $id)) {
                         if ($updateAvatar) {
-                            if (!DataUtils::validateImageFormat($avatar)) {
+                            // Accept base64 data URLs directly (avatar stored inline)
+                            $isBase64 = 0 === strpos($avatar, 'data:image/');
+                            if (!$isBase64 && !DataUtils::validateImageFormat($avatar)) {
                                 $this->logger->error($errorMessage, ['errors' => 'invalid file format']);
 
                                 $this->renderJson(['message' => 'invalid file format'], ResponseCode::HTTP_PRECONDITION_FAILED);
@@ -82,7 +84,9 @@ class Edit extends BaseAction
                         }
                         $user->username = $username;
                         $user->email    = $email;
-                        $user->avatar   = $avatar;
+                        if ($updateAvatar) {
+                            $user->avatar = $avatar;
+                        }
                         if ($updatePassword) {
                             $user->password = $new_password;
                         }
