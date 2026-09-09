@@ -22,8 +22,10 @@ declare(strict_types=1);
 
 namespace Models;
 
+use Enum\Presets\Audio;
 use Enum\Presets\General;
 use Enum\Presets\Layout;
+use Enum\Presets\Recording;
 use Models\Base as BaseModel;
 
 /**
@@ -40,6 +42,22 @@ class PresetSetting extends BaseModel
 {
     protected const GROUP_NAME = 'GROUP_NAME';
     protected $table           = 'preset_settings';
+
+    /**
+     * Settings enabled out of the box, so a fresh installation can host a meeting
+     * that guests are able to join without any further configuration.
+     */
+    private const DEFAULT_ENABLED_SETTINGS = [
+        General::ANYONE_CAN_START,
+        General::OPEN_FOR_EVERYONE,
+        General::DURATION,
+        General::MAXIMUM_PARTICIPANTS,
+        General::WELCOME,
+        Audio::USERS_JOIN_MUTED,
+        Audio::MODERATORS_ALLOWED_TO_UNMUTE_USERS,
+        Recording::RECORD,
+        Recording::ALLOW_START_STOP,
+    ];
 
     public function getDefaultPresetSettings($enabled = false): array
     {
@@ -63,7 +81,7 @@ class PresetSetting extends BaseModel
                         $subCategory     = $class->getConstant($attributeName);
                         $subCategoryData = [
                             'name'    => $subCategory,
-                            'enabled' => (Layout::GROUP_NAME === $categoryName || General::ANYONE_CAN_START === $subCategory) ? true : $enabled,
+                            'enabled' => (Layout::GROUP_NAME === $categoryName || \in_array($subCategory, self::DEFAULT_ENABLED_SETTINGS, true)) ? true : $enabled,
                         ];
                         $categoryData['subcategories'][] = $subCategoryData;
                     }
