@@ -33,6 +33,28 @@ use Sukarix\Models\Model;
 abstract class Base extends Model
 {
     /**
+     * Reload the record after an insert.
+     *
+     * PostgreSQL identity columns carry no nextval default, so Fat-Free does not
+     * recognise them as auto increment. The reload it runs itself after an insert
+     * then filters on the identifier the record had before the insert, matches
+     * nothing and leaves the whole record blank in memory, defaults included.
+     *
+     * @return mixed
+     */
+    public function insert()
+    {
+        $result = parent::insert();
+
+        $id = $this->mapper->get('_id');
+        if (!$this->valid() && $id) {
+            $this->load(['id = ?', $id]);
+        }
+
+        return $result;
+    }
+
+    /**
      * Add an identifier exclusion to a filter. Comparing to a null identifier
      * never matches in SQL and would silently disable the whole filter, which
      * makes every uniqueness check pass while creating a record.
