@@ -498,6 +498,7 @@ const PresetsCol: React.FC<PresetColProps> = ({
                                     }
                                     disabled={!item.enabled}
                                     type="link"
+                                    aria-label={t(category)}
                                     icon={<DynamicIcon type={getIconName(item.name)} className={'PresetIcon'} />}
                                 />
                             </Tooltip>

@@ -3174,6 +3174,12 @@ fieldset {
 .install-tooltip h5 {
     margin: 0.25em 0 !important;
 }
+/* The typography default is the dark page text, which vanishes on the dark
+   tooltip the category names are shown in. */
+.install-tooltip h5.ant-typography,
+.title-tooltip h5.ant-typography {
+    color: #ffffff !important;
+}
 .presets-cards {
     padding-top: 16px;
 }
