@@ -37,6 +37,11 @@ use Models\Base as BaseModel;
  */
 class Label extends BaseModel
 {
+    /**
+     * Colours are stored and compared as a six digit hexadecimal value.
+     */
+    final public const COLOR_PATTERN = '/^#[0-9a-fA-F]{6}$/';
+
     protected $table = 'labels';
 
     public function __construct($db = null, $table = null, $fluid = null, $ttl = 0)
@@ -86,6 +91,31 @@ class Label extends BaseModel
     public function colorExists(string $color, $id = null)
     {
         return $this->load($this->excludeId(['color = ?', $color], $id));
+    }
+
+    public function nameExists(string $name, $id = null): bool
+    {
+        return $this->load($this->excludeId(['lower(name) = ?', mb_strtolower(mb_trim($name))], $id));
+    }
+
+    /**
+     * Names and colours are both unique, returns one message per value already taken.
+     *
+     * @param null|mixed $id
+     */
+    public function uniquenessErrors(string $name, string $color, $id = null): array
+    {
+        $errors = [];
+
+        if (new self()->nameExists($name, $id)) {
+            $errors['name'] = 'Label name already exists';
+        }
+
+        if (new self()->colorExists($color, $id)) {
+            $errors['color'] = 'Label color already exists';
+        }
+
+        return $errors;
     }
 
     public function getAllLabels()

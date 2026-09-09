@@ -42,24 +42,20 @@ class Add extends BaseAction
         $body = $this->getDecodedBody();
         $form = $body['data'];
 
-        $errorMessage      = 'Label could not be added';
-        $nameErrorMessage  = 'Label name already exists';
-        $colorErrorMessage = 'Label color already exists';
+        $errorMessage = 'Label could not be added';
 
         $dataChecker = new DataChecker();
         $dataChecker->verify($form['name'], Validator::notEmpty()->setName('name'));
         $dataChecker->verify($form['name'], Validator::length(1, 32)->setName('name'));
-        $dataChecker->verify($form['color'], Validator::notEmpty()->setName('color'));
+        $dataChecker->verify($form['color'], Validator::notEmpty()->regex(Label::COLOR_PATTERN)->setName('color'));
 
         if ($dataChecker->allValid()) {
-            $label      = new Label();
-            $colorExist = $label->colorExists($form['color']);
+            $label  = new Label();
+            $errors = $label->uniquenessErrors($form['name'], $form['color']);
 
-            if ($colorExist) {
-                $message = ['color' => $colorErrorMessage];
-
-                $this->logger->error($errorMessage, ['errors' => $message]);
-                $this->renderJson(['errors' => $message], ResponseCode::HTTP_PRECONDITION_FAILED);
+            if ($errors) {
+                $this->logger->error($errorMessage, ['errors' => $errors]);
+                $this->renderJson(['errors' => $errors], ResponseCode::HTTP_PRECONDITION_FAILED);
 
                 return;
             }

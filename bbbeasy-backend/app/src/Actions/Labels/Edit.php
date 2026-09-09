@@ -47,36 +47,28 @@ class Edit extends BaseAction
         $body = $this->getDecodedBody();
         $form = $body['data'];
 
-        $id                = $params['id'];
-        $label             = $this->loadData($id);
-        $errorMessage      = 'Label could not be updated';
-        $nameErrorMessage  = 'Label name already exists';
-        $colorErrorMessage = 'Label color already exists';
+        $id           = $params['id'];
+        $label        = $this->loadData($id);
+        $errorMessage = 'Label could not be updated';
         if ($label->valid()) {
             $dataChecker = new DataChecker();
             $dataChecker->verify($form['name'], Validator::notEmpty()->setName('name'));
             $dataChecker->verify($form['name'], Validator::length(1, 32)->setName('name'));
-            $dataChecker->verify($form['color'], Validator::notEmpty()->setName('color'));
+            $dataChecker->verify($form['color'], Validator::notEmpty()->regex(Label::COLOR_PATTERN)->setName('color'));
 
             if ($dataChecker->allValid()) {
-                $checkLabel         = new Label();
-                $label->name        = $form['name'];
-                $label->description = $form['description'];
-                $label->color       = $form['color'];
+                $errors = new Label()->uniquenessErrors($form['name'], $form['color'], $id);
 
-                $colorExist = $checkLabel->colorExists($form['color'], $id);
-                // @fixme: ambiguous double cehck for $colorExist
-                if ($colorExist) {
-                    if ($colorExist) {
-                        $message = ['name' => $nameErrorMessage, 'color' => $colorErrorMessage];
-                    } else {
-                        $message = ['color' => $colorErrorMessage];
-                    }
-                    $this->logger->error($errorMessage, ['errors' => $message]);
-                    $this->renderJson(['errors' => $message], ResponseCode::HTTP_PRECONDITION_FAILED);
+                if ($errors) {
+                    $this->logger->error($errorMessage, ['errors' => $errors]);
+                    $this->renderJson(['errors' => $errors], ResponseCode::HTTP_PRECONDITION_FAILED);
 
                     return;
                 }
+
+                $label->name        = $form['name'];
+                $label->description = $form['description'];
+                $label->color       = $form['color'];
 
                 try {
                     $label->save();
