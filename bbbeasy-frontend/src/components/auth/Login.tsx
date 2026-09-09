@@ -48,6 +48,7 @@ const Login: React.FC = () => {
     const [successful, setSuccessful] = useState<boolean>(false);
     const [message, setMessage] = useState<string>('');
     const [email, setEmail] = useState<string>('');
+    const [submitting, setSubmitting] = useState<boolean>(false);
 
     const initialValues: formType = {
         email: '',
@@ -57,6 +58,7 @@ const Login: React.FC = () => {
     const handleLogin = (formValue: formType) => {
         const { email, password } = formValue;
         setEmail(email);
+        setSubmitting(true);
         AuthService.login(email, password)
             .then((response) => {
                 const { user, session } = response.data;
@@ -88,7 +90,8 @@ const Login: React.FC = () => {
                 } else {
                     console.error('Login error:', error);
                 }
-            });
+            })
+            .finally(() => setSubmitting(false));
     };
 
     const handleReset = () => {
@@ -196,7 +199,7 @@ const Login: React.FC = () => {
                     >
                         <AddUserForm isLogin />
                         <Form.Item>
-                            <Button type="primary" id="submit-btn" htmlType="submit" block>
+                            <Button type="primary" id="submit-btn" htmlType="submit" block loading={submitting}>
                                 <Trans i18nKey="login" />
                             </Button>
                         </Form.Item>

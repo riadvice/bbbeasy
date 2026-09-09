@@ -53,6 +53,7 @@ const Branding = () => {
     const [data, setData] = React.useState<SettingsType>(null);
     const [actions, setActions] = React.useState<string[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [submitting, setSubmitting] = useState<boolean>(false);
     const [brandColor, setBrandColor] = React.useState<string>('');
     const [defaultFontSize, setDefaultFontSize] = React.useState<number>(0);
     const [borderRadius, setBorderRadius] = React.useState<number>(0);
@@ -114,6 +115,7 @@ const Branding = () => {
     }, []);
 
     const onFinish = async () => {
+        setSubmitting(true);
         const settingsData: formType = settingsForm.getFieldsValue(true);
 
         //update branding colors
@@ -167,7 +169,8 @@ const Branding = () => {
             })
             .catch(() => {
                 Notifications.openNotificationWithIcon('error', t('edit_settings_error'));
-            });
+            })
+            .finally(() => setSubmitting(false));
     };
 
     return (
@@ -207,7 +210,7 @@ const Branding = () => {
 
                                 {AuthService.isAllowedAction(actions, 'edit') && (
                                     <Form.Item className="button-container button-padding">
-                                        <Button type="primary" id="submit-btn" htmlType="submit" block>
+                                        <Button type="primary" id="submit-btn" htmlType="submit" block loading={submitting}>
                                             <Trans i18nKey="save" />
                                         </Button>
                                     </Form.Item>

@@ -64,9 +64,11 @@ const Profile = () => {
     };
     const [images, setImages] = React.useState([]);
     const [errors, setErrors] = React.useState<string>('');
+    const [submitting, setSubmitting] = React.useState<boolean>(false);
 
     const handleUpdate = async (formValues: formType) => {
         setErrors('');
+        setSubmitting(true);
 
         // save avatar as base64
         if (images.length !== 0 && images[0].file != null) {
@@ -143,7 +145,8 @@ const Profile = () => {
                 if (error.response.data.message) {
                     setErrors(error.response.data.message);
                 }
-            });
+            })
+            .finally(() => setSubmitting(false));
     };
 
     return (
@@ -261,7 +264,14 @@ const Profile = () => {
                                 )}
                             </ImageUploading>
                             <Form.Item>
-                                <Button type="primary" id="submit-btn" htmlType="submit" block className="p-50">
+                                <Button
+                                    type="primary"
+                                    id="submit-btn"
+                                    htmlType="submit"
+                                    block
+                                    className="p-50"
+                                    loading={submitting}
+                                >
                                     <Trans i18nKey={'update_profile'} />
                                 </Button>
                             </Form.Item>
