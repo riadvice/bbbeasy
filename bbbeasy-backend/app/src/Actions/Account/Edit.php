@@ -103,7 +103,11 @@ class Edit extends BaseAction
                         // update user session
                         $this->session->updateUser($user);
                         $this->logger->info('Profile successfully updated', ['user' => $user->toArray()]);
-                        $this->renderJson(['result' => 'success', 'user' => $user->toArray(['username', 'email', 'avatar'])]);
+                        $this->renderJson(['result' => 'success', 'user' => [
+                            'username' => $user->username,
+                            'email'    => $user->email,
+                            'avatar'   => $user->avatar,
+                        ]]);
                     }
                 } else {
                     // incorrect password
