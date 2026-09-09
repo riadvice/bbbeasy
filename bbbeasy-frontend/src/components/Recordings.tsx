@@ -23,7 +23,7 @@ import { t } from 'i18next';
 
 import PageHeader from './PageHeader';
 
-import { Button, Typography, Space, Popconfirm, Input, Tooltip, Tag, Select } from 'antd';
+import { Button, Form, Input, Popconfirm, Select, Space, Tag, Tooltip, Typography } from 'antd';
 import {
     DeleteOutlined,
     QuestionCircleOutlined,
@@ -35,7 +35,6 @@ import {
     MinusCircleOutlined,
 } from '@ant-design/icons';
 
-import Form from 'antd/lib/form';
 import Notifications from './Notifications';
 import { CompareRecords } from '../functions/compare.function';
 import { EditableTable } from './EditableTable';

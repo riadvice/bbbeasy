@@ -21,34 +21,31 @@ import Icon from '@ant-design/icons';
 import * as AntdIcons from '@ant-design/icons';
 import { withTranslation } from 'react-i18next';
 
+import { BBBEASY_ICON_PATHS, BBBEASY_ICON_TRANSFORM, BBBEASY_ICON_VIEWBOX } from './BBBEasyIcons';
+
 type Props = {
     type: string;
     className?: string;
 };
 
-const DynamicIcon = (props: Props) => {
-    const { type, className } = props;
-    const bbbeasyIcons: string[] = [
-        'mp4',
-        'room',
-        'zcaleright',
-        'role',
-        'general-settings',
-        'bigbluebutton',
-        'playback-presentation',
-        'playback-podcast',
-        'activity-reports',
-        'preset',
-        'permissions',
-    ];
+const BBBEasyIcon = ({ path }: { path: string }) => (
+    <svg viewBox={BBBEASY_ICON_VIEWBOX} width="1em" height="1em" fill="currentColor" aria-hidden="true">
+        <g transform={BBBEASY_ICON_TRANSFORM}>
+            <path d={path} />
+        </g>
+    </svg>
+);
 
-    if (bbbeasyIcons.includes(type.toLowerCase())) {
-        const bbbeasyIcon = () => <span className={`icon-bbbeasy-${type.toLowerCase()}`} />;
-        return <Icon component={bbbeasyIcon} className={className} />;
-    } else {
-        const AntdIcon = AntdIcons[type];
-        return <AntdIcon className={className} />;
+const DynamicIcon = ({ type, className }: Props) => {
+    const path = BBBEASY_ICON_PATHS[type.toLowerCase()];
+
+    if (path) {
+        return <Icon component={() => <BBBEasyIcon path={path} />} className={className} />;
     }
+
+    const AntdIcon = AntdIcons[type];
+
+    return <AntdIcon className={className} />;
 };
 
 export default withTranslation()(DynamicIcon);

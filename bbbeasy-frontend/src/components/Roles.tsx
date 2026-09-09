@@ -23,7 +23,7 @@ import EN_US from '../locale/en-US.json';
 
 import PageHeader from './PageHeader';
 
-import { Button, Row, Col, Typography, Space, Modal, Popconfirm, Card, Checkbox, Input } from 'antd';
+import { Button, Card, Checkbox, Col, Form, Input, Modal, Popconfirm, Row, Space, Typography } from 'antd';
 import {
     DeleteOutlined,
     QuestionCircleOutlined,
@@ -34,7 +34,7 @@ import {
     CheckOutlined,
 } from '@ant-design/icons';
 
-import Form, { FormInstance } from 'antd/lib/form';
+import { FormInstance } from 'antd/lib/form';
 import type { FormRef } from '@rc-component/form';
 import { CompareRecords } from '../functions/compare.function';
 import { EditableTable } from './EditableTable';
