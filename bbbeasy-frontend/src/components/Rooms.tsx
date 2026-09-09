@@ -235,11 +235,11 @@ const Rooms = () => {
     const deleteRoom = (id) => {
         RoomsService.delete_room(id)
             .then(() => {
-                setRooms(rooms.filter((r) => r.id !== id));
-                const indexRoom = dataContext.dataRooms.findIndex((item) => id === item.id);
-                if (indexRoom !== -1) {
-                    dataContext.dataRooms.splice(indexRoom, 1);
-                }
+                setRooms((rooms) => rooms.filter((r) => r.id !== id));
+
+                // Through the setter rather than in place, a spliced array keeps the
+                // same reference and nothing else reading the context redraws.
+                dataContext.setDataRooms((rooms) => rooms.filter((r) => r.id !== id));
                 Notifications.openNotificationWithIcon('success', t('delete_room_success'));
             })
             .catch((error) => {

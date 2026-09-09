@@ -35,7 +35,6 @@ import {
 } from '@ant-design/icons';
 
 import { FormInstance } from 'antd/lib/form';
-import type { FormRef } from '@rc-component/form';
 import { CompareRecords } from '../functions/compare.function';
 import { EditableTable } from './EditableTable';
 import EditableTableCell from './EditableTableCell';
@@ -63,12 +62,136 @@ interface EditableCellProps {
     children: React.ReactNode;
     dataIndex: keyof RoleType;
     record: RoleType;
+    actions: string[];
+    transformText: (text: string) => string;
+    onRoleEdited: (response: AxiosResponse, key: React.Key) => void;
 }
 const EditableContext = React.createContext<FormInstance | null>(null);
 
-let addForm: FormRef = null;
+/**
+ * Declared here rather than inside Roles: a component defined during a render is a new
+ * type on every render, so React throws away the state below and the rename it is in
+ * the middle of closes itself. What it used to reach through the closure now arrives
+ * as props.
+ */
+const EditableCell: React.FC<EditableCellProps> = ({
+    editable,
+    children,
+    dataIndex,
+    record,
+    actions,
+    transformText,
+    onRoleEdited,
+    ...restProps
+}) => {
+    const [isShown, setIsShown] = useState<boolean>(false);
+    const [editing, setEditing] = useState<boolean>(false);
+    const inputRef = useRef(null);
+    const [errorsEdit, setErrorsEdit] = React.useState({});
+    const editForm = useContext(EditableContext);
+    useEffect(() => {
+        if (editing) {
+            inputRef.current.focus();
+        }
+    }, [editing]);
+    const toggleEditName = () => {
+        setEditing(!editing);
+        let nameText = record[dataIndex] as string;
+        if (dataIndex === 'name') {
+            nameText = transformText(nameText);
+        }
+        editForm.setFieldsValue({ [dataIndex]: nameText });
+    };
+    const cancelName = () => {
+        setErrorsEdit({});
+        setEditing(!editing);
+    };
+    const saveName = async () => {
+        setErrorsEdit({});
+        try {
+            const values = (await editForm.validateFields()) as RoleType;
+            const key = record.key;
+            RolesService.edit_role(values, key)
+                .then((response) => {
+                    toggleEditName();
+                    onRoleEdited(response, key);
+                })
+                .catch((error) => {
+                    const responseData = error.response.data;
+                    if (responseData.errors) {
+                        const err = responseData.errors;
+                        err['key'] = key;
+                        setErrorsEdit(err);
+                    }
+                });
+        } catch (errInfo) {
+            console.log('Save failed:', errInfo);
+        }
+    };
+    const keepName = () => {
+        Notifications.openNotificationWithIcon('info', t('no_changes'));
+        cancelName();
+    };
+    const compareName = () => {
+        return !CompareRecords(transformText(record.name), editForm.getFieldsValue(true).name)
+            ? saveName()
+            : keepName();
+    };
+
+    return (
+        <EditableTableCell
+            componentName="Roles"
+            editing={editing}
+            dataIndex={dataIndex}
+            record={record}
+            inputNode={
+                <Input
+                    ref={inputRef}
+                    maxLength={64}
+                    onPressEnter={compareName}
+                    suffix={
+                        <>
+                            <Button
+                                icon={<CloseOutlined />}
+                                size="small"
+                                onClick={cancelName}
+                                className="cell-input-cancel"
+                            />
+                            <Button
+                                icon={<CheckOutlined />}
+                                size="small"
+                                onClick={compareName}
+                                type="primary"
+                                className="cell-input-save"
+                            />
+                        </>
+                    }
+                />
+            }
+            errorsEdit={errorsEdit}
+            editable={editable}
+            editComponent={
+                isShown &&
+                AuthService.isAllowedAction(actions, 'edit') && (
+                    <Button
+                        size="small"
+                        type="link"
+                        icon={<EditOutlined className="cell-edit-icon" />}
+                        onClick={toggleEditName}
+                    />
+                )
+            }
+            {...restProps}
+            mouseOverFct={() => setIsShown(true)}
+            mouseLeaveFct={() => setIsShown(false)}
+        >
+            {children}
+        </EditableTableCell>
+    );
+};
 
 const Roles = () => {
+    const [addForm] = Form.useForm();
     const [data, setData] = React.useState<RoleType[]>([]);
     const [loading, setLoading] = React.useState<boolean>(false);
     const [actions, setActions] = React.useState<string[]>([]);
@@ -325,113 +448,6 @@ const Roles = () => {
 
     // edit name
     const [editTableForm] = Form.useForm();
-    const EditableCell: React.FC<EditableCellProps> = ({ editable, children, dataIndex, record, ...restProps }) => {
-        const [isShown, setIsShown] = useState<boolean>(false);
-        const [editing, setEditing] = useState<boolean>(false);
-        const inputRef = useRef(null);
-        const [errorsEdit, setErrorsEdit] = React.useState({});
-        const editForm = useContext(EditableContext);
-        useEffect(() => {
-            if (editing) {
-                inputRef.current.focus();
-            }
-        }, [editing]);
-        const toggleEditName = () => {
-            setEditing(!editing);
-            let nameText = record[dataIndex] as string;
-            if (dataIndex === 'name') {
-                nameText = transformText(nameText);
-            }
-            editForm.setFieldsValue({ [dataIndex]: nameText });
-        };
-        const cancelName = () => {
-            setErrorsEdit({});
-            setEditing(!editing);
-        };
-        const saveName = async () => {
-            setErrorsEdit({});
-            try {
-                const values = (await editForm.validateFields()) as RoleType;
-                const key = record.key;
-                RolesService.edit_role(values, key)
-                    .then((response) => {
-                        toggleEditName();
-                        editRow(response, key);
-                    })
-                    .catch((error) => {
-                        const responseData = error.response.data;
-                        if (responseData.errors) {
-                            const err = responseData.errors;
-                            err['key'] = key;
-                            setErrorsEdit(err);
-                        }
-                    });
-            } catch (errInfo) {
-                console.log('Save failed:', errInfo);
-            }
-        };
-        const keepName = () => {
-            Notifications.openNotificationWithIcon('info', t('no_changes'));
-            cancelName();
-        };
-        const compareName = () => {
-            return !CompareRecords(transformText(record.name), editForm.getFieldsValue(true).name)
-                ? saveName()
-                : keepName();
-        };
-
-        return (
-            <EditableTableCell
-                componentName="Roles"
-                editing={editing}
-                dataIndex={dataIndex}
-                record={record}
-                inputNode={
-                    <Input
-                        ref={inputRef}
-                        maxLength={64}
-                        onPressEnter={compareName}
-                        suffix={
-                            <>
-                                <Button
-                                    icon={<CloseOutlined />}
-                                    size="small"
-                                    onClick={cancelName}
-                                    className="cell-input-cancel"
-                                />
-                                <Button
-                                    icon={<CheckOutlined />}
-                                    size="small"
-                                    onClick={compareName}
-                                    type="primary"
-                                    className="cell-input-save"
-                                />
-                            </>
-                        }
-                    />
-                }
-                errorsEdit={errorsEdit}
-                editable={editable}
-                editComponent={
-                    isShown &&
-                    AuthService.isAllowedAction(actions, 'edit') && (
-                        <Button
-                            size="small"
-                            type="link"
-                            icon={<EditOutlined className="cell-edit-icon" />}
-                            onClick={toggleEditName}
-                        />
-                    )
-                }
-                {...restProps}
-                mouseOverFct={() => setIsShown(true)}
-                mouseLeaveFct={() => setIsShown(false)}
-            >
-                {children}
-            </EditableTableCell>
-        );
-    };
-
     // delete
     const deleteRole = (key: number, nbUsers: number) => {
         RolesService.delete_role(key)
@@ -554,6 +570,9 @@ const Roles = () => {
                 editable: col.editable,
                 dataIndex: col.dataIndex,
                 title: col.title,
+                actions,
+                transformText,
+                onRoleEdited: editRow,
             }),
         };
     });
@@ -585,11 +604,9 @@ const Roles = () => {
                     maskClosable
                 >
                     <Form
+                        form={addForm}
                         layout="vertical"
                         name="roles_form"
-                        ref={(form) => {
-                            addForm = form;
-                        }}
                         initialValues={{ name: '' }}
                         requiredMark={false}
                         onFinish={handleAdd}

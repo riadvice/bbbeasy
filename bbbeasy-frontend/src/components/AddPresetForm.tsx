@@ -29,7 +29,6 @@ import PresetsService from 'services/presets.service';
 import AuthService from 'services/auth.service';
 
 import { MyPresetType } from 'types/MyPresetType';
-import type { FormRef } from '@rc-component/form';
 
 type Props = {
     isLogin?: boolean;
@@ -42,9 +41,8 @@ type formType = {
     name?: string;
 };
 
-let addForm: FormRef = null;
-
 export const AddPresetForm = (props: Props) => {
+    const [addForm] = Form.useForm();
     const dataContext = React.useContext(DataContext);
     const initialAddValues: formType = {
         name: '',
@@ -99,10 +97,8 @@ export const AddPresetForm = (props: Props) => {
             maskClosable
         >
             <Form
+                form={addForm}
                 layout="vertical"
-                ref={(form) => {
-                    addForm = form;
-                }}
                 initialValues={initialAddValues}
                 requiredMark={false}
                 onFinish={handleAdd}

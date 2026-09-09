@@ -25,7 +25,6 @@ import PageHeader from './PageHeader';
 import { Alert, Button, Dropdown, Form, Input, Modal, Popconfirm, Select, Space, Tag, Typography } from 'antd';
 import { DeleteOutlined, EditOutlined, MoreOutlined, QuestionCircleOutlined, StarFilled } from '@ant-design/icons';
 
-import type { FormRef } from '@rc-component/form';
 import { CompareRecords } from '../functions/compare.function';
 import { EditableTable } from './EditableTable';
 import EditableTableCell from './EditableTableCell';
@@ -61,10 +60,52 @@ interface EditableCellProps {
     dataIndex: keyof UserType;
     record: UserType;
     inputType: 'text' | 'select';
+    inputNode: React.JSX.Element;
+    errorsEdit: object;
 }
-let addForm: FormRef = null;
+
+/**
+ * Declared here rather than inside Users: a component defined during a render is a new
+ * type on every render, so React unmounts the cell and the field being edited loses its
+ * focus and its caret. Everything it needs arrives through the column onCell.
+ */
+const EditableCell: React.FC<EditableCellProps> = ({
+    editing,
+    children,
+    dataIndex,
+    record,
+    inputNode,
+    errorsEdit,
+    ...restProps
+}) => (
+    <EditableTableCell
+        componentName="Users"
+        editing={editing}
+        dataIndex={dataIndex}
+        record={record}
+        inputNode={inputNode}
+        errorsEdit={errorsEdit}
+        editRules={
+            (dataIndex === 'username' && {
+                min: 4,
+                message: t('invalid_username'),
+            }) ||
+            (dataIndex === 'email' && {
+                type: 'email',
+                message: t('invalid_email'),
+            }) ||
+            (dataIndex === 'role' && {
+                validator: (_, value) => (value ? Promise.resolve() : Promise.reject(new Error())),
+            })
+        }
+        {...restProps}
+    >
+        {children}
+    </EditableTableCell>
+);
 
 const Users = () => {
+    const [addForm] = Form.useForm();
     const [data, setData] = React.useState<UserType[]>([]);
     const [loading, setLoading] = React.useState<boolean>(false);
     const [actions, setActions] = React.useState<string[]>([]);
@@ -201,54 +242,24 @@ const Users = () => {
 
     // edit
     const [editForm] = Form.useForm();
-    const EditableCell: React.FC<EditableCellProps> = ({
-        editing,
-        children,
-        dataIndex,
-        record,
-        inputType,
-        ...restProps
-    }) => {
-        let inputNode: React.JSX.Element;
-        if (inputType === 'select') {
-            const statesOptions = allStates.map((item, index) => (
-                <Option key={index} value={item} className="text-capitalize">
+    const getInputNode = (dataIndex: string): React.JSX.Element => {
+        if (dataIndex === 'role') {
+            return getSelectRoles();
+        }
+
+        if (dataIndex === 'status') {
+            const statesOptions = allStates.map((item) => (
+                <Option key={item} value={item} className="text-capitalize">
                     {t(item)}
                 </Option>
             ));
 
-            inputNode =
-                dataIndex === 'role' ? getSelectRoles() : getSelectItems(t('status.placeholder'), statesOptions);
-        } else {
-            inputNode = <Input onFocus={() => setCancelVisibility(false)} />;
+            return getSelectItems(t('status.placeholder'), statesOptions);
         }
-        return (
-            <EditableTableCell
-                componentName="Users"
-                editing={editing}
-                dataIndex={dataIndex}
-                record={record}
-                inputNode={inputNode}
-                errorsEdit={errorsEdit}
-                editRules={
-                    (dataIndex === 'username' && {
-                        min: 4,
-                        message: t('invalid_username'),
-                    }) ||
-                    (dataIndex === 'email' && {
-                        type: 'email',
-                        message: t('invalid_email'),
-                    }) ||
-                    (dataIndex === 'role' && {
-                        validator: (_, value) => (value ? Promise.resolve() : Promise.reject(new Error())),
-                    })
-                }
-                {...restProps}
-            >
-                {children}
-            </EditableTableCell>
-        );
+
+        return <Input onFocus={() => setCancelVisibility(false)} />;
     };
+
     const isEditing = (record: UserType) => record.key === editingKey;
     const changeRoleCol = (record: UserType): object => {
         if (typeof record.role === 'string') {
@@ -548,6 +559,8 @@ const Users = () => {
                 dataIndex: col.dataIndex,
                 title: col.title,
                 editing: isEditing(record),
+                errorsEdit,
+                inputNode: getInputNode(col.dataIndex),
             }),
         };
     });
@@ -579,11 +592,9 @@ const Users = () => {
                     maskClosable
                 >
                     <Form
+                        form={addForm}
                         layout="vertical"
                         name="users_form"
-                        ref={(form) => {
-                            addForm = form;
-                        }}
                         initialValues={initialAddValues}
                         requiredMark={false}
                         onFinish={handleAdd}

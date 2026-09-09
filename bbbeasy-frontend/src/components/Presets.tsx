@@ -744,10 +744,9 @@ const Presets = () => {
         PresetsService.delete_preset(id)
             .then(() => {
                 setMyPresets(myPresets.filter((p) => p.id !== id));
-                const indexPreset = dataContext.dataPresets.findIndex((item) => id === item.id);
-                if (indexPreset !== -1) {
-                    dataContext.dataPresets.splice(indexPreset, 1);
-                }
+                // Through the setter rather than in place, a spliced array keeps the
+                // same reference and nothing else reading the context redraws.
+                dataContext.setDataPresets((presets) => presets.filter((preset) => preset.id !== id));
                 Notifications.openNotificationWithIcon('success', t('delete_preset_success'));
             })
             .catch((error) => {

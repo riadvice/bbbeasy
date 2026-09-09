@@ -28,7 +28,6 @@ import { PresetType } from '../types/PresetType';
 import { SubCategoryType } from '../types/SubCategoryType';
 import { getIconName } from '../types/GetIconName';
 import EN_US from '../locale/en-US.json';
-import type { FormRef } from '@rc-component/form';
 const { Title, Paragraph } = Typography;
 const { Grid, Meta } = Card;
 import { useLocation } from 'react-router-dom';
@@ -38,8 +37,8 @@ type Props = {
     onFinish?: (category: string, subCategories: SubCategoryType[]) => void;
     enabled?: boolean;
 };
-let step3: FormRef = null;
 export const Step3Form = (props: Props) => {
+    const [step3] = Form.useForm();
     const location = useLocation();
     const { presets } = props;
     const [values, setValues] = React.useState<any>();
@@ -154,11 +153,7 @@ export const Step3Form = (props: Props) => {
                         ]}
                         maskClosable
                     >
-                        <Form
-                            ref={(form) => {
-                                step3 = form;
-                            }}
-                        >
+                        <Form form={step3}>
                             <div className="presets-body">
                                 {modalContent.map((item) => {
                                     return (

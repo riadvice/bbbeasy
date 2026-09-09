@@ -24,6 +24,7 @@ import { t } from 'i18next';
 import PageHeader from './PageHeader';
 
 import { Badge, Button, Form, Input, Modal, Popconfirm, Space, Typography, ColorPicker, theme, Alert } from 'antd';
+import { FormInstance } from 'antd/lib/form';
 import { DeleteOutlined, EditOutlined, QuestionCircleOutlined, WarningOutlined } from '@ant-design/icons';
 
 import Notifications from './Notifications';
@@ -50,7 +51,96 @@ interface EditableCellProps {
     dataIndex: keyof LabelType;
     record: LabelType;
     inputType: 'text';
+    editForm: FormInstance;
+    errorsEdit: object;
+    isErrorValidation: boolean;
+    color: string;
+    onColorChange: (color: string) => void;
+    onFocus: () => void;
 }
+
+/**
+ * Declared here rather than inside Labels: a component defined during a render is a
+ * new type on every render, so React unmounts the cell and the input being edited
+ * loses its focus and its caret on every keystroke.
+ */
+const EditableCell: React.FC<EditableCellProps> = ({
+    editing,
+    children,
+    dataIndex,
+    record,
+    editForm,
+    errorsEdit,
+    isErrorValidation,
+    color,
+    onColorChange,
+    onFocus,
+    ...restProps
+}) => {
+    const { token } = theme.useToken();
+
+    return (
+        <EditableTableCell
+            componentName="Labels"
+            editing={editing}
+            dataIndex={dataIndex}
+            record={record}
+            inputNode={
+                <Input
+                    onFocus={onFocus}
+                    style={{
+                        borderColor: dataIndex === 'name' && isErrorValidation ? 'red' : null,
+                    }}
+                />
+            }
+            errorsEdit={errorsEdit}
+            showLabelColor={dataIndex === 'description'}
+            inputColor={
+                record && (
+                    <ColorPicker
+                        onChange={(picked: Color) => {
+                            const hex = picked.toHexString();
+                            editForm.setFieldValue('color', hex);
+                            onColorChange(hex);
+                        }}
+                    >
+                        <Space className="space-color-picker">
+                            <div
+                                style={{
+                                    width: token.sizeMD,
+                                    height: token.sizeMD,
+                                    borderRadius: token.borderRadiusSM,
+                                    backgroundColor: color || record.color,
+                                }}
+                            />
+                            <span>
+                                <input
+                                    className="code-color-picker-edit-label"
+                                    disabled
+                                    type="text"
+                                    readOnly
+                                    value={color || record.color}
+                                />
+                            </span>
+                        </Space>
+                    </ColorPicker>
+                )
+            }
+            {...restProps}
+        >
+            {dataIndex === 'name' && record != null ? (
+                <Badge
+                    count={record.name}
+                    style={{
+                        backgroundColor: record.color,
+                    }}
+                />
+            ) : (
+                children
+            )}
+        </EditableTableCell>
+    );
+};
 
 const Labels = () => {
     const dataContext = React.useContext(DataContext);
@@ -62,8 +152,8 @@ const Labels = () => {
     const [cancelVisibility, setCancelVisibility] = React.useState<boolean>(false);
     const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
     const [isErrorValidation, setIsErrorValidation] = React.useState<boolean>(false);
+    const [editingColor, setEditingColor] = React.useState<string>('');
     const [errorMsg, setErrorMsg] = React.useState<string>('');
-    const { token } = theme.useToken();
     const getLabels = () => {
         setLoading(true);
         LabelsService.list_labels()
@@ -95,17 +185,13 @@ const Labels = () => {
             .then(() => {
                 Notifications.openNotificationWithIcon('success', t('delete_label_success'));
                 setData((labels) => labels.filter((label) => label.key !== key));
-                const indexLabel = dataContext.dataLabels.findIndex((item) => key === item.key);
-                if (indexLabel !== -1) {
-                    dataContext.dataLabels.splice(indexLabel, 1);
-                }
-                dataContext.dataRooms.forEach((r) => {
-                    const index = r.labels.findIndex((item) => key === item.key);
 
-                    if (index !== -1) {
-                        r.labels.splice(index, 1);
-                    }
-                });
+                // Through the setters rather than in place: mutating the arrays leaves
+                // the reference unchanged, so nothing else reading the context redraws.
+                dataContext.setDataLabels((labels) => labels.filter((label) => label.key !== key));
+                dataContext.setDataRooms((rooms) =>
+                    rooms.map((room) => ({ ...room, labels: room.labels.filter((label) => label.key !== key) }))
+                );
             })
             .catch((error) => {
                 console.error(error);
@@ -141,85 +227,18 @@ const Labels = () => {
 
     //edit
     const [editForm] = Form.useForm();
-    const EditableCell: React.FC<EditableCellProps> = ({ editing, children, dataIndex, record, ...restProps }) => {
-        return (
-            <EditableTableCell
-                componentName="Labels"
-                editing={editing}
-                dataIndex={dataIndex}
-                record={record}
-                inputNode={
-                    <Input
-                        onFocus={() => {
-                            setCancelVisibility(false);
-                        }}
-                        style={{
-                            borderColor: dataIndex === 'name' && isErrorValidation ? 'red' : null,
-                        }}
-                    />
-                }
-                errorsEdit={errorsEdit}
-                showLabelColor={dataIndex === 'description'}
-                inputColor={
-                    record && (
-                        <ColorPicker
-                            onChange={(color1: Color) => {
-                                editForm.setFieldValue('color', color1.toHexString());
-                                (document.getElementById('newColor') as HTMLInputElement).value =
-                                    editForm.getFieldValue('color');
-                                (document.getElementById('myNewColor') as HTMLInputElement).style.backgroundColor =
-                                    editForm.getFieldValue('color');
-                            }}
-                        >
-                            <Space className="space-color-picker">
-                                <div
-                                    id="myNewColor"
-                                    style={{
-                                        width: token.sizeMD,
-                                        height: token.sizeMD,
-                                        borderRadius: token.borderRadiusSM,
-                                        backgroundColor: record.color,
-                                    }}
-                                />
-                                <span>
-                                    <input
-                                        className="code-color-picker-edit-label"
-                                        disabled
-                                        type="text"
-                                        id="newColor"
-                                        value={editForm.getFieldValue('color')}
-                                    />
-                                </span>
-                            </Space>
-                        </ColorPicker>
-                    )
-                }
-                {...restProps}
-            >
-                {dataIndex === 'name' && record != null ? (
-                    <Badge
-                        count={record.name}
-                        style={{
-                            backgroundColor: record.color,
-                        }}
-                    />
-                ) : (
-                    children
-                )}
-            </EditableTableCell>
-        );
-    };
     const isEditing = (record: LabelType) => record.key === editingKey;
     const toggleEdit = (record: LabelType) => {
         setCancelVisibility(false);
         setEditingKey(record.key);
         setErrorsEdit({});
-        const recordClone = { ...record };
-        editForm.setFieldsValue(recordClone);
+        setEditingColor(record.color);
+        editForm.setFieldsValue({ ...record });
     };
     const cancelEdit = () => {
         setCancelVisibility(false);
         setEditingKey(null);
+        setEditingColor('');
     };
     const saveEdit = async (record: LabelType, key: number) => {
         try {
@@ -234,20 +253,13 @@ const Labels = () => {
                         const newRow: LabelType = response.data.label;
                         const index = data.findIndex((item) => key === item.key);
                         if (index !== -1 && newRow) {
-                            setData((data) => {
-                                data[index] = newRow;
-                                dataContext.dataLabels[index] = newRow;
+                            const replace = (label: LabelType) => (label.key === key ? newRow : label);
 
-                                return [...data];
-                            });
-                            dataContext.dataRooms.forEach((r) => {
-                                // A room that does not carry the label has nothing to
-                                // update, writing at -1 only adds a stray property.
-                                const labelIndex = r.labels.findIndex((item) => key === item.key);
-                                if (labelIndex !== -1) {
-                                    r.labels[labelIndex] = newRow;
-                                }
-                            });
+                            setData((labels) => labels.map(replace));
+                            dataContext.setDataLabels((labels) => labels.map(replace));
+                            dataContext.setDataRooms((rooms) =>
+                                rooms.map((room) => ({ ...room, labels: room.labels.map(replace) }))
+                            );
                             cancelEdit();
                         }
                         Notifications.openNotificationWithIcon('success', t('edit_label_success'));
@@ -403,6 +415,12 @@ const Labels = () => {
                 dataIndex: col.dataIndex,
                 title: col.title,
                 editing: isEditing(record),
+                editForm,
+                errorsEdit,
+                isErrorValidation,
+                color: isEditing(record) ? editingColor : record.color,
+                onColorChange: setEditingColor,
+                onFocus: () => setCancelVisibility(false),
             }),
         };
     });

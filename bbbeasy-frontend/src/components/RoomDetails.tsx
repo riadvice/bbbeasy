@@ -393,11 +393,12 @@ const RoomDetails = () => {
                         cancelEdit();
                     } else {
                         setRoom(response.data.room);
-                        const index = dataContext.dataRooms.findIndex((item) => room.id === item.id);
 
-                        if (index !== -1) {
-                            dataContext.dataRooms[index] = response.data.room;
-                        }
+                        // Through the setter rather than in place, writing into the
+                        // array keeps the same reference and the rooms page misses it.
+                        dataContext.setDataRooms((rooms) =>
+                            rooms.map((item) => (item.id === room.id ? response.data.room : item))
+                        );
                         Notifications.openNotificationWithIcon('success', t('edit_room_success'));
                         cancelEdit();
                     }

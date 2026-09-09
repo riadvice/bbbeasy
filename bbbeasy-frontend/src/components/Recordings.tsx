@@ -61,7 +61,36 @@ interface EditableCellProps {
     dataIndex: keyof RecordingType;
     record: RecordingType;
     inputType: 'text' | 'select';
+    inputNode: React.JSX.Element;
+    errorsEdit: object;
 }
+
+/**
+ * Declared here rather than inside Recordings: a component defined during a render is a
+ * new type on every render, so React unmounts the cell and the field being edited loses
+ * its focus and its caret. Everything it needs arrives through the column onCell.
+ */
+const EditableCell: React.FC<EditableCellProps> = ({
+    editing,
+    children,
+    dataIndex,
+    record,
+    inputNode,
+    errorsEdit,
+    ...restProps
+}) => (
+    <EditableTableCell
+        componentName="Recordings"
+        editing={editing}
+        dataIndex={dataIndex}
+        record={record}
+        inputNode={inputNode}
+        errorsEdit={errorsEdit}
+        {...restProps}
+    >
+        {children}
+    </EditableTableCell>
+);
 
 const Recordings = () => {
     const [data, setData] = React.useState<RecordingType[]>([]);
@@ -121,41 +150,20 @@ const Recordings = () => {
     };
     // edit
     const [editForm] = Form.useForm();
-    const EditableCell: React.FC<EditableCellProps> = ({
-        editing,
-        children,
-        dataIndex,
-        record,
-        inputType,
-        ...restProps
-    }) => {
-        let inputNode: React.JSX.Element;
-        if (inputType === 'select') {
-            console.log('select');
-            const statesOptions = recordingStates.map((item, index) => (
-                <Option key={index} value={item} className="text-capitalize">
+    const getInputNode = (dataIndex: string): React.JSX.Element => {
+        if (dataIndex === 'state') {
+            const statesOptions = recordingStates.map((item) => (
+                <Option key={item} value={item} className="text-capitalize">
                     {t(item)}
                 </Option>
             ));
 
-            inputNode = getSelectItems(t('state.placeholder'), statesOptions);
-        } else {
-            inputNode = <Input onFocus={() => setCancelVisibility(false)} />;
+            return getSelectItems(t('state.placeholder'), statesOptions);
         }
-        return (
-            <EditableTableCell
-                componentName="Recordings"
-                editing={editing}
-                dataIndex={dataIndex}
-                record={record}
-                inputNode={inputNode}
-                errorsEdit={errorsEdit}
-                {...restProps}
-            >
-                {children}
-            </EditableTableCell>
-        );
+
+        return <Input onFocus={() => setCancelVisibility(false)} />;
     };
+
     const toggleEdit = (record: RecordingType) => {
         setCancelVisibility(false);
         setEditingKey(record.key);
@@ -408,9 +416,10 @@ const Recordings = () => {
                 record,
                 editing: isEditing(record),
                 inputType: col.dataIndex === 'state' ? 'select' : 'text',
-
                 dataIndex: col.dataIndex,
                 title: col.title,
+                errorsEdit,
+                inputNode: getInputNode(col.dataIndex),
             }),
         };
     });

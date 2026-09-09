@@ -36,7 +36,6 @@ import AuthService from '../services/auth.service';
 import LocaleService from '../services/locale.service';
 import { UserContext } from '../lib/UserContext';
 
-import type { FormRef } from '@rc-component/form';
 import { UserType } from '../types/UserType';
 
 type formType = {
@@ -48,9 +47,8 @@ type formType = {
     avatar?: string;
 };
 
-let accountForm: FormRef = null;
-
 const Profile = () => {
+    const [accountForm] = Form.useForm();
     const { setCurrentUser } = React.useContext(UserContext);
     const [currentUser, setCurrentLocalUser] = React.useState<UserType>(() => AuthService.getCurrentUser());
     const initialAddValues: formType = {
@@ -146,11 +144,9 @@ const Profile = () => {
         <>
             <PageHeader className="profile-page-header" title={<Trans i18nKey="update_profile" />} />
             <Form
+                form={accountForm}
                 layout="vertical"
                 className="site-page-form profile-form"
-                ref={(form) => {
-                    accountForm = form;
-                }}
                 initialValues={initialAddValues}
                 requiredMark={false}
                 scrollToFirstError

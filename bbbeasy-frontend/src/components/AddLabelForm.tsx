@@ -28,7 +28,6 @@ import Notifications from './Notifications';
 
 import LabelsService from 'services/labels.service';
 
-import type { FormRef } from '@rc-component/form';
 import { LabelType } from '../types/LabelType';
 
 type Props = {
@@ -43,9 +42,9 @@ type formType = {
     description?: string;
     color?: string;
 };
-let addForm: FormRef = null;
 
 export const AddLabelForm = (props: Props) => {
+    const [addForm] = Form.useForm();
     const [initialColor] = React.useState<string>(
         getComputedStyle(document.documentElement).getPropertyValue('--bbbeasy-brand-color').trim() || '#fbbc0b'
     );
@@ -109,10 +108,8 @@ export const AddLabelForm = (props: Props) => {
             maskClosable
         >
             <Form
+                form={addForm}
                 layout="vertical"
-                ref={(form) => {
-                    addForm = form;
-                }}
                 initialValues={initialAddValues}
                 requiredMark={false}
                 onFinish={handleAdd}

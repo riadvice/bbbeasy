@@ -32,7 +32,6 @@ import RoomsService from 'services/rooms.service';
 import AuthService from 'services/auth.service';
 import LabelsService from 'services/labels.service';
 
-import type { FormRef } from '@rc-component/form';
 import { LabelType } from 'types/LabelType';
 import { PresetType } from 'types/PresetType';
 import { UserType } from 'types/UserType';
@@ -45,7 +44,6 @@ type formType = {
     preset?: PresetType;
     labels?: LabelType[];
 };
-let addForm: FormRef = null;
 
 type Props = {
     isLogin?: boolean;
@@ -60,6 +58,7 @@ type Props = {
 };
 
 export const AddRoomForm = (props: Props) => {
+    const [addForm] = Form.useForm();
     const { shortlink } = props;
 
     const [loading, setLoading] = React.useState<boolean>(false);
@@ -191,10 +190,8 @@ export const AddRoomForm = (props: Props) => {
             maskClosable
         >
             <Form
+                form={addForm}
                 layout="vertical"
-                ref={(form) => {
-                    addForm = form;
-                }}
                 initialValues={props.initialAddValues}
                 requiredMark={false}
                 onFinish={handleAdd}
