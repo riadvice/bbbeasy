@@ -56,6 +56,9 @@ class ResetPassword extends BaseAction
                 $resetToken          = new ResetPasswordToken();
                 $resetToken->user_id = $user->id;
             }
+            // Every request issues a fresh token, reusing the previous one would keep
+            // an old reset email working for as long as the user keeps asking.
+            $resetToken->token      = bin2hex(random_bytes(16));
             $resetToken->expires_at = date('Y-m-d H:i:s', strtotime('+15 min'));
             $resetToken->status     = ResetTokenStatus::NEW;
             // otherwise, will update the existing row
