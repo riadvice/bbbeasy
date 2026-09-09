@@ -50,15 +50,14 @@ class EditSubcategories extends BaseAction
             $categories    = json_decode($oldPreset['settings']);
             $subCategories = [];
             if (isset($categories->{$categoryName})) {
-                $subCategories = json_decode($categories->{$categoryName});
+                // A category holding no subcategory yet decodes to an array, keeping
+                // the whole thing associative works for both shapes.
+                $subCategories = (array) json_decode((string) $categories->{$categoryName}, true);
                 foreach ($form as $editedSubCategory) {
-                    $subCategoryName  = $editedSubCategory['name'];
-                    $subCategoryValue = $editedSubCategory['value'];
-
-                    $subCategories->{$subCategoryName} = $subCategoryValue;
+                    $subCategories[$editedSubCategory['name']] = $editedSubCategory['value'];
                 }
 
-                $categories->{$categoryName} = json_encode($subCategories);
+                $categories->{$categoryName} = json_encode((object) $subCategories);
                 $oldPreset['settings']       = json_encode($categories);
 
                 try {

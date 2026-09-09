@@ -45,68 +45,71 @@ class Edit extends BaseAction
 
         $presetSetting = new PresetSetting();
         $settings      = $presetSetting->find(['group = ?', $categoryName], ['order' => 'id']);
-        if ($settings) {
-            // update preset setting
-            foreach ($settings as $index => $setting) {
-                $editedSubCategory = $form[$index];
-                if ($setting->name === $editedSubCategory['name']) {
-                    $setting->enabled = $editedSubCategory['enabled'];
-                    $setting->save();
-                }
-            }
 
-            // update column settings in user presets table
-            $preset       = new Preset();
-            $userPresets  = $preset->find();
-            $errorMessage = 'User Preset could not be updated';
-            foreach ($userPresets as $userPreset) {
-                $userCategories = json_decode($userPreset['settings']);
-                if (property_exists($userCategories, $categoryName)) {
-                    $userSubCategories = json_decode($userCategories->{$categoryName});
-
-                    foreach ($form as $editedSubCategory) {
-                        $subCategoryName = $editedSubCategory['name'];
-                        // enable disabled category
-                        if ($editedSubCategory['enabled'] && null === $userSubCategories) {
-                            $userSubCategories = (object) [$subCategoryName => ''];
-                        } elseif (null !== $userSubCategories) {
-                            // remove disabled category from userSubCategories
-                            if (!$editedSubCategory['enabled'] && property_exists($userSubCategories, $subCategoryName)) {
-                                unset($userSubCategories->{$subCategoryName});
-                            }
-                            // add enabled category from userSubCategories
-                            if ($editedSubCategory['enabled'] && !property_exists($userSubCategories, $subCategoryName)) {
-                                if (\Enum\Presets\GuestPolicy::POLICY === $subCategoryName) {
-                                    $userSubCategories->{$subCategoryName} = GuestPolicy::ALWAYS_ACCEPT;
-                                } else {
-                                    $userSubCategories->{$subCategoryName} = '';
-                                }
-                            }
-                        }
-                    }
-
-                    // disable enabled category
-                    if (0 === \count((array) $userSubCategories)) {
-                        $userCategories->{$categoryName} = 'null';
-                    } else {
-                        $userCategories->{$categoryName} = json_encode($userSubCategories);
-                    }
-
-                    $userPreset['settings'] = json_encode($userCategories);
-
-                    try {
-                        $userPreset->save();
-                    } catch (\Exception $e) {
-                        $this->logger->error($errorMessage, ['preset' => $userPreset->toArray(), 'error' => $e->getMessage()]);
-                        $this->renderJson(['errors' => $errorMessage], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-
-                        return;
-                    }
-                }
-            }
-            $this->renderJson(['result' => 'success', 'settings' => $presetSetting->getCategoryInfos($categoryName)]);
-        } else {
+        if (!$settings) {
             $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
+
+            return;
         }
+
+        // The form carries one entry per setting of the category, matching them by
+        // name rather than by position keeps it working whatever order they arrive in.
+        $enabled = array_column($form, 'enabled', 'name');
+
+        foreach ($settings as $setting) {
+            if (\array_key_exists($setting->name, $enabled)) {
+                $setting->enabled = $enabled[$setting->name];
+                $setting->save();
+            }
+        }
+
+        $errorMessage = 'User Preset could not be updated';
+
+        foreach (new Preset()->find() ?: [] as $userPreset) {
+            $categories = json_decode((string) $userPreset['settings']);
+
+            if (!\is_object($categories) || !property_exists($categories, $categoryName)) {
+                continue;
+            }
+
+            $userPreset['settings'] = json_encode($this->applyToPreset($categories, $categoryName, $enabled));
+
+            try {
+                $userPreset->save();
+            } catch (\Exception $e) {
+                $this->logger->error($errorMessage, ['preset' => $userPreset->toArray(), 'error' => $e->getMessage()]);
+                $this->renderJson(['errors' => $errorMessage], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
+
+                return;
+            }
+        }
+
+        $this->renderJson(['result' => 'success', 'settings' => $presetSetting->getCategoryInfos($categoryName)]);
+    }
+
+    /**
+     * Add the settings that were switched on to one preset category and drop the ones
+     * that were switched off. A category left without a single setting reads as
+     * disabled, which the presets store as the string null.
+     */
+    protected function applyToPreset(object $categories, string $categoryName, array $enabled): object
+    {
+        $subCategories = (array) json_decode((string) $categories->{$categoryName});
+
+        foreach ($enabled as $name => $isEnabled) {
+            if (!$isEnabled) {
+                unset($subCategories[$name]);
+
+                continue;
+            }
+
+            if (!\array_key_exists($name, $subCategories)) {
+                $subCategories[$name] = \Enum\Presets\GuestPolicy::POLICY === $name ? GuestPolicy::ALWAYS_ACCEPT : '';
+            }
+        }
+
+        $categories->{$categoryName} = [] === $subCategories ? 'null' : json_encode((object) $subCategories);
+
+        return $categories;
     }
 }

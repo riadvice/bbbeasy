@@ -43,18 +43,64 @@ use Enum\Presets\Whiteboard;
 
 class PresetProcessor
 {
-    public function preparePresetData($preset)
+    /**
+     * Preset settings handed to BigBlueButton, in the order they are read.
+     */
+    private const SETTINGS = [
+        [Audio::GROUP_NAME, Audio::USERS_JOIN_MUTED],
+        [Audio::GROUP_NAME, Audio::MODERATORS_ALLOWED_TO_UNMUTE_USERS],
+        [Branding::GROUP_NAME, Branding::LOGO],
+        [Branding::GROUP_NAME, Branding::BANNER_COLOR],
+        [Branding::GROUP_NAME, Branding::BANNER_TEXT],
+        [BreakoutRooms::GROUP_NAME, BreakoutRooms::CONFIGURABLE],
+        [BreakoutRooms::GROUP_NAME, BreakoutRooms::RECORDING],
+        [BreakoutRooms::GROUP_NAME, BreakoutRooms::PRIVATE_CHAT],
+        [General::GROUP_NAME, General::DURATION],
+        [General::GROUP_NAME, General::MAXIMUM_PARTICIPANTS],
+        [General::GROUP_NAME, General::WELCOME],
+        [GuestPolicy::GROUP_NAME, GuestPolicy::POLICY],
+        [LearningDashboard::GROUP_NAME, LearningDashboard::CONFIGURABLE],
+        [LearningDashboard::GROUP_NAME, LearningDashboard::CLEANUP_DELAY],
+        [LockSettings::GROUP_NAME, LockSettings::WEBCAMS],
+        [LockSettings::GROUP_NAME, LockSettings::MICROPHONES],
+        [LockSettings::GROUP_NAME, LockSettings::PRIVATE_CHAT],
+        [LockSettings::GROUP_NAME, LockSettings::PUBLIC_CHAT],
+        [LockSettings::GROUP_NAME, LockSettings::SHARED_NOTES],
+        [LockSettings::GROUP_NAME, LockSettings::LAYOUT],
+        [Presentation::GROUP_NAME, Presentation::PRE_UPLOAD],
+        [Recording::GROUP_NAME, Recording::AUTO_START],
+        [Recording::GROUP_NAME, Recording::ALLOW_START_STOP],
+        [Recording::GROUP_NAME, Recording::RECORD],
+        [Security::GROUP_NAME, Security::PASSWORD_FOR_MODERATOR],
+        [Security::GROUP_NAME, Security::PASSWORD_FOR_ATTENDEE],
+        [Screenshare::GROUP_NAME, Screenshare::CONFIGURABLE],
+        [Webcams::GROUP_NAME, Webcams::VISIBLE_FOR_MODERATOR_ONLY],
+        [Webcams::GROUP_NAME, Webcams::MODERATOR_ALLOWED_CAMERA_EJECT],
+    ];
+
+    /**
+     * Settings BigBlueButton expects unset rather than zero.
+     */
+    private const EMPTY_IS_NULL = [
+        General::DURATION,
+        General::MAXIMUM_PARTICIPANTS,
+    ];
+
+    /**
+     * Settings of the enabled categories of a preset, keyed by category and by name.
+     *
+     * @param mixed $preset
+     */
+    public function preparePresetData($preset): array
     {
         $data = [];
-        foreach ($preset['categories'] as $category) {
-            if ($category['enabled']) {
-                $subs = [];
-                foreach ($category['subcategories'] as $subcategory) {
-                    $subs[$subcategory['name']] = $subcategory['value'];
-                }
 
-                $data[$category['name']] = $subs;
+        foreach ($preset['categories'] ?? [] as $category) {
+            if (!$category['enabled']) {
+                continue;
             }
+
+            $data[$category['name']] = array_column($category['subcategories'], 'value', 'name');
         }
 
         return $data;
@@ -67,48 +113,16 @@ class PresetProcessor
         $preparePresetData = $this->preparePresetData($preset);
 
         // Set the preset data
-        $presetsData->setData(Audio::GROUP_NAME, Audio::USERS_JOIN_MUTED, $preparePresetData[Audio::GROUP_NAME][Audio::USERS_JOIN_MUTED]);
-        $presetsData->setData(Audio::GROUP_NAME, Audio::MODERATORS_ALLOWED_TO_UNMUTE_USERS, $preparePresetData[Audio::GROUP_NAME][Audio::MODERATORS_ALLOWED_TO_UNMUTE_USERS]);
+        foreach (self::SETTINGS as [$group, $setting]) {
+            // A category the user disabled is simply absent from the preset.
+            $value = $preparePresetData[$group][$setting] ?? null;
 
-        $presetsData->setData(Branding::GROUP_NAME, Branding::LOGO, $preparePresetData[Branding::GROUP_NAME][Branding::LOGO]);
-        $presetsData->setData(Branding::GROUP_NAME, Branding::BANNER_COLOR, $preparePresetData[Branding::GROUP_NAME][Branding::BANNER_COLOR]);
-        $presetsData->setData(Branding::GROUP_NAME, Branding::BANNER_TEXT, $preparePresetData[Branding::GROUP_NAME][Branding::BANNER_TEXT]);
+            if (\in_array($setting, self::EMPTY_IS_NULL, true)) {
+                $value = $value ?: null;
+            }
 
-        $presetsData->setData(BreakoutRooms::GROUP_NAME, BreakoutRooms::CONFIGURABLE, $preparePresetData[BreakoutRooms::GROUP_NAME][BreakoutRooms::CONFIGURABLE]);
-        $presetsData->setData(BreakoutRooms::GROUP_NAME, BreakoutRooms::RECORDING, $preparePresetData[BreakoutRooms::GROUP_NAME][BreakoutRooms::RECORDING]);
-        $presetsData->setData(BreakoutRooms::GROUP_NAME, BreakoutRooms::PRIVATE_CHAT, $preparePresetData[BreakoutRooms::GROUP_NAME][BreakoutRooms::PRIVATE_CHAT]);
-
-        $presetsData->setData(General::GROUP_NAME, General::DURATION, $preparePresetData[General::GROUP_NAME][General::DURATION] ?: null);
-
-        $presetsData->setData(General::GROUP_NAME, General::MAXIMUM_PARTICIPANTS, $preparePresetData[General::GROUP_NAME][General::MAXIMUM_PARTICIPANTS] ?: null);
-
-        $presetsData->setData(General::GROUP_NAME, General::MAXIMUM_PARTICIPANTS, $preparePresetData[General::GROUP_NAME][General::MAXIMUM_PARTICIPANTS] ?: null);
-        $presetsData->setData(General::GROUP_NAME, General::WELCOME, $preparePresetData[General::GROUP_NAME][General::WELCOME]);
-        $presetsData->setData(GuestPolicy::GROUP_NAME, GuestPolicy::POLICY, $preparePresetData[GuestPolicy::GROUP_NAME][GuestPolicy::POLICY]);
-
-        $presetsData->setData(LearningDashboard::GROUP_NAME, LearningDashboard::CONFIGURABLE, $preparePresetData[LearningDashboard::GROUP_NAME][LearningDashboard::CONFIGURABLE]);
-        $presetsData->setData(LearningDashboard::GROUP_NAME, LearningDashboard::CLEANUP_DELAY, $preparePresetData[LearningDashboard::GROUP_NAME][LearningDashboard::CLEANUP_DELAY]);
-
-        $presetsData->setData(LockSettings::GROUP_NAME, LockSettings::WEBCAMS, $preparePresetData[LockSettings::GROUP_NAME][LockSettings::WEBCAMS]);
-        $presetsData->setData(LockSettings::GROUP_NAME, LockSettings::MICROPHONES, $preparePresetData[LockSettings::GROUP_NAME][LockSettings::MICROPHONES]);
-        $presetsData->setData(LockSettings::GROUP_NAME, LockSettings::PRIVATE_CHAT, $preparePresetData[LockSettings::GROUP_NAME][LockSettings::PRIVATE_CHAT]);
-        $presetsData->setData(LockSettings::GROUP_NAME, LockSettings::PUBLIC_CHAT, $preparePresetData[LockSettings::GROUP_NAME][LockSettings::PUBLIC_CHAT]);
-        $presetsData->setData(LockSettings::GROUP_NAME, LockSettings::SHARED_NOTES, $preparePresetData[LockSettings::GROUP_NAME][LockSettings::SHARED_NOTES]);
-        $presetsData->setData(LockSettings::GROUP_NAME, LockSettings::LAYOUT, $preparePresetData[LockSettings::GROUP_NAME][LockSettings::LAYOUT]);
-
-        $presetsData->setData(Presentation::GROUP_NAME, Presentation::PRE_UPLOAD, $preparePresetData[Presentation::GROUP_NAME][Presentation::PRE_UPLOAD]);
-
-        $presetsData->setData(Recording::GROUP_NAME, Recording::AUTO_START, $preparePresetData[Recording::GROUP_NAME][Recording::AUTO_START]);
-        $presetsData->setData(Recording::GROUP_NAME, Recording::ALLOW_START_STOP, $preparePresetData[Recording::GROUP_NAME][Recording::ALLOW_START_STOP]);
-        $presetsData->setData(Recording::GROUP_NAME, Recording::RECORD, $preparePresetData[Recording::GROUP_NAME][Recording::RECORD]);
-
-        $presetsData->setData(Security::GROUP_NAME, Security::PASSWORD_FOR_MODERATOR, $preparePresetData[Security::GROUP_NAME][Security::PASSWORD_FOR_MODERATOR]);
-        $presetsData->setData(Security::GROUP_NAME, Security::PASSWORD_FOR_ATTENDEE, $preparePresetData[Security::GROUP_NAME][Security::PASSWORD_FOR_ATTENDEE]);
-
-        $presetsData->setData(Screenshare::GROUP_NAME, Screenshare::CONFIGURABLE, $preparePresetData[Screenshare::GROUP_NAME][Screenshare::CONFIGURABLE]);
-
-        $presetsData->setData(Webcams::GROUP_NAME, Webcams::VISIBLE_FOR_MODERATOR_ONLY, $preparePresetData[Webcams::GROUP_NAME][Webcams::VISIBLE_FOR_MODERATOR_ONLY]);
-        $presetsData->setData(Webcams::GROUP_NAME, Webcams::MODERATOR_ALLOWED_CAMERA_EJECT, $preparePresetData[Webcams::GROUP_NAME][Webcams::MODERATOR_ALLOWED_CAMERA_EJECT]);
+            $presetsData->setData($group, $setting, $value);
+        }
 
         // Get preset data to create meeting parameters
         $createParams->setModeratorPassword((string) $presetsData->getData(Security::GROUP_NAME, Security::PASSWORD_FOR_MODERATOR) ?: DataUtils::generateRandomString());

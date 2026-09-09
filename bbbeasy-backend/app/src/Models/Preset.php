@@ -109,9 +109,8 @@ class Preset extends BaseModel
             'name' => $myPreset['name'],
         ];
 
-        $enabledCategories        = json_decode($myPreset['settings']);
-        $categoriesData           = $this->getMyPresetCategories($enabledCategories);
-        $presetData['categories'] = $categoriesData;
+        $enabledCategories        = json_decode((string) $myPreset['settings']);
+        $presetData['categories'] = $this->getMyPresetCategories($enabledCategories);
 
         $room                   = new Room();
         $rooms                  = $room->collectAllByPresetId($myPreset['id']);
@@ -123,47 +122,16 @@ class Preset extends BaseModel
     public function getMyPresetCategories($enabledCategories): array
     {
         $categoriesData = [];
-        $categories     = $this->getPresetCategories();
-        if ($categories) {
-            foreach ($categories as $category) {
-                $categoryName = $this->getCategoryName($category);
 
-                $class         = new \ReflectionClass($category);
-                $subcategories = [];
+        foreach ($this->getPresetCategories() ?: [] as $category) {
+            $categoryName = $this->getCategoryName($category);
+            $values       = $this->decodeCategorySettings($enabledCategories, $categoryName);
 
-                // the enabled categ with enabled subcategories
-                if (json_decode($enabledCategories->{$categoryName})) {
-                    foreach ($class->getReflectionConstants() as $constant) {
-                        if (!str_ends_with($constant->name, '_TYPE')) {
-                            $subCategory     = $constant->name;
-                            $subCategoryName = $class->getConstant(mb_strtoupper($subCategory));
-                            if (str_contains($subCategory, 'PASSWORD')) {
-                                $subCategory = str_ireplace('PASSWORD', 'PASS', $subCategory);
-                            }
-                            $subCategoryType  = $class->getConstant(mb_strtoupper($subCategory) . '_TYPE');
-                            $subCategoryValue = json_decode($enabledCategories->{$categoryName})->{$subCategoryName};
-                            if (isset($subCategoryValue)) {
-                                $subcategories[] = [
-                                    'name'  => $subCategoryName,
-                                    'type'  => $subCategoryType,
-                                    'value' => $subCategoryValue,
-                                ];
-                            }
-                        }
-                    }
-                    $categoriesData[] = [
-                        'name'          => $categoryName,
-                        'enabled'       => true,
-                        'subcategories' => $subcategories,
-                    ];
-                } else { // disabled categ
-                    $categoriesData[] = [
-                        'name'          => $categoryName,
-                        'enabled'       => false,
-                        'subcategories' => $subcategories,
-                    ];
-                }
-            }
+            $categoriesData[] = [
+                'name'          => $categoryName,
+                'enabled'       => (bool) $values,
+                'subcategories' => $values ? $this->collectSubCategories($category, (object) $values) : [],
+            ];
         }
 
         return $categoriesData;
@@ -228,6 +196,53 @@ class Preset extends BaseModel
         }
 
         return $settings;
+    }
+
+    /**
+     * Settings of one category, as they are stored inside the preset. Returns null
+     * when the preset holds nothing for that category, which reads as disabled.
+     *
+     * @param mixed $enabledCategories
+     */
+    protected function decodeCategorySettings($enabledCategories, string $categoryName)
+    {
+        $value = \is_object($enabledCategories) ? ($enabledCategories->{$categoryName} ?? null) : null;
+
+        return null === $value ? null : json_decode((string) $value);
+    }
+
+    /**
+     * Subcategories of one category, paired with the type and the value the preset
+     * holds for each of them.
+     */
+    protected function collectSubCategories(string $category, object $values): array
+    {
+        $subcategories = [];
+        $class         = new \ReflectionClass($category);
+
+        foreach ($class->getReflectionConstants() as $constant) {
+            if (str_ends_with($constant->name, '_TYPE')) {
+                continue;
+            }
+
+            $subCategoryName = $class->getConstant($constant->name);
+            $value           = $values->{$subCategoryName} ?? null;
+
+            if (null === $value) {
+                continue;
+            }
+
+            // The type constant of a password setting is named after PASS, not PASSWORD.
+            $typeConstant = str_ireplace('PASSWORD', 'PASS', $constant->name) . '_TYPE';
+
+            $subcategories[] = [
+                'name'  => $subCategoryName,
+                'type'  => $class->getConstant($typeConstant),
+                'value' => $value,
+            ];
+        }
+
+        return $subcategories;
     }
 
     /**
