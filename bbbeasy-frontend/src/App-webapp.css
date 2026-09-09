@@ -769,13 +769,16 @@ fieldset {
     color: #ffffff !important;
 }
 .site-sider .sider-new-btn {
-    background: var(--bbbeasy-brand-color) !important;
+    /* The shortcut, not the page's own call to action: it keeps the brand
+       outline and leaves the filled amber to the one button that is. */
+    background: transparent !important;
     border-color: var(--bbbeasy-brand-color) !important;
+    color: var(--bbbeasy-brand-color) !important;
 }
 .site-sider .sider-new-btn:hover,
 .site-sider .sider-new-btn:focus {
-    background: var(--bbbeasy-brand-color-hover) !important;
-    color: #ffffff !important;
+    background: rgba(251, 188, 11, 0.14) !important;
+    color: var(--bbbeasy-brand-color-hover) !important;
     border-color: var(--bbbeasy-brand-color-hover) !important;
 }
 .site-sider .site-menu .ant-menu-submenu-title .ant-menu-title-content,
@@ -2835,35 +2838,39 @@ fieldset {
 .labels-table .ant-table-thead > tr > th,
 .users-table .ant-table-thead > tr > th,
 .roles-table .ant-table-thead > tr > th {
-    background: linear-gradient(135deg, var(--bbbeasy-brand-color) 0%, var(--bbbeasy-brand-color) 100%) !important;
-    color: #ffffff !important;
+    /* A column heading is not an action. The brand colour is spent on the one
+       button per page that is, so the heading reads as the band it is. */
+    background: #16294a !important;
+    color: #a9bcda !important;
     font-weight: 600;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-size: 12px;
     border-bottom: 1px solid rgba(96, 165, 250, 0.35) !important;
 }
 .recordings-table .ant-table-thead > tr > th .ant-table-column-sorter,
 .labels-table .ant-table-thead > tr > th .ant-table-column-sorter,
 .users-table .ant-table-thead > tr > th .ant-table-column-sorter,
 .roles-table .ant-table-thead > tr > th .ant-table-column-sorter {
-    color: rgba(255, 255, 255, 0.45);
+    color: rgba(169, 188, 218, 0.5);
 }
 .recordings-table .ant-table-thead > tr > th.ant-table-column-has-sorters:hover .ant-table-column-sorter,
 .labels-table .ant-table-thead > tr > th.ant-table-column-has-sorters:hover .ant-table-column-sorter,
 .users-table .ant-table-thead > tr > th.ant-table-column-has-sorters:hover .ant-table-column-sorter,
 .roles-table .ant-table-thead > tr > th.ant-table-column-has-sorters:hover .ant-table-column-sorter {
-    color: rgba(255, 255, 255, 0.9);
+    color: #e2ecf9;
 }
 .recordings-table .ant-table-thead > tr > th .ant-table-filter-trigger,
 .labels-table .ant-table-thead > tr > th .ant-table-filter-trigger,
 .users-table .ant-table-thead > tr > th .ant-table-filter-trigger,
 .roles-table .ant-table-thead > tr > th .ant-table-filter-trigger {
-    color: rgba(255, 255, 255, 0.65);
+    color: rgba(169, 188, 218, 0.7);
 }
 .recordings-table .ant-table-thead > tr > th .ant-table-filter-trigger:hover,
 .labels-table .ant-table-thead > tr > th .ant-table-filter-trigger:hover,
 .users-table .ant-table-thead > tr > th .ant-table-filter-trigger:hover,
 .roles-table .ant-table-thead > tr > th .ant-table-filter-trigger:hover {
-    color: #ffffff;
+    color: #e2ecf9;
 }
 .recordings-table .ant-table-thead > tr > th .ant-table-filter-trigger.active,
 .labels-table .ant-table-thead > tr > th .ant-table-filter-trigger.active,
