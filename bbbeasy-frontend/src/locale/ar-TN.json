@@ -312,6 +312,7 @@
     "start": "ابدأ",
     "join": "انضم",
     "meeting_not_started": "لم يبدأ الاجتماع بعد",
+    "meeting_unavailable": "تعذر بدء الاجتماع أو الانضمام إليه",
     "room_ppts": "عروض الغرفة",
     "upload": "إضافة",
     "upload_presentation_success": "تم تحميل العرض بنجاح",

@@ -316,6 +316,7 @@
     "start": "Start",
     "join": "Join",
     "meeting_not_started": "Meeting has not started yet",
+    "meeting_unavailable": "Could not start or join the meeting",
     "room_ppts": "Room presentations",
     "upload": "Add",
     "upload_presentation_success": "Presentation successfully uploaded",

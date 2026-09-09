@@ -312,6 +312,7 @@
     "start": "Démarrer",
     "join": "Rejoindre",
     "meeting_not_started": "la réunion n'a pas encore commencé",
+    "meeting_unavailable": "Impossible de démarrer ou de rejoindre la réunion",
     "room_ppts": "Présentations de la salle",
     "upload": "Ajouter",
     "upload_presentation_success": "Présentation chargée avec succès",
