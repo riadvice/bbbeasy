@@ -43,9 +43,9 @@ use Test\Scenario;
  */
 final class InstallTest extends Scenario
 {
-    final protected const COLLECT_USERS_ROUTE = 'POST /api/collect-users';
-    final protected const INSTALL_ROUTE       = 'POST /api/install';
-    protected $group                          = 'Action Core Install Process';
+    protected const COLLECT_USERS_ROUTE = 'POST /api/collect-users';
+    protected const INSTALL_ROUTE       = 'POST /api/install';
+    protected $group                    = 'Action Core Install Process';
 
     /**
      * @param $f3 \Base

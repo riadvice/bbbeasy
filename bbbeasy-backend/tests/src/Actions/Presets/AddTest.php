@@ -35,8 +35,8 @@ use Test\Scenario;
  */
 final class AddTest extends Scenario
 {
-    final protected const ADD_PRESET_ROUTE = 'POST /api/presets';
-    protected $group                       = 'Action Preset Add';
+    protected const ADD_PRESET_ROUTE = 'POST /api/presets';
+    protected $group                 = 'Action Preset Add';
 
     /**
      * @param mixed $f3

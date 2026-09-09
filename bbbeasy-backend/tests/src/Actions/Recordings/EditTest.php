@@ -32,8 +32,8 @@ use Test\Scenario;
  */
 final class EditTest extends Scenario
 {
-    final protected const EDIT_RECORDING_ROUTE = 'PUT /api/recordings/';
-    protected $group                           = 'Actions Recording Edit';
+    protected const EDIT_RECORDING_ROUTE = 'PUT /api/recordings/';
+    protected $group                     = 'Actions Recording Edit';
 
     /**
      * @param mixed $f3

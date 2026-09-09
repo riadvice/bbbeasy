@@ -33,8 +33,8 @@ use Test\Scenario;
  */
 final class EditTest extends Scenario
 {
-    final protected const EDIT_LABEL_ROUTE = 'PUT /api/labels/';
-    protected $group                       = 'Actions Label Edit';
+    protected const EDIT_LABEL_ROUTE = 'PUT /api/labels/';
+    protected $group                 = 'Actions Label Edit';
 
     /**
      * @param mixed $f3

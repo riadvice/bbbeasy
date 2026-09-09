@@ -34,8 +34,8 @@ use Test\Scenario;
  */
 final class StartTest extends Scenario
 {
-    final protected const START_ROOM_ROUTE = 'POST /api/rooms/';
-    protected $group                       = 'Action Room Start';
+    protected const START_ROOM_ROUTE = 'POST /api/rooms/';
+    protected $group                 = 'Action Room Start';
 
     /**
      * @param mixed $f3

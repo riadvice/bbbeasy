@@ -36,8 +36,8 @@ use Test\Scenario;
  */
 final class EditTest extends Scenario
 {
-    final protected const EDIT_ROOM_ROUTE = 'PUT /api/rooms/';
-    protected $group                      = 'Actions Rooms Edit';
+    protected const EDIT_ROOM_ROUTE = 'PUT /api/rooms/';
+    protected $group                = 'Actions Rooms Edit';
 
     /**
      * @param mixed $f3

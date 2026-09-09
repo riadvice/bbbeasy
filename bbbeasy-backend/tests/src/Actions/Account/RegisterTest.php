@@ -32,8 +32,8 @@ use Test\Scenario;
  */
 final class RegisterTest extends Scenario
 {
-    final protected const REGISTER_ROUTE = 'POST /api/account/register';
-    protected $group                     = 'Action User Register';
+    protected const REGISTER_ROUTE = 'POST /api/account/register';
+    protected $group               = 'Action User Register';
 
     /**
      * @param mixed $f3

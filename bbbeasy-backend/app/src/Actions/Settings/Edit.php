@@ -49,12 +49,10 @@ class Edit extends BaseAction
 
         $setting = new Setting();
 
-        /** @var Setting $settings */
-        $settings = $setting->find([], ['limit' => 1])->current();
-
+        $settings     = $setting->getDefault();
         $errorMessage = 'Settings could not be updated';
 
-        if ($settings->valid()) {
+        if (null !== $settings && $settings->valid()) {
             $dataChecker = new DataChecker();
             $dataChecker = $setting->checkSettingsData($dataChecker, $form);
 

@@ -33,8 +33,8 @@ use Test\Scenario;
  */
 final class EditTest extends Scenario
 {
-    final protected const EDIT_SETTINGS_ROUTE = 'PUT /api/settings';
-    protected $group                          = 'Action Setting Edit';
+    protected const EDIT_SETTINGS_ROUTE = 'PUT /api/settings';
+    protected $group                    = 'Action Setting Edit';
 
     /**
      * @param mixed $f3

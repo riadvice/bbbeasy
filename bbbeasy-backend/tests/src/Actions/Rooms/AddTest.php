@@ -37,8 +37,8 @@ use Test\Scenario;
  */
 final class AddTest extends Scenario
 {
-    final protected const ADD_ROOM_ROUTE = 'POST /api/rooms';
-    protected $group                     = 'Action Room Add';
+    protected const ADD_ROOM_ROUTE = 'POST /api/rooms';
+    protected $group               = 'Action Room Add';
 
     /**
      * @param mixed $f3

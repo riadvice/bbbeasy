@@ -31,8 +31,8 @@ use Test\Scenario;
  */
 final class CollectTest extends Scenario
 {
-    final protected const COLLECT_PRESET_SETTINGS_ROUTE = 'GET /api/preset-settings';
-    protected $group                                    = 'Action Preset Setting Collect';
+    protected const COLLECT_PRESET_SETTINGS_ROUTE = 'GET /api/preset-settings';
+    protected $group                              = 'Action Preset Setting Collect';
 
     /**
      * @param mixed $f3

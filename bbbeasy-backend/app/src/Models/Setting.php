@@ -66,14 +66,24 @@ class Setting extends BaseModel
         }
     }
 
+    /**
+     * The one settings row the instance holds, or null before it is created.
+     * find() answers false rather than an empty cursor when the table is empty.
+     */
+    public function getDefault(): ?self
+    {
+        $found = $this->find([], ['limit' => 1]);
+
+        return $found ? $found->current() : null;
+    }
+
     public function getAllSettings(): array
     {
         $result = [];
 
-        /** @var Setting $defaultSettings */
-        $defaultSettings = $this->find([], ['limit' => 1])->current();
+        $defaultSettings = $this->getDefault();
 
-        if ($defaultSettings->valid()) {
+        if (null !== $defaultSettings && $defaultSettings->valid()) {
             $result = [
                 'company_name'    => $defaultSettings->company_name,
                 'company_website' => $defaultSettings->company_website,

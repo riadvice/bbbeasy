@@ -31,8 +31,8 @@ use Test\Scenario;
  */
 final class IndexTest extends Scenario
 {
-    final protected const INDEX_ROLE_ROUTE = 'GET /api/roles';
-    protected $group                       = 'Action Role Index';
+    protected const INDEX_ROLE_ROUTE = 'GET /api/roles';
+    protected $group                 = 'Action Role Index';
 
     /**
      * @param mixed $f3

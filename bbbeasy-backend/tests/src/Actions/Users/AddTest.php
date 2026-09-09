@@ -34,8 +34,8 @@ use Test\Scenario;
  */
 final class AddTest extends Scenario
 {
-    final protected const ADD_USER_ROUTE = 'POST /api/users';
-    protected $group                     = 'Action User Add';
+    protected const ADD_USER_ROUTE = 'POST /api/users';
+    protected $group               = 'Action User Add';
 
     /**
      * @param mixed $f3

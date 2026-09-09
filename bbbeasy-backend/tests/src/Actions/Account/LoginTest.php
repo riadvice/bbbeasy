@@ -36,8 +36,8 @@ use Test\Scenario;
  */
 final class LoginTest extends Scenario
 {
-    final protected const LOGIN_ROUTE = 'POST /api/account/login';
-    protected $group                  = 'Action User Login';
+    protected const LOGIN_ROUTE = 'POST /api/account/login';
+    protected $group            = 'Action User Login';
 
     /**
      * @param mixed $f3

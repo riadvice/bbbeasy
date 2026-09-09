@@ -400,14 +400,20 @@ class Session extends Tailored
             }
         }
 
+        // The secret signs every access token, nothing but the account running the
+        // application has any business reading it.
         $directory = \dirname($secretFile);
-        if (!is_dir($directory)) {
-            mkdir($directory, 0o770, true);
+        if (!is_dir($directory) && !mkdir($directory, 0o700, true) && !is_dir($directory)) {
+            throw new \RuntimeException('Could not create the directory holding the session secret');
         }
 
         $generatedSecret = bin2hex(random_bytes(64));
-        file_put_contents($secretFile, $generatedSecret, LOCK_EX);
-        @chmod($secretFile, 0o600);
+
+        if (false === file_put_contents($secretFile, $generatedSecret, LOCK_EX)) {
+            throw new \RuntimeException('Could not write the session secret');
+        }
+
+        chmod($secretFile, 0o600);
 
         return $generatedSecret;
     }

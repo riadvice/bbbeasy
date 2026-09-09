@@ -64,7 +64,7 @@ class Install extends BaseAction
                     if (null !== $form['logo']) {
                         $logoName = $form['logo'];
                         if (!DataUtils::validateImageFormat($logoName)) {
-                            $this->logger->error('Settings could not be updated', ['errors' => 'invalid file format : ' . $logoFormat]);
+                            $this->logger->error('Settings could not be updated', ['errors' => 'invalid file format : ' . $logoName]);
 
                             $this->renderJson(['message' => 'invalid file format'], ResponseCode::HTTP_PRECONDITION_FAILED);
 
@@ -101,9 +101,8 @@ class Install extends BaseAction
 
                                 $this->logger->info('Initial application setup : Add administrator with admin role and default preset', ['user' => $user->toArray()]);
 
-                                /** @var Setting $settings */
-                                $settings = $setting->find([], ['limit' => 1])->current();
-                                if (!$settings->dry()) {
+                                $settings = $setting->getDefault();
+                                if (null !== $settings && !$settings->dry()) {
                                     $settings->saveSettings(
                                         $form['company_name'],
                                         $form['company_url'],

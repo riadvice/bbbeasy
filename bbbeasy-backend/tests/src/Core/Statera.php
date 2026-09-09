@@ -278,9 +278,19 @@ class Statera
     }
 }
 
+/**
+ * Stands in for a routed class while the suite mocks requests. Fat-Free only needs
+ * the verbs to exist, nothing is meant to happen when they are called.
+ */
 class Map
 {
-    public function get(): void {}
+    public function get(): void
+    {
+        // Nothing to serve, the suite drives the actions directly.
+    }
 
-    public function post(): void {}
+    public function post(): void
+    {
+        // Nothing to serve, the suite drives the actions directly.
+    }
 }

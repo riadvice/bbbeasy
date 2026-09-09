@@ -34,8 +34,8 @@ use Test\Scenario;
  */
 final class DeleteTest extends Scenario
 {
-    final protected const DELETE_PRESET_ROUTE = 'DELETE /api/presets/';
-    protected $group                          = 'Action Preset Delete';
+    protected const DELETE_PRESET_ROUTE = 'DELETE /api/presets/';
+    protected $group                    = 'Action Preset Delete';
 
     /**
      * @param mixed $f3

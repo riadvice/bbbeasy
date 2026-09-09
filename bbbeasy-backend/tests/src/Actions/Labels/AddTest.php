@@ -35,8 +35,8 @@ use Test\Scenario;
  */
 final class AddTest extends Scenario
 {
-    final protected const ADD_LABEL_ROUTE = 'POST /api/labels';
-    protected $group                      = 'Action Label Add';
+    protected const ADD_LABEL_ROUTE = 'POST /api/labels';
+    protected $group                = 'Action Label Add';
 
     /**
      * @param mixed $f3

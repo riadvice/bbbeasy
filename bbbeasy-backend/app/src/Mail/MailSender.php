@@ -36,11 +36,14 @@ class MailSender extends BaseMailSender
      */
     public function sendExceptionEmail($exception): void
     {
-        $hash         = mb_substr(md5(preg_replace('~(Resource id #)\d+~', '$1', (string) $exception)), 0, 10);
+        // The hash only groups repeats of the same exception, it is not a signature.
+        $hash         = mb_substr(hash('xxh128', preg_replace('~(Resource id #)\d+~', '$1', (string) $exception)), 0, 10);
         $mailSentPath = $this->f3->get('ROOT') . '/' . $this->f3->get('LOGS') . 'email-sent-' . $hash;
         $snooze       = strtotime('1 day') - time();
         $messageId    = $this->generateId();
-        if (@filemtime($mailSentPath) + $snooze < time() && @file_put_contents($mailSentPath, 'sent')) {
+        $lastSent     = is_file($mailSentPath) ? (int) filemtime($mailSentPath) : 0;
+
+        if ($lastSent + $snooze < time() && false !== file_put_contents($mailSentPath, 'sent')) {
             $this->f3->set('mailer.from_name', 'BBBEasy Debugger');
             $subject = 'PHP: An error occurred on server ' . Environment::getHostName() . " ERROR ID '{$hash}'";
             $message = 'An error occurred on <b>' . Environment::getHostName() . '</b><br />' . nl2br($exception->getTraceAsString());
@@ -75,10 +78,19 @@ class MailSender extends BaseMailSender
             return false;
         }
 
-        $socket = @fsockopen(mb_strtolower($host), $port, $errno, $error, 2);
+        // A refused connection is the answer this asks for, not a warning in the log.
+        set_error_handler(static fn (): bool => true);
+
+        try {
+            $socket = fsockopen(mb_strtolower($host), $port, $errno, $error, 2);
+        } finally {
+            restore_error_handler();
+        }
+
         if (!$socket) {
             return false;
         }
+
         fclose($socket);
 
         return true;
@@ -113,14 +125,33 @@ class MailSender extends BaseMailSender
 
         $sent = $this->mailer->send($subject, Environment::isNotProduction());
         if ($sent && Environment::isNotProduction()) {
-            @file_put_contents(
-                $this->f3->get('MAIL_STORAGE') . mb_substr($messageId, 1, -1) . '.eml',
-                explode("354 Go ahead\n", explode("250 OK\nQUIT", (string) $this->mailer->log())[0])[1]
-            );
+            $this->storeSentMail($messageId);
         }
 
         $this->logger->info('Sending email | Status: ' . ($sent ? 'true' : 'false') . " | Log:\n" . $this->mailer->log());
 
         return (bool) $sent;
+    }
+
+    /**
+     * Keeps a copy of what was sent, so the message can be read outside production
+     * without a mail server. The log is only parsable when the exchange succeeded,
+     * a mail that never reached the DATA stage simply leaves no copy.
+     */
+    private function storeSentMail(string $messageId): void
+    {
+        $log  = (string) $this->mailer->log();
+        $head = explode("250 OK\nQUIT", $log)[0];
+        $body = explode("354 Go ahead\n", $head);
+
+        if (!isset($body[1])) {
+            return;
+        }
+
+        $path = $this->f3->get('MAIL_STORAGE') . mb_substr($messageId, 1, -1) . '.eml';
+
+        if (false === file_put_contents($path, $body[1])) {
+            $this->logger->warning('The sent email could not be stored', ['path' => $path]);
+        }
     }
 }

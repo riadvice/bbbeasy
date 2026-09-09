@@ -34,8 +34,8 @@ use Test\Scenario;
  */
 final class CollectTest extends Scenario
 {
-    final protected const COLLECT_ROOMS_ROUTE = 'GET /api/rooms/';
-    protected $group                          = 'Action Room Collect Rooms';
+    protected const COLLECT_ROOMS_ROUTE = 'GET /api/rooms/';
+    protected $group                    = 'Action Room Collect Rooms';
 
     /**
      * @param mixed $f3

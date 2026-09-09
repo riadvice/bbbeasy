@@ -33,8 +33,8 @@ use Test\Scenario;
  */
 final class ChangePasswordTest extends Scenario
 {
-    final protected const CHANGE_ROUTE = 'POST /api/account/change-password';
-    protected $group                   = 'Action Change Password';
+    protected const CHANGE_ROUTE = 'POST /api/account/change-password';
+    protected $group             = 'Action Change Password';
 
     /**
      * @param mixed $f3

@@ -69,9 +69,11 @@ class Delete extends BaseAction
         $room->setPresentations($list);
         $room->save();
 
+        // The room no longer lists the file, a copy left on disk is worth a line in
+        // the log rather than a failed request.
         $filePath = $this->f3->get('UPLOADS') . $filename;
-        if (is_file($filePath)) {
-            @unlink($filePath);
+        if (is_file($filePath) && !unlink($filePath)) {
+            $this->logger->warning('The presentation file could not be removed', ['room_id' => $room->id, 'name' => $filename]);
         }
 
         $this->logger->info('Presentation successfully deleted for room', ['room_id' => $room->id, 'name' => $filename]);
