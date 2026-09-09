@@ -332,7 +332,7 @@ const Install = () => {
                             onValuesChange={() => setMessage('')}
                         >
                             {steps[activeStep].content}
-                            <UserPasswordForm isHidden={activeStep !== 0} />
+                            <UserPasswordForm isInstall isHidden={activeStep !== 0} />
                             <Row
                                 className={
                                     activeStep === steps.length - 1

@@ -24,12 +24,15 @@ import { PasswordInput } from 'antd-password-input-strength';
 type Props = {
     passwordText?: string;
     isHidden?: boolean;
+    isInstall?: boolean;
 };
 
 export const UserPasswordForm = (props: Props) => {
     return (
         <Form.Item
-            className={!props.isHidden ? 'password-install' : ''}
+            /* The installer lays its steps out with a wide gutter; every other
+               form wants the field to line up with the ones around it. */
+            className={props.isInstall && !props.isHidden ? 'password-install' : ''}
             hidden={props.isHidden}
             label={<Trans i18nKey={props.passwordText ?? 'password.label'} />}
             name={props.passwordText ?? 'password'}

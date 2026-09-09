@@ -2329,10 +2329,6 @@ fieldset {
     width: min(100%, 520px);
 }
 
-.login-page .password-install {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-}
 
 .register-page .login-form-column {
     min-height: calc(100vh - 240px);
@@ -2344,10 +2340,6 @@ fieldset {
     width: min(100%, 460px);
 }
 
-.register-page .password-install {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-}
 
 .section-top {
     padding: 50px 0 !important;
@@ -4282,10 +4274,6 @@ div.error-message-Label {
 }
 /* Reset the installer padding on the password Form.Item so the field
    has exactly the same width as the email field */
-.user-add-modal .password-install {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-}
 .user-add-modal .ant-select-selector,
 .user-add-modal .ant-select-content {
     background: #0b1526 !important;
