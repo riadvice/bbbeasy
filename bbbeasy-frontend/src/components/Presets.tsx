@@ -40,7 +40,6 @@ import {
     InputNumber,
     Space,
     Dropdown,
-    Menu,
     Select,
 } from 'antd';
 import {
@@ -177,30 +176,28 @@ const PresetsCol: React.FC<PresetColProps> = ({
         }
     };
 
-    //delete
+    // Delete always asks, and says more when rooms are using the preset. The menu
+    // entry used to carry a second confirmation of its own on top of this one, and
+    // a confirmation cannot live inside a menu entry that closes the menu.
     const handleDelete = () => {
-        if (preset.nb_rooms > 0) {
-            Modal.confirm({
-                wrapClassName: 'delete-wrap',
-                title: null,
-                icon: null,
-                content: (
-                    <>
-                        <WarningOutlined className="delete-icon" />
-                        <span className="ant-modal-confirm-title">
-                            <Trans i18nKey="delete_preset_title" />
-                        </span>
-                        <Trans i18nKey="delete_preset_content" />
-                    </>
-                ),
-                okType: 'danger',
-                okText: <Trans i18nKey="confirm_yes" />,
-                cancelText: <Trans i18nKey="confirm_no" />,
-                onOk: () => deleteClickHandler(),
-            });
-        } else {
-            deleteClickHandler();
-        }
+        Modal.confirm({
+            wrapClassName: 'delete-wrap',
+            title: null,
+            icon: null,
+            content: (
+                <>
+                    <WarningOutlined className="delete-icon" />
+                    <span className="ant-modal-confirm-title">
+                        <Trans i18nKey="delete_preset_title" />
+                    </span>
+                    {preset.nb_rooms > 0 && <Trans i18nKey="delete_preset_content" />}
+                </>
+            ),
+            okType: 'danger',
+            okText: <Trans i18nKey="confirm_yes" />,
+            cancelText: <Trans i18nKey="confirm_no" />,
+            onOk: () => deleteClickHandler(),
+        });
     };
 
     //edit name
@@ -420,26 +417,21 @@ const PresetsCol: React.FC<PresetColProps> = ({
                     copyClickHandler != null || deleteEnabled ? (
                         <Dropdown
                             key="more"
-                            popupRender={() => (
-                                <Menu>
-                                    {copyClickHandler != null && (
-                                        <Menu.Item key="1" onClick={copyClickHandler}>
-                                            <Trans i18nKey={'copy'} />
-                                        </Menu.Item>
-                                    )}
-                                    {deleteEnabled && (
-                                        <Popconfirm
-                                            title={t('delete_preset_confirm')}
-                                            icon={<QuestionCircleOutlined className="red-icon" />}
-                                            onConfirm={() => handleDelete()}
-                                        >
-                                            <Menu.Item key="2" danger>
-                                                <Trans i18nKey={'delete'} />
-                                            </Menu.Item>
-                                        </Popconfirm>
-                                    )}
-                                </Menu>
-                            )}
+                            menu={{
+                                items: [
+                                    copyClickHandler != null && {
+                                        key: '1',
+                                        label: <Trans i18nKey={'copy'} />,
+                                        onClick: copyClickHandler,
+                                    },
+                                    deleteEnabled && {
+                                        key: '2',
+                                        danger: true,
+                                        label: <Trans i18nKey={'delete'} />,
+                                        onClick: handleDelete,
+                                    },
+                                ].filter(Boolean),
+                            }}
                             placement={LocaleService.direction === 'rtl' ? 'bottomLeft' : 'bottomRight'}
                         >
                             <MoreOutlined />
