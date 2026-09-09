@@ -67,6 +67,32 @@ const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
     const [borderRadius, setBorderRadius] = React.useState<number>(6);
     const [wireframeStyle, setWireframeStyle] = React.useState<boolean>(false);
 
+    // The access token has a lifetime, sign the user out when it runs out instead of
+    // waiting for the next request to fail.
+    React.useEffect(() => {
+        if (!currentSession?.expiresAt) {
+            return;
+        }
+
+        const endSession = () => {
+            AuthService.clearAuth();
+            setCurrentUser(null);
+            setCurrentSession(null);
+            setIsLogged(false);
+        };
+
+        const remaining = Date.parse(currentSession.expiresAt) - Date.now();
+        if (remaining <= 0) {
+            endSession();
+
+            return;
+        }
+
+        const timer = window.setTimeout(endSession, remaining);
+
+        return () => window.clearTimeout(timer);
+    }, [currentSession]);
+
     const dataProvider = useMemo(
         () => ({ dataRooms, setDataRooms, dataLabels, setDataLabels, dataPresets, setDataPresets }),
         [dataRooms, dataLabels, dataPresets]
