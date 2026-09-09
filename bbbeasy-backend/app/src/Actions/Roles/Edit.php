@@ -26,7 +26,6 @@ use Actions\Base as BaseAction;
 use Actions\RequirePrivilegeTrait;
 use Enum\ResponseCode;
 use Models\Role;
-use Models\RolePermission;
 use Respect\Validation\Validator;
 use Validation\DataChecker;
 
@@ -77,71 +76,13 @@ class Edit extends BaseAction
                 }
             }
             if (isset($form['permissions'])) {
-                // edit permissions
-                $newPermissions = $form['permissions'];
-                $oldPermissions = $role->getRolePermissions();
-                foreach ($newPermissions as $group => $actions) {
-                    // check if role have permissions assigned and group exist
-                    if (\is_array($oldPermissions) && $oldPermissions[$group]) {
-                        // delete or add new actions of this group
-                        $deletedActions = array_diff($oldPermissions[$group], $actions);
-                        $addedActions   = array_diff($actions, $oldPermissions[$group]);
-                        if (!empty($deletedActions)) {
-                            // delete role permissions
-                            foreach ($deletedActions as $deletedAction) {
-                                $rolePermission = new RolePermission();
-                                $rolePermission->load(['role_id = ? and group = ? and name = ?', $roleId, $group, $deletedAction]);
-                                $deleteResult = $rolePermission->erase();
-                                if ($deleteResult) {
-                                    $this->logger->info('Role permission successfully deleted');
-                                } else {
-                                    $this->logger->critical('Error occurred while deleting role permission', ['rolePermission' => $rolePermission->toArray()]);
-                                    $this->renderJson([], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-                                }
-                            }
-                        }
-                        if (!empty($addedActions)) {
-                            // add role permissions
-                            foreach ($addedActions as $addedAction) {
-                                $rolePermission          = new RolePermission();
-                                $rolePermission->group   = $group;
-                                $rolePermission->name    = $addedAction;
-                                $rolePermission->role_id = $roleId;
+                try {
+                    $role->syncPermissions($form['permissions']);
+                } catch (\Exception $e) {
+                    $this->logger->error('Role permissions could not be updated', ['error' => $e->getMessage()]);
+                    $this->renderJson(['errors' => $e->getMessage()], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
 
-                                try {
-                                    $rolePermission->save();
-                                    $this->logger->info('Role permission successfully added', ['rolePermission' => $rolePermission->toArray()]);
-                                } catch (\Exception $e) {
-                                    $this->logger->error('Role permission could not be added', ['error' => $e->getMessage()]);
-                                    $this->renderJson(['errors' => $e->getMessage()], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-
-                                    return;
-                                }
-                            }
-                        }
-                    }
-                    // permissions role is empty or a new group of permissions
-                    else {
-                        if (!empty($actions)) {
-                            // new role permissions
-                            foreach ($actions as $newAction) {
-                                $rolePermission          = new RolePermission();
-                                $rolePermission->group   = $group;
-                                $rolePermission->name    = $newAction;
-                                $rolePermission->role_id = $roleId;
-
-                                try {
-                                    $rolePermission->save();
-                                    $this->logger->info('Role permission successfully added', ['rolePermission' => $rolePermission->toArray()]);
-                                } catch (\Exception $e) {
-                                    $this->logger->error('Role permission could not be added', ['error' => $e->getMessage()]);
-                                    $this->renderJson(['errors' => $e->getMessage()], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
-
-                                    return;
-                                }
-                            }
-                        }
-                    }
+                    return;
                 }
             }
 
@@ -156,7 +97,7 @@ class Edit extends BaseAction
 
             $role = $this->loadData($roleId);
             $this->logger->info('Role successfully updated', ['role' => $role->toArray()]);
-            $this->renderJson(['result' => 'success', 'role' => $role->getRoleInfos($role)]);
+            $this->renderJson(['result' => 'success', 'role' => $role->getRoleInfos()]);
         } else {
             $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
         }

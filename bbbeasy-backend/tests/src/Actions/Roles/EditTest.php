@@ -34,7 +34,7 @@ use Test\Scenario;
  */
 final class EditTest extends Scenario
 {
-    final protected const EDIT_ROLE_ROUTE = 'PUT /roles/';
+    final protected const EDIT_ROLE_ROUTE = 'PUT /api/roles/';
     protected $group                      = 'Action Role Edit';
 
     /**

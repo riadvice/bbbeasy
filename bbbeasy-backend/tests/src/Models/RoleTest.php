@@ -174,8 +174,8 @@ final class RoleTest extends Scenario
         $dataGet = [
             $role->getAdministratorRole(),
             $role->getLecturerRole(),
-            $role1->getRoleInfos($role1),
-            $role2->getRoleInfos($role2),
+            $role1->getRoleInfos(),
+            $role2->getRoleInfos(),
         ];
 
         $test->expect($dataCollect === $role->collectAll(), 'collectAllRoles() returned all roles names');
@@ -198,7 +198,7 @@ final class RoleTest extends Scenario
             'permissions' => $role->getRolePermissions(),
         ];
 
-        $test->expect(empty(array_udiff($data, $role->getRoleInfos($data), static fn ($obj1, $obj2) => $obj1 === $obj2)), 'getRoleInfos() returned role informations');
+        $test->expect(empty(array_udiff($data, $role->getRoleInfos(), static fn ($obj1, $obj2) => $obj1 === $obj2)), 'getRoleInfos() returned role informations');
 
         return $test->results();
     }
@@ -233,7 +233,7 @@ final class RoleTest extends Scenario
         $data       = ['labels' => ['add', 'delete', 'edit']];
         $role       = new Role();
         $role->name = 'labels manager';
-        $result     = $role->saveRoleAndPermissions($role->name, $data);
+        $result     = $role->saveRoleAndPermissions($data);
 
         $test->expect($result, 'saveRoleAndPermissions() add role permissions');
         $test->expect($data === $role->getRolePermissions(), 'getRolePermissions() returned role permissions');
@@ -253,7 +253,7 @@ final class RoleTest extends Scenario
         $data       = ['labels' => ['add', 'delete', 'edit']];
         $role       = new Role();
         $role->name = $faker->name;
-        $role->saveRoleAndPermissions($role->name, $data);
+        $role->saveRoleAndPermissions($data);
         $roleId = $role->id;
         $role->delete();
 

@@ -56,7 +56,9 @@ class Role extends BaseModel
 
     public function nameExists($name, $id = null): bool
     {
-        return $this->load($this->excludeId(['lower(name) = ?', mb_strtolower($this->f3->snakecase($name))], $id));
+        // Roles are stored with the name the user typed, snake casing it here made
+        // the comparison miss every name holding a capital or a space.
+        return $this->load($this->excludeId(['lower(name) = ?', mb_strtolower(mb_trim($name))], $id));
     }
 
     public function getAllRoles(): array
@@ -65,7 +67,7 @@ class Role extends BaseModel
         $roles = $this->find([], ['order' => 'id']);
         if ($roles) {
             foreach ($roles as $role) {
-                $data[] = $role->getRoleInfos($role);
+                $data[] = $role->getRoleInfos();
             }
         }
 
@@ -77,11 +79,11 @@ class Role extends BaseModel
         return $this->db->exec('SELECT id, name FROM roles');
     }
 
-    public function getRoleInfos($role): array
+    public function getRoleInfos(): array
     {
         return [
-            'key'         => $role->id,
-            'name'        => $role->name,
+            'key'         => $this->id,
+            'name'        => $this->name,
             'users'       => $this->getRoleUsers(),
             'permissions' => $this->getRolePermissions(),
         ];
@@ -106,7 +108,7 @@ class Role extends BaseModel
         $data = [];
         $this->load(['id = ?', [UserRole::LECTURER_ID]]);
         if ($this->valid()) {
-            $data = $this->getRoleInfos($this);
+            $data = $this->getRoleInfos();
         }
 
         return $data;
@@ -117,7 +119,7 @@ class Role extends BaseModel
         $data = [];
         $this->load(['id = ?', [UserRole::ADMINISTRATOR_ID]]);
         if ($this->valid()) {
-            $data = $this->getRoleInfos($this);
+            $data = $this->getRoleInfos();
         }
 
         return $data;
@@ -146,43 +148,92 @@ class Role extends BaseModel
         return $permissionsRole;
     }
 
-    public function saveRoleAndPermissions($name, $permissions): bool|self
+    public function saveRoleAndPermissions($permissions): bool|self
     {
         $this->logger->info('Starting save role and permissions transaction.');
         $this->db->begin();
-        $this->save();
-        $this->logger->info('Role successfully added', ['role' => $this->toArray()]);
-        $this->db->commit();
-        $roleId = $this->getIdRoleByName($name);
 
-        $this->db->begin();
-        if (isset($permissions)) {
-            // add permissions
-            foreach ($permissions as $group => $actions) {
-                if (!empty($actions)) {
-                    foreach ($actions as $action) {
-                        $rolePermission          = new RolePermission();
-                        $rolePermission->group   = $group;
-                        $rolePermission->name    = $action;
-                        $rolePermission->role_id = $roleId['id'];
+        try {
+            $this->save();
+            $this->syncPermissions($permissions);
+        } catch (\Exception $e) {
+            $this->db->rollback();
+            $this->logger->error('Role and permissions could not be saved', ['error' => $e->getMessage()]);
 
-                        try {
-                            $rolePermission->save();
-                            $this->logger->info('Role permission successfully added', ['rolePermission' => $rolePermission->toArray()]);
-                        } catch (\Exception $e) {
-                            $this->logger->error('Role permission could not be added', ['error' => $e->getMessage()]);
-
-                            return false;
-                        }
-                    }
-                }
-            }
+            return false;
         }
 
         $this->db->commit();
-        $this->logger->info('Save role and permissions transaction successfully commit.');
 
-        return $this->getRoleByName($name);
+        // The relation was resolved before the permissions were written, reading it
+        // back is what makes the saved role report them.
+        $this->load(['id = ?', $this->id]);
+        $this->logger->info('Save role and permissions transaction successfully commit.', ['role' => $this->toArray()]);
+
+        return $this;
+    }
+
+    /**
+     * Turn a group indexed permission list into a flat list of group and action pairs.
+     *
+     * @param null|array|object $permissions
+     */
+    public function flattenPermissions($permissions): array
+    {
+        $pairs = [];
+        foreach ((array) $permissions as $group => $actions) {
+            foreach ((array) $actions as $action) {
+                $pairs[] = [$group, $action];
+            }
+        }
+
+        return $pairs;
+    }
+
+    /**
+     * The same list as one comparable "group.action" string per permission.
+     *
+     * @param null|array|object $permissions
+     */
+    public function permissionKeys($permissions): array
+    {
+        return array_map(static fn (array $pair): string => $pair[0] . '.' . $pair[1], $this->flattenPermissions($permissions));
+    }
+
+    /**
+     * Replace the permissions of this role with the given ones. The form carries the
+     * whole matrix, so whatever is missing from it is revoked.
+     *
+     * @param null|array|object $permissions
+     */
+    public function syncPermissions($permissions): void
+    {
+        $wanted  = $this->permissionKeys($permissions);
+        $current = $this->permissionKeys($this->getRolePermissions());
+
+        foreach (array_diff($current, $wanted) as $key) {
+            [$group, $action] = explode('.', $key, 2);
+
+            $rolePermission = new RolePermission();
+            $rolePermission->load(['role_id = ? and group = ? and name = ?', $this->id, $group, $action]);
+
+            if (!$rolePermission->dry()) {
+                $rolePermission->erase();
+                $this->logger->info('Role permission successfully deleted', ['role' => $this->id, 'permission' => $key]);
+            }
+        }
+
+        foreach (array_diff($wanted, $current) as $key) {
+            [$group, $action] = explode('.', $key, 2);
+
+            $rolePermission          = new RolePermission();
+            $rolePermission->group   = $group;
+            $rolePermission->name    = $action;
+            $rolePermission->role_id = $this->id;
+            $rolePermission->save();
+
+            $this->logger->info('Role permission successfully added', ['role' => $this->id, 'permission' => $key]);
+        }
     }
 
     public function switchAllRoleUsers(): bool
