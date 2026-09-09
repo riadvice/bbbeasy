@@ -41,6 +41,9 @@ export default tseslint.config(
         },
         rules: {
             'react/prop-types': 'off',
+            // Destructuring a prop only to keep it out of the rest element is how a
+            // component stops a non DOM prop reaching the element it spreads onto.
+            '@typescript-eslint/no-unused-vars': ['error', { ignoreRestSiblings: true }],
             'react/react-in-jsx-scope': 'off',
             '@typescript-eslint/no-explicit-any': 'off',
             '@typescript-eslint/no-empty-interface': 'warn',

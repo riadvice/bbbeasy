@@ -45,6 +45,10 @@ type Props = {
 
     showLabelColor?: boolean;
     inputColor?: React.JSX.Element;
+
+    /* The column carries this so the caller can choose the editor. It is not a
+       DOM attribute, and anything left in restProps lands on the <td>. */
+    inputType?: 'text' | 'select';
 };
 
 const EditableTableCell: React.FC<Props> = ({
@@ -62,6 +66,7 @@ const EditableTableCell: React.FC<Props> = ({
     mouseLeaveFct,
     showLabelColor,
     inputColor,
+    inputType,
     ...restProps
 }) => {
     let firstTest = false;
