@@ -113,8 +113,15 @@ export async function requestEmail(
     await page.goto('/reset-password', { waitUntil: 'domcontentloaded' });
     await page.waitForSelector('form#reset', { state: 'visible', timeout: 15000 });
     await page.locator('input#reset_email').fill(email);
+
+    // Wait for the request itself rather than a fixed delay, the token only exists
+    // in the database once the backend has answered.
+    const resetResponse = page.waitForResponse(
+        (response) => response.url().includes('/api/account/reset-password') && response.request().method() === 'POST',
+        { timeout: 15000 }
+    );
     await page.locator('form#reset button[type="submit"]').click();
-    await wait(2000);
+    await resetResponse;
 
     if (expired) {
         // Set token expiry to a date in the past to guarantee it's expired
