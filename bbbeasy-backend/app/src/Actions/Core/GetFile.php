@@ -50,10 +50,17 @@ class GetFile extends BaseAction
         $inline = 'pdf' === mb_strtolower(pathinfo($file, PATHINFO_EXTENSION));
 
         // Resolve the uploads directory to an absolute path to avoid CWD issues
-        $uploadsDir = realpath($f3->get('BASE') . \DIRECTORY_SEPARATOR . $f3->get('UPLOADS'));
-        if (!$uploadsDir) {
+        $uploadsDir = realpath($f3->get('BASE') . \DIRECTORY_SEPARATOR . $f3->get('UPLOADS'))
             // Fallback: resolve relative to this file's location
-            $uploadsDir = realpath(__DIR__ . '/../../../../uploads');
+            ?: realpath(__DIR__ . '/../../../../uploads');
+
+        // Without a directory to compare against, the prefix check below degrades to
+        // "starts with a slash" and would serve any readable file on the machine.
+        if (!$uploadsDir) {
+            $this->logger->error('The uploads directory could not be resolved', ['uploads' => $f3->get('UPLOADS')]);
+            $f3->error(404);
+
+            return;
         }
 
         $filePath = realpath($uploadsDir . \DIRECTORY_SEPARATOR . $file);
