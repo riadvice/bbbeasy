@@ -77,7 +77,6 @@ import { MyPresetType } from '../types/MyPresetType';
 import { SubCategoryType } from '../types/SubCategoryType';
 import { UploadFile } from 'antd/lib/upload/interface';
 import type { Color } from 'antd/es/color-picker';
-import ReactDomServer from 'react-dom/server';
 import { LanguagesBBB } from './LanguagesBBB';
 import { GuestPolicy } from './GuestPolicy';
 
@@ -238,6 +237,30 @@ const PresetsCol: React.FC<PresetColProps> = ({
         } catch (errInfo) {
             console.log('Save failed:', errInfo);
         }
+    };
+
+    // Turning a switch on or off rewrites the modal content, the two general settings
+    // that contradict each other are never both on.
+    const EXCLUSIVE_SETTINGS: Record<string, string> = {
+        open_for_everyone: 'logged_in_users_only',
+        logged_in_users_only: 'open_for_everyone',
+    };
+
+    const toggleSetting = (changed: SubCategoryType, checked: boolean) => {
+        const opposite = checked ? EXCLUSIVE_SETTINGS[changed.name] : undefined;
+
+        setModalContent((content) =>
+            content.map((entry) => {
+                if (entry.name === changed.name) {
+                    return { ...entry, value: checked };
+                }
+                if (opposite && entry.name === opposite) {
+                    return { ...entry, value: false };
+                }
+
+                return entry;
+            })
+        );
     };
 
     //edit category
@@ -520,37 +543,15 @@ const PresetsCol: React.FC<PresetColProps> = ({
                                                                 id={item.name}
                                                                 value={
                                                                     item.value == true
-                                                                        ? ReactDomServer.renderToString(
-                                                                              <Trans i18nKey="status_presets_active" />
-                                                                          )
-                                                                        : ReactDomServer.renderToString(
-                                                                              <Trans i18nKey="status_presets_inactive" />
-                                                                          )
+                                                                        ? t('status_presets_active')
+                                                                        : t('status_presets_inactive')
                                                                 }
+                                                                readOnly
                                                             />
 
                                                             <Switch
-                                                                defaultChecked={item.value == true ? true : false}
-                                                                onChange={(checked) => {
-                                                                    item.value = checked;
-                                                                    if (item.value) {
-                                                                        (
-                                                                            document.getElementById(
-                                                                                item.name
-                                                                            ) as HTMLInputElement
-                                                                        ).value = ReactDomServer.renderToString(
-                                                                            <Trans i18nKey="status_presets_active" />
-                                                                        );
-                                                                    } else {
-                                                                        (
-                                                                            document.getElementById(
-                                                                                item.name
-                                                                            ) as HTMLInputElement
-                                                                        ).value = ReactDomServer.renderToString(
-                                                                            <Trans i18nKey="status_presets_inactive" />
-                                                                        );
-                                                                    }
-                                                                }}
+                                                                checked={item.value == true}
+                                                                onChange={(checked) => toggleSetting(item, checked)}
                                                             />
                                                         </>
                                                     )}
@@ -620,15 +621,12 @@ const PresetsCol: React.FC<PresetColProps> = ({
                                                             options={getData().map((data) => ({
                                                                 label:
                                                                     'Guest Policy' == modalTitle
-                                                                        ? ReactDomServer.renderToString(
-                                                                              <Trans i18nKey={data.key} />
-                                                                          )
+                                                                        ? t(data.key)
                                                                         : data.name,
                                                                 value: data.value,
                                                             }))}
                                                             onChange={(event) => {
                                                                 item.value = event;
-                                                                console.log(event);
                                                             }}
                                                         />
                                                     )}
