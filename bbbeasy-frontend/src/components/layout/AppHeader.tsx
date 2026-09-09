@@ -63,7 +63,12 @@ import { apiRoutes } from '../../routing/backend-config';
 const { Header } = Layout;
 const { Title, Text, Paragraph } = Typography;
 
-// eslint-disable-next-line complexity
+// Every popup in the header hangs off the same side, and the badge sits on the
+// same side of its button. Naming them once keeps the direction test out of the
+// component body, where it was repeated four times.
+const popupPlacement = LocaleService.direction === 'rtl' ? 'bottomLeft' : 'bottomRight';
+const badgeOffset: [number, number] = LocaleService.direction === 'rtl' ? [34, 5] : [-34, 5];
+
 const AppHeader = () => {
     const { settings } = useSettings();
     const { setIsLogged, currentUser, setCurrentUser, setCurrentSession } = React.useContext(UserContext);
@@ -148,7 +153,7 @@ const AppHeader = () => {
     const dropdownLang = (
         <Dropdown
             popupRender={() => menuLang}
-            placement={LocaleService.direction === 'rtl' ? 'bottomLeft' : 'bottomRight'}
+            placement={popupPlacement}
             arrow
             trigger={['click']}
         >
@@ -174,12 +179,12 @@ const AppHeader = () => {
             }}
             classNames={{ root: 'profil-btn-dropdown warning-btn-dropdown' }}
             disabled={!warningNotification}
-            placement={LocaleService.direction === 'rtl' ? 'bottomLeft' : 'bottomRight'}
+            placement={popupPlacement}
             arrow
             trigger={['click']}
             className={!warningNotification ? 'dropdownWarning' : null}
         >
-            <Badge offset={LocaleService.direction === 'rtl' ? [34, 5] : [-34, 5]} count={warningNotification ? 1 : 0}>
+            <Badge offset={badgeOffset} count={warningNotification ? 1 : 0}>
                 <Button type="primary" icon={<WarningOutlined />} className="profil-btn" />
             </Badge>
         </Dropdown>
@@ -266,7 +271,7 @@ const AppHeader = () => {
                             <Dropdown
                                 menu={menuProfile}
                                 classNames={{ root: 'profil-btn-dropdown' }}
-                                placement={LocaleService.direction === 'rtl' ? 'bottomLeft' : 'bottomRight'}
+                                placement={popupPlacement}
                                 arrow
                                 trigger={['click']}
                             >
