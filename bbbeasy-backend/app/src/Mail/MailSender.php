@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Mail;
 
-use Log\LogWriterTrait;
 use Nette\Utils\Strings;
+use Sukarix\Behaviours\LogWriter;
 use Utils\DataUtils;
 use Utils\Environment;
 
@@ -32,7 +32,7 @@ use Utils\Environment;
  */
 class MailSender extends \Prefab
 {
-    use LogWriterTrait;
+    use LogWriter;
 
     /**
      * f3 instance.

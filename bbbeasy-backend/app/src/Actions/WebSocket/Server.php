@@ -24,11 +24,11 @@ namespace Actions\WebSocket;
 
 use CLI\Agent;
 use CLI\WS;
-use Log\LogWriterTrait;
+use Sukarix\Behaviours\LogWriter;
 
 class Server
 {
-    use LogWriterTrait;
+    use LogWriter;
 
     public function __construct()
     {

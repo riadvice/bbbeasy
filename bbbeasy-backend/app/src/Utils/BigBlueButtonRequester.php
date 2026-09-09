@@ -23,11 +23,11 @@ declare(strict_types=1);
 namespace Utils;
 
 use BigBlueButton\BigBlueButton;
-use Log\LogWriterTrait;
+use Sukarix\Behaviours\LogWriter;
 
 class BigBlueButtonRequester extends BigBlueButton
 {
-    use LogWriterTrait;
+    use LogWriter;
 
     /**
      * f3 instance.

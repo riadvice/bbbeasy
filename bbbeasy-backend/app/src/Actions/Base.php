@@ -28,9 +28,9 @@ use Enum\ResponseCode;
 use Enum\UserRole;
 use Enum\UserStatus;
 use Helpers\I18n;
-use Log\LogWriterTrait;
 use Models\User;
 use SimpleXMLElement;
+use Sukarix\Behaviours\LogWriter;
 use Utils\Environment;
 use Utils\SecurityUtils;
 
@@ -39,7 +39,7 @@ use Utils\SecurityUtils;
  */
 abstract class Base extends \Prefab
 {
-    use LogWriterTrait;
+    use LogWriter;
 
     public const JSON            = 'Content-Type: application/json; charset=utf-8';
     public const APPLICATION_XML = 'Content-Type: application/xml; charset=UTF-8';

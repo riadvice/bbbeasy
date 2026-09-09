@@ -24,12 +24,12 @@ namespace Core;
 
 use DB\SQL;
 use Enum\UserStatus;
-use Log\LogWriterTrait;
 use Models\User;
+use Sukarix\Behaviours\LogWriter;
 
 class Session extends \Prefab
 {
-    use LogWriterTrait;
+    use LogWriter;
 
     /**
      * f3 instance.

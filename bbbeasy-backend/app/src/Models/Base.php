@@ -25,7 +25,7 @@ namespace Models;
 use Core\Session;
 use DB\Cortex;
 use Helpers\Time;
-use Log\LogWriterTrait;
+use Sukarix\Behaviours\LogWriter;
 
 /**
  * Base Model Class.
@@ -35,7 +35,7 @@ use Log\LogWriterTrait;
  */
 abstract class Base extends Cortex
 {
-    use LogWriterTrait;
+    use LogWriter;
 
     /**
      * f3 instance.

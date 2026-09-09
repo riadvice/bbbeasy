@@ -24,14 +24,14 @@ namespace Actions\Notification;
 
 use Actions\Base as BaseAction;
 use Enum\ResponseCode;
-use Log\LogWriterTrait;
+use Sukarix\Behaviours\LogWriter;
 
 /**
  * Class Start.
  */
 class WarningNotification extends BaseAction
 {
-    use LogWriterTrait;
+    use LogWriter;
 
     /**
      * @param \Base $f3

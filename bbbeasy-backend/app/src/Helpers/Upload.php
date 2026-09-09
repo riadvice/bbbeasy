@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Helpers;
 
-use Log\LogWriterTrait;
+use Sukarix\Behaviours\LogWriter;
 use Utils\Environment;
 use Validation\DataChecker;
 
@@ -31,7 +31,7 @@ use Validation\DataChecker;
  */
 class Upload extends \Prefab
 {
-    use LogWriterTrait;
+    use LogWriter;
 
     /**
      * f3 instance.

@@ -23,14 +23,14 @@ declare(strict_types=1);
 namespace Helpers;
 
 use Core\Session;
-use Log\LogWriterTrait;
+use Sukarix\Behaviours\LogWriter;
 
 /**
  * Base Helper Class.
  */
 class Base extends \Prefab
 {
-    use LogWriterTrait;
+    use LogWriter;
 
     /**
      * f3 instance.
