@@ -66,8 +66,25 @@ class User extends BaseModel
     /**
      * Get user record by email value.
      *
+     * @param mixed $depth
+     *
      * @return $this
      */
+    /**
+     * Never let the password hash reach a log or an API response.
+     *
+     * @param int $depth
+     */
+    public function toArray($depth = 0): array
+    {
+        $data = parent::toArray($depth);
+        if (\array_key_exists('password', $data)) {
+            $data['password'] = '***REDACTED***';
+        }
+
+        return $data;
+    }
+
     public function getByEmail(string $email): self
     {
         $this->load(['lower(email) = ?', mb_strtolower($email)]);
