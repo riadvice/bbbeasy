@@ -60,7 +60,28 @@ class MailSender extends BaseMailSender
 
         $message = \Template::instance()->render('mail/' . $template . '.phtml', null, $vars);
 
-        return $this->smtpSend($this->f3->get('from_mail'), $to, $title, $subject, $message, $messageId);
+        return $this->smtpSend($this->f3->get('mailer.from_mail'), $to, $title, $subject, $message, $messageId);
+    }
+
+    /**
+     * Check that the configured SMTP server accepts connections.
+     */
+    protected function smtpIsReachable(): bool
+    {
+        $host = (string) $this->f3->get('mailer.smtp.host');
+        $port = (int) ($this->f3->get('mailer.smtp.port') ?: 25);
+
+        if ('' === $host) {
+            return false;
+        }
+
+        $socket = @fsockopen(mb_strtolower($host), $port, $errno, $error, 2);
+        if (!$socket) {
+            return false;
+        }
+        fclose($socket);
+
+        return true;
     }
 
     protected function smtpSend($from, $to, $title, $subject, $message, $messageId): bool
@@ -78,6 +99,17 @@ class MailSender extends BaseMailSender
         }
         $this->mailer->setHTML($message);
         $this->mailer->set('Message-Id', $messageId);
+
+        // The SMTP transport aborts the whole request when the server cannot be
+        // reached, check the connection first and report the failure to the caller.
+        if (!$this->smtpIsReachable()) {
+            $this->logger->error('Sending email failed, the SMTP server is unreachable', [
+                'host' => $this->f3->get('mailer.smtp.host'),
+                'port' => $this->f3->get('mailer.smtp.port'),
+            ]);
+
+            return false;
+        }
 
         $sent = $this->mailer->send($subject, Environment::isNotProduction());
         if ($sent && Environment::isNotProduction()) {

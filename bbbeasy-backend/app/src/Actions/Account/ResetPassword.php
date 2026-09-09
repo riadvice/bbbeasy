@@ -61,7 +61,7 @@ class ResetPassword extends BaseAction
             // otherwise, will update the existing row
             $resetToken->save();
 
-            $emailTokens['from_name']  = $this->f3->get('from_name');
+            $emailTokens['from_name']  = $this->f3->get('mailer.from_name');
             $emailTokens['expires_at'] = $resetToken->expires_at;
             $emailTokens['token']      = $resetToken->token;
 
@@ -75,12 +75,19 @@ class ResetPassword extends BaseAction
                 ),
                 $f3->format($f3->get('i18n.label.mail.expires_at')),
             ];
-            $sent = $mailer->send('common/reset_password', $emailTokens, $email, 'reset password', 'reset password');
-            $this->logger->info('mail', ['mail' => $mailer]);
+
+            try {
+                $sent = $mailer->send('common/reset_password', $emailTokens, $email, 'reset password', 'reset password');
+            } catch (\Exception $exception) {
+                $sent = false;
+                $this->logger->error('Reset password email could not be sent', ['error' => $exception->getMessage()]);
+            }
+
             if ($sent) {
                 $this->renderJson(['message' => 'Please check your email to reset your password']);
+            } else {
+                $this->renderJson(['message' => 'Reset password email could not be sent, please contact your administrator'], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
             }
-        // @fixme: and if the mail wasn't sent?
         } else {
             // email invalid or user no exist
             $message = 'User does not exist with this email';
