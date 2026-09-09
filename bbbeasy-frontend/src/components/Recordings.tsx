@@ -23,13 +23,12 @@ import { t } from 'i18next';
 
 import PageHeader from './PageHeader';
 
-import { Button, Typography, Space, Popconfirm, Input, Tooltip, Modal, Tag, Select } from 'antd';
+import { Button, Typography, Space, Popconfirm, Input, Tooltip, Tag, Select } from 'antd';
 import {
     DeleteOutlined,
     QuestionCircleOutlined,
     UserOutlined,
     EditOutlined,
-    ShareAltOutlined,
     CheckCircleOutlined,
     SyncOutlined,
     InfoCircleOutlined,
@@ -37,7 +36,6 @@ import {
 } from '@ant-design/icons';
 
 import Form from 'antd/lib/form';
-import DynamicIcon from './DynamicIcon';
 import Notifications from './Notifications';
 import { CompareRecords } from '../functions/compare.function';
 import { EditableTable } from './EditableTable';
@@ -50,14 +48,11 @@ import RecordingsService from '../services/recordings.service';
 
 import { TableColumnType } from '../types/TableColumnType';
 import { RecordingType } from '../types/RecordingType';
-import CopyTextToClipBoard from './CopyTextToClipBoard';
-import {
-    FacebookIcon,
-    FacebookShareButton,
-    LinkedinIcon,
-    LinkedinShareButton,
-    TwitterShareButton,
-} from 'react-share';
+
+import ModalSocialLinks from './ModalSocialLinks';
+import RecordingFormatIcons from './RecordingFormatIcons';
+
+
 
 const { Link } = Typography;
 const { Option } = Select;
@@ -80,10 +75,6 @@ const Recordings = () => {
     const [editingKey, setEditingKey] = React.useState<string>(null);
     const [errorsEdit, setErrorsEdit] = React.useState({});
     const [cancelVisibility, setCancelVisibility] = React.useState<boolean>(false);
-
-    const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
-    const [modalFormats, setModalFormats] = React.useState<string[]>(null);
-    const [modalUrl, setModalUrl] = React.useState<string>(null);
 
     //list
     const getRecordings = () => {
@@ -237,41 +228,6 @@ const Recordings = () => {
             });
     };
 
-    // share
-    const showModal = (formats: string[], url: string) => {
-        setIsModalVisible(true);
-        setModalFormats(formats);
-        setModalUrl(url);
-    };
-    const cancelShare = () => {
-        setIsModalVisible(false);
-    };
-    const handleShare = () => {
-        console.log(modalUrl);
-    };
-
-    const getFormatIcons = (formats: string[], showDisabled?: boolean) => {
-        const getFormatIcon = (format: string, icon: string, iconClass?: string) => {
-            const enabled = formats.includes(format);
-            if (enabled || showDisabled) {
-                return (
-                    <div className={(!enabled && 'disabled ') + (iconClass ?? '')}>
-                        <DynamicIcon type={icon} className={!enabled && 'icon-disabled'} />
-                    </div>
-                );
-            }
-        };
-
-        return (
-            <Space size="middle" className="recording-formats">
-                {getFormatIcon('presentation', 'playback-presentation')}
-                {getFormatIcon('podcast', 'playback-podcast')}
-                {getFormatIcon('screenshare', 'DesktopOutlined', 'icon-desktop')}
-                {getFormatIcon('mp4', 'mp4')}
-                {getFormatIcon('reports', 'activity-reports')}
-            </Space>
-        );
-    };
 
     const columns: TableColumnType[] = [
         {
@@ -376,7 +332,7 @@ const Recordings = () => {
             dataIndex: 'formats',
             editable: false,
             render: (text, record) => {
-                return getFormatIcons(record.formats);
+                return <RecordingFormatIcons formats={record.formats} />;
             },
         },
         {
@@ -436,11 +392,9 @@ const Recordings = () => {
                         {AuthService.isAllowedAction(actions, 'share') && (
                             <Tooltip
                                 placement={LocaleService.direction == 'rtl' ? 'right' : 'left'}
-                                title={getFormatIcons(record.formats, true)}
+                                title={<RecordingFormatIcons formats={record.formats} showDisabled />}
                             >
-                                <Link onClick={() => showModal(record.formats, record.url)}>
-                                    <ShareAltOutlined />
-                                </Link>
+                                <ModalSocialLinks recording={record} />
                             </Tooltip>
                         )}
                     </Space>
@@ -468,69 +422,6 @@ const Recordings = () => {
     return (
         <>
             <PageHeader className="site-page-header recordings-page-header" title={<Trans i18nKey="recordings" />} />
-
-            {isModalVisible && (
-                <Modal
-                    className="share-modal"
-                    centered
-                    open={isModalVisible}
-                    onOk={handleShare}
-                    onCancel={cancelShare}
-                    footer={null}
-                    maskClosable={false}
-                >
-                    <Form layout="vertical" requiredMark={false} onFinish={handleShare} validateTrigger="onSubmit">
-                        <Space size={38} direction="vertical" className="modal-content">
-                            <div className="mt-24">{getFormatIcons(modalFormats, true)}</div>
-                            <Space size="middle" className="social-medias">
-                                <div className="bbbeasy-white-btn">
-                                    <FacebookShareButton url={modalUrl}>
-                                        <FacebookIcon size={75} round />
-                                    </FacebookShareButton>
-                                </div>
-                                <div className="bbbeasy-white-btn">
-                                    <TwitterShareButton url={modalUrl}>
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="75" height="75">
-                                            <rect x="2" y="2" width="56" height="56" rx="30" fill="#000000"/>
-                                            <path d="M17 15h8.2l7 9.7 8.1-9.7h4.4L34.2 28.6 45.4 45h-8.2l-7.9-11-9.2 11H15.7l11.8-14.1L17 15z" fill="#ffffff"/>
-                                        </svg>
-                                    </TwitterShareButton>
-                                </div>
-
-                                <div className="bbbeasy-white-btn">
-                                    <LinkedinShareButton
-                                        url={modalUrl}
-                                        title="Create LinkedIn Share button on Website Webpages"
-                                    >
-                                        <LinkedinIcon size={75} round />
-                                    </LinkedinShareButton>
-                                </div>
-                            </Space>
-                            <Input
-                                readOnly
-                                defaultValue={modalUrl}
-                                suffix={<CopyTextToClipBoard textToCopy={modalUrl} />}
-                            />
-                            <Form.Item className="modal-submit-btn">
-                                <Button
-                                    type="primary"
-                                    id="submit-btn"
-                                    icon={<DynamicIcon type="playback-presentation" className="bbbeasy-ppt" />}
-                                    onClick={() => {
-                                        window.open(modalUrl);
-                                    }}
-                                    htmlType="submit"
-                                    block
-                                >
-                                    <span>
-                                        <Trans i18nKey="replay" />
-                                    </span>
-                                </Button>
-                            </Form.Item>
-                        </Space>
-                    </Form>
-                </Modal>
-            )}
 
             <div className="recordings-table">
                 <EditableTable

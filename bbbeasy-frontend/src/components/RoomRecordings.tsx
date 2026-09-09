@@ -20,16 +20,15 @@ import React, { useEffect } from 'react';
 import { Trans } from 'react-i18next';
 import { t } from 'i18next';
 
-import { Button, Card, Col, Dropdown, Input, Row, Space, Typography, Form, Popconfirm } from 'antd';
+import { Button, Card, Col, Dropdown, Form, Input, Popconfirm, Row, Space, Typography } from 'antd';
 import {
     CalendarOutlined,
+    CheckOutlined,
     ClockCircleOutlined,
+    CloseOutlined,
     MoreOutlined,
     SearchOutlined,
-    ShareAltOutlined,
     TeamOutlined,
-    CheckOutlined,
-    CloseOutlined,
 } from '@ant-design/icons';
 import DynamicIcon from './DynamicIcon';
 import LoadingSpinner from './LoadingSpinner';
@@ -39,9 +38,11 @@ import EN_US from '../locale/en-US.json';
 import LocaleService from '../services/locale.service';
 
 import { RecordingType } from '../types/RecordingType';
+import ModalSocialLinks from './ModalSocialLinks';
 import recordingsService from 'services/recordings.service';
 
 import Notifications from './Notifications';
+
 
 const { Title } = Typography;
 
@@ -226,8 +227,9 @@ const RoomRecordings = (props: Props) => {
                                         : recording.name.substring(0, 21) + '...';
 
                                 return (
-                                    <Col span={6} key={recording.key}>
+                                    <Col style={{maxWidth:"300px"}} key={recording.key}>
                                         <Card
+                                            style={{maxWidth:"300px"}}
                                             bordered={false}
                                             hoverable
                                             cover={
@@ -338,14 +340,7 @@ const RoomRecordings = (props: Props) => {
                                                                 <ClockCircleOutlined /> {recording.duration}
                                                             </span>
                                                         </Space>
-
-                                                        <Button
-                                                            className="share-icon"
-                                                            size="middle"
-                                                            type="primary"
-                                                            shape="circle"
-                                                            icon={<ShareAltOutlined />}
-                                                        />
+                                                        <ModalSocialLinks recording={recording} trigger="button" />
                                                     </div>
                                                 </div>
                                             }
