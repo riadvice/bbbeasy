@@ -24,47 +24,66 @@ namespace Utils;
 
 class PrivilegeUtils
 {
+    private const PRIVILEGE_TRAIT = 'Actions\RequirePrivilegeTrait';
+
+    /**
+     * Every privilege the application declares, as a list of actions per group. An
+     * action class carries a privilege by using the RequirePrivilegeTrait, its group
+     * and its name come from the namespace it lives in.
+     */
     public static function listSystemPrivileges(): array
     {
-        $privileges     = [];
-        $prvilegeTtrait = 'Actions\RequirePrivilegeTrait';
+        $f3         = \Base::instance();
+        $privileges = [];
 
-        $classes             = get_declared_classes();
-        $autoloaderClassName = '';
-        foreach ($classes as $className) {
+        foreach (self::actionClasses() as $action) {
+            if (!\in_array(self::PRIVILEGE_TRAIT, new \ReflectionClass($action)->getTraitNames(), true)) {
+                continue;
+            }
+
+            [, $group, $name] = explode('\\', $action);
+
+            // Several classes can share one privilege, the room presentations live in
+            // their own namespace with an index, an add and a delete.
+            $privileges[$f3->snakecase($group)][$f3->snakecase($name)] = true;
+        }
+
+        foreach ($privileges as $group => $actions) {
+            $actions = array_keys($actions);
+            sort($actions);
+            $privileges[$group] = $actions;
+        }
+
+        ksort($privileges);
+
+        return $privileges;
+    }
+
+    /**
+     * Action classes of the application, taken from the composer class map.
+     *
+     * @todo put the list in the cache when the application starts the first time
+     */
+    private static function actionClasses(): array
+    {
+        $autoloader = '';
+
+        foreach (get_declared_classes() as $className) {
             if (str_starts_with($className, 'ComposerAutoloaderInit')) {
-                $autoloaderClassName = $className;
+                $autoloader = $className;
 
                 break;
             }
         }
-        $classLoader = $autoloaderClassName::getLoader();
 
-        /*
-         * @todo:
-         * 5 - Later put the list in redis cache when the application starts the first time
-         */
-        $classMap = $classLoader->getClassMap();
-        // Filter classes starting with "Actions\" having only a secondary names space (2 \)
-        $actions = preg_filter('/^Actions\\\[A-Z a-z]*\\\[A-Z a-z]*/', '$0', array_keys($classMap));
+        $classes = array_keys($autoloader::getLoader()->getClassMap());
 
-        foreach ($actions as $action) {
-            $class = new \ReflectionClass($action);
-            if (\in_array($prvilegeTtrait, $class->getTraitNames(), true)) {
-                // Filter classes having RequirePrivilegeTrait
-                $privilegeInfos = explode('\\', $action);
-                array_shift($privilegeInfos);
-                $privileges[\Base::instance()->snakecase($privilegeInfos[0])][] = \Base::instance()->snakecase($privilegeInfos[1]);
-            }
-        }
-
-        // Several actions can share one privilege name, the room presentations live in
-        // their own namespace with an Index, an Add and a Delete class.
-        foreach ($privileges as $group => $actions) {
-            sort($actions);
-            $privileges[$group] = array_values(array_unique($actions));
-        }
-
-        return $privileges;
+        // Classes under Actions with at least two namespace levels. A class nested
+        // deeper, such as the room presentations, still carries the privilege of the
+        // first two levels, its own namespace being the action name.
+        return array_values(array_filter(
+            $classes,
+            static fn (string $class): bool => str_starts_with($class, 'Actions\\') && mb_substr_count($class, '\\') >= 2
+        ));
     }
 }
