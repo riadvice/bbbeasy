@@ -51,8 +51,14 @@ class DataChecker
                 'passed' => $numRules - $numExceptions,
             ];
             if (null !== $validationException) {
-                $fullName                            = str_replace('_', ' ', $validator->reportError($input, $summary)->getFullMessage());
-                $this->errors[$validator->getName()] = $fullName;
+                // Report the rules that actually failed, the summary message only says
+                // that "all of the required rules must pass" which helps nobody.
+                $messages = array_filter($validationException->getMessages());
+                $message  = [] === $messages
+                    ? $validator->reportError($input, $summary)->getFullMessage()
+                    : implode(', ', $messages);
+
+                $this->errors[$validator->getName()] = str_replace('_', ' ', $message);
 
                 return false;
             }
