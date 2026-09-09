@@ -307,7 +307,7 @@ const AppHeader = () => {
                                     <Title level={3}>{singleRoom.name}</Title>
                                     <Row>
                                         {singleRoom.labels.map((item) => (
-                                            <Tag key={item.id} color={item.color}>
+                                            <Tag key={item.key ?? item.id} color={item.color}>
                                                 {item.name}
                                             </Tag>
                                         ))}

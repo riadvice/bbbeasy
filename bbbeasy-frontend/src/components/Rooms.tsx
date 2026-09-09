@@ -150,12 +150,12 @@ const RoomsCol: React.FC<RoomsColProps> = ({ room, editable, bbbConfigured, dele
                 <div className="room-card-body room-labels">
                     {room.labels.map((item) => (
                         <Tooltip
-                            key={item.id}
+                            key={item.key ?? item.id}
                             classNames={{ root: 'install-tooltip' }}
                             title={
                                 <ul>
                                     {room.labels.map((myItem) => (
-                                        <li key={myItem.id}>
+                                        <li key={myItem.key ?? myItem.id}>
                                             <Tag color={myItem.color}>{myItem.name}</Tag>
                                         </li>
                                     ))}
