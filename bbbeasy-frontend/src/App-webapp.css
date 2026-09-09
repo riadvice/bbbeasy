@@ -713,12 +713,19 @@ fieldset {
     right: unset !important;
 }
 .site-sider .logo {
+    /* A logo is drawn for a light page: the stock one and most uploaded ones are
+       dark on transparent, and the wordmark disappeared into the dark sider.
+       The slot carries its own light plate so any logo reads on it. */
     position: relative;
     z-index: 1;
-    background: transparent;
-    width: 240px;
-    margin: 10px;
-    margin-left: 24px;
+    display: inline-flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.92);
+    border-radius: var(--bbbeasy-border-radius);
+    width: auto;
+    max-width: calc(var(--bbbeasy-sider-width) - 48px);
+    padding: 6px 12px;
+    margin: 10px 24px;
 }
 .site-sider .logo .sider-logo-image {
     /* Bound both sides, a tall logo used to grow until it pushed the menu

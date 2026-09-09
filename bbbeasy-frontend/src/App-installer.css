@@ -254,15 +254,6 @@
     margin: 25px 20px;
     z-index: 2;
 }
-.site-sider {
-    background: #07192c !important;
-}
-.site-sider .logo {
-    background: #07192c !important;
-}
-.site-sider .menu-sider .site-menu {
-    color: #ffffff !important;
-}
 
 .site-footer {
     min-height: 50px;
