@@ -56,7 +56,7 @@ class Role extends BaseModel
 
     public function nameExists($name, $id = null): bool
     {
-        return $this->load(['lower(name) = ? and id != ?', mb_strtolower($this->f3->snakecase($name)), $id]);
+        return $this->load($this->excludeId(['lower(name) = ?', mb_strtolower($this->f3->snakecase($name))], $id));
     }
 
     public function getAllRoles(): array

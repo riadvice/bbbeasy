@@ -53,7 +53,7 @@ class Room extends BaseModel
 
     public function nameExists($name, $userId, $id = null)
     {
-        return $this->load(['lower(name) = ? and user_id = ? and id != ?', mb_strtolower($name), $userId, $id]);
+        return $this->load($this->excludeId(['lower(name) = ? and user_id = ?', mb_strtolower($name), $userId], $id));
     }
 
     public function getByNameAndLink($name, $link): self
@@ -70,7 +70,7 @@ class Room extends BaseModel
 
     public function shortlinkExists($shortlink, $id = null)
     {
-        return $this->load(['short_link = ? and id != ?', $shortlink, $id]);
+        return $this->load($this->excludeId(['short_link = ?', $shortlink], $id));
     }
 
     public function presetExists($presetId, $name)

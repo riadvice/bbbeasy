@@ -98,24 +98,6 @@ class User extends BaseModel
     }
 
     /**
-     * Add an identifier exclusion to a filter, comparing to a null identifier
-     * never matches in SQL and would silently disable the whole filter.
-     *
-     * @param null|mixed $id
-     */
-    public function excludeId(array $filter, $id = null): array
-    {
-        if (null === $id) {
-            return $filter;
-        }
-
-        $filter[0] = '(' . $filter[0] . ') and id != ?';
-        $filter[]  = $id;
-
-        return $filter;
-    }
-
-    /**
      * Check if email already in use.
      *
      * @param null|mixed $id

@@ -30,4 +30,24 @@ use Sukarix\Models\Model;
  * @property \DateTime $created_on
  * @property \DateTime $updated_on
  */
-abstract class Base extends Model {}
+abstract class Base extends Model
+{
+    /**
+     * Add an identifier exclusion to a filter. Comparing to a null identifier
+     * never matches in SQL and would silently disable the whole filter, which
+     * makes every uniqueness check pass while creating a record.
+     *
+     * @param null|mixed $id
+     */
+    public function excludeId(array $filter, $id = null): array
+    {
+        if (null === $id) {
+            return $filter;
+        }
+
+        $filter[0] = '(' . $filter[0] . ') and id != ?';
+        $filter[]  = $id;
+
+        return $filter;
+    }
+}

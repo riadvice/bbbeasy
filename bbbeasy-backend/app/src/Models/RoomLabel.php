@@ -79,6 +79,6 @@ class RoomLabel extends BaseModel
 
     public function roomAndLabelExists($room, $label, $id = null)
     {
-        return $this->load(['room_id = ? and label_id = ? and id != ?', $room, $label, $id]);
+        return $this->load($this->excludeId(['room_id = ? and label_id = ?', $room, $label], $id));
     }
 }

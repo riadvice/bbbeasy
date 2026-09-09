@@ -85,7 +85,7 @@ class Label extends BaseModel
      */
     public function colorExists(string $color, $id = null)
     {
-        return $this->load(['color = ? and id != ?', $color, $id]);
+        return $this->load($this->excludeId(['color = ?', $color], $id));
     }
 
     public function getAllLabels()
