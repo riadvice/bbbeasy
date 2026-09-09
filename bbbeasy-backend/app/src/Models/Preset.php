@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Models;
 
+use Enum\Presets\General;
 use Enum\Presets\GuestPolicy;
 use Enum\Presets\Layout;
 use Enum\Presets\Screenshare;
@@ -201,54 +202,57 @@ class Preset extends BaseModel
         return true;
     }
 
-    /**
-     * @throws \ReflectionException
-     */
     public function getPresetSettings(): array
     {
-        $preset         = new self();
-        $categories     = $preset->getPresetCategories();
-        $presetSettings = [];
-        $settings       = [];
+        $preset     = new self();
+        $categories = $preset->getPresetCategories();
+        $settings   = [];
 
         if ($categories) {
             foreach ($categories as $category) {
-                // get category name
                 $categoryName = $preset->getCategoryName($category);
+                $attributes   = new \ReflectionClass($category)->getConstants();
+                $presetSett   = new PresetSetting();
 
-                // get the reflexion classes of category class
-                $class      = new \ReflectionClass($category);
-                $attributes = $class->getConstants();
-                $presetSett = new PresetSetting();
-
+                $categorySettings = [];
                 foreach ($attributes as $attribute) {
-                    $presetSettings = $presetSett->getByNameAndGroup($attribute, $categoryName);
+                    $presetSetting = $presetSett->getByNameAndGroup($attribute, $categoryName);
 
-                    if (!$presetSettings->dry() && $presetSettings->enabled) {
-                        if (!$settings[$categoryName]) {
-                            if (GuestPolicy::GROUP_NAME === $categoryName && GuestPolicy::POLICY === $presetSettings->name) {
-                                $settings += [$categoryName => [$presetSettings->name => \Enum\GuestPolicy::ALWAYS_ACCEPT]];
-                            } elseif (Layout::GROUP_NAME === $categoryName || Screenshare::GROUP_NAME === $categoryName) {
-                                $settings += [$categoryName => [$presetSettings->name => true]];
-                            } else {
-                                $settings += [$categoryName => [$presetSettings->name => '']];
-                            }
-                        } else {
-                            if (GuestPolicy::GROUP_NAME === $categoryName && GuestPolicy::POLICY === $presetSettings->name) {
-                                $settings[$categoryName] += [$presetSettings->name => \Enum\GuestPolicy::ALWAYS_ACCEPT];
-                            } elseif (Layout::GROUP_NAME === $categoryName) {
-                                $settings[$categoryName] += [$presetSettings->name => true];
-                            } else {
-                                $settings[$categoryName] += [$presetSettings->name => ''];
-                            }
-                        }
+                    if (!$presetSetting->dry() && $presetSetting->enabled) {
+                        $categorySettings[$presetSetting->name] = $this->getDefaultSettingValue($categoryName, $presetSetting->name);
                     }
                 }
 
-                $settings[$categoryName] = json_encode($settings[$categoryName]);
+                $settings[$categoryName] = json_encode($categorySettings);
             }
         }
 
         return $settings;
+    }
+
+    /**
+     * @throws \ReflectionException
+     */
+    /**
+     * Value a setting starts with when a preset is created. Everything a first
+     * meeting needs is on, so a room works without touching the preset.
+     *
+     * @return bool|string
+     */
+    private function getDefaultSettingValue(string $group, string $setting)
+    {
+        if (GuestPolicy::GROUP_NAME === $group && GuestPolicy::POLICY === $setting) {
+            return \Enum\GuestPolicy::ALWAYS_ACCEPT;
+        }
+
+        if (\in_array($group, [Layout::GROUP_NAME, Screenshare::GROUP_NAME], true)) {
+            return true;
+        }
+
+        if (General::GROUP_NAME === $group && \in_array($setting, [General::ANYONE_CAN_START, General::OPEN_FOR_EVERYONE], true)) {
+            return true;
+        }
+
+        return '';
     }
 }
