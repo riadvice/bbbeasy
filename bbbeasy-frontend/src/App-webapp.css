@@ -2465,6 +2465,31 @@ fieldset {
         transform: translateY(-10px);
     }
 }
+/* A control that only exists on hover cannot be found by keyboard, and does not
+   exist at all on a touch screen. They stay in place, quietly, and come forward
+   on hover or focus. */
+.card-more-btn,
+.cell-edit-btn {
+    opacity: 0.4;
+    transition: opacity 0.2s ease;
+    min-width: 32px;
+    min-height: 32px;
+}
+.room-box:hover .card-more-btn,
+.ant-table-row:hover .cell-edit-btn,
+.card-more-btn:hover,
+.card-more-btn:focus-visible,
+.cell-edit-btn:hover,
+.cell-edit-btn:focus-visible {
+    opacity: 1;
+}
+@media (hover: none) {
+    .card-more-btn,
+    .cell-edit-btn {
+        opacity: 1;
+    }
+}
+
 /*******************ROOMS*********************/
 .home-guide {
     margin-top: 80px !important;

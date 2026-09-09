@@ -51,7 +51,6 @@ interface RoomsColProps {
 }
 
 const RoomsCol: React.FC<RoomsColProps> = ({ room, editable, bbbConfigured, deleteClickHandler }) => {
-    const [isShown, setIsShown] = useState<boolean>(false);
     const navigate = useNavigate();
 
     //view
@@ -101,8 +100,6 @@ const RoomsCol: React.FC<RoomsColProps> = ({ room, editable, bbbConfigured, dele
         <Col span={5} className="custom-col-5 room-box">
             <Card
                 hoverable
-                onMouseOver={() => setIsShown(true)}
-                onMouseLeave={() => setIsShown(false)}
                 bordered={false}
                 title={
                     <div onClick={() => showRoomDetails()}>
@@ -145,16 +142,19 @@ const RoomsCol: React.FC<RoomsColProps> = ({ room, editable, bbbConfigured, dele
                     </div>
                 }
                 extra={
-                    isShown && (
-                        <Dropdown
-                            key="more"
-                            menu={actions}
-                            placement={LocaleService.direction === 'rtl' ? 'bottomLeft' : 'bottomRight'}
-                            trigger={['click']}
-                        >
-                            <MoreOutlined />
-                        </Dropdown>
-                    )
+                    <Dropdown
+                        key="more"
+                        menu={actions}
+                        placement={LocaleService.direction === 'rtl' ? 'bottomLeft' : 'bottomRight'}
+                        trigger={['click']}
+                    >
+                        <Button
+                            type="text"
+                            className="card-more-btn"
+                            aria-label={t('actions_col')}
+                            icon={<MoreOutlined />}
+                        />
+                    </Dropdown>
                 }
             >
                 <div className="room-card-body room-labels">

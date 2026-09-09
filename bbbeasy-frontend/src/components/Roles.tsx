@@ -84,7 +84,6 @@ const EditableCell: React.FC<EditableCellProps> = ({
     onRoleEdited,
     ...restProps
 }) => {
-    const [isShown, setIsShown] = useState<boolean>(false);
     const [editing, setEditing] = useState<boolean>(false);
     const inputRef = useRef(null);
     const [errorsEdit, setErrorsEdit] = React.useState({});
@@ -171,19 +170,18 @@ const EditableCell: React.FC<EditableCellProps> = ({
             errorsEdit={errorsEdit}
             editable={editable}
             editComponent={
-                isShown &&
-                AuthService.isAllowedAction(actions, 'edit') && (
+                AuthService.isAllowedAction(actions ?? [], 'edit') && (
                     <Button
                         size="small"
                         type="link"
+                        className="cell-edit-btn"
+                        aria-label={t('edit')}
                         icon={<EditOutlined className="cell-edit-icon" />}
                         onClick={toggleEditName}
                     />
                 )
             }
             {...restProps}
-            mouseOverFct={() => setIsShown(true)}
-            mouseLeaveFct={() => setIsShown(false)}
         >
             {children}
         </EditableTableCell>
