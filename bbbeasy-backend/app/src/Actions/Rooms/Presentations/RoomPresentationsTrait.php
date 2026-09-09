@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Actions\Rooms\Presentations;
 
+use Enum\UserRole;
 use Models\Room;
 
 trait RoomPresentationsTrait
@@ -36,14 +37,15 @@ trait RoomPresentationsTrait
             return false;
         }
 
-        return (int) $room->user_id === (int) $user['id'] || 'administrator' === $this->session->getRole();
+        // Compare the role by its identifier, the administrator role can be renamed.
+        return (int) $room->user_id === (int) $user['id'] || UserRole::ADMINISTRATOR_ID === $this->session->getRoleId();
     }
 
     protected function presentationUrl(string $name): string
     {
-        $origin = $this->f3->get('SERVER.HTTP_ORIGIN') ?: '';
-
-        return $origin . '/api/' . rawurlencode($name);
+        // Relative on purpose, the uploads are served by the same host as the API and
+        // the Origin header points at whichever client sent the request.
+        return '/api/files/' . rawurlencode($name);
     }
 
     protected function presentationSize(string $name): int
