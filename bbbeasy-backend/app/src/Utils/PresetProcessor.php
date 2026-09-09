@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Utils;
 
+use BigBlueButton\Enum\Feature;
+use BigBlueButton\Enum\GuestPolicy as BBBGuestPolicy;
 use Data\PresetData;
 use Enum\Presets\Audio;
 use Enum\Presets\Branding;
@@ -118,9 +120,9 @@ class PresetProcessor
         // $createParams->setListenOnlyEnabled($presetData->getData(Audio::GROUP_NAME, Audio::LISTEN_ONLY_ENABLED));
         // $createParams->setSkipEchoTest($presetData->getData(Audio::GROUP_NAME, Audio::SKIP_ECHO_TEST));
 
-        $createParams->setLogo((string) $presetsData->getData(Branding::GROUP_NAME, Branding::LOGO));
-        $createParams->setBannerText((string) $presetsData->getData(Branding::GROUP_NAME, Branding::BANNER_TEXT));
-        $createParams->setBannerColor((string) $presetsData->getData(Branding::GROUP_NAME, Branding::BANNER_COLOR));
+        $this->setIfFilled($createParams, 'setLogo', $presetsData->getData(Branding::GROUP_NAME, Branding::LOGO));
+        $this->setIfFilled($createParams, 'setBannerText', $presetsData->getData(Branding::GROUP_NAME, Branding::BANNER_TEXT));
+        $this->setIfFilled($createParams, 'setBannerColor', $presetsData->getData(Branding::GROUP_NAME, Branding::BANNER_COLOR));
         // $createParams->setUseAvatars($presetsData->getData(Branding::GROUP_NAME, Branding::USE_AVATARS));
 
         $createParams->setBreakoutRoomsEnabled((bool) $presetsData->getData(BreakoutRooms::GROUP_NAME, BreakoutRooms::CONFIGURABLE));
@@ -128,14 +130,19 @@ class PresetProcessor
 
         $createParams->setBreakoutRoomsPrivateChatEnabled(null !== $presetsData->getData(BreakoutRooms::GROUP_NAME, BreakoutRooms::PRIVATE_CHAT) ? $presetsData->getData(BreakoutRooms::GROUP_NAME, BreakoutRooms::PRIVATE_CHAT) : true);
 
-        $createParams->setDuration((int) $presetsData->getData(General::GROUP_NAME, General::DURATION));
-        $createParams->setMaxParticipants((int) $presetsData->getData(General::GROUP_NAME, General::MAXIMUM_PARTICIPANTS));
-        $createParams->setWelcomeMessage((string) $presetsData->getData(General::GROUP_NAME, General::WELCOME));
+        // An empty duration or participant limit means "no limit", which BigBlueButton
+        // expresses by leaving the parameter out rather than by sending a zero.
+        $this->setIfFilled($createParams, 'setDuration', $presetsData->getData(General::GROUP_NAME, General::DURATION), 'int');
+        $this->setIfFilled($createParams, 'setMaxParticipants', $presetsData->getData(General::GROUP_NAME, General::MAXIMUM_PARTICIPANTS), 'int');
+        $this->setIfFilled($createParams, 'setWelcomeMessage', $presetsData->getData(General::GROUP_NAME, General::WELCOME));
 
         // $createParams->setOpenForEveryone($presetData->getData(General::GROUP_NAME, General::OPEN_FOR_EVERYONE));
         // anyone_can_start,open_for_everyone,logged_in_users_only
 
-        $createParams->setGuestPolicy((string) $presetsData->getData(GuestPolicy::GROUP_NAME, GuestPolicy::POLICY));
+        $guestPolicy = BBBGuestPolicy::tryFrom((string) $presetsData->getData(GuestPolicy::GROUP_NAME, GuestPolicy::POLICY));
+        if (null !== $guestPolicy) {
+            $createParams->setGuestPolicy($guestPolicy);
+        }
         // configurable
 
         // language:default_language
@@ -150,7 +157,7 @@ class PresetProcessor
         $createParams->setLockSettingsDisablePublicChat((bool) $presetsData->getData(LockSettings::GROUP_NAME, LockSettings::PUBLIC_CHAT));
         $createParams->setLockSettingsDisableNote((bool) $presetsData->getData(LockSettings::GROUP_NAME, LockSettings::SHARED_NOTES));
         if ($presetsData->getData(LockSettings::GROUP_NAME, LockSettings::LAYOUT)) {
-            $disabledFeatures[] = 'layouts';
+            $disabledFeatures[] = Feature::LAYOUTS;
         }
 
         // $createParams->setPreUploadedPresentationOverrideDefault($presetsData->getData(Presentation::GROUP_NAME, Presentation::PRE_UPLOAD));
@@ -159,7 +166,7 @@ class PresetProcessor
         $createParams->setAllowStartStopRecording((bool) $presetsData->getData(Recording::GROUP_NAME, Recording::ALLOW_START_STOP));
         $createParams->setRecord((bool) $presetsData->getData(Recording::GROUP_NAME, Recording::RECORD));
         if (!$presetsData->getData(Screenshare::GROUP_NAME, Screenshare::CONFIGURABLE)) {
-            $disabledFeatures[] = 'screenshare';
+            $disabledFeatures[] = Feature::SCREENSHARE;
         }
         $createParams->setDisabledFeatures($disabledFeatures);
 
@@ -222,5 +229,21 @@ class PresetProcessor
         $joinParams->setRedirect(false);
 
         return $joinParams;
+    }
+
+    /**
+     * Call a BigBlueButton parameter setter only when the preset actually holds a
+     * value, so an empty preset field falls back to the server default instead of
+     * sending an empty or zeroed parameter.
+     *
+     * @param mixed $value
+     */
+    private function setIfFilled(object $params, string $setter, $value, string $cast = 'string'): void
+    {
+        if (null === $value || '' === $value) {
+            return;
+        }
+
+        $params->{$setter}('int' === $cast ? (int) $value : (string) $value);
     }
 }

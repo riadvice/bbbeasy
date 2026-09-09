@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d2b2b2714f783c5ddca2405726666c36",
+    "content-hash": "f732bf867b99840edfffee8fda588e24",
     "packages": [
         {
             "name": "bcosca/fatfree-core",
@@ -53,7 +53,7 @@
         },
         {
             "name": "bigbluebutton/bigbluebutton-api-php",
-            "version": "dev-master",
+            "version": "3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bigbluebutton/bigbluebutton-api-php.git",
@@ -94,7 +94,6 @@
                 "psr/http-client": "To inject your own PSR-18 http client via BigBlueButton::createWithHttpClient()",
                 "psr/http-factory": "To inject your own PSR-17 factories via BigBlueButton::createWithHttpClient()"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -126,7 +125,7 @@
             ],
             "support": {
                 "issues": "https://github.com/bigbluebutton/bigbluebutton-api-php/issues",
-                "source": "https://github.com/bigbluebutton/bigbluebutton-api-php/tree/develop"
+                "source": "https://github.com/bigbluebutton/bigbluebutton-api-php/tree/3.0.0"
             },
             "time": "2026-08-19T17:21:49+00:00"
         },
@@ -7855,7 +7854,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "bigbluebutton/bigbluebutton-api-php": 20,
         "roave/security-advisories": 20
     },
     "prefer-stable": false,

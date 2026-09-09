@@ -173,7 +173,7 @@ class Start extends BaseAction
         $createParams->setAttendeePassword(DataUtils::generateRandomString());
         // @todo : set later via presets
 
-        $createParams->setModeratorOnlyMessage('to invite someone you can use this link ' . $this->f3->get('SERVER.HTTP_ORIGIN') . $this->f3->get('client.room_url_prefix') . $link);
+        $createParams->setModeratorOnlyMessage('to invite someone you can use this link ' . $this->roomUrl($link));
 
         // @fixme: delete after fixing the PHP library
         $createParams->setAllowRequestsWithoutSession(true);
@@ -195,7 +195,7 @@ class Start extends BaseAction
         return $createParams->getModeratorPassword();
     }
 
-    public function joinMeeting(string $meetingId, string $role, BigBlueButtonRequester $bbbRequester, $p, $fullname): void
+    public function joinMeeting(string $meetingId, Role $role, BigBlueButtonRequester $bbbRequester, $p, $fullname): void
     {
         $joinParams      = new JoinMeetingParameters($meetingId, $fullname, $role);
         $presetProcessor = new PresetProcessor();
@@ -208,6 +208,27 @@ class Start extends BaseAction
         );
 
         $this->renderJson($bbbRequester->joinMeeting($joinParams)->getUrl());
+    }
+
+    /**
+     * Build the public room URL. The Origin header points at whatever client sent the
+     * request, which is the development server or nothing at all, so the configured
+     * public URL comes first and the request host is the fallback.
+     */
+    private function roomUrl(string $link): string
+    {
+        $base = mb_rtrim((string) $this->f3->get('client.url'), '/');
+
+        if ('' === $base) {
+            $host = (string) $this->f3->get('HOST');
+            $port = (int) $this->f3->get('PORT');
+            $base = $this->f3->get('SCHEME') . '://' . $host;
+            if (0 !== $port && 80 !== $port && 443 !== $port) {
+                $base .= ':' . $port;
+            }
+        }
+
+        return $base . $this->f3->get('client.room_url_prefix') . $link;
     }
 
     private function attachPresentations(CreateMeetingParameters $createParams, Room $room): void
