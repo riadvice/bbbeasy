@@ -5538,3 +5538,17 @@ body {
 .search-submit {
     cursor: pointer;
 }
+
+/* The room details sit in a narrow column, stack the edit fields so each input
+   gets the full width instead of sharing it with its label. */
+.room-edit-form .ant-form-item {
+    margin-bottom: 12px;
+}
+.room-edit-form .ant-form-item-label {
+    padding-bottom: 2px;
+}
+.room-edit-form .ant-input,
+.room-edit-form .ant-select,
+.room-edit-form .ant-input-group-wrapper {
+    width: 100%;
+}

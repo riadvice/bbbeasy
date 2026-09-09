@@ -541,7 +541,7 @@ const RoomDetails = () => {
                                                     </>
                                                 ) : (
                                                     <Space size="middle" className="edit-room-form">
-                                                        <Form form={editForm} labelAlign="left" labelCol={{ span: 11 }}>
+                                                        <Form form={editForm} layout="vertical" className="room-edit-form">
                                                             {editFormItems.map((editFormItem) => {
                                                                 return customFormItem(editFormItem);
                                                             })}
