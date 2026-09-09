@@ -21,7 +21,7 @@ import { Trans, withTranslation } from 'react-i18next';
 import { t } from 'i18next';
 import EN_US from '../locale/en-US.json';
 
-import { PageHeader } from '@ant-design/pro-layout';
+import PageHeader from './PageHeader';
 
 import { Avatar, Badge, Button, Col, Form, Row, Space, Tooltip, Alert } from 'antd';
 import { DeleteOutlined, EditOutlined, UserOutlined } from '@ant-design/icons';
@@ -36,7 +36,7 @@ import AuthService from '../services/auth.service';
 import LocaleService from '../services/locale.service';
 import { UserContext } from '../lib/UserContext';
 
-import { FormRef } from 'rc-field-form/lib/interface';
+import type { FormRef } from '@rc-component/form';
 import { UserType } from '../types/UserType';
 
 type formType = {
@@ -137,9 +137,11 @@ const Profile = () => {
             <Form
                 layout="vertical"
                 className="site-page-form profile-form"
-                ref={(form) => (accountForm = form)}
+                ref={(form) => {
+accountForm = form;
+}}
                 initialValues={initialAddValues}
-                hideRequiredMark
+                requiredMark={false}
                 scrollToFirstError={true}
                 validateTrigger="onSubmit"
                 onFinish={handleUpdate}

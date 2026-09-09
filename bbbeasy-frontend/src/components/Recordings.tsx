@@ -21,7 +21,7 @@ import React, { useEffect } from 'react';
 import { Trans, withTranslation } from 'react-i18next';
 import { t } from 'i18next';
 
-import { PageHeader } from '@ant-design/pro-layout';
+import PageHeader from './PageHeader';
 
 import { Button, Typography, Space, Popconfirm, Input, Tooltip, Modal, Tag, Select } from 'antd';
 import {
@@ -397,8 +397,8 @@ const Recordings = () => {
                         <Popconfirm
                             title={t('cancel_edit')}
                             placement="leftTop"
-                            visible={cancelVisibility}
-                            onVisibleChange={() => clickCancel(record)}
+                            open={cancelVisibility}
+                            onOpenChange={() => clickCancel(record)}
                             onConfirm={cancelEdit}
                             onCancel={() => setCancelVisibility(false)}
                         >
@@ -479,7 +479,7 @@ const Recordings = () => {
                     footer={null}
                     maskClosable={false}
                 >
-                    <Form layout="vertical" hideRequiredMark onFinish={handleShare} validateTrigger="onSubmit">
+                    <Form layout="vertical" requiredMark={false} onFinish={handleShare} validateTrigger="onSubmit">
                         <Space size={38} direction="vertical" className="modal-content">
                             <div className="mt-24">{getFormatIcons(modalFormats, true)}</div>
                             <Space size="middle" className="social-medias">
@@ -539,7 +539,7 @@ const Recordings = () => {
                     mergedColumns={mergedColumns}
                     dataSource={data}
                     loading={loading}
-                    notFoundContent="no_data"
+                    notFoundContent="no_recordings"
                 />
             </div>
         </>

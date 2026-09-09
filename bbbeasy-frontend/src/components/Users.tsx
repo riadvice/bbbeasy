@@ -21,11 +21,11 @@ import { Trans, withTranslation } from 'react-i18next';
 import EN_US from '../locale/en-US.json';
 import { t } from 'i18next';
 
-import { PageHeader } from '@ant-design/pro-layout';
+import PageHeader from './PageHeader';
 import { Alert, Button, Form, Input, Modal, Popconfirm, Select, Space, Tag, Typography } from 'antd';
 import { DeleteOutlined, EditOutlined, QuestionCircleOutlined, StarFilled } from '@ant-design/icons';
 
-import { FormRef } from 'rc-field-form/lib/interface';
+import type { FormRef } from '@rc-component/form';
 import { CompareRecords } from '../functions/compare.function';
 import { EditableTable } from './EditableTable';
 import EditableTableCell from './EditableTableCell';
@@ -460,8 +460,8 @@ const Users = () => {
                         <Popconfirm
                             title={t('cancel_edit')}
                             placement="leftTop"
-                            visible={cancelVisibility}
-                            onVisibleChange={() => clickCancel(record)}
+                            open={cancelVisibility}
+                            onOpenChange={() => clickCancel(record)}
                             onConfirm={() => cancelEdit()}
                             onCancel={() => setCancelVisibility(false)}
                         >
@@ -546,9 +546,11 @@ const Users = () => {
                     <Form
                         layout="vertical"
                         name="users_form"
-                        ref={(form) => (addForm = form)}
+                        ref={(form) => {
+addForm = form;
+}}
                         initialValues={initialAddValues}
-                        hideRequiredMark
+                        requiredMark={false}
                         onFinish={handleAdd}
                         validateTrigger="onSubmit"
                         onValuesChange={() => setErrorsAdd('')}
@@ -596,7 +598,7 @@ const Users = () => {
                     mergedColumns={mergedColumns}
                     dataSource={data}
                     loading={loading}
-                    notFoundContent="no_data"
+                    notFoundContent="no_users"
                 />
             </div>
         </>

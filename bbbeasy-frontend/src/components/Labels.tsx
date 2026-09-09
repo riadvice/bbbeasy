@@ -21,7 +21,7 @@ import React, { useEffect } from 'react';
 import { Trans, withTranslation } from 'react-i18next';
 import { t } from 'i18next';
 
-import { PageHeader } from '@ant-design/pro-layout';
+import PageHeader from './PageHeader';
 
 import { Badge, Button, Form, Input, Modal, Popconfirm, Space, Typography, ColorPicker, theme, Alert } from 'antd';
 import { DeleteOutlined, EditOutlined, QuestionCircleOutlined, WarningOutlined } from '@ant-design/icons';
@@ -339,10 +339,10 @@ const Labels = () => {
                         <Popconfirm
                             title={t('cancel_edit')}
                             placement="leftTop"
-                            visible={cancelVisibility}
+                            open={cancelVisibility}
                             onConfirm={() => cancelEdit()}
                             onCancel={() => setCancelVisibility(false)}
-                            onVisibleChange={handleCancelVisibilityChange}
+                            onOpenChange={handleCancelVisibilityChange}
                         >
                             <Button size="middle" className="cell-input-cancel">
                                 <Trans i18nKey="cancel" />

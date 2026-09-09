@@ -21,7 +21,7 @@ import { Trans, withTranslation } from 'react-i18next';
 import { t } from 'i18next';
 import EN_US from '../locale/en-US.json';
 
-import { PageHeader } from '@ant-design/pro-layout';
+import PageHeader from './PageHeader';
 
 import { Button, Row, Col, Typography, Space, Modal, Popconfirm, Card, Checkbox, Input } from 'antd';
 import {
@@ -35,7 +35,7 @@ import {
 } from '@ant-design/icons';
 
 import Form, { FormInstance } from 'antd/lib/form';
-import { FormRef } from 'rc-field-form/lib/interface';
+import type { FormRef } from '@rc-component/form';
 import { CompareRecords } from '../functions/compare.function';
 import { EditableTable } from './EditableTable';
 import EditableTableCell from './EditableTableCell';
@@ -282,7 +282,9 @@ const Roles = () => {
         return (
             <fieldset disabled={!AuthService.isAllowedAction(actions, 'edit')}>
                 <Form
-                    ref={(form) => (editRowForm = form)}
+                    ref={(form) => {
+editRowForm = form;
+}}
                     initialValues={permissionsChecked}
                     onFinish={() => saveEdit(record.key)}
                     onChange={() => changeEdit(record.key)}
@@ -585,9 +587,11 @@ const Roles = () => {
                     <Form
                         layout="vertical"
                         name="roles_form"
-                        ref={(form) => (addForm = form)}
+                        ref={(form) => {
+addForm = form;
+}}
                         initialValues={{ name: '' }}
-                        hideRequiredMark
+                        requiredMark={false}
                         onFinish={handleAdd}
                         onFinishFailed={failedAdd}
                         validateTrigger="onSubmit"
@@ -647,7 +651,7 @@ const Roles = () => {
                         showExpandColumn: false,
                         expandedRowKeys: expandedKeys,
                     }}
-                    notFoundContent="no_data"
+                    notFoundContent="no_roles"
                 />
             </div>
         </>
