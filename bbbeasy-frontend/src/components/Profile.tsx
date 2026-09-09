@@ -26,7 +26,8 @@ import PageHeader from './PageHeader';
 import { Avatar, Badge, Button, Col, Form, Row, Space, Tooltip, Alert } from 'antd';
 import { DeleteOutlined, EditOutlined, UserOutlined } from '@ant-design/icons';
 
-import ImageUploading, { ImageListType } from 'react-images-uploading';
+import ImageUploadingImport from 'react-images-uploading';
+import type { ImageListType } from 'react-images-uploading';
 import { PasswordInput } from 'antd-password-input-strength';
 import ConfirmPassword from './ConfirmPassword';
 import Notifications from './Notifications';
@@ -37,6 +38,11 @@ import LocaleService from '../services/locale.service';
 import { UserContext } from '../lib/UserContext';
 
 import { UserType } from '../types/UserType';
+
+// The package is CommonJS and ships no ESM entry, so the bundler hands the default
+// import back as the module object rather than as the component inside it.
+const ImageUploading =
+    (ImageUploadingImport as { default?: typeof ImageUploadingImport }).default ?? ImageUploadingImport;
 
 type formType = {
     username?: string;
