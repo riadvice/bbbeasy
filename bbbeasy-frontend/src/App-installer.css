@@ -760,3 +760,12 @@ body.rtl {
 .ant-page-header-content {
     padding-top: 12px;
 }
+
+/* Ant Design 6 renders the number input as a plain <input> inside the wrapper and no
+   longer gives it the .ant-input-number-input class the theme rules target, so the
+   value inherited the browser default and disappeared on the dark background. */
+.ant-input-number input,
+.ant-input-number .ant-input-number-input {
+    color: inherit !important;
+    background: transparent !important;
+}

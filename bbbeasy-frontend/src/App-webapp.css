@@ -2830,7 +2830,8 @@ fieldset {
 .recordings-table .ant-input::placeholder {
     color: #64748b !important;
 }
-.recordings-table .ant-select:not(.ant-select-disabled) .ant-select-selector {
+.recordings-table .ant-select:not(.ant-select-disabled) .ant-select-selector,
+.recordings-table .ant-select:not(.ant-select-disabled) .ant-select-content {
     background: #0b1526 !important;
     border-color: rgba(96, 165, 250, 0.4) !important;
     color: #e2e8f0 !important;
@@ -3297,6 +3298,7 @@ fieldset {
 /* Ant Design 6 renamed the card meta text wrapper and no longer lets it grow,
    without this the setting group names are cut mid-word. */
 .presets-grid .ant-card-meta-detail,
+.presets-grid .ant-card-meta-section,
 .presets-grid .ant-card-meta-section {
     flex: 1 1 auto;
     min-width: 0;
@@ -3728,7 +3730,8 @@ div.error-message-Label {
 .room-details .ant-input-affix-wrapper .anticon:not(.text-success) {
     color: #93c5fd !important;
 }
-.room-details .ant-select-selector {
+.room-details .ant-select-selector,
+.room-details .ant-select-content {
     background: #0b1526 !important;
     border-color: rgba(96, 165, 250, 0.4) !important;
 }
@@ -3974,12 +3977,14 @@ div.error-message-Label {
 .add-modal.large-modal .readonly-item button:hover {
     color: var(--bbbeasy-brand-color) !important;
 }
-.add-modal.large-modal .ant-select-selector {
+.add-modal.large-modal .ant-select-selector,
+.add-modal.large-modal .ant-select-content {
     background: #0b1526 !important;
     border-color: rgba(96, 165, 250, 0.4) !important;
 }
 .add-modal.large-modal .ant-select-selection-item,
-.add-modal.large-modal .ant-select-selection-placeholder {
+.add-modal.large-modal .ant-select-selection-placeholder,
+.add-modal.large-modal .ant-select-placeholder {
     color: #e2e8f0 !important;
 }
 .add-modal.large-modal .ant-select-arrow {
@@ -4162,12 +4167,14 @@ div.error-message-Label {
     padding-left: 0 !important;
     padding-right: 0 !important;
 }
-.user-add-modal .ant-select-selector {
+.user-add-modal .ant-select-selector,
+.user-add-modal .ant-select-content {
     background: #0b1526 !important;
     border-color: rgba(96, 165, 250, 0.4) !important;
 }
 .user-add-modal .ant-select-selection-item,
-.user-add-modal .ant-select-selection-placeholder {
+.user-add-modal .ant-select-selection-placeholder,
+.user-add-modal .ant-select-placeholder {
     color: #e2e8f0 !important;
 }
 .user-add-modal .ant-select-arrow {
@@ -4854,7 +4861,8 @@ div.error-message-Label {
 }
 .ant-modal-root:has(.ant-modal.presets-edit-modal) .ant-input,
 .ant-modal-root:has(.ant-modal.presets-edit-modal) .ant-input-number,
-.ant-modal-root:has(.ant-modal.presets-edit-modal) .ant-select .ant-select-selector {
+.ant-modal-root:has(.ant-modal.presets-edit-modal) .ant-select .ant-select-selector,
+.ant-modal-root:has(.ant-modal.presets-edit-modal) .ant-select .ant-select-content {
     background: #0b1526 !important;
     border-color: rgba(96, 165, 250, 0.4) !important;
     color: #e2e8f0 !important;
@@ -4864,6 +4872,7 @@ div.error-message-Label {
     color: rgba(148, 163, 184, 0.9) !important;
 }
 .ant-modal-root:has(.ant-modal.presets-edit-modal) .ant-select .ant-select-selector .ant-select-selection-item,
+.ant-modal-root:has(.ant-modal.presets-edit-modal) .ant-select .ant-select-content .ant-select-selection-item,
 .ant-modal-root:has(.ant-modal.presets-edit-modal) .ant-input-number-input {
     color: #e2e8f0 !important;
 }
@@ -5330,6 +5339,7 @@ body {
 .ant-btn,
 .ant-input,
 .ant-select-selector,
+.ant-select-content,
 .ant-picker {
     border-radius: var(--bbbeasy-border-radius) !important;
 }
@@ -5389,4 +5399,13 @@ body {
 }
 .ant-page-header-content {
     padding-top: 12px;
+}
+
+/* Ant Design 6 renders the number input as a plain <input> inside the wrapper and no
+   longer gives it the .ant-input-number-input class the theme rules target, so the
+   value inherited the browser default and disappeared on the dark background. */
+.ant-input-number input,
+.ant-input-number .ant-input-number-input {
+    color: inherit !important;
+    background: transparent !important;
 }
