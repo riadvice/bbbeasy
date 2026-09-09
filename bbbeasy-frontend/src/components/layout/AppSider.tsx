@@ -43,7 +43,6 @@ import { MenuType } from '../../types/MenuType';
 import { apiRoutes } from '../../routing/backend-config';
 
 const { Sider } = Layout;
-const { SubMenu } = Menu;
 
 type formType = {
     name?: string;
@@ -184,29 +183,31 @@ const AppSider = (props: Props) => {
                         onClick={handleClick}
                         selectedKeys={[currentPath]}
                         defaultOpenKeys={['sub1']}
-                    >
-                        {menuItems.map((item) =>
-                            item.children != null ? (
-                                <SubMenu key={item.path} icon={<DynamicIcon type={item.icon} />} title={t(item.name)}>
-                                    {item.children.map((subItem) => (
-                                        <Menu.Item key={subItem.path} icon={<DynamicIcon type={subItem.icon} />}>
-                                            <Link to={subItem.path}>{t(subItem.name)}</Link>
-                                        </Menu.Item>
-                                    ))}
-                                </SubMenu>
-                            ) : (
-                                <Menu.Item key={item.path} icon={<DynamicIcon type={item.icon} />}>
-                                    {item.path.includes('http') ? (
-                                        <a target="_blank" rel="noopener noreferrer" href={item.path}>
-                                            {t(item.name)}
-                                        </a>
-                                    ) : (
-                                        <Link to={item.path}>{t(item.name)}</Link>
-                                    )}
-                                </Menu.Item>
-                            )
+                        items={menuItems.map((item) =>
+                            item.children != null
+                                ? {
+                                      key: item.path,
+                                      icon: <DynamicIcon type={item.icon} />,
+                                      label: t(item.name),
+                                      children: item.children.map((subItem) => ({
+                                          key: subItem.path,
+                                          icon: <DynamicIcon type={subItem.icon} />,
+                                          label: <Link to={subItem.path}>{t(subItem.name)}</Link>,
+                                      })),
+                                  }
+                                : {
+                                      key: item.path,
+                                      icon: <DynamicIcon type={item.icon} />,
+                                      label: item.path.includes('http') ? (
+                                          <a target="_blank" rel="noopener noreferrer" href={item.path}>
+                                              {t(item.name)}
+                                          </a>
+                                      ) : (
+                                          <Link to={item.path}>{t(item.name)}</Link>
+                                      ),
+                                  }
                         )}
-                    </Menu>
+                    />
                 </div>
             </Sider>
         )

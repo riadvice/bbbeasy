@@ -134,15 +134,16 @@ const AppHeader = () => {
     }, []);
 
     const menuLang = (
-        <Menu>
-            <Radio.Group value={currentLocale} onChange={handleChange}>
-                {Languages.map(({ name, key, value }) => (
-                    <Menu.Item key={key}>
-                        <Radio value={value}>{name}</Radio>
-                    </Menu.Item>
-                ))}
-            </Radio.Group>
-        </Menu>
+        // The group stays outside the menu: the radios read the current value from
+        // its context, and the menu now takes its entries as data.
+        <Radio.Group value={currentLocale} onChange={handleChange}>
+            <Menu
+                items={Languages.map(({ name, key, value }) => ({
+                    key,
+                    label: <Radio value={value}>{name}</Radio>,
+                }))}
+            />
+        </Radio.Group>
     );
     const dropdownLang = (
         <Dropdown
