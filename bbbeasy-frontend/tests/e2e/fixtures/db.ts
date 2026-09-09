@@ -4,10 +4,11 @@ import pg from 'pg';
 const { Pool } = pg;
 
 const dbConfig = {
-    user: 'bbbeasy',
-    host: 'localhost',
-    database: 'bbbeasy',
-    password: 'bbbeasy',
+    user: process.env.PGUSER || 'bbbeasy',
+    host: process.env.PGHOST || 'localhost',
+    port: Number(process.env.PGPORT) || 5432,
+    database: process.env.PGDATABASE || 'bbbeasy',
+    password: process.env.PGPASSWORD || 'bbbeasy',
 };
 
 type DBQueryResult = pg.QueryResult<any>;

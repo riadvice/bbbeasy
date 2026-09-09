@@ -4,10 +4,11 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const dbConfig = {
-    user: 'bbbeasy',
-    host: 'localhost',
-    database: 'bbbeasy',
-    password: 'bbbeasy',
+    user: process.env.PGUSER || 'bbbeasy',
+    host: process.env.PGHOST || 'localhost',
+    port: Number(process.env.PGPORT) || 5432,
+    database: process.env.PGDATABASE || 'bbbeasy',
+    password: process.env.PGPASSWORD || 'bbbeasy',
 };
 
 export default defineConfig({
@@ -19,7 +20,7 @@ export default defineConfig({
     reporter: [['html', { open: 'never' }]],
     timeout: 60_000,
     use: {
-        baseURL: process.env.REACT_APP_URL || 'http://bbbeasy.test',
+        baseURL: process.env.VITE_APP_URL || 'http://bbbeasy.test',
         trace: 'on-first-retry',
         screenshot: 'only-on-failure',
     },

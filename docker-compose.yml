@@ -57,6 +57,9 @@ services:
     restart: always
     image: postgres:18-alpine
     container_name: bbbeasy_db
+    ports:
+      # exposed for the end to end test suite, PGPORT selects it
+      - "55432:5432"
     environment:
       - POSTGRES_DB=bbbeasy
       - POSTGRES_USER=bbbeasy
