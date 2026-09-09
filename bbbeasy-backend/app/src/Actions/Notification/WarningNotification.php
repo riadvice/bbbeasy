@@ -24,6 +24,7 @@ namespace Actions\Notification;
 
 use Actions\Base as BaseAction;
 use Sukarix\Behaviours\LogWriter;
+use Utils\BigBlueButtonRequester;
 
 /**
  * Reports the BigBlueButton configuration status to the web application.
@@ -52,25 +53,32 @@ class WarningNotification extends BaseAction
     }
 
     /**
-     * The server and the shared secret must both be set and both be moved away
-     * from the values shipped in the default configuration.
+     * The installation counts as configured only when the BigBlueButton server
+     * actually answers with the configured shared secret, a sample value left in
+     * place is as useless to the user as an empty one. The answer is cached, the
+     * web application asks for it on every page load.
      */
     private function bigBlueButtonIsConfigured(): bool
     {
-        $defaults = [
-            'unsecure_server_to_change_immediately',
-            'unsecure_shared_secret_to_change_immediately',
-        ];
-
-        $server = mb_trim((string) $this->f3->get('bbb.server'));
-        $secret = mb_trim((string) $this->f3->get('bbb.shared_secret'));
-
-        foreach ([$server, $secret] as $value) {
-            if ('' === $value || \in_array($value, $defaults, true)) {
-                return false;
-            }
+        if ('' === mb_trim((string) $this->f3->get('bbb.server')) || '' === mb_trim((string) $this->f3->get('bbb.shared_secret'))) {
+            return false;
         }
 
-        return true;
+        $cacheKey = 'bbb.configured';
+        $cache    = \Cache::instance();
+        if ($cache->exists($cacheKey, $cached)) {
+            return (bool) $cached;
+        }
+
+        try {
+            $configured = new BigBlueButtonRequester()->getApiVersion()->success();
+        } catch (\Throwable $throwable) {
+            $this->logger->warning('BigBlueButton server could not be reached', ['error' => $throwable->getMessage()]);
+            $configured = false;
+        }
+
+        $cache->set($cacheKey, $configured, $configured ? 300 : 60);
+
+        return $configured;
     }
 }
