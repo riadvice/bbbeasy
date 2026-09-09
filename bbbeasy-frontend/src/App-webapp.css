@@ -5530,3 +5530,8 @@ body {
 .ant-table-tbody .input-editable .ant-input-affix-wrapper {
     width: 100%;
 }
+
+/* The magnifier submits the room search, make it look like the control it is. */
+.search-submit {
+    cursor: pointer;
+}

@@ -78,15 +78,6 @@ const AppHeader = () => {
     const location = useLocation();
     const [searchForm] = Form.useForm();
     const isRoomsSearch = location.pathname.includes('rooms');
-    const isRecordingsSearch = location.pathname.includes('recordings');
-    const isLabelsSearch = location.pathname.includes('labels');
-    const isPresetsSearch = location.pathname.includes('presets');
-    const isRoomDetailsSearch = location.pathname.startsWith('/r/');
-    const isBrandingSearch = location.pathname.includes('branding');
-    const isPresetSettingsSearch = location.pathname.includes('bigbluebutton');
-    const isUsersSearch = location.pathname.includes('users');
-    const isRolesSearch = location.pathname.includes('roles');
-    const isAdministrationSearch = location.pathname.includes('administration');
     const [logo, setLogo] = React.useState<string>('');
     const isLoginPage = location.pathname.includes('login');
     const storedUser = AuthService.getCurrentUser();
@@ -126,17 +117,21 @@ const AppHeader = () => {
         LocaleService.changeLocale(selectedLang);
     };
 
-    const handleFilter = (e) => {
-        const data = [];
-        dataContext.dataRooms.map((room) => {
-            const lbs = room.labels.filter((item) => item.name.toLowerCase().includes(e.target.value.toLowerCase()));
+    const handleFilter = () => {
+        const query = (searchForm.getFieldValue('search') ?? '').trim().toLowerCase();
+        if (query === '') {
+            return;
+        }
 
-            if (lbs.length > 0) {
-                data.push(room);
-            }
-        });
+        // A room matches on its own name as well as on any of its labels, the
+        // placeholder promises to search rooms and that is what people type.
+        const matches = dataContext.dataRooms.filter(
+            (room) =>
+                room.name.toLowerCase().includes(query) ||
+                room.labels.some((label) => label.name.toLowerCase().includes(query))
+        );
 
-        setRooms(data);
+        setRooms(matches);
         setIsModalVisible(true);
     };
 
@@ -262,29 +257,21 @@ const AppHeader = () => {
                 ) : (
                     <Row align="middle">
                         <Col span={14} offset={5}>
+                            {isRoomsSearch && (
                             <Form form={searchForm}>
                                 <Form.Item name="search" className="mb-0">
                                     <Input
-                                        onPressEnter={isRoomsSearch ? handleFilter : null}
-                                className={`search-input global-search ${isRoomsSearch ? 'rooms-search-input' : ''} ${
-                                    isRecordingsSearch ? 'recordings-search-input' : ''
-                                } ${isLabelsSearch ? 'labels-search-input' : ''} ${
-                                    isPresetsSearch ? 'presets-search-input' : ''
-                                } ${isRoomDetailsSearch ? 'room-details-search-input' : ''} ${
-                                    isBrandingSearch ? 'branding-search-input' : ''
-                                } ${isPresetSettingsSearch ? 'preset-settings-search-input' : ''} ${
-                                    isUsersSearch ? 'users-search-input' : ''
-                                } ${isRolesSearch ? 'roles-search-input' : ''} ${
-                                    isAdministrationSearch ? 'administration-search-input' : ''
-                                }`}
+                                        onPressEnter={handleFilter}
+                                        className="search-input global-search rooms-search-input"
                                         size="middle"
-                                        placeholder={isRoomsSearch ? t('search_all_rooms') : t('search')}
+                                        placeholder={t('search_all_rooms')}
                                         allowClear
-                                        suffix={<SearchOutlined onClick={isRoomsSearch ? handleFilter : null} />}
-                                        bordered={false}
+                                        suffix={<SearchOutlined className="search-submit" onClick={handleFilter} />}
+                                        variant="borderless"
                                     />
                                 </Form.Item>
                             </Form>
+                            )}
                         </Col>
                         <Col span={5} className="text-end">
                             <Space size="middle">
