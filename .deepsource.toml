@@ -1,0 +1,30 @@
+version = 1
+
+exclude_patterns = [
+  # Statera scenarios resolve through composer's autoload-dev, which the analysers
+  # do not read: every helper the base scenario provides reads as undefined.
+  "bbbeasy-backend/tests/**",
+  "bbbeasy-frontend/tests/**",
+  "bbbeasy-frontend/dist/**",
+]
+
+[[analyzers]]
+name = "php"
+
+  [analyzers.meta]
+  bootstrap_files = ["bbbeasy-backend/vendor/autoload.php"]
+
+[[analyzers]]
+name = "javascript"
+
+  [analyzers.meta]
+  plugins = ["react"]
+  environment = ["browser", "nodejs"]
+  dialect = "typescript"
+  module_system = "es-modules"
+
+[[analyzers]]
+name = "docker"
+
+[[analyzers]]
+name = "shell"
