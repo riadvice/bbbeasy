@@ -17,7 +17,7 @@
  */
 
 import React from 'react';
-import { Trans } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 
 import { Button, Form, Typography, Card, Modal, Switch, Alert, Tooltip } from 'antd';
 import DynamicIcon from './DynamicIcon';
@@ -31,13 +31,13 @@ import EN_US from '../locale/en-US.json';
 const { Title, Paragraph } = Typography;
 const { Grid, Meta } = Card;
 import { useLocation } from 'react-router-dom';
-import ReactDomServer from 'react-dom/server';
 type Props = {
     presets: PresetType[];
     onFinish?: (category: string, subCategories: SubCategoryType[]) => void;
     enabled?: boolean;
 };
 export const Step3Form = (props: Props) => {
+    const { t } = useTranslation();
     const [step3] = Form.useForm();
     const location = useLocation();
     const { presets } = props;
@@ -71,7 +71,7 @@ export const Step3Form = (props: Props) => {
     };
 
     const cancelChanges = () => {
-        modalContent.forEach((item) => step3.setFieldValue(item.name, item.enabled));
+        setValues(Object.fromEntries(modalContent.map((item) => [item.name, item.enabled])));
         setIsModalVisible(false);
     };
     return (
@@ -171,43 +171,23 @@ export const Step3Form = (props: Props) => {
                                                     <input
                                                         className="input-status-presets"
                                                         disabled
+                                                        readOnly
                                                         type="text"
                                                         id={item.name}
-                                                        value={
-                                                            item.enabled === true
-                                                                ? ReactDomServer.renderToString(
-                                                                      <Trans i18nKey="status_presets_active" />
-                                                                  )
-                                                                : ReactDomServer.renderToString(
-                                                                      <Trans i18nKey="status_presets_inactive" />
-                                                                  )
-                                                        }
+                                                        value={t(
+                                                            values[item.name]
+                                                                ? 'status_presets_active'
+                                                                : 'status_presets_inactive'
+                                                        )}
                                                     />
                                                     <Switch
-                                                        defaultChecked={item.enabled}
-                                                        onChange={(checked) => {
-                                                            const formValues = values;
-                                                            formValues[item.name] = checked;
-
-                                                            setValues(formValues);
-                                                            if (checked) {
-                                                                (
-                                                                    document.getElementById(
-                                                                        item.name
-                                                                    ) as HTMLInputElement
-                                                                ).value = ReactDomServer.renderToString(
-                                                                    <Trans i18nKey="status_presets_active" />
-                                                                );
-                                                            } else {
-                                                                (
-                                                                    document.getElementById(
-                                                                        item.name
-                                                                    ) as HTMLInputElement
-                                                                ).value = ReactDomServer.renderToString(
-                                                                    <Trans i18nKey="status_presets_inactive" />
-                                                                );
-                                                            }
-                                                        }}
+                                                        checked={values[item.name]}
+                                                        onChange={(checked) =>
+                                                            setValues((current) => ({
+                                                                ...current,
+                                                                [item.name]: checked,
+                                                            }))
+                                                        }
                                                     />
                                                 </>
                                             </Form.Item>
