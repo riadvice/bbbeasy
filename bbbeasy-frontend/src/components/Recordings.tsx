@@ -52,8 +52,6 @@ import { RecordingType } from '../types/RecordingType';
 import ModalSocialLinks from './ModalSocialLinks';
 import RecordingFormatIcons from './RecordingFormatIcons';
 
-
-
 const { Link } = Typography;
 const { Option } = Select;
 
@@ -164,7 +162,7 @@ const Recordings = () => {
         setEditingKey(record.key);
         editForm.setFieldsValue(record);
     };
-    const isEditing = (record: RecordingType) => record.key == editingKey;
+    const isEditing = (record: RecordingType) => record.key === editingKey;
     const cancelEdit = () => {
         setEditingKey(null);
     };
@@ -184,7 +182,7 @@ const Recordings = () => {
                             const newRowData: RecordingType = response.data.recording;
                             const newData = [...data];
                             const index = newData.findIndex((item) => record.key === item.key);
-                            if (index > -1 && newRowData != undefined) {
+                            if (index > -1 && newRowData != null) {
                                 const item = newData[index];
                                 newData.splice(index, 1, {
                                     ...item,
@@ -227,7 +225,6 @@ const Recordings = () => {
                 setLoading(false);
             });
     };
-
 
     const columns: TableColumnType[] = [
         {
@@ -391,7 +388,7 @@ const Recordings = () => {
                         )}
                         {AuthService.isAllowedAction(actions, 'share') && (
                             <Tooltip
-                                placement={LocaleService.direction == 'rtl' ? 'right' : 'left'}
+                                placement={LocaleService.direction === 'rtl' ? 'right' : 'left'}
                                 title={<RecordingFormatIcons formats={record.formats} showDisabled />}
                             >
                                 <ModalSocialLinks recording={record} />

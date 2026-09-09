@@ -35,7 +35,7 @@ const ExternalLink = ({ url, children }: { url?: string; children: React.ReactNo
             {children}
         </a>
     ) : (
-        <>{children}</>
+        (children as React.JSX.Element)
     );
 
 const AppFooter = () => {

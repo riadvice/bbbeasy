@@ -95,13 +95,13 @@ export const Step3Form = (props: Props) => {
             </Paragraph>
             <Card bordered={false}>
                 {presets.map((item) => {
-                    const filteredElements = Object.keys(EN_US).filter((elem) => EN_US[elem] == item.name);
-                    const category = filteredElements.length != 0 ? filteredElements[0] : item.name;
+                    const filteredElements = Object.keys(EN_US).filter((elem) => EN_US[elem] === item.name);
+                    const category = filteredElements.length !== 0 ? filteredElements[0] : item.name;
 
                     return (
                         <Tooltip
                             key={item.name}
-                            placement={LocaleService.direction == 'rtl' ? 'leftTop' : 'rightTop'}
+                            placement={LocaleService.direction === 'rtl' ? 'leftTop' : 'rightTop'}
                             overlayClassName="install-tooltip"
                             title={
                                 <ul>
@@ -110,8 +110,8 @@ export const Step3Form = (props: Props) => {
 
                                         return (
                                             <li
-                                                key={item.name + '_' + subItem.name}
-                                                className={subItem.enabled == true ? 'text-black' : 'text-grey'}
+                                                key={`${item.name}_${subItem.name}`}
+                                                className={subItem.enabled === true ? 'text-black' : 'text-grey'}
                                             >
                                                 <Trans i18nKey={subcategory} />
                                             </li>
@@ -152,15 +152,17 @@ export const Step3Form = (props: Props) => {
                                 </Button>
                             </Form.Item>,
                         ]}
-                        maskClosable={true}
+                        maskClosable
                     >
-                        <Form ref={(form) => {
-step3 = form;
-}}>
+                        <Form
+                            ref={(form) => {
+                                step3 = form;
+                            }}
+                        >
                             <div className="presets-body">
                                 {modalContent.map((item) => {
                                     return (
-                                        <div key={modalTitle + '_' + item.name}>
+                                        <div key={`${modalTitle}_${item.name}`}>
                                             <Form.Item
                                                 label={
                                                     item.name.length > 30 ? (
@@ -181,7 +183,7 @@ step3 = form;
                                                         type="text"
                                                         id={item.name}
                                                         value={
-                                                            item.enabled == true
+                                                            item.enabled === true
                                                                 ? ReactDomServer.renderToString(
                                                                       <Trans i18nKey="status_presets_active" />
                                                                   )

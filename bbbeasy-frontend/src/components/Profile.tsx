@@ -65,7 +65,7 @@ const Profile = () => {
         setErrors('');
 
         // save avatar as base64
-        if (images.length != 0 && images[0].file != null) {
+        if (images.length !== 0 && images[0].file != null) {
             try {
                 // Resize image and convert to base64
                 const base64 = await new Promise<string>((resolve, reject) => {
@@ -78,9 +78,15 @@ const Profile = () => {
                             let width = img.width;
                             let height = img.height;
                             if (width > height) {
-                                if (width > MAX_SIZE) { height = (height * MAX_SIZE) / width; width = MAX_SIZE; }
+                                if (width > MAX_SIZE) {
+                                    height = (height * MAX_SIZE) / width;
+                                    width = MAX_SIZE;
+                                }
                             } else {
-                                if (height > MAX_SIZE) { width = (width * MAX_SIZE) / height; height = MAX_SIZE; }
+                                if (height > MAX_SIZE) {
+                                    width = (width * MAX_SIZE) / height;
+                                    height = MAX_SIZE;
+                                }
                             }
                             canvas.width = width;
                             canvas.height = height;
@@ -112,7 +118,12 @@ const Profile = () => {
                     //update LS
 
                     AuthService.updateCurrentUser(user.username, user.email, user.avatar);
-                    const updatedUser = { ...currentUser, username: user.username, email: user.email, avatar: user.avatar } as UserType;
+                    const updatedUser = {
+                        ...currentUser,
+                        username: user.username,
+                        email: user.email,
+                        avatar: user.avatar,
+                    } as UserType;
 
                     setCurrentUser(updatedUser);
                     setCurrentLocalUser(updatedUser);
@@ -138,11 +149,11 @@ const Profile = () => {
                 layout="vertical"
                 className="site-page-form profile-form"
                 ref={(form) => {
-accountForm = form;
-}}
+                    accountForm = form;
+                }}
                 initialValues={initialAddValues}
                 requiredMark={false}
-                scrollToFirstError={true}
+                scrollToFirstError
                 validateTrigger="onSubmit"
                 onFinish={handleUpdate}
                 onValuesChange={() => setErrors('')}
@@ -153,7 +164,9 @@ accountForm = form;
                             <Alert
                                 type="error"
                                 className="alert-msg"
-                                message={<Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errors)} />}
+                                message={
+                                    <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] === errors)} />
+                                }
                                 showIcon
                             />
                         )}
@@ -194,7 +207,7 @@ accountForm = form;
                                     <Badge
                                         count={
                                             <Tooltip
-                                                placement={LocaleService.direction == 'rtl' ? 'left' : 'right'}
+                                                placement={LocaleService.direction === 'rtl' ? 'left' : 'right'}
                                                 title={<Trans i18nKey="change_avatar" />}
                                             >
                                                 <Avatar
@@ -228,17 +241,15 @@ accountForm = form;
                                                             </div>
                                                         </div>
                                                     </div>
-                                                ) : (
-                                                    currentUser.avatar ? (
-                                                        <img
-                                                            className="ant-image-img"
-                                                            src={currentUser.avatar}
-                                                            width={130}
-                                                            height={130}
-                                                            style={{ borderRadius: '50%' }}
-                                                        />
-                                                    ) : null
-                                                )
+                                                ) : currentUser.avatar ? (
+                                                    <img
+                                                        className="ant-image-img"
+                                                        src={currentUser.avatar}
+                                                        width={130}
+                                                        height={130}
+                                                        style={{ borderRadius: '50%' }}
+                                                    />
+                                                ) : null
                                             }
                                             icon={imageList[0] == null && !currentUser.avatar ? <UserOutlined /> : null}
                                             size={{ xs: 32, sm: 40, md: 64, lg: 80, xl: 125, xxl: 135 }}

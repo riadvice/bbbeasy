@@ -19,6 +19,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import AuthService from '../../services/auth.service';
+
+import { useSettings } from 'lib/SettingsContext';
 import AddUserForm from '../AddUserForm';
 import ConfirmPassword from '../ConfirmPassword';
 
@@ -26,8 +28,6 @@ import { Form, Button, Checkbox, Alert, Col, Row, Typography, Card, Result } fro
 import { Trans, withTranslation } from 'react-i18next';
 import EN_US from '../../locale/en-US.json';
 import { t } from 'i18next';
-import settingsService from 'services/settings.service';
-import { SettingsType } from 'types/SettingsType';
 import { apiRoutes } from '../../routing/backend-config';
 
 const { Title, Paragraph } = Typography;
@@ -41,9 +41,9 @@ type formType = {
 };
 
 const Register = () => {
+    const { settings } = useSettings();
     const [successful, setSuccessful] = React.useState<boolean>(false);
     const [message, setMessage] = React.useState<string>('');
-    const [logo, setLogo] = React.useState<string>('');
     const initialValues: formType = {
         username: '',
         email: '',
@@ -51,17 +51,6 @@ const Register = () => {
         confirmPassword: '',
         agreement: false,
     };
-    React.useEffect(() => {
-        settingsService
-            .collect_settings()
-            .then((response) => {
-                const settings: SettingsType = response.data;
-                setLogo(settings.logo);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }, []);
 
     const navigate = useNavigate();
 
@@ -142,7 +131,9 @@ const Register = () => {
                             <Paragraph className="form-header text-center">
                                 <img
                                     className="form-img"
-                                    src={logo ? apiRoutes.GET_FILE_URL + logo : '/images/logo_02.png'}
+                                    src={
+                                        settings?.logo ? apiRoutes.GET_FILE_URL + settings.logo : '/images/logo_02.png'
+                                    }
                                     alt="Logo"
                                 />
                                 <Title level={4}>
@@ -155,7 +146,7 @@ const Register = () => {
                                     type="error"
                                     className="alert-msg"
                                     message={
-                                        <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == message)} />
+                                        <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] === message)} />
                                     }
                                     showIcon
                                 />
@@ -166,7 +157,7 @@ const Register = () => {
                                 name="register_form"
                                 initialValues={initialValues}
                                 requiredMark={false}
-                                scrollToFirstError={true}
+                                scrollToFirstError
                                 validateTrigger="onSubmit"
                                 onFinish={handleRegistration}
                                 onValuesChange={() => setMessage('')}

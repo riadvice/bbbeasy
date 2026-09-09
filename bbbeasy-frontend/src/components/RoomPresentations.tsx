@@ -208,7 +208,7 @@ const RoomPresentations = (props: Props) => {
 
         try {
             await axiosInstance.delete(
-                apiRoutes.DELETE_ROOM_PRESENTATION_URL + props.roomId + '/' + encodeURIComponent(file.name)
+                `${apiRoutes.DELETE_ROOM_PRESENTATION_URL + props.roomId}/${encodeURIComponent(file.name)}`
             );
             Notifications.openNotificationWithIcon('success', t('delete_presentation_success'));
 
@@ -266,49 +266,47 @@ const RoomPresentations = (props: Props) => {
     };
 
     return (
-        <>
-            {props.open && (
-                <>
-                    <Card bordered={false} size="small" className="room-presentations gray-bg">
-                        <Title level={5}>
-                            <Trans i18nKey="room_ppts" />
-                        </Title>
-                        {overLimitCount > 0 && (
-                            <div className="room-presentations-size-warning">
-                                <WarningOutlined />
-                                <span>
-                                    <Trans i18nKey="presentation_preupload_size_warning" />
-                                </span>
-                            </div>
-                        )}
-                        <Upload
-                            listType="picture-card"
-                            fileList={fileList}
-                            onPreview={handlePreview}
-                            onChange={handleChange}
-                            onRemove={handleRemove}
-                            customRequest={customRequest}
-                            beforeUpload={beforeUpload}
-                            iconRender={iconRender}
-                            accept=".png,.jpg,.jpeg,.pdf,.ppt,.pptx,.doc,.docx"
-                        >
-                            {fileList.length >= MAX_PRESENTATIONS ? null : uploadButton}
-                        </Upload>
-                    </Card>
-                    <Modal open={previewOpen} footer={null} onCancel={handleCancel} maskClosable={true}>
-                        <img className="full-width" src={previewImage} />
-                        {previewSize > PRE_UPLOAD_MAX_BYTES && (
-                            <div className="room-presentations-preview-size-warning">
-                                <WarningOutlined />
-                                <span>
-                                    <Trans i18nKey="presentation_preupload_size_warning_file" />
-                                </span>
-                            </div>
-                        )}
-                    </Modal>
-                </>
-            )}
-        </>
+        props.open && (
+            <>
+                <Card bordered={false} size="small" className="room-presentations gray-bg">
+                    <Title level={5}>
+                        <Trans i18nKey="room_ppts" />
+                    </Title>
+                    {overLimitCount > 0 && (
+                        <div className="room-presentations-size-warning">
+                            <WarningOutlined />
+                            <span>
+                                <Trans i18nKey="presentation_preupload_size_warning" />
+                            </span>
+                        </div>
+                    )}
+                    <Upload
+                        listType="picture-card"
+                        fileList={fileList}
+                        onPreview={handlePreview}
+                        onChange={handleChange}
+                        onRemove={handleRemove}
+                        customRequest={customRequest}
+                        beforeUpload={beforeUpload}
+                        iconRender={iconRender}
+                        accept=".png,.jpg,.jpeg,.pdf,.ppt,.pptx,.doc,.docx"
+                    >
+                        {fileList.length >= MAX_PRESENTATIONS ? null : uploadButton}
+                    </Upload>
+                </Card>
+                <Modal open={previewOpen} footer={null} onCancel={handleCancel} maskClosable>
+                    <img className="full-width" src={previewImage} />
+                    {previewSize > PRE_UPLOAD_MAX_BYTES && (
+                        <div className="room-presentations-preview-size-warning">
+                            <WarningOutlined />
+                            <span>
+                                <Trans i18nKey="presentation_preupload_size_warning_file" />
+                            </span>
+                        </div>
+                    )}
+                </Modal>
+            </>
+        )
     );
 };
 

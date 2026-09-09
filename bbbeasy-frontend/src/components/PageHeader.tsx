@@ -31,7 +31,7 @@ type Props = {
  * Ant Design 5 and only survived in a package pinned to that major version.
  */
 const PageHeader = ({ title, subTitle, extra, className, children }: Props) => (
-    <div className={`ant-page-header${className ? ' ' + className : ''}`}>
+    <div className={`ant-page-header${className ? ` ${className}` : ''}`}>
         <div className="ant-page-header-heading">
             <div className="ant-page-header-heading-left">
                 {title && <span className="ant-page-header-heading-title">{title}</span>}

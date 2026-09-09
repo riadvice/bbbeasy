@@ -62,7 +62,7 @@ const PresetSettings = () => {
                 const newPresetData: PresetType = response.data.settings;
                 const newData = [...presets];
                 const index = newData.findIndex((item) => category === item.name);
-                if (index > -1 && newPresetData != undefined) {
+                if (index > -1 && newPresetData != null) {
                     const item = newData[index];
                     newData.splice(index, 1, {
                         ...item,

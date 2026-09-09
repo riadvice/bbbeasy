@@ -50,14 +50,14 @@ import { DataContext } from 'lib/RoomsContext';
 import DynamicIcon from 'components/DynamicIcon';
 
 import LocaleService from '../../services/locale.service';
+
+import { useSettings } from 'lib/SettingsContext';
 import AuthService from '../../services/auth.service';
 
 import { LanguageType } from '../../types/LanguageType';
 import { RoomType } from 'types/RoomType';
 import notificationService from '../../services/notification.service';
 
-import settingsService from 'services/settings.service';
-import { SettingsType } from 'types/SettingsType';
 import { apiRoutes } from '../../routing/backend-config';
 
 const { Header } = Layout;
@@ -65,9 +65,10 @@ const { Title, Text, Paragraph } = Typography;
 
 // eslint-disable-next-line complexity
 const AppHeader = () => {
+    const { settings } = useSettings();
     const { setIsLogged, currentUser, setCurrentUser, setCurrentSession } = React.useContext(UserContext);
     const currentLocale = LocaleService.language;
-    const result: LanguageType[] = Languages.filter((item) => item.value == currentLocale);
+    const result: LanguageType[] = Languages.filter((item) => item.value === currentLocale);
     const language: string = result[0].name;
     const navigate = useNavigate();
 
@@ -78,25 +79,11 @@ const AppHeader = () => {
     const location = useLocation();
     const [searchForm] = Form.useForm();
     const isRoomsSearch = location.pathname.includes('rooms');
-    const [logo, setLogo] = React.useState<string>('');
     const isLoginPage = location.pathname.includes('login');
     const storedUser = AuthService.getCurrentUser();
     const storedSession = AuthService.getCurrentSession();
     const isAuthenticated = Boolean(storedUser && storedSession);
 
-    useEffect(() => {
-        settingsService
-            .collect_settings()
-            .then((response) => {
-                const settings: SettingsType = response.data;
-                setLogo(settings.logo);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-
-        return settingsService.on_settings_updated((settings) => setLogo(settings.logo));
-    }, []);
     const logout = () => {
         AuthService.logout()
             .catch((error) => {
@@ -160,7 +147,7 @@ const AppHeader = () => {
     const dropdownLang = (
         <Dropdown
             popupRender={() => menuLang}
-            placement={LocaleService.direction == 'rtl' ? 'bottomLeft' : 'bottomRight'}
+            placement={LocaleService.direction === 'rtl' ? 'bottomLeft' : 'bottomRight'}
             arrow
             trigger={['click']}
         >
@@ -186,12 +173,12 @@ const AppHeader = () => {
             }}
             overlayClassName="profil-btn-dropdown warning-btn-dropdown"
             disabled={!warningNotification}
-            placement={LocaleService.direction == 'rtl' ? 'bottomLeft' : 'bottomRight'}
+            placement={LocaleService.direction === 'rtl' ? 'bottomLeft' : 'bottomRight'}
             arrow
             trigger={['click']}
             className={!warningNotification ? 'dropdownWarning' : null}
         >
-            <Badge offset={LocaleService.direction == 'rtl' ? [34, 5] : [-34, 5]} count={warningNotification ? 1 : 0}>
+            <Badge offset={LocaleService.direction === 'rtl' ? [34, 5] : [-34, 5]} count={warningNotification ? 1 : 0}>
                 <Button type="primary" icon={<WarningOutlined />} className="profil-btn" />
             </Badge>
         </Dropdown>
@@ -230,34 +217,33 @@ const AppHeader = () => {
 
     return (
         <Header className="site-header">
-            <>
-                {!isAuthenticated || isLoginPage ? (
-                    <Paragraph className="site-header-inner">
-                        <Link to={'/'}>
-                            <img
-                                className="header-logo-image"
-                                src={logo ? apiRoutes.GET_FILE_URL + logo : '/images/logo_01.png'}
-                                alt="Logo"
-                            />
-                        </Link>
-                        <Space size="large">
-                            {!INSTALLER_FEATURE && (
-                                <>
-                                    <Button className="color-primary" onClick={() => navigate('/login')}>
-                                        <Trans i18nKey="login" />
-                                    </Button>
-                                    <Button className="color-primary" onClick={() => navigate('/register')}>
-                                        <Trans i18nKey="sign-up" />
-                                    </Button>
-                                </>
-                            )}
-                            {dropdownLang}
-                        </Space>
-                    </Paragraph>
-                ) : (
-                    <Row align="middle">
-                        <Col span={14} offset={5}>
-                            {isRoomsSearch && (
+            {!isAuthenticated || isLoginPage ? (
+                <Paragraph className="site-header-inner">
+                    <Link to={'/'}>
+                        <img
+                            className="header-logo-image"
+                            src={settings?.logo ? apiRoutes.GET_FILE_URL + settings.logo : '/images/logo_01.png'}
+                            alt="Logo"
+                        />
+                    </Link>
+                    <Space size="large">
+                        {!INSTALLER_FEATURE && (
+                            <>
+                                <Button className="color-primary" onClick={() => navigate('/login')}>
+                                    <Trans i18nKey="login" />
+                                </Button>
+                                <Button className="color-primary" onClick={() => navigate('/register')}>
+                                    <Trans i18nKey="sign-up" />
+                                </Button>
+                            </>
+                        )}
+                        {dropdownLang}
+                    </Space>
+                </Paragraph>
+            ) : (
+                <Row align="middle">
+                    <Col span={14} offset={5}>
+                        {isRoomsSearch && (
                             <Form form={searchForm}>
                                 <Form.Item name="search" className="mb-0">
                                     <Input
@@ -271,30 +257,29 @@ const AppHeader = () => {
                                     />
                                 </Form.Item>
                             </Form>
-                            )}
-                        </Col>
-                        <Col span={5} className="text-end">
-                            <Space size="middle">
-                                {dropdownWarning}
-                                <Dropdown
-                                    menu={menuProfile}
-                                    overlayClassName="profil-btn-dropdown"
-                                    placement={LocaleService.direction == 'rtl' ? 'bottomLeft' : 'bottomRight'}
-                                    arrow
-                                    trigger={['click']}
-                                >
-                                    <Avatar
-                                        className="profil-btn profil-avatar"
-                                        src={activeUser?.avatar || undefined}
-                                        icon={<UserOutlined />}
-                                    />
-                                </Dropdown>
-                                {dropdownLang}
-                            </Space>
-                        </Col>
-                    </Row>
-                )}
-            </>
+                        )}
+                    </Col>
+                    <Col span={5} className="text-end">
+                        <Space size="middle">
+                            {dropdownWarning}
+                            <Dropdown
+                                menu={menuProfile}
+                                overlayClassName="profil-btn-dropdown"
+                                placement={LocaleService.direction === 'rtl' ? 'bottomLeft' : 'bottomRight'}
+                                arrow
+                                trigger={['click']}
+                            >
+                                <Avatar
+                                    className="profil-btn profil-avatar"
+                                    src={activeUser?.avatar || undefined}
+                                    icon={<UserOutlined />}
+                                />
+                            </Dropdown>
+                            {dropdownLang}
+                        </Space>
+                    </Col>
+                </Row>
+            )}
             <Modal
                 title={
                     <Trans i18nKey="found_results" count={rooms.length}>

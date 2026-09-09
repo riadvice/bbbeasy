@@ -34,7 +34,7 @@ const Router: React.FC<IProps> = ({ routes }) => {
 
     const RenderComponent = (props): React.JSX.Element => {
         const route = props.route;
-        if (route.path == '*') return route.element;
+        if (route.path === '*') return route.element;
         else {
             return checkAccess(route);
         }

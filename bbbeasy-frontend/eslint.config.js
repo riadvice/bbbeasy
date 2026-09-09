@@ -56,6 +56,12 @@ export default tseslint.config(
             'prefer-promise-reject-errors': 'warn',
             'react-hooks/rules-of-hooks': 'error',
             'react-hooks/exhaustive-deps': 'warn',
+            eqeqeq: ['error', 'always', { null: 'ignore' }],
+            'no-implicit-coercion': ['error', { boolean: true, number: false, string: false }],
+            'react/jsx-boolean-value': ['error', 'never'],
+            'react/jsx-no-useless-fragment': 'error',
+            'react/jsx-key': 'error',
+            'prefer-template': 'error',
         },
         settings: {
             react: {

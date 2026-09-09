@@ -99,7 +99,7 @@ const Labels = () => {
                 if (indexLabel !== -1) {
                     dataContext.dataLabels.splice(indexLabel, 1);
                 }
-                dataContext.dataRooms.map((r) => {
+                dataContext.dataRooms.forEach((r) => {
                     const index = r.labels.findIndex((item) => key === item.key);
 
                     if (index !== -1) {
@@ -154,51 +154,49 @@ const Labels = () => {
                             setCancelVisibility(false);
                         }}
                         style={{
-                            borderColor: dataIndex == 'name' && isErrorValidation ? 'red' : null,
+                            borderColor: dataIndex === 'name' && isErrorValidation ? 'red' : null,
                         }}
                     />
                 }
                 errorsEdit={errorsEdit}
-                showLabelColor={dataIndex == 'description'}
+                showLabelColor={dataIndex === 'description'}
                 inputColor={
                     record && (
-                        <>
-                            <ColorPicker
-                                onChange={(color1: Color) => {
-                                    editForm.setFieldValue('color', color1.toHexString());
-                                    (document.getElementById('newColor') as HTMLInputElement).value =
-                                        editForm.getFieldValue('color');
-                                    (document.getElementById('myNewColor') as HTMLInputElement).style.backgroundColor =
-                                        editForm.getFieldValue('color');
-                                }}
-                            >
-                                <Space className="space-color-picker">
-                                    <div
-                                        id="myNewColor"
-                                        style={{
-                                            width: token.sizeMD,
-                                            height: token.sizeMD,
-                                            borderRadius: token.borderRadiusSM,
-                                            backgroundColor: record.color,
-                                        }}
+                        <ColorPicker
+                            onChange={(color1: Color) => {
+                                editForm.setFieldValue('color', color1.toHexString());
+                                (document.getElementById('newColor') as HTMLInputElement).value =
+                                    editForm.getFieldValue('color');
+                                (document.getElementById('myNewColor') as HTMLInputElement).style.backgroundColor =
+                                    editForm.getFieldValue('color');
+                            }}
+                        >
+                            <Space className="space-color-picker">
+                                <div
+                                    id="myNewColor"
+                                    style={{
+                                        width: token.sizeMD,
+                                        height: token.sizeMD,
+                                        borderRadius: token.borderRadiusSM,
+                                        backgroundColor: record.color,
+                                    }}
+                                />
+                                <span>
+                                    <input
+                                        className="code-color-picker-edit-label"
+                                        disabled
+                                        type="text"
+                                        id="newColor"
+                                        value={editForm.getFieldValue('color')}
                                     />
-                                    <span>
-                                        <input
-                                            className="code-color-picker-edit-label"
-                                            disabled
-                                            type="text"
-                                            id="newColor"
-                                            value={editForm.getFieldValue('color')}
-                                        />
-                                    </span>
-                                </Space>
-                            </ColorPicker>
-                        </>
+                                </span>
+                            </Space>
+                        </ColorPicker>
                     )
                 }
                 {...restProps}
             >
-                {dataIndex == 'name' && record != null ? (
+                {dataIndex === 'name' && record != null ? (
                     <Badge
                         count={record.name}
                         style={{
@@ -211,7 +209,7 @@ const Labels = () => {
             </EditableTableCell>
         );
     };
-    const isEditing = (record: LabelType) => record.key == editingKey;
+    const isEditing = (record: LabelType) => record.key === editingKey;
     const toggleEdit = (record: LabelType) => {
         setCancelVisibility(false);
         setEditingKey(record.key);
@@ -242,9 +240,13 @@ const Labels = () => {
 
                                 return [...data];
                             });
-                            dataContext.dataRooms.map((r) => {
-                                const index = r.labels.findIndex((item) => key === item.key);
-                                r.labels[index] = newRow;
+                            dataContext.dataRooms.forEach((r) => {
+                                // A room that does not carry the label has nothing to
+                                // update, writing at -1 only adds a stray property.
+                                const labelIndex = r.labels.findIndex((item) => key === item.key);
+                                if (labelIndex !== -1) {
+                                    r.labels[labelIndex] = newRow;
+                                }
                             });
                             cancelEdit();
                         }
@@ -421,7 +423,10 @@ const Labels = () => {
 
             {AuthService.isAllowedAction(actions, 'add') && (
                 <AddLabelForm
-                    defaultColor={getComputedStyle(document.documentElement).getPropertyValue('--bbbeasy-brand-color').trim() || '#fbbc0b'}
+                    defaultColor={
+                        getComputedStyle(document.documentElement).getPropertyValue('--bbbeasy-brand-color').trim() ||
+                        '#fbbc0b'
+                    }
                     isModalShow={isModalVisible}
                     close={() => {
                         setIsModalVisible(false);

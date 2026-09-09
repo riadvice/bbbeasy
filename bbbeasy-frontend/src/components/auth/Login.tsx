@@ -16,9 +16,11 @@
  * with BBBEasy; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import AuthService from '../../services/auth.service';
+
+import { useSettings } from 'lib/SettingsContext';
 import Notifications from '../Notifications';
 
 import { Form, Button, Alert, Col, Row, Typography, Card } from 'antd';
@@ -30,8 +32,6 @@ import AddUserForm from '../AddUserForm';
 import { UserType } from '../../types/UserType';
 import { SessionType } from '../../types/SessionType';
 import { UserContext } from '../../lib/UserContext';
-import settingsService from 'services/settings.service';
-import { SettingsType } from 'types/SettingsType';
 import { apiRoutes } from '../../routing/backend-config';
 
 const { Text, Title, Paragraph } = Typography;
@@ -42,29 +42,17 @@ type formType = {
 };
 
 const Login: React.FC = () => {
+    const { settings } = useSettings();
     const { t } = useTranslation();
     const { setIsLogged, setCurrentUser, setCurrentSession } = useContext(UserContext);
     const [successful, setSuccessful] = useState<boolean>(false);
     const [message, setMessage] = useState<string>('');
     const [email, setEmail] = useState<string>('');
-    const [logo, setLogo] = useState<string>('');
 
     const initialValues: formType = {
         email: '',
         password: '',
     };
-
-    useEffect(() => {
-        settingsService
-            .collect_settings()
-            .then((response) => {
-                const settings: SettingsType = response.data;
-                setLogo(settings.logo);
-            })
-            .catch((error) => {
-                console.error('Error fetching settings:', error);
-            });
-    }, []);
 
     const handleLogin = (formValue: formType) => {
         const { email, password } = formValue;
@@ -79,7 +67,7 @@ const Login: React.FC = () => {
                     Notifications.openNotificationWithIcon(
                         'success',
                         <>
-                            <Trans i18nKey="welcome-app" /> {' ' + userInfos.username + ' !'}
+                            <Trans i18nKey="welcome-app" /> {` ${userInfos.username} !`}
                         </>,
                         <SmileOutlined className="text-color-primary" />,
                         2.5
@@ -165,7 +153,7 @@ const Login: React.FC = () => {
                     <Paragraph className="form-header text-center">
                         <img
                             className="form-img"
-                            src={logo ? apiRoutes.GET_FILE_URL + logo : '/images/logo_02.png'}
+                            src={settings?.logo ? apiRoutes.GET_FILE_URL + settings.logo : '/images/logo_02.png'}
                             alt="Logo"
                         />
                         <Title level={4}>
@@ -206,7 +194,7 @@ const Login: React.FC = () => {
                         onFinish={handleLogin}
                         onValuesChange={() => setMessage('')}
                     >
-                        <AddUserForm isLogin={true} />
+                        <AddUserForm isLogin />
                         <Form.Item>
                             <Button type="primary" id="submit-btn" htmlType="submit" block>
                                 <Trans i18nKey="login" />

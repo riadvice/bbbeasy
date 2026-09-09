@@ -100,7 +100,7 @@ const addSettings = (keys: string[], items: MenuType[]) => {
         subItems
     );
 
-    if (subItems.length != 0) {
+    if (subItems.length !== 0) {
         items.push({
             name: 'settings',
             icon: 'General-settings',
@@ -116,7 +116,7 @@ class MenuService {
         const news: string[] = [];
         let defaultRoute = '';
 
-        if (Object.keys(userPermissions).length != 0) {
+        if (Object.keys(userPermissions).length !== 0) {
             const keys = Object.keys(userPermissions);
 
             const addActionExist = (key: string) => {
@@ -179,7 +179,7 @@ class MenuService {
             path: 'https://riadvice.tn/',
         });
 
-        if (items.length != 0) {
+        if (items.length !== 0) {
             if (items[0].children == null) {
                 if (items[0].path.startsWith('http')) {
                     defaultRoute = '/profile';

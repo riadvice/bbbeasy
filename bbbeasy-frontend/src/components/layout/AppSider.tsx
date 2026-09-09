@@ -35,11 +35,11 @@ import AddLabelForm from 'components/AddLabelForm';
 import AddPresetForm from 'components/AddPresetForm';
 
 import AuthService from '../../services/auth.service';
+
+import { useSettings } from 'lib/SettingsContext';
 import MenuService from '../../services/menu.service';
 import { UserType } from '../../types/UserType';
 import { MenuType } from '../../types/MenuType';
-import settingsService from 'services/settings.service';
-import { SettingsType } from 'types/SettingsType';
 import { apiRoutes } from '../../routing/backend-config';
 
 const { Sider } = Layout;
@@ -57,6 +57,7 @@ type Props = {
 };
 
 const AppSider = (props: Props) => {
+    const { settings } = useSettings();
     const initialAddValues: formType = {
         name: '',
         shortlink: getRandomString(),
@@ -75,7 +76,6 @@ const AppSider = (props: Props) => {
     const location: Location = useLocation();
     const [currentPath, setCurrentPath] = React.useState<string>(location.pathname);
     const { t } = useTranslation();
-    const [logo, setLogo] = React.useState<string>('');
 
     useEffect(() => {
         const user: UserType = AuthService.getCurrentUser();
@@ -83,17 +83,6 @@ const AppSider = (props: Props) => {
 
         setMenuItems(menuSider.items);
         setNewMenuItems(menuSider.news);
-        settingsService
-            .collect_settings()
-            .then((response) => {
-                const settings: SettingsType = response.data;
-                setLogo(settings.logo);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-
-        const stopListening = settingsService.on_settings_updated((settings) => setLogo(settings.logo));
         if (currentPath.startsWith('/r/')) {
             const index = menuSider.items.findIndex((item) => item.name === 'recordings');
             if (index !== -1) {
@@ -101,15 +90,14 @@ const AppSider = (props: Props) => {
             }
         }
 
-        if (currentPath == '/login') {
+        if (currentPath === '/login') {
             const defaultRoute = menuSider.defaultRoute;
-            if (defaultRoute != '') {
+            if (defaultRoute !== '') {
                 navigate(defaultRoute);
                 setCurrentPath(defaultRoute);
             }
         }
 
-        return stopListening;
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -117,113 +105,111 @@ const AppSider = (props: Props) => {
         setCurrentPath(e.key);
     };
     return (
-        <>
-            {menuItems.length != 0 && (
-                <Sider className="site-sider">
-                    <div className="logo">
-                        <Link to={'/'}>
-                            <img
-                                className="sider-logo-image"
-                                src={logo ? apiRoutes.GET_FILE_URL + logo : '/images/logo_01.png'}
-                                alt="Logo"
-                            />
-                        </Link>
-                    </div>
-                    <div className="menu-sider">
-                        {newMenuItems.length != 0 && (
+        menuItems.length !== 0 && (
+            <Sider className="site-sider">
+                <div className="logo">
+                    <Link to={'/'}>
+                        <img
+                            className="sider-logo-image"
+                            src={settings?.logo ? apiRoutes.GET_FILE_URL + settings.logo : '/images/logo_01.png'}
+                            alt="Logo"
+                        />
+                    </Link>
+                </div>
+                <div className="menu-sider">
+                    {newMenuItems.length !== 0 && (
+                        <>
+                            <Dropdown
+                                menu={{
+                                    items: [
+                                        newMenuItems.includes('rooms') && {
+                                            key: '1',
+                                            label: <span>{t('room')}</span>,
+                                            onClick: () => setIsModalVisibleRoom(true),
+                                        },
+                                        newMenuItems.includes('labels') && {
+                                            key: '2',
+                                            label: t('label'),
+                                            onClick: () => setIsModalVisibleLabel(true),
+                                        },
+                                        newMenuItems.includes('presets') && {
+                                            key: '3',
+                                            label: t('preset.label'),
+                                            onClick: () => setIsModalVisiblePreset(true),
+                                        },
+                                    ].filter(Boolean),
+                                }}
+                                trigger={['click']}
+                            >
+                                <Button size="middle" className="sider-new-btn">
+                                    <PlusOutlined /> {t('new')} <DownOutlined />
+                                </Button>
+                            </Dropdown>
+
                             <>
-                                <Dropdown
-                                    menu={{
-                                        items: [
-                                            newMenuItems.includes('rooms') && {
-                                                key: '1',
-                                                label: <span>{t('room')}</span>,
-                                                onClick: () => setIsModalVisibleRoom(true),
-                                            },
-                                            newMenuItems.includes('labels') && {
-                                                key: '2',
-                                                label: t('label'),
-                                                onClick: () => setIsModalVisibleLabel(true),
-                                            },
-                                            newMenuItems.includes('presets') && {
-                                                key: '3',
-                                                label: t('preset.label'),
-                                                onClick: () => setIsModalVisiblePreset(true),
-                                            },
-                                        ].filter(Boolean),
-                                    }}
-                                    trigger={['click']}
-                                >
-                                    <Button size="middle" className="sider-new-btn">
-                                        <PlusOutlined /> {t('new')} <DownOutlined />
-                                    </Button>
-                                </Dropdown>
-
-                                <>
-                                    {newMenuItems.includes('rooms') && (
-                                        <AddRoomForm
-                                            isModalShow={isModalVisibleRoom}
-                                            close={() => setIsModalVisibleRoom(false)}
-                                            shortlink={initialAddValues.shortlink}
-                                            initialAddValues={initialAddValues}
-                                            presets={props.presets}
-                                        />
-                                    )}
-                                    {newMenuItems.includes('labels') && (
-                                        <AddLabelForm
-                                            isModalShow={isModalVisibleLabel}
-                                            close={() => setIsModalVisibleLabel(false)}
-                                            defaultColor={getComputedStyle(document.documentElement).getPropertyValue('--bbbeasy-brand-color').trim() || '#fbbc0b'}
-                                        />
-                                    )}
-                                    {newMenuItems.includes('presets') && (
-                                        <AddPresetForm
-                                            isModalShow={isModalVisiblePreset}
-                                            close={() => setIsModalVisiblePreset(false)}
-                                        />
-                                    )}
-                                </>
+                                {newMenuItems.includes('rooms') && (
+                                    <AddRoomForm
+                                        isModalShow={isModalVisibleRoom}
+                                        close={() => setIsModalVisibleRoom(false)}
+                                        shortlink={initialAddValues.shortlink}
+                                        initialAddValues={initialAddValues}
+                                        presets={props.presets}
+                                    />
+                                )}
+                                {newMenuItems.includes('labels') && (
+                                    <AddLabelForm
+                                        isModalShow={isModalVisibleLabel}
+                                        close={() => setIsModalVisibleLabel(false)}
+                                        defaultColor={
+                                            getComputedStyle(document.documentElement)
+                                                .getPropertyValue('--bbbeasy-brand-color')
+                                                .trim() || '#fbbc0b'
+                                        }
+                                    />
+                                )}
+                                {newMenuItems.includes('presets') && (
+                                    <AddPresetForm
+                                        isModalShow={isModalVisiblePreset}
+                                        close={() => setIsModalVisiblePreset(false)}
+                                    />
+                                )}
                             </>
-                        )}
+                        </>
+                    )}
 
-                        <Menu
-                            className="site-menu"
-                            mode="inline"
-                            theme="light"
-                            onClick={handleClick}
-                            selectedKeys={[currentPath]}
-                            defaultOpenKeys={['sub1']}
-                        >
-                            {menuItems.map((item) =>
-                                item.children != null ? (
-                                    <SubMenu
-                                        key={item.path}
-                                        icon={<DynamicIcon type={item.icon} />}
-                                        title={t(item.name)}
-                                    >
-                                        {item.children.map((subItem) => (
-                                            <Menu.Item key={subItem.path} icon={<DynamicIcon type={subItem.icon} />}>
-                                                <Link to={subItem.path}>{t(subItem.name)}</Link>
-                                            </Menu.Item>
-                                        ))}
-                                    </SubMenu>
-                                ) : (
-                                    <Menu.Item key={item.path} icon={<DynamicIcon type={item.icon} />}>
-                                        {item.path.includes('http') ? (
-                                            <a target="_blank" rel="noopener noreferrer" href={item.path}>
-                                                {t(item.name)}
-                                            </a>
-                                        ) : (
-                                            <Link to={item.path}>{t(item.name)}</Link>
-                                        )}
-                                    </Menu.Item>
-                                )
-                            )}
-                        </Menu>
-                    </div>
-                </Sider>
-            )}
-        </>
+                    <Menu
+                        className="site-menu"
+                        mode="inline"
+                        theme="light"
+                        onClick={handleClick}
+                        selectedKeys={[currentPath]}
+                        defaultOpenKeys={['sub1']}
+                    >
+                        {menuItems.map((item) =>
+                            item.children != null ? (
+                                <SubMenu key={item.path} icon={<DynamicIcon type={item.icon} />} title={t(item.name)}>
+                                    {item.children.map((subItem) => (
+                                        <Menu.Item key={subItem.path} icon={<DynamicIcon type={subItem.icon} />}>
+                                            <Link to={subItem.path}>{t(subItem.name)}</Link>
+                                        </Menu.Item>
+                                    ))}
+                                </SubMenu>
+                            ) : (
+                                <Menu.Item key={item.path} icon={<DynamicIcon type={item.icon} />}>
+                                    {item.path.includes('http') ? (
+                                        <a target="_blank" rel="noopener noreferrer" href={item.path}>
+                                            {t(item.name)}
+                                        </a>
+                                    ) : (
+                                        <Link to={item.path}>{t(item.name)}</Link>
+                                    )}
+                                </Menu.Item>
+                            )
+                        )}
+                    </Menu>
+                </div>
+            </Sider>
+        )
     );
 };
 

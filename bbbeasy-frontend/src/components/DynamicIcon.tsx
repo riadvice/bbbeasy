@@ -43,7 +43,7 @@ const DynamicIcon = (props: Props) => {
     ];
 
     if (bbbeasyIcons.includes(type.toLowerCase())) {
-        const bbbeasyIcon = () => <span className={'icon-bbbeasy-' + type.toLowerCase()} />;
+        const bbbeasyIcon = () => <span className={`icon-bbbeasy-${type.toLowerCase()}`} />;
         return <Icon component={bbbeasyIcon} className={className} />;
     } else {
         const AntdIcon = AntdIcons[type];

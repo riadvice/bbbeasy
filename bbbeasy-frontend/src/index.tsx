@@ -38,7 +38,7 @@ const root = createRoot(container);
 if (!INSTALLER_FEATURE) {
     root.render(
         <BrowserRouter>
-            <App routes={webRoutes} isSider={true} logs={'Initialisation BBBEasy Webapp Application'} />
+            <App routes={webRoutes} isSider logs={'Initialisation BBBEasy Webapp Application'} />
         </BrowserRouter>
     );
 }

@@ -111,7 +111,7 @@ const PresetsCol: React.FC<PresetColProps> = ({
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [errorsEdit, setErrorsEdit] = React.useState({});
     const [originalPreset, setOriginalPreset] = React.useState<MyPresetType | null>(null);
-    const isDefault = preset['name'] == 'default';
+    const isDefault = preset['name'] === 'default';
     const deleteEnabled = deleteClickHandler != null && !isDefault;
     const { token } = theme.useToken();
 
@@ -134,7 +134,7 @@ const PresetsCol: React.FC<PresetColProps> = ({
         onChange: (info) => {
             let fileList: UploadFile[] = [...info.fileList];
             fileList = fileList.slice(-1);
-            if (fileList[0] != undefined) {
+            if (fileList[0] != null) {
                 const img: boolean =
                     fileList[0].type === 'image/jpg' ||
                     fileList[0].type === 'image/jpeg' ||
@@ -167,7 +167,7 @@ const PresetsCol: React.FC<PresetColProps> = ({
         setFileList(null);
 
         const indexLogo = content.findIndex((item) => item.type === 'file');
-        if (indexLogo > -1 && content[indexLogo].value != '') {
+        if (indexLogo > -1 && content[indexLogo].value !== '') {
             const presetLogo: UploadFile = {
                 uid: '1',
                 name: content[indexLogo].value,
@@ -288,11 +288,11 @@ const PresetsCol: React.FC<PresetColProps> = ({
 
         if (indexLogo > -1) {
             // updated logo
-            if (file != undefined && file.originFileObj != null) {
+            if (file != null && file.originFileObj != null) {
                 subCategories[indexLogo].value = file.name;
             }
             //deleted logo
-            else if (file == undefined && subCategories[indexLogo].value != null) {
+            else if (file == null && subCategories[indexLogo].value != null) {
                 subCategories[indexLogo].value = '';
             }
         }
@@ -304,7 +304,7 @@ const PresetsCol: React.FC<PresetColProps> = ({
         }
 
         //edit file
-        if (indexLogo > -1 && file != undefined && file.originFileObj != null) {
+        if (indexLogo > -1 && file != null && file.originFileObj != null) {
             const formData: FormData = new FormData();
             formData.append('logo', file.originFileObj, file.originFileObj.name);
             formData.append('logo_name', file.originFileObj.name);
@@ -364,7 +364,7 @@ const PresetsCol: React.FC<PresetColProps> = ({
                                             help: (
                                                 <Trans
                                                     i18nKey={Object.keys(EN_US).filter(
-                                                        (elem) => EN_US[elem] == errorsEdit['name']
+                                                        (elem) => EN_US[elem] === errorsEdit['name']
                                                     )}
                                                 />
                                             ),
@@ -445,7 +445,7 @@ const PresetsCol: React.FC<PresetColProps> = ({
                                     )}
                                 </Menu>
                             )}
-                            placement={LocaleService.direction == 'rtl' ? 'bottomLeft' : 'bottomRight'}
+                            placement={LocaleService.direction === 'rtl' ? 'bottomLeft' : 'bottomRight'}
                         >
                             <MoreOutlined />
                         </Dropdown>
@@ -453,57 +453,55 @@ const PresetsCol: React.FC<PresetColProps> = ({
                 }
             >
                 {preset.categories.map((item, subIndex) => {
-                    const filteredElements = Object.keys(EN_US).filter((elem) => EN_US[elem] == item.name);
-                    const category = filteredElements.length != 0 ? filteredElements[0] : item.name;
+                    const filteredElements = Object.keys(EN_US).filter((elem) => EN_US[elem] === item.name);
+                    const category = filteredElements.length !== 0 ? filteredElements[0] : item.name;
 
                     return (
-                        <>
-                            {item.enabled && (
-                                <Tooltip
-                                    key={subIndex + '-' + item.name}
-                                    placement={
-                                        LocaleService.direction == 'rtl'
-                                            ? item.enabled == true
-                                                ? 'leftTop'
-                                                : 'left'
-                                            : item.enabled
-                                            ? 'rightTop'
-                                            : 'right'
-                                    }
-                                    overlayClassName={item.enabled ? 'install-tooltip' : 'title-tooltip'}
-                                    title={
-                                        item.enabled == true ? (
-                                            <>
-                                                <Title level={5}>{t(category)}</Title>
-                                                <ul>
-                                                    {item.subcategories.map((subItem) => (
-                                                        <li
-                                                            key={item.name + '_' + subItem.name}
-                                                            className={subItem.value == '' ? 'text-grey' : 'text-black'}
-                                                        >
-                                                            {t(subItem.name)}
-                                                        </li>
-                                                    ))}
-                                                </ul>
-                                            </>
-                                        ) : (
+                        item.enabled && (
+                            <Tooltip
+                                key={`${subIndex}-${item.name}`}
+                                placement={
+                                    LocaleService.direction === 'rtl'
+                                        ? item.enabled === true
+                                            ? 'leftTop'
+                                            : 'left'
+                                        : item.enabled
+                                          ? 'rightTop'
+                                          : 'right'
+                                }
+                                overlayClassName={item.enabled ? 'install-tooltip' : 'title-tooltip'}
+                                title={
+                                    item.enabled === true ? (
+                                        <>
                                             <Title level={5}>{t(category)}</Title>
-                                        )
+                                            <ul>
+                                                {item.subcategories.map((subItem) => (
+                                                    <li
+                                                        key={`${item.name}_${subItem.name}`}
+                                                        className={subItem.value === '' ? 'text-grey' : 'text-black'}
+                                                    >
+                                                        {t(subItem.name)}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </>
+                                    ) : (
+                                        <Title level={5}>{t(category)}</Title>
+                                    )
+                                }
+                            >
+                                <Button
+                                    onClick={() =>
+                                        editClickHandler != null
+                                            ? showModal(item.name, category, item.subcategories)
+                                            : null
                                     }
-                                >
-                                    <Button
-                                        onClick={() =>
-                                            editClickHandler != null
-                                                ? showModal(item.name, category, item.subcategories)
-                                                : null
-                                        }
-                                        disabled={!item.enabled}
-                                        type="link"
-                                        icon={<DynamicIcon type={getIconName(item.name)} className={'PresetIcon'} />}
-                                    />
-                                </Tooltip>
-                            )}
-                        </>
+                                    disabled={!item.enabled}
+                                    type="link"
+                                    icon={<DynamicIcon type={getIconName(item.name)} className={'PresetIcon'} />}
+                                />
+                            </Tooltip>
+                        )
                     );
                 })}
 
@@ -516,14 +514,14 @@ const PresetsCol: React.FC<PresetColProps> = ({
                         onOk={() => setIsModalVisible(false)}
                         onCancel={() => setIsModalVisible(false)}
                         footer={null}
-                        maskClosable={true}
+                        maskClosable
                     >
                         <div className="presets-body">
                             <Form>
-                                {modalContent.map((item) => (
-                                    <>
-                                        {typeof item.type !== 'boolean' && (
-                                            <div key={modalTitle + '_' + item.name}>
+                                {modalContent.map(
+                                    (item) =>
+                                        typeof item.type !== 'boolean' && (
+                                            <div key={`${modalTitle}_${item.name}`}>
                                                 <Form.Item
                                                     label={
                                                         item.name.length > 30 ? (
@@ -534,7 +532,7 @@ const PresetsCol: React.FC<PresetColProps> = ({
                                                     }
                                                     name={item.name}
                                                 >
-                                                    {item.type == 'bool' && (
+                                                    {item.type === 'bool' && (
                                                         <>
                                                             <input
                                                                 className="input-status-presets"
@@ -542,7 +540,7 @@ const PresetsCol: React.FC<PresetColProps> = ({
                                                                 type="text"
                                                                 id={item.name}
                                                                 value={
-                                                                    item.value == true
+                                                                    item.value === true
                                                                         ? t('status_presets_active')
                                                                         : t('status_presets_inactive')
                                                                 }
@@ -550,7 +548,7 @@ const PresetsCol: React.FC<PresetColProps> = ({
                                                             />
 
                                                             <Switch
-                                                                checked={item.value == true}
+                                                                checked={item.value === true}
                                                                 onChange={(checked) => toggleSetting(item, checked)}
                                                             />
                                                         </>
@@ -568,7 +566,13 @@ const PresetsCol: React.FC<PresetColProps> = ({
 
                                                     {item.type === 'color' && (
                                                         <ColorPicker
-                                                            value={item.value ? item.value : getComputedStyle(document.documentElement).getPropertyValue('--bbbeasy-brand-color').trim() || '#fbbc0b'}
+                                                            value={
+                                                                item.value
+                                                                    ? item.value
+                                                                    : getComputedStyle(document.documentElement)
+                                                                          .getPropertyValue('--bbbeasy-brand-color')
+                                                                          .trim() || '#fbbc0b'
+                                                            }
                                                             onChange={(color1: Color) => {
                                                                 item.value =
                                                                     typeof color1 === 'string'
@@ -584,7 +588,11 @@ const PresetsCol: React.FC<PresetColProps> = ({
 
                                                                         backgroundColor: item.value
                                                                             ? item.value
-                                                                            : getComputedStyle(document.documentElement).getPropertyValue('--bbbeasy-brand-color').trim() || '#fbbc0b',
+                                                                            : getComputedStyle(document.documentElement)
+                                                                                  .getPropertyValue(
+                                                                                      '--bbbeasy-brand-color'
+                                                                                  )
+                                                                                  .trim() || '#fbbc0b',
                                                                     }}
                                                                 />
                                                             </Space>
@@ -620,7 +628,7 @@ const PresetsCol: React.FC<PresetColProps> = ({
                                                             defaultValue={item.value}
                                                             options={getData().map((data) => ({
                                                                 label:
-                                                                    'Guest Policy' == modalTitle
+                                                                    'Guest Policy' === modalTitle
                                                                         ? t(data.key)
                                                                         : data.name,
                                                                 value: data.value,
@@ -632,9 +640,8 @@ const PresetsCol: React.FC<PresetColProps> = ({
                                                     )}
                                                 </Form.Item>
                                             </div>
-                                        )}
-                                    </>
-                                ))}
+                                        )
+                                )}
                                 <Form.Item className="button-container">
                                     <Button
                                         type="text"
@@ -697,13 +704,13 @@ const Presets = () => {
 
     //edit
     const editPreset = (newPreset: MyPresetType, oldPreset: MyPresetType, checkName: boolean = true) => {
-        if (checkName && newPreset.name == oldPreset.name) {
+        if (checkName && newPreset.name === oldPreset.name) {
             Notifications.openNotificationWithIcon('info', t('no_changes'));
             return;
         }
         const newPresets = [...myPresets];
         const index = newPresets.findIndex((item) => oldPreset.id === item.id);
-        if (index > -1 && newPreset != undefined) {
+        if (index > -1 && newPreset != null) {
             const item = newPresets[index];
             newPresets.splice(index, 1, {
                 ...item,
@@ -736,7 +743,7 @@ const Presets = () => {
     const deletePreset = (id) => {
         PresetsService.delete_preset(id)
             .then(() => {
-                setMyPresets(myPresets.filter((p) => p.id != id));
+                setMyPresets(myPresets.filter((p) => p.id !== id));
                 const indexPreset = dataContext.dataPresets.findIndex((item) => id === item.id);
                 if (indexPreset !== -1) {
                     dataContext.dataPresets.splice(indexPreset, 1);
@@ -769,7 +776,7 @@ const Presets = () => {
                         key="2"
                         content={t('bigbluebutton_rooms_settings')}
                         trigger="click"
-                        placement={LocaleService.direction == 'rtl' ? 'right' : 'left'}
+                        placement={LocaleService.direction === 'rtl' ? 'right' : 'left'}
                     >
                         <QuestionCircleOutlined className="help-icon" />
                     </Popover>,
@@ -792,7 +799,7 @@ const Presets = () => {
             <Row gutter={[32, 32]} justify="center" className="presets-cards">
                 {isLoading ? (
                     <LoadingSpinner />
-                ) : myPresets.length == 0 ? (
+                ) : myPresets.length === 0 ? (
                     <EmptyData description={<Trans i18nKey="no_presets" />} className="empty-presets" />
                 ) : (
                     results.map((singlePresets) => (

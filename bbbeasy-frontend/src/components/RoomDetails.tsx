@@ -76,7 +76,10 @@ const FacebookLogo = () => (
 const XLogo = () => (
     <svg className="social-icon" viewBox="0 0 60 60" width="20" height="20" aria-hidden="true" focusable="false">
         <rect x="2" y="2" width="56" height="56" rx="10" fill="#000000" />
-        <path d="M17 15h8.2l7 9.7 8.1-9.7h4.4L34.2 28.6 45.4 45h-8.2l-7.9-11-9.2 11H15.7l11.8-14.1L17 15z" fill="#ffffff" />
+        <path
+            d="M17 15h8.2l7 9.7 8.1-9.7h4.4L34.2 28.6 45.4 45h-8.2l-7.9-11-9.2 11H15.7l11.8-14.1L17 15z"
+            fill="#ffffff"
+        />
     </svg>
 );
 
@@ -227,7 +230,7 @@ const RoomDetails = () => {
                     setRoom(room);
 
                     setOpen(true);
-                    if (room.user_id == currentUser?.id || currentUser?.role == 'administrator') {
+                    if (room.user_id === currentUser?.id || currentUser?.role === 'administrator') {
                         getRoomRecordings(room.id);
                         setShowRecodingAndPresenttaions(true);
                         setShowSocialMedia(true);
@@ -345,7 +348,7 @@ const RoomDetails = () => {
     };
 
     const labelUpdated = (labels_data, new_labels) => {
-        if (labels_data.length != new_labels.length) {
+        if (labels_data.length !== new_labels.length) {
             return true;
         } else {
             for (const label of new_labels) {
@@ -369,9 +372,9 @@ const RoomDetails = () => {
         const labels = editForm.getFieldValue('labels');
         if (
             !labelUpdated(labels_data, labels) &&
-            name == room.name &&
-            short_link == room.short_link &&
-            presetId == room.preset_id
+            name === room.name &&
+            short_link === room.short_link &&
+            presetId === room.preset_id
         ) {
             cancelEdit();
         }
@@ -416,14 +419,14 @@ const RoomDetails = () => {
             <Form.Item
                 name={item}
                 {...(item in errorsEdit && {
-                    help: <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errorsEdit[item])} />,
+                    help: <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] === errorsEdit[item])} />,
                     validateStatus: 'error',
                 })}
                 label={label}
                 rules={[
                     {
                         required: isRequired && true,
-                        message: <Trans i18nKey={(messageItem ?? item) + '.required'} />,
+                        message: <Trans i18nKey={`${messageItem ?? item}.required`} />,
                     },
                     // General verification rule
                     {
@@ -468,165 +471,157 @@ const RoomDetails = () => {
             );
         }
     };
-    return (
-        <>
-            {isLoading ? (
-                <LoadingSpinner className="mt-30 content-center" />
-            ) : (
-                room && (
-                    <div className="page-padding">
-                        <Row align="bottom" className="mb-40">
-                            <Col span={10}>
-                                <Row justify="end" className="mb-5">
-                                    {!isEditing && showRecodingAndPresenttaions ? (
-                                        <Button
-                                            className="edit-btn"
-                                            size="small"
-                                            type="link"
-                                            icon={<EditOutlined />}
-                                            onClick={toggleEdit}
-                                            disabled={!canStart}
+    return isLoading ? (
+        <LoadingSpinner className="mt-30 content-center" />
+    ) : (
+        room && (
+            <div className="page-padding">
+                <Row align="bottom" className="mb-40">
+                    <Col span={10}>
+                        <Row justify="end" className="mb-5">
+                            {!isEditing && showRecodingAndPresenttaions ? (
+                                <Button
+                                    className="edit-btn"
+                                    size="small"
+                                    type="link"
+                                    icon={<EditOutlined />}
+                                    onClick={toggleEdit}
+                                    disabled={!canStart}
+                                >
+                                    {t('edit')}
+                                </Button>
+                            ) : (
+                                isEditing && (
+                                    <Space size={'middle'}>
+                                        <Popconfirm
+                                            title={t('cancel_edit')}
+                                            placement="leftTop"
+                                            onConfirm={() => cancelEdit()}
                                         >
-                                            {t('edit')}
-                                        </Button>
-                                    ) : (
-                                        <>
-                                            {isEditing && (
-                                                <Space size={'middle'}>
-                                                    <Popconfirm
-                                                        title={t('cancel_edit')}
-                                                        placement="leftTop"
-                                                        onConfirm={() => cancelEdit()}
-                                                    >
-                                                        <Button
-                                                            size="middle"
-                                                            onClick={() => cancelEditRoom()}
-                                                            className="cell-input-cancel"
-                                                        >
-                                                            <Trans i18nKey="cancel" />
-                                                        </Button>
-                                                    </Popconfirm>
-                                                    <Button size="middle" onClick={handleSaveEdit} type="primary">
-                                                        <Trans i18nKey="save" />
-                                                    </Button>
-                                                </Space>
-                                            )}
-                                        </>
-                                    )}
-                                </Row>
-                                <Card bordered={false} className="room-details gray-bg">
-                                    <Row justify="center" align="middle">
-                                        <Col span={22}>
-                                            <Space
-                                                direction="vertical"
-                                                size="large"
-                                                className={isEditing ? 'edit-room-form' : null}
+                                            <Button
+                                                size="middle"
+                                                onClick={() => cancelEditRoom()}
+                                                className="cell-input-cancel"
                                             >
-                                                {!isEditing ? (
-                                                    <>
-                                                        <Title level={3}>{room.name}</Title>
-                                                        {currentUser != null ? (
-                                                            <>
-                                                                <div>
-                                                                    {room.labels.map((item) => (
-                                                                        <Tag key={item.id} color={item.color}>
-                                                                            {item.name}
-                                                                        </Tag>
-                                                                    ))}
-                                                                </div>
-                                                            </>
-                                                        ) : null}
-
-                                                        {renderLinkOrUsername()}
-                                                    </>
-                                                ) : (
-                                                    <Space size="middle" className="edit-room-form">
-                                                        <Form form={editForm} layout="vertical" className="room-edit-form">
-                                                            {editFormItems.map((editFormItem) => {
-                                                                return customFormItem(editFormItem);
-                                                            })}
-                                                        </Form>
-                                                    </Space>
-                                                )}
-                                                {showSocialMedia && (
-                                                    <div className="medias">
-                                                        <Space size="middle">
-                                                            <Tooltip
-                                                                placement="bottom"
-                                                                title={<Trans i18nKey="facebook_share" />}
-                                                            >
-                                                                <FacebookShareButton
-                                                                    url={
-                                                                        window.location.origin +
-                                                                        prefixShortLink +
-                                                                        room?.short_link
-                                                                    }
-                                                                >
-                                                                    <FacebookLogo />
-                                                                </FacebookShareButton>
-                                                            </Tooltip>
-                                                            <Tooltip
-                                                                placement="bottom"
-                                                                title={<Trans i18nKey="twitter_share" />}
-                                                            >
-                                                                <TwitterShareButton
-                                                                    url={
-                                                                        window.location.origin +
-                                                                        prefixShortLink +
-                                                                        room?.short_link
-                                                                    }
-                                                                >
-                                                                    <XLogo />
-                                                                </TwitterShareButton>
-                                                            </Tooltip>
-                                                            <Tooltip
-                                                                placement="bottom"
-                                                                title={<Trans i18nKey="linkedin_share" />}
-                                                            >
-                                                                <LinkedinShareButton
-                                                                    url={
-                                                                        window.location.origin +
-                                                                        prefixShortLink +
-                                                                        room?.short_link
-                                                                    }
-                                                                >
-                                                                    <LinkedinLogo />
-                                                                </LinkedinShareButton>
-                                                            </Tooltip>
-                                                        </Space>
-                                                    </div>
-                                                )}
-                                            </Space>
-                                        </Col>
-                                        {showStartButton && (
-                                            <Col span={2}>
-                                                <a onClick={startRoom}>
-                                                    <Avatar
-                                                        size={{ xs: 40, sm: 64, md: 85, lg: 100, xl: 120, xxl: 140 }}
-                                                        className={'bbbeasy-btn'}
-                                                    >
-                                                        <Trans i18nKey={canStart && !isRunning ? 'start' : 'join'} />
-                                                    </Avatar>
-                                                </a>
-                                            </Col>
-                                        )}
-                                    </Row>
-                                </Card>
-                            </Col>
-                            <Col span={8} offset={6} className="RoomPresentation">
-                                <RoomPresentations roomId={room.id} open={showRecodingAndPresenttaions} />
-                            </Col>
+                                                <Trans i18nKey="cancel" />
+                                            </Button>
+                                        </Popconfirm>
+                                        <Button size="middle" onClick={handleSaveEdit} type="primary">
+                                            <Trans i18nKey="save" />
+                                        </Button>
+                                    </Space>
+                                )
+                            )}
                         </Row>
-                        <RoomRecordings
-                            id={room.id}
-                            loading={loading}
-                            roomRecordings={roomRecordings}
-                            open={showRecodingAndPresenttaions}
-                        />
-                    </div>
-                )
-            )}
-        </>
+                        <Card bordered={false} className="room-details gray-bg">
+                            <Row justify="center" align="middle">
+                                <Col span={22}>
+                                    <Space
+                                        direction="vertical"
+                                        size="large"
+                                        className={isEditing ? 'edit-room-form' : null}
+                                    >
+                                        {!isEditing ? (
+                                            <>
+                                                <Title level={3}>{room.name}</Title>
+                                                {currentUser != null ? (
+                                                    <div>
+                                                        {room.labels.map((item) => (
+                                                            <Tag key={item.id} color={item.color}>
+                                                                {item.name}
+                                                            </Tag>
+                                                        ))}
+                                                    </div>
+                                                ) : null}
+
+                                                {renderLinkOrUsername()}
+                                            </>
+                                        ) : (
+                                            <Space size="middle" className="edit-room-form">
+                                                <Form form={editForm} layout="vertical" className="room-edit-form">
+                                                    {editFormItems.map((editFormItem) => {
+                                                        return customFormItem(editFormItem);
+                                                    })}
+                                                </Form>
+                                            </Space>
+                                        )}
+                                        {showSocialMedia && (
+                                            <div className="medias">
+                                                <Space size="middle">
+                                                    <Tooltip
+                                                        placement="bottom"
+                                                        title={<Trans i18nKey="facebook_share" />}
+                                                    >
+                                                        <FacebookShareButton
+                                                            url={
+                                                                window.location.origin +
+                                                                prefixShortLink +
+                                                                room?.short_link
+                                                            }
+                                                        >
+                                                            <FacebookLogo />
+                                                        </FacebookShareButton>
+                                                    </Tooltip>
+                                                    <Tooltip
+                                                        placement="bottom"
+                                                        title={<Trans i18nKey="twitter_share" />}
+                                                    >
+                                                        <TwitterShareButton
+                                                            url={
+                                                                window.location.origin +
+                                                                prefixShortLink +
+                                                                room?.short_link
+                                                            }
+                                                        >
+                                                            <XLogo />
+                                                        </TwitterShareButton>
+                                                    </Tooltip>
+                                                    <Tooltip
+                                                        placement="bottom"
+                                                        title={<Trans i18nKey="linkedin_share" />}
+                                                    >
+                                                        <LinkedinShareButton
+                                                            url={
+                                                                window.location.origin +
+                                                                prefixShortLink +
+                                                                room?.short_link
+                                                            }
+                                                        >
+                                                            <LinkedinLogo />
+                                                        </LinkedinShareButton>
+                                                    </Tooltip>
+                                                </Space>
+                                            </div>
+                                        )}
+                                    </Space>
+                                </Col>
+                                {showStartButton && (
+                                    <Col span={2}>
+                                        <a onClick={startRoom}>
+                                            <Avatar
+                                                size={{ xs: 40, sm: 64, md: 85, lg: 100, xl: 120, xxl: 140 }}
+                                                className={'bbbeasy-btn'}
+                                            >
+                                                <Trans i18nKey={canStart && !isRunning ? 'start' : 'join'} />
+                                            </Avatar>
+                                        </a>
+                                    </Col>
+                                )}
+                            </Row>
+                        </Card>
+                    </Col>
+                    <Col span={8} offset={6} className="RoomPresentation">
+                        <RoomPresentations roomId={room.id} open={showRecodingAndPresenttaions} />
+                    </Col>
+                </Row>
+                <RoomRecordings
+                    id={room.id}
+                    loading={loading}
+                    roomRecordings={roomRecordings}
+                    open={showRecodingAndPresenttaions}
+                />
+            </div>
+        )
     );
 };
 

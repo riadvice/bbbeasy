@@ -18,14 +18,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import AuthService from '../../services/auth.service';
+
+import { useSettings } from 'lib/SettingsContext';
 import Notifications from '../Notifications';
 
 import { Form, Input, Button, Alert, Col, Row, Typography, Card } from 'antd';
 import { Trans, withTranslation } from 'react-i18next';
 import EN_US from '../../locale/en-US.json';
 import { t } from 'i18next';
-import settingsService from 'services/settings.service';
-import { SettingsType } from 'types/SettingsType';
 import { apiRoutes } from '../../routing/backend-config';
 
 const { Text, Title, Paragraph } = Typography;
@@ -35,24 +35,13 @@ type formType = {
 };
 
 const Reset = () => {
+    const { settings } = useSettings();
     const [successful, setSuccessful] = React.useState<boolean>(false);
     const [message, setMessage] = React.useState<string>('');
-    const [logo, setLogo] = React.useState<string>('');
 
     const initialValues: formType = {
         email: '',
     };
-    React.useEffect(() => {
-        settingsService
-            .collect_settings()
-            .then((response) => {
-                const settings: SettingsType = response.data;
-                setLogo(settings.logo);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }, []);
     const handleReset = (formValue: formType) => {
         const { email } = formValue;
         AuthService.reset_password(email)
@@ -61,7 +50,7 @@ const Reset = () => {
                 setSuccessful(true);
                 Notifications.openNotificationWithIcon(
                     'success',
-                    <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == responseMessage)} />
+                    <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] === responseMessage)} />
                 );
             })
             .catch((error) => {
@@ -77,7 +66,7 @@ const Reset = () => {
                     <Paragraph className="form-header text-center">
                         <img
                             className="form-img"
-                            src={logo ? apiRoutes.GET_FILE_URL + logo : '/images/logo_02.png'}
+                            src={settings?.logo ? apiRoutes.GET_FILE_URL + settings.logo : '/images/logo_02.png'}
                             alt="Logo"
                         />
                         <Title level={4}>
@@ -88,7 +77,7 @@ const Reset = () => {
                         <Alert
                             type="error"
                             className="alert-msg"
-                            message={<Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == message)} />}
+                            message={<Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] === message)} />}
                             showIcon
                         />
                     )}
@@ -97,7 +86,7 @@ const Reset = () => {
                         name="reset"
                         initialValues={initialValues}
                         requiredMark={false}
-                        scrollToFirstError={true}
+                        scrollToFirstError
                         validateTrigger="onSubmit"
                         onFinish={handleReset}
                         onValuesChange={() => setMessage('')}

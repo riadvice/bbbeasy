@@ -56,8 +56,12 @@ interface IProps {
 
 const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
     const [currentUser, setCurrentUser] = React.useState<UserType | null>(() => AuthService.getCurrentUser());
-    const [currentSession, setCurrentSession] = React.useState<SessionType | null>(() => AuthService.getCurrentSession());
-    const [isLogged, setIsLogged] = React.useState<boolean>(() => Boolean(AuthService.getCurrentUser() && AuthService.getCurrentSession()));
+    const [currentSession, setCurrentSession] = React.useState<SessionType | null>(() =>
+        AuthService.getCurrentSession()
+    );
+    const [isLogged, setIsLogged] = React.useState<boolean>(() =>
+        Boolean(AuthService.getCurrentUser() && AuthService.getCurrentSession())
+    );
     const isAuthenticated = Boolean(AuthService.getCurrentUser() && AuthService.getCurrentSession());
 
     const [dataRooms, setDataRooms] = React.useState<RoomType[]>([]);
@@ -105,32 +109,35 @@ const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
     );
     const authViewKey = isLogged ? 'authenticated' : 'anonymous';
 
-    const customTheme = useMemo(() => ({
-        token: {
-            colorPrimary: brandColor,
-            colorPrimaryHover: brandColor + 'cc',
-            colorPrimaryActive: brandColor + '99',
-            outlineColor: brandColor + '1a',
-
-            colorBorder: '#dddfe1',
-
-            colorLink: brandColor,
-            colorLinkHover: brandColor + 'cc',
-            colorLinkActive: brandColor + 'cc',
-
-            borderRadiusLG: borderRadius,
-            fontSize: defaultFontSize,
-            wireframe: wireframeStyle,
-        },
-        components: {
-            Button: {
+    const customTheme = useMemo(
+        () => ({
+            token: {
                 colorPrimary: brandColor,
-                colorPrimaryHover: brandColor + 'cc',
-                colorPrimaryActive: brandColor + '99',
-                primaryShadow: brandColor + '33',
+                colorPrimaryHover: `${brandColor}cc`,
+                colorPrimaryActive: `${brandColor}99`,
+                outlineColor: `${brandColor}1a`,
+
+                colorBorder: '#dddfe1',
+
+                colorLink: brandColor,
+                colorLinkHover: `${brandColor}cc`,
+                colorLinkActive: `${brandColor}cc`,
+
+                borderRadiusLG: borderRadius,
+                fontSize: defaultFontSize,
+                wireframe: wireframeStyle,
             },
-        },
-    }), [brandColor, borderRadius, defaultFontSize, wireframeStyle]);
+            components: {
+                Button: {
+                    colorPrimary: brandColor,
+                    colorPrimaryHover: `${brandColor}cc`,
+                    colorPrimaryActive: `${brandColor}99`,
+                    primaryShadow: `${brandColor}33`,
+                },
+            },
+        }),
+        [brandColor, borderRadius, defaultFontSize, wireframeStyle]
+    );
 
     const getRooms = useCallback((userId: number) => {
         RoomsService.list_rooms(userId)
@@ -170,13 +177,19 @@ const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
                     if (settings.brand_color) {
                         setBrandColor(settings.brand_color);
                         document.documentElement.style.setProperty('--bbbeasy-brand-color', settings.brand_color);
-                        document.documentElement.style.setProperty('--bbbeasy-brand-color-hover', settings.brand_color + 'cc');
+                        document.documentElement.style.setProperty(
+                            '--bbbeasy-brand-color-hover',
+                            `${settings.brand_color}cc`
+                        );
                         // Convert hex to rgba for shadow
                         const hex = settings.brand_color.replace('#', '');
                         const r = parseInt(hex.substring(0, 2), 16);
                         const g = parseInt(hex.substring(2, 4), 16);
                         const b = parseInt(hex.substring(4, 6), 16);
-                        document.documentElement.style.setProperty('--bbbeasy-brand-color-shadow', `rgba(${r}, ${g}, ${b}, 0.35)`);
+                        document.documentElement.style.setProperty(
+                            '--bbbeasy-brand-color-shadow',
+                            `rgba(${r}, ${g}, ${b}, 0.35)`
+                        );
 
                         // Inject dynamic styles AFTER Ant Design CSS-in-JS (always wins)
                         let styleEl = document.getElementById('brand-dynamic-styles');
@@ -273,15 +286,24 @@ const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
                     }
                     if (settings.default_font_size) {
                         setDefaultFontSize(settings.default_font_size);
-                        document.documentElement.style.setProperty('--bbbeasy-font-size', settings.default_font_size + 'px');
+                        document.documentElement.style.setProperty(
+                            '--bbbeasy-font-size',
+                            `${settings.default_font_size}px`
+                        );
                     }
                     if (settings.border_radius) {
                         setBorderRadius(settings.border_radius);
-                        document.documentElement.style.setProperty('--bbbeasy-border-radius', settings.border_radius + 'px');
+                        document.documentElement.style.setProperty(
+                            '--bbbeasy-border-radius',
+                            `${settings.border_radius}px`
+                        );
                     }
                     if (settings.wireframe_style !== undefined) {
                         setWireframeStyle(settings.wireframe_style);
-                        document.documentElement.style.setProperty('--bbbeasy-wireframe', settings.wireframe_style ? '1' : '0');
+                        document.documentElement.style.setProperty(
+                            '--bbbeasy-wireframe',
+                            settings.wireframe_style ? '1' : '0'
+                        );
                         document.documentElement.setAttribute('data-wireframe', settings.wireframe_style ? '1' : '0');
                     }
                 }
@@ -319,31 +341,33 @@ const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
 
     return (
         <StyleProvider hashPriority="high" transformers={[legacyLogicalPropertiesTransformer]}>
-            <Layout className={LocaleService.direction === 'rtl' ? 'page-layout-content-rtl' : 'page-layout-content'}>
-                <ConfigProvider
-                    key={brandColor}
-                    theme={customTheme}
-                    locale={LocaleService.antLocale}
-                    direction={LocaleService.direction}
-                    componentSize="large"
+            <SettingsProvider>
+                <Layout
+                    className={LocaleService.direction === 'rtl' ? 'page-layout-content-rtl' : 'page-layout-content'}
                 >
-                    <UserContext.Provider key={authViewKey} value={userProvider}>
-                        <DataContext.Provider value={dataProvider}>
-                            {isAuthenticated && isSider && <AppSider presets={dataPresets} />}
-                            <Layout className="page-layout-body">
-                                <AppHeader />
-                                <Content className="site-content">
-                                    <Router routes={routes} />
-                                </Content>
-                                <SettingsProvider>
+                    <ConfigProvider
+                        key={brandColor}
+                        theme={customTheme}
+                        locale={LocaleService.antLocale}
+                        direction={LocaleService.direction}
+                        componentSize="large"
+                    >
+                        <UserContext.Provider key={authViewKey} value={userProvider}>
+                            <DataContext.Provider value={dataProvider}>
+                                {isAuthenticated && isSider && <AppSider presets={dataPresets} />}
+                                <Layout className="page-layout-body">
+                                    <AppHeader />
+                                    <Content className="site-content">
+                                        <Router routes={routes} />
+                                    </Content>
                                     <AppFooter />
-                                </SettingsProvider>
-                            </Layout>
-                        </DataContext.Provider>
-                    </UserContext.Provider>
-                </ConfigProvider>
-                <FloatButton.BackTop />
-            </Layout>
+                                </Layout>
+                            </DataContext.Provider>
+                        </UserContext.Provider>
+                    </ConfigProvider>
+                    <FloatButton.BackTop />
+                </Layout>
+            </SettingsProvider>
         </StyleProvider>
     );
 };

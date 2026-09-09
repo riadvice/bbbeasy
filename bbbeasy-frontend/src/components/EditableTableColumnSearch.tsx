@@ -31,7 +31,7 @@ const EditableTableColumnSearch = (dataIndex: string) => {
     const [searchedColumn, setSearchedColumn] = useState<string>('');
 
     const transformText = (text: string): string => {
-        if (text != '') {
+        if (text !== '') {
             text = text.replace('_', ' ');
             return text[0].toUpperCase() + text.slice(1);
         }
@@ -53,7 +53,7 @@ const EditableTableColumnSearch = (dataIndex: string) => {
                 <Input
                     size="middle"
                     className="table-search-input"
-                    placeholder={t('search') + ' ' + t(dataIndex + '_col')}
+                    placeholder={`${t('search')} ${t(`${dataIndex}_col`)}`}
                     value={selectedKeys[0]}
                     onChange={(e) => setSelectedKeys([e.target.value])}
                     onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
@@ -86,7 +86,7 @@ const EditableTableColumnSearch = (dataIndex: string) => {
             return record[dataIndex] ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()) : '';
         },
         render: (text) => {
-            if (dataIndex == 'name' || dataIndex == 'username' || dataIndex == 'role') {
+            if (dataIndex === 'name' || dataIndex === 'username' || dataIndex === 'role') {
                 text = transformText(text);
             }
             if (searchedColumn === dataIndex) {

@@ -126,7 +126,7 @@ const Branding = () => {
         let deleteLogo = false;
         //edit file
 
-        if (file != undefined && file.originFileObj != null) {
+        if (file != null && file.originFileObj != null) {
             const formData: FormData = new FormData();
             formData.append('logo', file.originFileObj, file.name);
             formData.append('logo_name', file.name);
@@ -138,7 +138,7 @@ const Branding = () => {
                 Notifications.openNotificationWithIcon('error', t('file_upload_error'));
                 return;
             }
-        } else if (file == undefined && settingsData.logo != null) {
+        } else if (file == null && settingsData.logo != null) {
             deleteLogo = true;
         }
 
@@ -181,7 +181,7 @@ const Branding = () => {
                             className="install-form"
                             form={settingsForm}
                             requiredMark={false}
-                            scrollToFirstError={true}
+                            scrollToFirstError
                             validateTrigger="onSubmit"
                             onFinish={onFinish}
                         >

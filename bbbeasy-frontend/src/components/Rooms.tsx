@@ -53,11 +53,7 @@ interface RoomsColProps {
 
 const RoomsCol: React.FC<RoomsColProps> = ({ index, room, editable, bbbConfigured, deleteClickHandler }) => {
     const [isShown, setIsShown] = useState<boolean>(false);
-    const labels = [];
     const navigate = useNavigate();
-    room.labels.map((item) => {
-        labels.push(item);
-    });
 
     //view
     const showRoomDetails = () => {
@@ -67,7 +63,7 @@ const RoomsCol: React.FC<RoomsColProps> = ({ index, room, editable, bbbConfigure
             Notifications.openNotificationWithIcon('warning', t('bigbluebutton_not_configured'));
             return;
         }
-        navigate('/r/' + room.short_link, { state: { room: room, editable: editable } });
+        navigate(`/r/${room.short_link}`, { state: { room: room, editable: editable } });
     };
 
     //delete
@@ -113,9 +109,9 @@ const RoomsCol: React.FC<RoomsColProps> = ({ index, room, editable, bbbConfigure
                     <div onClick={() => showRoomDetails()}>
                         <Space size="middle" direction="vertical" className="room-card-title">
                             <Badge
-                                offset={LocaleService.direction == 'rtl' ? [22, 11] : [-22, 11]}
+                                offset={LocaleService.direction === 'rtl' ? [22, 11] : [-22, 11]}
                                 count={
-                                    room.id % 2 == 0 ? (
+                                    room.id % 2 === 0 ? (
                                         <div className="custom-badge-bg">
                                             <div className="custom-badge">
                                                 <ClockCircleOutlined />
@@ -125,9 +121,9 @@ const RoomsCol: React.FC<RoomsColProps> = ({ index, room, editable, bbbConfigure
                                 }
                             >
                                 <Badge
-                                    offset={LocaleService.direction == 'rtl' ? [22, 69] : [-22, 69]}
+                                    offset={LocaleService.direction === 'rtl' ? [22, 69] : [-22, 69]}
                                     count={
-                                        room.id % 2 != 0 ? (
+                                        room.id % 2 !== 0 ? (
                                             <div className="custom-badge-bg">
                                                 <div className="custom-badge">
                                                     <TeamOutlined />
@@ -154,7 +150,7 @@ const RoomsCol: React.FC<RoomsColProps> = ({ index, room, editable, bbbConfigure
                         <Dropdown
                             key="more"
                             menu={actions}
-                            placement={LocaleService.direction == 'rtl' ? 'bottomLeft' : 'bottomRight'}
+                            placement={LocaleService.direction === 'rtl' ? 'bottomLeft' : 'bottomRight'}
                             trigger={['click']}
                         >
                             <MoreOutlined />
@@ -164,31 +160,23 @@ const RoomsCol: React.FC<RoomsColProps> = ({ index, room, editable, bbbConfigure
             >
                 <div className="room-card-body room-labels">
                     {room.labels.map((item) => (
-                        <>
-                            <Tooltip
-                                key={item.name}
-                                overlayClassName="install-tooltip"
-                                title={
-                                    <ul>
-                                        {room.labels.map((myItem) => {
-                                            const myLabel = myItem.name;
-
-                                            return (
-                                                <li key={item.name + '_' + myItem.name}>
-                                                    <Tag key={myItem.id} color={myItem.color}>
-                                                        {myLabel}
-                                                    </Tag>
-                                                </li>
-                                            );
-                                        })}
-                                    </ul>
-                                }
-                            >
-                                <Tag className="room-label" key={item.id} color={item.color}>
-                                    {item.name}
-                                </Tag>
-                            </Tooltip>
-                        </>
+                        <Tooltip
+                            key={item.id}
+                            overlayClassName="install-tooltip"
+                            title={
+                                <ul>
+                                    {room.labels.map((myItem) => (
+                                        <li key={myItem.id}>
+                                            <Tag color={myItem.color}>{myItem.name}</Tag>
+                                        </li>
+                                    ))}
+                                </ul>
+                            }
+                        >
+                            <Tag className="room-label" color={item.color}>
+                                {item.name}
+                            </Tag>
+                        </Tooltip>
                     ))}
                 </div>
             </Card>
@@ -247,7 +235,7 @@ const Rooms = () => {
     const deleteRoom = (id) => {
         RoomsService.delete_room(id)
             .then(() => {
-                setRooms(rooms.filter((r) => r.id != id));
+                setRooms(rooms.filter((r) => r.id !== id));
                 const indexRoom = dataContext.dataRooms.findIndex((item) => id === item.id);
                 if (indexRoom !== -1) {
                     dataContext.dataRooms.splice(indexRoom, 1);
@@ -259,86 +247,77 @@ const Rooms = () => {
             });
     };
 
-    return (
+    return isLoading ? (
+        <LoadingSpinner className="mt-30 content-center" />
+    ) : rooms.length === 0 ? (
+        AuthService.isAllowedAction(actions, 'add') ? (
+            <Paragraph className="text-center home-guide">
+                <Title level={2}>
+                    <Trans i18nKey="create-easy-room" />
+                </Title>
+                <Row justify="center">
+                    {addSteps.map((addStep, index) => (
+                        <Col key={index} span={5}>
+                            <Avatar size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 85, xxl: 100 }} className="bbbeasy-btn">
+                                {index + 1}
+                            </Avatar>
+                            <Title level={4}>
+                                <Trans i18nKey={addStep} />
+                            </Title>
+                        </Col>
+                    ))}
+                </Row>
+                <Button type="primary" onClick={() => setIsModalVisible(true)}>
+                    <Trans i18nKey="create-first-room" />
+                </Button>
+                <AddRoomForm
+                    isModalShow={isModalVisible}
+                    close={() => {
+                        setIsModalVisible(false);
+                    }}
+                    shortlink={initialAddValues.shortlink}
+                    initialAddValues={initialAddValues}
+                />
+            </Paragraph>
+        ) : (
+            <EmptyData description={<Trans i18nKey="no_rooms" />} />
+        )
+    ) : (
         <>
-            {isLoading ? (
-                <LoadingSpinner className="mt-30 content-center" />
-            ) : rooms.length == 0 ? (
-                AuthService.isAllowedAction(actions, 'add') ? (
-                    <Paragraph className="text-center home-guide">
-                        <Title level={2}>
-                            <Trans i18nKey="create-easy-room" />
-                        </Title>
-                        <Row justify="center">
-                            {addSteps.map((addStep, index) => (
-                                <Col key={index} span={5}>
-                                    <Avatar
-                                        size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 85, xxl: 100 }}
-                                        className="bbbeasy-btn"
-                                    >
-                                        {index + 1}
-                                    </Avatar>
-                                    <Title level={4}>
-                                        <Trans i18nKey={addStep} />
-                                    </Title>
-                                </Col>
-                            ))}
-                        </Row>
-                        <Button type="primary" onClick={() => setIsModalVisible(true)}>
-                            <Trans i18nKey="create-first-room" />
-                        </Button>
+            <PageHeader
+                className="rooms-page-header"
+                title={<Trans i18nKey="rooms" />}
+                extra={
+                    AuthService.isAllowedAction(actions, 'add') && [
+                        <Button key="1" type="primary" onClick={() => setIsModalVisible(true)}>
+                            <Trans i18nKey="new_room" />
+                        </Button>,
                         <AddRoomForm
+                            key="1"
                             isModalShow={isModalVisible}
                             close={() => {
                                 setIsModalVisible(false);
                             }}
                             shortlink={initialAddValues.shortlink}
                             initialAddValues={initialAddValues}
-                        />
-                    </Paragraph>
-                ) : (
-                    <EmptyData description={<Trans i18nKey="no_rooms" />} />
-                )
-            ) : (
-                <>
-                    <PageHeader
-                        className="rooms-page-header"
-                        title={<Trans i18nKey="rooms" />}
-                        extra={
-                            AuthService.isAllowedAction(actions, 'add') && [
-                                <Button key="1" type="primary" onClick={() => setIsModalVisible(true)}>
-                                    <Trans i18nKey="new_room" />
-                                </Button>,
-                                <AddRoomForm
-                                    key="1"
-                                    isModalShow={isModalVisible}
-                                    close={() => {
-                                        setIsModalVisible(false);
-                                    }}
-                                    shortlink={initialAddValues.shortlink}
-                                    initialAddValues={initialAddValues}
-                                />,
-                            ]
+                        />,
+                    ]
+                }
+            />
+            <Row gutter={[18, 18]} className="rooms-cards">
+                {rooms.map((singleRoom, index) => (
+                    <RoomsCol
+                        key={`${index}-${singleRoom.name}`}
+                        index={index}
+                        room={singleRoom}
+                        editable={AuthService.isAllowedAction(actions, 'edit')}
+                        bbbConfigured={bbbConfigured}
+                        deleteClickHandler={
+                            AuthService.isAllowedAction(actions, 'delete') ? deleteRoom.bind(this, singleRoom.id) : null
                         }
                     />
-                    <Row gutter={[18, 18]} className="rooms-cards">
-                        {rooms.map((singleRoom, index) => (
-                            <RoomsCol
-                                key={index + '-' + singleRoom.name}
-                                index={index}
-                                room={singleRoom}
-                                editable={AuthService.isAllowedAction(actions, 'edit')}
-                                bbbConfigured={bbbConfigured}
-                                deleteClickHandler={
-                                    AuthService.isAllowedAction(actions, 'delete')
-                                        ? deleteRoom.bind(this, singleRoom.id)
-                                        : null
-                                }
-                            />
-                        ))}
-                    </Row>
-                </>
-            )}
+                ))}
+            </Row>
         </>
     );
 };

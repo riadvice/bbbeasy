@@ -98,105 +98,101 @@ export const AddLabelForm = (props: Props) => {
         setErrorsAdd([]);
     };
     return (
-        <>
-            <Modal
-                title={<Trans i18nKey="new_label" />}
-                className="add-modal label-add-modal"
-                centered
-                open={props.isModalShow}
-                onOk={handleAdd}
-                onCancel={cancelAdd}
-                footer={null}
-                maskClosable={true}
+        <Modal
+            title={<Trans i18nKey="new_label" />}
+            className="add-modal label-add-modal"
+            centered
+            open={props.isModalShow}
+            onOk={handleAdd}
+            onCancel={cancelAdd}
+            footer={null}
+            maskClosable
+        >
+            <Form
+                layout="vertical"
+                ref={(form) => {
+                    addForm = form;
+                }}
+                initialValues={initialAddValues}
+                requiredMark={false}
+                onFinish={handleAdd}
+                onFinishFailed={failedAdd}
+                validateTrigger="onSubmit"
             >
-                <Form
-                    layout="vertical"
-                    ref={(form) => {
-addForm = form;
-}}
-                    initialValues={initialAddValues}
-                    requiredMark={false}
-                    onFinish={handleAdd}
-                    onFinishFailed={failedAdd}
-                    validateTrigger="onSubmit"
-                >
-                    {!props.isLogin && (
-                        <Form.Item
-                            label={<Trans i18nKey="name.label" />}
-                            name="name"
-                            {...('name' in errorsAdd && {
-                                help: (
-                                    <Trans
-                                        i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errorsAdd['name'])}
-                                    />
-                                ),
-                                validateStatus: 'error',
-                            })}
-                            rules={[
-                                {
-                                    required: true,
-                                    message: <Trans i18nKey="name.required" />,
-                                },
-                                {
-                                    min: 1,
-                                    message: <Trans i18nKey="label_name.size" />,
-                                },
-                                {
-                                    max: 32,
-                                    message: <Trans i18nKey="label_name.maxSize" />,
-                                },
-                            ]}
-                        >
-                            <Input placeholder={t('name.label')} />
-                        </Form.Item>
-                    )}
-                    <Form.Item label={<Trans i18nKey="description.label" />} name="description">
-                        <Input placeholder={t('description.label')} />
-                    </Form.Item>
+                {!props.isLogin && (
                     <Form.Item
-                        label={<Trans i18nKey="color.label" />}
-                        name="color"
-                        {...('color' in errorsAdd && {
+                        label={<Trans i18nKey="name.label" />}
+                        name="name"
+                        {...('name' in errorsAdd && {
                             help: (
                                 <Trans
-                                    i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errorsAdd['color'])}
+                                    i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] === errorsAdd['name'])}
                                 />
                             ),
                             validateStatus: 'error',
                         })}
+                        rules={[
+                            {
+                                required: true,
+                                message: <Trans i18nKey="name.required" />,
+                            },
+                            {
+                                min: 1,
+                                message: <Trans i18nKey="label_name.size" />,
+                            },
+                            {
+                                max: 32,
+                                message: <Trans i18nKey="label_name.maxSize" />,
+                            },
+                        ]}
                     >
-                        <ColorPicker
-                            value={color}
-                            onChange={(color1: Color) => {
-                                addForm.setFieldValue('color', color1.toHexString());
+                        <Input placeholder={t('name.label')} />
+                    </Form.Item>
+                )}
+                <Form.Item label={<Trans i18nKey="description.label" />} name="description">
+                    <Input placeholder={t('description.label')} />
+                </Form.Item>
+                <Form.Item
+                    label={<Trans i18nKey="color.label" />}
+                    name="color"
+                    {...('color' in errorsAdd && {
+                        help: (
+                            <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] === errorsAdd['color'])} />
+                        ),
+                        validateStatus: 'error',
+                    })}
+                >
+                    <ColorPicker
+                        value={color}
+                        onChange={(color1: Color) => {
+                            addForm.setFieldValue('color', color1.toHexString());
 
-                                setColor(color1.toHexString());
-                            }}
-                        >
-                            <Space className="space-color-picker-add-label">
-                                <div
-                                    style={{
-                                        width: token.sizeMD,
-                                        height: token.sizeMD,
-                                        borderRadius: token.borderRadiusSM,
-                                        backgroundColor: color,
-                                    }}
-                                />
-                                <span>{color}</span>
-                            </Space>
-                        </ColorPicker>
-                    </Form.Item>
-                    <Form.Item className="modal-submit-btn button-container">
-                        <Button type="text" className="cancel-btn prev" block onClick={cancelAdd}>
-                            <Trans i18nKey="cancel" />
-                        </Button>
-                        <Button type="primary" htmlType="submit" disabled={loading} block>
-                            <Trans i18nKey="create" />
-                        </Button>
-                    </Form.Item>
-                </Form>
-            </Modal>
-        </>
+                            setColor(color1.toHexString());
+                        }}
+                    >
+                        <Space className="space-color-picker-add-label">
+                            <div
+                                style={{
+                                    width: token.sizeMD,
+                                    height: token.sizeMD,
+                                    borderRadius: token.borderRadiusSM,
+                                    backgroundColor: color,
+                                }}
+                            />
+                            <span>{color}</span>
+                        </Space>
+                    </ColorPicker>
+                </Form.Item>
+                <Form.Item className="modal-submit-btn button-container">
+                    <Button type="text" className="cancel-btn prev" block onClick={cancelAdd}>
+                        <Trans i18nKey="cancel" />
+                    </Button>
+                    <Button type="primary" htmlType="submit" disabled={loading} block>
+                        <Trans i18nKey="create" />
+                    </Button>
+                </Form.Item>
+            </Form>
+        </Modal>
     );
 };
 export default withTranslation()(AddLabelForm);

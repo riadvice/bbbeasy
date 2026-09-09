@@ -21,13 +21,7 @@ import { Trans } from 'react-i18next';
 
 import { Button, Form, Input, Modal, Space, Typography } from 'antd';
 import { ShareAltOutlined } from '@ant-design/icons';
-import {
-    FacebookIcon,
-    FacebookShareButton,
-    LinkedinIcon,
-    LinkedinShareButton,
-    TwitterShareButton,
-} from 'react-share';
+import { FacebookIcon, FacebookShareButton, LinkedinIcon, LinkedinShareButton, TwitterShareButton } from 'react-share';
 
 import CopyTextToClipBoard from './CopyTextToClipBoard';
 import DynamicIcon from './DynamicIcon';

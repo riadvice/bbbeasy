@@ -43,12 +43,12 @@ export const Step1Form = (props: Props) => {
                 <Alert
                     type="error"
                     className="text-center"
-                    message={<Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == props.message)} />}
+                    message={<Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] === props.message)} />}
                     showIcon
                 />
             )}
 
-            <AddUserForm isInstall={true} />
+            <AddUserForm isInstall />
         </div>
     );
 };

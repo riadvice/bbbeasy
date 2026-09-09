@@ -114,7 +114,7 @@ const Roles = () => {
         setActions(rolesActions);
     }, []);
     const transformText = (text: string): string => {
-        if (text != '') {
+        if (text !== '') {
             text = text.replace('_', ' ');
             return text[0].toUpperCase() + text.slice(1);
         }
@@ -127,7 +127,7 @@ const Roles = () => {
                     return (
                         <Card bordered={false} key={group} title={newGroup} type="inner">
                             <Form.Item name={group}>
-                                <Checkbox.Group disabled={key == 1}>
+                                <Checkbox.Group disabled={key === 1}>
                                     <Row gutter={[32, 16]}>
                                         {allPrivileges[group].map((action) => (
                                             <Col key={action}>
@@ -185,7 +185,7 @@ const Roles = () => {
         const newRowData: RoleType = response.data.role;
         const newData = [...data];
         const index = newData.findIndex((item) => key === item.key);
-        if (index > -1 && newRowData != undefined) {
+        if (index > -1 && newRowData != null) {
             const item = newData[index];
             newData.splice(index, 1, {
                 ...item,
@@ -212,7 +212,7 @@ const Roles = () => {
             for (const group of groups) {
                 const oldActions = oldRecord[group];
                 const newActions = newRecord[group];
-                if (oldActions.length != newActions.length) {
+                if (oldActions.length !== newActions.length) {
                     condition = false;
                     break;
                 } else {
@@ -242,7 +242,7 @@ const Roles = () => {
         const compareEditData = (oldRecord: object, newRecord: object): boolean => {
             const oldGroups = Object.keys(oldRecord);
             const newGroups = Object.keys(newRecord);
-            if (oldGroups.length != newGroups.length) return false;
+            if (oldGroups.length !== newGroups.length) return false;
             return compareGroups(oldRecord, newRecord, oldGroups, newGroups);
         };
         const cancelEdit = (key: React.Key) => {
@@ -283,15 +283,15 @@ const Roles = () => {
             <fieldset disabled={!AuthService.isAllowedAction(actions, 'edit')}>
                 <Form
                     ref={(form) => {
-editRowForm = form;
-}}
+                        editRowForm = form;
+                    }}
                     initialValues={permissionsChecked}
                     onFinish={() => saveEdit(record.key)}
                     onChange={() => changeEdit(record.key)}
                 >
                     <Card bordered={false} className="card-parent">
                         {getPermissionsCard(record.key)}
-                        {AuthService.isAllowedAction(actions, 'edit') && record.key != 1 && (
+                        {AuthService.isAllowedAction(actions, 'edit') && record.key !== 1 && (
                             <Space size="middle" className="actions-expanded">
                                 {changedKeys.includes(record.key) ? (
                                     <Popconfirm
@@ -339,7 +339,7 @@ editRowForm = form;
         const toggleEditName = () => {
             setEditing(!editing);
             let nameText = record[dataIndex] as string;
-            if (dataIndex == 'name') {
+            if (dataIndex === 'name') {
                 nameText = transformText(nameText);
             }
             editForm.setFieldsValue({ [dataIndex]: nameText });
@@ -441,7 +441,7 @@ editRowForm = form;
                 if (nbUsers > 0 && response.data.lecturer) {
                     const LecturerRowData: RoleType = response.data.lecturer;
                     const index = newData.findIndex((item) => item.key === 2);
-                    if (index > -1 && LecturerRowData != undefined) {
+                    if (index > -1 && LecturerRowData != null) {
                         const item = newData[index];
                         // update lecturer row to get switched users
                         newData.splice(index, 1, {
@@ -527,7 +527,7 @@ editRowForm = form;
                             <DynamicIcon type="permissions" className="icon-bbbeasy-permissions" />{' '}
                             <Trans i18nKey="permissions.label" />
                         </Link>
-                        {AuthService.isAllowedAction(actions, 'delete') && record.key != 1 && record.key != 2 && (
+                        {AuthService.isAllowedAction(actions, 'delete') && record.key !== 1 && record.key !== 2 && (
                             <Popconfirm
                                 title={t('delete_role_confirm')}
                                 icon={<QuestionCircleOutlined className="red-icon" />}
@@ -582,14 +582,14 @@ editRowForm = form;
                     onCancel={cancelAdd}
                     footer={null}
                     width={600}
-                    maskClosable={true}
+                    maskClosable
                 >
                     <Form
                         layout="vertical"
                         name="roles_form"
                         ref={(form) => {
-addForm = form;
-}}
+                            addForm = form;
+                        }}
                         initialValues={{ name: '' }}
                         requiredMark={false}
                         onFinish={handleAdd}
@@ -602,7 +602,7 @@ addForm = form;
                             {...('name' in errorsAdd && {
                                 help: (
                                     <Trans
-                                        i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errorsAdd['name'])}
+                                        i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] === errorsAdd['name'])}
                                     />
                                 ),
                                 validateStatus: 'error',

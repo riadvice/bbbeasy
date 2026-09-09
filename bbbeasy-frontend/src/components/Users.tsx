@@ -217,7 +217,8 @@ const Users = () => {
                 </Option>
             ));
 
-            inputNode = dataIndex == 'role' ? getSelectRoles() : getSelectItems(t('status.placeholder'), statesOptions);
+            inputNode =
+                dataIndex === 'role' ? getSelectRoles() : getSelectItems(t('status.placeholder'), statesOptions);
         } else {
             inputNode = <Input onFocus={() => setCancelVisibility(false)} />;
         }
@@ -230,15 +231,15 @@ const Users = () => {
                 inputNode={inputNode}
                 errorsEdit={errorsEdit}
                 editRules={
-                    (dataIndex == 'username' && {
+                    (dataIndex === 'username' && {
                         min: 4,
                         message: t('invalid_username'),
                     }) ||
-                    (dataIndex == 'email' && {
+                    (dataIndex === 'email' && {
                         type: 'email',
                         message: t('invalid_email'),
                     }) ||
-                    (dataIndex == 'role' && {
+                    (dataIndex === 'role' && {
                         validator: (_, value) => (value ? Promise.resolve() : Promise.reject(new Error())),
                     })
                 }
@@ -248,10 +249,10 @@ const Users = () => {
             </EditableTableCell>
         );
     };
-    const isEditing = (record: UserType) => record.key == editingKey;
+    const isEditing = (record: UserType) => record.key === editingKey;
     const changeRoleCol = (record: UserType): object => {
-        if (typeof record.role == 'string') {
-            const res = allRoles.filter((role) => role.name == record.role);
+        if (typeof record.role === 'string') {
+            const res = allRoles.filter((role) => role.name === record.role);
             record.role = res[0].id;
         }
         return record;
@@ -282,7 +283,7 @@ const Users = () => {
                         const newRowData: UserType = response.data.user;
                         const newData = [...data];
                         const index = newData.findIndex((item) => key === item.key);
-                        if (index > -1 && newRowData != undefined) {
+                        if (index > -1 && newRowData != null) {
                             const item = newData[index];
                             newData.splice(index, 1, {
                                 ...item,
@@ -340,7 +341,7 @@ const Users = () => {
                 // update item
                 const newRowData: UserType = response.data.user;
                 const index = newData.findIndex((item) => key === item.key);
-                if (index > -1 && newRowData != undefined) {
+                if (index > -1 && newRowData != null) {
                     const item = newData[index];
                     newData.splice(index, 1, {
                         ...item,
@@ -368,7 +369,7 @@ const Users = () => {
                 multiple: 4,
             },
             render: (username, record) => {
-                if (record.key == 1) {
+                if (record.key === 1) {
                     return (
                         <>
                             {' '}
@@ -376,7 +377,7 @@ const Users = () => {
                         </>
                     );
                 } else {
-                    return <>{username}</>;
+                    return <span>{username}</span>;
                 }
             },
         },
@@ -468,7 +469,7 @@ const Users = () => {
                     }
                 };
                 const editable = isEditing(record);
-                const deletedRow = record.status == 'deleted';
+                const deletedRow = record.status === 'deleted';
 
                 return editable ? (
                     <Space size="middle">
@@ -490,7 +491,7 @@ const Users = () => {
                     </Space>
                 ) : (
                     <Space size="middle">
-                        {AuthService.isAllowedAction(actions, 'edit') && colletRolesAction && record.key != 1 && (
+                        {AuthService.isAllowedAction(actions, 'edit') && colletRolesAction && record.key !== 1 && (
                             <Link
                                 className="edit-button-color"
                                 disabled={editingKey !== null}
@@ -499,7 +500,7 @@ const Users = () => {
                                 <EditOutlined /> <Trans i18nKey="edit" />
                             </Link>
                         )}
-                        {AuthService.isAllowedAction(actions, 'delete') && !deletedRow && record.key != 1 && (
+                        {AuthService.isAllowedAction(actions, 'delete') && !deletedRow && record.key !== 1 && (
                             <Popconfirm
                                 title={t('delete_user_confirm')}
                                 icon={<QuestionCircleOutlined className="red-icon" />}
@@ -522,7 +523,7 @@ const Users = () => {
                                         },
                                     ],
                                 }}
-                                placement={LocaleService.direction == 'rtl' ? 'topRight' : 'topLeft'}
+                                placement={LocaleService.direction === 'rtl' ? 'topRight' : 'topLeft'}
                                 trigger={['click']}
                                 arrow
                             >
@@ -575,26 +576,26 @@ const Users = () => {
                     onOk={handleAdd}
                     onCancel={cancelAdd}
                     footer={null}
-                    maskClosable={true}
+                    maskClosable
                 >
                     <Form
                         layout="vertical"
                         name="users_form"
                         ref={(form) => {
-addForm = form;
-}}
+                            addForm = form;
+                        }}
                         initialValues={initialAddValues}
                         requiredMark={false}
                         onFinish={handleAdd}
                         validateTrigger="onSubmit"
                         onValuesChange={() => setErrorsAdd('')}
                     >
-                        {errorsAdd != '' && (
+                        {errorsAdd !== '' && (
                             <Alert
                                 type="error"
                                 className="alert-msg"
                                 message={
-                                    <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errorsAdd)} />
+                                    <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] === errorsAdd)} />
                                 }
                                 showIcon
                             />

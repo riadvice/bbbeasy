@@ -65,7 +65,7 @@ type formType = {
 
 const Install = () => {
     const { t } = useTranslation();
-    const logoname = 'logo-' + Date.now();
+    const logoname = `logo-${Date.now()}`;
     const [stepForm] = Form.useForm();
     const initialValues: formType = {
         username: '',
@@ -192,13 +192,13 @@ const Install = () => {
     const steps: stepType[] = [
         {
             title: t('administrator_account'),
-            content: <Step1Form message={message} success={message == ''} />,
+            content: <Step1Form message={message} success={message === ''} />,
             button: t('next'),
             span: 8,
             offset: 4,
         },
         {
-            title: t('company.label') + ' & ' + t('branding'),
+            title: `${t('company.label')} & ${t('branding')}`,
             content: (
                 <Step2Form
                     brandColor={brandColor}
@@ -229,7 +229,7 @@ const Install = () => {
 
     const onFinish = () => {
         const stepsData: formType = stepForm.getFieldsValue(true);
-        if (activeStep == 0) {
+        if (activeStep === 0) {
             setMessage('');
             usersService
                 .collect_users(stepsData)
@@ -243,7 +243,7 @@ const Install = () => {
             next();
         } else {
             //edit file
-            if (file != undefined && file.originFileObj != null) {
+            if (file != null && file.originFileObj != null) {
                 const formData: FormData = new FormData();
                 formData.append('logo', file.originFileObj, file.name);
                 formData.append('logo_name', file.name);
@@ -266,9 +266,9 @@ const Install = () => {
             };
             stepsData.presetsConfig = presets;
 
-            if (file != undefined && file.originFileObj != null) {
+            if (file != null && file.originFileObj != null) {
                 stepsData.logo = file.name;
-            } else if (file == undefined && stepsData.logo != null) {
+            } else if (file == null && stepsData.logo != null) {
                 stepsData.logo = null;
             }
 
@@ -326,13 +326,13 @@ const Install = () => {
                             form={stepForm}
                             initialValues={initialValues}
                             requiredMark={false}
-                            scrollToFirstError={true}
+                            scrollToFirstError
                             validateTrigger="onSubmit"
                             onFinish={onFinish}
                             onValuesChange={() => setMessage('')}
                         >
                             {steps[activeStep].content}
-                            <UserPasswordForm isHidden={activeStep != 0} />
+                            <UserPasswordForm isHidden={activeStep !== 0} />
                             <Row
                                 className={
                                     activeStep === steps.length - 1
@@ -354,7 +354,7 @@ const Install = () => {
                                         type="primary"
                                         className="btn-installer"
                                         htmlType="submit"
-                                        style={activeStep == 0 ? { 'width': '100%' } : { 'width': '47%' }}
+                                        style={activeStep === 0 ? { 'width': '100%' } : { 'width': '47%' }}
                                     >
                                         {steps[activeStep].button}
                                     </Button>

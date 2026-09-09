@@ -22,6 +22,6 @@ import { SessionType } from '../types/SessionType';
 export const authHeader = () => {
     const currentSession: SessionType = AuthService.getCurrentSession();
     if (currentSession != null) {
-        return { Authorization: currentSession.tokenType + ' ' + currentSession.accessToken };
+        return { Authorization: `${currentSession.tokenType} ${currentSession.accessToken}` };
     }
 };

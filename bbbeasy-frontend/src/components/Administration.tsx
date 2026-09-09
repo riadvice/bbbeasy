@@ -102,7 +102,10 @@ export const Administration = () => {
         <LoadingSpinner className="loading" />
     ) : (
         <>
-            <PageHeader className="site-page-header administration-page-header" title={<Trans i18nKey="administration" />} />
+            <PageHeader
+                className="site-page-header administration-page-header"
+                title={<Trans i18nKey="administration" />}
+            />
 
             <Row className="branding-row administration-page">
                 <Col span={8}>
@@ -113,7 +116,7 @@ export const Administration = () => {
                         form={settingsForm}
                         initialValues={initialValues}
                         requiredMark={false}
-                        scrollToFirstError={true}
+                        scrollToFirstError
                         validateTrigger="onSubmit"
                         onFinish={onFinish}
                         onValuesChange={() => setMessage('')}
@@ -124,7 +127,7 @@ export const Administration = () => {
                                     type="error"
                                     className="text-center"
                                     message={
-                                        <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == message)} />
+                                        <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] === message)} />
                                     }
                                     showIcon
                                 />

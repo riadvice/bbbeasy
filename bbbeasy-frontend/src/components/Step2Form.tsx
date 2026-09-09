@@ -75,7 +75,7 @@ export const Step2Form = (props: Props) => {
         let fileList: UploadFile[] = [...info.fileList];
 
         fileList = fileList.slice(-1);
-        if (fileList[0] != undefined) {
+        if (fileList[0] != null) {
             const img: boolean =
                 fileList[0].type === 'image/jpg' ||
                 fileList[0].type === 'image/jpeg' ||
@@ -83,7 +83,7 @@ export const Step2Form = (props: Props) => {
             if (img) {
                 setFileList(fileList);
 
-                fileList[0].name = 'logo-' + Date.now() + '.' + fileList[0].type.substring(6);
+                fileList[0].name = `logo-${Date.now()}.${fileList[0].type.substring(6)}`;
 
                 setFile(fileList[0]);
             }
@@ -186,25 +186,23 @@ export const Step2Form = (props: Props) => {
                             showUploadList={{ showRemoveIcon: true }}
                             fileList={fileList}
                             accept=".png,.jpg,.jpeg"
-                        beforeUpload={(file: RcFile) => {
-                            if (
-                                !(
+                            beforeUpload={(file: RcFile) => {
+                                if (!(
                                     file.type === 'image/jpg' ||
                                     file.type === 'image/png' ||
                                     file.type === 'image/jpeg'
-                                )
-                            ) {
-                                message.error(t('wrong_file'));
-                                return null;
-                            }
-                            const maxSize = 5 * 1024 * 1024; // 5MB
-                            if (file.size > maxSize) {
-                                message.error(t('file_too_large'));
-                                return null;
-                            }
+                                )) {
+                                    message.error(t('wrong_file'));
+                                    return null;
+                                }
+                                const maxSize = 5 * 1024 * 1024; // 5MB
+                                if (file.size > maxSize) {
+                                    message.error(t('file_too_large'));
+                                    return null;
+                                }
 
-                            return false;
-                        }}
+                                return false;
+                            }}
                             onChange={(info) => {
                                 handleChangeFile(info);
                             }}

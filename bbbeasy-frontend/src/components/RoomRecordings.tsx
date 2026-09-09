@@ -43,7 +43,6 @@ import recordingsService from 'services/recordings.service';
 
 import Notifications from './Notifications';
 
-
 const { Title } = Typography;
 
 type Props = {
@@ -182,8 +181,8 @@ const RoomRecordings = (props: Props) => {
             },
             {
                 key: '2',
-                label: <Trans i18nKey={record.state == 'published' ? 'unpublish' : 'publish'} />,
-                onClick: () => publish(record.key, record.state == 'published' ? false : true),
+                label: <Trans i18nKey={record.state === 'published' ? 'unpublish' : 'publish'} />,
+                onClick: () => publish(record.key, record.state === 'published' ? false : true),
             },
             {
                 key: '3',
@@ -195,231 +194,217 @@ const RoomRecordings = (props: Props) => {
     });
 
     return (
-        <>
-            {open && (
-                <div className="room-recordings">
-                    <div className="mb-40">
-                        <Space size="middle">
-                            <Title level={4}>
-                                <Trans i18nKey="room_recordings" />
-                            </Title>
-                            {roomRecordings.length != 0 && (
-                                <Input
-                                    className="search-input"
-                                    size="middle"
-                                    placeholder={t('search')}
-                                    allowClear
-                                    suffix={<SearchOutlined />}
-                                    bordered={false}
-                                />
-                            )}
-                        </Space>
-                    </div>
-                    {isLoading ? (
-                        <LoadingSpinner className="mt-30 content-center" />
-                    ) : recordings.length != 0 ? (
-                        <Row gutter={[16, 20]} className="room-recordings-body">
-                            {recordings.map((recording) => {
-                                const addHeight = recording.name.length <= 16 ? '65px' : null;
-                                const recordingName =
-                                    recording.name.length <= 24
-                                        ? recording.name
-                                        : recording.name.substring(0, 21) + '...';
+        open && (
+            <div className="room-recordings">
+                <div className="mb-40">
+                    <Space size="middle">
+                        <Title level={4}>
+                            <Trans i18nKey="room_recordings" />
+                        </Title>
+                        {roomRecordings.length !== 0 && (
+                            <Input
+                                className="search-input"
+                                size="middle"
+                                placeholder={t('search')}
+                                allowClear
+                                suffix={<SearchOutlined />}
+                                bordered={false}
+                            />
+                        )}
+                    </Space>
+                </div>
+                {isLoading ? (
+                    <LoadingSpinner className="mt-30 content-center" />
+                ) : recordings.length !== 0 ? (
+                    <Row gutter={[16, 20]} className="room-recordings-body">
+                        {recordings.map((recording) => {
+                            const addHeight = recording.name.length <= 16 ? '65px' : null;
+                            const recordingName =
+                                recording.name.length <= 24 ? recording.name : `${recording.name.substring(0, 21)}...`;
 
-                                return (
-                                    <Col style={{maxWidth:"300px"}} key={recording.key}>
-                                        <Card
-                                            style={{maxWidth:"300px"}}
-                                            bordered={false}
-                                            hoverable
-                                            cover={
-                                                <div className="recording-box">
-                                                    <img
-                                                        src="/images/meeting.png"
-                                                        style={{ 'width': '-webkit-fill-available' }}
-                                                        height={220}
-                                                    />
-                                                    <div className="recording-cover">
-                                                        {!isEditing ? (
-                                                            <div className="recording-header">
-                                                                <Title level={3} style={{ height: addHeight }}>
-                                                                    {recordingName}
-                                                                </Title>
-                                                                <Dropdown
-                                                                    key="more"
-                                                                    menu={actionsItems(recording)}
-                                                                    placement={
-                                                                        LocaleService.direction == 'rtl'
-                                                                            ? 'bottomLeft'
-                                                                            : 'bottomRight'
-                                                                    }
-                                                                >
-                                                                    <MoreOutlined />
-                                                                </Dropdown>
-                                                            </div>
-                                                        ) : (
-                                                            <>
-                                                                <div className="recording-header">
-                                                                    <Form form={editForm}>
-                                                                        <Form.Item
-                                                                            name="name"
-                                                                            className="input-editable"
-                                                                            {...('name' in errorsEdit && {
-                                                                                help: (
-                                                                                    <Trans
-                                                                                        i18nKey={Object.keys(
-                                                                                            EN_US
-                                                                                        ).filter(
-                                                                                            (elem) =>
-                                                                                                EN_US[elem] ==
-                                                                                                errorsEdit['name']
-                                                                                        )}
-                                                                                    />
-                                                                                ),
-                                                                                validateStatus: 'error',
-                                                                            })}
-                                                                            rules={[
-                                                                                {
-                                                                                    required: true,
-                                                                                    message: (
-                                                                                        <Trans i18nKey="name.required" />
-                                                                                    ),
-                                                                                },
-                                                                            ]}
-                                                                        >
-                                                                            <Input
-                                                                                onPressEnter={handleSaveEdit}
-                                                                                suffix={
-                                                                                    <>
-                                                                                        <Popconfirm
-                                                                                            title={t('cancel_edit')}
-                                                                                            placement="leftTop"
-                                                                                            onConfirm={() =>
-                                                                                                cancelEdit()
-                                                                                            }
-                                                                                        >
-                                                                                            <Button
-                                                                                                //  style={{"width":"100% !important","height":"100% !important"}}
-
-                                                                                                icon={<CloseOutlined />}
-                                                                                                size="small"
-                                                                                                className="cell-input-cancel-record"
-                                                                                            />
-                                                                                        </Popconfirm>
-                                                                                        <Button
-                                                                                            //     style={{"width":"100% !important","height":"100% !important"}}
-
-                                                                                            icon={<CheckOutlined />}
-                                                                                            size="small"
-                                                                                            onClick={() =>
-                                                                                                handleSaveEdit(
-                                                                                                    recording
-                                                                                                )
-                                                                                            }
-                                                                                            type="primary"
-                                                                                            className="cell-input-save-record"
-                                                                                        />
-                                                                                    </>
-                                                                                }
+                            return (
+                                <Col style={{ maxWidth: '300px' }} key={recording.key}>
+                                    <Card
+                                        style={{ maxWidth: '300px' }}
+                                        bordered={false}
+                                        hoverable
+                                        cover={
+                                            <div className="recording-box">
+                                                <img
+                                                    src="/images/meeting.png"
+                                                    style={{ 'width': '-webkit-fill-available' }}
+                                                    height={220}
+                                                />
+                                                <div className="recording-cover">
+                                                    {!isEditing ? (
+                                                        <div className="recording-header">
+                                                            <Title level={3} style={{ height: addHeight }}>
+                                                                {recordingName}
+                                                            </Title>
+                                                            <Dropdown
+                                                                key="more"
+                                                                menu={actionsItems(recording)}
+                                                                placement={
+                                                                    LocaleService.direction === 'rtl'
+                                                                        ? 'bottomLeft'
+                                                                        : 'bottomRight'
+                                                                }
+                                                            >
+                                                                <MoreOutlined />
+                                                            </Dropdown>
+                                                        </div>
+                                                    ) : (
+                                                        <div className="recording-header">
+                                                            <Form form={editForm}>
+                                                                <Form.Item
+                                                                    name="name"
+                                                                    className="input-editable"
+                                                                    {...('name' in errorsEdit && {
+                                                                        help: (
+                                                                            <Trans
+                                                                                i18nKey={Object.keys(EN_US).filter(
+                                                                                    (elem) =>
+                                                                                        EN_US[elem] ===
+                                                                                        errorsEdit['name']
+                                                                                )}
                                                                             />
-                                                                        </Form.Item>
-                                                                    </Form>
-                                                                </div>
-                                                            </>
-                                                        )}
+                                                                        ),
+                                                                        validateStatus: 'error',
+                                                                    })}
+                                                                    rules={[
+                                                                        {
+                                                                            required: true,
+                                                                            message: <Trans i18nKey="name.required" />,
+                                                                        },
+                                                                    ]}
+                                                                >
+                                                                    <Input
+                                                                        onPressEnter={handleSaveEdit}
+                                                                        suffix={
+                                                                            <>
+                                                                                <Popconfirm
+                                                                                    title={t('cancel_edit')}
+                                                                                    placement="leftTop"
+                                                                                    onConfirm={() => cancelEdit()}
+                                                                                >
+                                                                                    <Button
+                                                                                        //  style={{"width":"100% !important","height":"100% !important"}}
 
-                                                        <Space direction="vertical" className="recording-infos">
-                                                            <span>
-                                                                <TeamOutlined /> {recording.users}{' '}
-                                                                <Trans i18nKey="attendees" />{' '}
-                                                            </span>
-                                                            <span>
-                                                                <CalendarOutlined /> {recording.date}
-                                                            </span>
-                                                            <span>
-                                                                <ClockCircleOutlined /> {recording.duration}
-                                                            </span>
-                                                        </Space>
-                                                        <ModalSocialLinks recording={recording} trigger="button" />
-                                                    </div>
+                                                                                        icon={<CloseOutlined />}
+                                                                                        size="small"
+                                                                                        className="cell-input-cancel-record"
+                                                                                    />
+                                                                                </Popconfirm>
+                                                                                <Button
+                                                                                    //     style={{"width":"100% !important","height":"100% !important"}}
+
+                                                                                    icon={<CheckOutlined />}
+                                                                                    size="small"
+                                                                                    onClick={() =>
+                                                                                        handleSaveEdit(recording)
+                                                                                    }
+                                                                                    type="primary"
+                                                                                    className="cell-input-save-record"
+                                                                                />
+                                                                            </>
+                                                                        }
+                                                                    />
+                                                                </Form.Item>
+                                                            </Form>
+                                                        </div>
+                                                    )}
+
+                                                    <Space direction="vertical" className="recording-infos">
+                                                        <span>
+                                                            <TeamOutlined /> {recording.users}{' '}
+                                                            <Trans i18nKey="attendees" />{' '}
+                                                        </span>
+                                                        <span>
+                                                            <CalendarOutlined /> {recording.date}
+                                                        </span>
+                                                        <span>
+                                                            <ClockCircleOutlined /> {recording.duration}
+                                                        </span>
+                                                    </Space>
+                                                    <ModalSocialLinks recording={recording} trigger="button" />
                                                 </div>
-                                            }
-                                        >
-                                            <Space direction="vertical" size="large">
+                                            </div>
+                                        }
+                                    >
+                                        <Space direction="vertical" size="large">
+                                            <div>
+                                                <Button
+                                                    size="middle"
+                                                    type="primary"
+                                                    icon={
+                                                        <DynamicIcon
+                                                            type="playback-presentation"
+                                                            className="bbbeasy-ppt"
+                                                        />
+                                                    }
+                                                    onClick={() => window.open(recording.url, '_blank')}
+                                                >
+                                                    <span>
+                                                        <Trans i18nKey="replay" />
+                                                    </span>
+                                                </Button>
+                                                <span className="file-size">
+                                                    35,6 <Trans i18nKey="mb" />
+                                                </span>
+                                            </div>
+                                            <Space size="large" className="actions">
                                                 <div>
                                                     <Button
-                                                        size="middle"
                                                         type="primary"
-                                                        icon={
-                                                            <DynamicIcon
-                                                                type="playback-presentation"
-                                                                className="bbbeasy-ppt"
-                                                            />
-                                                        }
-                                                        onClick={() => window.open(recording.url, '_blank')}
-                                                    >
-                                                        <span>
-                                                            <Trans i18nKey="replay" />
-                                                        </span>
-                                                    </Button>
+                                                        ghost
+                                                        icon={<DynamicIcon type="playback-podcast" />}
+                                                    />
                                                     <span className="file-size">
                                                         35,6 <Trans i18nKey="mb" />
                                                     </span>
                                                 </div>
-                                                <Space size="large" className="actions">
-                                                    <div>
-                                                        <Button
-                                                            type="primary"
-                                                            ghost
-                                                            icon={<DynamicIcon type="playback-podcast" />}
-                                                        />
-                                                        <span className="file-size">
-                                                            35,6 <Trans i18nKey="mb" />
-                                                        </span>
-                                                    </div>
-                                                    <div>
-                                                        <Button
-                                                            type="primary"
-                                                            ghost
-                                                            icon={<DynamicIcon type="DesktopOutlined" />}
-                                                        />
-                                                        <span className="file-size">
-                                                            35,6 <Trans i18nKey="mb" />
-                                                        </span>
-                                                    </div>
-                                                    <div>
-                                                        <Button
-                                                            type="primary"
-                                                            ghost
-                                                            icon={<DynamicIcon type="mp4" className="bbbeasy-mp4" />}
-                                                        />
-                                                        <span className="file-size">
-                                                            35,6 <Trans i18nKey="mb" />
-                                                        </span>
-                                                    </div>
-                                                    <div>
-                                                        <Button
-                                                            type="primary"
-                                                            ghost
-                                                            icon={<DynamicIcon type="activity-reports" />}
-                                                        />
-                                                        <span className="file-size">
-                                                            35,6 <Trans i18nKey="mb" />
-                                                        </span>
-                                                    </div>
-                                                </Space>
+                                                <div>
+                                                    <Button
+                                                        type="primary"
+                                                        ghost
+                                                        icon={<DynamicIcon type="DesktopOutlined" />}
+                                                    />
+                                                    <span className="file-size">
+                                                        35,6 <Trans i18nKey="mb" />
+                                                    </span>
+                                                </div>
+                                                <div>
+                                                    <Button
+                                                        type="primary"
+                                                        ghost
+                                                        icon={<DynamicIcon type="mp4" className="bbbeasy-mp4" />}
+                                                    />
+                                                    <span className="file-size">
+                                                        35,6 <Trans i18nKey="mb" />
+                                                    </span>
+                                                </div>
+                                                <div>
+                                                    <Button
+                                                        type="primary"
+                                                        ghost
+                                                        icon={<DynamicIcon type="activity-reports" />}
+                                                    />
+                                                    <span className="file-size">
+                                                        35,6 <Trans i18nKey="mb" />
+                                                    </span>
+                                                </div>
                                             </Space>
-                                        </Card>
-                                    </Col>
-                                );
-                            })}
-                        </Row>
-                    ) : (
-                        <EmptyData description={<Trans i18nKey="no_recordings" />} />
-                    )}
-                </div>
-            )}
-        </>
+                                        </Space>
+                                    </Card>
+                                </Col>
+                            );
+                        })}
+                    </Row>
+                ) : (
+                    <EmptyData description={<Trans i18nKey="no_recordings" />} />
+                )}
+            </div>
+        )
     );
 };
 

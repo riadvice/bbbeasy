@@ -39,8 +39,8 @@ const defaultLang: string = import.meta.env.VITE_FALLBACK_LANG;
 const initLang = (): string => {
     if (localStorage.getItem('locale') == null) {
         const navigatorLang: string = navigator.language.substring(0, 2);
-        const res = Languages.filter((item) => item.key == navigatorLang);
-        return res.length != 0 ? res[0].value : defaultLang;
+        const res = Languages.filter((item) => item.key === navigatorLang);
+        return res.length !== 0 ? res[0].value : defaultLang;
     } else {
         return localStorage.getItem('locale');
     }
@@ -87,7 +87,7 @@ class LocaleService {
 
     changeLocale(locale: string) {
         console.log(enUS, frFR);
-        const res: object = Languages.filter((item) => item.value == locale);
+        const res: object = Languages.filter((item) => item.value === locale);
         i18next.changeLanguage(res[0].key);
         dayjs.locale(locale);
         this.setLocale(locale);

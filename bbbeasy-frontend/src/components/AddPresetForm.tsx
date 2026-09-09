@@ -88,63 +88,59 @@ export const AddPresetForm = (props: Props) => {
         setErrorsAdd([]);
     };
     return (
-        <>
-            <Modal
-                title={<Trans i18nKey="new_preset" />}
-                className="add-modal preset-add-modal"
-                centered
-                open={props.isModalShow}
-                onOk={handleAdd}
-                onCancel={cancelAdd}
-                footer={null}
-                maskClosable={true}
+        <Modal
+            title={<Trans i18nKey="new_preset" />}
+            className="add-modal preset-add-modal"
+            centered
+            open={props.isModalShow}
+            onOk={handleAdd}
+            onCancel={cancelAdd}
+            footer={null}
+            maskClosable
+        >
+            <Form
+                layout="vertical"
+                ref={(form) => {
+                    addForm = form;
+                }}
+                initialValues={initialAddValues}
+                requiredMark={false}
+                onFinish={handleAdd}
+                onFinishFailed={failedAdd}
+                validateTrigger="onSubmit"
             >
-                <Form
-                    layout="vertical"
-                    ref={(form) => {
-addForm = form;
-}}
-                    initialValues={initialAddValues}
-                    requiredMark={false}
-                    onFinish={handleAdd}
-                    onFinishFailed={failedAdd}
-                    validateTrigger="onSubmit"
+                <Form.Item
+                    label={<Trans i18nKey="name.label" />}
+                    name="name"
+                    {...('name' in errorsAdd && {
+                        help: (
+                            <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] === errorsAdd['name'])} />
+                        ),
+                        validateStatus: 'error',
+                    })}
+                    rules={[
+                        {
+                            required: true,
+                            message: <Trans i18nKey="name.required" />,
+                        },
+                        {
+                            max: 64,
+                            message: <Trans i18nKey="preset_name.maxSize" />,
+                        },
+                    ]}
                 >
-                    <Form.Item
-                        label={<Trans i18nKey="name.label" />}
-                        name="name"
-                        {...('name' in errorsAdd && {
-                            help: (
-                                <Trans
-                                    i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errorsAdd['name'])}
-                                />
-                            ),
-                            validateStatus: 'error',
-                        })}
-                        rules={[
-                            {
-                                required: true,
-                                message: <Trans i18nKey="name.required" />,
-                            },
-                            {
-                                max: 64,
-                                message: <Trans i18nKey="preset_name.maxSize" />,
-                            },
-                        ]}
-                    >
-                        <Input placeholder={t('name.label')} />
-                    </Form.Item>
-                    <Form.Item className="modal-submit-btn button-container">
-                        <Button type="text" className="cancel-btn prev" block onClick={cancelAdd}>
-                            <Trans i18nKey="cancel" />
-                        </Button>
-                        <Button type="primary" htmlType="submit" disabled={loading} block>
-                            <Trans i18nKey="create" />
-                        </Button>
-                    </Form.Item>
-                </Form>
-            </Modal>
-        </>
+                    <Input placeholder={t('name.label')} />
+                </Form.Item>
+                <Form.Item className="modal-submit-btn button-container">
+                    <Button type="text" className="cancel-btn prev" block onClick={cancelAdd}>
+                        <Trans i18nKey="cancel" />
+                    </Button>
+                    <Button type="primary" htmlType="submit" disabled={loading} block>
+                        <Trans i18nKey="create" />
+                    </Button>
+                </Form.Item>
+            </Form>
+        </Modal>
     );
 };
 export default withTranslation()(AddPresetForm);

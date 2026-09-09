@@ -67,7 +67,7 @@ const EditableTableCell: React.FC<Props> = ({
     let firstTest = false;
     let secondTest = false;
 
-    if (editable != undefined) {
+    if (editable != null) {
         if (editing) {
             firstTest = true;
         } else {
@@ -89,12 +89,12 @@ const EditableTableCell: React.FC<Props> = ({
     const customFormItem = (index: string, customInputNode: React.JSX.Element) => {
         const constraint = nameConstraints[componentName];
         const errorHelp = index in errorsEdit &&
-            record.key == errorsEdit['key'] && {
-                help: <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errorsEdit[index])} />,
+            record.key === errorsEdit['key'] && {
+                help: <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] === errorsEdit[index])} />,
                 validateStatus: 'error' as const,
             };
 
-        if (constraint && index == 'name') {
+        if (constraint && index === 'name') {
             return (
                 <Form.Item
                     name={index}
@@ -103,16 +103,16 @@ const EditableTableCell: React.FC<Props> = ({
                     rules={[
                         {
                             required: true,
-                            message: t('required_' + index),
+                            message: t(`required_${index}`),
                         },
                         { ...editRules },
                         {
                             min: 1,
-                            message: <Trans i18nKey={constraint.i18n + '.size'} />,
+                            message: <Trans i18nKey={`${constraint.i18n}.size`} />,
                         },
                         {
                             max: constraint.max,
-                            message: <Trans i18nKey={constraint.i18n + '.maxSize'} />,
+                            message: <Trans i18nKey={`${constraint.i18n}.maxSize`} />,
                         },
                     ]}
                 >
