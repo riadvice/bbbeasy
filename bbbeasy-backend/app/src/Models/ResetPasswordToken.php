@@ -73,8 +73,16 @@ class ResetPasswordToken extends BaseModel
      */
     public function isUsable(): bool
     {
-        $status = ResetTokenStatus::NEW;
+        // The status and the expiry of this very token decide, comparing a fresh
+        // timestamp against itself accepted consumed and expired tokens forever.
+        if (ResetTokenStatus::NEW !== $this->status) {
+            return false;
+        }
 
-        return ResetTokenStatus::NEW === $status && !Time::isInPast(date('Y-m-d H:i:s', strtotime('+15 min')));
+        $expiresAt = $this->expires_at instanceof \DateTimeInterface
+            ? $this->expires_at->format('Y-m-d H:i:s')
+            : (string) $this->expires_at;
+
+        return '' !== $expiresAt && !Time::isInPast($expiresAt);
     }
 }
