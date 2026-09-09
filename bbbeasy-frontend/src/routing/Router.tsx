@@ -32,19 +32,15 @@ const Router: React.FC<IProps> = ({ routes }) => {
         else return <PublicRoute restricted={route.restricted}>{route.element}</PublicRoute>;
     };
 
-    const RenderComponent = (props): React.JSX.Element => {
-        const route = props.route;
-        if (route.path === '*') return route.element;
-        else {
-            return checkAccess(route);
-        }
-    };
+    // A plain function, not a component: a component declared during a render is a new
+    // type every time, so React would unmount and remount the whole routed page.
+    const renderRoute = (route: IRoute): React.JSX.Element => (route.path === '*' ? route.element : checkAccess(route));
 
     return (
         <Routes>
             {routes &&
-                routes.map((route: IRoute, index) => (
-                    <Route key={index} path={route.path} element={<RenderComponent route={route} />} />
+                routes.map((route: IRoute) => (
+                    <Route key={route.path} path={route.path} element={renderRoute(route)} />
                 ))}
         </Routes>
     );

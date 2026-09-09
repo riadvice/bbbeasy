@@ -44,14 +44,13 @@ import { getRandomString } from 'types/getRandomString';
 const { Title, Paragraph } = Typography;
 
 interface RoomsColProps {
-    index: number;
     room: RoomType;
     editable: boolean;
     bbbConfigured: boolean;
     deleteClickHandler: () => void;
 }
 
-const RoomsCol: React.FC<RoomsColProps> = ({ index, room, editable, bbbConfigured, deleteClickHandler }) => {
+const RoomsCol: React.FC<RoomsColProps> = ({ room, editable, bbbConfigured, deleteClickHandler }) => {
     const [isShown, setIsShown] = useState<boolean>(false);
     const navigate = useNavigate();
 
@@ -99,7 +98,7 @@ const RoomsCol: React.FC<RoomsColProps> = ({ index, room, editable, bbbConfigure
     };
 
     return (
-        <Col key={index} span={5} className="custom-col-5 room-box">
+        <Col span={5} className="custom-col-5 room-box">
             <Card
                 hoverable
                 onMouseOver={() => setIsShown(true)}
@@ -257,7 +256,7 @@ const Rooms = () => {
                 </Title>
                 <Row justify="center">
                     {addSteps.map((addStep, index) => (
-                        <Col key={index} span={5}>
+                        <Col key={addStep} span={5}>
                             <Avatar size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 85, xxl: 100 }} className="bbbeasy-btn">
                                 {index + 1}
                             </Avatar>
@@ -305,15 +304,14 @@ const Rooms = () => {
                 }
             />
             <Row gutter={[18, 18]} className="rooms-cards">
-                {rooms.map((singleRoom, index) => (
+                {rooms.map((singleRoom) => (
                     <RoomsCol
-                        key={`${index}-${singleRoom.name}`}
-                        index={index}
+                        key={singleRoom.id}
                         room={singleRoom}
                         editable={AuthService.isAllowedAction(actions, 'edit')}
                         bbbConfigured={bbbConfigured}
                         deleteClickHandler={
-                            AuthService.isAllowedAction(actions, 'delete') ? deleteRoom.bind(this, singleRoom.id) : null
+                            AuthService.isAllowedAction(actions, 'delete') ? () => deleteRoom(singleRoom.id) : null
                         }
                     />
                 ))}

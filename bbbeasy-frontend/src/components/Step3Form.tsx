@@ -60,22 +60,22 @@ export const Step3Form = (props: Props) => {
         setValues(formvalues);
     };
 
-    const Confirm = () => {
-        modalContent.map((item) => {
-            item.enabled = values[item.name];
-        });
+    // Named as handlers, not components: capitalised names read as JSX and these are
+    // only ever called from an onClick.
+    const confirmChanges = () => {
+        const confirmed = modalContent.map((item) => ({ ...item, enabled: values[item.name] }));
+
+        setModalContent(confirmed);
 
         if (location.pathname.includes('settings')) {
-            props.onFinish(modalTitle, modalContent);
+            props.onFinish(modalTitle, confirmed);
         }
+
         setIsModalVisible(false);
     };
 
-    const Cancel = () => {
-        modalContent.map((item) => {
-            step3.setFieldValue(item.name, item.enabled);
-        });
-
+    const cancelChanges = () => {
+        modalContent.forEach((item) => step3.setFieldValue(item.name, item.enabled));
         setIsModalVisible(false);
     };
     return (
@@ -140,13 +140,13 @@ export const Step3Form = (props: Props) => {
                         centered
                         open={isModalVisible}
                         onOk={() => setIsModalVisible(false)}
-                        onCancel={() => Cancel()}
+                        onCancel={() => cancelChanges()}
                         footer={[
                             <Form.Item key="footer" className="button-container">
-                                <Button className="cancel-btn prev" key="reset" onClick={Cancel}>
+                                <Button className="cancel-btn prev" key="reset" onClick={cancelChanges}>
                                     <Trans i18nKey="cancel" />
                                 </Button>
-                                <Button key="submit" type="primary" htmlType="submit" onClick={Confirm}>
+                                <Button key="submit" type="primary" htmlType="submit" onClick={confirmChanges}>
                                     <Trans i18nKey="confirm" />
                                 </Button>
                             </Form.Item>,
