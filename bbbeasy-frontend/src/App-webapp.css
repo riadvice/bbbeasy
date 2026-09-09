@@ -3683,6 +3683,17 @@ fieldset {
 #administration_form .ant-col {
     text-align: right;
 }
+/* The label column is narrower than the sentence in it, and the framework clips
+   rather than wraps: "Send registration invitation to users" arrived as
+   "Send registration invitati". */
+#administration_form .ant-form-item-label {
+    overflow: visible;
+    white-space: normal;
+}
+#administration_form .ant-form-item-label > label {
+    height: auto;
+    white-space: normal;
+}
 #administration_form .ant-col-rtl {
     text-align: left !important;
 }
