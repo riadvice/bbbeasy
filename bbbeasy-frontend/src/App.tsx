@@ -93,6 +93,7 @@ const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
 
             borderRadiusLG: borderRadius,
             fontSize: defaultFontSize,
+            wireframe: wireframeStyle,
         },
         components: {
             Button: {
@@ -102,7 +103,7 @@ const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
                 primaryShadow: brandColor + '33',
             },
         },
-    }), [brandColor, borderRadius, defaultFontSize]);
+    }), [brandColor, borderRadius, defaultFontSize, wireframeStyle]);
 
     const getRooms = useCallback((userId: number) => {
         RoomsService.list_rooms(userId)

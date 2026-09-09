@@ -36,9 +36,6 @@ import AuthService from '../services/auth.service';
 import LocaleService from '../services/locale.service';
 import { UserContext } from '../lib/UserContext';
 
-import axios from 'axios';
-import { apiRoutes } from '../routing/backend-config';
-
 import { FormRef } from 'rc-field-form/lib/interface';
 import { UserType } from '../types/UserType';
 

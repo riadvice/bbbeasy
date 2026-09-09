@@ -65,7 +65,7 @@ const { Title, Text, Paragraph } = Typography;
 
 // eslint-disable-next-line complexity
 const AppHeader = () => {
-    const { isLogged, setIsLogged, currentUser, setCurrentUser, setCurrentSession } = React.useContext(UserContext);
+    const { setIsLogged, currentUser, setCurrentUser, setCurrentSession } = React.useContext(UserContext);
     const currentLocale = LocaleService.language;
     const result: LanguageType[] = Languages.filter((item) => item.value == currentLocale);
     const language: string = result[0].name;

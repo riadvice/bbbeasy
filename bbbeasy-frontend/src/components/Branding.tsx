@@ -134,7 +134,7 @@ const Branding = () => {
 
             try {
                 await axios.post(apiRoutes.SAVE_FILE_URL, formData);
-            } catch (error) {
+            } catch {
                 Notifications.openNotificationWithIcon('error', t('file_upload_error'));
                 return;
             }
@@ -161,7 +161,7 @@ const Branding = () => {
                     Notifications.openNotificationWithIcon('info', t('no_changes'));
                 }
             })
-            .catch((error) => {
+            .catch(() => {
                 Notifications.openNotificationWithIcon('error', t('edit_settings_error'));
             });
     };
