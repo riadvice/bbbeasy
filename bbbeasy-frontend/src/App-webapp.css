@@ -721,7 +721,12 @@ fieldset {
     margin-left: 24px;
 }
 .site-sider .logo .sider-logo-image {
-    width: 110px !important;
+    /* Bound both sides, a tall logo used to grow until it pushed the menu
+       items out of the sider. */
+    width: auto !important;
+    max-width: 110px;
+    max-height: 48px;
+    object-fit: contain;
 }
 /*
 .page-layout-content .site-sider .logo .sider-logo-image {
@@ -2350,7 +2355,11 @@ fieldset {
     margin-top: 20px !important;
 }
 .form-img {
-    width: 55px;
+    /* Bound both sides, a tall logo used to stretch the sign in card. */
+    width: auto;
+    max-width: 55px;
+    max-height: 55px;
+    object-fit: contain;
     margin-left: auto;
     margin-right: auto;
     display: block;
