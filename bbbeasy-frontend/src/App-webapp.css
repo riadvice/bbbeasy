@@ -203,6 +203,9 @@
 }
 :root {
     --bbbeasy-brand-color: #fbbc0b;
+    /* Rounded hexagon used for avatars, badges and the preset tiles. A mask is used
+       instead of clip-path because clip-path cannot round the corners of a polygon. */
+    --bbbeasy-hexagon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M50 7 L88 28.5 L88 71.5 L50 93 L12 71.5 L12 28.5 Z' fill='%23000' stroke='%23000' stroke-width='13' stroke-linejoin='round'/%3E%3C/svg%3E");
     --bbbeasy-brand-color-hover: #ffcf33;
     --bbbeasy-font-size: 14px;
     --bbbeasy-border-radius: 6px;
@@ -566,12 +569,19 @@ fieldset {
 }
 .site-header .profil-btn {
     color: #edf4ff !important;
-    clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%);
+    -webkit-mask-image: var(--bbbeasy-hexagon);
+    mask-image: var(--bbbeasy-hexagon);
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
     border-radius: 50% !important;
     transition: transform 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
 }
 .site-header .profil-avatar {
     clip-path: none !important;
+    -webkit-mask-image: none !important;
+    mask-image: none !important;
     border-radius: 50% !important;
     overflow: hidden;
     cursor: pointer;
@@ -1722,7 +1732,12 @@ fieldset {
     border-radius: 50%;
     background: linear-gradient(135deg, var(--bbbeasy-brand-color) 0%, var(--bbbeasy-brand-color) 100%);
     box-shadow: 0 10px 24px rgba(59, 130, 246, 0.28);
-    clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%) !important;
+    -webkit-mask-image: var(--bbbeasy-hexagon) !important;
+    mask-image: var(--bbbeasy-hexagon) !important;
+    -webkit-mask-size: 100% 100% !important;
+    mask-size: 100% 100% !important;
+    -webkit-mask-repeat: no-repeat !important;
+    mask-repeat: no-repeat !important;
 }
 
 .bbbeasy-icon {
@@ -2447,7 +2462,12 @@ fieldset {
 .home-guide .bbbeasy-btn {
     font-size: 45px !important;
     font-weight: 600;
-    clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%);
+    -webkit-mask-image: var(--bbbeasy-hexagon);
+    mask-image: var(--bbbeasy-hexagon);
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
     margin-bottom: 20px;
     border-radius: 50%;
     background: var(--bbbeasy-brand-color);
@@ -2551,19 +2571,32 @@ fieldset {
 .room-card-title .bbbeasy-btn {
     font-size: 22px !important;
     font-weight: 600;
-    clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%);
+    -webkit-mask-image: var(--bbbeasy-hexagon);
+    mask-image: var(--bbbeasy-hexagon);
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
     background-color: var(--bbbeasy-brand-color);
 }
 .room-card-title .custom-badge-bg {
-    -webkit-clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%);
-    clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%);
+    -webkit-mask-image: var(--bbbeasy-hexagon);
+    mask-image: var(--bbbeasy-hexagon);
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
     background: var(--bbbeasy-brand-color);
     width: 25px;
     height: 25px;
 }
 .room-card-title .custom-badge {
-    -webkit-clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%);
-    clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%);
+    -webkit-mask-image: var(--bbbeasy-hexagon);
+    mask-image: var(--bbbeasy-hexagon);
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
     background: white;
     padding: 4.5px;
     position: absolute;
@@ -2608,7 +2641,12 @@ fieldset {
 .room-details .bbbeasy-btn {
     font-size: 20px !important;
     font-weight: 600;
-    clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%);
+    -webkit-mask-image: var(--bbbeasy-hexagon);
+    mask-image: var(--bbbeasy-hexagon);
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
     border-radius: 50%;
     background-color: var(--bbbeasy-brand-color) !important;
 }
@@ -2653,7 +2691,12 @@ fieldset {
     padding: 7px;
     color: white;
     background: var(--bbbeasy-brand-color);
-    clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%);
+    -webkit-mask-image: var(--bbbeasy-hexagon);
+    mask-image: var(--bbbeasy-hexagon);
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
     border-radius: 50%;
 }
 .recording-box .recording-infos span {
@@ -3167,7 +3210,12 @@ fieldset {
     padding: 20px !important;
     color: white !important;
     background: var(--bbbeasy-brand-color);
-    clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%);
+    -webkit-mask-image: var(--bbbeasy-hexagon);
+    mask-image: var(--bbbeasy-hexagon);
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
     border-radius: 50%;
 }
 .button-container {
@@ -3314,7 +3362,12 @@ fieldset {
     padding: 10px;
     color: white;
     background: var(--bbbeasy-brand-color) !important;
-    clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%);
+    -webkit-mask-image: var(--bbbeasy-hexagon);
+    mask-image: var(--bbbeasy-hexagon);
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
     border-radius: 50%;
 }
 /*.PresetIcon img {
@@ -3405,13 +3458,22 @@ fieldset {
     color: #ffffff !important;
 }
 .profile-form .bbbeasy-btn {
-    clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%);
+    -webkit-mask-image: var(--bbbeasy-hexagon);
+    mask-image: var(--bbbeasy-hexagon);
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
     background-color: var(--bbbeasy-brand-color);
     color: black;
 }
 .profile-form .custom-badge-bg {
-    -webkit-clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%);
-    clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%);
+    -webkit-mask-image: var(--bbbeasy-hexagon);
+    mask-image: var(--bbbeasy-hexagon);
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
     background: var(--bbbeasy-brand-color);
     font-size: 19px !important;
     margin-top: 16px;
@@ -3421,8 +3483,12 @@ fieldset {
     left: 32px !important;
 }
 .profile-form .custom-badge {
-    -webkit-clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%);
-    clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%);
+    -webkit-mask-image: var(--bbbeasy-hexagon);
+    mask-image: var(--bbbeasy-hexagon);
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
     background: white;
     position: absolute;
     top: 0.5px;
@@ -3497,8 +3563,12 @@ fieldset {
 }
 
 .share-modal .bbbeasy-btn:not(:hover) .bbbeasy-white-btn {
-    -webkit-clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%);
-    clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%);
+    -webkit-mask-image: var(--bbbeasy-hexagon);
+    mask-image: var(--bbbeasy-hexagon);
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
 }
 
 .profile-form .ant-image .ant-image-img {
@@ -3665,7 +3735,12 @@ fieldset {
 .room-details .disableStart {
     font-size: 20px !important;
     font-weight: 600;
-    clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%);
+    -webkit-mask-image: var(--bbbeasy-hexagon);
+    mask-image: var(--bbbeasy-hexagon);
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
     border-radius: 50%;
     background-color: #d4d4d4 !important;
     cursor: not-allowed;
@@ -5408,4 +5483,22 @@ body {
 .ant-input-number .ant-input-number-input {
     color: inherit !important;
     background: transparent !important;
+}
+
+/* ---------- Hexagon polish ----------
+   The hexagon is the product's signature shape. A mask cannot carry a shadow, so the
+   depth comes from a soft gradient in the fill and a drop-shadow filter on the wrapper. */
+.room-card-title .bbbeasy-btn,
+.room-details .bbbeasy-btn,
+.home-guide .bbbeasy-btn,
+.profile-form .bbbeasy-btn,
+.site-header .profil-btn,
+.PresetIcon {
+    background-image: linear-gradient(150deg, var(--bbbeasy-brand-color-hover) 0%, var(--bbbeasy-brand-color) 55%, #e0a608 100%);
+    transition: filter 0.25s ease, transform 0.25s ease;
+}
+.rooms-cards .ant-card:hover .bbbeasy-btn,
+.presets-grid:hover .PresetIcon {
+    filter: brightness(1.06);
+    transform: translateY(-1px);
 }

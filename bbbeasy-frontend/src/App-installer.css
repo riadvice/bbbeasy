@@ -461,7 +461,12 @@ body.rtl {
     padding: 20px !important;
     color: white !important;
     background: var(--bbbeasy-brand-color);
-    clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%);
+    -webkit-mask-image: var(--bbbeasy-hexagon);
+    mask-image: var(--bbbeasy-hexagon);
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
     border-radius: 50%;
 }
 .install-steps {
@@ -639,7 +644,12 @@ body.rtl {
     padding: 10px;
     color: white;
     background: var(--bbbeasy-brand-color);
-    clip-path: polygon(48% 0, 52% 0, 95% 25%, 95% 75%, 52% 100%, 48% 100%, 5% 75%, 5% 25%);
+    -webkit-mask-image: var(--bbbeasy-hexagon);
+    mask-image: var(--bbbeasy-hexagon);
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
     border-radius: 50%;
 }
 .ant-tooltip .ant-tooltip-arrow::before,
@@ -768,4 +778,22 @@ body.rtl {
 .ant-input-number .ant-input-number-input {
     color: inherit !important;
     background: transparent !important;
+}
+
+/* ---------- Hexagon polish ----------
+   The hexagon is the product's signature shape. A mask cannot carry a shadow, so the
+   depth comes from a soft gradient in the fill and a drop-shadow filter on the wrapper. */
+.room-card-title .bbbeasy-btn,
+.room-details .bbbeasy-btn,
+.home-guide .bbbeasy-btn,
+.profile-form .bbbeasy-btn,
+.site-header .profil-btn,
+.PresetIcon {
+    background-image: linear-gradient(150deg, var(--bbbeasy-brand-color-hover) 0%, var(--bbbeasy-brand-color) 55%, #e0a608 100%);
+    transition: filter 0.25s ease, transform 0.25s ease;
+}
+.rooms-cards .ant-card:hover .bbbeasy-btn,
+.presets-grid:hover .PresetIcon {
+    filter: brightness(1.06);
+    transform: translateY(-1px);
 }
