@@ -33,7 +33,7 @@ use Test\Scenario;
  */
 final class ChangePasswordTest extends Scenario
 {
-    final protected const CHANGE_ROUTE = 'POST /account/change-password';
+    final protected const CHANGE_ROUTE = 'POST /api/account/change-password';
     protected $group                   = 'Action Change Password';
 
     /**
@@ -65,7 +65,7 @@ final class ChangePasswordTest extends Scenario
         $test  = $this->newTest();
         $faker = Faker::create();
         $data  = [
-            'password' => $faker->password(8),
+            'password' => $this->strongPassword(),
             'token'    => $faker->md5,
         ];
         $f3->mock(self::CHANGE_ROUTE, null, null, $this->postJsonData($data));
@@ -108,7 +108,7 @@ final class ChangePasswordTest extends Scenario
         $lastToken = new ResetPasswordToken();
         $lastToken->load(['id = ?', $lastToken->lastInsertId()]);
         $data = [
-            'password' => $faker->password(8),
+            'password' => $this->strongPassword(),
             'token'    => $lastToken->token,
         ];
         $f3->mock(self::CHANGE_ROUTE, null, null, $this->postJsonData($data));

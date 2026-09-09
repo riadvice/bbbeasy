@@ -33,7 +33,7 @@ use Test\Scenario;
  */
 final class DeleteTest extends Scenario
 {
-    final protected const DELETE_LABEL_ROUTE = 'DELETE /labels/';
+    final protected const DELETE_LABEL_ROUTE = 'DELETE /api/labels/';
     protected $group                         = 'Actions Label Delete';
 
     /**

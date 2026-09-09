@@ -32,7 +32,7 @@ use Test\Scenario;
  */
 final class DeleteTest extends Scenario
 {
-    final protected const DELETE_RECORDING_ROUTE = 'DELETE /recordings/';
+    final protected const DELETE_RECORDING_ROUTE = 'DELETE /api/recordings/';
     protected $group                             = 'Actions Recording Delete';
 
     /**

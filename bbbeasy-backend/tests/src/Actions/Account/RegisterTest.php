@@ -32,7 +32,7 @@ use Test\Scenario;
  */
 final class RegisterTest extends Scenario
 {
-    final protected const REGISTER_ROUTE = 'POST /account/register';
+    final protected const REGISTER_ROUTE = 'POST /api/account/register';
     protected $group                     = 'Action User Register';
 
     /**
@@ -91,7 +91,7 @@ final class RegisterTest extends Scenario
     {
         $test        = $this->newTest();
         $faker       = Faker::create();
-        $rawPassword = $faker->password(8);
+        $rawPassword = $this->strongPassword();
         $data        = [
             'username'        => $faker->userName,
             'email'           => $faker->email,

@@ -31,7 +31,7 @@ use Test\Scenario;
  */
 final class CollectTest extends Scenario
 {
-    final protected const COLLECT_ROLE_PERMISSION_ROUTE = 'GET /roles_permissions';
+    final protected const COLLECT_ROLE_PERMISSION_ROUTE = 'GET /api/roles-permissions';
     protected $group                                    = 'Action Role Permission Collect';
 
     /**

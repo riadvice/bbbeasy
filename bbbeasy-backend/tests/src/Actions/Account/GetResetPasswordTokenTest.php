@@ -35,7 +35,7 @@ use Test\Scenario;
  */
 final class GetResetPasswordTokenTest extends Scenario
 {
-    final protected const CHECK_TOKEN_ROUTE = 'GET /account/reset-token/';
+    final protected const CHECK_TOKEN_ROUTE = 'GET /api/account/reset-token/';
     protected $group                        = 'Action Get Reset Password Token';
 
     /**

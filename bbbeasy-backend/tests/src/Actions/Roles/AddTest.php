@@ -33,7 +33,7 @@ use Test\Scenario;
  */
 final class AddTest extends Scenario
 {
-    final protected const ADD_ROLE_ROUTE = 'POST /roles';
+    final protected const ADD_ROLE_ROUTE = 'POST /api/roles';
     protected $group                     = 'Action Role Add';
 
     /**

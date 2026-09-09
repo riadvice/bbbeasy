@@ -34,7 +34,7 @@ use Test\Scenario;
  */
 final class ViewTest extends Scenario
 {
-    final protected const VIEW_ROOM_ROUTE = 'GET /rooms/get/';
+    final protected const VIEW_ROOM_ROUTE = 'GET /api/rooms/get/';
     protected $group                      = 'Action Room View';
 
     /**

@@ -44,7 +44,7 @@ final class SettingTest extends Scenario
         $test    = $this->newTest();
         $setting = new Setting();
 
-        $test->expect(10 === \count($setting->getAllSettings()), 'getAllSettings() returned all settings');
+        $test->expect(12 === \count($setting->getAllSettings()), 'getAllSettings() returned all settings');
 
         return $test->results();
     }
@@ -68,13 +68,18 @@ final class SettingTest extends Scenario
             $faker->url,
             'policy updated',
             'logo-1.png',
-            ['primary_color' => '#006644'],
+            [
+                'brand_color'       => '#006644',
+                'default_font_size' => 14,
+                'border_radius'     => 6,
+                'wireframe_style'   => false,
+            ],
             true,
             true
         );
         $settings->save();
 
-        $test->expect('policy updated' === $settings->privacy_policy && 'logo-1.png' === $settings->logo && '#006644' === $settings->primary_color, 'saveSettings() updated setting with given params');
+        $test->expect('policy updated' === $settings->privacy_policy && 'logo-1.png' === $settings->logo && '#006644' === $settings->brand_color, 'saveSettings() updated setting with given params');
 
         return $test->results();
     }

@@ -33,7 +33,7 @@ use Test\Scenario;
  */
 final class ResetPasswordTest extends Scenario
 {
-    final protected const RESET_ROUTE = 'POST /account/reset-password';
+    final protected const RESET_ROUTE = 'POST /api/account/reset-password';
     protected $group                  = 'Action Reset Password';
 
     /**

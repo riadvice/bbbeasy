@@ -31,7 +31,7 @@ use Test\Scenario;
  */
 final class IndexTest extends Scenario
 {
-    final protected const INDEX_USER_ROUTE = 'GET /users';
+    final protected const INDEX_USER_ROUTE = 'GET /api/users';
     protected $group                       = 'Action User Index';
 
     /**

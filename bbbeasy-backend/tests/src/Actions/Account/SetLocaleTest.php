@@ -41,7 +41,7 @@ final class SetLocaleTest extends Scenario
     public function testSetLocale($f3)
     {
         $test = $this->newTest();
-        $f3->mock('PUT /set-locale/en-GB [ajax]');
+        $f3->mock('PUT /api/set-locale/en-GB [ajax]');
 
         json_decode($f3->get('RESPONSE'));
 

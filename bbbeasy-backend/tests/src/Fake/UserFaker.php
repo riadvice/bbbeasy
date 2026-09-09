@@ -105,7 +105,7 @@ class UserFaker
         if (UserRole::ADMINISTRATOR === $role) {
             $password = $role . $role;
         }
-        \Base::instance()->mock('POST /account/login', [
+        \Base::instance()->mock('POST /api/account/login', [
             'email'    => $user->email,
             'password' => $password,
         ]);
@@ -113,7 +113,7 @@ class UserFaker
 
     public static function logout(): void
     {
-        \Base::instance()->mock('GET /account/logout');
+        \Base::instance()->mock('GET /api/account/logout');
     }
 
     /**

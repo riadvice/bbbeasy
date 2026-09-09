@@ -35,7 +35,7 @@ use Test\Scenario;
  */
 final class IndexTest extends Scenario
 {
-    final protected const INDEX_RECORDING_ROUTE = 'GET /recordings/';
+    final protected const INDEX_RECORDING_ROUTE = 'GET /api/recordings/';
     protected $group                            = 'Action Recording Index';
 
     /**

@@ -33,7 +33,7 @@ use Test\Scenario;
  */
 final class EditTest extends Scenario
 {
-    final protected const EDIT_PRESET_SETTINGS_ROUTE = 'PUT /preset_settings';
+    final protected const EDIT_PRESET_SETTINGS_ROUTE = 'PUT /api/preset-settings';
     protected $group                                 = 'Action Preset Settings Edit';
 
     /**

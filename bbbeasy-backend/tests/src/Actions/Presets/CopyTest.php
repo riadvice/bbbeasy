@@ -33,7 +33,7 @@ use Test\Scenario;
  */
 final class CopyTest extends Scenario
 {
-    final protected const COPY_PRESET_ROUTE = 'GET /presets/copy/';
+    final protected const COPY_PRESET_ROUTE = 'GET /api/presets/copy/';
     protected $group                        = 'Action Preset Copy';
 
     /**

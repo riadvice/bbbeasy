@@ -31,7 +31,7 @@ use Test\Scenario;
  */
 final class CollectTest extends Scenario
 {
-    final protected const COLLECT_SETTINGS_ROUTE = 'GET /settings';
+    final protected const COLLECT_SETTINGS_ROUTE = 'GET /api/settings';
     protected $group                             = 'Action Setting Collect';
 
     /**

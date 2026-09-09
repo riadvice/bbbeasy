@@ -41,7 +41,7 @@ final class GetLocaleTest extends Scenario
     public function testGetLocale($f3)
     {
         $test = $this->newTest();
-        $f3->mock('GET /locale/json/en-GB.json [ajax]');
+        $f3->mock('GET /api/locale/json/en-GB.json [ajax]');
 
         json_decode($f3->get('RESPONSE'));
 

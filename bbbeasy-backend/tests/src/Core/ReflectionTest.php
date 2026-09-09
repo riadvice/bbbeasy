@@ -40,9 +40,9 @@ final class ReflectionTest extends Scenario
         'logs'            => ['collect'],
         'preset_settings' => ['collect', 'edit'],
         'presets'         => ['add', 'copy', 'delete', 'edit', 'edit_subcategories', 'index'],
-        'recordings'      => ['collect', 'delete', 'edit', 'index'],
+        'recordings'      => ['collect', 'delete', 'edit', 'index', 'publish'],
         'roles'           => ['add', 'collect', 'delete', 'edit', 'index'],
-        'rooms'           => ['add', 'delete', 'edit', 'index', 'start', 'view'],
+        'rooms'           => ['add', 'delete', 'edit', 'index', 'presentations', 'start', 'view'],
         'settings'        => ['collect', 'edit'],
         'users'           => ['add', 'delete', 'edit', 'index'],
     ];

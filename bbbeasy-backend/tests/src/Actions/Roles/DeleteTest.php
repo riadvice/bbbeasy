@@ -33,7 +33,7 @@ use Test\Scenario;
  */
 final class DeleteTest extends Scenario
 {
-    final protected const DELETE_ROLE_ROUTE = 'DELETE /roles/';
+    final protected const DELETE_ROLE_ROUTE = 'DELETE /api/roles/';
     protected $group                        = 'Action Role Delete';
 
     /**

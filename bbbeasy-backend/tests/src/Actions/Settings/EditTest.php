@@ -33,7 +33,7 @@ use Test\Scenario;
  */
 final class EditTest extends Scenario
 {
-    final protected const EDIT_SETTINGS_ROUTE = 'PUT /settings';
+    final protected const EDIT_SETTINGS_ROUTE = 'PUT /api/settings';
     protected $group                          = 'Action Setting Edit';
 
     /**
@@ -48,17 +48,17 @@ final class EditTest extends Scenario
         $test = $this->newTest();
 
         $data = ['data' => [
-            'company_name'    => '',
-            'company_url'     => '',
-            'platform_name'   => '',
-            'term_url'        => '',
-            'policy_url'      => '',
-            'logo'            => '',
-            'branding_colors' => [
-                'primary_color'   => '',
-                'secondary_color' => '',
-                'accent_color'    => '',
-                'add_color'       => '',
+            'company_name'  => '',
+            'company_url'   => '',
+            'platform_name' => '',
+            'term_url'      => '',
+            'policy_url'    => '',
+            'logo'          => '',
+            'theme'         => [
+                'brand_color'       => '',
+                'default_font_size' => '',
+                'border_radius'     => '',
+                'wireframe_style'   => false,
             ],
         ]];
         $f3->mock(self::EDIT_SETTINGS_ROUTE, null, null, $this->postJsonData($data));
@@ -74,17 +74,17 @@ final class EditTest extends Scenario
         $faker   = Faker::create();
         $setting = new Setting();
         $data    = ['data' => [
-            'company_name'    => $faker->name,
-            'company_url'     => $faker->url,
-            'platform_name'   => $faker->name,
-            'term_url'        => $faker->url,
-            'policy_url'      => $faker->url,
-            'logo'            => 'logo-1.doc',
-            'branding_colors' => [
-                'primary_color'   => $faker->safeHexColor,
-                'secondary_color' => $faker->safeHexColor,
-                'accent_color'    => $faker->safeHexColor,
-                'add_color'       => $faker->safeHexColor,
+            'company_name'  => $faker->name,
+            'company_url'   => $faker->url,
+            'platform_name' => $faker->name,
+            'term_url'      => $faker->url,
+            'policy_url'    => $faker->url,
+            'logo'          => 'logo-1.doc',
+            'theme'         => [
+                'brand_color'       => $faker->safeHexColor,
+                'default_font_size' => 14,
+                'border_radius'     => 6,
+                'wireframe_style'   => false,
             ],
         ]];
         $f3->mock(self::EDIT_SETTINGS_ROUTE, null, null, $this->postJsonData($data));

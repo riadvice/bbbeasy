@@ -35,7 +35,7 @@ use Test\Scenario;
  */
 final class AddTest extends Scenario
 {
-    final protected const ADD_LABEL_ROUTE = 'POST /labels';
+    final protected const ADD_LABEL_ROUTE = 'POST /api/labels';
     protected $group                      = 'Action Label Add';
 
     /**
@@ -55,7 +55,7 @@ final class AddTest extends Scenario
         $f3->mock(self::ADD_LABEL_ROUTE, null, null, $this->postJsonData($data));
         $test->expect($this->compareTemplateToResponse('label/success.json'), 'Add label successfully');
 
-        $test->expect($label->load(['name = ?', $f3->snakeCase($data['data']['name'])]), 'Label Added to DB:' . $label->name);
+        $test->expect($label->load(['name = ?', $data['data']['name']]), 'Label Added to DB:' . $label->name);
 
         return $test->results();
     }

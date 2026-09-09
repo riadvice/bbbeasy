@@ -31,7 +31,7 @@ use Test\Scenario;
  */
 final class IndexTest extends Scenario
 {
-    final protected const INDEX_LABEL_ROUTE = 'GET /labels';
+    final protected const INDEX_LABEL_ROUTE = 'GET /api/labels';
     protected $group                        = 'Action Label Index';
 
     /**

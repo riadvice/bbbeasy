@@ -33,7 +33,7 @@ use Test\Scenario;
  */
 final class EditTest extends Scenario
 {
-    final protected const EDIT_LABEL_ROUTE = 'PUT /labels/';
+    final protected const EDIT_LABEL_ROUTE = 'PUT /api/labels/';
     protected $group                       = 'Actions Label Edit';
 
     /**
@@ -131,7 +131,7 @@ final class EditTest extends Scenario
 
         // Asserting that the changes took place at the model layer.
         $label->load(['id = ?', $label->id]);
-        $test->expect($f3->snakeCase($data['data']['name']) === $label->name, 'Label with id "' . $label->id . '" "name" updated in the DB.');
+        $test->expect($data['data']['name'] === $label->name, 'Label with id "' . $label->id . '" "name" updated in the DB.');
         $test->expect($data['data']['description'] === $label->description, 'Label with id "' . $label->id . '" "description" updated in the DB.');
         $test->expect($data['data']['color'] === $label->color, 'Label with id "' . $label->id . '" "color" updated in the DB.');
 

@@ -35,8 +35,8 @@ use Test\Scenario;
  */
 final class EditTest extends Scenario
 {
-    final protected const EDIT_PRESET_SUB_CATEG_ROUTE = 'PUT /presets/subcategories/';
-    final protected const EDIT_PRESET_ROUTE           = 'PUT /presets/';
+    final protected const EDIT_PRESET_SUB_CATEG_ROUTE = 'PUT /api/presets/subcategories/';
+    final protected const EDIT_PRESET_ROUTE           = 'PUT /api/presets/';
     protected $group                                  = 'Action Preset Edit';
 
     /**

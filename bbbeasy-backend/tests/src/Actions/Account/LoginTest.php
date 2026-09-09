@@ -36,7 +36,7 @@ use Test\Scenario;
  */
 final class LoginTest extends Scenario
 {
-    final protected const LOGIN_ROUTE = 'POST /account/login';
+    final protected const LOGIN_ROUTE = 'POST /api/account/login';
     protected $group                  = 'Action User Login';
 
     /**
@@ -81,7 +81,7 @@ final class LoginTest extends Scenario
     {
         $test           = $this->newTest();
         $faker          = Faker::create();
-        $rawPassword    = $faker->password(8);
+        $rawPassword    = $this->strongPassword();
         $user           = new User();
         $user->email    = $faker->email;
         $user->username = $faker->userName;

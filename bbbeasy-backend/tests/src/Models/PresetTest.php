@@ -108,7 +108,7 @@ final class PresetTest extends Scenario
     {
         $test     = $this->newTest();
         $preset   = PresetFaker::create(UserFaker::create());
-        $myPreset = $preset->toArray(['id', 'name', 'settings']);
+        $myPreset = $preset->toArray();
         $room     = new Room();
 
         $data = [

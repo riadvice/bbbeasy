@@ -32,7 +32,7 @@ use Test\Scenario;
  */
 final class EditTest extends Scenario
 {
-    final protected const EDIT_RECORDING_ROUTE = 'PUT /recordings/';
+    final protected const EDIT_RECORDING_ROUTE = 'PUT /api/recordings/';
     protected $group                           = 'Actions Recording Edit';
 
     /**

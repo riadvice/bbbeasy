@@ -34,7 +34,7 @@ use Test\Scenario;
  */
 final class IndexTest extends Scenario
 {
-    final protected const LIST_PRESETS_ROUTE = 'GET /presets/';
+    final protected const LIST_PRESETS_ROUTE = 'GET /api/presets/';
     protected $group                         = 'Action Preset Index Presets';
 
     /**

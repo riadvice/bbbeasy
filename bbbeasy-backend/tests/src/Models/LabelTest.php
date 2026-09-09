@@ -68,7 +68,7 @@ final class LabelTest extends Scenario
         $label->save();
 
         $test->expect(0 !== $label->id, 'Label mocked and saved to the database');
-        $test->expect($label->color, 'Color defaulted to ' . $label->color);
+        $test->expect('#fbbc0b' === $label->color, 'Color defaulted to ' . $label->color);
 
         return $test->results();
     }

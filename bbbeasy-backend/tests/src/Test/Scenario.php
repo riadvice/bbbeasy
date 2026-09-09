@@ -24,6 +24,7 @@ namespace Test;
 
 use Base;
 use Core\Statera;
+use Faker\Factory;
 use SebastianBergmann\CodeCoverage\CodeCoverage;
 
 class Scenario
@@ -97,6 +98,15 @@ class Scenario
     /**
      * @return \Test
      */
+    /**
+     * A password that satisfies the strength rules the actions enforce. Faker on its
+     * own returns one that fails them often enough to make a run flaky.
+     */
+    protected function strongPassword(): string
+    {
+        return 'Aa1!' . Factory::create()->password(8);
+    }
+
     protected function newTest()
     {
         // We logout any existing user if there is anyone to force flushing session data
@@ -105,7 +115,7 @@ class Scenario
         \Base::instance()->clear('data');
         \Base::instance()->clear('cdn_render');
         \Base::instance()->clear('utest.headers');
-        // @fixme: to be activated Base::instance()->mock('GET /logout');
+        // @fixme: to be activated Base::instance()->mock('GET /api/logout');
         \Base::instance()->set('utest.number', $this->currentTestNumber() + 1);
         $this->resetErrorHandler();
 

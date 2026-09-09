@@ -34,7 +34,7 @@ use Test\Scenario;
  */
 final class AddTest extends Scenario
 {
-    final protected const ADD_USER_ROUTE = 'POST /users';
+    final protected const ADD_USER_ROUTE = 'POST /api/users';
     protected $group                     = 'Action User Add';
 
     /**
@@ -87,7 +87,7 @@ final class AddTest extends Scenario
 
         $faker = Faker::create();
         $user  = UserFaker::create(UserRole::LECTURER);
-        $data  = ['data' => ['username' => $user->username, 'email' => $faker->email, 'password' => $faker->password(8), 'role' => UserRole::LECTURER_ID]];
+        $data  = ['data' => ['username' => $user->username, 'email' => $faker->email, 'password' => $this->strongPassword(), 'role' => UserRole::LECTURER_ID]];
         $f3->mock(self::ADD_USER_ROUTE, null, null, $this->postJsonData($data));
         $test->expect($this->compareTemplateToResponse('user/exist_username_error.json'), 'Add user with an existing username "' . $user->username . '" shown an error');
 
@@ -107,7 +107,7 @@ final class AddTest extends Scenario
 
         $faker = Faker::create();
         $user  = UserFaker::create(UserRole::LECTURER);
-        $data  = ['data' => ['username' => $faker->userName, 'email' => $user->email, 'password' => $faker->password(8), 'role' => UserRole::LECTURER_ID]];
+        $data  = ['data' => ['username' => $faker->userName, 'email' => $user->email, 'password' => $this->strongPassword(), 'role' => UserRole::LECTURER_ID]];
         $f3->mock(self::ADD_USER_ROUTE, null, null, $this->postJsonData($data));
         $test->expect($this->compareTemplateToResponse('user/exist_email_error.json'), 'Add user with an existing email "' . $user->email . '" shown an error');
 
@@ -126,7 +126,7 @@ final class AddTest extends Scenario
         $test = $this->newTest();
 
         $faker = Faker::create();
-        $data  = ['data' => ['username' => $faker->userName, 'email' => $faker->email, 'password' => $faker->password(8), 'role' => UserRole::NON_EXISTING_ID]];
+        $data  = ['data' => ['username' => $faker->userName, 'email' => $faker->email, 'password' => $this->strongPassword(), 'role' => UserRole::NON_EXISTING_ID]];
         $f3->mock(self::ADD_USER_ROUTE, null, null, $this->postJsonData($data));
         $test->expect($this->compareTemplateToResponse('not_found_error.json'), 'Add user with non existing role "' . UserRole::NON_EXISTING_ID . '" shown an error');
 
@@ -145,7 +145,7 @@ final class AddTest extends Scenario
         $test = $this->newTest();
 
         $faker = Faker::create();
-        $data  = ['data' => ['username' => $faker->userName, 'email' => $faker->email, 'password' => $faker->password(8), 'role' => UserRole::LECTURER_ID]];
+        $data  = ['data' => ['username' => $faker->userName, 'email' => $faker->email, 'password' => $this->strongPassword(), 'role' => UserRole::LECTURER_ID]];
         $f3->mock(self::ADD_USER_ROUTE, null, null, $this->postJsonData($data));
         $test->expect($this->compareArrayToResponse(['result' => 'success']), 'Add user with a valid data');
 

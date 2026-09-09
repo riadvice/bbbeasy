@@ -43,8 +43,8 @@ use Test\Scenario;
  */
 final class InstallTest extends Scenario
 {
-    final protected const COLLECT_USERS_ROUTE = 'POST /collect-users';
-    final protected const INSTALL_ROUTE       = 'POST /install';
+    final protected const COLLECT_USERS_ROUTE = 'POST /api/collect-users';
+    final protected const INSTALL_ROUTE       = 'POST /api/install';
     protected $group                          = 'Action Core Install Process';
 
     /**
@@ -106,7 +106,7 @@ final class InstallTest extends Scenario
             'data' => [
                 'username' => $user->username,
                 'email'    => $user->email,
-                'password' => $faker->password(8),
+                'password' => $this->strongPassword(),
             ],
         ];
         $f3->mock(self::COLLECT_USERS_ROUTE, null, null, $this->postJsonData($data));
@@ -153,20 +153,20 @@ final class InstallTest extends Scenario
 
         $data = [
             'data' => [
-                'username'        => '',
-                'email'           => '',
-                'password'        => '',
-                'company_name'    => '',
-                'company_url'     => '',
-                'platform_name'   => '',
-                'term_url'        => '',
-                'policy_url'      => '',
-                'logo'            => '',
-                'branding_colors' => [
-                    'primary_color'   => '',
-                    'secondary_color' => '',
-                    'accent_color'    => '',
-                    'add_color'       => '',
+                'username'      => '',
+                'email'         => '',
+                'password'      => '',
+                'company_name'  => '',
+                'company_url'   => '',
+                'platform_name' => '',
+                'term_url'      => '',
+                'policy_url'    => '',
+                'logo'          => '',
+                'theme'         => [
+                    'brand_color'       => '',
+                    'default_font_size' => '',
+                    'border_radius'     => '',
+                    'wireframe_style'   => false,
                 ],
                 'presetsConfig' => [],
             ],
@@ -190,20 +190,20 @@ final class InstallTest extends Scenario
         $presetSetting = new PresetSetting();
         $data          = [
             'data' => [
-                'username'        => $faker->userName,
-                'email'           => $faker->email,
-                'password'        => $faker->password(8),
-                'company_name'    => $faker->name,
-                'company_url'     => $faker->url,
-                'platform_name'   => $faker->name,
-                'term_url'        => $faker->url,
-                'policy_url'      => $faker->url,
-                'logo'            => 'logo-1.doc',
-                'branding_colors' => [
-                    'primary_color'   => $faker->safeHexColor,
-                    'secondary_color' => $faker->safeHexColor,
-                    'accent_color'    => $faker->safeHexColor,
-                    'add_color'       => $faker->safeHexColor,
+                'username'      => $faker->userName,
+                'email'         => $faker->email,
+                'password'      => $this->strongPassword(),
+                'company_name'  => $faker->name,
+                'company_url'   => $faker->url,
+                'platform_name' => $faker->name,
+                'term_url'      => $faker->url,
+                'policy_url'    => $faker->url,
+                'logo'          => 'logo-1.doc',
+                'theme'         => [
+                    'brand_color'       => $faker->safeHexColor,
+                    'default_font_size' => 14,
+                    'border_radius'     => 6,
+                    'wireframe_style'   => false,
                 ],
                 'presetsConfig' => $presetSetting->getDefaultPresetSettings(true),
             ],
