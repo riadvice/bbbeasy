@@ -16,6 +16,7 @@
     }
   },
   "require": {
+    "php": "^8.4",
     "ext-json": "*",
     "ext-curl": "*",
     "ext-simplexml": "*",
@@ -63,7 +64,7 @@
       "sudo phpenmod -s cli xdebug\n\n"
     ]
   },
-  "license": "PRIVATE",
+  "license": "AGPL-3.0-or-later",
   "authors": [
     {
       "name": "RIADVICE",
