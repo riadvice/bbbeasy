@@ -347,18 +347,8 @@ const RoomDetails = () => {
         setShowStartButton(true);
     };
 
-    const labelUpdated = (labels_data, new_labels) => {
-        if (labels_data.length !== new_labels.length) {
-            return true;
-        } else {
-            for (const label of new_labels) {
-                if (!labels_data.includes(label)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    };
+    const labelUpdated = (labels_data, new_labels) =>
+        labels_data.length !== new_labels.length || new_labels.some((label) => !labels_data.includes(label));
 
     const cancelEditRoom = () => {
         const labels_data = [];

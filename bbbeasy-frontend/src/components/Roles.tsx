@@ -237,10 +237,13 @@ const Roles = () => {
         setActions(rolesActions);
     }, []);
     const transformText = (text: string): string => {
-        if (text !== '') {
-            text = text.replace('_', ' ');
-            return text[0].toUpperCase() + text.slice(1);
+        if (text === '') {
+            return text;
         }
+
+        const spaced = text.replace('_', ' ');
+
+        return spaced[0].toUpperCase() + spaced.slice(1);
     };
     const getPermissionsCard = (key?: React.Key) => {
         return (
