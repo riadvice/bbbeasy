@@ -452,14 +452,14 @@ const PresetsCol: React.FC<PresetColProps> = ({
                     ) : null
                 }
             >
-                {preset.categories.map((item, subIndex) => {
+                {preset.categories.map((item) => {
                     const filteredElements = Object.keys(EN_US).filter((elem) => EN_US[elem] === item.name);
                     const category = filteredElements.length !== 0 ? filteredElements[0] : item.name;
 
                     return (
                         item.enabled && (
                             <Tooltip
-                                key={`${subIndex}-${item.name}`}
+                                key={item.name}
                                 placement={
                                     LocaleService.direction === 'rtl'
                                         ? item.enabled === true

@@ -296,7 +296,7 @@ const AppHeader = () => {
                 maskClosable={false}
             >
                 {rooms.map((singleRoom, index) => (
-                    <>
+                    <React.Fragment key={singleRoom.id}>
                         <Row align="middle" justify="space-around" className="room-content">
                             <Col span={1}>
                                 <DynamicIcon type="room" />
@@ -315,7 +315,7 @@ const AppHeader = () => {
                             </Col>
                         </Row>
                         {index < rooms.length - 1 && <Divider />}
-                    </>
+                    </React.Fragment>
                 ))}
             </Modal>
         </Header>
