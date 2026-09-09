@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Helpers;
 
 use Sukarix\Behaviours\LogWriter;
-use Utils\Environment;
+use Sukarix\Configuration\Environment;
 use Validation\DataChecker;
 
 /**

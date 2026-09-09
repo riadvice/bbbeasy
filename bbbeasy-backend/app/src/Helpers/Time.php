@@ -22,87 +22,19 @@ declare(strict_types=1);
 
 namespace Helpers;
 
-use DateTime;
+use Sukarix\Utils\Time as BaseTime;
 
 /**
- * Time and Date Helper Class.
+ * Time Helper Class.
  */
-class Time
+class Time extends BaseTime
 {
     /**
-     * format a database-specific date/time string.
-     *
-     * @param \DateTime|int|string $unixTime (optional) the unix time (null = now)
-     * @param null|string          $dbms     (optional) the database software the timestamp is for
-     *
-     * @return bool|string date in format of database driver
-     *
-     * @throws \Exception
-     *
-     * @todo add a switch for the f3 database driver and set the timestamp
-     */
-    public static function db(\DateTime|int|string|null $unixTime = null, ?string $dbms = null): bool|string
-    {
-        // use current time if bad time value or unset
-        if (\is_string($unixTime)) {
-            $date     = new \DateTime($unixTime);
-            $unixTime = $date->getTimestamp();
-        } elseif ($unixTime instanceof \DateTime) {
-            $unixTime = $unixTime->getTimestamp();
-        }
-        $unixTime = (int) $unixTime;
-        if ($unixTime <= 0) {
-            $unixTime = time();
-        }
-
-        // format date/time according to database driver
-        $dbms = empty($dbms) ? \Base::instance()->get('db.driver') : $dbms;
-
-        return match ($dbms) {
-            'pgsql', 'mysql' => date('Y-m-d H:i:s', $unixTime),
-        };
-    }
-
-    /**
-     * Utility to convert timestamp into a http header date/time.
-     *
-     * @param int    $unixtime time php time value
-     * @param string $zone     timezone, default GMT
-     *
-     * @return string
-     */
-    public static function http($unixtime = null, $zone = 'GMT')
-    {
-        // use current time if bad time value or unset
-        $unixtime = (int) $unixtime;
-        if ($unixtime <= 0) {
-            $unixtime = time();
-        }
-
-        // if its not a 3 letter timezone set it to GMT
-        $zone = 3 !== mb_strlen($zone) ? 'GMT' : mb_strtoupper($zone);
-
-        return gmdate('D, d M Y H:i:s', $unixtime) . ' ' . $zone;
-    }
-
-    public static function formattedTime($dateTime = null): array
-    {
-        $formatTime = ' G:i';
-        $dateMonth  = lcfirst(date('F', strtotime($dateTime)));
-        $dateYear   = lcfirst(date(' j, Y ', strtotime($dateTime)));
-        $time       = date($formatTime, strtotime($dateTime));
-
-        return [$dateMonth, $dateYear, $time];
-    }
-
-    /**
-     * Check if a particular DateTime is prior to now.
-     *
-     * @param mixed $dateTime
+     * Check if a particular date and time is prior to now.
      *
      * @throws \Exception
      */
-    public static function isInPast($dateTime): bool
+    public static function isInPast(mixed $dateTime): bool
     {
         return new \DateTime($dateTime) < new \DateTime();
     }

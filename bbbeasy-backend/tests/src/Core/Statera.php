@@ -44,7 +44,7 @@ use Suite\RolesPermissionsActionsTest;
 use Suite\RoomsActionsTest;
 use Suite\SettingsActionsTest;
 use Suite\UsersActionsTest;
-use Utils\CliUtils;
+use Sukarix\Utils\CliUtils;
 
 class Statera
 {

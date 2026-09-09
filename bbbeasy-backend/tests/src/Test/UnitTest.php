@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Test;
 
-use Utils\CliUtils;
+use Sukarix\Utils\CliUtils;
 
 /**
  * @internal

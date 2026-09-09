@@ -23,37 +23,14 @@ declare(strict_types=1);
 namespace Mail;
 
 use Nette\Utils\Strings;
-use Sukarix\Behaviours\LogWriter;
-use Utils\DataUtils;
-use Utils\Environment;
+use Sukarix\Configuration\Environment;
+use Sukarix\Mail\MailSender as BaseMailSender;
 
 /**
  * MailSender Class.
  */
-class MailSender extends \Prefab
+class MailSender extends BaseMailSender
 {
-    use LogWriter;
-
-    /**
-     * f3 instance.
-     *
-     * @var \Base f3
-     */
-    protected $f3;
-
-    /**
-     * @var \Mailer
-     */
-    protected $mailer;
-
-    public function __construct()
-    {
-        $this->mailer = new \Mailer('UTF-8');
-        $this->f3     = \Base::instance();
-        $this->initLogger();
-        \Mailer::initTracking();
-    }
-
     /**
      * @param \Exception $exception
      */
@@ -65,54 +42,28 @@ class MailSender extends \Prefab
         $messageId    = $this->generateId();
         if (@filemtime($mailSentPath) + $snooze < time() && @file_put_contents($mailSentPath, 'sent')) {
             $this->f3->set('mailer.from_name', 'BBBEasy Debugger');
-            $subject = "PHP: An error occurred on server {$this->f3->get('HOST')} ERROR ID '{$hash}'";
-            $message = 'An error occurred on <b>' . $this->f3->get('HOST') . '</b><br />' . nl2br($exception->getTraceAsString());
-            $this->smtpSend(null, $this->f3->get('debug.email'), 'BigBlueButton Load Balancer DevOps', $subject, $message, $messageId);
+            $subject = 'PHP: An error occurred on server ' . Environment::getHostName() . " ERROR ID '{$hash}'";
+            $message = 'An error occurred on <b>' . Environment::getHostName() . '</b><br />' . nl2br($exception->getTraceAsString());
+            $this->smtpSend(null, $this->f3->get('debug.email'), 'BBBEasy DevOps', $subject, $message, $messageId);
         }
     }
 
     public function send($template, $vars, $to, $title, $subject): bool
     {
         $messageId         = $this->generateId();
-        $vars['date']      = strftime('%A %d %B %A à %T');
-        $vars['messageId'] = $shortId = Strings::before(mb_substr($messageId, 1, -1), '@');
+        $vars['date']      = date('l d F H:i:s');
+        $vars['messageId'] = Strings::before(mb_substr($messageId, 1, -1), '@');
         $vars['SCHEME']    = $this->f3->get('SCHEME');
-        $vars['HOST']      = $this->f3->get('HOST');
+        $vars['HOST']      = Environment::getHostName();
         $vars['PORT']      = $this->f3->get('PORT');
         $vars['BASE']      = $this->f3->get('BASE');
 
         $message = \Template::instance()->render('mail/' . $template . '.phtml', null, $vars);
 
-        /*
-        //replace the db template variables with provided $vars
-        if (array_key_exists('first_name', $vars)) {
-            $message = str_replace('[F-NAME]', $vars['first_name'], $message);
-        }
-        @todo: put email variable names in an Enum class to make their use easy */
-        /*
-        if (array_key_exists('reset_link', $vars)) {
-            $message = str_replace('[ACTIVE-LINK]', $vars['reset_link'], $message);
-        }
-
-        if (array_key_exists('course_name', $vars)) {
-            $message = str_replace('[COURSE-NAME]', $vars['course_name'], $message);
-        }
-
-        if (array_key_exists('start_date', $vars)) {
-            $message = str_replace('[START-DATE]', $vars['start_date'], $message);
-        }
-
-        if (array_key_exists('session_link', $vars)) {
-            $message = str_replace('[C-URL]', $vars['session_link'], $message);
-        }
-
-        $message = str_replace('[C-NAME]', \Cache::instance()->get(CacheKey::ORGANISATION), $message);
-        */
-
         return $this->smtpSend($this->f3->get('from_mail'), $to, $title, $subject, $message, $messageId);
     }
 
-    private function smtpSend($from, $to, $title, $subject, $message, $messageId): bool
+    protected function smtpSend($from, $to, $title, $subject, $message, $messageId): bool
     {
         if (\is_array($to)) {
             foreach ($to as $email) {
@@ -138,19 +89,6 @@ class MailSender extends \Prefab
 
         $this->logger->info('Sending email | Status: ' . ($sent ? 'true' : 'false') . " | Log:\n" . $this->mailer->log());
 
-        return $sent ?: !$sent;
-    }
-
-    /**
-     * Generate a unique message id.
-     */
-    private function generateId(): string
-    {
-        return \sprintf(
-            '<%s.%s@%s>',
-            base_convert(microtime(), 10, 36),
-            base_convert(DataUtils::generateRandomString(), 16, 36),
-            $this->f3->get('HOST')
-        );
+        return (bool) $sent;
     }
 }

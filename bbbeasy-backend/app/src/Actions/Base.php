@@ -27,11 +27,11 @@ use Core\Session;
 use Enum\ResponseCode;
 use Enum\UserRole;
 use Enum\UserStatus;
-use Helpers\I18n;
 use Models\User;
 use SimpleXMLElement;
 use Sukarix\Behaviours\LogWriter;
-use Utils\Environment;
+use Sukarix\Configuration\Environment;
+use Sukarix\Helpers\I18n;
 use Utils\SecurityUtils;
 
 /**
