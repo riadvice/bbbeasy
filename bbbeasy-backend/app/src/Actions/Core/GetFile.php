@@ -42,15 +42,16 @@ class GetFile extends BaseAction
         $inline = 'pdf' === mb_strtolower(pathinfo($file, PATHINFO_EXTENSION));
 
         // Resolve the uploads directory to an absolute path to avoid CWD issues
-        $uploadsDir = realpath($f3->get('BASE') . DIRECTORY_SEPARATOR . $f3->get('UPLOADS'));
+        $uploadsDir = realpath($f3->get('BASE') . \DIRECTORY_SEPARATOR . $f3->get('UPLOADS'));
         if (!$uploadsDir) {
             // Fallback: resolve relative to this file's location
             $uploadsDir = realpath(__DIR__ . '/../../../../uploads');
         }
-        $filePath = $uploadsDir . DIRECTORY_SEPARATOR . $file;
+        $filePath = $uploadsDir . \DIRECTORY_SEPARATOR . $file;
 
         if (!file_exists($filePath)) {
             $f3->error(404);
+
             return;
         }
 

@@ -73,7 +73,7 @@ class Edit extends BaseAction
                     if ($this->credentialsAreValid($username, $email, $new_password, $errorMessage, $id)) {
                         if ($updateAvatar) {
                             // Accept base64 data URLs directly (avatar stored inline)
-                            $isBase64 = 0 === strpos($avatar, 'data:image/');
+                            $isBase64 = 0 === mb_strpos($avatar, 'data:image/');
                             if (!$isBase64 && !DataUtils::validateImageFormat($avatar)) {
                                 $this->logger->error($errorMessage, ['errors' => 'invalid file format']);
 
