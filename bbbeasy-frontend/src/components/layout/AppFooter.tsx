@@ -20,17 +20,44 @@ import React from 'react';
 import { Button, Layout, Typography } from 'antd';
 import { Trans, withTranslation } from 'react-i18next';
 
+import { useSettings } from '../../lib/SettingsContext';
+
 const { Footer } = Layout;
 const { Text } = Typography;
 
+/**
+ * Links the label only when the setting holds a URL. An anchor with an empty href
+ * points at the current page and reloads the app when it is clicked.
+ */
+const ExternalLink = ({ url, children }: { url?: string; children: React.ReactNode }) =>
+    url ? (
+        <a href={url} target="_blank" rel="noreferrer">
+            {children}
+        </a>
+    ) : (
+        <>{children}</>
+    );
+
 const AppFooter = () => {
+    const { settings } = useSettings();
+
     return (
         <Footer className="site-footer">
             <Text type="secondary">
-                ©2022 <Button type="link">RIADVICE</Button> <Trans i18nKey="reserved-rights" />
+                &copy;2022{' '}
+                <Button type="link" href={settings?.company_website || undefined}>
+                    {settings?.company_name || 'RIADVICE'}
+                </Button>{' '}
+                <Trans i18nKey="reserved-rights" />
             </Text>
             <Text type="secondary">
-                <Trans i18nKey="term" /> & <Trans i18nKey="conditions" /> | <Trans i18nKey="privacy-policy" />
+                <ExternalLink url={settings?.terms_use}>
+                    <Trans i18nKey="term" /> &amp; <Trans i18nKey="conditions" />
+                </ExternalLink>{' '}
+                |{' '}
+                <ExternalLink url={settings?.privacy_policy}>
+                    <Trans i18nKey="privacy-policy" />
+                </ExternalLink>
             </Text>
         </Footer>
     );

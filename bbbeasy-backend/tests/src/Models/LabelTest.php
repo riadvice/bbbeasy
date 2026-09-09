@@ -46,7 +46,7 @@ final class LabelTest extends Scenario
         $faker              = Faker::create();
         $label              = new Label();
         $label->name        = $faker->name;
-        $label->color       = $faker->safeHexColor();
+        $label->color       = $faker->hexColor();
         $label->description = $faker->text();
         $label->save();
 
@@ -82,7 +82,7 @@ final class LabelTest extends Scenario
         $faker              = Faker::create();
         $label              = new Label();
         $label->name        = 'labelLabel';
-        $label->color       = $faker->safeHexColor();
+        $label->color       = $faker->hexColor();
         $name               = $label->name;
         $color              = $label->color;
         $label->description = $faker->text();

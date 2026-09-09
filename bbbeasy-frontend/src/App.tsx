@@ -38,6 +38,7 @@ import SettingsService from 'services/settings.service';
 
 import { UserContext } from './lib/UserContext';
 import { DataContext } from 'lib/RoomsContext';
+import { SettingsProvider } from 'lib/SettingsContext';
 
 import { RoomType } from 'types/RoomType';
 import { LabelType } from 'types/LabelType';
@@ -334,7 +335,9 @@ const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
                                 <Content className="site-content">
                                     <Router routes={routes} />
                                 </Content>
-                                <AppFooter />
+                                <SettingsProvider>
+                                    <AppFooter />
+                                </SettingsProvider>
                             </Layout>
                         </DataContext.Provider>
                     </UserContext.Provider>

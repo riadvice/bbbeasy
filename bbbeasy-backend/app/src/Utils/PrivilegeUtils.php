@@ -60,30 +60,42 @@ class PrivilegeUtils
     }
 
     /**
-     * Action classes of the application, taken from the composer class map.
+     * Action classes of the application, read from the directory they live in.
      *
-     * @todo put the list in the cache when the application starts the first time
+     * The composer class map was the obvious source, but an action added after the
+     * autoloader was dumped is missing from it, and its privilege then silently
+     * disappears from the role matrix.
      */
     private static function actionClasses(): array
     {
-        $autoloader = '';
+        $root = \dirname(__DIR__) . \DIRECTORY_SEPARATOR . 'Actions';
 
-        foreach (get_declared_classes() as $className) {
-            if (str_starts_with($className, 'ComposerAutoloaderInit')) {
-                $autoloader = $className;
-
-                break;
-            }
+        if (!is_dir($root)) {
+            return [];
         }
 
-        $classes = array_keys($autoloader::getLoader()->getClassMap());
+        $classes  = [];
+        $files    = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($root, \FilesystemIterator::SKIP_DOTS));
+        $rootSize = mb_strlen($root) + 1;
 
-        // Classes under Actions with at least two namespace levels. A class nested
-        // deeper, such as the room presentations, still carries the privilege of the
-        // first two levels, its own namespace being the action name.
-        return array_values(array_filter(
-            $classes,
-            static fn (string $class): bool => str_starts_with($class, 'Actions\\') && mb_substr_count($class, '\\') >= 2
-        ));
+        foreach ($files as $file) {
+            if (!$file->isFile() || 'php' !== $file->getExtension()) {
+                continue;
+            }
+
+            $relative = mb_substr($file->getPathname(), $rootSize, -4);
+
+            // Only actions living in a namespace of their own, the classes sitting
+            // directly under Actions are the shared base ones.
+            if (!str_contains($relative, \DIRECTORY_SEPARATOR)) {
+                continue;
+            }
+
+            $classes[] = 'Actions\\' . str_replace(\DIRECTORY_SEPARATOR, '\\', $relative);
+        }
+
+        sort($classes);
+
+        return $classes;
     }
 }

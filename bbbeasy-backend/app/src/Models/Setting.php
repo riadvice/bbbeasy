@@ -98,14 +98,16 @@ class Setting extends BaseModel
     public function checkSettingsData(DataChecker $dataChecker, array $form): DataChecker
     {
         $dataChecker->verify($form['company_name'], Validator::notEmpty()->setName('company_name'));
-        $dataChecker->verify($form['company_url'], Validator::url()->setName('company_url'));
         $dataChecker->verify($form['platform_name'], Validator::notEmpty()->setName('platform_name'));
 
-        if (null !== $form['term_url']) {
-            $dataChecker->verify($form['term_url'], Validator::url()->setName('term_url'));
-        }
-        if (null !== $form['policy_url']) {
-            $dataChecker->verify($form['policy_url'], Validator::url()->setName('policy_url'));
+        $dataChecker->verify($form['company_url'], Validator::url()->setName('company_url'));
+
+        // The policy links are optional, the footer shows the label unlinked when one
+        // is missing. Whatever is filled in still has to be a URL.
+        foreach (['term_url', 'policy_url'] as $field) {
+            if (!empty($form[$field])) {
+                $dataChecker->verify($form[$field], Validator::url()->setName($field));
+            }
         }
 
         $dataChecker->verify($form['theme'], Validator::notEmpty()->setName('color'));
