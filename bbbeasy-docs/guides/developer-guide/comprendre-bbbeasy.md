@@ -47,7 +47,7 @@ Le frontend contient:
 - `src/`: le code React/TypeScript
 - `public/`: les assets publics
 - `build/`: le résultat de compilation
-- `cypress/`: les tests end-to-end
+- `tests/e2e/`: les tests end-to-end (Playwright)
 
 ### `bbbeasy-docs/`
 
@@ -125,7 +125,7 @@ Rôle:
 ### Outils de développement
 
 - Docusaurus: documentation
-- Cypress: tests end-to-end
+- Playwright: tests end-to-end
 - ESLint: qualité du code frontend
 - Prettier: formatage frontend
 - PHP-CS-Fixer: formatage backend

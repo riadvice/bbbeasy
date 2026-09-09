@@ -65,8 +65,9 @@ final class ViewTest extends Scenario
     {
         $test = $this->newTest();
 
-        $loggedUser = new User();
-        $loggedUser->load(['id = ?', [$f3->get('SESSION.user.id')]]);
+        $loggedUser  = new User();
+        $currentUser = \Registry::get('session')->get('user');
+        $loggedUser->load(['id = ?', [$currentUser['id']]]);
         $preset = PresetFaker::create($loggedUser);
         $room   = RoomFaker::create($loggedUser, $preset, 'abcdef-123456');
         $f3->mock(self::VIEW_ROOM_ROUTE . $room->short_link, null, null);

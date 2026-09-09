@@ -30,6 +30,7 @@ import { CustomTagProps } from 'rc-select/lib/BaseSelect';
 
 import RoomsService from 'services/rooms.service';
 import AuthService from 'services/auth.service';
+import LabelsService from 'services/labels.service';
 
 import { FormRef } from 'rc-field-form/lib/interface';
 import { LabelType } from 'types/LabelType';
@@ -64,6 +65,7 @@ export const AddRoomForm = (props: Props) => {
     const [loading, setLoading] = React.useState<boolean>(false);
     const [errorsAdd, setErrorsAdd] = React.useState<string[]>([]);
     const [presets, setPresets] = React.useState<PresetType[]>([]);
+    const [labels, setLabels] = React.useState<{ label: string; value: string }[]>([]);
     const [readOnly, setReadOnly] = React.useState<boolean>(true);
     const [shortLink, setShortLink] = React.useState<string>('');
     const dataContext = React.useContext(DataContext);
@@ -77,6 +79,17 @@ export const AddRoomForm = (props: Props) => {
         PresetsService.list_presets(currentUser.id)
             .then((result) => {
                 setPresets(result.data);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+        LabelsService.list_labels()
+            .then((result) => {
+                const labels_data = [];
+                result.data.forEach((label) => {
+                    labels_data.push({ label: label.name, value: label.color });
+                });
+                setLabels(labels_data);
             })
             .catch((err) => {
                 console.log(err);
@@ -144,11 +157,7 @@ export const AddRoomForm = (props: Props) => {
         setShortLink(addForm.getFieldValue('shortlink'));
     };
 
-    const labels_data = [];
-    dataContext.dataLabels.forEach((label) => {
-        const newLabel = { label: label.name, value: label.color };
-        labels_data.push(newLabel);
-    });
+    const labels_data = labels;
 
     const tagRender = (props: CustomTagProps) => {
         const { label, value, closable, onClose } = props;

@@ -46,7 +46,9 @@ type formType = {
 let addForm: FormRef = null;
 
 export const AddLabelForm = (props: Props) => {
-    const [initialColor] = React.useState<string>('#fbbc0b');
+    const [initialColor] = React.useState<string>(
+        getComputedStyle(document.documentElement).getPropertyValue('--bbbeasy-brand-color').trim() || '#fbbc0b'
+    );
     const { defaultColor } = props;
     const initialAddValues: formType = {
         name: '',
@@ -99,7 +101,7 @@ export const AddLabelForm = (props: Props) => {
         <>
             <Modal
                 title={<Trans i18nKey="new_label" />}
-                className="add-modal"
+                className="add-modal label-add-modal"
                 centered
                 open={props.isModalShow}
                 onOk={handleAdd}

@@ -65,8 +65,9 @@ final class StartTest extends Scenario
     {
         $test = $this->newTest();
 
-        $loggedUser = new User();
-        $loggedUser->load(['id = ?', [$f3->get('SESSION.user.id')]]);
+        $loggedUser  = new User();
+        $currentUser = \Registry::get('session')->get('user');
+        $loggedUser->load(['id = ?', [$currentUser['id']]]);
         $preset = PresetFaker::create($loggedUser);
         $room   = RoomFaker::create($loggedUser, $preset);
         $f3->mock(self::START_ROOM_ROUTE . $room->id, null, null);

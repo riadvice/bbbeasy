@@ -34,6 +34,7 @@ import LocaleService from './services/locale.service';
 import RoomsService from 'services/rooms.service';
 import LabelsService from 'services/labels.service';
 import PresetsService from 'services/presets.service';
+import SettingsService from 'services/settings.service';
 
 import { UserContext } from './lib/UserContext';
 import { DataContext } from 'lib/RoomsContext';
@@ -53,13 +54,18 @@ interface IProps {
 }
 
 const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
-    const [currentUser, setCurrentUser] = React.useState<UserType | null>(null);
-    const [currentSession, setCurrentSession] = React.useState<SessionType | null>(null);
-    const [isLogged, setIsLogged] = React.useState<boolean>(false);
+    const [currentUser, setCurrentUser] = React.useState<UserType | null>(() => AuthService.getCurrentUser());
+    const [currentSession, setCurrentSession] = React.useState<SessionType | null>(() => AuthService.getCurrentSession());
+    const [isLogged, setIsLogged] = React.useState<boolean>(() => Boolean(AuthService.getCurrentUser() && AuthService.getCurrentSession()));
+    const isAuthenticated = Boolean(AuthService.getCurrentUser() && AuthService.getCurrentSession());
 
     const [dataRooms, setDataRooms] = React.useState<RoomType[]>([]);
     const [dataLabels, setDataLabels] = React.useState<LabelType[]>([]);
     const [dataPresets, setDataPresets] = React.useState<PresetType[]>([]);
+    const [brandColor, setBrandColor] = React.useState<string>('#fbbc0b');
+    const [defaultFontSize, setDefaultFontSize] = React.useState<number>(14);
+    const [borderRadius, setBorderRadius] = React.useState<number>(6);
+    const [wireframeStyle, setWireframeStyle] = React.useState<boolean>(false);
 
     const dataProvider = useMemo(
         () => ({ dataRooms, setDataRooms, dataLabels, setDataLabels, dataPresets, setDataPresets }),
@@ -70,22 +76,33 @@ const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
         () => ({ isLogged, setIsLogged, currentUser, setCurrentUser, currentSession, setCurrentSession }),
         [isLogged, currentUser, currentSession]
     );
+    const authViewKey = isLogged ? 'authenticated' : 'anonymous';
 
-    const customTheme = {
+    const customTheme = useMemo(() => ({
         token: {
-            colorPrimary: '#fbbc0b',
-            colorPrimaryHover: '#ffcf33',
-            outlineColor: '#fffce6',
+            colorPrimary: brandColor,
+            colorPrimaryHover: brandColor + 'cc',
+            colorPrimaryActive: brandColor + '99',
+            outlineColor: brandColor + '1a',
 
             colorBorder: '#dddfe1',
 
-            colorLink: '#fbbc0b',
-            colorLinkHover: '#ffcf33',
-            colorLinkActive: '#ffcf33',
+            colorLink: brandColor,
+            colorLinkHover: brandColor + 'cc',
+            colorLinkActive: brandColor + 'cc',
 
-            borderRadiusLG: 6,
+            borderRadiusLG: borderRadius,
+            fontSize: defaultFontSize,
         },
-    };
+        components: {
+            Button: {
+                colorPrimary: brandColor,
+                colorPrimaryHover: brandColor + 'cc',
+                colorPrimaryActive: brandColor + '99',
+                primaryShadow: brandColor + '33',
+            },
+        },
+    }), [brandColor, borderRadius, defaultFontSize]);
 
     const getRooms = useCallback((userId: number) => {
         RoomsService.list_rooms(userId)
@@ -118,6 +135,135 @@ const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
     }, []);
 
     useEffect(() => {
+        SettingsService.collect_settings()
+            .then((response) => {
+                const settings = response.data;
+                if (settings) {
+                    if (settings.brand_color) {
+                        setBrandColor(settings.brand_color);
+                        document.documentElement.style.setProperty('--bbbeasy-brand-color', settings.brand_color);
+                        document.documentElement.style.setProperty('--bbbeasy-brand-color-hover', settings.brand_color + 'cc');
+                        // Convert hex to rgba for shadow
+                        const hex = settings.brand_color.replace('#', '');
+                        const r = parseInt(hex.substring(0, 2), 16);
+                        const g = parseInt(hex.substring(2, 4), 16);
+                        const b = parseInt(hex.substring(4, 6), 16);
+                        document.documentElement.style.setProperty('--bbbeasy-brand-color-shadow', `rgba(${r}, ${g}, ${b}, 0.35)`);
+
+                        // Inject dynamic styles AFTER Ant Design CSS-in-JS (always wins)
+                        let styleEl = document.getElementById('brand-dynamic-styles');
+                        if (!styleEl) {
+                            styleEl = document.createElement('style');
+                            styleEl.id = 'brand-dynamic-styles';
+                            document.head.appendChild(styleEl);
+                        }
+                        styleEl.textContent = `
+                            /* Primary solid buttons only */
+                            .ant-btn-primary.ant-btn-color-primary.ant-btn-variant-solid {
+                                background-color: ${settings.brand_color} !important;
+                                border-color: ${settings.brand_color} !important;
+                                color: #ffffff !important;
+                                box-shadow: 0 2px 0 ${settings.brand_color}33 !important;
+                            }
+                            .ant-btn-primary.ant-btn-color-primary.ant-btn-variant-solid:hover,
+                            .ant-btn-primary.ant-btn-color-primary.ant-btn-variant-solid:focus {
+                                background-color: ${settings.brand_color}cc !important;
+                                border-color: ${settings.brand_color}cc !important;
+                            }
+                            .ant-btn-primary.ant-btn-color-primary.ant-btn-variant-solid:active {
+                                background-color: ${settings.brand_color}99 !important;
+                                border-color: ${settings.brand_color}99 !important;
+                            }
+                            /* Ghost primary buttons - transparent bg, white icons */
+                            .ant-btn-background-ghost.ant-btn-primary {
+                                background: transparent !important;
+                                border-color: ${settings.brand_color} !important;
+                                color: #ffffff !important;
+                            }
+                            .ant-btn-background-ghost.ant-btn-primary .anticon,
+                            .ant-btn-background-ghost.ant-btn-primary .icon-bbbeasy-mp4,
+                            .ant-btn-background-ghost.ant-btn-primary .icon-bbbeasy-playback-podcast,
+                            .ant-btn-background-ghost.ant-btn-primary .icon-bbbeasy-playback-presentation,
+                            .ant-btn-background-ghost.ant-btn-primary .icon-bbbeasy-activity-reports {
+                                color: #ffffff !important;
+                            }
+                            .ant-btn-background-ghost.ant-btn-primary:hover,
+                            .ant-btn-background-ghost.ant-btn-primary:focus {
+                                color: #ffffff !important;
+                                border-color: ${settings.brand_color}cc !important;
+                                background: ${settings.brand_color}1a !important;
+                            }
+                            .ant-btn-background-ghost.ant-btn-primary:hover .anticon,
+                            .ant-btn-background-ghost.ant-btn-primary:focus .anticon,
+                            .ant-btn-background-ghost.ant-btn-primary:hover .icon-bbbeasy-mp4,
+                            .ant-btn-background-ghost.ant-btn-primary:focus .icon-bbbeasy-mp4,
+                            .ant-btn-background-ghost.ant-btn-primary:hover .icon-bbbeasy-playback-podcast,
+                            .ant-btn-background-ghost.ant-btn-primary:focus .icon-bbbeasy-playback-podcast,
+                            .ant-btn-background-ghost.ant-btn-primary:hover .icon-bbbeasy-activity-reports,
+                            .ant-btn-background-ghost.ant-btn-primary:focus .icon-bbbeasy-activity-reports {
+                                color: #ffffff !important;
+                            }
+                            /* Sider New button */
+                            button.sider-new-btn,
+                            .ant-dropdown-trigger.sider-new-btn {
+                                background: ${settings.brand_color} !important;
+                                border-color: ${settings.brand_color} !important;
+                                color: #ffffff !important;
+                            }
+                            button.sider-new-btn:hover,
+                            button.sider-new-btn:focus,
+                            .ant-dropdown-trigger.sider-new-btn:hover,
+                            .ant-dropdown-trigger.sider-new-btn:focus {
+                                background: ${settings.brand_color}cc !important;
+                                border-color: ${settings.brand_color}cc !important;
+                                color: #ffffff !important;
+                            }
+                            /* Back to Home button */
+                            .color-blue {
+                                background: ${settings.brand_color} !important;
+                                border-color: ${settings.brand_color} !important;
+                                color: #ffffff !important;
+                            }
+                            .color-blue:hover,
+                            .color-blue:focus {
+                                background: ${settings.brand_color}cc !important;
+                                border-color: ${settings.brand_color}cc !important;
+                            }
+                            /* Sider trigger */
+                            .ant-layout-sider-trigger {
+                                background: ${settings.brand_color} !important;
+                            }
+                            /* Menu selected */
+                            .ant-menu-item-selected,
+                            .ant-menu-submenu-selected > .ant-menu-submenu-title {
+                                color: ${settings.brand_color} !important;
+                            }
+                            .ant-menu-item-selected::after {
+                                border-right-color: ${settings.brand_color} !important;
+                            }
+                        `;
+                    }
+                    if (settings.default_font_size) {
+                        setDefaultFontSize(settings.default_font_size);
+                        document.documentElement.style.setProperty('--bbbeasy-font-size', settings.default_font_size + 'px');
+                    }
+                    if (settings.border_radius) {
+                        setBorderRadius(settings.border_radius);
+                        document.documentElement.style.setProperty('--bbbeasy-border-radius', settings.border_radius + 'px');
+                    }
+                    if (settings.wireframe_style !== undefined) {
+                        setWireframeStyle(settings.wireframe_style);
+                        document.documentElement.style.setProperty('--bbbeasy-wireframe', settings.wireframe_style ? '1' : '0');
+                        document.documentElement.setAttribute('data-wireframe', settings.wireframe_style ? '1' : '0');
+                    }
+                }
+            })
+            .catch((error) => {
+                console.error('Error fetching settings:', error);
+            });
+    }, []);
+
+    useEffect(() => {
         const user: UserType | null = AuthService.getCurrentUser();
         const session: SessionType | null = AuthService.getCurrentSession();
         if (user && session) {
@@ -125,7 +271,7 @@ const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
             setCurrentSession(session);
             setIsLogged(true);
 
-            const allowedGroups = Object.keys(user.permissions);
+            const allowedGroups = Object.keys(user.permissions ?? {});
             if (allowedGroups.length > 0) {
                 if (AuthService.isAllowedGroup(allowedGroups, 'logs')) {
                     Logger.info(logs);
@@ -147,14 +293,15 @@ const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
         <StyleProvider hashPriority="high" transformers={[legacyLogicalPropertiesTransformer]}>
             <Layout className={LocaleService.direction === 'rtl' ? 'page-layout-content-rtl' : 'page-layout-content'}>
                 <ConfigProvider
+                    key={brandColor}
                     theme={customTheme}
                     locale={LocaleService.antLocale}
                     direction={LocaleService.direction}
                     componentSize="large"
                 >
-                    <UserContext.Provider value={userProvider}>
+                    <UserContext.Provider key={authViewKey} value={userProvider}>
                         <DataContext.Provider value={dataProvider}>
-                            {isLogged && isSider && <AppSider presets={dataPresets} />}
+                            {isAuthenticated && isSider && <AppSider presets={dataPresets} />}
                             <Layout className="page-layout-body">
                                 <AppHeader />
                                 <Content className="site-content">

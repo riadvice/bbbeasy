@@ -91,7 +91,7 @@ export const AddPresetForm = (props: Props) => {
         <>
             <Modal
                 title={<Trans i18nKey="new_preset" />}
-                className="add-modal"
+                className="add-modal preset-add-modal"
                 centered
                 open={props.isModalShow}
                 onOk={handleAdd}

@@ -37,7 +37,23 @@ class GetFile extends BaseAction
     {
         $file = $f3->get('PARAMS.filename');
 
-        // @fixme: relative paths must be avoided for security reasons, instead use or create F3 hive properties/config
-        return \Web::instance()->send('../uploads/' . $file);
+        // PDFs must be rendered inline so the room presentation preview (iframe)
+        // can display them; everything else keeps the download disposition.
+        $inline = 'pdf' === mb_strtolower(pathinfo($file, PATHINFO_EXTENSION));
+
+        // Resolve the uploads directory to an absolute path to avoid CWD issues
+        $uploadsDir = realpath($f3->get('BASE') . DIRECTORY_SEPARATOR . $f3->get('UPLOADS'));
+        if (!$uploadsDir) {
+            // Fallback: resolve relative to this file's location
+            $uploadsDir = realpath(__DIR__ . '/../../../../uploads');
+        }
+        $filePath = $uploadsDir . DIRECTORY_SEPARATOR . $file;
+
+        if (!file_exists($filePath)) {
+            $f3->error(404);
+            return;
+        }
+
+        return \Web::instance()->send($filePath, null, 0, !$inline);
     }
 }

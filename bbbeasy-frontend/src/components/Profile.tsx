@@ -34,6 +34,7 @@ import { AddUserForm } from './AddUserForm';
 
 import AuthService from '../services/auth.service';
 import LocaleService from '../services/locale.service';
+import { UserContext } from '../lib/UserContext';
 
 import axios from 'axios';
 import { apiRoutes } from '../routing/backend-config';
@@ -53,8 +54,8 @@ type formType = {
 let accountForm: FormRef = null;
 
 const Profile = () => {
-    const currentUser: UserType = AuthService.getCurrentUser();
-    console.log(currentUser.avatar);
+    const { setCurrentUser } = React.useContext(UserContext);
+    const [currentUser, setCurrentLocalUser] = React.useState<UserType>(() => AuthService.getCurrentUser());
     const initialAddValues: formType = {
         username: currentUser.username,
         email: currentUser.email,
@@ -63,32 +64,64 @@ const Profile = () => {
     const [images, setImages] = React.useState([]);
     const [errors, setErrors] = React.useState<string>('');
 
-    const handleUpdate = (formValues: formType) => {
+    const handleUpdate = async (formValues: formType) => {
         setErrors('');
 
-        // save avatar
+        // save avatar as base64
         if (images.length != 0 && images[0].file != null) {
-            const formData: FormData = new FormData();
-            formData.append('logo', images[0].file, images[0].file.name);
-            formData.append('logo_name', images[0].file.name);
-
-            axios.post(apiRoutes.SAVE_FILE_URL, formData).catch((error) => {
+            try {
+                // Resize image and convert to base64
+                const base64 = await new Promise<string>((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                        const img = new window.Image();
+                        img.onload = () => {
+                            const canvas = document.createElement('canvas');
+                            const MAX_SIZE = 200;
+                            let width = img.width;
+                            let height = img.height;
+                            if (width > height) {
+                                if (width > MAX_SIZE) { height = (height * MAX_SIZE) / width; width = MAX_SIZE; }
+                            } else {
+                                if (height > MAX_SIZE) { width = (width * MAX_SIZE) / height; height = MAX_SIZE; }
+                            }
+                            canvas.width = width;
+                            canvas.height = height;
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(img, 0, 0, width, height);
+                            resolve(canvas.toDataURL('image/png'));
+                        };
+                        img.onerror = reject;
+                        img.src = reader.result as string;
+                    };
+                    reader.onerror = reject;
+                    reader.readAsDataURL(images[0].file);
+                });
+                formValues.avatar = base64;
+            } catch (error) {
                 console.log(error);
-            });
-
-            formValues.avatar = images[0].file.name;
+                Notifications.openNotificationWithIcon('error', t('file_upload_error'));
+                return;
+            }
         }
 
         //edit account
+        console.log('[Profile] Sending avatar (base64 length):', formValues.avatar?.length);
         AuthService.edit_account(formValues)
             .then((response) => {
                 const user = response.data.user;
-                console.log(user);
+                console.log('[Profile] Avatar saved, length:', user?.avatar?.length);
                 if (user) {
                     //remove passwords from form
                     accountForm.resetFields(['current_password', 'new_password', 'confirm_new_password']);
                     //update LS
+
                     AuthService.updateCurrentUser(user.username, user.email, user.avatar);
+                    const updatedUser = { ...currentUser, username: user.username, email: user.email, avatar: user.avatar } as UserType;
+
+                    setCurrentUser(updatedUser);
+                    setCurrentLocalUser(updatedUser);
+                    setImages([]);
                     Notifications.openNotificationWithIcon('success', t('edit_account_success'));
                 }
             })
@@ -105,7 +138,7 @@ const Profile = () => {
 
     return (
         <>
-            <PageHeader title={<Trans i18nKey="update_profile" />} />
+            <PageHeader className="profile-page-header" title={<Trans i18nKey="update_profile" />} />
             <Form
                 layout="vertical"
                 className="site-page-form profile-form"
@@ -179,14 +212,7 @@ const Profile = () => {
                                                     <div className="ant-image">
                                                         <img
                                                             className="ant-image-img"
-                                                            //   src={  src={logo ? import.meta.env.VITE_API_URL +"/"+ logo : '/images/logo_01.png'}}
-                                                            src={
-                                                                currentUser.avatar
-                                                                    ? import.meta.env.VITE_API_URL +
-                                                                      '/' +
-                                                                      currentUser.avatar
-                                                                    : '/images/logo_01.png'
-                                                            }
+                                                            src={imageList[0]?.dataURL || currentUser.avatar}
                                                             width={130}
                                                             height={130}
                                                         />
@@ -196,9 +222,19 @@ const Profile = () => {
                                                             </div>
                                                         </div>
                                                     </div>
-                                                ) : null
+                                                ) : (
+                                                    currentUser.avatar ? (
+                                                        <img
+                                                            className="ant-image-img"
+                                                            src={currentUser.avatar}
+                                                            width={130}
+                                                            height={130}
+                                                            style={{ borderRadius: '50%' }}
+                                                        />
+                                                    ) : null
+                                                )
                                             }
-                                            icon={imageList[0] == null ? <UserOutlined /> : null}
+                                            icon={imageList[0] == null && !currentUser.avatar ? <UserOutlined /> : null}
                                             size={{ xs: 32, sm: 40, md: 64, lg: 80, xl: 125, xxl: 135 }}
                                             className="bbbeasy-btn"
                                         />

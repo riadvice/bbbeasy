@@ -65,21 +65,74 @@ The web-application is split in two parts:
 
 ## Testing
 
-Backend test:
+BBBEasy follows a **pyramid testing strategy** — unit tests form the foundation, with E2E tests covering critical user journeys.
 
-- From the browser: http://bbbeasy.test/api?statera or http://bbbeasy.test/api?statera=withCoverage
+### Backend — Unit Tests
 
-Frontend test:
+The backend uses [Atoum](https://atoum.org/) as its test framework. Tests cover all API endpoints, models, authentication, and permissions.
 
-- To start testing with Cypress, follow these steps :
+| Command | Description |
+|---|---|
+| `php vendor/bin/atoum -d tests/src` | Run all backend tests |
+| `php vendor/bin/atoum -d tests/src/Actions/Account` | Run account-related tests |
+| `php vendor/bin/atoum -d tests/src/Actions/Rooms` | Run room-related tests |
+| `php vendor/bin/atoum -d tests/src/Models` | Run model tests |
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1- Enable the **installer** app as described in `Development` heading.
+Alternatively, from the browser:
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2- Run `yarn cypress`.
+- `http://bbbeasy.test/api?statera` — View test results
+- `http://bbbeasy.test/api?statera=withCoverage` — View results with coverage report
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3- When the Command Prompt displays **Wait 30 seconds until enabling web app (manually)**, terminate the running installer app.
+### Frontend — E2E Tests
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4- Run `yarn start-dev` within 30 seconds.
+End-to-end tests use [Playwright](https://playwright.dev/) and are organized into two independent suites:
+
+| Suite | File | Command |
+|---|---|---|
+| **Installer** | `tests/e2e/installer.spec.ts` | `yarn test:e2e:installer` |
+| **Web App** | `tests/e2e/webapp.spec.ts` | `yarn test:e2e:webapp` |
+| **All** | — | `yarn test:e2e` |
+
+#### Prerequisites
+
+1. Enable the **installer** app as described in the [Development](#development) section.
+2. Install the Chromium browser: `npx playwright install chromium`
+3. Ensure the backend server is running and accessible.
+
+#### Running Tests
+
+```bash
+# Run all E2E tests (installer + webapp)
+yarn test:e2e
+
+# Run only installer tests
+yarn test:e2e:installer
+
+# Run only webapp tests
+yarn test:e2e:webapp
+
+# Open interactive Playwright UI for debugging
+yarn test:e2e:ui
+
+# Run a specific test by name
+npx playwright test -g "Test login"
+```
+
+#### Test Coverage
+
+| Module | Installer | Web App |
+|---|---|---|
+| Installation wizard (3 steps) | ✅ | — |
+| Login / Register | — | ✅ |
+| Password reset / change | — | ✅ |
+| Roles (CRUD + permissions) | — | ✅ |
+| Users (CRUD + status) | — | ✅ |
+| Rooms (create) | — | ✅ |
+| Presets (create) | — | ✅ |
+| Labels (add) | — | ✅ |
+| Recordings (view) | — | ✅ |
+| Branding (view) | — | ✅ |
+| Home / Landing / 404 | — | ✅ |
 
 ## Technologies
 
@@ -95,7 +148,7 @@ Frontend test:
 
 [TypeSCript](https://www.typescriptlang.org/)
 
-[Cypress](https://www.cypress.io/)
+[Playwright](https://playwright.dev/)
 
 [NGINX](https://www.nginx.com/)
 

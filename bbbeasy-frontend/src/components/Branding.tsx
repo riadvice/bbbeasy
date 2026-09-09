@@ -112,7 +112,7 @@ const Branding = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const onFinish = () => {
+    const onFinish = async () => {
         const settingsData: formType = settingsForm.getFieldsValue(true);
 
         //update branding colors
@@ -132,21 +132,18 @@ const Branding = () => {
             formData.append('logo_name', file.name);
             updateLogo = true;
 
-            axios
-                .post(apiRoutes.SAVE_FILE_URL, formData)
-                .then((response) => {
-                    console.log(response);
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
+            try {
+                await axios.post(apiRoutes.SAVE_FILE_URL, formData);
+            } catch (error) {
+                Notifications.openNotificationWithIcon('error', t('file_upload_error'));
+                return;
+            }
         } else if (file == undefined && settingsData.logo != null) {
             deleteLogo = true;
         }
 
         //update logo
         if (updateLogo) {
-            console.log(updateLogo);
             settingsData.logo = file.name;
         } else if (deleteLogo) {
             settingsData.logo = null;
@@ -155,8 +152,6 @@ const Branding = () => {
         //edit settings
         SettingsService.edit_settings(settingsData)
             .then((response) => {
-                console.log(response);
-
                 const newData: SettingsType = response.data.settings;
 
                 if (!CompareRecords(data, newData)) {
@@ -167,12 +162,12 @@ const Branding = () => {
                 }
             })
             .catch((error) => {
-                console.log(error);
+                Notifications.openNotificationWithIcon('error', t('edit_settings_error'));
             });
     };
 
     return (
-        <Row justify="center" className="branding-row">
+        <Row justify="center" className="branding-row branding-page">
             {isLoading ? (
                 <LoadingSpinner />
             ) : (

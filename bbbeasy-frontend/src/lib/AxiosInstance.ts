@@ -17,31 +17,41 @@
  */
 
 import axios, { AxiosRequestHeaders } from 'axios';
+import AuthService from '../services/auth.service';
 
 export const axiosInstance = axios.create();
 
 axiosInstance.interceptors.request.use((config) => {
     try {
-        const sessionStr = localStorage.getItem('session');
-        if (sessionStr) {
-            const session = JSON.parse(sessionStr);
-            if (session?.expiresAt && Date.parse(session.expiresAt) < Date.now()) {
-                localStorage.removeItem('user');
-                localStorage.removeItem('session');
-                return config;
-            }
-
-            if (session?.accessToken && session?.tokenType) {
-                config.headers = (config.headers || {}) as AxiosRequestHeaders;
-                Object.assign(config.headers, {
-                    Authorization: `${session.tokenType} ${session.accessToken}`,
-                });
-            }
+        const session = AuthService.getCurrentSession();
+        if (session?.accessToken) {
+            config.headers = (config.headers || {}) as AxiosRequestHeaders;
+            Object.assign(config.headers, {
+                Authorization: `${session.tokenType ?? 'Bearer'} ${session.accessToken}`,
+            });
         }
     } catch (error) {
-        console.warn('Failed to process session from localStorage:', error);
-        localStorage.removeItem('session');
+        console.warn('Failed to process auth state from localStorage:', error);
+        AuthService.clearAuth();
     }
 
     return config;
 });
+
+// Handle 401 responses globally: clear auth state and redirect to login
+let isRedirectingToLogin = false;
+axiosInstance.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error?.response?.status === 401 && !isRedirectingToLogin) {
+            const currentPath = window.location.pathname;
+            // Don't redirect if already on login page
+            if (currentPath !== '/login' && currentPath !== '/') {
+                isRedirectingToLogin = true;
+                AuthService.clearAuth();
+                window.location.href = '/login';
+            }
+        }
+        return Promise.reject(error);
+    },
+);

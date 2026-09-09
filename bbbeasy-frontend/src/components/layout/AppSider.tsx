@@ -78,7 +78,7 @@ const AppSider = (props: Props) => {
 
     useEffect(() => {
         const user: UserType = AuthService.getCurrentUser();
-        const menuSider = MenuService.getMenuSider(user.permissions);
+        const menuSider = MenuService.getMenuSider(user?.permissions ?? {});
 
         setMenuItems(menuSider.items);
         setNewMenuItems(menuSider.news);
@@ -168,7 +168,7 @@ const AppSider = (props: Props) => {
                                         <AddLabelForm
                                             isModalShow={isModalVisibleLabel}
                                             close={() => setIsModalVisibleLabel(false)}
-                                            defaultColor="#fbbc0b"
+                                            defaultColor={getComputedStyle(document.documentElement).getPropertyValue('--bbbeasy-brand-color').trim() || '#fbbc0b'}
                                         />
                                     )}
                                     {newMenuItems.includes('presets') && (

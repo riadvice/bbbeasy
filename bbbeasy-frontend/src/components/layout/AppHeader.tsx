@@ -35,6 +35,7 @@ import {
     Divider,
     Form,
     Badge,
+    Avatar,
 } from 'antd';
 import { SearchOutlined, GlobalOutlined, UserOutlined, LogoutOutlined, WarningOutlined } from '@ant-design/icons';
 
@@ -76,20 +77,32 @@ const AppHeader = () => {
     const location = useLocation();
     const [searchForm] = Form.useForm();
     const isRoomsSearch = location.pathname.includes('rooms');
+    const isRecordingsSearch = location.pathname.includes('recordings');
+    const isLabelsSearch = location.pathname.includes('labels');
+    const isPresetsSearch = location.pathname.includes('presets');
+    const isRoomDetailsSearch = location.pathname.startsWith('/r/');
+    const isBrandingSearch = location.pathname.includes('branding');
+    const isPresetSettingsSearch = location.pathname.includes('bigbluebutton');
+    const isUsersSearch = location.pathname.includes('users');
+    const isRolesSearch = location.pathname.includes('roles');
+    const isAdministrationSearch = location.pathname.includes('administration');
     const [logo, setLogo] = React.useState<string>('');
     const isLoginPage = location.pathname.includes('login');
-    if (isLoginPage) {
-        setIsLogged(false);
-    }
-    settingsService
-        .collect_settings()
-        .then((response) => {
-            const settings: SettingsType = response.data;
-            setLogo(settings.logo);
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+    const storedUser = AuthService.getCurrentUser();
+    const storedSession = AuthService.getCurrentSession();
+    const isAuthenticated = Boolean(storedUser && storedSession);
+
+    useEffect(() => {
+        settingsService
+            .collect_settings()
+            .then((response) => {
+                const settings: SettingsType = response.data;
+                setLogo(settings.logo);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }, []);
     const logout = () => {
         AuthService.logout()
             .catch((error) => {
@@ -187,6 +200,7 @@ const AppHeader = () => {
         </Dropdown>
     );
 
+    const activeUser = currentUser ?? storedUser;
     const menuProfile = {
         items: [
             {
@@ -194,9 +208,9 @@ const AppHeader = () => {
                 className: 'username-item',
                 label: (
                     <>
-                        <Trans i18nKey="signed_as" /> {currentUser?.username}
+                        <Trans i18nKey="signed_as" /> {activeUser?.username}
                         <br />
-                        <Text>{currentUser?.email}</Text>
+                        <Text>{activeUser?.email}</Text>
                     </>
                 ),
             },
@@ -220,7 +234,7 @@ const AppHeader = () => {
     return (
         <Header className="site-header">
             <>
-                {!isLogged ? (
+                {!isAuthenticated || isLoginPage ? (
                     <Paragraph className="site-header-inner">
                         <Link to={'/'}>
                             <img
@@ -250,7 +264,17 @@ const AppHeader = () => {
                                 <Form.Item name="search" className="mb-0">
                                     <Input
                                         onPressEnter={isRoomsSearch ? handleFilter : null}
-                                        className="search-input global-search"
+                                className={`search-input global-search ${isRoomsSearch ? 'rooms-search-input' : ''} ${
+                                    isRecordingsSearch ? 'recordings-search-input' : ''
+                                } ${isLabelsSearch ? 'labels-search-input' : ''} ${
+                                    isPresetsSearch ? 'presets-search-input' : ''
+                                } ${isRoomDetailsSearch ? 'room-details-search-input' : ''} ${
+                                    isBrandingSearch ? 'branding-search-input' : ''
+                                } ${isPresetSettingsSearch ? 'preset-settings-search-input' : ''} ${
+                                    isUsersSearch ? 'users-search-input' : ''
+                                } ${isRolesSearch ? 'roles-search-input' : ''} ${
+                                    isAdministrationSearch ? 'administration-search-input' : ''
+                                }`}
                                         size="middle"
                                         placeholder={isRoomsSearch ? t('search_all_rooms') : t('search')}
                                         allowClear
@@ -270,7 +294,11 @@ const AppHeader = () => {
                                     arrow
                                     trigger={['click']}
                                 >
-                                    <Button type="primary" icon={<UserOutlined />} className="profil-btn" />
+                                    <Avatar
+                                        className="profil-btn profil-avatar"
+                                        src={activeUser?.avatar || undefined}
+                                        icon={<UserOutlined />}
+                                    />
                                 </Dropdown>
                                 {dropdownLang}
                             </Space>

@@ -361,6 +361,7 @@ const RoomRecordings = (props: Props) => {
                                                                 className="bbbeasy-ppt"
                                                             />
                                                         }
+                                                        onClick={() => window.open(recording.url, '_blank')}
                                                     >
                                                         <span>
                                                             <Trans i18nKey="replay" />

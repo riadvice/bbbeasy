@@ -8,8 +8,7 @@
       "DOM.Iterable"
     ],
     "types": [
-      "vite/client",
-      "cypress"
+      "vite/client"
     ],
     "allowJs": true,
     "skipLibCheck": true,
@@ -32,6 +31,7 @@
   ],
   "exclude": [
     "node_modules",
-    "dist"
+    "dist",
+    "tests"
   ]
 }

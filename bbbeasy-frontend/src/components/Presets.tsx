@@ -87,7 +87,7 @@ interface PresetColProps {
     key: number;
     preset: MyPresetType;
     editName: boolean;
-    editClickHandler: (newPreset: MyPresetType, oldPreset: MyPresetType) => void;
+    editClickHandler: (newPreset: MyPresetType, oldPreset: MyPresetType, checkName?: boolean) => void;
     copyClickHandler: () => void;
     deleteClickHandler: () => void;
 }
@@ -111,9 +111,18 @@ const PresetsCol: React.FC<PresetColProps> = ({
     const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [errorsEdit, setErrorsEdit] = React.useState({});
+    const [originalPreset, setOriginalPreset] = React.useState<MyPresetType | null>(null);
     const isDefault = preset['name'] == 'default';
     const deleteEnabled = deleteClickHandler != null && !isDefault;
     const { token } = theme.useToken();
+
+    const clonePreset = (presetToClone: MyPresetType): MyPresetType => ({
+        ...presetToClone,
+        categories: presetToClone.categories.map((category) => ({
+            ...category,
+            subcategories: category.subcategories.map((subCategory) => ({ ...subCategory })),
+        })),
+    });
 
     const props = {
         beforeUpload: (file) => {
@@ -153,7 +162,10 @@ const PresetsCol: React.FC<PresetColProps> = ({
     const showModal = (title: string, _titleTrans: string, content: SubCategoryType[]) => {
         setIsModalVisible(true);
         setModalTitle(title);
-        setModalContent(content);
+        setOriginalPreset(clonePreset(preset));
+        setModalContent(content.map((item) => ({ ...item })));
+        setFile(null);
+        setFileList(null);
 
         const indexLogo = content.findIndex((item) => item.type === 'file');
         if (indexLogo > -1 && content[indexLogo].value != '') {
@@ -226,9 +238,45 @@ const PresetsCol: React.FC<PresetColProps> = ({
     };
 
     //edit category
+    const subCategoryValuesChanged = (
+        original: MyPresetType | null,
+        categoryTitle: string,
+        edited: SubCategoryType[]
+    ): boolean => {
+        const originalCategory = original?.categories?.find((category) => category.name === categoryTitle);
+        if (!originalCategory) {
+            return true;
+        }
+        for (const subCategory of edited) {
+            const originalSubCategory = originalCategory.subcategories.find((item) => item.name === subCategory.name);
+            if (!originalSubCategory || originalSubCategory.value !== subCategory.value) {
+                return true;
+            }
+        }
+        return false;
+    };
+
     const saveEditPresetCategory = (title: string, preset: MyPresetType, subCategories: SubCategoryType[]) => {
         setIsModalVisible(false);
         const indexLogo = subCategories.findIndex((item) => item.type === 'file');
+
+        if (indexLogo > -1) {
+            // updated logo
+            if (file != undefined && file.originFileObj != null) {
+                subCategories[indexLogo].value = file.name;
+            }
+            //deleted logo
+            else if (file == undefined && subCategories[indexLogo].value != null) {
+                subCategories[indexLogo].value = '';
+            }
+        }
+
+        //nothing changed -> show info toast without calling the backend
+        if (!subCategoryValuesChanged(originalPreset, title, subCategories)) {
+            Notifications.openNotificationWithIcon('info', t('no_changes'));
+            return;
+        }
+
         //edit file
         if (indexLogo > -1 && file != undefined && file.originFileObj != null) {
             const formData: FormData = new FormData();
@@ -245,19 +293,8 @@ const PresetsCol: React.FC<PresetColProps> = ({
                 });
         }
 
-        if (indexLogo > -1) {
-            // updated logo
-            if (file != undefined && file.originFileObj != null) {
-                subCategories[indexLogo].value = file.name;
-            }
-            //deleted logo
-            else if (file == undefined && subCategories[indexLogo].value != null) {
-                subCategories[indexLogo].value = '';
-            }
-        }
-
         PresetsService.edit_subcategory_preset(title, subCategories, preset.id).then((response) => {
-            editClickHandler(response.data.preset, preset);
+            editClickHandler(response.data.preset, preset, false);
         });
     };
 
@@ -433,7 +470,7 @@ const PresetsCol: React.FC<PresetColProps> = ({
                 {editClickHandler != null && (
                     <Modal
                         title={t(modalTitle)}
-                        className="presets-modal"
+                        className="presets-modal presets-edit-modal"
                         centered
                         open={isModalVisible}
                         onOk={() => setIsModalVisible(false)}
@@ -513,7 +550,7 @@ const PresetsCol: React.FC<PresetColProps> = ({
 
                                                     {item.type === 'color' && (
                                                         <ColorPicker
-                                                            value={item.value ? item.value : '#fbbc0b'}
+                                                            value={item.value ? item.value : getComputedStyle(document.documentElement).getPropertyValue('--bbbeasy-brand-color').trim() || '#fbbc0b'}
                                                             onChange={(color1: Color) => {
                                                                 item.value =
                                                                     typeof color1 === 'string'
@@ -529,7 +566,7 @@ const PresetsCol: React.FC<PresetColProps> = ({
 
                                                                         backgroundColor: item.value
                                                                             ? item.value
-                                                                            : '#fbbc0b',
+                                                                            : getComputedStyle(document.documentElement).getPropertyValue('--bbbeasy-brand-color').trim() || '#fbbc0b',
                                                                     }}
                                                                 />
                                                             </Space>
@@ -644,8 +681,8 @@ const Presets = () => {
     }, []);
 
     //edit
-    const editPreset = (newPreset: MyPresetType, oldPreset: MyPresetType) => {
-        if (newPreset.name == oldPreset.name) {
+    const editPreset = (newPreset: MyPresetType, oldPreset: MyPresetType, checkName: boolean = true) => {
+        if (checkName && newPreset.name == oldPreset.name) {
             Notifications.openNotificationWithIcon('info', t('no_changes'));
             return;
         }
@@ -699,10 +736,11 @@ const Presets = () => {
     return (
         <>
             <PageHeader
+                className="site-page-header presets-page-header"
                 title={<Trans i18nKey="presets" />}
                 subTitle={
                     <Input
-                        className="search-input"
+                        className="search-input presets-search-input"
                         size="middle"
                         placeholder={t('search_preset')}
                         allowClear

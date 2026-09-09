@@ -286,6 +286,7 @@ const Rooms = () => {
             ) : (
                 <>
                     <PageHeader
+                        className="rooms-page-header"
                         title={<Trans i18nKey="rooms" />}
                         extra={
                             AuthService.isAllowedAction(actions, 'add') && [

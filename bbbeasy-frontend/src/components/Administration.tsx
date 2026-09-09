@@ -102,9 +102,9 @@ export const Administration = () => {
         <LoadingSpinner className="loading" />
     ) : (
         <>
-            <PageHeader className="site-page-header" title={<Trans i18nKey="administration" />} />
+            <PageHeader className="site-page-header administration-page-header" title={<Trans i18nKey="administration" />} />
 
-            <Row className="branding-row">
+            <Row className="branding-row administration-page">
                 <Col span={8}>
                     <Form
                         layout="horizontal"

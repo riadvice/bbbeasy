@@ -56,7 +56,6 @@ import {
     FacebookShareButton,
     LinkedinIcon,
     LinkedinShareButton,
-    TwitterIcon,
     TwitterShareButton,
 } from 'react-share';
 
@@ -429,7 +428,7 @@ const Recordings = () => {
                                 icon={<QuestionCircleOutlined className="red-icon" />}
                                 onConfirm={() => handleDelete(record.key)}
                             >
-                                <Link>
+                                <Link className="delete-button-color">
                                     <DeleteOutlined /> <Trans i18nKey="delete" />
                                 </Link>
                             </Popconfirm>
@@ -468,7 +467,7 @@ const Recordings = () => {
 
     return (
         <>
-            <PageHeader className="site-page-header" title={<Trans i18nKey="recordings" />} />
+            <PageHeader className="site-page-header recordings-page-header" title={<Trans i18nKey="recordings" />} />
 
             {isModalVisible && (
                 <Modal
@@ -491,7 +490,10 @@ const Recordings = () => {
                                 </div>
                                 <div className="bbbeasy-white-btn">
                                     <TwitterShareButton url={modalUrl}>
-                                        <TwitterIcon size={75} round />
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="75" height="75">
+                                            <rect x="2" y="2" width="56" height="56" rx="30" fill="#000000"/>
+                                            <path d="M17 15h8.2l7 9.7 8.1-9.7h4.4L34.2 28.6 45.4 45h-8.2l-7.9-11-9.2 11H15.7l11.8-14.1L17 15z" fill="#ffffff"/>
+                                        </svg>
                                     </TwitterShareButton>
                                 </div>
 
@@ -530,14 +532,16 @@ const Recordings = () => {
                 </Modal>
             )}
 
-            <EditableTable
-                EditableCell={EditableCell}
-                editForm={editForm}
-                mergedColumns={mergedColumns}
-                dataSource={data}
-                loading={loading}
-                notFoundContent="no_data"
-            />
+            <div className="recordings-table">
+                <EditableTable
+                    EditableCell={EditableCell}
+                    editForm={editForm}
+                    mergedColumns={mergedColumns}
+                    dataSource={data}
+                    loading={loading}
+                    notFoundContent="no_data"
+                />
+            </div>
         </>
     );
 };

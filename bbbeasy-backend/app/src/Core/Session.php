@@ -89,7 +89,6 @@ class Session extends \Prefab
     public function set($key, $value): void
     {
         $this->runtimeValues[$key] = $value;
-        $this->f3->set('SESSION.' . $key, $value);
     }
 
     /**
@@ -278,20 +277,7 @@ class Session extends \Prefab
 
     private function syncSessionState(): void
     {
-        if (!$this->currentUser instanceof User) {
-            return;
-        }
-
-        $user             = $this->serializeUser($this->currentUser);
-        $user['loggedIn'] = true;
-
-        $this->f3->set('SESSION.user', $user);
-        $this->f3->set('SESSION.user.loggedIn', true);
-        $this->f3->set('SESSION.user.id', $user['id']);
-        $this->f3->set('SESSION.user.role', $user['role']);
-        $this->f3->set('SESSION.user.roleId', $this->currentUser->role->id);
-        $this->f3->set('SESSION.user.username', $user['username']);
-        $this->f3->set('SESSION.user.email', $user['email']);
+        // JWT-only mode keeps the authenticated user in request memory only.
     }
 
     /**
@@ -367,7 +353,8 @@ class Session extends \Prefab
         if (isset($payload['nbf']) && (int) $payload['nbf'] > $now + (int) ($this->f3->get('auth.jwt.leeway') ?: 30)) {
             return [];
         }
-        if (isset($payload['exp']) && (int) $payload['exp'] < $now) {
+        $leeway = (int) ($this->f3->get('auth.jwt.leeway') ?: 30);
+        if (isset($payload['exp']) && (int) $payload['exp'] < $now - $leeway) {
             return [];
         }
         if (isset($payload['jti']) && $this->isRevoked((string) $payload['jti'])) {
@@ -386,7 +373,7 @@ class Session extends \Prefab
             return true;
         }
 
-        return null !== \Cache::instance()->get($this->revokedTokenCacheKey($jti));
+        return false !== \Cache::instance()->get($this->revokedTokenCacheKey($jti));
     }
 
     private function revokedTokenCacheKey(string $jti): string

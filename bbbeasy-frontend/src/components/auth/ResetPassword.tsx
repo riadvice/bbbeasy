@@ -41,16 +41,17 @@ const Reset = () => {
     const initialValues: formType = {
         email: '',
     };
-    settingsService
-        .collect_settings()
-        .then((response) => {
-            console.log(response.data);
-            const settings: SettingsType = response.data;
-            setLogo(settings.logo);
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+    React.useEffect(() => {
+        settingsService
+            .collect_settings()
+            .then((response) => {
+                const settings: SettingsType = response.data;
+                setLogo(settings.logo);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }, []);
     const handleReset = (formValue: formType) => {
         const { email } = formValue;
         AuthService.reset_password(email)

@@ -520,6 +520,7 @@ const Users = () => {
     return (
         <>
             <PageHeader
+                className="site-page-header users-page-header"
                 title={<Trans i18nKey="users" />}
                 extra={
                     AuthService.isAllowedAction(actions, 'add') &&
@@ -534,7 +535,7 @@ const Users = () => {
             {AuthService.isAllowedAction(actions, 'add') && colletRolesAction && (
                 <Modal
                     title={<Trans i18nKey="new_user" />}
-                    className="add-modal"
+                    className="add-modal user-add-modal"
                     centered
                     open={isModalVisible}
                     onOk={handleAdd}
@@ -588,14 +589,16 @@ const Users = () => {
                 </Modal>
             )}
 
-            <EditableTable
-                EditableCell={EditableCell}
-                editForm={editForm}
-                mergedColumns={mergedColumns}
-                dataSource={data}
-                loading={loading}
-                notFoundContent="no_data"
-            />
+            <div className="users-table">
+                <EditableTable
+                    EditableCell={EditableCell}
+                    editForm={editForm}
+                    mergedColumns={mergedColumns}
+                    dataSource={data}
+                    loading={loading}
+                    notFoundContent="no_data"
+                />
+            </div>
         </>
     );
 };

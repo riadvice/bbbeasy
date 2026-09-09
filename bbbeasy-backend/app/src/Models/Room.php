@@ -132,13 +132,45 @@ class Room extends BaseModel
     public function getRoomInfos(): array
     {
         return [
-            'id'         => $this->id,
-            'name'       => $this->name,
-            'preset_id'  => $this->getPresetID($this->id)['preset_id'],
-            'user_id'    => $this->getUserID($this->id)['user_id'],
-            'short_link' => $this->short_link,
-            'labels'     => $this->getLabels($this->id),
+            'id'            => $this->id,
+            'name'          => $this->name,
+            'preset_id'     => $this->getPresetID($this->id)['preset_id'],
+            'user_id'       => $this->getUserID($this->id)['user_id'],
+            'short_link'    => $this->short_link,
+            'labels'        => $this->getLabels($this->id),
+            'presentations' => $this->getPresentations(),
         ];
+    }
+
+    public function getPresentations(): array
+    {
+        $data = json_decode((string) $this->presentations, true);
+
+        return \is_array($data) ? $data : [];
+    }
+
+    /**
+     * Normalize a presentation entry (legacy plain name or [name, original]
+     * array) into ['name' => stored file name, 'original' => display name].
+     *
+     * @param mixed $entry
+     */
+    public static function normalizePresentation($entry): array
+    {
+        if (\is_array($entry)) {
+            return [
+                'name'     => (string) ($entry['name'] ?? ''),
+                'original' => (string) ($entry['original'] ?? ($entry['name'] ?? '')),
+            ];
+        }
+        $stored = (string) $entry;
+
+        return ['name' => $stored, 'original' => $stored];
+    }
+
+    public function setPresentations(array $presentations): void
+    {
+        $this->presentations = json_encode(array_values($presentations));
     }
 
     public function getPresetID($id)
