@@ -198,6 +198,18 @@ const Profile = () => {
                             <PasswordInput placeholder="**********" />
                         </Form.Item>
                         <ConfirmPassword dependOn="new_password" confirmText="confirm_new_password" />
+                        <Form.Item>
+                            <Button
+                                type="primary"
+                                id="submit-btn"
+                                htmlType="submit"
+                                block
+                                className="p-50"
+                                loading={submitting}
+                            >
+                                <Trans i18nKey={'update_profile'} />
+                            </Button>
+                        </Form.Item>
                     </Col>
 
                     <Col span={10} offset={1} className="mt-15">
@@ -263,18 +275,6 @@ const Profile = () => {
                                     </Badge>
                                 )}
                             </ImageUploading>
-                            <Form.Item>
-                                <Button
-                                    type="primary"
-                                    id="submit-btn"
-                                    htmlType="submit"
-                                    block
-                                    className="p-50"
-                                    loading={submitting}
-                                >
-                                    <Trans i18nKey={'update_profile'} />
-                                </Button>
-                            </Form.Item>
                         </Space>
                     </Col>
                 </Row>
