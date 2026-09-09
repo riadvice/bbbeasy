@@ -88,7 +88,7 @@ export const Step3Form = (props: Props) => {
                     closeText={<Trans i18nKey="understand" />}
                 />
             </Paragraph>
-            <Card bordered={false}>
+            <Card variant="borderless">
                 {presets.map((item) => {
                     const filteredElements = Object.keys(EN_US).filter((elem) => EN_US[elem] === item.name);
                     const category = filteredElements.length !== 0 ? filteredElements[0] : item.name;

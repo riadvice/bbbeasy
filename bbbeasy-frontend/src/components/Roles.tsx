@@ -249,7 +249,7 @@ const Roles = () => {
                 {Object.keys(allPrivileges).map((group) => {
                     const newGroup = transformText(group);
                     return (
-                        <Card bordered={false} key={group} title={newGroup} type="inner">
+                        <Card variant="borderless" key={group} title={newGroup} type="inner">
                             <Form.Item name={group}>
                                 <Checkbox.Group disabled={key === 1}>
                                     <Row gutter={[32, 16]}>
@@ -413,7 +413,7 @@ const Roles = () => {
                     onFinish={() => saveEdit(record.key)}
                     onChange={() => changeEdit(record.key)}
                 >
-                    <Card bordered={false} className="card-parent">
+                    <Card variant="borderless" className="card-parent">
                         {getPermissionsCard(record.key)}
                         {AuthService.isAllowedAction(actions, 'edit') && record.key !== 1 && (
                             <Space size="middle" className="actions-expanded">

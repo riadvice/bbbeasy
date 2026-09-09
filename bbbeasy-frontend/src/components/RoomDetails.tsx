@@ -504,7 +504,7 @@ const RoomDetails = () => {
                                 )
                             )}
                         </Row>
-                        <Card bordered={false} className="room-details gray-bg">
+                        <Card variant="borderless" className="room-details gray-bg">
                             <Row justify="center" align="middle">
                                 <Col span={22}>
                                     <Space

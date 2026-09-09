@@ -208,7 +208,7 @@ const RoomRecordings = (props: Props) => {
                                 placeholder={t('search')}
                                 allowClear
                                 suffix={<SearchOutlined />}
-                                bordered={false}
+                                variant="borderless"
                             />
                         )}
                     </Space>
@@ -226,7 +226,7 @@ const RoomRecordings = (props: Props) => {
                                 <Col style={{ maxWidth: '300px' }} key={recording.key}>
                                     <Card
                                         style={{ maxWidth: '300px' }}
-                                        bordered={false}
+                                        variant="borderless"
                                         hoverable
                                         cover={
                                             <div className="recording-box">

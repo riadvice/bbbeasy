@@ -89,7 +89,7 @@ const RoomsCol: React.FC<RoomsColProps> = ({ room, editable, bbbConfigured, dele
         <Col span={5} className="custom-col-5 room-box">
             <Card
                 hoverable
-                bordered={false}
+                variant="borderless"
                 title={
                     <div onClick={() => showRoomDetails()}>
                         <Space size="middle" orientation="vertical" className="room-card-title">

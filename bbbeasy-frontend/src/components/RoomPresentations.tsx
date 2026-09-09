@@ -268,7 +268,7 @@ const RoomPresentations = (props: Props) => {
     return (
         props.open && (
             <>
-                <Card bordered={false} size="small" className="room-presentations gray-bg">
+                <Card variant="borderless" size="small" className="room-presentations gray-bg">
                     <Title level={5}>
                         <Trans i18nKey="room_ppts" />
                     </Title>
