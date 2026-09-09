@@ -5358,7 +5358,10 @@ body {
    The edit row lays its fields out in an inline-flex Space, so without these the
    text input collapses to a few pixels and the row actions spill out of the table. */
 .ant-table-wrapper .ant-table-container {
-    overflow-x: auto;
+    /* Naming one axis leaves the other at visible, which CSS then promotes to
+       auto: every table drew a vertical scrollbar for the one pixel the border
+       adds. */
+    overflow: auto hidden;
 }
 .ant-table-tbody .ant-space {
     display: flex;
