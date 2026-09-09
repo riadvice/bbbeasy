@@ -98,13 +98,31 @@ class User extends BaseModel
     }
 
     /**
+     * Add an identifier exclusion to a filter, comparing to a null identifier
+     * never matches in SQL and would silently disable the whole filter.
+     *
+     * @param null|mixed $id
+     */
+    public function excludeId(array $filter, $id = null): array
+    {
+        if (null === $id) {
+            return $filter;
+        }
+
+        $filter[0] = '(' . $filter[0] . ') and id != ?';
+        $filter[]  = $id;
+
+        return $filter;
+    }
+
+    /**
      * Check if email already in use.
      *
      * @param null|mixed $id
      */
     public function emailExists(string $email, $id = null): bool
     {
-        return $this->load(['lower(email) = ? and id != ?', mb_strtolower($email), $id]);
+        return $this->load($this->excludeId(['lower(email) = ?', mb_strtolower($email)], $id));
     }
 
     /**
@@ -114,7 +132,7 @@ class User extends BaseModel
      */
     public function usernameExists(string $username, $id = null): bool
     {
-        return $this->load(['lower(username) = ? and  id != ?', mb_strtolower($username), $id]);
+        return $this->load($this->excludeId(['lower(username) = ?', mb_strtolower($username)], $id));
     }
 
     public function getUsers($username, $email)
@@ -137,7 +155,10 @@ class User extends BaseModel
     {
         $data = [];
 
-        $users = $this->find(['(username = lower(?) and id != ?) or (email = lower(?) and id != ?)', $username, $id, $email, $id]);
+        $users = $this->find($this->excludeId(
+            ['lower(username) = ? or lower(email) = ?', mb_strtolower($username), mb_strtolower($email)],
+            $id
+        ));
         if ($users) {
             $data = $users->castAll(['username', 'email']);
         }
