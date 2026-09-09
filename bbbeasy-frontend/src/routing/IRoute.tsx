@@ -16,9 +16,11 @@
  * with BBBEasy; if not, see <http://www.gnu.org/licenses/>.
  */
 
+import type React from 'react';
+
 export interface IRoute {
     path: string;
-    element?: JSX.Element;
+    element?: React.JSX.Element;
     private?: boolean;
     restricted?: boolean;
 }

@@ -44,7 +44,7 @@ import usersService from 'services/users.service';
 
 type stepType = {
     title: string;
-    content: JSX.Element;
+    content: React.JSX.Element;
     button: string;
     span: number;
     offset: number;

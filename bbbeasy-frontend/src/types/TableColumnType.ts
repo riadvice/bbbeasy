@@ -33,9 +33,9 @@ export type TableColumnType = {
     editable?: boolean;
     width?: string;
     sorter?: { compare?: (a, b) => number; multiple?: number };
-    render?: (text: string, record) => JSX.Element;
-    filterDropdown?: (props: FilterDropdownProps) => JSX.Element;
-    filterIcon?: (filtered: boolean) => JSX.Element;
+    render?: (text: string, record) => React.JSX.Element;
+    filterDropdown?: (props: FilterDropdownProps) => React.JSX.Element;
+    filterIcon?: (filtered: boolean) => React.JSX.Element;
     filters?: ColumnFilterItem[];
     onFilter?: (value: string | number | boolean, record) => any;
 };

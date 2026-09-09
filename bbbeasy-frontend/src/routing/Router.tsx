@@ -32,7 +32,7 @@ const Router: React.FC<IProps> = ({ routes }) => {
         else return <PublicRoute restricted={route.restricted}>{route.element}</PublicRoute>;
     };
 
-    const RenderComponent = (props): JSX.Element => {
+    const RenderComponent = (props): React.JSX.Element => {
         const route = props.route;
         if (route.path == '*') return route.element;
         else {

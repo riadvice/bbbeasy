@@ -132,7 +132,7 @@ const Recordings = () => {
         inputType,
         ...restProps
     }) => {
-        let inputNode: JSX.Element;
+        let inputNode: React.JSX.Element;
         if (inputType === 'select') {
             console.log('select');
             const statesOptions = recordingStates.map((item, index) => (

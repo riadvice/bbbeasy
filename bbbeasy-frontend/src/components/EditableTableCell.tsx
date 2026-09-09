@@ -34,7 +34,7 @@ type Props = {
     children: React.ReactNode;
     dataIndex: string;
     record: RecordingType | LabelType | UserType | RoleType;
-    inputNode: JSX.Element;
+    inputNode: React.JSX.Element;
     errorsEdit: object;
     editRules?: object;
 
@@ -44,7 +44,7 @@ type Props = {
     mouseLeaveFct?: () => void;
 
     showLabelColor?: boolean;
-    inputColor?: JSX.Element;
+    inputColor?: React.JSX.Element;
 };
 
 const EditableTableCell: React.FC<Props> = ({
@@ -86,7 +86,7 @@ const EditableTableCell: React.FC<Props> = ({
         Presets: { max: 64, i18n: 'preset_name' },
     };
 
-    const customFormItem = (index: string, customInputNode: JSX.Element) => {
+    const customFormItem = (index: string, customInputNode: React.JSX.Element) => {
         const constraint = nameConstraints[componentName];
         const errorHelp = index in errorsEdit &&
             record.key == errorsEdit['key'] && {

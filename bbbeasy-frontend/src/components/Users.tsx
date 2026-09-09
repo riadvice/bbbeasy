@@ -209,7 +209,7 @@ const Users = () => {
         inputType,
         ...restProps
     }) => {
-        let inputNode: JSX.Element;
+        let inputNode: React.JSX.Element;
         if (inputType === 'select') {
             const statesOptions = allStates.map((item, index) => (
                 <Option key={index} value={item} className="text-capitalize">

@@ -57,8 +57,8 @@ type formType = {
 
 type editFormItemType = {
     item: string;
-    label: JSX.Element;
-    formItemNode: JSX.Element;
+    label: React.JSX.Element;
+    formItemNode: React.JSX.Element;
     isRequired?: boolean;
     messageItem?: string;
 };
