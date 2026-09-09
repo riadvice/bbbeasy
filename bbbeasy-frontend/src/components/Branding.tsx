@@ -21,6 +21,7 @@ import React, { useEffect, useState } from 'react';
 import SettingsService from '../services/settings.service';
 
 import { Button, Col, Form, Row } from 'antd';
+import PageHeader from './PageHeader';
 import { Trans, withTranslation } from 'react-i18next';
 import { t } from 'i18next';
 
@@ -170,47 +171,53 @@ const Branding = () => {
     };
 
     return (
-        <Row justify="center" className="branding-row branding-page">
-            {isLoading ? (
-                <LoadingSpinner />
-            ) : (
-                <Col span={18}>
-                    <fieldset disabled={!AuthService.isAllowedAction(actions, 'edit')}>
-                        <Form
-                            layout="vertical"
-                            className="install-form"
-                            form={settingsForm}
-                            requiredMark={false}
-                            scrollToFirstError
-                            validateTrigger="onSubmit"
-                            onFinish={onFinish}
-                        >
-                            <Step2Form
-                                brandColor={brandColor}
-                                defaultFontSize={defaultFontSize}
-                                borderRadius={borderRadius}
-                                wireframeStyle={wireframeStyle}
-                                setBrandColor={setBrandColor}
-                                setDefaultFontSize={setDefaultFontSize}
-                                setBorderRadius={setBorderRadius}
-                                setWireframeStyle={setWireframeStyle}
-                                setFile={setFile}
-                                fileList={fileList}
-                                setFileList={setFileList}
-                            />
+        <>
+            <PageHeader
+                className="site-page-header branding-page-header"
+                title={<Trans i18nKey="company_branding" />}
+            />
+            <Row justify="center" className="branding-row branding-page">
+                {isLoading ? (
+                    <LoadingSpinner />
+                ) : (
+                    <Col span={18}>
+                        <fieldset disabled={!AuthService.isAllowedAction(actions, 'edit')}>
+                            <Form
+                                layout="vertical"
+                                className="install-form"
+                                form={settingsForm}
+                                requiredMark={false}
+                                scrollToFirstError
+                                validateTrigger="onSubmit"
+                                onFinish={onFinish}
+                            >
+                                <Step2Form
+                                    brandColor={brandColor}
+                                    defaultFontSize={defaultFontSize}
+                                    borderRadius={borderRadius}
+                                    wireframeStyle={wireframeStyle}
+                                    setBrandColor={setBrandColor}
+                                    setDefaultFontSize={setDefaultFontSize}
+                                    setBorderRadius={setBorderRadius}
+                                    setWireframeStyle={setWireframeStyle}
+                                    setFile={setFile}
+                                    fileList={fileList}
+                                    setFileList={setFileList}
+                                />
 
-                            {AuthService.isAllowedAction(actions, 'edit') && (
-                                <Form.Item className="button-container button-padding">
-                                    <Button type="primary" id="submit-btn" htmlType="submit" block>
-                                        <Trans i18nKey={'edit'} />
-                                    </Button>
-                                </Form.Item>
-                            )}
-                        </Form>
-                    </fieldset>
-                </Col>
-            )}
-        </Row>
+                                {AuthService.isAllowedAction(actions, 'edit') && (
+                                    <Form.Item className="button-container button-padding">
+                                        <Button type="primary" id="submit-btn" htmlType="submit" block>
+                                            <Trans i18nKey="save" />
+                                        </Button>
+                                    </Form.Item>
+                                )}
+                            </Form>
+                        </fieldset>
+                    </Col>
+                )}
+            </Row>
+        </>
     );
 };
 

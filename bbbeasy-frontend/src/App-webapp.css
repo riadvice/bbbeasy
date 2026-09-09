@@ -2579,9 +2579,6 @@ fieldset {
 .rooms-cards .anticon-more:hover {
     color: var(--bbbeasy-brand-color);
 }
-.rooms-page-header .ant-page-header-heading-title {
-    color: #ffffff !important;
-}
 .rooms-search-input input,
 .rooms-search-input input::placeholder {
     color: rgba(148, 163, 184, 0.9) !important;
@@ -2591,9 +2588,6 @@ fieldset {
 .rooms-search-input .anticon-search {
     color: rgba(148, 163, 184, 0.9) !important;
 }
-.recordings-page-header .ant-page-header-heading-title {
-    color: #ffffff !important;
-}
 .recordings-search-input input,
 .recordings-search-input input::placeholder {
     color: rgba(148, 163, 184, 0.9) !important;
@@ -2602,9 +2596,6 @@ fieldset {
 .recordings-search-input .ant-input-clear-icon,
 .recordings-search-input .anticon-search {
     color: rgba(148, 163, 184, 0.9) !important;
-}
-.labels-page-header .ant-page-header-heading-title {
-    color: #ffffff !important;
 }
 .labels-search-input input,
 .labels-search-input input::placeholder {
@@ -3197,9 +3188,6 @@ fieldset {
 }
 .presets-cards .ant-card-body button:disabled .PresetIcon {
     background-color: var(--bbbeasy-medimum-gray);
-}
-.presets-page-header .ant-page-header-heading-title {
-    color: #ffffff !important;
 }
 .presets-search-input input,
 .presets-search-input input::placeholder {
@@ -4493,9 +4481,6 @@ div.error-message-Label {
     color: rgba(148, 163, 184, 0.9) !important;
 }
 /*****************USERS PAGE - BLUE DESIGN*****************/
-.users-page-header .ant-page-header-heading-title {
-    color: #ffffff !important;
-}
 .users-search-input input,
 .users-search-input input::placeholder {
     color: rgba(148, 163, 184, 0.9) !important;
@@ -4581,9 +4566,6 @@ div.error-message-Label {
     backdrop-filter: blur(5px);
 }
 /*****************ROLES PAGE - BLUE DESIGN*****************/
-.roles-page-header .ant-page-header-heading-title {
-    color: #ffffff !important;
-}
 .roles-search-input input,
 .roles-search-input input::placeholder {
     color: rgba(148, 163, 184, 0.9) !important;
@@ -4736,7 +4718,6 @@ div.error-message-Label {
 }
 /*****************ADMINISTRATION PAGE - BLUE DESIGN*****************/
 .administration-page-header .ant-page-header-heading-title {
-    color: #ffffff !important;
     font-weight: 600;
 }
 .administration-search-input input,
@@ -5315,6 +5296,9 @@ body {
 }
 
 /***********************PAGE HEADER***********************************/
+.site-page-header .ant-page-header-heading-title {
+    color: #ffffff !important;
+}
 .ant-page-header {
     box-sizing: border-box;
     padding: 16px 24px;

@@ -148,7 +148,7 @@ const Profile = () => {
 
     return (
         <>
-            <PageHeader className="profile-page-header" title={<Trans i18nKey="update_profile" />} />
+            <PageHeader className="site-page-header profile-page-header" title={<Trans i18nKey="update_profile" />} />
             <Form
                 form={accountForm}
                 layout="vertical"
