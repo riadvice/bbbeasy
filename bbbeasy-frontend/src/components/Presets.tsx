@@ -82,7 +82,6 @@ import { GuestPolicy } from './GuestPolicy';
 const { Title } = Typography;
 
 interface PresetColProps {
-    key: number;
     preset: MyPresetType;
     editName: boolean;
     editClickHandler: (newPreset: MyPresetType, oldPreset: MyPresetType, checkName?: boolean) => void;
@@ -94,7 +93,6 @@ type formType = {
 };
 
 const PresetsCol: React.FC<PresetColProps> = ({
-    key,
     preset,
     editName,
     editClickHandler,
@@ -321,7 +319,7 @@ const PresetsCol: React.FC<PresetColProps> = ({
     };
 
     return (
-        <Col key={key} span={11}>
+        <Col span={11}>
             <Card
                 title={
                     <div className="preset-card-title">
