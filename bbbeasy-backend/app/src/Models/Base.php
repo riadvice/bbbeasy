@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Models;
 
+use DB\CortexCollection;
 use Sukarix\Models\Model;
 
 /**
@@ -32,6 +33,24 @@ use Sukarix\Models\Model;
  */
 abstract class Base extends Model
 {
+    /**
+     * Narrow what a query returns.
+     *
+     * Cortex documents find() as returning an array of records, it returns a
+     * CortexCollection, and callers use the collection methods the array does
+     * not have.
+     *
+     * @param null|array $filter
+     * @param null|array $options
+     * @param int        $ttl
+     *
+     * @return CortexCollection|false
+     */
+    public function find($filter = null, ?array $options = null, $ttl = 0)
+    {
+        return parent::find($filter, $options, $ttl);
+    }
+
     /**
      * Reload the record after an insert.
      *

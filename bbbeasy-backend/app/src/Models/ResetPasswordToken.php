@@ -34,6 +34,7 @@ use Models\Base as BaseModel;
  * @property string    $token
  * @property string    $status
  * @property \DateTime $expires_at
+ * @property \DateTime $created_on
  */
 class ResetPasswordToken extends BaseModel
 {

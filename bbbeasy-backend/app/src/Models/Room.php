@@ -35,8 +35,9 @@ use Utils\BigBlueButtonRequester;
  * @property string    $name
  * @property string    $meeting_id
  * @property string    $short_link
- * @property int       $preset_id
+ * @property Preset    $preset_id
  * @property int       $user_id
+ * @property string    $presentations
  * @property Label[]   $labels
  * @property \DateTime $created_on
  * @property \DateTime $updated_on

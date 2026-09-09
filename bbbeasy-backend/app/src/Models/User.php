@@ -32,19 +32,16 @@ use Models\Base as BaseModel;
  *
  * @property int       $id
  * @property string    $email
- * @property int       $role_id
+ * @property Role      $role_id
  * @property Role      $role
  * @property string    $username
- * @property string    $first_name
- * @property string    $last_name
  * @property string    $password
  * @property string    $status
  * @property string    $avatar
- * @property string    $resetToken
+ * @property int       $password_attempts
+ * @property \DateTime $last_login
  * @property \DateTime $created_on
  * @property \DateTime $updated_on
- * @property \DateTime $last_login
- * @property int       $password_attempts
  */
 class User extends BaseModel
 {

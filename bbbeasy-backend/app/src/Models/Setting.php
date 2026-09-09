@@ -36,10 +36,12 @@ use Validation\DataChecker;
  * @property string    $terms_use
  * @property string    $privacy_policy
  * @property string    $logo
- * @property string    $primary_color
- * @property string    $secondary_color
- * @property string    $accent_color
- * @property string    $additional_color
+ * @property string    $brand_color
+ * @property int       $default_font_size
+ * @property int       $border_radius
+ * @property bool      $wireframe_style
+ * @property bool      $self_registration
+ * @property bool      $send_registration
  * @property \DateTime $created_on
  * @property \DateTime $updated_on
  */

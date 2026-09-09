@@ -33,7 +33,7 @@ use Models\Base as BaseModel;
  *
  * @property int       $id
  * @property string    $name
- * @property json      $settings
+ * @property string    $settings
  * @property int       $user_id
  * @property \DateTime $created_on
  * @property \DateTime $updated_on

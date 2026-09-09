@@ -29,12 +29,12 @@ use Models\Base as BaseModel;
 /**
  * Class Role.
  *
- * @property int       $id
- * @property string    $name
- * @property array     $permissions
- * @property array     $users
- * @property \DateTime $created_on
- * @property \DateTime $updated_on
+ * @property int              $id
+ * @property string           $name
+ * @property RolePermission[] $permissions
+ * @property User[]           $users
+ * @property \DateTime        $created_on
+ * @property \DateTime        $updated_on
  */
 class Role extends BaseModel
 {

@@ -30,7 +30,7 @@ use Models\Base as BaseModel;
  *
  * @property int       $id
  * @property string    $name
- * @property text      $description
+ * @property string    $description
  * @property string    $color
  * @property \DateTime $created_on
  * @property \DateTime $updated_on
