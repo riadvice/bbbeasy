@@ -2476,6 +2476,7 @@ fieldset {
     min-height: 32px;
 }
 .room-box:hover .card-more-btn,
+.presets-cards .ant-card:hover .cell-edit-btn,
 .ant-table-row:hover .cell-edit-btn,
 .card-more-btn:hover,
 .card-more-btn:focus-visible,

@@ -104,7 +104,6 @@ const PresetsCol: React.FC<PresetColProps> = ({
 }) => {
     const [file, setFile] = React.useState<UploadFile>(null);
     const [fileList, setFileList] = React.useState<UploadFile[]>(null);
-    const [isShown, setIsShown] = useState<boolean>(false);
     const [modalTitle, setModalTitle] = React.useState<string>('');
     const [modalContent, setModalContent] = React.useState<SubCategoryType[]>([]);
     const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
@@ -328,11 +327,7 @@ const PresetsCol: React.FC<PresetColProps> = ({
         <Col key={key} span={11}>
             <Card
                 title={
-                    <div
-                        className="preset-card-title"
-                        onMouseOver={() => setIsShown(true)}
-                        onMouseLeave={() => setIsShown(false)}
-                    >
+                    <div className="preset-card-title">
                         <Space>
                             {!isEditing ? (
                                 <>
@@ -343,9 +338,9 @@ const PresetsCol: React.FC<PresetColProps> = ({
                                     >
                                         <div className="preset-name">{preset['name']}</div>
                                     </Tooltip>
-                                    {isShown && editName && !isDefault && (
+                                    {editName && !isDefault && (
                                         <Button
-                                            className="edit-btn"
+                                            className="edit-btn cell-edit-btn"
                                             size="small"
                                             type="link"
                                             icon={<EditOutlined />}
