@@ -103,6 +103,8 @@ const AppHeader = () => {
             .catch((error) => {
                 console.log(error);
             });
+
+        return settingsService.on_settings_updated((settings) => setLogo(settings.logo));
     }, []);
     const logout = () => {
         AuthService.logout()

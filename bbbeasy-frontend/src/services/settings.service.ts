@@ -18,6 +18,14 @@
 
 import { axiosInstance } from '../lib/AxiosInstance';
 import { apiRoutes } from '../routing/backend-config';
+import { SettingsType } from '../types/SettingsType';
+
+/**
+ * Fired after the branding settings are saved, so the parts of the layout that
+ * read them once on mount (the sider and the header logo) can catch up without
+ * a page reload.
+ */
+export const SETTINGS_UPDATED = 'bbbeasy:settings-updated';
 
 class SettingsService {
     collect_settings() {
@@ -28,6 +36,17 @@ class SettingsService {
         return axiosInstance.put(apiRoutes.EDIT_SETTINGS_URL, {
             data,
         });
+    }
+
+    announce_settings(settings: SettingsType) {
+        window.dispatchEvent(new CustomEvent<SettingsType>(SETTINGS_UPDATED, { detail: settings }));
+    }
+
+    on_settings_updated(listener: (settings: SettingsType) => void) {
+        const handler = (event: Event) => listener((event as CustomEvent<SettingsType>).detail);
+        window.addEventListener(SETTINGS_UPDATED, handler);
+
+        return () => window.removeEventListener(SETTINGS_UPDATED, handler);
     }
 }
 

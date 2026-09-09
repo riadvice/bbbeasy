@@ -157,6 +157,9 @@ const Branding = () => {
                 if (!CompareRecords(data, newData)) {
                     Notifications.openNotificationWithIcon('success', t('edit_settings_success'));
                     setSettings(newData);
+                    setData(newData);
+                    // Let the sider and the header pick up the new logo straight away.
+                    SettingsService.announce_settings(newData);
                 } else {
                     Notifications.openNotificationWithIcon('info', t('no_changes'));
                 }

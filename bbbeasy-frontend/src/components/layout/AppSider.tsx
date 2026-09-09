@@ -92,6 +92,8 @@ const AppSider = (props: Props) => {
             .catch((error) => {
                 console.log(error);
             });
+
+        const stopListening = settingsService.on_settings_updated((settings) => setLogo(settings.logo));
         if (currentPath.startsWith('/r/')) {
             const index = menuSider.items.findIndex((item) => item.name === 'recordings');
             if (index !== -1) {
@@ -106,6 +108,8 @@ const AppSider = (props: Props) => {
                 setCurrentPath(defaultRoute);
             }
         }
+
+        return stopListening;
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
