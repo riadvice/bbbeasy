@@ -32,13 +32,14 @@ class RoutePrivileges
      * Request method of an action, anything not listed is read only.
      */
     private const METHODS = [
-        'add'                => 'POST',
-        'start'              => 'POST',
-        'collect'            => 'GET|POST',
-        'edit'               => 'PUT',
-        'edit_subcategories' => 'PUT',
-        'publish'            => 'PUT',
-        'delete'             => 'DELETE',
+        'add'                     => 'POST',
+        'start'                   => 'POST',
+        'reset_password_attempts' => 'POST',
+        'collect'                 => 'GET|POST',
+        'edit'                    => 'PUT',
+        'edit_subcategories'      => 'PUT',
+        'publish'                 => 'PUT',
+        'delete'                  => 'DELETE',
     ];
 
     /**

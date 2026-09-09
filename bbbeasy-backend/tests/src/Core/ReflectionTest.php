@@ -44,7 +44,7 @@ final class ReflectionTest extends Scenario
         'roles'           => ['add', 'collect', 'delete', 'edit', 'index'],
         'rooms'           => ['add', 'delete', 'edit', 'index', 'presentations', 'start', 'view'],
         'settings'        => ['collect', 'edit'],
-        'users'           => ['add', 'delete', 'edit', 'index'],
+        'users'           => ['add', 'delete', 'edit', 'index', 'reset_password_attempts'],
     ];
 
     /**

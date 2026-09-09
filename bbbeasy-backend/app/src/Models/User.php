@@ -48,6 +48,11 @@ use Models\Base as BaseModel;
  */
 class User extends BaseModel
 {
+    /**
+     * Failed sign in attempts an account starts with, and is given back on unlock.
+     */
+    final public const PASSWORD_ATTEMPTS = 3;
+
     protected $fieldConf = [
         'role_id' => [
             'belongs-to-one' => Role::class,
@@ -218,6 +223,22 @@ class User extends BaseModel
         return (int) $result[0]['total'];
     }
 
+    /**
+     * Give the account its sign in attempts back and let it in again. Reaching zero
+     * attempts locks the account by deactivating it, so restoring the counter alone
+     * would leave the user just as locked out as before.
+     */
+    public function unlock(): void
+    {
+        $this->password_attempts = self::PASSWORD_ATTEMPTS;
+
+        if (UserStatus::INACTIVE === $this->status) {
+            $this->status = UserStatus::ACTIVE;
+        }
+
+        $this->save();
+    }
+
     public function verifyPassword($password): bool
     {
         return password_verify(mb_trim($password), $this->password);
@@ -258,7 +279,7 @@ class User extends BaseModel
             $this->password          = $password;
             $this->role_id           = $roleId;
             $this->status            = UserStatus::ACTIVE;
-            $this->password_attempts = 3;
+            $this->password_attempts = self::PASSWORD_ATTEMPTS;
 
             $this->save();
             $this->getById($this->lastInsertId());

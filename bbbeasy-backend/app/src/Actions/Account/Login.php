@@ -35,11 +35,6 @@ use Validation\DataChecker;
  */
 class Login extends BaseAction
 {
-    /**
-     * Failed sign in attempts allowed before the account is locked.
-     */
-    private const PASSWORD_ATTEMPTS = 3;
-
     public function authorise($f3): void
     {
         $form        = $this->getDecodedBody();
@@ -93,7 +88,7 @@ class Login extends BaseAction
         $accessToken = $this->session->authorizeUser($user);
 
         $user->last_login        = Time::db();
-        $user->password_attempts = self::PASSWORD_ATTEMPTS;
+        $user->password_attempts = User::PASSWORD_ATTEMPTS;
         $user->save();
 
         // @todo: store role in redis cache to allow routes
