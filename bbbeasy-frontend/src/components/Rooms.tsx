@@ -22,8 +22,8 @@ import { Trans, withTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { t } from 'i18next';
 
-import { Avatar, Badge, Card, Col, Dropdown, Row, Space, Tag, Typography, Button, Modal, Tooltip } from 'antd';
-import { ClockCircleOutlined, MoreOutlined, TeamOutlined, WarningOutlined } from '@ant-design/icons';
+import { Avatar, Badge, Card, Col, Row, Space, Tag, Typography, Button, Modal, Tooltip } from 'antd';
+import { ClockCircleOutlined, DeleteOutlined, TeamOutlined, WarningOutlined } from '@ant-design/icons';
 
 import Notifications from './Notifications';
 import AddRoomForm from './AddRoomForm';
@@ -85,17 +85,6 @@ const RoomsCol: React.FC<RoomsColProps> = ({ room, editable, bbbConfigured, dele
         });
     };
 
-    const actions = {
-        items: [
-            deleteClickHandler != null && {
-                key: '2',
-                danger: true,
-                label: <Trans i18nKey={'delete'} />,
-                onClick: () => handleDelete(),
-            },
-        ].filter(Boolean),
-    };
-
     return (
         <Col span={5} className="custom-col-5 room-box">
             <Card
@@ -142,19 +131,20 @@ const RoomsCol: React.FC<RoomsColProps> = ({ room, editable, bbbConfigured, dele
                     </div>
                 }
                 extra={
-                    <Dropdown
-                        key="more"
-                        menu={actions}
-                        placement={LocaleService.direction === 'rtl' ? 'bottomLeft' : 'bottomRight'}
-                        trigger={['click']}
-                    >
-                        <Button
-                            type="text"
-                            className="card-more-btn"
-                            aria-label={t('actions_col')}
-                            icon={<MoreOutlined />}
-                        />
-                    </Dropdown>
+                    /* Delete is the only thing this menu ever held, so it is the
+                       button: a menu that hides one action only costs a click. */
+                    deleteClickHandler != null && (
+                        <Tooltip title={<Trans i18nKey="delete" />}>
+                            <Button
+                                type="text"
+                                danger
+                                className="card-more-btn"
+                                aria-label={t('delete')}
+                                icon={<DeleteOutlined />}
+                                onClick={handleDelete}
+                            />
+                        </Tooltip>
+                    )
                 }
             >
                 <div className="room-card-body room-labels">
