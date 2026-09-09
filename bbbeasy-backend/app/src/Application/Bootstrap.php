@@ -25,6 +25,7 @@ namespace Application;
 use Core\Session;
 use Models\Role;
 use Sukarix\Application\Bootstrap as SukarixBootstrap;
+use Tracy\Debugger;
 
 /**
  * BBBEasy application initialisation.
@@ -41,14 +42,16 @@ class Bootstrap extends SukarixBootstrap
         \Registry::set('session', new $className());
     }
 
-    protected function setPhpVariables(): void
+    protected function handleException(): void
     {
-        parent::setPhpVariables();
+        parent::handleException();
 
-        // Fat-Free forces its own error reporting level, drop deprecations from it:
-        // the Cortex ORM still calls ReflectionProperty::setAccessible() which PHP 8.5
-        // deprecates and which the framework turns into a fatal error.
+        // Both Fat-Free and Tracy force their own error reporting level, so the mask
+        // has to be applied last: the Cortex ORM still calls
+        // ReflectionProperty::setAccessible(), which PHP 8.5 deprecates, and the
+        // frameworks turn that deprecation into a fatal error on every query.
         error_reporting(error_reporting() & ~E_DEPRECATED);
+        Debugger::$scream = false;
     }
 
     protected function loadConfiguration(): void

@@ -36,7 +36,7 @@ class MailSender extends BaseMailSender
      */
     public function sendExceptionEmail($exception): void
     {
-        $hash         = mb_substr(md5(preg_replace('~(Resource id #)\d+~', '$1', $exception)), 0, 10);
+        $hash         = mb_substr(md5(preg_replace('~(Resource id #)\d+~', '$1', (string) $exception)), 0, 10);
         $mailSentPath = $this->f3->get('ROOT') . '/' . $this->f3->get('LOGS') . 'email-sent-' . $hash;
         $snooze       = strtotime('1 day') - time();
         $messageId    = $this->generateId();
