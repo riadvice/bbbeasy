@@ -41,7 +41,6 @@ use Models\Base as BaseModel;
 class PresetSetting extends BaseModel
 {
     protected const GROUP_NAME = 'GROUP_NAME';
-    protected $table           = 'preset_settings';
 
     /**
      * Settings enabled out of the box, so a fresh installation can host a meeting
@@ -58,6 +57,7 @@ class PresetSetting extends BaseModel
         Recording::RECORD,
         Recording::ALLOW_START_STOP,
     ];
+    protected $table = 'preset_settings';
 
     public function getDefaultPresetSettings($enabled = false): array
     {

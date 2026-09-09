@@ -58,7 +58,7 @@ final class SeedDefaultPresetSettings extends AbstractMigration
                 $rows[] = [
                     'group'      => $group,
                     'name'       => $setting,
-                    'enabled'    => 'Layout' === $group || \in_array($setting, self::ENABLED, true),
+                    'enabled'    => 'Layout' === $group || in_array($setting, self::ENABLED, true),
                     'created_on' => date('Y-m-d H:i:s'),
                 ];
             }

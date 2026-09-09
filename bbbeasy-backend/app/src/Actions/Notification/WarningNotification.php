@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Actions\Notification;
 
 use Actions\Base as BaseAction;
-use Enum\ResponseCode;
 use Sukarix\Behaviours\LogWriter;
 
 /**
