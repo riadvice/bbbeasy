@@ -26,9 +26,9 @@ FROM php:8.5-fpm-trixie AS backend
 ENV COMPOSER_ALLOW_SUPERUSER=1 \
     COMPOSER_NO_INTERACTION=1
 
-# hadolint ignore=DL3008
 # The versions are left unpinned on purpose: Debian drops superseded packages from
 # the archive as soon as a security update lands, so a pinned build stops working.
+# hadolint ignore=DL3008
 RUN apt-get update && apt-get install -y --no-install-recommends \
         git \
         libicu-dev \
