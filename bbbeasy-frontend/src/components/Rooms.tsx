@@ -278,11 +278,11 @@ const Rooms = () => {
                 title={<Trans i18nKey="rooms" />}
                 extra={
                     AuthService.isAllowedAction(actions, 'add') && [
-                        <Button key="1" type="primary" onClick={() => setIsModalVisible(true)}>
+                        <Button key="new-room" type="primary" onClick={() => setIsModalVisible(true)}>
                             <Trans i18nKey="new_room" />
                         </Button>,
                         <AddRoomForm
-                            key="1"
+                            key="add-room-form"
                             isModalShow={isModalVisible}
                             close={() => {
                                 setIsModalVisible(false);
