@@ -77,8 +77,7 @@ export const Administration = () => {
             .catch((error) => {
                 console.log(error);
             });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [settingsForm]);
 
     const onFinish = () => {
         const settingsData: formType = settingsForm.getFieldsValue(true);

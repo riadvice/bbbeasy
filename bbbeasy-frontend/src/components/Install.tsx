@@ -177,6 +177,8 @@ const Install = () => {
             .finally(() => {
                 setIsLoading(false);
             });
+        // The installer loads once. getSettings is redeclared every render, so naming
+        // it here would re-run the whole check on each one.
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 

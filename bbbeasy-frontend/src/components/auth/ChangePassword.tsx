@@ -46,10 +46,11 @@ const ChangePassword = () => {
     const [message, setMessage] = React.useState<string>('');
     const [availableToken, setAvailableToken] = React.useState<boolean>(false);
     const params: _URLSearchParams = new URLSearchParams(window.location.search);
+    const token = params.get('token');
     const navigate = useNavigate();
 
     useEffect(() => {
-        AuthService.get_reset_password(params.get('token'))
+        AuthService.get_reset_password(token)
             .then(() => {
                 setAvailableToken(true);
             })
@@ -57,12 +58,11 @@ const ChangePassword = () => {
                 setAvailableToken(false);
                 setMessage(error.response.data.message);
             });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [token]);
 
     const handleSubmit = (formValue: formType) => {
         const { password } = formValue;
-        AuthService.change_password(params.get('token'), password)
+        AuthService.change_password(token, password)
             .then((result) => {
                 if (result.data.message === 'New password cannot be the same as your old password') {
                     setSuccessful(false);

@@ -80,10 +80,8 @@ const RoomRecordings = (props: Props) => {
             });
     };
     useEffect(() => {
-        //Runs only on the first render
         getRoomRecordings(id);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [id]);
     const toggleEdit = (record) => {
         setIsEditing(true);
         editForm.setFieldsValue({ name: record.name });

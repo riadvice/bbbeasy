@@ -252,7 +252,8 @@ const RoomDetails = () => {
     };
 
     useEffect(() => {
-        //Runs only on the first render
+        // The room is loaded once. The three loaders are redeclared every render, so
+        // naming them here would fetch the room again on each one.
         checkRoomStarted();
         getPresets();
         getLabels();

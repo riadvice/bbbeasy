@@ -96,7 +96,9 @@ const AppSider = (props: Props) => {
                 setCurrentPath(defaultRoute);
             }
         }
-
+        // The menu is built once from the signed in user's permissions, and the
+        // redirect away from the sign in page is a one time move: naming currentPath
+        // here would run it again on every navigation.
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 

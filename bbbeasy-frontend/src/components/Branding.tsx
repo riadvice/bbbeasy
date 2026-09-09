@@ -16,7 +16,7 @@
  * with BBBEasy; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import SettingsService from '../services/settings.service';
 
@@ -61,7 +61,8 @@ const Branding = () => {
     const [file, setFile] = React.useState<UploadFile>(null);
     const [fileList, setFileList] = React.useState<UploadFile[]>(null);
 
-    const setSettings = (settings: SettingsType) => {
+    // Kept stable so the effect below can name it without refetching every render.
+    const setSettings = useCallback((settings: SettingsType) => {
         setBrandColor(settings.brand_color);
         setDefaultFontSize(settings.default_font_size);
         setBorderRadius(settings.border_radius);
@@ -94,7 +95,7 @@ const Branding = () => {
             console.log(settingLogo);
         }
         setIsLoading(false);
-    };
+    }, [settingsForm]);
 
     useEffect(() => {
         SettingsService.collect_settings()
@@ -111,8 +112,7 @@ const Branding = () => {
 
         const settingsActions = AuthService.getActionsPermissionsByGroup('settings');
         setActions(settingsActions);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [setSettings]);
 
     const onFinish = async () => {
         setSubmitting(true);
