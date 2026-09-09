@@ -142,11 +142,10 @@ const AppHeader = () => {
         notificationService
             .collect_notification()
             .then((response) => {
-                setWarningNotification(true);
-                console.log(response.data);
+                setWarningNotification(!response.data.configured);
             })
-            .catch((error) => {
-                console.error(error);
+            .catch(() => {
+                setWarningNotification(true);
             });
     }, []);
 

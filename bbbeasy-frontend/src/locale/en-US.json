@@ -427,6 +427,8 @@
     "no_rooms": "No Rooms",
     "no_presets": "No Presets",
     "no_labels": "No labels",
+    "no_users": "No Users",
+    "no_roles": "No Roles",
     "no_data": "No Data",
     "wrong_file_name": "Wrong file name : File name must not contain special characters",
     "email_not_exist": "User with this email does not exist",
@@ -443,5 +445,6 @@
     "alwaysDeny": "Always deny",
     "email-not-exist": "User does not exist with this email",
     "publish_record_success": "Recording published successfully",
-    "unpublish_record_success": "Recording unpublished successfully"
+    "unpublish_record_success": "Recording unpublished successfully",
+    "bigbluebutton_not_configured": "BigBlueButton is not configured yet, ask your administrator to set the server address and shared secret before opening a room"
 }

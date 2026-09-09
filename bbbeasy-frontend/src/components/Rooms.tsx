@@ -16,7 +16,7 @@
  * with BBBEasy; if not, see <http://www.gnu.org/licenses/>.
  */
 
-import { PageHeader } from '@ant-design/pro-layout';
+import PageHeader from './PageHeader';
 import React, { useEffect, useState } from 'react';
 import { Trans, withTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -34,6 +34,7 @@ import EmptyData from './EmptyData';
 import LocaleService from '../services/locale.service';
 import RoomsService from 'services/rooms.service';
 import AuthService from 'services/auth.service';
+import notificationService from '../services/notification.service';
 
 import { RoomType } from 'types/RoomType';
 import { PresetType } from 'types/PresetType';
@@ -46,10 +47,11 @@ interface RoomsColProps {
     index: number;
     room: RoomType;
     editable: boolean;
+    bbbConfigured: boolean;
     deleteClickHandler: () => void;
 }
 
-const RoomsCol: React.FC<RoomsColProps> = ({ index, room, editable, deleteClickHandler }) => {
+const RoomsCol: React.FC<RoomsColProps> = ({ index, room, editable, bbbConfigured, deleteClickHandler }) => {
     const [isShown, setIsShown] = useState<boolean>(false);
     const labels = [];
     const navigate = useNavigate();
@@ -59,6 +61,12 @@ const RoomsCol: React.FC<RoomsColProps> = ({ index, room, editable, deleteClickH
 
     //view
     const showRoomDetails = () => {
+        // A room cannot be started without a BigBlueButton server, tell the user
+        // instead of opening a page where every action fails.
+        if (!bbbConfigured) {
+            Notifications.openNotificationWithIcon('warning', t('bigbluebutton_not_configured'));
+            return;
+        }
         navigate('/r/' + room.short_link, { state: { room: room, editable: editable } });
     };
 
@@ -226,6 +234,14 @@ const Rooms = () => {
         labels: [],
     };
     const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
+    const [bbbConfigured, setBbbConfigured] = React.useState<boolean>(true);
+
+    React.useEffect(() => {
+        notificationService
+            .collect_notification()
+            .then((response) => setBbbConfigured(response.data.configured))
+            .catch(() => setBbbConfigured(false));
+    }, []);
 
     //delete
     const deleteRoom = (id) => {
@@ -312,6 +328,7 @@ const Rooms = () => {
                                 index={index}
                                 room={singleRoom}
                                 editable={AuthService.isAllowedAction(actions, 'edit')}
+                                bbbConfigured={bbbConfigured}
                                 deleteClickHandler={
                                     AuthService.isAllowedAction(actions, 'delete')
                                         ? deleteRoom.bind(this, singleRoom.id)

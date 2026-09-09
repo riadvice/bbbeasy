@@ -27,13 +27,15 @@ use Enum\ResponseCode;
 use Sukarix\Behaviours\LogWriter;
 
 /**
- * Class Start.
+ * Reports the BigBlueButton configuration status to the web application.
  */
 class WarningNotification extends BaseAction
 {
     use LogWriter;
 
     /**
+     * Report whether this installation is connected to a BigBlueButton server.
+     *
      * @param \Base $f3
      * @param array $params
      *
@@ -41,17 +43,35 @@ class WarningNotification extends BaseAction
      */
     public function execute($f3, $params): void
     {
-        $default_shared_secret = 'unsecure_shared_secret_to_change_immediately';
-        $default_server        = 'unsecure_server_to_change_immediately';
-        $bbbServer             = $this->f3->get('bbb.server');
-        $bbbSharedSecret       = $this->f3->get('bbb.shared_secret');
-        $errorMessage          = 'BigBlueButton API configured';
-        if ($default_server === $bbbServer && $default_shared_secret === $bbbSharedSecret) {
-            $this->logger->info('BigBlueButton API is not configured');
-            $this->renderJson(['result' => 'configuration warning']);
-        } else {
-            $this->logger->error($errorMessage);
-            $this->renderJson([$errorMessage], ResponseCode::HTTP_BAD_REQUEST);
+        $configured = $this->bigBlueButtonIsConfigured();
+
+        if (!$configured) {
+            $this->logger->warning('BigBlueButton API is not configured');
         }
+
+        $this->renderJson(['configured' => $configured]);
+    }
+
+    /**
+     * The server and the shared secret must both be set and both be moved away
+     * from the values shipped in the default configuration.
+     */
+    private function bigBlueButtonIsConfigured(): bool
+    {
+        $defaults = [
+            'unsecure_server_to_change_immediately',
+            'unsecure_shared_secret_to_change_immediately',
+        ];
+
+        $server = mb_trim((string) $this->f3->get('bbb.server'));
+        $secret = mb_trim((string) $this->f3->get('bbb.shared_secret'));
+
+        foreach ([$server, $secret] as $value) {
+            if ('' === $value || \in_array($value, $defaults, true)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

@@ -423,6 +423,8 @@
     "no_rooms": "Aucune salle",
     "no_presets": "Aucun préréglage",
     "no_labels": "Aucune étiquette",
+    "no_users": "Aucun utilisateur",
+    "no_roles": "Aucun rôle",
     "no_data": "Aucune donnée",
     "wrong_file_name": "Mauvais nom de fichier : Le nom du fichier ne doit pas contenir de caractères spéciaux",
     "email_not_exist": "L'utilisateur avec cette adresse e-mail n'existe pas",
@@ -438,5 +440,6 @@
     "alwaysAccept": "Toujours accepter",
     "alwaysDeny": "Toujours refuser",
     "publish_record_success": "Enregistrement publié avec succès",
-    "unpublish_record_success": "L'enregistrement a été inédit avec succès"
+    "unpublish_record_success": "L'enregistrement a été inédit avec succès",
+    "bigbluebutton_not_configured": "BigBlueButton n'est pas encore configuré, demandez à votre administrateur de renseigner l'adresse du serveur et le secret partagé avant d'ouvrir une salle"
 }
