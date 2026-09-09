@@ -49,7 +49,7 @@ type Props = {
     loading: boolean;
     roomRecordings: RecordingType[];
     open: boolean;
-    id: any;
+    id: number;
 };
 type formType = {
     name: string;

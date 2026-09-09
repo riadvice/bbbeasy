@@ -33,6 +33,7 @@ import translationAR from '../locale/ar-TN.json';
 
 import { Languages } from '../components/Languages';
 import { DirectionType } from 'antd/lib/config-provider';
+import type { Locale } from 'antd/lib/locale';
 
 const defaultLang: string = import.meta.env.VITE_FALLBACK_LANG;
 
@@ -61,10 +62,10 @@ i18next.use(initReactI18next).init({
 });
 
 class LocaleService {
-    localeMap: object = { 'en': enUS, 'fr': frFR, 'ar': arEG };
+    localeMap: Record<string, Locale> = { 'en': enUS, 'fr': frFR, 'ar': arEG };
     rtlLocales: string[] = ['ar'];
     language: string;
-    antLocale: any;
+    antLocale: Locale;
     direction: DirectionType;
 
     constructor() {

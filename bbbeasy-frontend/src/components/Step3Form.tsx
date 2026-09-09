@@ -41,7 +41,7 @@ export const Step3Form = (props: Props) => {
     const [step3] = Form.useForm();
     const location = useLocation();
     const { presets } = props;
-    const [values, setValues] = React.useState<any>();
+    const [values, setValues] = React.useState<Record<string, boolean>>({});
     const enabled = props.enabled ?? true;
     const [modalTitle, setModalTitle] = React.useState<string>('');
     const [modalTitleTrans, setModalTitleTrans] = React.useState<string>('');
@@ -53,11 +53,7 @@ export const Step3Form = (props: Props) => {
         setModalTitleTrans(titleTrans);
 
         setModalContent(content);
-        const formvalues = [];
-        content.forEach((item) => {
-            formvalues[item.name] = item.enabled;
-        });
-        setValues(formvalues);
+        setValues(Object.fromEntries(content.map((item) => [item.name, item.enabled])));
     };
 
     // Named as handlers, not components: capitalised names read as JSX and these are
