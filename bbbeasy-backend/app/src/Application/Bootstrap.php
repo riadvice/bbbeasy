@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Application;
 
+use Core\Session;
 use Models\Role;
 use Sukarix\Application\Bootstrap as SukarixBootstrap;
 
@@ -30,6 +31,26 @@ use Sukarix\Application\Bootstrap as SukarixBootstrap;
  */
 class Bootstrap extends SukarixBootstrap
 {
+    protected function setPhpVariables(): void
+    {
+        parent::setPhpVariables();
+
+        // Fat-Free forces its own error reporting level, drop deprecations from it:
+        // the Cortex ORM still calls ReflectionProperty::setAccessible() which PHP 8.5
+        // deprecates and which the framework turns into a fatal error.
+        error_reporting(error_reporting() & ~E_DEPRECATED);
+    }
+
+    /**
+     * BBBEasy authenticates with stateless JWT access tokens, the session is
+     * therefore not the database backed one the framework expects.
+     */
+    public function prepareSession(): void
+    {
+        $className = $this->f3->get('classes.session');
+        \Registry::set('session', new $className());
+    }
+
     protected function loadConfiguration(): void
     {
         parent::loadConfiguration();
@@ -41,7 +62,7 @@ class Bootstrap extends SukarixBootstrap
 
     protected function loadAppSetting(): void
     {
-        $locale = $this->session->get('locale');
+        $locale = $this->getSession()->get('locale');
         if (!empty($locale)) {
             $this->f3->set('LANGUAGE', $locale);
         }
@@ -80,7 +101,7 @@ class Bootstrap extends SukarixBootstrap
      */
     protected function allowRoutesDynamically(): void
     {
-        $roleId = $this->session->getRoleId();
+        $roleId = $this->getSession()->getRoleId();
         if (0 === $roleId) {
             return;
         }
@@ -99,6 +120,11 @@ class Bootstrap extends SukarixBootstrap
                 $access->allow($this->getRouteByGroupAndAction($group, $action), $role->name);
             }
         }
+    }
+
+    protected function getSession(): Session
+    {
+        return \Registry::get('session');
     }
 
     protected function getRouteByGroupAndAction(string $group, string $action): string

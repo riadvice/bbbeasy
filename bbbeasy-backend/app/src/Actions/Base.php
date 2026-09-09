@@ -48,7 +48,8 @@ abstract class Base extends Action
 
     public function beforeroute(): void
     {
-        $this->access->authorize($this->getRole(), function($route, $subject): void {
+        // The framework keeps its own access instance private, use the singleton.
+        \Access::instance()->authorize($this->getRole(), function($route, $subject): void {
             $this->onAccessAuthorizeDeny($route, $subject);
         });
         if ($this->session->isLoggedIn() && $this->f3->get('ALIAS') === $this->f3->get('ALIASES.login')) {
