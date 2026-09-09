@@ -102,7 +102,7 @@ const tagRender = (props: CustomTagProps) => {
         event.stopPropagation();
     };
     return (
-        <Tooltip key="tooltipLabels" overlayClassName="install-tooltip" title={label}>
+        <Tooltip key="tooltipLabels" classNames={{ root: 'install-tooltip' }} title={label}>
             <Tag
                 className="room-label"
                 color={value}

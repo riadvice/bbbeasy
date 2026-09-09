@@ -151,7 +151,7 @@ const RoomsCol: React.FC<RoomsColProps> = ({ room, editable, bbbConfigured, dele
                     {room.labels.map((item) => (
                         <Tooltip
                             key={item.id}
-                            overlayClassName="install-tooltip"
+                            classNames={{ root: 'install-tooltip' }}
                             title={
                                 <ul>
                                     {room.labels.map((myItem) => (

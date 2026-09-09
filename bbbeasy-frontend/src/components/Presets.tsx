@@ -333,7 +333,7 @@ const PresetsCol: React.FC<PresetColProps> = ({
                                 <>
                                     <Tooltip
                                         key="tooltipLabels"
-                                        overlayClassName="install-tooltip"
+                                        classNames={{ root: 'install-tooltip' }}
                                         title={preset['name']}
                                     >
                                         <div className="preset-name">{preset['name']}</div>
@@ -464,7 +464,7 @@ const PresetsCol: React.FC<PresetColProps> = ({
                                           ? 'rightTop'
                                           : 'right'
                                 }
-                                overlayClassName={item.enabled ? 'install-tooltip' : 'title-tooltip'}
+                                classNames={{ root: item.enabled ? 'install-tooltip' : 'title-tooltip' }}
                                 title={
                                     item.enabled === true ? (
                                         <>

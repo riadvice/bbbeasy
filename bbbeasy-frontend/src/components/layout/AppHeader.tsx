@@ -171,7 +171,7 @@ const AppHeader = () => {
                     },
                 ],
             }}
-            overlayClassName="profil-btn-dropdown warning-btn-dropdown"
+            classNames={{ root: 'profil-btn-dropdown warning-btn-dropdown' }}
             disabled={!warningNotification}
             placement={LocaleService.direction === 'rtl' ? 'bottomLeft' : 'bottomRight'}
             arrow
@@ -264,7 +264,7 @@ const AppHeader = () => {
                             {dropdownWarning}
                             <Dropdown
                                 menu={menuProfile}
-                                overlayClassName="profil-btn-dropdown"
+                                classNames={{ root: 'profil-btn-dropdown' }}
                                 placement={LocaleService.direction === 'rtl' ? 'bottomLeft' : 'bottomRight'}
                                 arrow
                                 trigger={['click']}

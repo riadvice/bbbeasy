@@ -97,7 +97,7 @@ export const Step3Form = (props: Props) => {
                         <Tooltip
                             key={item.name}
                             placement={LocaleService.direction === 'rtl' ? 'leftTop' : 'rightTop'}
-                            overlayClassName="install-tooltip"
+                            classNames={{ root: 'install-tooltip' }}
                             title={
                                 <ul>
                                     {item.subcategories.map((subItem) => {
