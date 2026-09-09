@@ -35,6 +35,11 @@ use Validation\DataChecker;
  */
 class Login extends BaseAction
 {
+    /**
+     * Failed sign in attempts allowed before the account is locked.
+     */
+    private const PASSWORD_ATTEMPTS = 3;
+
     public function authorise($f3): void
     {
         $form        = $this->getDecodedBody();
@@ -55,60 +60,85 @@ class Login extends BaseAction
 
     private function login($email, $password, $errorMessage): void
     {
-        $user = new User();
-        $user = $user->getByEmail($email);
+        $user = new User()->getByEmail($email);
         $this->logger->info('Login attempt using email', ['email' => $email]);
 
-        if ($user->valid() && UserStatus::ACTIVE === $user->status && $user->verifyPassword($password)) {
-            // @todo: test UserRole::API !== $user->role->name
-            $accessToken = $this->session->authorizeUser($user);
-
-            $user->last_login        = Time::db();
-            $user->password_attempts = 3;
-            $user->save();
-
-            // @todo: store role in redis cache to allow routes
-            $this->f3->set('role', $user->role->name);
-
-            // @todo: store locale in user prefs table
-            // $this->session->set('locale', $user->locale);
-            $userInfos = [
-                'id'          => $user->id,
-                'username'    => $user->username,
-                'email'       => $user->email,
-                'role'        => $user->role->name,
-                'avatar'      => $user->avatar,
-                'permissions' => $user->role->getRolePermissions(),
-            ];
-
-            $sessionInfos = [
-                'accessToken' => $accessToken,
-                'tokenType'   => 'Bearer',
-                'expiresAt'   => $this->session->getTokenExpiresAt(),
-            ];
-
-            $this->logger->info('User successfully logged in', ['email' => $email, 'session' => $sessionInfos]);
-            $this->renderJson(['user' => $userInfos, 'session' => $sessionInfos]);
-        } elseif ($user->valid() && UserStatus::ACTIVE === $user->status && !$user->verifyPassword($password) && $user->password_attempts > 1) {
-            --$user->password_attempts;
-            $user->save();
+        if (!$user->valid()) {
             $this->logger->error($errorMessage, ['email' => $email]);
-            $this->renderJson(['message' => 'Invalid credentials provided, try again'], ResponseCode::HTTP_BAD_REQUEST);
-        } elseif ($user->valid() && 0 === $user->password_attempts || 1 === $user->password_attempts) {
-            $user->password_attempts = 0;
-            $user->status            = UserStatus::INACTIVE;
-            $user->save();
-            $this->logger->error($errorMessage, ['email' => $email]);
-            $this->renderJson(['message' => 'Your account has been locked because you have reached the maximum number of invalid sign-in attempts. You can contact the administrator or click here to receive an email containing instructions on how to unlock your account'], ResponseCode::HTTP_BAD_REQUEST);
-        } elseif ($user->valid() && (UserStatus::PENDING === $user->status || UserStatus::INACTIVE === $user->status)) {
-            $this->logger->error($errorMessage, ['email' => $email]);
-            $this->renderJson(['message' => 'Your account is not active. Please contact your administrator'], ResponseCode::HTTP_BAD_REQUEST);
-        } elseif ($user->valid() && UserStatus::DELETED === $user->status) {
+            $this->renderJson(['message' => 'User does not exist with this email'], ResponseCode::HTTP_BAD_REQUEST);
+
+            return;
+        }
+
+        if (UserStatus::DELETED === $user->status) {
             $this->logger->error($errorMessage, ['email' => $email]);
             $this->renderJson(['message' => 'Your account has been disabled for violating our terms'], ResponseCode::HTTP_BAD_REQUEST);
-        } elseif (!$user->valid()) {
-            $this->logger->error($errorMessage, ['email' => $email]);
-            $this->renderJson(['message' => 'Invalid credentials provided, try again'], ResponseCode::HTTP_BAD_REQUEST);
+
+            return;
         }
+
+        if (UserStatus::ACTIVE !== $user->status) {
+            $this->logger->error($errorMessage, ['email' => $email]);
+            $this->renderJson(['message' => 'Your account is not active. Please contact your administrator'], ResponseCode::HTTP_BAD_REQUEST);
+
+            return;
+        }
+
+        if (!$user->verifyPassword($password)) {
+            $this->refuseWrongPassword($user, $email, $errorMessage);
+
+            return;
+        }
+
+        $accessToken = $this->session->authorizeUser($user);
+
+        $user->last_login        = Time::db();
+        $user->password_attempts = self::PASSWORD_ATTEMPTS;
+        $user->save();
+
+        // @todo: store role in redis cache to allow routes
+        $this->f3->set('role', $user->role->name);
+
+        // @todo: store locale in user prefs table
+        $userInfos = [
+            'id'          => $user->id,
+            'username'    => $user->username,
+            'email'       => $user->email,
+            'role'        => $user->role->name,
+            'avatar'      => $user->avatar,
+            'permissions' => $user->role->getRolePermissions(),
+        ];
+
+        $sessionInfos = [
+            'accessToken' => $accessToken,
+            'tokenType'   => 'Bearer',
+            'expiresAt'   => $this->session->getTokenExpiresAt(),
+        ];
+
+        $this->logger->info('User successfully logged in', ['email' => $email, 'session' => $sessionInfos]);
+        $this->renderJson(['user' => $userInfos, 'session' => $sessionInfos]);
+    }
+
+    /**
+     * Count the failed attempt down and lock the account once the last one is spent.
+     */
+    private function refuseWrongPassword(User $user, string $email, string $errorMessage): void
+    {
+        $this->logger->error($errorMessage, ['email' => $email]);
+
+        if ($user->password_attempts > 1) {
+            --$user->password_attempts;
+            $user->save();
+
+            $this->renderJson(['message' => 'Wrong password. Attempts left : ' . $user->password_attempts], ResponseCode::HTTP_BAD_REQUEST);
+
+            return;
+        }
+
+        $user->password_attempts = 0;
+        $user->status            = UserStatus::INACTIVE;
+        $user->save();
+
+        $this->renderJson(['message' => 'Your account has been locked because you have reached the maximum number of invalid sign-in attempts. You can contact the administrator or click here to receive an email containing instructions on how to unlock your account'], ResponseCode::HTTP_BAD_REQUEST);
     }
 }
