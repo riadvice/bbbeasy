@@ -244,21 +244,6 @@ const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
                             .ant-btn-background-ghost.ant-btn-primary:focus .icon-bbbeasy-activity-reports {
                                 color: #ffffff !important;
                             }
-                            /* Sider New button */
-                            button.sider-new-btn,
-                            .ant-dropdown-trigger.sider-new-btn {
-                                background: ${settings.brand_color} !important;
-                                border-color: ${settings.brand_color} !important;
-                                color: #ffffff !important;
-                            }
-                            button.sider-new-btn:hover,
-                            button.sider-new-btn:focus,
-                            .ant-dropdown-trigger.sider-new-btn:hover,
-                            .ant-dropdown-trigger.sider-new-btn:focus {
-                                background: ${settings.brand_color}cc !important;
-                                border-color: ${settings.brand_color}cc !important;
-                                color: #ffffff !important;
-                            }
                             /* Back to Home button */
                             .color-blue {
                                 background: ${settings.brand_color} !important;

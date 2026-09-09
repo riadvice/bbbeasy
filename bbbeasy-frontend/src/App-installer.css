@@ -264,17 +264,6 @@
     color: #ffffff !important;
 }
 
-.site-sider .sider-new-btn {
-    background: #1677ff !important;
-    border-color: #1677ff !important;
-}
-.site-sider .sider-new-btn:hover,
-.site-sider .sider-new-btn:focus {
-    background: #4096ff !important;
-    color: #ffffff !important;
-    border-color: #4096ff !important;
-}
-
 .site-footer {
     min-height: 50px;
     z-index: 1;
@@ -291,23 +280,6 @@
     padding: 0 5px !important;
 }
 /*********************************************/
-.color-primary {
-    background: #1677ff !important;
-    border-color: #1677ff !important;
-    color: #ffffff !important;
-}
-.color-primary:hover {
-    background: #4096ff !important;
-    border-color: #4096ff !important;
-    color: #ffffff !important;
-}
-.color-blue {
-    color: #fff !important;
-    border-color: #1890ff !important;
-    background: #1890ff !important;
-    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12);
-    box-shadow: 0 2px #0000000b !important;
-}
 
 .m-5 {
     margin: 5%;
@@ -341,33 +313,6 @@
     margin-right: 20px !important;
 }
 
-.modal-submit-btn .ant-btn-primary {
-    background: #1677ff !important;
-    border-color: #1677ff !important;
-    color: #ffffff !important;
-}
-.modal-submit-btn .ant-btn-primary:hover,
-.modal-submit-btn .ant-btn-primary:focus {
-    background: #4096ff !important;
-    border-color: #4096ff !important;
-    color: #ffffff !important;
-}
-
-.ant-page-header .ant-btn-primary,
-.site-page-header .ant-btn-primary {
-    background: #1677ff !important;
-    border-color: #1677ff !important;
-    color: #ffffff !important;
-}
-
-.ant-page-header .ant-btn-primary:hover,
-.ant-page-header .ant-btn-primary:focus,
-.site-page-header .ant-btn-primary:hover,
-.site-page-header .ant-btn-primary:focus {
-    background: #4096ff !important;
-    border-color: #4096ff !important;
-    color: #ffffff !important;
-}
 .final-step-btn {
     width: 81%;
     display: block;
