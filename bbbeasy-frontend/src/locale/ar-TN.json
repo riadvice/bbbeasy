@@ -57,6 +57,7 @@
     "have-already-account": "لديك حساب",
     "login-here": "تسجيل الدخول هنا",
     "passwords-not-match": "كلمتا المرور غير متطابقتين",
+    "password-not-changed": "يجب أن تكون كلمة المرور الجديدة مختلفة عن كلمة المرور الحالية",
     "user-could-not-logged": "تعذر تسجيل المستخدم",
     "success-title": "تم الإجراء بنجاح",
     "error-title": "خطأ",
@@ -424,16 +425,13 @@
     "self_registration.label": "السماح بالتسجيل الذاتي",
     "administration": "الإدارة",
     "edit_administration_settings_success": "تم تحديث إعدادات الإدارة بنجاح",
-
     "status_presets_active": "نشيط",
     "status_presets_inactive": "عاطل",
     "availability": "التوفر",
     "record": "سجل",
     "askModerator": "اسأل المشرف",
     "alwaysAccept": "تقبل دائما",
-
     "alwaysDeny": "ينفي دائما",
-
     "email-not-exist": "المستخدم غير موجود مع هذا البريد الإلكتروني",
     "publish_record_success": "تم نشر التسجيل بنجاح",
     "unpublish_record_success": "تم إلغاء نشر التسجيل بنجاح"

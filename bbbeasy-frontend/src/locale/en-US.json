@@ -57,6 +57,7 @@
     "have-already-account": "Already have an account",
     "login-here": "Login Here",
     "passwords-not-match": "The two passwords do not match",
+    "password-not-changed": "The new password must be different from the current one",
     "user-could-not-logged": "User could not be logged",
     "success-title": "Success",
     "error-title": "Error",
@@ -86,7 +87,6 @@
     "and": "and",
     "privacy-policy": "Privacy Policy",
     "invalid_credentials": "Invalid credentials provided, try again!",
-
     "attempts_exceeded": "Your account has been locked because you have reached the maximum number of invalid sign-in attempts. You can contact the administrator or ",
     "click_here": " click here",
     "email_instructions": "to receive an email containing instructions on how to unlock your account",
@@ -185,7 +185,6 @@
         "logout": "Sign Out",
         "warning_notification": "BigBlueButton API is not configured on this instance. Please contact your administrator."
     },
-
     "name_col": "Name",
     "users_col": "No. of users",
     "nb_rooms_col": "No. of Rooms",
@@ -222,7 +221,6 @@
     "delete_role_success": "Role successfully deleted",
     "confirm_yes": "Yes",
     "confirm_no": "No",
-
     "username_col": "Username",
     "email_col": "Email",
     "role_col": "Role",
@@ -248,7 +246,6 @@
     "edit_user_success": "User successfully updated",
     "delete_user_confirm": "Are you sure to delete this user ?",
     "delete_user_success": "User successfully deleted",
-
     "label_name": {
         "size": "Label Name must be at least one character",
         "maxSize": "Label name cannot be longer than 32 characters"
@@ -287,10 +284,8 @@
     "add_preset_success": "Preset successfully added",
     "edit_preset_success": "Preset successfully updated",
     "copy_preset_success": "Preset successfully copied",
-
     "edit_settings_success": "Organisation & Branding settings successfully updated",
     "edit_preset_settings_success": "BigBlueButton rooms settings successfully updated",
-
     "new_room": "New Room",
     "room_name": {
         "minSize": "Room name must have at least 4 characters",
@@ -305,7 +300,6 @@
     "room-name-already-exist": "Room name already exists",
     "room-link-already-exist": "Room link already exists",
     "add_room_success": "Room added Successfully",
-
     "view": "View",
     "copy": "Copy",
     "copy_text": "Copy text",
@@ -339,19 +333,16 @@
     "edit_room_success": "Room successfully updated",
     "found_results": "Found {{count}} results",
     "search_all_rooms": "Search all my rooms",
-
     "update_profile": "Update profile",
     "current_password": "Current password",
     "new_password": "New password",
     "confirm_new_password": "Re-type new password",
     "change_avatar": "Change avatar",
     "edit_account_success": "Profile successfully updated",
-
     "install_locked_title": "Install process locked",
     "install_locked_text": "Sorry, you are not authorized to access this page, application already installed",
     "install_error_title": "Installer disabled",
     "install_error_text": "Installer must be enabled in the backend configuration. Please reload once updated",
-
     "recordings": "Recordings",
     "date_col": "Date",
     "duration_col": "Duration",
@@ -368,7 +359,6 @@
     "edit_recording_success": "Recording successfully updated",
     "delete_recording_confirm": "Are you sure to delete this recording ?",
     "delete_recording_success": "Recording successfully deleted",
-
     "audio": "Audio",
     "breakout_rooms": "Breakout Rooms",
     "general": "General",
@@ -384,7 +374,6 @@
     "ux": "User Experience",
     "webcams": "Webcams",
     "whiteboard": "Whiteboard",
-
     "users_join_muted": "Users join muted",
     "moderators_allowed_to_unmute_users": "Moderators allowed to unmute users",
     "auto_join": "Auto join",
@@ -435,23 +424,18 @@
     "no_labels": "No labels",
     "no_data": "No Data",
     "wrong_file_name": "Wrong file name : File name must not contain special characters",
-
     "email_not_exist": "User with this email does not exist",
     "send_invitation.label": "Send registration invitation to users",
     "self_registration.label": "Allow self-registration",
     "administration": "Administration",
     "edit_administration_settings_success": "Administration settings successfully updated",
-
     "status_presets_active": "Active",
     "status_presets_inactive": "Inactive",
     "availability": "Availability",
     "record": "Record",
-
     "askModerator": "Ask moderator",
     "alwaysAccept": "Always accept",
-
     "alwaysDeny": "Always deny",
-
     "email-not-exist": "User does not exist with this email",
     "publish_record_success": "Recording published successfully",
     "unpublish_record_success": "Recording unpublished successfully"

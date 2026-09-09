@@ -103,11 +103,9 @@ const Profile = () => {
         }
 
         //edit account
-        console.log('[Profile] Sending avatar (base64 length):', formValues.avatar?.length);
         AuthService.edit_account(formValues)
             .then((response) => {
                 const user = response.data.user;
-                console.log('[Profile] Avatar saved, length:', user?.avatar?.length);
                 if (user) {
                     //remove passwords from form
                     accountForm.resetFields(['current_password', 'new_password', 'confirm_new_password']);
@@ -161,11 +159,20 @@ const Profile = () => {
                         <Form.Item
                             label={<Trans i18nKey="new_password" />}
                             name="new_password"
+                            dependencies={['current_password']}
                             rules={[
                                 {
                                     min: 8,
                                     message: <Trans i18nKey="password.size" />,
                                 },
+                                ({ getFieldValue }) => ({
+                                    validator(_, value) {
+                                        if (!value || getFieldValue('current_password') !== value) {
+                                            return Promise.resolve();
+                                        }
+                                        return Promise.reject(new Error(t('password-not-changed')));
+                                    },
+                                }),
                             ]}
                         >
                             <PasswordInput placeholder="**********" />
