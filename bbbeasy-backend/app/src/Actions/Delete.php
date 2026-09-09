@@ -25,7 +25,6 @@ namespace Actions;
 use Actions\Base as BaseAction;
 use Enum\ResponseCode;
 use Models\Base as Model;
-use Nette\Utils\Strings;
 
 /**
  * Class Delete.
@@ -69,10 +68,8 @@ abstract class Delete extends BaseAction
     {
         $this->recordId = $params['id'];
 
-        if (null === $this->model) {
-            $this->model = $f3->camelcase(Strings::capitalize(str_replace('-', '_', Strings::before($f3->get('ALIAS'), '_delete'))));
-        }
-
+        // Every delete action names its model, deriving it from the route alias
+        // tied the models to the way the routes happen to be named.
         $this->class         = new \ReflectionClass("Models\\{$this->model}");
         $this->modelInstance = $this->class->newInstance();
 

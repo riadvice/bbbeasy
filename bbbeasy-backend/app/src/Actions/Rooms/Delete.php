@@ -32,5 +32,7 @@ class Delete extends DeleteAction
 {
     use RequirePrivilegeTrait;
 
+    protected $model = 'Room';
+
     protected $deleteMethodName = 'delete';
 }

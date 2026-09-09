@@ -26,6 +26,7 @@ use Core\Session;
 use Models\Role;
 use Sukarix\Application\Bootstrap as SukarixBootstrap;
 use Tracy\Debugger;
+use Utils\RoutePrivileges;
 
 /**
  * BBBEasy application initialisation.
@@ -118,36 +119,13 @@ class Bootstrap extends SukarixBootstrap
         }
 
         $access = \Access::instance();
-        foreach ($permissions as $group => $actions) {
-            foreach ($actions as $action) {
-                $access->allow($this->getRouteByGroupAndAction($group, $action), $role->name);
-            }
+        foreach (RoutePrivileges::routesFor($permissions) as $route) {
+            $access->allow($route, $role->name);
         }
     }
 
     protected function getSession(): Session
     {
         return \Registry::get('session');
-    }
-
-    protected function getRouteByGroupAndAction(string $group, string $action): string
-    {
-        $method = match ($action) {
-            'add', 'start' => 'POST',
-            'edit'         => 'PUT',
-            'delete'       => 'DELETE',
-            'collect'      => 'GET|POST',
-            default        => 'GET',
-        };
-        if (str_contains($action, 'edit')) {
-            $method = 'PUT';
-        }
-        if ('delete' === $action) {
-            $acl = '@' . mb_substr($group, 0, -1) . '_' . $action;
-        } else {
-            $acl = '@' . $group . '_' . $action;
-        }
-
-        return $method . ' ' . $acl;
     }
 }

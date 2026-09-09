@@ -35,6 +35,8 @@ class Delete extends DeleteAction
 {
     use RequirePrivilegeTrait;
 
+    protected $model = 'Preset';
+
     public function execute($f3, $params): void
     {
         $preset   = new Preset();

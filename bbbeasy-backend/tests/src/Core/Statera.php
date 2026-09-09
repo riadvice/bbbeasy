@@ -69,7 +69,7 @@ class Statera
 
         // Test web-application classes
         $classes = [
-            ConfigurationTest::class, ReflectionTest::class, ModelsTest::class,
+            ConfigurationTest::class, ReflectionTest::class, RoutePrivilegesTest::class, ModelsTest::class,
             CoreActionsTest::class,
             AccountActionsTest::class,
             RolesActionsTest::class,
