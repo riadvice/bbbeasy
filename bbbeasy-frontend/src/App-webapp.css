@@ -5511,3 +5511,22 @@ body {
     filter: brightness(1.06);
     transform: translateY(-1px);
 }
+
+/* ---------- Inline table editing ----------
+   The edit row lays its fields out in an inline-flex Space, so without these the
+   text input collapses to a few pixels and the row actions spill out of the table. */
+.ant-table-wrapper .ant-table-container {
+    overflow-x: auto;
+}
+.ant-table-tbody .ant-space {
+    display: flex;
+    width: 100%;
+}
+.ant-table-tbody .ant-space > .ant-space-item:first-child {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+.ant-table-tbody .input-editable .ant-input,
+.ant-table-tbody .input-editable .ant-input-affix-wrapper {
+    width: 100%;
+}
