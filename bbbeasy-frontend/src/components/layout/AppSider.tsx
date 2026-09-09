@@ -40,6 +40,7 @@ import { UserType } from '../../types/UserType';
 import { MenuType } from '../../types/MenuType';
 import settingsService from 'services/settings.service';
 import { SettingsType } from 'types/SettingsType';
+import { apiRoutes } from '../../routing/backend-config';
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
@@ -119,7 +120,7 @@ const AppSider = (props: Props) => {
                         <Link to={'/'}>
                             <img
                                 className="sider-logo-image"
-                                src={logo ? import.meta.env.VITE_API_URL + '/' + logo : '/images/logo_01.png'}
+                                src={logo ? apiRoutes.GET_FILE_URL + logo : '/images/logo_01.png'}
                                 alt="Logo"
                             />
                         </Link>

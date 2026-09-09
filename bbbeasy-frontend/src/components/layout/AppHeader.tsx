@@ -58,6 +58,7 @@ import notificationService from '../../services/notification.service';
 
 import settingsService from 'services/settings.service';
 import { SettingsType } from 'types/SettingsType';
+import { apiRoutes } from '../../routing/backend-config';
 
 const { Header } = Layout;
 const { Title, Text, Paragraph } = Typography;
@@ -239,7 +240,7 @@ const AppHeader = () => {
                         <Link to={'/'}>
                             <img
                                 className="header-logo-image"
-                                src={logo ? import.meta.env.VITE_API_URL + '/' + logo : '/images/logo_01.png'}
+                                src={logo ? apiRoutes.GET_FILE_URL + logo : '/images/logo_01.png'}
                                 alt="Logo"
                             />
                         </Link>

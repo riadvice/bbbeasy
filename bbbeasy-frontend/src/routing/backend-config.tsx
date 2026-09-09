@@ -37,6 +37,7 @@ export const apiRoutes = {
     COLLECT_SETTINGS_URL: API_URL + '/settings',
     EDIT_SETTINGS_URL: API_URL + '/settings',
     SAVE_FILE_URL: API_URL + '/settings',
+    GET_FILE_URL: API_URL + '/files/',
     INSTALL_URL: API_URL + '/install',
 
     LIST_ROLE_URL: API_URL + '/roles',

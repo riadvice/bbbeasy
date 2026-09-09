@@ -25,7 +25,7 @@ namespace Actions\Core;
 use Actions\Base as BaseAction;
 
 /**
- * Class LocalesController.
+ * Serves a file from the uploads directory.
  */
 class GetFile extends BaseAction
 {
@@ -35,7 +35,15 @@ class GetFile extends BaseAction
      */
     public function execute($f3, $params)
     {
-        $file = $f3->get('PARAMS.filename');
+        $file = (string) $f3->get('PARAMS.filename');
+
+        // Only plain file names are served, never a path.
+        if ('' === $file || basename($file) !== $file) {
+            $this->logger->warning('Rejected an upload request with an invalid file name', ['filename' => $file]);
+            $f3->error(404);
+
+            return;
+        }
 
         // PDFs must be rendered inline so the room presentation preview (iframe)
         // can display them; everything else keeps the download disposition.
@@ -47,9 +55,9 @@ class GetFile extends BaseAction
             // Fallback: resolve relative to this file's location
             $uploadsDir = realpath(__DIR__ . '/../../../../uploads');
         }
-        $filePath = $uploadsDir . \DIRECTORY_SEPARATOR . $file;
 
-        if (!file_exists($filePath)) {
+        $filePath = realpath($uploadsDir . \DIRECTORY_SEPARATOR . $file);
+        if (!$filePath || !str_starts_with($filePath, $uploadsDir . \DIRECTORY_SEPARATOR) || !is_file($filePath)) {
             $f3->error(404);
 
             return;

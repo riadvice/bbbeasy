@@ -28,6 +28,7 @@ import EN_US from '../../locale/en-US.json';
 import { t } from 'i18next';
 import settingsService from 'services/settings.service';
 import { SettingsType } from 'types/SettingsType';
+import { apiRoutes } from '../../routing/backend-config';
 
 const { Title, Paragraph } = Typography;
 
@@ -141,7 +142,7 @@ const Register = () => {
                             <Paragraph className="form-header text-center">
                                 <img
                                     className="form-img"
-                                    src={logo ? import.meta.env.VITE_API_URL + '/' + logo : '/images/logo_02.png'}
+                                    src={logo ? apiRoutes.GET_FILE_URL + logo : '/images/logo_02.png'}
                                     alt="Logo"
                                 />
                                 <Title level={4}>

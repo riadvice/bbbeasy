@@ -31,16 +31,6 @@ use Sukarix\Application\Bootstrap as SukarixBootstrap;
  */
 class Bootstrap extends SukarixBootstrap
 {
-    protected function setPhpVariables(): void
-    {
-        parent::setPhpVariables();
-
-        // Fat-Free forces its own error reporting level, drop deprecations from it:
-        // the Cortex ORM still calls ReflectionProperty::setAccessible() which PHP 8.5
-        // deprecates and which the framework turns into a fatal error.
-        error_reporting(error_reporting() & ~E_DEPRECATED);
-    }
-
     /**
      * BBBEasy authenticates with stateless JWT access tokens, the session is
      * therefore not the database backed one the framework expects.
@@ -49,6 +39,16 @@ class Bootstrap extends SukarixBootstrap
     {
         $className = $this->f3->get('classes.session');
         \Registry::set('session', new $className());
+    }
+
+    protected function setPhpVariables(): void
+    {
+        parent::setPhpVariables();
+
+        // Fat-Free forces its own error reporting level, drop deprecations from it:
+        // the Cortex ORM still calls ReflectionProperty::setAccessible() which PHP 8.5
+        // deprecates and which the framework turns into a fatal error.
+        error_reporting(error_reporting() & ~E_DEPRECATED);
     }
 
     protected function loadConfiguration(): void

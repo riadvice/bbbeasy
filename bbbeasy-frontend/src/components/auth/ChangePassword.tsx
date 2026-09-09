@@ -31,6 +31,7 @@ import { URLSearchParams as _URLSearchParams } from 'url';
 import { PasswordInput } from 'antd-password-input-strength';
 import settingsService from 'services/settings.service';
 import { SettingsType } from 'types/SettingsType';
+import { apiRoutes } from '../../routing/backend-config';
 
 const { Title, Paragraph } = Typography;
 
@@ -106,7 +107,7 @@ const ChangePassword = () => {
                                 <Paragraph className="form-header text-center">
                                     <img
                                         className="form-img"
-                                        src={logo ? import.meta.env.VITE_API_URL + '/' + logo : '/images/logo_02.png'}
+                                        src={logo ? apiRoutes.GET_FILE_URL + logo : '/images/logo_02.png'}
                                         alt="Logo"
                                     />
                                     <Title level={4}>
