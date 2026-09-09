@@ -73,6 +73,28 @@ class Room extends BaseModel
         return $this->load($this->excludeId(['short_link = ?', $shortlink], $id));
     }
 
+    /**
+     * Names are unique per owner and short links are unique overall, returns one
+     * message per value already taken.
+     *
+     * @param mixed      $userId
+     * @param null|mixed $id
+     */
+    public function uniquenessErrors(string $name, string $shortLink, $userId, $id = null): array
+    {
+        $errors = [];
+
+        if (new self()->nameExists($name, $userId, $id)) {
+            $errors['name'] = 'Room name already exists';
+        }
+
+        if (new self()->shortlinkExists($shortLink, $id)) {
+            $errors['short_link'] = 'Room link already exists';
+        }
+
+        return $errors;
+    }
+
     public function presetExists($presetId, $name)
     {
         return $this->load(['preset_id = ? and name = ?', $presetId, $name]);
@@ -122,7 +144,7 @@ class Room extends BaseModel
         $rooms = $this->find([], ['order' => 'id']);
         if ($rooms) {
             foreach ($rooms as $room) {
-                $data[] = $room->getRoomInfos($room);
+                $data[] = $room->getRoomInfos();
             }
         }
 
@@ -175,38 +197,12 @@ class Room extends BaseModel
 
     public function getPresetID($id)
     {
-        if ($id) {
-            $subQuery = 'WHERE r.id = :room_id';
-            $params   = [':room_id' => $id];
-        }
-        $result = $this->db->exec(
-            'SELECT
-                 p.id AS preset_id
-            FROM
-                rooms r
-            LEFT JOIN presets p ON r.preset_id = p.id ' . $subQuery,
-            $params
-        );
-
-        return $id ? $result[0] : $result;
+        return $this->joinedIds('presets p ON r.preset_id = p.id', 'p.id AS preset_id', $id);
     }
 
     public function getUserID($id)
     {
-        if ($id) {
-            $subQuery = 'WHERE r.id = :room_id';
-            $params   = [':room_id' => $id];
-        }
-        $result = $this->db->exec(
-            'SELECT
-                 u.id AS user_id
-            FROM
-                rooms r
-            LEFT JOIN users u ON r.user_id = u.id ' . $subQuery,
-            $params
-        );
-
-        return $id ? $result[0] : $result;
+        return $this->joinedIds('users u ON r.user_id = u.id', 'u.id AS user_id', $id);
     }
 
     public function getLabels($room): array
@@ -237,9 +233,9 @@ class Room extends BaseModel
         $recordingsParams->setMeetingId($meetingId);
         $this->logger->info('Received request to fetch recordings', ['meetingID' => $meetingId]);
 
-        $recordingsResponse = $bbbRequester->getRecordings($recordingsParams);
+        $recordingsResponse = $bbbRequester->send(static fn () => $bbbRequester->getRecordings($recordingsParams));
 
-        if ($recordingsResponse->success() && \count($recordingsResponse->getRecords()) > 0) {
+        if (null !== $recordingsResponse && $recordingsResponse->success() && \count($recordingsResponse->getRecords()) > 0) {
             $recordingsData = [];
             $recordings     = $recordingsResponse->getRawXml()->recordings;
             $recordings     = $recordings[0];
@@ -263,8 +259,8 @@ class Room extends BaseModel
         $recordingParams->setRecordId($recordId);
         $this->logger->info('Received request to fetch recording', ['recordID' => $recordingParams]);
 
-        $recordingResponse = $bbbRequester->getRecordings($recordingParams);
-        if ($recordingResponse->success() && \count($recordingResponse->getRecords()) > 0) {
+        $recordingResponse = $bbbRequester->send(static fn () => $bbbRequester->getRecordings($recordingParams));
+        if (null !== $recordingResponse && $recordingResponse->success() && \count($recordingResponse->getRecords()) > 0) {
             if (true === $loadRecord) {
                 $recording = $recordingResponse->getRawXml()->recordings->recording[0];
                 $bbbRecord = $recordingResponse->getRecords()[0];
@@ -344,5 +340,21 @@ class Room extends BaseModel
         }
 
         return [[], ResponseCode::HTTP_FORBIDDEN];
+    }
+
+    /**
+     * One row for the given room, every row when no room is given. Building the
+     * statement from an unset variable produced a query with a placeholder and no
+     * value bound to it.
+     *
+     * @param mixed $id
+     */
+    protected function joinedIds(string $join, string $select, $id): array
+    {
+        $where  = $id ? ' WHERE r.id = :room_id' : '';
+        $params = $id ? [':room_id' => $id] : [];
+        $result = $this->db->exec('SELECT ' . $select . ' FROM rooms r LEFT JOIN ' . $join . $where, $params);
+
+        return $id ? ($result[0] ?? []) : $result;
     }
 }

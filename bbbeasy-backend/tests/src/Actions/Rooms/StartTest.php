@@ -34,7 +34,7 @@ use Test\Scenario;
  */
 final class StartTest extends Scenario
 {
-    final protected const START_ROOM_ROUTE = 'POST /rooms/';
+    final protected const START_ROOM_ROUTE = 'POST /api/rooms/';
     protected $group                       = 'Action Room Start';
 
     /**
@@ -71,7 +71,9 @@ final class StartTest extends Scenario
         $preset = PresetFaker::create($loggedUser);
         $room   = RoomFaker::create($loggedUser, $preset);
         $f3->mock(self::START_ROOM_ROUTE . $room->id, null, null);
-        $test->expect(null === json_decode($f3->get('RESPONSE')), 'Start room meeting with id "' . $room->id . '" and meeting_id "' . $room->meeting_id . '"');
+        // No BigBlueButton server is reachable from the test environment, starting a
+        // room has to answer with an error rather than break.
+        $test->expect($this->compareArrayToResponse(['meeting' => 'Could not start or join the meeting']), 'Start room meeting with id "' . $room->id . '" and meeting_id "' . $room->meeting_id . '"');
 
         return $test->results();
     }

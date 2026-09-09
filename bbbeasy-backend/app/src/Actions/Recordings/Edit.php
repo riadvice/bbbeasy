@@ -68,13 +68,13 @@ class Edit extends BaseAction
                 if ($recordName !== $recording['name']) {
                     $editParams->addMeta('name', $recordName);
                     $this->logger->info('Received request to edit recording', ['recordID' => $recordId]);
-                    $editResponse = $bbbRequester->updateRecordings($editParams);
-                    if ($editResponse->success() && $editResponse->isUpdated()) {
+                    $editResponse = $bbbRequester->send(static fn () => $bbbRequester->updateRecordings($editParams));
+                    if (null !== $editResponse && $editResponse->success() && $editResponse->isUpdated()) {
                         $this->logger->info('Recording name successfully updated', ['recordID' => $recordId]);
                         $newRecording = $room->getRecordingByRecordId($recordId, true);
                         $this->renderJson(['result' => 'success', 'recording' => $newRecording]);
                     } else {
-                        $this->logger->error('Recording could not be updated', ['recordID' => $recordId, 'error' => $editResponse->getMessage()]);
+                        $this->logger->error('Recording could not be updated', ['recordID' => $recordId, 'error' => $editResponse?->getMessage()]);
                         $this->renderJson([], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
                     }
                 }
@@ -86,25 +86,25 @@ class Edit extends BaseAction
                         $publish = 'published' === $form['state'] ? true : false;
 
                         $publishParams   = new PublishRecordingsParameters($recordId, $publish);
-                        $publishResponse = $bbbRequester->publishRecordings($publishParams);
+                        $publishResponse = $bbbRequester->send(static fn () => $bbbRequester->publishRecordings($publishParams));
 
-                        if ($publishResponse->success() && ($publish && $publishResponse->isPublished() || !$publish && !$publishResponse->isPublished())) {
+                        if (null !== $publishResponse && $publishResponse->success() && ($publish && $publishResponse->isPublished() || !$publish && !$publishResponse->isPublished())) {
                             $this->logger->info('Recording state successfully updated', ['recordID' => $recordId]);
                             $newRecording = $room->getRecordingByRecordId($recordId, true);
                             $this->renderJson(['result' => 'success', 'recording' => $newRecording]);
                         } else {
-                            $this->logger->error('Recording state could not be updated', ['recordID' => $recordId, 'error' => $publishResponse->getMessage()]);
+                            $this->logger->error('Recording state could not be updated', ['recordID' => $recordId, 'error' => $publishResponse?->getMessage()]);
                             $this->renderJson([], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
                         }
                     } else {
                         $deleteParams   = new DeleteRecordingsParameters($recordId);
-                        $deleteResponse = $bbbRequester->deleteRecordings($deleteParams);
-                        if ($deleteResponse->success() && $deleteResponse->isDeleted()) {
+                        $deleteResponse = $bbbRequester->send(static fn () => $bbbRequester->deleteRecordings($deleteParams));
+                        if (null !== $deleteResponse && $deleteResponse->success() && $deleteResponse->isDeleted()) {
                             $this->logger->info('Recording  successfully deleted', ['recordID' => $recordId]);
                             $newRecording = $room->getRecordingByRecordId($recordId, true);
                             $this->renderJson(['result' => 'success', 'recording' => $newRecording]);
                         } else {
-                            $this->logger->error('Recording  could not be deleted', ['recordID' => $recordId, 'error' => $deleteResponse->getMessage()]);
+                            $this->logger->error('Recording  could not be deleted', ['recordID' => $recordId, 'error' => $deleteResponse?->getMessage()]);
                             $this->renderJson([], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
                         }
                     }

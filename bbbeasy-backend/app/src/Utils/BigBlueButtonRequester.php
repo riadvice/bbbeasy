@@ -50,4 +50,26 @@ class BigBlueButtonRequester extends BigBlueButton
 
         $this->initLogger();
     }
+
+    /**
+     * Runs a request against BigBlueButton and returns null when the server cannot
+     * be reached. The library throws on transport errors, without this every caller
+     * turns an unreachable or misconfigured server into a 500.
+     *
+     * @template T
+     *
+     * @param callable():T $request
+     *
+     * @return null|T
+     */
+    public function send(callable $request)
+    {
+        try {
+            return $request();
+        } catch (\Exception $exception) {
+            $this->logger->error('BigBlueButton request failed', ['error' => $exception->getMessage()]);
+
+            return null;
+        }
+    }
 }

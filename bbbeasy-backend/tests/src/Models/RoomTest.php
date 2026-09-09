@@ -154,14 +154,15 @@ final class RoomTest extends Scenario
         $room   = RoomFaker::create($user, $preset);
 
         $data = [
-            'id'         => $room->id,
-            'name'       => $room->name,
-            'preset_id'  => $preset->id,
-            'user_id'    => $user->id,
-            'short_link' => $room->short_link,
-            'labels'     => $room->getLabels($room->id),
+            'id'            => $room->id,
+            'name'          => $room->name,
+            'preset_id'     => $preset->id,
+            'user_id'       => $user->id,
+            'short_link'    => $room->short_link,
+            'labels'        => $room->getLabels($room->id),
+            'presentations' => $room->getPresentations(),
         ];
-        $test->expect($data === $room->getRoomInfos($room), 'getRoomInfos() returned room');
+        $test->expect($data === $room->getRoomInfos(), 'getRoomInfos() returned room');
 
         return $test->results();
     }
@@ -243,7 +244,7 @@ final class RoomTest extends Scenario
         $room2 = RoomFaker::create($user1, $preset1);
         $room3 = RoomFaker::create($user2, $preset2);
 
-        $data = [$room1->getRoomInfos($room1), $room2->getRoomInfos($room2), $room3->getRoomInfos($room3)];
+        $data = [$room1->getRoomInfos(), $room2->getRoomInfos(), $room3->getRoomInfos()];
         $test->expect($data === $room->collectAll(), 'collectAll() returned all rooms');
 
         $data1 = ['id' => $room1->id, 'name' => $room1->name, 'short_link' => $room1->short_link];

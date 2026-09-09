@@ -76,12 +76,11 @@ class Add extends BaseAction
                     $room->labels     = $form['labels'];
                     $room->meeting_id = DataUtils::generateRandomString();
 
-                    if ($checkRoom->nameExists($room->name, $userId)) {
-                        $this->logger->error($errorMessage, ['error' => 'Name already exists']);
-                        $this->renderJson(['errors' => ['name' => 'Room name already exists']], ResponseCode::HTTP_PRECONDITION_FAILED);
-                    } elseif ($checkRoom->shortlinkExists($room->short_link)) {
-                        $this->logger->error($errorMessage, ['error' => 'Room Link already exists']);
-                        $this->renderJson(['errors' => ['short_link' => 'Room link already exists']], ResponseCode::HTTP_PRECONDITION_FAILED);
+                    $errors = $checkRoom->uniquenessErrors($room->name, $room->short_link, $userId);
+
+                    if ($errors) {
+                        $this->logger->error($errorMessage, ['errors' => $errors]);
+                        $this->renderJson(['errors' => $errors], ResponseCode::HTTP_PRECONDITION_FAILED);
                     } else {
                         while ($checkRoom->meetingIdExists($room->meeting_id)) {
                             $room->meeting_id = DataUtils::generateRandomString();

@@ -56,14 +56,14 @@ class Publish extends BaseAction
 
             // $editParams->addMeta('HVname', $recordName);
             $this->logger->info('Received request to publish recording', ['recordID' => $recordId]);
-            $publishResponse = $bbbRequester->publishRecordings($publishParams);
+            $publishResponse = $bbbRequester->send(static fn () => $bbbRequester->publishRecordings($publishParams));
 
-            if ($publishResponse->success() && ($publish && $publishResponse->isPublished() || !$publish && !$publishResponse->isPublished())) {
+            if (null !== $publishResponse && $publishResponse->success() && ($publish && $publishResponse->isPublished() || !$publish && !$publishResponse->isPublished())) {
                 $this->logger->info('Recording state successfully updated', ['recordID' => $recordId]);
                 $newRecording = $room->getRecordingByRecordId($recordId, true);
                 $this->renderJson(['result' => 'success', 'recording' => $newRecording]);
             } else {
-                $this->logger->error('Recording state could not be updated', ['recordID' => $recordId, 'error' => $publishResponse->getMessage()]);
+                $this->logger->error('Recording state could not be updated', ['recordID' => $recordId, 'error' => $publishResponse?->getMessage()]);
                 $this->renderJson([], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
             }
         } else {

@@ -49,12 +49,12 @@ class Delete extends BaseAction
             $deleteParams = new DeleteRecordingsParameters($recordId);
 
             $this->logger->info('Received request to delete recordings', ['recordID' => $recordId]);
-            $deleteResponse = $bbbRequester->deleteRecordings($deleteParams);
-            if ($deleteResponse->success() && $deleteResponse->isDeleted()) {
+            $deleteResponse = $bbbRequester->send(static fn () => $bbbRequester->deleteRecordings($deleteParams));
+            if (null !== $deleteResponse && $deleteResponse->success() && $deleteResponse->isDeleted()) {
                 $this->logger->info('Recording successfully deleted', ['recordID' => $recordId]);
                 $this->renderJson(['result' => 'success']);
             } else {
-                $this->logger->error('Recording could not be deleted', ['recordID' => $recordId, 'error' => $deleteResponse->getMessage()]);
+                $this->logger->error('Recording could not be deleted', ['recordID' => $recordId, 'error' => $deleteResponse?->getMessage()]);
                 $this->renderJson([], ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
             }
         } else {

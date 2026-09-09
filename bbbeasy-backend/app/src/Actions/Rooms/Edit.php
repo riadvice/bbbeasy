@@ -58,53 +58,22 @@ class Edit extends BaseAction
             $dataChecker->verify($form['preset_id'], Validator::notEmpty()->setName('preset_id'));
 
             if ($dataChecker->allValid()) {
-                $checkRoom        = new Room();
+                $errors = $room->uniquenessErrors($form['name'], $form['short_link'], $room->user_id, $room->id);
+
+                if ($errors) {
+                    $this->logger->error($errorMessage, ['errors' => $errors]);
+                    $this->renderJson(['errors' => $errors], ResponseCode::HTTP_PRECONDITION_FAILED);
+
+                    return;
+                }
+
                 $room->name       = $form['name'];
                 $room->short_link = $form['short_link'];
                 $room->preset_id  = $form['preset_id'];
 
-                $nameExist      = $checkRoom->nameExists($room->name, $room->user_id);
-                $shortLinkExist = $checkRoom->shortlinkExists($room->short_link);
-                $presetExist    = $checkRoom->presetExists($form['preset_id'], $form['name']);
-                $labelUpdated   = $this->labelUpdated($room->getLabels($room->id), $form['labels']);
-
-                if ($form['labels']) {
-                    foreach ($form['labels'] as $labelForm) {
-                        // test if element has been added to room labels list
-                        $label = new Label();
-                        $label = $label->getByColor($labelForm);
-
-                        if (!$label->dry()) {
-                            $room_label = new RoomLabel();
-
-                            if (!$room_label->roomAndLabelExists($room->id, $label->id)) {
-                                $room_label->label_id = $label->id;
-                                $room_label->room_id  = $room->id;
-
-                                $room_label->save();
-                            }
-                        }
-                    }
-                }
-
-                foreach ($room->getLabels($room->id) as $label) {
-                    $roomLabel = new RoomLabel();
-                    if (!\in_array($label['color'], $form['labels'], true)) {
-                        $labelUpdated = true;
-                        $roomLabel    = $roomLabel->getByRoomAndLabel($room->id, $label['key']);
-                        if (!$roomLabel->dry()) {
-                            $roomLabel->erase();
-                        }
-                    }
-                }
+                $this->syncLabels($room, $form['labels'] ?? []);
 
                 try {
-                    if (!$labelUpdated && $nameExist && $shortLinkExist && $presetExist) {
-                        $this->logger->info('The room is not updated', ['room' => $room->toArray()]);
-                        $this->renderJson(['result' => 'FAILED', 'room' => $room->getRoomInfos($room)]);
-
-                        return;
-                    }
                     $room->save();
                 } catch (\Exception $e) {
                     $this->logger->error($errorMessage, ['error' => $e->getMessage()]);
@@ -114,7 +83,7 @@ class Edit extends BaseAction
                 }
 
                 $this->logger->info('room successfully updated', ['room' => $room->toArray()]);
-                $this->renderJson(['result' => 'success', 'room' => $room->getRoomInfos($room)]);
+                $this->renderJson(['result' => 'success', 'room' => $room->getRoomInfos()]);
             } else {
                 $this->logger->error($errorMessage, ['errors' => $dataChecker->getErrors()]);
                 $this->renderJson(['errors' => $dataChecker->getErrors()], ResponseCode::HTTP_UNPROCESSABLE_ENTITY);
@@ -125,21 +94,35 @@ class Edit extends BaseAction
         }
     }
 
-    public function labelUpdated($labels, $newLabels)
+    /**
+     * Bring the room labels in line with the colours the form carries, adding what
+     * is new and removing what is gone.
+     */
+    protected function syncLabels(Room $room, array $colors): void
     {
-        // Get old label.
-        $oldLabel = [];
-        foreach ($labels as $label) {
-            $oldLabel[] = $label['color'];
-        }
+        foreach ($colors as $color) {
+            $label = new Label()->getByColor($color);
+            if ($label->dry()) {
+                continue;
+            }
 
-        // Test whether the label has been updated or not.
-        foreach ($newLabels as $label) {
-            if (!\in_array($label, $oldLabel, true)) {
-                return true;
+            $roomLabel = new RoomLabel();
+            if (!$roomLabel->roomAndLabelExists($room->id, $label->id)) {
+                $roomLabel->label_id = $label->id;
+                $roomLabel->room_id  = $room->id;
+                $roomLabel->save();
             }
         }
 
-        return false;
+        foreach ($room->getLabels($room->id) as $label) {
+            if (\in_array($label['color'], $colors, true)) {
+                continue;
+            }
+
+            $roomLabel = new RoomLabel()->getByRoomAndLabel($room->id, $label['key']);
+            if (!$roomLabel->dry()) {
+                $roomLabel->erase();
+            }
+        }
     }
 }

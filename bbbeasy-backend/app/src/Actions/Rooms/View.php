@@ -43,12 +43,17 @@ class View extends BaseAction
     {
         $link = $this->f3->get('PARAMS.link');
 
-        $room            = new Room();
-        $room            = $room->getByLink($link);
-        $preset          = new Preset();
-        $p               = $preset->findById($room->getPresetID($room->id)['preset_id']);
+        $room = new Room()->getByLink($link);
+
+        // Nothing to authorise when the link matches no room, the action itself
+        // answers with a not found.
+        if ($room->dry()) {
+            return;
+        }
+
+        $preset          = new Preset()->findById($room->getPresetID($room->id)['preset_id']);
         $presetProcessor = new PresetProcessor();
-        $presetData      = $presetProcessor->preparePresetData($p->getMyPresetInfos($p));
+        $presetData      = $presetProcessor->preparePresetData($preset->getMyPresetInfos($preset));
 
         if (!$presetData[General::GROUP_NAME][General::OPEN_FOR_EVERYONE] && null === $this->session->get('user')) {
             $this->logger->warning('Access denied to route ');
@@ -70,27 +75,25 @@ class View extends BaseAction
             $bbbRequester   = new BigBlueButtonRequester();
             $getInfosParams = new GetMeetingInfoParameters($room->meeting_id);
 
-            $meetingInfoResponse = $bbbRequester->getMeetingInfo($getInfosParams);
-            $canStart            = false;
-            $preset              = new Preset();
-            $p                   = $preset->findById($room->getPresetID($room->id)['preset_id']);
-            $presetProcessor     = new PresetProcessor();
-            $presetData          = $presetProcessor->preparePresetData($p->getMyPresetInfos($p));
+            $meetingInfoResponse = $bbbRequester->send(static fn () => $bbbRequester->getMeetingInfo($getInfosParams));
 
-            if (!$meetingInfoResponse->success()) {
-                if ('notFound' === $meetingInfoResponse->getMessageKey()) {
-                    $anyonestart = false;
+            $preset     = new Preset()->findById($room->getPresetID($room->id)['preset_id']);
+            $presetData = new PresetProcessor()->preparePresetData($preset->getMyPresetInfos($preset));
 
-                    if ($room->getRoomInfos($room)['user_id'] === $this->session->get('user.id') || $presetData[General::GROUP_NAME][General::ANYONE_CAN_START]) {
-                        $canStart = true;
-                    }
-                }
-            }
+            // No meeting is running when BigBlueButton says it does not know this one
+            // or when it could not be reached at all, the owner and whoever the preset
+            // allows may then start one.
+            $noMeeting = null === $meetingInfoResponse
+                || (!$meetingInfoResponse->success() && 'notFound' === $meetingInfoResponse->getMessageKey());
 
-            $meeting             = (array) $meetingInfoResponse->getRawXml();
+            $canStart = $noMeeting
+                && ($room->getRoomInfos()['user_id'] === $this->session->get('user.id')
+                    || $presetData[General::GROUP_NAME][General::ANYONE_CAN_START]);
+
+            $meeting             = null !== $meetingInfoResponse ? (array) $meetingInfoResponse->getRawXml() : [];
             $meeting['canStart'] = $canStart;
 
-            $this->renderJson(['room' => $room->getRoomInfos($room), 'meeting' => $meeting]);
+            $this->renderJson(['room' => $room->getRoomInfos(), 'meeting' => $meeting]);
         } else {
             $this->logger->error('Link not found');
             $this->renderJson([], ResponseCode::HTTP_NOT_FOUND);
