@@ -20,12 +20,19 @@
 
 use Application\Bootstrap;
 use Core\Statera;
+use Nette\Utils\Strings;
 
-// load composer autoload
-require_once '../vendor/autoload.php';
+// load composer autoload, the paths are resolved from this file so the runner
+// works whatever the current directory is
+require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
 
 // Change to application directory to execute the code
-chdir(realpath(dirname(__DIR__,2) . DIRECTORY_SEPARATOR . 'app'));
+chdir(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'app');
+
+// The environment is picked from the query string, populate it from the command
+// line before the framework boots.
+$argv[1] = $argv[1] ?? '/api?statera&test=all';
+parse_str(Strings::after($argv[1], '?') ?: '', $_GET);
 
 $GLOBALS['test_cli'] = PHP_SAPI === 'cli';
 

@@ -58,6 +58,16 @@ EXPOSE 9000
 CMD ["php-fpm"]
 
 # ---------------------------------------------------------------------------
+# Test stage, the backend plus the development dependencies and the test suite.
+# ---------------------------------------------------------------------------
+FROM backend AS test
+
+RUN composer install --prefer-dist --ignore-platform-req=ext-xdebug \
+    && composer dump-autoload
+
+CMD ["tools/statera.sh", "all"]
+
+# ---------------------------------------------------------------------------
 # Web stage, nginx serving the frontend and proxying the API to PHP-FPM.
 # ---------------------------------------------------------------------------
 FROM nginx:1.29-alpine AS web

@@ -25,7 +25,7 @@ environments:
 
     testing:
         adapter: pgsql
-        host: localhost
+        host: bbbeasy_db
         name: bbbeasy_test
         user: bbbeasy_test
         pass: 'bbbeasy_test'

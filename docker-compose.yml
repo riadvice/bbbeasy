@@ -49,9 +49,33 @@ services:
       - ./docker/phinx.yml:/var/www/html/bbbeasy-backend/phinx.yml:ro
       - ./docker/www-bbbeasy.conf:/usr/local/etc/php-fpm.d/www-bbbeasy.conf:ro
       - ./docker/config-production.ini:/var/www/html/bbbeasy-backend/app/config/config-production.ini:ro
+      - ./docker/config-test.ini:/var/www/html/bbbeasy-backend/app/config/config-test.ini:ro
       - bbbeasy-logs:/var/www/html/bbbeasy-backend/logs/:rw
       - bbbeasy-cache:/var/www/html/bbbeasy-backend/tmp/:rw
       - bbbeasy-uploads:/var/www/html/bbbeasy-backend/uploads/:rw
+
+  tests:
+    profiles: ["test"]
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      target: test
+    image: riadvice/bbbeasy-tests
+    container_name: bbbeasy_tests
+    depends_on:
+      db:
+        condition: service_healthy
+      cache:
+        condition: service_started
+      mail:
+        condition: service_started
+    networks:
+      bbbeasy-network:
+        ipv4_address: 172.55.0.30
+    volumes:
+      - ./docker/php.ini:/usr/local/etc/php/conf.d/custom.ini:ro
+      - ./docker/config-test.ini:/var/www/html/bbbeasy-backend/app/config/config-test.ini:ro
+      - ./docker/phinx.yml:/var/www/html/bbbeasy-backend/phinx.yml:ro
 
   db:
     restart: always
