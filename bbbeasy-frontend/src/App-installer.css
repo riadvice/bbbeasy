@@ -212,72 +212,7 @@
     --bbbeasy-sider-width: 260px;
     --bbbeasy-page-height: 100vh;
 }
-body,
-input,
-select,
-textarea,
-.ant-typography,
-.ant-steps-item-title,
-.ant-form-item-label label,
-.ant-checkbox-wrapper,
-.ant-radio-wrapper,
-.ant-alert-message,
-.ant-card-meta-title,
-.ant-modal-title,
-.ant-menu-item:not(.ant-menu-item-selected),
-.ant-menu-item:not(.ant-menu-item-selected) a,
-.ant-menu-submenu:not(.ant-menu-submenu-selected) .ant-menu-submenu-title,
-.ant-menu-submenu:not(.ant-menu-submenu-selected) .ant-menu-title-content {
-    color: var(--bbbeasy-darken-gray) !important;
-}
-.ant-typography {
-    margin-top: 0 !important;
-}
-body {
-    font-family: 'Poppins', sans-serif !important;
-    margin: 0;
-}
-body.rtl {
-    font-family: 'Tajawal', sans-serif !important;
-    font-weight: 450 !important;
-}
-.ant-form-item-label {
-    padding: 0 !important;
-}
-.ant-form-item:not(.ant-form-item-with-help) {
-    margin-bottom: 20px;
-}
-.install-form .ant-card-body {
-    display: flex;
-    flex-wrap: wrap;
-}
-.rtl .anticon {
-    -webkit-transform: scaleX(-1);
-    transform: scaleX(-1);
-}
-.rtl .ant-input-prefix > :not(:last-child),
-.rtl .ant-input-suffix > :not(:last-child) {
-    margin-left: 8px;
-    margin-right: unset;
-}
-.rtl .ant-form-vertical .ant-form-item-label {
-    text-align: right;
-}
-.ant-layout,
-.ant-layout-header,
-.ant-layout-footer,
-.ant-layout-sider {
-    background: transparent !important;
-}
-.ant-card-rtl .ant-card-meta-avatar {
-    padding-left: 16px !important;
-    padding-right: unset !important;
-}
-.ant-btn-rtl > .anticon + span,
-.ant-btn-rtl > span + .anticon {
-    margin-right: 8px !important;
-    margin-left: unset !important;
-}
+
 /*********************LAYOUT***************************/
 .page-layout-content,
 .page-layout-content-rtl {
@@ -296,11 +231,7 @@ body.rtl {
     color: #dbe9ff;
     padding: 0;
 }
-.site-header .lang-btn:hover,
-.site-header .lang-btn.ant-dropdown-open {
-    color: #38bdf8 !important;
-    outline: unset !important;
-}
+
 .site-header-inner {
     position: relative;
     display: flex;
@@ -318,16 +249,7 @@ body.rtl {
     max-width: 64px;
     filter: drop-shadow(0 0 12px rgba(59, 130, 246, 0.28));
 }
-.site-header-inner button {
-    background: transparent !important;
-    color: #edf4ff !important;
-    transition: color 0.25s ease, transform 0.25s ease, opacity 0.25s ease;
-}
-.site-header-inner button:hover,
-.site-header-inner button:focus {
-    color: #38bdf8 !important;
-    transform: translateY(-1px);
-}
+
 .site-content {
     margin: 25px 20px;
     z-index: 2;
@@ -341,15 +263,7 @@ body.rtl {
 .site-sider .menu-sider .site-menu {
     color: #ffffff !important;
 }
-.site-sider .site-menu .ant-menu-item,
-.site-sider .site-menu .ant-menu-submenu-title,
-.site-sider .site-menu .ant-menu-title-content,
-.site-sider .site-menu .ant-menu-item a,
-.site-sider .site-menu .ant-menu-submenu-title a,
-.site-sider .site-menu .anticon,
-.site-sider .sider-new-btn {
-    color: #ffffff !important;
-}
+
 .site-sider .sider-new-btn {
     background: #1677ff !important;
     border-color: #1677ff !important;
@@ -360,21 +274,7 @@ body.rtl {
     color: #ffffff !important;
     border-color: #4096ff !important;
 }
-.site-sider .site-menu .ant-menu-submenu-title .ant-menu-title-content,
-.site-sider .site-menu .ant-menu-item .ant-menu-title-content {
-    color: #ffffff !important;
-}
-.site-sider .site-menu .ant-menu-item-selected,
-.site-sider .site-menu .ant-menu-submenu-selected > .ant-menu-submenu-title {
-    background: rgba(255, 255, 255, 0.08) !important;
-}
-.site-sider .site-menu .ant-menu-item:hover,
-.site-sider .site-menu .ant-menu-submenu-title:hover,
-.site-sider .site-menu .ant-menu-item:focus,
-.site-sider .site-menu .ant-menu-submenu-title:focus {
-    background: rgba(255, 255, 255, 0.12) !important;
-    color: #ffffff !important;
-}
+
 .site-footer {
     min-height: 50px;
     z-index: 1;
@@ -385,33 +285,6 @@ body.rtl {
 }
 .site-footer .ant-typography {
     color: #989898 !important;
-}
-.ant-upload-list-item {
-    width: 80% !important;
-}
-.ant-upload-drag {
-    width: 80% !important;
-}
-.space-color-picker-branding {
-    color: rgba(0, 0, 0, 0.25);
-
-    opacity: 1;
-
-    width: 150px;
-
-    background-color: #ffffff;
-    background-image: none;
-    border-width: 1px;
-    border-style: solid;
-    border-color: #dddfe1;
-    border-radius: 6px;
-    padding: 4px 11px;
-}
-
-.input-status-presets {
-    background: transparent;
-    border: transparent;
-    width: 50px;
 }
 
 .site-footer button {
@@ -435,47 +308,17 @@ body.rtl {
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12);
     box-shadow: 0 2px #0000000b !important;
 }
-.color-blue:hover,
-.color-blue:focus {
-    border-color: #40a9ff !important;
-    background: #40a9ff !important;
-}
-.section-top {
-    padding: 50px 0 !important;
-}
-.text-center {
-    text-align: center;
-}
-.text-end {
-    text-align: end;
-}
+
 .m-5 {
     margin: 5%;
 }
-.page-not-found {
-    padding: 60px 32px !important;
-}
+
 /********************INSTALL********************/
-.success-install-icon {
-    font-size: 40px !important;
-    padding: 20px !important;
-    color: white !important;
-    background: var(--bbbeasy-brand-color);
-    -webkit-mask-image: var(--bbbeasy-hexagon);
-    mask-image: var(--bbbeasy-hexagon);
-    -webkit-mask-size: 100% 100%;
-    mask-size: 100% 100%;
-    -webkit-mask-repeat: no-repeat;
-    mask-repeat: no-repeat;
-    border-radius: 50%;
-}
+
 .install-steps {
     margin-top: 20px !important;
 }
 
-.button-container {
-    margin-top: 24px !important;
-}
 .dragger {
     width: 90% !important;
 }
@@ -497,12 +340,7 @@ body.rtl {
 .button-container .ant-row:not(.ant-row-rtl) .prev {
     margin-right: 20px !important;
 }
-.button-container .ant-row.ant-row-rtl .prev {
-    margin-left: 20px;
-}
-.button-container .ant-form-item-control-input-content {
-    display: flex;
-}
+
 .modal-submit-btn .ant-btn-primary {
     background: #1677ff !important;
     border-color: #1677ff !important;
@@ -538,80 +376,28 @@ body.rtl {
     margin-top: 60px !important;
 }
 /*******STEP1*******/
-.form-header {
-    margin-bottom: 40px !important;
-    margin-top: 20px !important;
-}
+
 /*******STEP2*******/
-.install-form .company-container,
-.install-form .colors-container {
-    display: flex;
-    flex-wrap: wrap;
-}
-.install-form .box,
-.install-form .colors-container .ant-form-item {
-    flex: 0 0 50%;
-}
+
 .install-form:not(.ant-form-rtl) .box:not(.last),
 .install-form:not(.ant-form-rtl) .colors-container .ant-form-item {
     padding-right: 20px;
     padding-left: 30px;
 }
-.install-form.ant-form-rtl .box:not(.last),
-.install-form.ant-form-rtl .colors-container .ant-form-item {
-    padding-left: 20px;
-}
+
 .install-form:not(.ant-form-rtl) .box.last {
     padding-left: 20px;
     /* padding-right: 10px; */
     border-left: 1px solid #dddfe1;
     border-left: 1px solid var(--bbbeasy-border-gray);
 }
-.install-form.ant-form-rtl .box.last {
-    padding-right: 20px;
-    border-right: 1px solid var(--bbbeasy-border-gray);
-}
-.install-form .ant-upload.ant-upload-drag p.ant-upload-hint {
-    font-size: 13px !important;
-}
-.install-form .rc-color-picker-trigger {
-    width: 85px;
-    height: 24px;
-    border: 1px solid var(--bbbeasy-border-gray);
-}
-.install-form .rc-color-picker-wrap {
-    vertical-align: middle;
-}
-.install-form .color-palette-picker-value {
-    color: gray;
-    font-size: 13px;
-    font-weight: 500;
-}
-.install-form:not(.ant-form-rtl) .color-palette-picker-value {
-    margin-left: 10px;
-}
-.install-form.ant-form-rtl .color-palette-picker-value {
-    margin-right: 10px;
-}
+
 /*******STEP3*******/
-.final-form-header {
-    margin: 20px 0 !important;
-}
-.settings-info {
-    margin: 20px !important;
-}
+
 .text-black {
     color: var(--bbbeasy-darken-gray) !important;
 }
-.text-grey {
-    color: grey !important;
-}
-.install-form .ant-card:not(.ant-card-bordered) {
-    box-shadow: unset !important;
-}
-.install-form .ant-card:not(.ant-card-bordered) .ant-card-body {
-    padding: unset !important;
-}
+
 .presets-grid {
     width: 25% !important;
     box-shadow: none !important;
@@ -634,11 +420,7 @@ body.rtl {
     font-weight: unset;
     font-size: 14.5px;
 }
-.presets-grid.ant-card-grid-hoverable:hover {
-    background: #fffce6;
-    cursor: pointer;
-    border-radius: 10px;
-}
+
 .PresetIcon {
     font-size: 18px !important;
     padding: 10px;
@@ -652,20 +434,7 @@ body.rtl {
     mask-repeat: no-repeat;
     border-radius: 50%;
 }
-.ant-tooltip .ant-tooltip-arrow::before,
-.ant-tooltip .ant-tooltip-inner {
-    background: white !important;
-}
-.ant-tooltip-inner ul {
-    list-style: unset;
-    font-size: 13px;
-    font-weight: 300;
-    padding: 0 12px !important;
-    line-height: 1.7715;
-}
-.ant-tooltip-inner ul .text-black {
-    font-weight: bold !important;
-}
+
 /*.PresetIcon img {
   width: 19px;
 }*/
@@ -680,139 +449,4 @@ body.rtl {
 .presets-modal {
     width: 35% !important;
 }
-.white-space {
-    white-space: pre-wrap;
-    text-align: left;
-    width: 260px;
-}
-.presets-modal .ant-modal-content,
-.presets-modal .ant-modal-container {
-    margin: 0 30px;
-}
-.presets-modal label {
-    color: var(--bbbeasy-darken-gray) !important;
-    font-weight: 500;
-}
-.presets-modal label::after {
-    content: '' !important;
-}
-.presets-modal .presets-body {
-    padding: 20px;
-}
-.presets-modal .presets-body .ant-form-item-control:not(.ant-col-rtl) {
-    text-align: right;
-}
-.presets-modal .presets-body .ant-form-item-control.ant-col-rtl {
-    text-align: left;
-}
-.presets-modal .ant-modal-footer {
-    text-align: center !important;
-    border-top: unset;
-}
-.presets-modal .ant-modal-footer button {
-    width: 70%;
-}
-.ant-modal-header {
-    margin: 0 20px;
-}
-.ant-modal-close {
-    margin-top: 5px;
-}
-.cancel-btn {
-    background: var(--bbbeasy-medimum-gray) !important;
-    color: white !important;
-}
-.ant-input-number-rtl {
-    padding-right: 20px !important;
-}
 
-/***********************PAGE HEADER***********************************/
-.ant-page-header {
-    box-sizing: border-box;
-    padding: 16px 24px;
-}
-.ant-page-header-heading {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    flex-wrap: wrap;
-}
-.ant-page-header-heading-left {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    overflow: hidden;
-    margin: 4px 0;
-}
-.ant-page-header-heading-title {
-    margin-inline-end: 12px;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    font-size: 20px;
-    line-height: 1.4;
-    font-weight: 600;
-}
-.ant-page-header-heading-sub-title {
-    display: flex;
-    align-items: center;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-.ant-page-header-heading-extra {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
-    white-space: nowrap;
-}
-.ant-page-header-content {
-    padding-top: 12px;
-}
-
-/* Ant Design 6 renders the number input as a plain <input> inside the wrapper and no
-   longer gives it the .ant-input-number-input class the theme rules target, so the
-   value inherited the browser default and disappeared on the dark background. */
-.ant-input-number input,
-.ant-input-number .ant-input-number-input {
-    color: inherit !important;
-    background: transparent !important;
-}
-
-/* ---------- Hexagon polish ----------
-   The hexagon is the product's signature shape. A mask cannot carry a shadow, so the
-   depth comes from a soft gradient in the fill and a drop-shadow filter on the wrapper. */
-.room-card-title .bbbeasy-btn,
-.room-details .bbbeasy-btn,
-.home-guide .bbbeasy-btn,
-.profile-form .bbbeasy-btn,
-.site-header .profil-btn,
-.PresetIcon {
-    background-image: linear-gradient(150deg, var(--bbbeasy-brand-color-hover) 0%, var(--bbbeasy-brand-color) 55%, #e0a608 100%);
-    transition: filter 0.25s ease, transform 0.25s ease;
-}
-.rooms-cards .ant-card:hover .bbbeasy-btn,
-.presets-grid:hover .PresetIcon {
-    filter: brightness(1.06);
-    transform: translateY(-1px);
-}
-
-/* ---------- Inline table editing ----------
-   The edit row lays its fields out in an inline-flex Space, so without these the
-   text input collapses to a few pixels and the row actions spill out of the table. */
-.ant-table-wrapper .ant-table-container {
-    overflow-x: auto;
-}
-.ant-table-tbody .ant-space {
-    display: flex;
-    width: 100%;
-}
-.ant-table-tbody .ant-space > .ant-space-item:first-child {
-    flex: 1 1 auto;
-    min-width: 0;
-}
-.ant-table-tbody .input-editable .ant-input,
-.ant-table-tbody .input-editable .ant-input-affix-wrapper {
-    width: 100%;
-}
