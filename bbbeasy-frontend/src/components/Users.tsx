@@ -321,7 +321,7 @@ const Users = () => {
             console.log('Save failed:', errInfo);
             const errors = errInfo.errorFields;
             const err = {};
-            errors.map((error) => {
+            errors.forEach((error) => {
                 const errorKey = error['name'][0];
                 err[errorKey] = error['errors'][0];
             });

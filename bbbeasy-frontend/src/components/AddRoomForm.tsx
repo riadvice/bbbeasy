@@ -150,7 +150,7 @@ export const AddRoomForm = (props: Props) => {
         }
     };
 
-    const handleSaveEdit = async () => {
+    const handleSaveEdit = () => {
         setReadOnly(true);
 
         setShortLink(addForm.getFieldValue('shortlink'));

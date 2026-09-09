@@ -152,7 +152,7 @@ const PresetsCol: React.FC<PresetColProps> = ({
     };
 
     const getData = () => {
-        if ('Guest Policy' === modalTitle) {
+        if (modalTitle === 'Guest Policy') {
             return GuestPolicy;
         } else {
             return LanguagesBBB;
@@ -628,7 +628,7 @@ const PresetsCol: React.FC<PresetColProps> = ({
                                                             defaultValue={item.value}
                                                             options={getData().map((data) => ({
                                                                 label:
-                                                                    'Guest Policy' === modalTitle
+                                                                    modalTitle === 'Guest Policy'
                                                                         ? t(data.key)
                                                                         : data.name,
                                                                 value: data.value,
@@ -703,7 +703,7 @@ const Presets = () => {
     }, []);
 
     //edit
-    const editPreset = (newPreset: MyPresetType, oldPreset: MyPresetType, checkName: boolean = true) => {
+    const editPreset = (newPreset: MyPresetType, oldPreset: MyPresetType, checkName = true) => {
         if (checkName && newPreset.name === oldPreset.name) {
             Notifications.openNotificationWithIcon('info', t('no_changes'));
             return;

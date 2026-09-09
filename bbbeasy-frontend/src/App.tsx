@@ -183,12 +183,12 @@ const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
                         );
                         // Convert hex to rgba for shadow
                         const hex = settings.brand_color.replace('#', '');
-                        const r = parseInt(hex.substring(0, 2), 16);
-                        const g = parseInt(hex.substring(2, 4), 16);
-                        const b = parseInt(hex.substring(4, 6), 16);
+                        const red = parseInt(hex.substring(0, 2), 16);
+                        const green = parseInt(hex.substring(2, 4), 16);
+                        const blue = parseInt(hex.substring(4, 6), 16);
                         document.documentElement.style.setProperty(
                             '--bbbeasy-brand-color-shadow',
-                            `rgba(${r}, ${g}, ${b}, 0.35)`
+                            `rgba(${red}, ${green}, ${blue}, 0.35)`
                         );
 
                         // Inject dynamic styles AFTER Ant Design CSS-in-JS (always wins)

@@ -62,7 +62,7 @@ const RoomsCol: React.FC<RoomsColProps> = ({ room, editable, bbbConfigured, dele
             Notifications.openNotificationWithIcon('warning', t('bigbluebutton_not_configured'));
             return;
         }
-        navigate(`/r/${room.short_link}`, { state: { room: room, editable: editable } });
+        navigate(`/r/${room.short_link}`, { state: { room, editable } });
     };
 
     //delete

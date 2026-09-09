@@ -69,7 +69,7 @@ export const Step2Form = (props: Props) => {
         if (Array.isArray(e)) {
             return e;
         }
-        return e && e.fileList;
+        return e?.fileList;
     };
     const handleChangeFile = (info: UploadChangeParam<UploadFile<string>>) => {
         let fileList: UploadFile[] = [...info.fileList];

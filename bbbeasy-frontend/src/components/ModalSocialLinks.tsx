@@ -48,7 +48,7 @@ const ModalSocialLinks = ({ recording, trigger = 'link' }: Props) => {
 
     return (
         <>
-            {'link' === trigger ? (
+            {trigger === 'link' ? (
                 <Link onClick={() => setIsModalVisible(true)}>
                     <ShareAltOutlined />
                 </Link>

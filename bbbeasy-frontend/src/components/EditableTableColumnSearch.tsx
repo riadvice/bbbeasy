@@ -93,7 +93,7 @@ const EditableTableColumnSearch = (dataIndex: string) => {
                 text = transformText(text);
             }
             if (searchedColumn === dataIndex) {
-                return <Highlighter searchWords={[searchText]} autoEscape textToHighlight={text && text.toString()} />;
+                return <Highlighter searchWords={[searchText]} autoEscape textToHighlight={text?.toString()} />;
             }
             return text;
         },

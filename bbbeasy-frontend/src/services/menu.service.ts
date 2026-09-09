@@ -191,7 +191,7 @@ class MenuService {
             }
         }
 
-        return { items: items, news: news, defaultRoute: defaultRoute };
+        return { items, news, defaultRoute };
     }
 }
 

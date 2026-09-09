@@ -201,7 +201,7 @@ const LandingPage = () => {
                         <Trans i18nKey="bigbluebutton" />
                     </div>
                     <Title>
-                        <Trans i18nKey="welcome_platformname"> Welcome to {{ platformName: platformName }}</Trans>
+                        <Trans i18nKey="welcome_platformname"> Welcome to {{ platformName }}</Trans>
                     </Title>
                     <p className="mb-30">
                         <Trans i18nKey="create_customizable_rooms" />

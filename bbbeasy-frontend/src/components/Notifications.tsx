@@ -21,23 +21,21 @@ import { notification } from 'antd';
 import { t } from 'i18next';
 import LocaleService from '../services/locale.service';
 
-class Notifications {
-    openNotificationWithIcon = (type: string, message, icon?: React.ReactNode, duration?: number) => {
-        notification[type]({
-            placement: LocaleService.direction === 'rtl' ? 'topLeft' : 'topRight',
-            message: t(`${type}-title`),
-            description: (
-                <>
-                    {message}
-                    <div className="progress-bar">
-                        <span className={duration ? 'percentage notif-login' : 'percentage'} />
-                    </div>
-                </>
-            ),
-            icon: icon,
-            duration: duration,
-        });
-    };
-}
+const openNotificationWithIcon = (type: string, message, icon?: React.ReactNode, duration?: number) => {
+    notification[type]({
+        placement: LocaleService.direction === 'rtl' ? 'topLeft' : 'topRight',
+        message: t(`${type}-title`),
+        description: (
+            <>
+                {message}
+                <div className="progress-bar">
+                    <span className={duration ? 'percentage notif-login' : 'percentage'} />
+                </div>
+            </>
+        ),
+        icon,
+        duration,
+    });
+};
 
-export default new Notifications();
+export default { openNotificationWithIcon };

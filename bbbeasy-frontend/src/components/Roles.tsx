@@ -276,7 +276,7 @@ const Roles = () => {
         setErrorsAdd([]);
         const name: string = formValues.name;
         delete formValues.name;
-        RolesService.add_role({ name: name, permissions: formValues })
+        RolesService.add_role({ name, permissions: formValues })
             .then((response) => {
                 setLoading(true);
                 setIsModalVisible(false);
@@ -667,7 +667,7 @@ const Roles = () => {
                     dataSource={data}
                     loading={loading}
                     expandableTable={{
-                        expandedRowRender: expandedRowRender,
+                        expandedRowRender,
                         showExpandColumn: false,
                         expandedRowKeys: expandedKeys,
                     }}
