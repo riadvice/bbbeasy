@@ -58,6 +58,13 @@ class PrivilegeUtils
             }
         }
 
+        // Several actions can share one privilege name, the room presentations live in
+        // their own namespace with an Index, an Add and a Delete class.
+        foreach ($privileges as $group => $actions) {
+            sort($actions);
+            $privileges[$group] = array_values(array_unique($actions));
+        }
+
         return $privileges;
     }
 }
