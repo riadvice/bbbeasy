@@ -57,6 +57,7 @@ class Edit extends BaseAction
             if (isset($form['name'])) {
                 $dataChecker = new DataChecker();
                 $dataChecker->verify($form['name'], Validator::notEmpty()->setName('name'));
+                $dataChecker->verify($form['name'], Validator::length(1, 64)->setName('name'));
 
                 if ($dataChecker->allValid()) {
                     $checkRole  = new Role();

@@ -79,21 +79,27 @@ const EditableTableCell: React.FC<Props> = ({
         }
     }
 
+    // Name length constraints per component, they mirror the database columns.
+    const nameConstraints = {
+        Labels: { max: 32, i18n: 'label_name' },
+        Roles: { max: 64, i18n: 'role_name' },
+        Presets: { max: 64, i18n: 'preset_name' },
+    };
+
     const customFormItem = (index: string, customInputNode: JSX.Element) => {
-        if (componentName == 'Labels' && index == 'name') {
+        const constraint = nameConstraints[componentName];
+        const errorHelp = index in errorsEdit &&
+            record.key == errorsEdit['key'] && {
+                help: <Trans i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errorsEdit[index])} />,
+                validateStatus: 'error' as const,
+            };
+
+        if (constraint && index == 'name') {
             return (
                 <Form.Item
                     name={index}
                     className="input-editable"
-                    {...(index in errorsEdit &&
-                        record.key == errorsEdit['key'] && {
-                            help: (
-                                <Trans
-                                    i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errorsEdit[index])}
-                                />
-                            ),
-                            validateStatus: 'error',
-                        })}
+                    {...errorHelp}
                     rules={[
                         {
                             required: true,
@@ -102,36 +108,24 @@ const EditableTableCell: React.FC<Props> = ({
                         { ...editRules },
                         {
                             min: 1,
-                            message: <Trans i18nKey="label_name.size" />,
+                            message: <Trans i18nKey={constraint.i18n + '.size'} />,
                         },
                         {
-                            max: 32,
-                            message: <Trans i18nKey="label_name.maxSize" />,
+                            max: constraint.max,
+                            message: <Trans i18nKey={constraint.i18n + '.maxSize'} />,
                         },
                     ]}
                 >
                     {customInputNode}
                 </Form.Item>
             );
-        } else {
-            return (
-                <Form.Item
-                    name={index}
-                    className="input-editable"
-                    {...(index in errorsEdit &&
-                        record.key == errorsEdit['key'] && {
-                            help: (
-                                <Trans
-                                    i18nKey={Object.keys(EN_US).filter((elem) => EN_US[elem] == errorsEdit[index])}
-                                />
-                            ),
-                            validateStatus: 'error',
-                        })}
-                >
-                    {customInputNode}
-                </Form.Item>
-            );
         }
+
+        return (
+            <Form.Item name={index} className="input-editable" {...errorHelp}>
+                {customInputNode}
+            </Form.Item>
+        );
     };
 
     return (

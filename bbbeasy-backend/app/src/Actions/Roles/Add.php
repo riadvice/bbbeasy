@@ -50,6 +50,7 @@ class Add extends BaseAction
         $dataChecker = new DataChecker();
 
         $dataChecker->verify($form['name'], Validator::notEmpty()->setName('name'));
+        $dataChecker->verify($form['name'], Validator::length(1, 64)->setName('name'));
 
         $errorMessage = 'Role could not be added';
         if ($dataChecker->allValid()) {

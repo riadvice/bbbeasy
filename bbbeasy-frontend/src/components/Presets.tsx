@@ -215,6 +215,9 @@ const PresetsCol: React.FC<PresetColProps> = ({
         setErrorsEdit({});
         setIsEditing(false);
     };
+
+    // Only ask for a confirmation when the name was actually edited.
+    const nameWasEdited = () => editForm.getFieldValue('name') !== preset['name'];
     const handleSaveEdit = async () => {
         setErrorsEdit({});
         try {
@@ -349,23 +352,37 @@ const PresetsCol: React.FC<PresetColProps> = ({
                                                 required: true,
                                                 message: <Trans i18nKey="name.required" />,
                                             },
+                                            {
+                                                max: 64,
+                                                message: <Trans i18nKey="preset_name.maxSize" />,
+                                            },
                                         ]}
                                     >
                                         <Input
+                                            maxLength={64}
                                             onPressEnter={handleSaveEdit}
                                             suffix={
                                                 <>
-                                                    <Popconfirm
-                                                        title={t('cancel_edit')}
-                                                        placement="leftTop"
-                                                        onConfirm={() => cancelEdit()}
-                                                    >
+                                                    {nameWasEdited() ? (
+                                                        <Popconfirm
+                                                            title={t('cancel_edit')}
+                                                            placement="leftTop"
+                                                            onConfirm={() => cancelEdit()}
+                                                        >
+                                                            <Button
+                                                                icon={<CloseOutlined />}
+                                                                size="small"
+                                                                className="cell-input-cancel"
+                                                            />
+                                                        </Popconfirm>
+                                                    ) : (
                                                         <Button
                                                             icon={<CloseOutlined />}
                                                             size="small"
                                                             className="cell-input-cancel"
+                                                            onClick={cancelEdit}
                                                         />
-                                                    </Popconfirm>
+                                                    )}
                                                     <Button
                                                         icon={<CheckOutlined />}
                                                         size="small"
