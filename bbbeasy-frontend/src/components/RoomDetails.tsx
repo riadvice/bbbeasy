@@ -116,7 +116,90 @@ const tagRender = (props: CustomTagProps) => {
     );
 };
 
-// eslint-disable-next-line complexity
+/** A room's labels, shown to a signed in visitor. */
+const RoomLabels = ({ labels, signedIn }: { labels: LabelType[]; signedIn: boolean }) => {
+    if (!signedIn) {
+        return null;
+    }
+
+    return (
+        <div>
+            {labels.map((item) => (
+                <Tag key={item.key ?? item.id} color={item.color}>
+                    {item.name}
+                </Tag>
+            ))}
+        </div>
+    );
+};
+
+type RoomStartButtonProps = {
+    onStart: () => void;
+    joining: boolean;
+};
+
+/** The hexagon that starts the meeting, or joins it once it is running. */
+const RoomStartButton = ({ onStart, joining }: RoomStartButtonProps) => (
+    <Col span={2}>
+        <a onClick={onStart}>
+            <Avatar size={{ xs: 40, sm: 64, md: 85, lg: 100, xl: 120, xxl: 140 }} className={'bbbeasy-btn'}>
+                <Trans i18nKey={joining ? 'join' : 'start'} />
+            </Avatar>
+        </a>
+    </Col>
+);
+
+type RoomEditToolbarProps = {
+    isEditing: boolean;
+    canEdit: boolean;
+    canStart: boolean;
+    onEdit: () => void;
+    onCancel: () => void;
+    onCancelRoom: () => void;
+    onSave: () => void;
+};
+
+/**
+ * The edit / cancel / save row above the room card. Lifted out of RoomDetails so
+ * the page body is not carrying its branches as well as its own.
+ */
+const RoomEditToolbar = ({
+    isEditing,
+    canEdit,
+    canStart,
+    onEdit,
+    onCancel,
+    onCancelRoom,
+    onSave,
+}: RoomEditToolbarProps) => (
+    <Row justify="end" className="mb-5">
+        {!isEditing && canEdit && (
+            <Button
+                className="edit-btn"
+                size="small"
+                type="link"
+                icon={<EditOutlined />}
+                onClick={onEdit}
+                disabled={!canStart}
+            >
+                {t('edit')}
+            </Button>
+        )}
+        {isEditing && (
+            <Space size={'middle'}>
+                <Popconfirm title={t('cancel_edit')} placement="leftTop" onConfirm={() => onCancel()}>
+                    <Button size="middle" onClick={() => onCancelRoom()} className="cell-input-cancel">
+                        <Trans i18nKey="cancel" />
+                    </Button>
+                </Popconfirm>
+                <Button size="middle" onClick={onSave} type="primary">
+                    <Trans i18nKey="save" />
+                </Button>
+            </Space>
+        )}
+    </Row>
+);
+
 const RoomDetails = () => {
     const { state } = useLocation();
     const param = useParams();
@@ -470,41 +553,15 @@ const RoomDetails = () => {
             <div className="page-padding">
                 <Row align="bottom" className="mb-40">
                     <Col span={10}>
-                        <Row justify="end" className="mb-5">
-                            {!isEditing && showRecodingAndPresenttaions ? (
-                                <Button
-                                    className="edit-btn"
-                                    size="small"
-                                    type="link"
-                                    icon={<EditOutlined />}
-                                    onClick={toggleEdit}
-                                    disabled={!canStart}
-                                >
-                                    {t('edit')}
-                                </Button>
-                            ) : (
-                                isEditing && (
-                                    <Space size={'middle'}>
-                                        <Popconfirm
-                                            title={t('cancel_edit')}
-                                            placement="leftTop"
-                                            onConfirm={() => cancelEdit()}
-                                        >
-                                            <Button
-                                                size="middle"
-                                                onClick={() => cancelEditRoom()}
-                                                className="cell-input-cancel"
-                                            >
-                                                <Trans i18nKey="cancel" />
-                                            </Button>
-                                        </Popconfirm>
-                                        <Button size="middle" onClick={handleSaveEdit} type="primary">
-                                            <Trans i18nKey="save" />
-                                        </Button>
-                                    </Space>
-                                )
-                            )}
-                        </Row>
+                        <RoomEditToolbar
+                            isEditing={isEditing}
+                            canEdit={showRecodingAndPresenttaions}
+                            canStart={canStart}
+                            onEdit={toggleEdit}
+                            onCancel={cancelEdit}
+                            onCancelRoom={cancelEditRoom}
+                            onSave={handleSaveEdit}
+                        />
                         <Card variant="borderless" className="room-details gray-bg">
                             <Row justify="center" align="middle">
                                 <Col span={22}>
@@ -516,15 +573,7 @@ const RoomDetails = () => {
                                         {!isEditing ? (
                                             <>
                                                 <Title level={3}>{room.name}</Title>
-                                                {currentUser != null ? (
-                                                    <div>
-                                                        {room.labels.map((item) => (
-                                                            <Tag key={item.key ?? item.id} color={item.color}>
-                                                                {item.name}
-                                                            </Tag>
-                                                        ))}
-                                                    </div>
-                                                ) : null}
+                                                <RoomLabels labels={room.labels} signedIn={currentUser != null} />
 
                                                 {renderLinkOrUsername()}
                                             </>
@@ -588,16 +637,7 @@ const RoomDetails = () => {
                                     </Space>
                                 </Col>
                                 {showStartButton && (
-                                    <Col span={2}>
-                                        <a onClick={startRoom}>
-                                            <Avatar
-                                                size={{ xs: 40, sm: 64, md: 85, lg: 100, xl: 120, xxl: 140 }}
-                                                className={'bbbeasy-btn'}
-                                            >
-                                                <Trans i18nKey={canStart && !isRunning ? 'start' : 'join'} />
-                                            </Avatar>
-                                        </a>
-                                    </Col>
+                                    <RoomStartButton onStart={startRoom} joining={!canStart || isRunning} />
                                 )}
                             </Row>
                         </Card>
