@@ -46,7 +46,8 @@ export default defineConfig(({ mode }) => {
             host: true,
             port: 3300,
             strictPort: true,   
-            allowedHosts: ['bbbeasy.test', 'localhost', '127.0.0.1',"snooper-foe-cosigner.ngrok-free.dev"],
+            // Extra hosts for a tunnel or a remote preview go in VITE_ALLOWED_HOSTS, comma separated.
+            allowedHosts: ['bbbeasy.test', 'localhost', '127.0.0.1', ...(env.VITE_ALLOWED_HOSTS?.split(',').filter(Boolean) ?? [])],
             open: env.NODE_ENV === 'development' ? 'http://bbbeasy.test/' : false,
             proxy: {
                 '/api': {
