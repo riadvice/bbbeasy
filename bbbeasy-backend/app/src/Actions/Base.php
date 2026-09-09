@@ -22,90 +22,27 @@ declare(strict_types=1);
 
 namespace Actions;
 
-use Acl\Access;
-use Core\Session;
 use Enum\ResponseCode;
 use Enum\UserRole;
 use Enum\UserStatus;
 use Models\User;
-use SimpleXMLElement;
-use Sukarix\Behaviours\LogWriter;
+use Sukarix\Actions\Action;
 use Sukarix\Configuration\Environment;
-use Sukarix\Helpers\I18n;
 use Utils\SecurityUtils;
 
 /**
  * Base Controller Class.
  */
-abstract class Base extends \Prefab
+abstract class Base extends Action
 {
-    use LogWriter;
-
-    public const JSON            = 'Content-Type: application/json; charset=utf-8';
-    public const APPLICATION_XML = 'Content-Type: application/xml; charset=UTF-8';
-    public const CSV             = 'Content-Type: text/csv; charset=UTF-8';
-    public const TEXT            = 'Content-Type: text/plain; charset=utf-8';
-    public const XML             = 'Content-Type: text/xml; charset=UTF-8';
-
-    /**
-     * f3 instance.
-     *
-     * @var \Base f3
-     */
-    protected $f3;
-
-    /**
-     * f3 instance.
-     *
-     * @var Session f3
-     */
-    protected $session;
-
-    /**
-     * f3 instance.
-     *
-     * @var I18n f3
-     */
-    protected $i18n;
-
-    /**
-     * The view name to render.
-     *
-     * @var string
-     */
-    protected $view;
-
-    /**
-     * @var Access
-     */
-    private $access;
-
-    /**
-     * @var string
-     */
-    private $headerAuthorization;
-
-    /**
-     * @var string
-     */
-    private $templatesDir;
-
     /**
      * initialize controller.
      */
     public function __construct()
     {
-        $this->f3      = \Base::instance();
-        $this->session = \Registry::get('session');
-        $this->i18n    = I18n::instance();
-        $this->access  = Access::instance();
+        parent::__construct();
 
-        $this->initLogger();
-        $this->parseHeaderAuthorization();
-
-        $this->templatesDir = $this->f3->get('ROOT') . $this->f3->get('BASE') . '/../app/ui/';
         $this->f3->set('title', 'BBBEasy');
-
         $this->f3->set('init.js', ['Locale', 'Plugins', 'Common']);
     }
 
@@ -125,16 +62,13 @@ abstract class Base extends \Prefab
         }
     }
 
-    public function onAccessAuthorizeDeny($route, $subject): void
-    {
-        $this->logger->warning('Access denied to route ' . $route . ' for subject ' . ($subject ?: 'unknown'));
-        $this->f3->error(404);
-    }
-
     /**
+     * @param array|string $json
+     * @param int          $statusCode
+     *
      * @throws \JsonException
      */
-    public function renderJson(array|string $json, int $statusCode = 200): void
+    public function renderJson($json, $statusCode = 200): void
     {
         // @fixme: use HTTP/2.0?
         header('HTTP/1.1 ' . $statusCode);
@@ -151,72 +85,25 @@ abstract class Base extends \Prefab
         echo \is_string($json) ? $json : json_encode($json, JSON_THROW_ON_ERROR);
     }
 
-    public function renderText(array|string $text, int $statusCode = 200): void
-    {
-        // @fixme: use HTTP/2.0?
-        header('HTTP/1.1 ' . $statusCode);
-        header(self::TEXT);
-        echo \is_string($text) ? $text : implode("\n", $text);
-    }
-
-    public function renderCsv($object): void
-    {
-        header(self::CSV);
-        header('Content-Disposition: attachement; filename="' . $this->f3->hash($this->f3->get('TIME') . '.csv"'));
-        echo $object;
-    }
-
-    public function renderXML(?string $view = null, ?string $cacheKey = null, int $ttl = 0): void
-    {
-        if (!empty($view)) {
-            $this->view = $view;
-        }
-        // Set the XML header
-        header('Content-Type: text/xml; charset=UTF-8');
-
-        // Use caching only in production
-        if (!empty($cacheKey) && Environment::isProduction()) {
-            if (!$this->f3->exists($cacheKey)) {
-                $this->f3->set($cacheKey, $this->parseXMLView(), $ttl);
-            }
-            echo $this->f3->get($cacheKey);
-        } else {
-            echo $this->parseXMLView();
-        }
-    }
-
     /**
-     * @param $xml SimpleXMLElement
+     * @param \SimpleXMLElement $xml
      */
     public function renderRawXml($xml): void
     {
-        // Set the XML header
-        header('Content-Type: text/xml; charset=UTF-8');
-        echo $xml->asXML();
+        $this->renderXMLContent($xml);
     }
 
     public function renderXmlString($xml = null): void
     {
-        header('Content-Type: text/xml; charset=UTF-8');
-
-        echo $xml;
+        $this->renderXMLContent($xml);
     }
 
     /**
      * @return mixed
      */
-    public function getDecodedBody()
+    public function getDecodedBody(): array
     {
-        return json_decode($this->f3->get('BODY'), true);
-    }
-
-    protected function parseHeaderAuthorization(): void
-    {
-        if ($header = $this->f3->get('HEADERS.Authorization')) {
-            if (0 === mb_stripos($header, 'Basic ')) {
-                $this->headerAuthorization = str_replace('Basic ', '', $header);
-            }
-        }
+        return json_decode($this->f3->get('BODY'), true) ?: [];
     }
 
     protected function isApiUserVerified(): bool
@@ -228,7 +115,6 @@ abstract class Base extends \Prefab
             return
                 $user->valid()
                 && UserStatus::ACTIVE === $user->status
-                // && UserRole::API === $user->role_id->name
                 && $user->verifyPassword($credentials[1]);
         }
 
@@ -245,22 +131,6 @@ abstract class Base extends \Prefab
         }
 
         return '';
-    }
-
-    protected function getCredentials(): array
-    {
-        if (!$this->headerAuthorization) {
-            return [];
-        }
-
-        $credentials = base64_decode($this->headerAuthorization, true);
-        $credentials = explode(':', $credentials);
-
-        if (2 !== \count($credentials)) {
-            return [];
-        }
-
-        return $credentials;
     }
 
     protected function credentialsAreValid(string $username, string $email, $password, string $errorMessage, $userId = null): bool
@@ -328,18 +198,5 @@ abstract class Base extends \Prefab
         }
 
         return true;
-    }
-
-    private function parseXMLView(?string $view = null): string
-    {
-        $xmlResponse = new \SimpleXMLElement(\Template::instance()->render($this->view . '.xml'));
-
-        $xmlDocument                     = new \DOMDocument('1.0');
-        $xmlDocument->preserveWhiteSpace = false;
-        $xmlDocument->formatOutput       = true;
-
-        $xmlDocument->loadXML($xmlResponse->asXML());
-
-        return $xmlDocument->saveXML();
     }
 }

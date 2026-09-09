@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Application;
 
-use Acl\Access;
 use Models\Role;
 use Sukarix\Application\Bootstrap as SukarixBootstrap;
 
@@ -94,7 +93,7 @@ class Bootstrap extends SukarixBootstrap
             return;
         }
 
-        $access = Access::instance();
+        $access = \Access::instance();
         foreach ($permissions as $group => $actions) {
             foreach ($actions as $action) {
                 $access->allow($this->getRouteByGroupAndAction($group, $action), $role->name);

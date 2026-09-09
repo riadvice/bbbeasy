@@ -25,18 +25,18 @@ namespace Core;
 use DB\SQL;
 use Enum\UserStatus;
 use Models\User;
+use Sukarix\Behaviours\HasF3;
 use Sukarix\Behaviours\LogWriter;
+use Sukarix\Core\Processor;
+use Sukarix\Core\Tailored;
 
-class Session extends \Prefab
+/**
+ * Stateless JWT backed session.
+ */
+class Session extends Tailored
 {
+    use HasF3;
     use LogWriter;
-
-    /**
-     * f3 instance.
-     *
-     * @var \Base f3
-     */
-    protected $f3;
 
     /**
      * Current authenticated user.
@@ -71,8 +71,12 @@ class Session extends \Prefab
 
     public function __construct(?SQL $db = null, $table = 'sessions', $force = false, $onsuspect = null, $key = null)
     {
-        $this->f3 = \Base::instance();
-        $this->initLogger();
+        Processor::instance()->initialize($this);
+
+        // Register the session before hydrating it, models resolved while decoding
+        // the access token ask the injector for the very session being built.
+        \Registry::set('session', $this);
+
         $this->hydrateFromRequest();
     }
 
