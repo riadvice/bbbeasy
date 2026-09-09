@@ -154,13 +154,15 @@ abstract class Base extends Action
             $this->renderJson(['message' => $found], $responseCode);
             $credentials_valid = false;
         } elseif ($passwordExist) {
-            if (true !== $compliant) {
-                $this->logger->error($errorMessage, ['error' => $compliant]);
-                $this->renderJson(['message' => $compliant], $responseCode);
-                $credentials_valid = false;
-            } elseif ($common) {
+            // A password everybody uses is reported as such, saying it is not strong
+            // enough would send the user looking for the wrong fix.
+            if ($common) {
                 $this->logger->error($errorMessage, ['error' => $common]);
                 $this->renderJson(['message' => $common], $responseCode);
+                $credentials_valid = false;
+            } elseif (true !== $compliant) {
+                $this->logger->error($errorMessage, ['error' => $compliant]);
+                $this->renderJson(['message' => $compliant], $responseCode);
                 $credentials_valid = false;
             }
         }

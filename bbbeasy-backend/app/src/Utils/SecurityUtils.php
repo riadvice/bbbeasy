@@ -26,10 +26,29 @@ use Models\User;
 
 class SecurityUtils
 {
+    /**
+     * The passwords credential stuffing tries first. They are all rejected by the
+     * strength rules as well, this check only exists to tell the user why.
+     */
+    private const COMMON_PASSWORDS = [
+        '123456', '123456789', '12345678', '1234567890', '1234567', '12345',
+        'password', 'password1', 'password123', 'passw0rd', 'p@ssword', 'p@ssw0rd',
+        'qwerty', 'qwerty123', 'azerty', 'abc123', 'iloveyou', 'admin', 'welcome',
+        'monkey', 'dragon', 'letmein', 'football', 'baseball', 'sunshine',
+        'princess', 'superman', 'trustno1', 'starwars', 'whatever', 'zaq12wsx',
+        'qazwsx', 'asdfghjkl', '1q2w3e4r', '1qaz2wsx', 'michael', 'jordan23',
+        'bigbluebutton', 'bbbeasy',
+    ];
     public static string $GDPR_PATTERN = '/^(?=(.*[a-z]){1,})(?=(.*[A-Z]){1,})(?=(.*[\d]){1,})(?=(.*[!@#$%^&*()\-__+.]){1,}).{8,}$/';
 
     public static function credentialsAreCommon(string $username, string $email, string $password): ?string
     {
+        $message = 'Avoid choosing a common password';
+
+        if (\in_array(mb_strtolower($password), self::COMMON_PASSWORDS, true)) {
+            return $message;
+        }
+
         $user = new User();
 
         $users = $user->getUsers($username, $email);
@@ -37,10 +56,9 @@ class SecurityUtils
         foreach ($users as $user1) {
             $user = $user->getByEmail($user1['email']);
             if ($user->verifyPassword($password)) {
-                return 'Avoid choosing a common password';
+                return $message;
             }
         }
-        // @fixme: to be cached, reload to cache if update time changed
 
         return null;
     }
