@@ -740,6 +740,9 @@ fieldset {
 
 .site-sider .ant-menu-item-icon {
     font-size: 16px !important;
+    /* Set the gap explicitly, right to left left the icon flush against the label. */
+    margin-inline-end: 10px !important;
+    margin-inline-start: 0 !important;
 }
 .sider-new-btn {
     margin: 25px;
