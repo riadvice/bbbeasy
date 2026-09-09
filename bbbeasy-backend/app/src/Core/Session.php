@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Core;
 
-use DB\SQL;
 use Enum\UserStatus;
 use Models\User;
 use Sukarix\Behaviours\HasF3;
@@ -69,7 +68,7 @@ class Session extends Tailored
      */
     private ?string $issuedToken = null;
 
-    public function __construct(?SQL $db = null, $table = 'sessions', $force = false, $onsuspect = null, $key = null)
+    public function __construct()
     {
         Processor::instance()->initialize($this);
 
