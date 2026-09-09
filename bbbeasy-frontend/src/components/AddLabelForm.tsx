@@ -28,7 +28,7 @@ import Notifications from './Notifications';
 
 import LabelsService from 'services/labels.service';
 
-import { FormRef } from 'rc-field-form/lib/interface';
+import type { FormRef } from '@rc-component/form';
 import { LabelType } from '../types/LabelType';
 
 type Props = {
@@ -111,9 +111,11 @@ export const AddLabelForm = (props: Props) => {
             >
                 <Form
                     layout="vertical"
-                    ref={(form) => (addForm = form)}
+                    ref={(form) => {
+addForm = form;
+}}
                     initialValues={initialAddValues}
-                    hideRequiredMark
+                    requiredMark={false}
                     onFinish={handleAdd}
                     onFinishFailed={failedAdd}
                     validateTrigger="onSubmit"

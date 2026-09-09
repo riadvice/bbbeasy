@@ -21,7 +21,7 @@ import { Trans, withTranslation } from 'react-i18next';
 import { t } from 'i18next';
 import EN_US from '../locale/en-US.json';
 import LoadingSpinner from './LoadingSpinner';
-import { PageHeader } from '@ant-design/pro-layout';
+import PageHeader from './PageHeader';
 
 import { Form, Switch, Col, Row } from 'antd';
 

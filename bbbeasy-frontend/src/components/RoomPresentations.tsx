@@ -191,7 +191,7 @@ const RoomPresentations = (props: Props) => {
                     url: presentation.url,
                     size: presentation.size ?? file.size ?? 0,
                     status: 'done',
-                };
+                } as UploadFile;
             }
 
             return file;

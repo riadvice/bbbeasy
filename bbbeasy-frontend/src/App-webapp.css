@@ -619,16 +619,19 @@ fieldset {
     color: white !important;
     padding: 14px;
 }
-.search-modal .ant-modal-content .ant-modal-close {
+.search-modal .ant-modal-content .ant-modal-close,
+.search-modal .ant-modal-container .ant-modal-close {
     color: white !important;
 }
 .ant-modal-close {
     margin-top: 5px;
 }
-.search-modal .ant-modal-content {
+.search-modal .ant-modal-content,
+.search-modal .ant-modal-container {
     padding: 0 !important;
 }
-.search-modal .ant-modal-content .ant-modal-body {
+.search-modal .ant-modal-content .ant-modal-body,
+.search-modal .ant-modal-container .ant-modal-body {
     padding-bottom: 24px;
 }
 .search-modal .room-content {
@@ -3272,21 +3275,32 @@ fieldset {
 }
 .presets-grid {
     width: 25% !important;
+    /* Four tiles per row only while the names still fit, otherwise they wrap. */
+    min-width: 170px;
     box-shadow: none !important;
 }
 .presets-grid .ant-card-meta {
     align-items: center;
-    display: inline-flex !important;
+    display: flex !important;
+    min-width: 0;
 }
 /*.presets-grid .ant-card-meta .ant-card-meta-avatar {
   width: 38px !important;
   height: 38px !important;
 }*/
 .presets-grid .ant-card-meta .ant-card-meta-title {
-    white-space: unset;
+    white-space: normal;
     text-overflow: unset;
     font-weight: unset;
     font-size: 14.5px;
+}
+/* Ant Design 6 renamed the card meta text wrapper and no longer lets it grow,
+   without this the setting group names are cut mid-word. */
+.presets-grid .ant-card-meta-detail,
+.presets-grid .ant-card-meta-section {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: visible;
 }
 .presets-grid.ant-card-grid-hoverable:hover {
     background: #fffce6;
@@ -3312,7 +3326,8 @@ fieldset {
     text-align: left;
     width: 260px;
 }
-.presets-modal .ant-modal-content {
+.presets-modal .ant-modal-content,
+.presets-modal .ant-modal-container {
     margin: 0 30px;
 }
 .presets-modal label {
@@ -3910,7 +3925,8 @@ div.error-message-Label {
     color: rgba(148, 163, 184, 0.9) !important;
 }
 /*****************NEW ROOM MODAL - BLUE DESIGN*****************/
-.add-modal.large-modal .ant-modal-content {
+.add-modal.large-modal .ant-modal-content,
+.add-modal.large-modal .ant-modal-container {
     background: linear-gradient(145deg, #10203f 0%, #0d1b33 100%) !important;
     border: 1px solid rgba(96, 165, 250, 0.25) !important;
     border-radius: 14px !important;
@@ -3997,7 +4013,9 @@ div.error-message-Label {
 }
 /*****************NEW PRESET / NEW LABEL MODALS - BLUE DESIGN*****************/
 .preset-add-modal .ant-modal-content,
-.label-add-modal .ant-modal-content {
+.preset-add-modal .ant-modal-container,
+.label-add-modal .ant-modal-content,
+.label-add-modal .ant-modal-container {
     background: linear-gradient(145deg, #10203f 0%, #0d1b33 100%) !important;
     border: 1px solid rgba(96, 165, 250, 0.25) !important;
     border-radius: 14px !important;
@@ -4077,7 +4095,8 @@ div.error-message-Label {
     backdrop-filter: blur(5px);
 }
 /*****************NEW USER MODAL - BLUE DESIGN*****************/
-.user-add-modal .ant-modal-content {
+.user-add-modal .ant-modal-content,
+.user-add-modal .ant-modal-container {
     background: linear-gradient(145deg, #10203f 0%, #0d1b33 100%) !important;
     border: 1px solid rgba(96, 165, 250, 0.25) !important;
     border-radius: 14px !important;
@@ -4303,7 +4322,8 @@ div.error-message-Label {
     box-shadow: 0 4px 14px var(--bbbeasy-brand-color-shadow);
 }
 /* Preset settings modal (scoped to this page only) */
-.ant-modal-root:has(.ant-modal.preset-settings-modal) .ant-modal-content {
+.ant-modal-root:has(.ant-modal.preset-settings-modal) .ant-modal-content,
+.ant-modal-root:has(.ant-modal.preset-settings-modal) .ant-modal-container {
     background: linear-gradient(145deg, #10203f 0%, #0d1b33 100%) !important;
     border: 1px solid rgba(96, 165, 250, 0.25) !important;
     border-radius: 14px !important;
@@ -4688,7 +4708,8 @@ div.error-message-Label {
     border-color: var(--bbbeasy-brand-color) !important;
 }
 /* New Role modal - blue design (same as other add modals) */
-.roles-add-modal .ant-modal-content {
+.roles-add-modal .ant-modal-content,
+.roles-add-modal .ant-modal-container {
     background: linear-gradient(145deg, #10203f 0%, #0d1b33 100%) !important;
     border: 1px solid rgba(96, 165, 250, 0.25) !important;
     border-radius: 14px !important;
@@ -4798,7 +4819,8 @@ div.error-message-Label {
     color: #ffffff !important;
 }
 /*****************PRESETS EDIT POPUP - BLUE DESIGN*****************/
-.ant-modal-root:has(.ant-modal.presets-edit-modal) .ant-modal-content {
+.ant-modal-root:has(.ant-modal.presets-edit-modal) .ant-modal-content,
+.ant-modal-root:has(.ant-modal.presets-edit-modal) .ant-modal-container {
     background: linear-gradient(145deg, #10203f 0%, #0d1b33 100%) !important;
     border: 1px solid rgba(96, 165, 250, 0.25) !important;
     border-radius: 14px !important;
@@ -5324,4 +5346,47 @@ body {
     color: white !important;
 }
 
-
+/***********************PAGE HEADER***********************************/
+.ant-page-header {
+    box-sizing: border-box;
+    padding: 16px 24px;
+}
+.ant-page-header-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+.ant-page-header-heading-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    overflow: hidden;
+    margin: 4px 0;
+}
+.ant-page-header-heading-title {
+    margin-inline-end: 12px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: 20px;
+    line-height: 1.4;
+    font-weight: 600;
+}
+.ant-page-header-heading-sub-title {
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.ant-page-header-heading-extra {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    white-space: nowrap;
+}
+.ant-page-header-content {
+    padding-top: 12px;
+}

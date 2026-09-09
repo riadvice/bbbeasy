@@ -28,7 +28,7 @@ import { PresetType } from '../types/PresetType';
 import { SubCategoryType } from '../types/SubCategoryType';
 import { getIconName } from '../types/GetIconName';
 import EN_US from '../locale/en-US.json';
-import { FormRef } from 'rc-field-form/lib/interface';
+import type { FormRef } from '@rc-component/form';
 const { Title, Paragraph } = Typography;
 const { Grid, Meta } = Card;
 import { useLocation } from 'react-router-dom';
@@ -154,7 +154,9 @@ export const Step3Form = (props: Props) => {
                         ]}
                         maskClosable={true}
                     >
-                        <Form ref={(form) => (step3 = form)}>
+                        <Form ref={(form) => {
+step3 = form;
+}}>
                             <div className="presets-body">
                                 {modalContent.map((item) => {
                                     return (

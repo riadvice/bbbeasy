@@ -22,7 +22,7 @@ export type UserType = {
     username: string;
     email: string;
     role: string | number;
-    permissions?: object;
+    permissions?: Record<string, string[]>;
     status?: string;
     avatar?: string;
     nb_rooms?: number;

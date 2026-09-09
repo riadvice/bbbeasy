@@ -29,7 +29,7 @@ import PresetsService from 'services/presets.service';
 import AuthService from 'services/auth.service';
 
 import { MyPresetType } from 'types/MyPresetType';
-import { FormRef } from 'rc-field-form/lib/interface';
+import type { FormRef } from '@rc-component/form';
 
 type Props = {
     isLogin?: boolean;
@@ -101,9 +101,11 @@ export const AddPresetForm = (props: Props) => {
             >
                 <Form
                     layout="vertical"
-                    ref={(form) => (addForm = form)}
+                    ref={(form) => {
+addForm = form;
+}}
                     initialValues={initialAddValues}
-                    hideRequiredMark
+                    requiredMark={false}
                     onFinish={handleAdd}
                     onFinishFailed={failedAdd}
                     validateTrigger="onSubmit"

@@ -675,7 +675,8 @@ body.rtl {
     text-align: left;
     width: 260px;
 }
-.presets-modal .ant-modal-content {
+.presets-modal .ant-modal-content,
+.presets-modal .ant-modal-container {
     margin: 0 30px;
 }
 .presets-modal label {
@@ -713,4 +714,49 @@ body.rtl {
 }
 .ant-input-number-rtl {
     padding-right: 20px !important;
+}
+
+/***********************PAGE HEADER***********************************/
+.ant-page-header {
+    box-sizing: border-box;
+    padding: 16px 24px;
+}
+.ant-page-header-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+.ant-page-header-heading-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    overflow: hidden;
+    margin: 4px 0;
+}
+.ant-page-header-heading-title {
+    margin-inline-end: 12px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: 20px;
+    line-height: 1.4;
+    font-weight: 600;
+}
+.ant-page-header-heading-sub-title {
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.ant-page-header-heading-extra {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    white-space: nowrap;
+}
+.ant-page-header-content {
+    padding-top: 12px;
 }

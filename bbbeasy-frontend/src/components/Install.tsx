@@ -42,8 +42,6 @@ import axios from 'axios';
 import { apiRoutes } from '../routing/backend-config';
 import usersService from 'services/users.service';
 
-const { Step } = Steps;
-
 type stepType = {
     title: string;
     content: JSX.Element;
@@ -312,11 +310,13 @@ const Install = () => {
             ) : (
                 <>
                     <Col span={4}>
-                        <Steps className="install-steps" size="small" direction="vertical" current={activeStep}>
-                            {steps.map((item) => (
-                                <Step key={item.title} title={item.title} />
-                            ))}
-                        </Steps>
+                        <Steps
+                            className="install-steps"
+                            size="small"
+                            direction="vertical"
+                            current={activeStep}
+                            items={steps.map((item) => ({ key: item.title, title: item.title }))}
+                        />
                     </Col>
                     <Col span={steps[activeStep].span} offset={steps[activeStep].offset}>
                         <Form
