@@ -37,6 +37,8 @@ services:
         condition: service_healthy
       cache:
         condition: service_started
+      mail:
+        condition: service_started
     environment:
       - APP_ENV=production
     networks:
@@ -69,6 +71,16 @@ services:
         ipv4_address: 172.55.0.50
     volumes:
       - postgresdata:/var/lib/postgresql
+
+  mail:
+    restart: always
+    image: axllent/mailpit:latest
+    container_name: bbbeasy_mail
+    ports:
+      - "8025:8025"
+    networks:
+      bbbeasy-network:
+        ipv4_address: 172.55.0.70
 
   cache:
     restart: always
