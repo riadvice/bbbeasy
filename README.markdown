@@ -37,6 +37,33 @@ The web-application is split in two parts:
 
 ## Development
 
+The supported way to run BBBEasy locally is Docker Compose. It builds the frontend, the
+backend and nginx from this repository, so no image has to be pulled from a registry.
+
+```bash
+cp bbbeasy-backend/app/config/config-development.sample.ini bbbeasy-backend/app/config/config-development.ini
+docker compose up -d
+docker compose exec bbbeasy php vendor/bin/phinx migrate -e production
+```
+
+| Service | Address |
+|---|---|
+| Web application | http://localhost:8080 |
+| API | http://localhost:8080/api |
+| Outgoing mail | http://localhost:8025 |
+| PostgreSQL | localhost:55432 |
+
+Set your BigBlueButton server and shared secret in `docker/config-production.ini` before
+starting a room. The sources are baked into the images, so rebuild after a change:
+
+```bash
+docker compose build bbbeasy webserver && docker compose up -d
+```
+
+### Vagrant
+
+The Vagrant box is still in the tree for the legacy workflow:
+
 - To launch the backend in the development mode, follow these steps :
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1- Start a Command Prompt as an **Administrator**.
@@ -95,9 +122,19 @@ End-to-end tests use [Playwright](https://playwright.dev/) and are organized int
 
 #### Prerequisites
 
-1. Enable the **installer** app as described in the [Development](#development) section.
+1. Enable the **installer** app as described in the [Development](#development) section;
+   `installer.spec.ts` only passes against a build made with `VITE_INSTALLER_FEATURE=true`.
 2. Install the Chromium browser: `npx playwright install chromium`
 3. Ensure the backend server is running and accessible.
+
+The suite reads its target from the environment, so it can run against the Compose stack:
+
+```bash
+PGPORT=55432 VITE_APP_URL=http://localhost:8080 yarn test:e2e:webapp
+```
+
+`PGHOST`, `PGPORT`, `PGUSER`, `PGPASSWORD` and `PGDATABASE` select the database the tests
+read from, and `VITE_APP_URL` the deployment they drive.
 
 #### Running Tests
 
