@@ -32,8 +32,8 @@ if (!empty($_GET) && array_key_exists('statera', $_GET)) {
 // Change to application directory to execute the code
 chdir(realpath(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'app'));
 
-// require bootstrap to init the application
-require_once 'src/Application/Bootstrap.php';
+// require the composer autoloader to init the application
+require_once '../vendor/autoload.php';
 
 $app = new Bootstrap();
 $app->start();

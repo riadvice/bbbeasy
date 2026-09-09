@@ -23,155 +23,81 @@ declare(strict_types=1);
 namespace Application;
 
 use Acl\Access;
-use Enum\CacheKey;
-use Helpers\Time;
-use Mail\MailSender;
 use Models\Role;
-use Models\Setting;
-use Tracy\Debugger;
-
-// load composer autoload
-require_once '../vendor/autoload.php';
+use Sukarix\Application\Bootstrap as SukarixBootstrap;
 
 /**
- * fat-free framework application initialisation.
+ * BBBEasy application initialisation.
  */
-class Bootstrap extends Boot
+class Bootstrap extends SukarixBootstrap
 {
-    public function __construct()
-    {
-        $this->logFileName = \PHP_SAPI !== 'cli' ? 'app' : 'cli';
-        $this->logSession  = true;
-
-        parent::__construct();
-
-        $this->setupMailer();
-        $this->handleException();
-        $this->createDatabaseConnection();
-        $this->prepareSession();
-        $this->loadAppSetting();
-        $this->detectCli();
-        $this->loadRoutesAndAssets();
-        $this->allowRoutesDynamically();
-    }
-
     protected function loadConfiguration(): void
     {
-        $this->f3->config('config/default.ini');
-        if (file_exists('config/config-' . $this->environment . '.ini')) {
-            $this->f3->config('config/config-' . $this->environment . '.ini');
-        } else {
+        parent::loadConfiguration();
+
+        if (!file_exists('config/config-' . $this->environment . '.ini')) {
             throw new \RuntimeException('Could not find configuration file "config-' . $this->environment . '.ini"');
-        }
-
-        // Upload configuration
-        $this->f3->config('config/upload.ini');
-
-        // custom error handler if debugging
-        $this->debug = $this->f3->get('DEBUG');
-    }
-
-    protected function handleException(): void
-    {
-        // Tracy consumes about 300 Ko of memory
-        Debugger::enable(3 !== $this->debug ? Debugger::PRODUCTION : Debugger::DEVELOPMENT, __DIR__ . '/../../' . $this->f3->get('LOGS'));
-        if (Debugger::$productionMode) {
-            Debugger::$onFatalError = [static function($exception): void {
-                /**
-                 * @var MailSender $mailer
-                 */
-                $mailer = \Registry::get('mailer');
-                $mailer->sendExceptionEmail($exception);
-            }];
-        }
-
-        // default error pages if site is not being debugged
-        if (!$this->isCli && empty($this->debug)) {
-            $this->f3->set(
-                'ONERROR',
-                function(): void {
-                    header('Expires:  ' . Time::http(time() + \Base::instance()->get('error.ttl')));
-                    if ('404' === \Base::instance()->get('ERROR.code')) {
-                        include_once '/templates/error/404.phtml';
-                    } else {
-                        include_once '/templates/error/error.phtml';
-                    }
-                }
-            );
         }
     }
 
     protected function loadAppSetting(): void
     {
-        if (!$this->f3->get(CacheKey::CONFIG_LOADED)) {
-            $this->f3->set(CacheKey::CONFIG_LOADED, true, 3590);
-            // Load global settings
-            foreach ([] as $entry => $cacheKey) {
-                $exists = $this->f3->exists($entry);
-                if (!$exists) {
-                    $setting = new Setting();
-                    $setting->load();
-                    $value = $setting->{$entry};
-                    $this->f3->set($cacheKey, $value, 3600);
-                }
-            }
-        }
         $locale = $this->session->get('locale');
         if (!empty($locale)) {
             $this->f3->set('LANGUAGE', $locale);
         }
     }
 
-    protected function loadRoutesAndAssets(): void
+    protected function loadRoutesAndAccess(): void
     {
-        // setup routes
-        // @see http://fatfreeframework.com/routing-engine
-        // firstly load routes from ini file then load custom environment routes
-        $this->f3->config('config/routes' . $this->f3->get('config.extension') . '.ini');
+        $extension = $this->f3->get('config.extension');
 
-        if (file_exists('config/routes-' . $this->environment . '.ini')) {
-            $this->f3->config('config/routes-' . $this->environment . '.ini');
-        }
+        $this->f3->config('config/routes' . $extension . '.ini');
+        $this->f3->config('config/routes-' . $this->environment . '.ini');
 
-        if (!$this->isCli) {
-            // load routes access policy
-            $this->f3->config('config/access' . $this->f3->get('config.extension') . '.ini');
-        } else {
-            // load routes access policy for CLI
+        if ($this->isCli) {
             $this->f3->config('config/access-cli.ini');
+        } else {
+            $this->f3->config('config/access' . $extension . '.ini');
+            $this->sendCorsHeaders();
         }
-        // setup assets
-        // @see http://fatfreeframework.com/framework-variables#Customsections
-        // assets are save in configuration so we do no need to overload the memory with classes
-        $this->f3->config('config/assets.ini');
 
-        // enable cors to allow cross-origin requests from frontend react client
+        $this->allowRoutesDynamically();
+    }
+
+    /**
+     * Allow cross-origin requests coming from the React frontend.
+     */
+    protected function sendCorsHeaders(): void
+    {
         header('Access-Control-Allow-Origin: ' . $this->f3->get('webapps.allowed'));
         header('Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE');
         header('Access-Control-Allow-Headers: Content-Type, Origin, Authorization, X-Authorization, Accept, Accept-Language, Access-Control-Request-Method');
         header('Access-Control-Expose-Headers: Authorization, X-Authorization');
     }
 
+    /**
+     * Allow routes according to the role permissions of the logged in user.
+     */
     protected function allowRoutesDynamically(): void
     {
-        // allow routes according to role permissions of logged user
-        $access = Access::instance();
-        // get session user role
         $roleId = $this->session->getRoleId();
-        if (0 !== $roleId) {
-            $role = new Role();
-            $role->load(['id = ?', [$roleId]]);
-            $roleName = $role->name;
-            // load role permissions
-            $permissions = $role->getRolePermissions();
-            if (\is_array($permissions)) {
-                foreach ($permissions as $group => $actions) {
-                    foreach ($actions as $action) {
-                        $route = $this->getRouteByGroupAndAction($group, $action);
-                        // allow user role to access to route
-                        $access->allow($route, $roleName);
-                    }
-                }
+        if (0 === $roleId) {
+            return;
+        }
+
+        $role = new Role();
+        $role->load(['id = ?', [$roleId]]);
+
+        $permissions = $role->getRolePermissions();
+        if (!\is_array($permissions)) {
+            return;
+        }
+
+        $access = Access::instance();
+        foreach ($permissions as $group => $actions) {
+            foreach ($actions as $action) {
+                $access->allow($this->getRouteByGroupAndAction($group, $action), $role->name);
             }
         }
     }
