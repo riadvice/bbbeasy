@@ -72,7 +72,7 @@ const ModalSocialLinks = ({ recording, trigger = 'link' }: Props) => {
                 mask={{ closable: false }}
             >
                 <Form layout="vertical" requiredMark={false}>
-                    <Space size={38} direction="vertical" className="modal-content">
+                    <Space size={38} orientation="vertical" className="modal-content">
                         <div className="mt-24">
                             <RecordingFormatIcons formats={recording.formats} showDisabled />
                         </div>

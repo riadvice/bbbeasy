@@ -314,7 +314,7 @@ const RoomRecordings = (props: Props) => {
                                                         </div>
                                                     )}
 
-                                                    <Space direction="vertical" className="recording-infos">
+                                                    <Space orientation="vertical" className="recording-infos">
                                                         <span>
                                                             <TeamOutlined /> {recording.users}{' '}
                                                             <Trans i18nKey="attendees" />{' '}
@@ -331,7 +331,7 @@ const RoomRecordings = (props: Props) => {
                                             </div>
                                         }
                                     >
-                                        <Space direction="vertical" size="large">
+                                        <Space orientation="vertical" size="large">
                                             <div>
                                                 <Button
                                                     size="middle"

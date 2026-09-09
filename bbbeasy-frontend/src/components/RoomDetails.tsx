@@ -508,7 +508,7 @@ const RoomDetails = () => {
                             <Row justify="center" align="middle">
                                 <Col span={22}>
                                     <Space
-                                        direction="vertical"
+                                        orientation="vertical"
                                         size="large"
                                         className={isEditing ? 'edit-room-form' : null}
                                     >

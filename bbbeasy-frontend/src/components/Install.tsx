@@ -313,7 +313,7 @@ const Install = () => {
                         <Steps
                             className="install-steps"
                             size="small"
-                            direction="vertical"
+                            orientation="vertical"
                             current={activeStep}
                             items={steps.map((item) => ({ key: item.title, title: item.title }))}
                         />

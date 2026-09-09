@@ -213,7 +213,7 @@ const Profile = () => {
                     </Col>
 
                     <Col span={10} offset={1} className="mt-15">
-                        <Space size={30} direction="vertical" align="center">
+                        <Space size={30} orientation="vertical" align="center">
                             <ImageUploading
                                 multiple={false}
                                 value={images}

@@ -92,7 +92,7 @@ const RoomsCol: React.FC<RoomsColProps> = ({ room, editable, bbbConfigured, dele
                 bordered={false}
                 title={
                     <div onClick={() => showRoomDetails()}>
-                        <Space size="middle" direction="vertical" className="room-card-title">
+                        <Space size="middle" orientation="vertical" className="room-card-title">
                             <Badge
                                 offset={LocaleService.direction === 'rtl' ? [22, 11] : [-22, 11]}
                                 count={

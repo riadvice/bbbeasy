@@ -302,7 +302,7 @@ const AppHeader = () => {
                                 <DynamicIcon type="room" />
                             </Col>
                             <Col span={21}>
-                                <Space direction="vertical">
+                                <Space orientation="vertical">
                                     <Title level={3}>{singleRoom.name}</Title>
                                     <Row>
                                         {singleRoom.labels.map((item) => (
