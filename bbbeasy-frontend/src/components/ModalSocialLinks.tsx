@@ -69,7 +69,7 @@ const ModalSocialLinks = ({ recording, trigger = 'link' }: Props) => {
                 open={isModalVisible}
                 onCancel={() => setIsModalVisible(false)}
                 footer={null}
-                maskClosable={false}
+                mask={{ closable: false }}
             >
                 <Form layout="vertical" requiredMark={false}>
                     <Space size={38} direction="vertical" className="modal-content">

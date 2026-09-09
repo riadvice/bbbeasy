@@ -147,7 +147,7 @@ export const Step3Form = (props: Props) => {
                                 </Button>
                             </Form.Item>,
                         ]}
-                        maskClosable
+                        mask={{ closable: true }}
                     >
                         <Form form={step3}>
                             <div className="presets-body">

@@ -589,7 +589,7 @@ const Users = () => {
                     onOk={handleAdd}
                     onCancel={cancelAdd}
                     footer={null}
-                    maskClosable
+                    mask={{ closable: true }}
                 >
                     <Form
                         form={addForm}

@@ -187,7 +187,7 @@ export const AddRoomForm = (props: Props) => {
             onOk={handleAdd}
             onCancel={cancelAdd}
             footer={null}
-            maskClosable
+            mask={{ closable: true }}
         >
             <Form
                 form={addForm}

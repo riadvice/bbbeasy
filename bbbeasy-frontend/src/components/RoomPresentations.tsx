@@ -294,7 +294,7 @@ const RoomPresentations = (props: Props) => {
                         {fileList.length >= MAX_PRESENTATIONS ? null : uploadButton}
                     </Upload>
                 </Card>
-                <Modal open={previewOpen} footer={null} onCancel={handleCancel} maskClosable>
+                <Modal open={previewOpen} footer={null} onCancel={handleCancel} mask={{ closable: true }}>
                     <img className="full-width" src={previewImage} />
                     {previewSize > PRE_UPLOAD_MAX_BYTES && (
                         <div className="room-presentations-preview-size-warning">

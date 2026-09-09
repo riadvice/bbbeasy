@@ -293,7 +293,7 @@ const AppHeader = () => {
                     setIsModalVisible(false);
                 }}
                 footer={null}
-                maskClosable={false}
+                mask={{ closable: false }}
             >
                 {rooms.map((singleRoom, index) => (
                     <React.Fragment key={singleRoom.id}>
