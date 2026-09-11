@@ -41,6 +41,16 @@ services:
         condition: service_started
     environment:
       - APP_ENV=production
+      # A relay signs in as one identity and sends as another, so the account,
+      # the address and the name beside it are set separately. Anything left
+      # unset keeps what app/config/smtp.ini holds.
+      - BBBEASY_SMTP_HOST=${BBBEASY_SMTP_HOST:-}
+      - BBBEASY_SMTP_PORT=${BBBEASY_SMTP_PORT:-}
+      - BBBEASY_SMTP_SCHEME=${BBBEASY_SMTP_SCHEME:-}
+      - BBBEASY_SMTP_USERNAME=${BBBEASY_SMTP_USERNAME:-}
+      - BBBEASY_SMTP_PASSWORD=${BBBEASY_SMTP_PASSWORD:-}
+      - BBBEASY_SMTP_FROM_EMAIL=${BBBEASY_SMTP_FROM_EMAIL:-}
+      - BBBEASY_SMTP_SENDER_NAME=${BBBEASY_SMTP_SENDER_NAME:-}
     networks:
       bbbeasy-network:
         ipv4_address: 172.55.0.20

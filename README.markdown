@@ -60,6 +60,38 @@ starting a room. The sources are baked into the images, so rebuild after a chang
 docker compose build bbbeasy webserver && docker compose up -d
 ```
 
+### Outgoing mail
+
+The Compose stack catches mail in [mailpit](http://localhost:8025), so nothing is sent
+outside. Point a deployment at a real server with these variables — anything left unset
+keeps the value in `bbbeasy-backend/app/config/smtp.ini`:
+
+| Variable | Sets |
+|---|---|
+| `BBBEASY_SMTP_HOST` | Server host name |
+| `BBBEASY_SMTP_PORT` | Server port |
+| `BBBEASY_SMTP_SCHEME` | `ssl`, `tls`, or empty for none |
+| `BBBEASY_SMTP_USERNAME` | Account BBBEasy signs in with |
+| `BBBEASY_SMTP_PASSWORD` | Password for that account |
+| `BBBEASY_SMTP_FROM_EMAIL` | Address the mail comes from |
+| `BBBEASY_SMTP_SENDER_NAME` | Name shown beside that address |
+
+A relay such as [Postal](https://docs.postalserver.io/) signs in as one identity and
+sends as another, so the account, the address and the name are three separate settings:
+
+```bash
+BBBEASY_SMTP_HOST=postal.example.org
+BBBEASY_SMTP_PORT=587
+BBBEASY_SMTP_USERNAME=rooms-app-7f3c
+BBBEASY_SMTP_PASSWORD=…
+BBBEASY_SMTP_FROM_EMAIL=notifications@rooms.example.org
+BBBEASY_SMTP_SENDER_NAME=Example Rooms
+```
+
+They are read from the environment rather than a file because
+`docker/config-production.ini` is tracked, and a mail password does not belong in the
+repository.
+
 ### Vagrant
 
 The Vagrant box is still in the tree for the legacy workflow:

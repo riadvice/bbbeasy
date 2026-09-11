@@ -62,6 +62,10 @@ credentials. Set real ones locally to test, then scrub before committing.
   Both Fat-Free and Tracy force their own error level, so `Application\Bootstrap::handleException()`
   masks `E_DEPRECATED` last. Remove it once Cortex is fixed.
 - Mailer settings live under the `mailer.*` hive prefix, not at the top level.
+  `Application\Bootstrap::loadMailerEnvironment()` lets `BBBEASY_SMTP_*` override them, so
+  a deployment sets its own server without editing the tracked configuration. The library
+  reads host, port, user and password in `Mailer::initSMTP()`, which runs after the
+  bootstrap, so the overlay reaches them.
 - PostgreSQL identity columns carry no `nextval` default, so Fat-Free does not treat
   them as auto increment and the reload it runs after an insert matches nothing.
   `Models\Base::insert()` reads the record back, without it every model is blank in

@@ -34,6 +34,26 @@ use Utils\RoutePrivileges;
 class Bootstrap extends SukarixBootstrap
 {
     /**
+     * Mail settings a deployment has to set for itself, and the hive keys they
+     * stand in for.
+     *
+     * A relay such as Postal authenticates as one identity and sends as another,
+     * so the account it signs in with, the address the mail comes from and the
+     * name shown beside that address are three separate values. They live in the
+     * environment because the configuration file that would otherwise hold them
+     * is tracked, and a password does not belong in the repository.
+     */
+    private const MAILER_ENVIRONMENT = [
+        'BBBEASY_SMTP_HOST'        => 'mailer.smtp.host',
+        'BBBEASY_SMTP_PORT'        => 'mailer.smtp.port',
+        'BBBEASY_SMTP_SCHEME'      => 'mailer.smtp.scheme',
+        'BBBEASY_SMTP_USERNAME'    => 'mailer.smtp.user',
+        'BBBEASY_SMTP_PASSWORD'    => 'mailer.smtp.pw',
+        'BBBEASY_SMTP_FROM_EMAIL'  => 'mailer.from_mail',
+        'BBBEASY_SMTP_SENDER_NAME' => 'mailer.from_name',
+    ];
+
+    /**
      * BBBEasy authenticates with stateless JWT access tokens, the session is
      * therefore not the database backed one the framework expects.
      */
@@ -61,6 +81,23 @@ class Bootstrap extends SukarixBootstrap
 
         if (!file_exists('config/config-' . $this->environment . '.ini')) {
             throw new \RuntimeException('Could not find configuration file "config-' . $this->environment . '.ini"');
+        }
+
+        $this->loadMailerEnvironment();
+    }
+
+    /**
+     * Let the environment have the last word on the mail settings. A variable that
+     * is unset or empty leaves the configured value alone, so a deployment
+     * overrides only what it needs to.
+     */
+    protected function loadMailerEnvironment(): void
+    {
+        foreach (self::MAILER_ENVIRONMENT as $variable => $key) {
+            $value = getenv($variable);
+            if (false !== $value && '' !== $value) {
+                $this->f3->set($key, $value);
+            }
         }
     }
 
