@@ -107,7 +107,10 @@ class MailSender extends BaseMailSender
         }
 
         if (null !== $from) {
-            $this->mailer->setFrom($from);
+            // A relay such as Postal authenticates as one identity and sends as
+            // another, so the sender name belongs on the message, not on the
+            // credentials. Without it the mail arrives showing a bare address.
+            $this->mailer->setFrom($from, $this->f3->get('mailer.from_name'));
         }
         $this->mailer->setHTML($message);
         $this->mailer->set('Message-Id', $messageId);
