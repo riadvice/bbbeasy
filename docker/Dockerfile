@@ -40,6 +40,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && docker-php-ext-install intl \
     && docker-php-ext-install pgsql \
     && docker-php-ext-install pdo_pgsql \
+    # Only for php-amqplib, which Sukarix 0.5.0 requires outright. Drop this once the
+    # framework makes its RabbitMQ publisher optional, nothing here publishes to it.
+    && docker-php-ext-install sockets \
     && pecl install redis \
     && docker-php-ext-enable redis \
     && rm -rf /var/lib/apt/lists/*
