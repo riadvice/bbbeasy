@@ -7,4 +7,5 @@ exec docker compose --profile test run --rm --no-deps \
     -v "$PWD/bbbeasy-backend/app/config:$B/app/config:ro" \
     -v "$PWD/bbbeasy-backend/tests:$B/tests:ro" \
     -v "$PWD/bbbeasy-backend/tools:$B/tools:ro" \
+    -v "$PWD/bbbeasy-backend/vendor:$B/vendor:ro" \
     tests tools/statera.sh "${1:-all}"
