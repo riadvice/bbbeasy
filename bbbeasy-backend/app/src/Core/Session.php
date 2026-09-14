@@ -27,12 +27,13 @@ use Models\User;
 use Sukarix\Behaviours\HasF3;
 use Sukarix\Behaviours\LogWriter;
 use Sukarix\Core\Processor;
+use Sukarix\Core\SessionInterface;
 use Sukarix\Core\Tailored;
 
 /**
  * Stateless JWT backed session.
  */
-class Session extends Tailored
+class Session extends Tailored implements SessionInterface
 {
     use HasF3;
     use LogWriter;
@@ -127,6 +128,15 @@ class Session extends Tailored
     }
 
     public function cleanup($max): bool
+    {
+        return true;
+    }
+
+    /**
+     * The JWT session carries no anti-forgery token: the bearer token is the proof,
+     * and it is not sent by a browser on its own.
+     */
+    public function validateToken(): bool
     {
         return true;
     }

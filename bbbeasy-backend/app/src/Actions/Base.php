@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Actions;
 
-use Core\Session;
 use Enum\ResponseCode;
 use Enum\UserRole;
 use Enum\UserStatus;
@@ -36,14 +35,6 @@ use Utils\SecurityUtils;
  */
 abstract class Base extends Action
 {
-    /**
-     * BBBEasy replaces the framework session with a stateless JWT one, narrow the
-     * inherited property so its own methods resolve.
-     *
-     * @var Session
-     */
-    protected $session;
-
     /**
      * initialize controller.
      */
