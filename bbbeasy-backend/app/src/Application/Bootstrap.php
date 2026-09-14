@@ -25,6 +25,7 @@ namespace Application;
 use Core\Session;
 use Models\Role;
 use Sukarix\Application\Bootstrap as SukarixBootstrap;
+use Sukarix\Http\Cors;
 use Utils\RoutePrivileges;
 
 /**
@@ -78,14 +79,30 @@ class Bootstrap extends SukarixBootstrap
     }
 
     /**
-     * Allow cross-origin requests coming from the React frontend.
+     * Allow cross-origin requests from the origins the deployment names.
+     *
+     * Nothing is sent when none are named: the bundled stack serves the frontend and
+     * the API from one origin, where the browser asks for no permission.
      */
     protected function sendCorsHeaders(): void
     {
-        header('Access-Control-Allow-Origin: ' . $this->f3->get('webapps.allowed'));
-        header('Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE');
-        header('Access-Control-Allow-Headers: Content-Type, Origin, Authorization, X-Authorization, Accept, Accept-Language, Access-Control-Request-Method');
-        header('Access-Control-Expose-Headers: Authorization, X-Authorization');
+        // Fat-Free already splits a comma separated ini value into an array.
+        $allowed = $this->f3->get('webapps.allowed');
+        $origins = array_values(array_filter(array_map(
+            static fn ($origin): string => mb_trim((string) $origin),
+            \is_array($allowed) ? $allowed : explode(',', (string) $allowed)
+        )));
+
+        if ([] === $origins) {
+            return;
+        }
+
+        Cors::handle(
+            $this->f3,
+            $origins,
+            ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+            ['Content-Type', 'Origin', 'Authorization', 'X-Authorization', 'Accept', 'Accept-Language']
+        );
     }
 
     /**
