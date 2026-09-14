@@ -22,80 +22,26 @@ declare(strict_types=1);
 
 namespace Utils;
 
+use Sukarix\Utils\PrivilegeUtils as BasePrivilegeUtils;
+
+/**
+ * The privileges BBBEasy declares, read from the action classes that carry them.
+ */
 class PrivilegeUtils
 {
-    private const PRIVILEGE_TRAIT = 'Actions\RequirePrivilegeTrait';
+    private const ACTIONS_NAMESPACE = 'Actions';
+
+    private const PRIVILEGE_TRAIT = 'Actions\\RequirePrivilegeTrait';
 
     /**
-     * Every privilege the application declares, as a list of actions per group. An
-     * action class carries a privilege by using the RequirePrivilegeTrait, its group
-     * and its name come from the namespace it lives in.
+     * @return array<string, list<string>>
      */
     public static function listSystemPrivileges(): array
     {
-        $f3         = \Base::instance();
-        $privileges = [];
-
-        foreach (self::actionClasses() as $action) {
-            if (!\in_array(self::PRIVILEGE_TRAIT, new \ReflectionClass($action)->getTraitNames(), true)) {
-                continue;
-            }
-
-            [, $group, $name] = explode('\\', $action);
-
-            // Several classes can share one privilege, the room presentations live in
-            // their own namespace with an index, an add and a delete.
-            $privileges[$f3->snakecase($group)][$f3->snakecase($name)] = true;
-        }
-
-        foreach ($privileges as $group => $actions) {
-            $actions = array_keys($actions);
-            sort($actions);
-            $privileges[$group] = $actions;
-        }
-
-        ksort($privileges);
-
-        return $privileges;
-    }
-
-    /**
-     * Action classes of the application, read from the directory they live in.
-     *
-     * The composer class map was the obvious source, but an action added after the
-     * autoloader was dumped is missing from it, and its privilege then silently
-     * disappears from the role matrix.
-     */
-    private static function actionClasses(): array
-    {
-        $root = \dirname(__DIR__) . \DIRECTORY_SEPARATOR . 'Actions';
-
-        if (!is_dir($root)) {
-            return [];
-        }
-
-        $classes  = [];
-        $files    = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($root, \FilesystemIterator::SKIP_DOTS));
-        $rootSize = mb_strlen($root) + 1;
-
-        foreach ($files as $file) {
-            if (!$file->isFile() || 'php' !== $file->getExtension()) {
-                continue;
-            }
-
-            $relative = mb_substr($file->getPathname(), $rootSize, -4);
-
-            // Only actions living in a namespace of their own, the classes sitting
-            // directly under Actions are the shared base ones.
-            if (!str_contains($relative, \DIRECTORY_SEPARATOR)) {
-                continue;
-            }
-
-            $classes[] = 'Actions\\' . str_replace(\DIRECTORY_SEPARATOR, '\\', $relative);
-        }
-
-        sort($classes);
-
-        return $classes;
+        return BasePrivilegeUtils::listSystemPrivileges(
+            \dirname(__DIR__) . \DIRECTORY_SEPARATOR . self::ACTIONS_NAMESPACE,
+            self::ACTIONS_NAMESPACE,
+            self::PRIVILEGE_TRAIT
+        );
     }
 }
