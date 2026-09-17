@@ -5526,3 +5526,31 @@ body {
 .ant-select-dropdown .ant-empty-description {
     color: var(--bbbeasy-on-surface-muted) !important;
 }
+
+/* ---------- Empty states ---------- */
+.empty-hexagon {
+    width: 96px;
+    height: 86px;
+    overflow: visible;
+}
+.empty-hexagon-outline {
+    fill: none;
+    stroke: var(--bbbeasy-on-surface-accent);
+    stroke-width: 5;
+    stroke-linejoin: round;
+    opacity: 0.35;
+}
+.empty-hexagon-mark {
+    fill: var(--bbbeasy-brand-color);
+    stroke: var(--bbbeasy-brand-color);
+    stroke-width: 7;
+    stroke-linejoin: round;
+    opacity: 0.85;
+}
+.ant-empty-image:has(.empty-hexagon) {
+    height: auto;
+    margin-bottom: 16px;
+}
+.ant-empty-description {
+    color: var(--bbbeasy-on-surface-muted) !important;
+}

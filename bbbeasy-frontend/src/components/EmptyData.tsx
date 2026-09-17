@@ -24,9 +24,29 @@ type Props = {
     description: any;
 };
 
+/* Ant Design's own drawing is a light grey box made for a light page, and it sat
+   on the dark one as a pale smudge. The hexagon is the shape the product already
+   uses everywhere, and it takes its colours from the theme. */
+const HexagonPlaceholder = () => (
+    <svg className="empty-hexagon" viewBox="0 0 120 108" role="presentation" focusable="false">
+        <path
+            className="empty-hexagon-outline"
+            d="M56 9 L94 30.5 L94 73.5 L56 95 L18 73.5 L18 30.5 Z"
+        />
+        <path
+            className="empty-hexagon-mark"
+            d="M96 63.7 L110.4 71.7 L110.4 88.3 L96 96.3 L81.6 88.3 L81.6 71.7 Z"
+        />
+    </svg>
+);
+
 const EmptyData = (props: Props) => {
     return (
-        <Empty description={props.description} className={props.className ?? 'mt-30'}>
+        <Empty
+            image={<HexagonPlaceholder />}
+            description={props.description}
+            className={props.className ?? 'mt-30'}
+        >
             {' '}
         </Empty>
     );
