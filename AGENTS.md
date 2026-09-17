@@ -21,8 +21,9 @@ docker compose exec bbbeasy php vendor/bin/phinx migrate -e production
 `web` (nginx serving the built frontend and proxying `/api`). Rebuild after a code change
 with `docker compose build <service>` — the sources are baked into the image, not mounted.
 
-`docker/config-production.ini` is tracked and must only ever hold placeholder BigBlueButton
-credentials. Set real ones locally to test, then scrub before committing.
+`docker/config-production.ini` is the deployment's own configuration and is ignored by
+git. Copy it from `docker/config-production.sample.ini` before the first
+`docker compose up`, and put real credentials in it freely — only the sample is tracked.
 
 ## Build / test commands
 

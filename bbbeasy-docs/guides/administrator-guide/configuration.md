@@ -8,10 +8,13 @@ sidebar_label: 'Configuration files'
 
 ## Backend
 
-The backend reads its settings from `.ini` files in `bbbeasy-backend/app/config/`. The
-values that differ per deployment — and the secrets — are read from the environment
-instead, so `docker/config-production.ini`, which is tracked in the repository, does not
-have to hold them.
+The backend reads its settings from `.ini` files in `bbbeasy-backend/app/config/`. What
+differs per deployment goes in `docker/config-production.ini`, which the Compose stack
+mounts over the backend's own copy. That file is ignored by git; copy it from
+`docker/config-production.sample.ini` before the first `docker compose up`.
+
+Secrets can go in it, or be left to the environment variables below, which override the
+files and let a deployment keep its passwords in its own secret store.
 
 ### Outgoing mail
 
@@ -52,8 +55,8 @@ the password reset page shows an error and the reason is written to
 
 ### BigBlueButton
 
-`bbb.server` and `bbb.shared_secret` in `docker/config-production.ini` point BBBEasy at the
-BigBlueButton server. Both must be set before a room can be started; the status endpoint
+`bbb.server` and `bbb.shared_secret` in `docker/config-production.ini` point BBBEasy at
+the BigBlueButton server. Both must be set before a room can be started; the status endpoint
 calls `getApiVersion` to check them, so a wrong secret or an unreachable server is reported
 rather than assumed to be working.
 

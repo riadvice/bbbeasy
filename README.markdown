@@ -42,9 +42,16 @@ backend and nginx from this repository, so no image has to be pulled from a regi
 
 ```bash
 cp bbbeasy-backend/app/config/config-development.sample.ini bbbeasy-backend/app/config/config-development.ini
+cp docker/config-production.sample.ini docker/config-production.ini
 docker compose up -d
 docker compose exec bbbeasy php vendor/bin/phinx migrate -e production
 ```
+
+The second copy is the file the stack mounts into the backend container. It is ignored by
+git, so the BigBlueButton secret and anything else a deployment needs stay out of the
+repository. Copy it before the first `docker compose up`: Docker creates a directory in
+its place when the path does not exist, and the container then fails to read its
+configuration.
 
 | Service | Address |
 |---|---|
@@ -53,8 +60,8 @@ docker compose exec bbbeasy php vendor/bin/phinx migrate -e production
 | Outgoing mail | http://localhost:8025 |
 | PostgreSQL | localhost:55432 |
 
-Set your BigBlueButton server and shared secret in `docker/config-production.ini` before
-starting a room. The sources are baked into the images, so rebuild after a change:
+Set your BigBlueButton server and shared secret in your `docker/config-production.ini`
+before starting a room. The sources are baked into the images, so rebuild after a change:
 
 ```bash
 docker compose build bbbeasy webserver && docker compose up -d
@@ -88,9 +95,8 @@ BBBEASY_SMTP_FROM_EMAIL=notifications@rooms.example.org
 BBBEASY_SMTP_SENDER_NAME=Example Rooms
 ```
 
-They are read from the environment rather than a file because
-`docker/config-production.ini` is tracked, and a mail password does not belong in the
-repository.
+They are read from the environment so that a password can come from the deployment's own
+secret store rather than a file on the host.
 
 ### Vagrant
 

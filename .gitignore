@@ -23,3 +23,5 @@ bbbeasy-backend/tmp/jwt.secret
 test-results/
 playwright-report
 
+# Deployment configuration, copied from docker/config-production.sample.ini
+docker/config-production.ini
