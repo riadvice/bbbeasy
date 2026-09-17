@@ -5717,6 +5717,20 @@ body {
     .ant-page-header-heading-title {
         white-space: normal;
     }
+    /* A dialog sized as a share of the window is half a phone. They take what the
+       screen has, less a margin, so the form inside them is usable. */
+    .large-modal,
+    .medium-modal {
+        width: auto !important;
+        max-width: calc(100vw - 24px) !important;
+        margin: 12px auto !important;
+    }
+    /* Side by side the two fields of the New Room form are 80px each. */
+    .add-room-fields > .ant-col {
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+        margin-inline-start: 0 !important;
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -197,7 +197,7 @@ export const AddRoomForm = (props: Props) => {
                 onFinishFailed={failedAdd}
                 validateTrigger="onSubmit"
             >
-                <Row justify="center">
+                <Row justify="center" className="add-room-fields">
                     <Col span={11}>
                         <Form.Item
                             label={<Trans i18nKey="name.label" />}
