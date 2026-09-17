@@ -226,6 +226,16 @@
     --bbbeasy-webapp-bg-image: radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.12) 0px, transparent 50%),
         radial-gradient(at 100% 100%, rgba(99, 102, 241, 0.08) 0px, transparent 50%),
         radial-gradient(at 50% 50%, rgba(15, 23, 42, 0.5) 0px, transparent 100%);
+    /* The panel every overlay is drawn on. Dialogs and notifications float over
+       the same dark page, so the surface is named once here instead of each one
+       restating it. */
+    --bbbeasy-surface: linear-gradient(145deg, #10203f 0%, #0d1b33 100%);
+    --bbbeasy-surface-border: rgba(96, 165, 250, 0.25);
+    --bbbeasy-surface-shadow: 0 14px 44px rgba(37, 99, 235, 0.28);
+    --bbbeasy-surface-radius: 14px;
+    --bbbeasy-on-surface: #e2e8f0;
+    --bbbeasy-on-surface-strong: #ffffff;
+    --bbbeasy-on-surface-accent: #93c5fd;
 }
 body,
 input,
@@ -2819,7 +2829,6 @@ fieldset {
 }
 .delete-wrap .delete-icon {
     font-size: 35px;
-    margin-bottom: 20px;
     color: var(--bbbeasy-brand-color);
 }
 .delete-wrap .ant-modal-confirm-title {
@@ -5421,4 +5430,69 @@ body {
 .room-edit-form .ant-select,
 .room-edit-form .ant-input-group-wrapper {
     width: 100%;
+}
+
+/* ---------- Overlay surfaces ----------
+   Every dialog restated the dark panel for itself, and the two overlays nobody
+   wrote a rule for — the delete confirmations and the notifications — were still
+   drawing themselves white on a dark page. */
+.ant-modal-content,
+.ant-modal-container,
+.ant-notification-notice {
+    background: var(--bbbeasy-surface) !important;
+    border: 1px solid var(--bbbeasy-surface-border) !important;
+    border-radius: var(--bbbeasy-surface-radius) !important;
+    box-shadow: var(--bbbeasy-surface-shadow) !important;
+}
+.ant-modal-confirm-title,
+.ant-notification-notice-title {
+    color: var(--bbbeasy-on-surface-strong) !important;
+}
+.ant-modal-confirm-content,
+.ant-notification-notice-description {
+    color: var(--bbbeasy-on-surface) !important;
+}
+.ant-notification-notice-close {
+    color: var(--bbbeasy-on-surface-accent) !important;
+}
+.ant-notification-notice-close:hover {
+    color: var(--bbbeasy-brand-color) !important;
+}
+/* The cancel side of a confirmation is a quiet button on the panel. Ant Design 6
+   marks the destructive button as a default one too, so it is kept out of this. */
+.ant-modal-confirm-btns .ant-btn-default:not(.ant-btn-dangerous) {
+    background: rgba(71, 85, 105, 0.4) !important;
+    border-color: var(--bbbeasy-surface-border) !important;
+    color: var(--bbbeasy-on-surface) !important;
+}
+.ant-modal-confirm-btns .ant-btn-default:not(.ant-btn-dangerous):hover,
+.ant-modal-confirm-btns .ant-btn-default:not(.ant-btn-dangerous):focus {
+    background: rgba(71, 85, 105, 0.6) !important;
+    color: var(--bbbeasy-on-surface-strong) !important;
+}
+/* What deletes something says so, on a dark panel as much as on a light one. */
+.ant-modal-confirm-btns .ant-btn-dangerous {
+    background: rgba(248, 113, 113, 0.14) !important;
+    border-color: rgba(248, 113, 113, 0.5) !important;
+    color: #fca5a5 !important;
+}
+.ant-modal-confirm-btns .ant-btn-dangerous:hover,
+.ant-modal-confirm-btns .ant-btn-dangerous:focus {
+    background: rgba(248, 113, 113, 0.28) !important;
+    border-color: #f87171 !important;
+    color: #ffffff !important;
+}
+/* The warning sign belongs above the question, not wedged against its first
+   word: Ant Design 6 hands both to the dialog as one inline run of content. */
+.delete-wrap .ant-modal-confirm-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+}
+/* Every dialog gets the blurred mask the New Room one already had. */
+.ant-modal-root > .ant-modal-mask {
+    background-color: rgba(2, 6, 23, 0.55) !important;
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
 }
