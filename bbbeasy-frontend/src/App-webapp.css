@@ -2836,7 +2836,9 @@ fieldset {
 .labels-table .ant-table,
 .users-table .ant-table,
 .roles-table .ant-table {
-    background: transparent;
+    /* Ant Design injects its own white background at runtime and wins the tie on
+       specificity, which showed as a white strip along the scrollbar gutter. */
+    background: transparent !important;
     border-radius: 14px;
     overflow: hidden;
     box-shadow: 0 10px 34px rgba(37, 99, 235, 0.22);
@@ -5576,4 +5578,32 @@ body {
         text-align: center;
         padding: 12px 24px !important;
     }
+}
+
+/* ---------- Scrollbars ----------
+   The browser's own bar is drawn for a light page: a table that scrolled
+   sideways ended with a grey slab across the bottom of a dark panel. */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(96, 165, 250, 0.35) transparent;
+}
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: rgba(96, 165, 250, 0.32);
+    border: 2px solid transparent;
+    background-clip: content-box;
+    border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(96, 165, 250, 0.55);
+    background-clip: content-box;
+}
+::-webkit-scrollbar-corner {
+    background: transparent;
 }
