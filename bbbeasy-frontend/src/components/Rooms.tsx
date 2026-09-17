@@ -86,7 +86,7 @@ const RoomsCol: React.FC<RoomsColProps> = ({ room, editable, bbbConfigured, dele
     };
 
     return (
-        <Col span={5} className="custom-col-5 room-box">
+        <div className="room-box">
             <Card
                 hoverable
                 variant="borderless"
@@ -169,7 +169,7 @@ const RoomsCol: React.FC<RoomsColProps> = ({ room, editable, bbbConfigured, dele
                     ))}
                 </div>
             </Card>
-        </Col>
+        </div>
     );
 };
 
@@ -293,7 +293,7 @@ const Rooms = () => {
                     ]
                 }
             />
-            <Row gutter={[18, 18]} className="rooms-cards">
+            <div className="rooms-cards">
                 {rooms.map((singleRoom) => (
                     <RoomsCol
                         key={singleRoom.id}
@@ -305,7 +305,7 @@ const Rooms = () => {
                         }
                     />
                 ))}
-            </Row>
+            </div>
         </>
     );
 };

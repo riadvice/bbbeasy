@@ -2518,9 +2518,13 @@ fieldset {
 .home-guide button {
     width: 25%;
 }
-.custom-col-5 {
-    flex: 0 0 20% !important;
-    max-width: 20% !important;
+/* The cards size themselves to the space there is. A fixed percentage column
+   could not hold a card whose avatar has a pixel width, so the card overflowed
+   and covered its neighbour's title. */
+.rooms-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(216px, 1fr));
+    gap: 18px;
 }
 .rooms-cards .ant-card {
     border-radius: 10px !important;
@@ -2772,6 +2776,8 @@ fieldset {
 }
 .room-box {
     display: grid !important;
+    /* A grid item refuses to shrink below its content unless told to. */
+    min-width: 0;
 }
 .file-size {
     color: var(--bbbeasy-medimum-gray);
