@@ -820,10 +820,14 @@ fieldset {
 .page-layout-content-rtl .site-footer {
     min-height: 50px;
     z-index: 1;
-    padding: 0 50px !important;
+    padding: 10px 50px !important;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    /* The two halves keep to one line while there is room and stack when there
+       is not. Squeezed side by side they used to break down to a letter a line. */
+    flex-wrap: wrap;
+    gap: 4px 24px;
     background-color: var(--bbbeasy-webapp-bg) !important;
     background-image: var(--bbbeasy-webapp-bg-image) !important;
     background-attachment: fixed !important;
@@ -5553,4 +5557,17 @@ body {
 }
 .ant-empty-description {
     color: var(--bbbeasy-on-surface-muted) !important;
+}
+
+/* ---------- Footer ---------- */
+.site-footer > .ant-typography {
+    white-space: nowrap;
+}
+@media (max-width: 720px) {
+    .page-layout-content .site-footer,
+    .page-layout-content-rtl .site-footer {
+        justify-content: center;
+        text-align: center;
+        padding: 12px 24px !important;
+    }
 }
