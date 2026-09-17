@@ -5364,8 +5364,10 @@ body {
 }
 
 /* ---------- Hexagon polish ----------
-   The hexagon is the product's signature shape. A mask cannot carry a shadow, so the
-   depth comes from a soft gradient in the fill and a drop-shadow filter on the wrapper. */
+   The hexagon is the product's signature shape and the one warm thing on a dark
+   page, so it is lit: a gradient across the fill and a halo under it. box-shadow
+   would draw the square the mask cuts the hexagon out of, but drop-shadow runs
+   after the mask and follows the six sides. */
 .room-card-title .bbbeasy-btn,
 .room-details .bbbeasy-btn,
 .home-guide .bbbeasy-btn,
@@ -5373,12 +5375,16 @@ body {
 .site-header .profil-btn,
 .PresetIcon {
     background-image: linear-gradient(150deg, var(--bbbeasy-brand-color-hover) 0%, var(--bbbeasy-brand-color) 55%, #e0a608 100%);
+    filter: drop-shadow(0 5px 12px var(--bbbeasy-brand-color-shadow));
     transition: filter 0.25s ease, transform 0.25s ease;
 }
+/* The whole filter is replaced, not added to, so the halo is restated here. */
 .rooms-cards .ant-card:hover .bbbeasy-btn,
-.presets-grid:hover .PresetIcon {
-    filter: brightness(1.06);
-    transform: translateY(-1px);
+.presets-grid:hover .PresetIcon,
+.room-details .bbbeasy-btn:hover,
+.site-header .profil-btn:hover {
+    filter: brightness(1.06) drop-shadow(0 9px 20px var(--bbbeasy-brand-color-shadow));
+    transform: translateY(-2px);
 }
 
 /* ---------- Inline table editing ----------
