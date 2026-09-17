@@ -71,6 +71,9 @@ const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
     const [defaultFontSize, setDefaultFontSize] = React.useState<number>(14);
     const [borderRadius, setBorderRadius] = React.useState<number>(6);
     const [wireframeStyle, setWireframeStyle] = React.useState<boolean>(false);
+    // Below the sider's breakpoint it slides in over the page instead of taking a
+    // quarter of it, so whether it is showing is state the header shares.
+    const [siderOpen, setSiderOpen] = React.useState<boolean>(false);
 
     // The access token has a lifetime, sign the user out when it runs out instead of
     // waiting for the next request to fail.
@@ -339,9 +342,23 @@ const App: React.FC<IProps> = ({ routes, isSider, logs }) => {
                     >
                         <UserContext.Provider key={authViewKey} value={userProvider}>
                             <DataContext.Provider value={dataProvider}>
-                                {isAuthenticated && isSider && <AppSider presets={dataPresets} />}
+                                {isAuthenticated && isSider && (
+                                    <>
+                                        {siderOpen && (
+                                            <div className="sider-scrim" onClick={() => setSiderOpen(false)} />
+                                        )}
+                                        <AppSider
+                                            presets={dataPresets}
+                                            open={siderOpen}
+                                            onClose={() => setSiderOpen(false)}
+                                        />
+                                    </>
+                                )}
                                 <Layout className="page-layout-body">
-                                    <AppHeader />
+                                    <AppHeader
+                                        showSiderToggle={isAuthenticated && isSider}
+                                        onOpenSider={() => setSiderOpen(true)}
+                                    />
                                     <Content className="site-content">
                                         <Router routes={routes} />
                                     </Content>

@@ -5607,3 +5607,77 @@ body {
 ::-webkit-scrollbar-corner {
     background: transparent;
 }
+
+/* ---------- The shell on a narrow screen ----------
+   The sider is a fixed 260px column, which on a phone left the page a sliver and
+   scrolling sideways. Below the breakpoint it comes out of the flow and slides in
+   over the page from the header's button, and the header lays itself out in a row
+   that can give the search whatever is left. */
+.site-header-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    height: 100%;
+}
+.site-header-search {
+    flex: 1 1 auto;
+    display: flex;
+    justify-content: center;
+    min-width: 0;
+}
+.site-header-search .ant-form {
+    width: min(100%, 420px);
+}
+.site-header-actions {
+    flex: 0 0 auto;
+}
+.sider-toggle {
+    /* Ant Design's own display wins the tie on specificity, hence the insistence. */
+    display: none !important;
+    color: #dbe9ff !important;
+}
+.sider-toggle:hover {
+    color: var(--bbbeasy-brand-color) !important;
+}
+.sider-scrim {
+    display: none;
+}
+
+@media (max-width: 991px) {
+    .sider-toggle {
+        display: inline-flex !important;
+    }
+    .sider-scrim {
+        display: block;
+        position: fixed;
+        inset: 0;
+        z-index: 1001;
+        background: rgba(2, 6, 23, 0.6);
+        -webkit-backdrop-filter: blur(2px);
+        backdrop-filter: blur(2px);
+    }
+    .site-sider {
+        /* Ant Design injects position: relative at runtime and wins the tie on
+           specificity, so taking the sider out of the flow has to be insisted on. */
+        position: fixed !important;
+        top: 0;
+        bottom: 0;
+        z-index: 1002;
+        transform: translateX(-100%);
+        transition: transform 0.25s ease;
+        box-shadow: 18px 0 44px rgba(2, 6, 23, 0.55);
+    }
+    .page-layout-content-rtl .site-sider {
+        transform: translateX(100%);
+    }
+    .site-sider.site-sider-open,
+    .page-layout-content-rtl .site-sider.site-sider-open {
+        transform: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .site-sider {
+        transition: none;
+    }
+}

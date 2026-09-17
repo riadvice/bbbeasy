@@ -64,6 +64,7 @@
     "error-title": "خطأ",
     "info-title": "معلومات",
     "warning-title": "تنبيه",
+    "menu": "القائمة",
     "success-registration": "تهانينا! لقد تم إنشاء حسابك بنجاح",
     "username-email-already-exist": "اسم المستخدم والبريد الإلكتروني موجودان مسبقا",
     "username-already-exist": "اسم المستخدم موجود مسبقا",

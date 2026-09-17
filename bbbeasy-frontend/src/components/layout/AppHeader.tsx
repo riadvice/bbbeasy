@@ -37,7 +37,14 @@ import {
     Badge,
     Avatar,
 } from 'antd';
-import { SearchOutlined, GlobalOutlined, UserOutlined, LogoutOutlined, WarningOutlined } from '@ant-design/icons';
+import {
+    SearchOutlined,
+    GlobalOutlined,
+    UserOutlined,
+    LogoutOutlined,
+    WarningOutlined,
+    MenuOutlined,
+} from '@ant-design/icons';
 
 import { Trans, withTranslation } from 'react-i18next';
 import { t } from 'i18next';
@@ -69,7 +76,29 @@ const { Title, Text, Paragraph } = Typography;
 const popupPlacement = LocaleService.direction === 'rtl' ? 'bottomLeft' : 'bottomRight';
 const badgeOffset: [number, number] = LocaleService.direction === 'rtl' ? [34, 5] : [-34, 5];
 
-const AppHeader = () => {
+type Props = {
+    showSiderToggle?: boolean;
+    onOpenSider?: () => void;
+};
+
+/** Opens the sider where it is an overlay rather than a column of the page. */
+const SiderToggle = ({ show, onOpen }: { show?: boolean; onOpen?: () => void }) => {
+    if (!show) {
+        return null;
+    }
+
+    return (
+        <Button
+            type="text"
+            className="sider-toggle"
+            aria-label={t('menu')}
+            icon={<MenuOutlined />}
+            onClick={onOpen}
+        />
+    );
+};
+
+const AppHeader = (props: Props) => {
     const { settings } = useSettings();
     const { setIsLogged, currentUser, setCurrentUser, setCurrentSession } = React.useContext(UserContext);
     const currentLocale = LocaleService.language;
@@ -247,8 +276,9 @@ const AppHeader = () => {
                     </Space>
                 </Paragraph>
             ) : (
-                <Row align="middle">
-                    <Col span={14} offset={5}>
+                <div className="site-header-bar">
+                    <SiderToggle show={props.showSiderToggle} onOpen={props.onOpenSider} />
+                    <div className="site-header-search">
                         {isRoomsSearch && (
                             <Form form={searchForm}>
                                 <Form.Item name="search" className="mb-0">
@@ -264,8 +294,8 @@ const AppHeader = () => {
                                 </Form.Item>
                             </Form>
                         )}
-                    </Col>
-                    <Col span={5} className="text-end">
+                    </div>
+                    <div className="site-header-actions">
                         <Space size="middle">
                             {dropdownWarning}
                             <Dropdown
@@ -283,8 +313,8 @@ const AppHeader = () => {
                             </Dropdown>
                             {dropdownLang}
                         </Space>
-                    </Col>
-                </Row>
+                    </div>
+                </div>
             )}
             <Modal
                 title={

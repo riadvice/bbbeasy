@@ -53,6 +53,8 @@ type formType = {
 
 type Props = {
     presets?: PresetType[];
+    open?: boolean;
+    onClose?: () => void;
 };
 
 const AppSider = (props: Props) => {
@@ -104,10 +106,12 @@ const AppSider = (props: Props) => {
 
     const handleClick = (e) => {
         setCurrentPath(e.key);
+        // Below the breakpoint the sider covers the page it has just navigated to.
+        props.onClose?.();
     };
     return (
         menuItems.length !== 0 && (
-            <Sider className="site-sider">
+            <Sider className={props.open ? 'site-sider site-sider-open' : 'site-sider'}>
                 <div className="logo">
                     <Link to={'/'}>
                         <img
