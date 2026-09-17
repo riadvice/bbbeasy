@@ -391,7 +391,6 @@ const RoomDetails = () => {
             formItemNode: (
                 <Select
                     mode="multiple"
-                    showArrow
                     tagRender={tagRender}
                     style={{ width: '100%' }}
                     options={labels}

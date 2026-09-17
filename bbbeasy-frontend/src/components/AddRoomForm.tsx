@@ -21,7 +21,7 @@ import { Trans, withTranslation } from 'react-i18next';
 import { t } from 'i18next';
 import EN_US from '../locale/en-US.json';
 
-import { Button, Col, Form, Input, Modal, Popconfirm, Row, Select, Tag } from 'antd';
+import { Button, Col, Form, Input, Modal, Popconfirm, Row, Select, Space, Tag } from 'antd';
 import { CheckOutlined, CloseOutlined, EditOutlined } from '@ant-design/icons';
 
 import Notifications from './Notifications';
@@ -289,14 +289,14 @@ export const AddRoomForm = (props: Props) => {
                             ]}
                         >
                             {readOnly ? (
-                                <Input.Group compact className="readonly-item">
+                                <Space.Compact className="readonly-item">
                                     <Input
                                         disabled
                                         readOnly={readOnly}
                                         defaultValue={prefixShortLink + (shortLink !== '' ? shortLink : shortlink)}
                                     />
                                     <Button icon={<EditOutlined />} onClick={toggleEdit} />
-                                </Input.Group>
+                                </Space.Compact>
                             ) : (
                                 <Input
                                     addonBefore={prefixShortLink}
@@ -345,7 +345,6 @@ export const AddRoomForm = (props: Props) => {
                         >
                             <Select
                                 mode="multiple"
-                                showArrow
                                 tagRender={tagRender}
                                 style={{ width: '100%' }}
                                 options={labels_data}
