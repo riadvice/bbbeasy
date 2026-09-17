@@ -163,7 +163,7 @@ const Profile = () => {
                 onFinish={handleUpdate}
                 onValuesChange={() => setErrors('')}
             >
-                <Row>
+                <Row className="profile-row">
                     <Col span={9}>
                         {errors && (
                             <Alert
