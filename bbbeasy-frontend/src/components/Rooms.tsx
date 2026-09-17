@@ -22,8 +22,8 @@ import { Trans, withTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { t } from 'i18next';
 
-import { Avatar, Badge, Card, Col, Row, Space, Tag, Typography, Button, Modal, Tooltip } from 'antd';
-import { ClockCircleOutlined, DeleteOutlined, TeamOutlined, WarningOutlined } from '@ant-design/icons';
+import { Avatar, Card, Col, Row, Space, Tag, Typography, Button, Modal, Tooltip } from 'antd';
+import { DeleteOutlined, WarningOutlined } from '@ant-design/icons';
 
 import Notifications from './Notifications';
 import AddRoomForm from './AddRoomForm';
@@ -31,7 +31,6 @@ import { DataContext } from 'lib/RoomsContext';
 import LoadingSpinner from './LoadingSpinner';
 import EmptyData from './EmptyData';
 
-import LocaleService from '../services/locale.service';
 import RoomsService from 'services/rooms.service';
 import AuthService from 'services/auth.service';
 import notificationService from '../services/notification.service';
@@ -93,35 +92,12 @@ const RoomsCol: React.FC<RoomsColProps> = ({ room, editable, bbbConfigured, dele
                 title={
                     <div onClick={() => showRoomDetails()}>
                         <Space size="middle" orientation="vertical" className="room-card-title">
-                            <Badge
-                                offset={LocaleService.direction === 'rtl' ? [22, 11] : [-22, 11]}
-                                count={
-                                    room.id % 2 === 0 ? (
-                                        <div className="custom-badge-bg">
-                                            <div className="custom-badge">
-                                                <ClockCircleOutlined />
-                                            </div>
-                                        </div>
-                                    ) : null
-                                }
-                            >
-                                <Badge
-                                    offset={LocaleService.direction === 'rtl' ? [22, 69] : [-22, 69]}
-                                    count={
-                                        room.id % 2 !== 0 ? (
-                                            <div className="custom-badge-bg">
-                                                <div className="custom-badge">
-                                                    <TeamOutlined />
-                                                </div>
-                                            </div>
-                                        ) : null
-                                    }
-                                >
-                                    <Avatar size={80} className="bbbeasy-btn">
-                                        {room.name.slice(0, 2).toUpperCase()}
-                                    </Avatar>
-                                </Badge>
-                            </Badge>
+                            {/* The badge that used to sit here picked its icon from
+                                whether the room id was even, so a clock or a group of
+                                people appeared on rooms that had neither. */}
+                            <Avatar size={80} className="bbbeasy-btn">
+                                {room.name.slice(0, 2).toUpperCase()}
+                            </Avatar>
                             <Tooltip title={room.name} placement="top">
                                 <Title level={4} className="room-title">
                                     {room.name}

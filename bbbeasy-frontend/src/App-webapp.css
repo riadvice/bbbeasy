@@ -2627,30 +2627,6 @@ fieldset {
     mask-repeat: no-repeat;
     background-color: var(--bbbeasy-brand-color);
 }
-.room-card-title .custom-badge-bg {
-    -webkit-mask-image: var(--bbbeasy-hexagon);
-    mask-image: var(--bbbeasy-hexagon);
-    -webkit-mask-size: 100% 100%;
-    mask-size: 100% 100%;
-    -webkit-mask-repeat: no-repeat;
-    mask-repeat: no-repeat;
-    background: var(--bbbeasy-brand-color);
-    width: 25px;
-    height: 25px;
-}
-.room-card-title .custom-badge {
-    -webkit-mask-image: var(--bbbeasy-hexagon);
-    mask-image: var(--bbbeasy-hexagon);
-    -webkit-mask-size: 100% 100%;
-    mask-size: 100% 100%;
-    -webkit-mask-repeat: no-repeat;
-    mask-repeat: no-repeat;
-    background: white;
-    padding: 4.5px;
-    position: absolute;
-    top: 1px;
-    left: 1px;
-}
 .custom-badge .anticon {
     color: var(--bbbeasy-brand-color);
 }
@@ -3814,9 +3790,16 @@ fieldset {
     display: block !important;
 }
 .room-title {
-    max-width: 150px !important;
+    /* The card decides how much room there is, so the name uses all of it and
+       runs to a second line before it is cut. A fixed 150px used to clip names
+       that the card had space for. */
+    max-width: 100%;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
     overflow: hidden;
-    text-overflow: ellipsis;
+    overflow-wrap: anywhere;
 }
 .room-labels {
     word-break: break-all;
