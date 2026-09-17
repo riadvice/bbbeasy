@@ -236,6 +236,9 @@
     --bbbeasy-on-surface: #e2e8f0;
     --bbbeasy-on-surface-strong: #ffffff;
     --bbbeasy-on-surface-accent: #93c5fd;
+    --bbbeasy-on-surface-muted: rgba(148, 163, 184, 0.9);
+    --bbbeasy-field-bg: #0b1526;
+    --bbbeasy-field-border: rgba(96, 165, 250, 0.4);
 }
 body,
 input,
@@ -5495,4 +5498,48 @@ body {
     background-color: rgba(2, 6, 23, 0.55) !important;
     -webkit-backdrop-filter: blur(5px);
     backdrop-filter: blur(5px);
+}
+
+/* ---------- Ant Design 6 selects ----------
+   The control moved from .ant-select-selector to .ant-select-content and the
+   root element now paints a background of its own. The dark rules written for
+   version 5 dress only the inner box, so every select wore a white frame, and
+   the arrow kept the light theme's near black. */
+.ant-select {
+    background: transparent !important;
+}
+.ant-select .ant-select-content {
+    background: var(--bbbeasy-field-bg) !important;
+    border-color: var(--bbbeasy-field-border) !important;
+}
+.ant-select .ant-select-placeholder,
+.ant-select .ant-select-selection-item,
+.ant-select .ant-select-input {
+    color: var(--bbbeasy-on-surface) !important;
+}
+.ant-select .ant-select-suffix,
+.ant-select .ant-select-arrow {
+    color: var(--bbbeasy-on-surface-accent) !important;
+}
+/* The list a select opens is another overlay, and it kept the light theme too. */
+.ant-select-dropdown,
+.ant-dropdown-menu {
+    background: var(--bbbeasy-surface) !important;
+    border: 1px solid var(--bbbeasy-surface-border) !important;
+    box-shadow: var(--bbbeasy-surface-shadow) !important;
+}
+.ant-select-dropdown .ant-select-item,
+.ant-dropdown-menu .ant-dropdown-menu-item {
+    color: var(--bbbeasy-on-surface) !important;
+}
+.ant-select-dropdown .ant-select-item-option-active,
+.ant-select-dropdown .ant-select-item-option:hover {
+    background: rgba(96, 165, 250, 0.16) !important;
+}
+.ant-select-dropdown .ant-select-item-option-selected {
+    background: rgba(251, 188, 11, 0.18) !important;
+    color: var(--bbbeasy-on-surface-strong) !important;
+}
+.ant-select-dropdown .ant-empty-description {
+    color: var(--bbbeasy-on-surface-muted) !important;
 }
