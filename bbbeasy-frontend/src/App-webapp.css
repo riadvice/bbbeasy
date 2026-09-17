@@ -5752,3 +5752,23 @@ body {
         transition: none;
     }
 }
+
+/* ---------- Profile fields ----------
+   The profile page was given dark labels but never dark fields, so it asked for
+   a password in a white box in the middle of a dark page. */
+.profile-form .ant-input,
+.profile-form .ant-input-affix-wrapper {
+    background: var(--bbbeasy-field-bg) !important;
+    border-color: var(--bbbeasy-field-border) !important;
+    color: var(--bbbeasy-on-surface) !important;
+}
+.profile-form .ant-input-affix-wrapper .ant-input {
+    background: transparent !important;
+    border: 0 !important;
+}
+.profile-form .ant-input::placeholder {
+    color: var(--bbbeasy-on-surface-muted) !important;
+}
+.profile-form .ant-input-affix-wrapper .anticon {
+    color: var(--bbbeasy-on-surface-accent) !important;
+}
