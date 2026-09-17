@@ -551,7 +551,7 @@ const RoomDetails = () => {
         room && (
             <div className="page-padding">
                 <Row align="bottom" className="mb-40">
-                    <Col span={10}>
+                    <Col span={10} className="room-detail-main">
                         <RoomEditToolbar
                             isEditing={isEditing}
                             canEdit={showRecodingAndPresenttaions}

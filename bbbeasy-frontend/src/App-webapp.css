@@ -5674,6 +5674,49 @@ body {
     .page-layout-content-rtl .site-sider.site-sider-open {
         transform: none;
     }
+    /* Fixed column widths leave a card a third of a phone. Both halves of the room
+       page, and each preset, take the whole width instead. */
+    .room-detail-main,
+    .RoomPresentation,
+    .presets-cards > .ant-col {
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+        margin-inline-start: 0 !important;
+    }
+    .room-detail-main {
+        margin-bottom: 18px;
+    }
+}
+
+/* A phone, where a single row cannot hold a heading, a search box and a button. */
+@media (max-width: 640px) {
+    /* The globe alone says what the control does, and the name of the language
+       was taking the width the search needs. */
+    .lang-btn-label {
+        display: none;
+    }
+    .site-content {
+        margin: 16px 12px;
+    }
+    .page-padding {
+        padding: 12px !important;
+    }
+    .ant-page-header {
+        padding: 12px 4px;
+    }
+    .ant-page-header-heading-left,
+    .ant-page-header-heading-title,
+    .ant-page-header-heading-sub-title,
+    .ant-page-header-heading-extra {
+        flex: 1 1 100%;
+    }
+    .ant-page-header-heading-left {
+        flex-wrap: wrap;
+        overflow: visible;
+    }
+    .ant-page-header-heading-title {
+        white-space: normal;
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {

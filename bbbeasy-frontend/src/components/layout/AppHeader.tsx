@@ -187,7 +187,7 @@ const AppHeader = (props: Props) => {
             trigger={['click']}
         >
             <Button type="link" size="middle" className="lang-btn">
-                <GlobalOutlined /> {language}
+                <GlobalOutlined /> <span className="lang-btn-label">{language}</span>
             </Button>
         </Dropdown>
     );
