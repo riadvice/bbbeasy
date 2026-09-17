@@ -63,6 +63,7 @@
     "success-title": "Succès",
     "error-title": "Erreur",
     "info-title": "Info",
+    "warning-title": "Avertissement",
     "success-registration": "Félicitations ! Votre compte a été créé avec succès",
     "username-email-already-exist": "Ce nom d'utilisateur et cette adresse e-mail existent déjà",
     "username-already-exist": "Ce nom d’utilisateur existe déjà",
