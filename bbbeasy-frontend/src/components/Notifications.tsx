@@ -24,7 +24,7 @@ import LocaleService from '../services/locale.service';
 const openNotificationWithIcon = (type: string, message, icon?: React.ReactNode, duration?: number) => {
     notification[type]({
         placement: LocaleService.direction === 'rtl' ? 'topLeft' : 'topRight',
-        message: t(`${type}-title`),
+        title: t(`${type}-title`),
         description: (
             <>
                 {message}
